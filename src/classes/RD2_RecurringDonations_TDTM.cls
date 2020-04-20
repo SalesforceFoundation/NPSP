@@ -93,8 +93,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        validate(rds, triggerAction);
-        handleRDSchedules(rds, oldRds, triggerAction);
+        transformDataBeforeInsert(rds, triggerAction);
+        validate(rds, oldRds, triggerAction);
+        transformDataInBeforeContext(rds, oldRds, triggerAction);
+        handleSchedulesInAfterContext(rds, oldRds, triggerAction);
 
         // Insert/Update any pending RecurringDonationSchedule records before the
         // evaluation service is called so that the full schedule is available to the
@@ -127,14 +129,75 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Validates Recurring Donations data
+    * @description Data Transformation Actions for Before Insert and Update Trigger Actions:
+    * - If RecurringType is Open and number of plannned installments = 1, set number of plannned installments to null
+    * - If RecurringType is Fixed and number of paid installments is >= number of plannned installments, then close RD
+    * - Update the Next Donation Date on both Before Insert and Update trigger actions
     * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, BeforeUpdate, etc.
     */
-    public void validate(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
+    private void transformDataInBeforeContext(List<npe03__Recurring_Donation__c> rds,
+        List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction
+    ) {
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert
+            && triggerAction != TDTM_Runnable.Action.BeforeUpdate
+        ) {
+            return;
+        }
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-           new RD2_ValidationService().validate(rds);
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = triggerAction == TDTM_Runnable.Action.BeforeUpdate
+            ? scheduleService.getAllRecurringDonationSchedules(rds, oldRds)
+            : new Map<Id, List<RecurringDonationSchedule__c>>();
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
+                .revisePlannedInstallments();
+
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                rdRecord.reviseNextDonationDateBeforeInsert(scheduleService);
+
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                rdRecord
+                    .reviseStatusForFixedLength()
+                    .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
+            }
+        }
+    }
+
+    /***
+    * @description Data Transformation Actions for Before Insert; and before validation
+    * - Assign Installment Frequency to the recurring donation record if the field is null on insert
+    * @param rds Trigger.new records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void transformDataBeforeInsert(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert) {
+            return;
+        }
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.InstallmentFrequency__c == null) {
+                rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
+            }
+        }
+    }
+
+    /***
+    * @description Validates Recurring Donations data
+    * @param rds Trigger.new records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        RD2_ValidationService validationService = new RD2_ValidationService(rds);
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            validationService.validate();
+
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            validationService
+                .withOldRecurringDonations(oldRds)
+                .validateOnChange();
         }
     }
 
@@ -200,30 +263,13 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    private void handleRDSchedules(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+    private void handleSchedulesInAfterContext(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            calculateNextDonationDates(rds);
-
-        } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             buildNewSchedules(rds);
-
-        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            calculateNextDonationDateBeforeUpdate(rds, oldRds);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             synchronizeSchedulesAfterRDUpdate(rds, oldRds);
-        }
-    }
-
-    /***
-    * @description Handles next donation calculation before insert of recurring donation
-    * @param rds Trigger.new records
-    */
-    private void calculateNextDonationDates(List<npe03__Recurring_Donation__c> rds) {
-
-        for (npe03__Recurring_Donation__c rd : rds) {
-            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
         }
     }
 
@@ -234,19 +280,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     private void buildNewSchedules(List<npe03__Recurring_Donation__c> rds) {
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            dmlActions.objectsToInsert.addAll(scheduleService.getNewSchedules(rd));
-        }
-    }
-
-    /***
-    * @description Handles calculation of next donation date before update of recurring donation
-    * @param rds Trigger.new records
-    * @param oldRds Trigger.old records
-    */
-    private void calculateNextDonationDateBeforeUpdate(List<SObject> rds, List<SObject> oldRds) {
-        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = scheduleService.getAllRecurringDonationSchedules(rds, oldRds);
-        for (npe03__Recurring_Donation__c rd : (List<npe03__Recurring_Donation__c>)rds) {
-            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(schedulesByRdId.get(rd.Id));
+            dmlActions.objectsToInsert.addAll(scheduleService.buildNewSchedules(rd));
         }
     }
 

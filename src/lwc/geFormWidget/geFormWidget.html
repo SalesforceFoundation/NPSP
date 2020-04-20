@@ -1,0 +1,15 @@
+<template>
+    <template if:true={widgetNotFound}>
+        <p>{element.componentName} component was not found</p>
+    </template>
+    <template if:true={isPaymentScheduler}>
+        <!-- TODO: Add Payment Widget here -->
+        <c-ge-form-field data-id='widgetComponent' element={element}></c-ge-form-field>
+    </template>
+    <template if:true={isAllocation}>
+        <c-ge-form-widget-allocation data-id='widgetComponent'
+                                     element={element}
+                                     total-amount={totalAmount}>
+        </c-ge-form-widget-allocation>
+    </template>
+</template>

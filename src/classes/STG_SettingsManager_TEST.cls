@@ -34,13 +34,20 @@
 * @description test code for all of Settings
 */
 @isTest
-public with sharing class STG_SettingsManager_TEST {
+private with sharing class STG_SettingsManager_TEST {
+    /***
+    * @description Installment Opportunities Auto Creation Setting API value
+    */
+    private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
+    private static final String OPTION_NAME_DISABLE_ALL = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
+    private static final String OPTION_NAME_ALWAYS_CREATE_NEXT = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
 
     /*********************************************************************************************************
     * @description Tests the Settings Manager page
     * @return void
     */
-    public static testMethod void testSettingsManager() {
+    @isTest
+    private static void testSettingsManager() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
         system.assertEquals('idPanelHome', STG_SettingsManager_CTRL.idPanelCurrent);
         system.assertEquals(null, ctrl.setPanelCurrent());
@@ -50,7 +57,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests setting up TDTM and the Schedulables
     * @return void
     */
-    public static testMethod void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
+    @isTest
+    private static void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
 
         Test.startTest();
@@ -73,7 +81,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests an exception message is displayed if the record type settings update throws an exception
     * @return void
     */
-    public static testMethod void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
+    @isTest
+    private static void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
         Test.setCurrentPage(Page.STG_SettingsManager);
 
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
@@ -167,30 +176,43 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(null, ctrl.errorMsg);
     }
 
-
-    /*********************************************************************************************************
-    * @description Tests the DataBoundMultiSelect control used in Settings
-    * @return void
+    /**
+    * @description Verifies that when the options are selected, the displayed string will be converted to Label and the
+    * actual values will stay in Api format
     */
-    public static testMethod void testDataBoundMultiSelect() {
+    @isTest
+    private static void shouldConvertToLabelForDisplayAndApiValueForSaving() {
         STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
+        List<SelectOption> options = new List<SelectOption> {
+            new SelectOption('value1', 'label1'),
+            new SelectOption('value2', 'label2'),
+            new SelectOption('value3', 'label3')
+        };
+
         Contact con = new Contact();
-        con.npo02__Naming_Exclusions__c = 'a;b;c';
+
+        con.npo02__Naming_Exclusions__c = 'value1;value2';
         ctrl.sobjBinding = con;
+        ctrl.listSelectOption = options;
         ctrl.strField = 'npo02__Naming_Exclusions__c';
-        system.assertNotEquals(null, ctrl.listStrValues);
-        system.assertEquals(3, ctrl.listStrValues.size());
-        system.assertEquals('a;b;c', ctrl.strValues);
-        list<string> listStr = new list<string>{'x', 'y', 'z'};
-        ctrl.listStrValues = listStr;
-        system.assertEquals('x;y;z', ctrl.strValues);
+
+        System.assertEquals('label1;label2', ctrl.strValues, 'strValues should be convert to label for display');
+        System.assertEquals('value1;value2', con.npo02__Naming_Exclusions__c, 'Field value should remain the API value');
+
+        Test.startTest();
+        ctrl.listStrValues = new List<String>{'value2', 'value3'};        
+        Test.stopTest();
+
+        System.assertEquals('label2;label3', ctrl.strValues, 'strValues should be convert to label for display');
+        System.assertEquals('value2;value3', con.npo02__Naming_Exclusions__c, 'Field value should remain the API value');
     }
 
     /*********************************************************************************************************
     * @description Tests the panel infrastructure and shared lists of SelectOptions
     * @return void
     */
-    public static testMethod void testPanel() {
+    @isTest
+    private static void testPanel() {
         STG_Panel ctrl = new STG_Panel();
         system.assertEquals(null, ctrl.idPanel());
         ctrl.isEditMode = true;
@@ -204,7 +226,6 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, ctrl.cancelEdit());
         system.assertEquals(false, ctrl.isEditMode);
         system.assertEquals(3, STG_Panel.listSOAccountModels.size());
-        system.assertNotEquals(null, STG_Panel.listSOContactRoles);
         system.assertNotEquals(null, STG_Panel.listSOHHRules);
         system.assertNotEquals(null, STG_Panel.listSOContactRecTypes);
         system.assertNotEquals(null, STG_Panel.listSOAccountRecTypeIds);
@@ -221,7 +242,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests that the Settings Service has each settings object loaded
     * @return void
     */
-    public static testMethod void testSettingsService() {
+    @isTest
+    private static void testSettingsService() {
     	STG_SettingsService svc = STG_SettingsService.stgService;
     	system.assertNotEquals(null, svc);
     	system.assertNotEquals(null, svc.stgCon);
@@ -242,7 +264,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Affiliations panel
     * @return void
     */
-    public static testMethod void testPanelAffl() {
+    @isTest
+    private static void testPanelAffl() {
     	STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
     	system.assertEquals('idPanelAffl', panel.idPanel());
     	STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
@@ -257,7 +280,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Allocations panel
     * @return void
     */
-    public static testMethod void testPanelAllo() {
+    @isTest
+    private static void testPanelAllo() {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
 
@@ -303,7 +327,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Batch Data Entry panel
     * @return void
     */
-    public static testMethod void testPanelBDE() {
+    @isTest
+    private static void testPanelBDE() {
         STG_PanelBDE_CTRL panel = new STG_PanelBDE_CTRL();
         system.assertEquals('idPanelBDE', panel.idPanel());
         STG_Panel.stgService.stgBDE.Opportunity_Naming__c = true;
@@ -318,7 +343,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Contact Roles panel
     * @return void
     */
-    public static testMethod void testPanelContactRoles() {
+    @isTest
+    private static void testPanelContactRoles() {
         STG_PanelContactRoles_CTRL panel = new STG_PanelContactRoles_CTRL();
         system.assertEquals('idPanelConRoles', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c = true;
@@ -337,7 +363,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Contacts panel
     * @return void
     */
-    public static testMethod void testPanelContacts() {
+    @isTest
+    private static void testPanelContacts() {
         String hhAccountRecTypeLabel = STG_PanelContacts_CTRL.strHHAccountRecordTypeLabel;
         String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;
 
@@ -364,7 +391,8 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is still turned off.
         The Page contains an error.
     **********************************************************************************************************/
-    private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
+    @isTest
+    private static void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
@@ -393,7 +421,8 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is turned on.
         The Page contains no error.
     **********************************************************************************************************/
-    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
+    @isTest
+    private static void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
@@ -419,7 +448,8 @@ public with sharing class STG_SettingsManager_TEST {
         Household Naming batch has been run.
         The Page contains no error.
     **********************************************************************************************************/
-    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
+    @isTest
+    private static void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
@@ -442,7 +472,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Leads panel
     * @return void
     */
-    public static testMethod void testPanelLeads() {
+    @isTest
+    private static void testPanelLeads() {
         STG_PanelLeads_CTRL panel = new STG_PanelLeads_CTRL();
         system.assertEquals('idPanelLeads', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Default_Opp_on_Convert__c = true;
@@ -457,7 +488,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Membership panel
     * @return void
     */
-    public static testMethod void testPanelMembership() {
+    @isTest
+    private static void testPanelMembership() {
         STG_PanelMembership_CTRL panel = new STG_PanelMembership_CTRL();
         system.assertEquals('idPanelMembership', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 10;
@@ -472,7 +504,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Run Opp Rollups Batch panel
     * @return void
     */
-    public static testMethod void testPanelOppBatch() {
+    @isTest
+    private static void testPanelOppBatch() {
         STG_PanelOppBatch_CTRL panel = new STG_PanelOppBatch_CTRL();
         system.assertEquals('idPanelOppBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -484,7 +517,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Donor Statistics panel
     * @return void
     */
-    public static testMethod void testPanelOppRollups() {
+    @isTest
+    private static void testPanelOppRollups() {
         STG_PanelOppRollups_CTRL panel = new STG_PanelOppRollups_CTRL();
         system.assertEquals('idPanelOppRollup', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 10;
@@ -499,7 +533,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Payments panel
     * @return void
     */
-    public static testMethod void testPanelOpps() {
+    @isTest
+    private static void testPanelOpps() {
         STG_PanelOpps_CTRL panel = new STG_PanelOpps_CTRL();
         system.assertEquals('idPanelOpp', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Payments_Enabled__c = true;
@@ -514,7 +549,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the opportunity naming panel
     * @return void
     */
-    public static testMethod void testPanelOppNaming() {
+    @isTest
+    private static void testPanelOppNaming() {
         STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
         system.assertEquals('idPanelOppNaming', panel.idPanel());
         panel.newONS();
@@ -529,7 +565,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Payment Mappings panel
     * @return void
     */
-    public static testMethod void testPanelPaymentMapping() {
+    @isTest
+    private static void testPanelPaymentMapping() {
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
         system.assertEquals('idPanelPaymentMapping', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -575,12 +612,14 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Recurring Donations panel
     * @return void
     */
-    public static testMethod void testPanelRD() {
+    @isTest
+    private static void testPanelRD() {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
+
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(10, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
@@ -610,7 +649,6 @@ public with sharing class STG_SettingsManager_TEST {
         for (Integer i = 0; i < options.size(); i++) {
             System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
         }
-
     }
 
     /*********************************************************************************************************
@@ -629,14 +667,530 @@ public with sharing class STG_SettingsManager_TEST {
         for (Integer i = 0; i < options.size(); i++) {
             System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
         }
+    }
 
+    /***
+    * @description Every Installment Auto Creation Setting option should be converted into SelectOption
+    */
+    @isTest
+    private static void shouldHaveValidSelectOptionsForInstallmentAutoCreationSetting() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        List<String> optionValues = new List<String>();
+
+        Test.startTest();
+        for (SelectOption option : panel.installmentCreateOptions) {
+            optionValues.add(option.getValue());
+        }
+        Test.stopTest();
+
+        List<String> options = new List<String>();
+
+        for (RD2_Constants.InstallmentCreateOptions option : RD2_Constants.InstallmentCreateOptions.values()) {
+            options.add(option.name());
+        }
+
+        System.assertEquals(options, optionValues,
+            'Every Installment Creation Options should be in the list for selection');
+    }
+    /***
+    * @description The label currently being displayed should match the actual Installment Opp Auto Creation Setting
+    */
+    @isTest
+    private static void shouldHaveCorrectAutoCreationLabelDisplayed() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        panel.init();
+        Test.stopTest();
+
+        String currentOppSettingLabel = panel.convertToInstallmentLabel(
+            Stg_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
+
+        System.assertEquals(currentOppSettingLabel, panel.selectedInstallmentCreateOption,
+            'The installment opp displayed label should matches the one stored in the NPSP setting');
+    }
+
+    /***
+    * @description The label currently being displayed should match the actual Installment Opp Auto Creation Setting
+    */
+    @isTest
+    private static void shouldDisplayAlwaysCreateWhenSettingIsNullOrRandomString() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Map<String, Object> rdSettingMap = new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => null
+        };
+
+        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
+
+        Test.startTest();
+        panel.init();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppEnableAll, panel.selectedInstallmentCreateOption,
+            'The installment opp displayed label should be set to Always Create Next Installment When Setting value is not recognizable');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Always Allow Next Installment
+    * should be correctly conoverted to the respected label when displayed onto the RD panel
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationAlwaysAllowToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_ALWAYS_CREATE_NEXT);
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppEnableAll, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Disalbe First Installment
+    * should be correctly conoverted to the respected label when displayed onto the RD panel
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationDisableFirstToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_DISABLE_FIRST);
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppDisableFirst, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Disable All Installment
+    * should be correctly conoverted to the respected label when displayed onto the RD panel
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationDisableAllToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_DISABLE_ALL);
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppDisableAll, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
+    }
+
+    /**
+    * @description Should prevent read only user to delete opportunity naming settings
+    * as they do not have delete permission
+    */
+    @isTest
+    private static void shouldPreventDeleteOppNamingWhenUserDoesNotHaveDeletePermission() {
+        Opportunity_Naming_Settings__c settings = setUpOppNamingSettings();
+
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelOppNaming);
+            STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+
+            panel.currentONS = settings;
+            panel.currentONSName = settings.Name;
+
+            panel.delONS();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, panel.listOppNameSettings.size());
+            System.assertEquals(1, panel.mapOppNameSettings.size());
+            System.assertEquals(1, Opportunity_Naming_Settings__c.getAll().size());
+        }
+
+        Test.stopTest();
+
+    }
+
+    /**
+    * @description Verify if admin users can delete opportunity naming settings
+    */
+    @isTest
+    private static void shouldAllowDeleteOppNamingWhenUserHasAdminPermission() {
+        Opportunity_Naming_Settings__c settings = setUpOppNamingSettings();
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelOppNaming);
+        STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+
+        panel.currentONS = settings;
+        panel.currentONSName = settings.Name;
+
+        panel.delONS();
+
+        //verify if the settings are deleted
+        System.assertEquals(0, Opportunity_Naming_Settings__c.getAll().size());
+        System.assertEquals(0, panel.listOppNameSettings.size());
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Should prevent read only user to delete custom field mapping setting
+    * as they do not have delete permission
+    */
+    @isTest
+    private static void shouldPreventDeleteForFieldMappingWhenUserDoesNotHaveDelPermission() {
+        npe03__Custom_Field_Mapping__c cfm = setUpCustomFieldMapping();
+
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRDCustomFieldMapping);
+            STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
+
+            panel.fmNew.npe03__Recurring_Donation_Field__c = cfm.npe03__Recurring_Donation_Field__c;
+            panel.fmNew.npe03__Opportunity_Field__c = cfm.npe03__Opportunity_Field__c;
+
+            panel.fmIdDelete = panel.listRDCustomFieldMapping[0].Id;
+            panel.deleteFm();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, npe03__Custom_Field_Mapping__c.getAll().size());
+            System.assertEquals(1, panel.listRDCustomFieldMapping.size());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verify if admin users can delete custom field mapping settings
+    */
+    @isTest
+    private static void shouldAllowDeleteForFieldMappingWhenUserHasAdminPermission() {
+        npe03__Custom_Field_Mapping__c cfm = setUpCustomFieldMapping();
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRDCustomFieldMapping);
+        STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
+
+        panel.fmNew.npe03__Recurring_Donation_Field__c = cfm.npe03__Recurring_Donation_Field__c;
+        panel.fmNew.npe03__Opportunity_Field__c = cfm.npe03__Opportunity_Field__c;
+        panel.fmIdDelete = panel.listRDCustomFieldMapping[0].Id;
+        panel.deleteFm();
+
+        //verify if the settings are deleted
+        System.assertEquals(0, npe03__Custom_Field_Mapping__c.getAll().size());
+        system.assertEquals(0, panel.listRDCustomFieldMapping.size());
+
+        Test.stopTest();
+
+    }
+
+    /**
+    * @description Should prevent read only user to delete custom installment setting
+    * as they do not have delete permission
+    */
+    @isTest
+    private static void shouldPreventDeleteForCustomInstallmtWhenUserDoesNotHaveDelPermission() {
+        npe03__Custom_Installment_Settings__c cfm = setUpCustomInstallmentSettings();
+
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRDCustomInstallment);
+            STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
+
+            panel.ciNew.Name = cfm.Name;
+            panel.ciNew.npe03__Value__c = cfm.npe03__Value__c;
+            panel.ciNew.npe03__Increment__c = cfm.npe03__Increment__c;
+
+            panel.ciIdDelete = STG_Panel.stgService.listRDCustomInstallment[0].Id;
+            panel.deleteCi();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, npe03__Custom_Installment_Settings__c.getAll().size());
+            System.assertEquals(1, STG_Panel.stgService.listRDCustomInstallment.size());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verify if admin users can delete custom installment settings
+    */
+    @isTest
+    private static void shouldAllowDeleteForCustomInstallmtWhenUserHasAdminPermission() {
+        npe03__Custom_Installment_Settings__c cfm = setUpCustomInstallmentSettings();
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRDCustomInstallment);
+        STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
+
+        panel.ciNew.Name = cfm.Name;
+        panel.ciNew.npe03__Value__c = cfm.npe03__Value__c;
+        panel.ciNew.npe03__Increment__c = cfm.npe03__Increment__c;
+
+        panel.ciIdDelete = STG_Panel.stgService.listRDCustomInstallment[0].Id;
+        panel.deleteCi();
+
+        //verify if the settings are deleted
+        System.assertEquals(0, npe03__Custom_Installment_Settings__c.getAll().size());
+        system.assertEquals(0, STG_Panel.stgService.listRDCustomInstallment.size());
+
+        Test.stopTest();
+
+    }
+
+    /**
+    * @description Should prevent read only user to delete payment field mapping setting
+    * as they do not have delete permission
+    */
+    @isTest
+    private static void shouldPreventDeleteForPaymentMapWhenUserDoesNotHaveDelPermission() {
+        npe01__Payment_Field_Mapping_Settings__c cfm = setUpPaymentFieldMapSettings();
+
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelPaymentMapping);
+            STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
+
+            panel.pfmNew.npe01__Opportunity_Field__c = cfm.npe01__Opportunity_Field__c;
+            panel.pfmNew.npe01__Payment_Field__c = cfm.npe01__Payment_Field__c;
+
+            panel.pfmIdDelete = panel.listPMTFieldMapping[0].Id;
+            panel.deletePfm();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, npe01__Payment_Field_Mapping_Settings__c.getAll().size() );
+            System.assertEquals(1, STG_Panel.stgService.listPMTFieldMapping.size());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verify if admin users can delete payment field mapping settings
+    */
+    @isTest
+    private static void shouldAllowDeleteForPaymentMapWhenUserHasAdminPermission() {
+        npe01__Payment_Field_Mapping_Settings__c cfm = setUpPaymentFieldMapSettings();
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelPaymentMapping);
+        STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
+
+        panel.pfmNew.npe01__Opportunity_Field__c = cfm.npe01__Opportunity_Field__c;
+        panel.pfmNew.npe01__Payment_Field__c = cfm.npe01__Payment_Field__c;
+
+        panel.pfmIdDelete = panel.listPMTFieldMapping[0].Id;
+        panel.deletePfm();
+        //verify if the settings are deleted
+        System.assertEquals(0, npe01__Payment_Field_Mapping_Settings__c.getAll().size());
+        System.assertEquals(0, panel.listPMTFieldMapping.size());
+
+        Test.stopTest();
+
+    }
+
+    /**
+    * @description Should prevent read only user to delete relationship lookup setting
+    * as they do not have delete permission
+    */
+    @isTest
+    private static void shouldPreventDeleteForRelReciprocalWhenUserDoesNotHaveDelPermission() {
+        npe4__Relationship_Lookup__c cfm = setUpRelationshipLookup();
+
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRelReciprocal);
+            STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
+
+            panel.rlNew.Name = cfm.Name;
+            panel.rlNew.npe4__Male__c = cfm.npe4__Male__c;
+            panel.rlNew.npe4__Female__c = cfm.npe4__Female__c;
+            panel.rlNew.npe4__Neutral__c = cfm.npe4__Neutral__c;
+
+            panel.rlIdDelete = panel.listRelLookup[0].Id;
+            panel.deleteRl();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, npe4__Relationship_Lookup__c.getAll().size());
+            System.assertEquals(1, panel.listRelLookup.size());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verify if admin users can delete relationship lookup settings
+    */
+    @isTest
+    private static void shouldAllowDeleteForRelReciprocalWhenUserHasAdminPermission() {
+        npe4__Relationship_Lookup__c cfm = setUpRelationshipLookup();
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRelReciprocal);
+        STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
+
+        panel.rlNew.Name = cfm.Name;
+        panel.rlNew.npe4__Male__c = cfm.npe4__Male__c;
+        panel.rlNew.npe4__Female__c = cfm.npe4__Female__c;
+        panel.rlNew.npe4__Neutral__c = cfm.npe4__Neutral__c;
+
+        panel.rlIdDelete = panel.listRelLookup[0].Id;
+        panel.deleteRl();
+
+        System.assertEquals(0, npe4__Relationship_Lookup__c.getAll().size());
+        System.assertEquals(0, panel.listRelLookup.size());
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Should prevent read only user to delete relationship autocreate setting
+    * as they do not have delete permission
+    */
+    @isTest
+    private static void shouldPreventDeleteForRelAutoWhenUserDoesNotHaveDelPermission() {
+        npe4__Relationship_Auto_Create__c cfm = setUpRelationshipAutoCreate();
+
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRelAuto);
+            STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
+
+            panel.acNew.npe4__Object__c = cfm.npe4__Object__c;
+            panel.acNew.npe4__Field__c = cfm.npe4__Field__c;
+            panel.acNew.npe4__Relationship_Type__c = cfm.npe4__Relationship_Type__c;
+
+
+            panel.acIdDelete = panel.listRelAutoCreate[0].Id;
+            panel.deleteAc();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, npe4__Relationship_Auto_Create__c.getAll().size());
+            System.assertEquals(1, panel.listRelAutoCreate.size());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verify if admin users can delete relationship auto create settings
+    */
+    @isTest
+    private static void shouldAllowDeleteForRelAutoWhenUserHasAdminPermission() {
+        npe4__Relationship_Auto_Create__c cfm = setUpRelationshipAutoCreate();
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRelAuto);
+        STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
+
+        panel.acNew.npe4__Object__c = cfm.npe4__Object__c;
+        panel.acNew.npe4__Field__c = cfm.npe4__Field__c;
+        panel.acNew.npe4__Relationship_Type__c = cfm.npe4__Relationship_Type__c;
+
+
+        panel.acIdDelete = panel.listRelAutoCreate[0].Id;
+        panel.deleteAc();
+
+        System.assertEquals(0, npe4__Relationship_Auto_Create__c.getAll().size());
+        System.assertEquals(0, panel.listRelAutoCreate.size());
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Should prevent read only user to delete user roll up field setting
+    * as they do not have delete permission
+    */
+    @isTest
+    private static void shouldPreventDeleteForUserRollupWhenUserDoesNotHaveDelPermission() {
+        npo02__User_Rollup_Field_Settings__c HHurfs = setUpUserRollupFieldSettings();
+
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelUserRollup);
+            STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
+            panel.startBuild();
+
+            panel.activeUDR.SourceField = HHurfs.npo02__Source_Field__c;
+            panel.activeUDR.Operation = HHurfs.npo02__Field_Action__c;
+            panel.activeUDR.TargetObject = HHurfs.npo02__Object_Name__c;
+            panel.activeUDR.TargetField = HHurfs.npo02__Target_Field__c;
+
+            panel.activeUDR = panel.udrlist[0];
+            panel.activeUDR.deleteMe();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, npo02__User_Rollup_Field_Settings__c.getAll().size());
+            System.assertEquals(1, panel.udrlist.size());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verify if admin users can delete user rollup field settings
+    */
+    @isTest
+    private static void shouldAllowDeleteForUserRollupWhenUserHasAdminPermission() {
+        npo02__User_Rollup_Field_Settings__c HHurfs = setUpUserRollupFieldSettings();
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelUserRollup);
+        STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
+
+        panel.startBuild();
+
+        panel.activeUDR.SourceField = HHurfs.npo02__Source_Field__c;
+        panel.activeUDR.Operation = HHurfs.npo02__Field_Action__c;
+        panel.activeUDR.TargetObject = HHurfs.npo02__Object_Name__c;
+        panel.activeUDR.TargetField = HHurfs.npo02__Target_Field__c;
+
+        panel.activeUDR = panel.udrlist[0];
+        panel.activeUDR.deleteMe();
+        panel.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
+
+        System.assertEquals(0, npo02__User_Rollup_Field_Settings__c.getAll().size());
+        System.assertEquals(0, panel.udrlist.size());
+
+        Test.stopTest();
+    }
+
+    /**
+    * @description Verifies that the api value of the picklist will be converted into corresponding label
+    */
+    @isTest
+    private static void shouldConvertPicklistApiValueIntoLabelValue() {
+        System.runAs(UTIL_UnitTestData_TEST.createNonEnglishUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_STANDARD_USER)) {
+            Schema.DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe('OpportunityContactRole', 'Role');
+            String label = fieldResult.getPicklistValues()[0].getLabel();
+            String apiValue = fieldResult.getPicklistValues()[0].getValue();
+
+            Test.startTest();
+            String convertedLabel = STG_Panel.getPicklistLabelFromValue('OpportunityContactRole', 'Role', apiValue);
+            Test.stopTest();
+
+            System.assertEquals(label, convertedLabel, 'The api value should be correctly converted into the corressponding label');
+        }
     }
 
     /*********************************************************************************************************
     * @description Tests the Run RD Batch panel
     * @return void
     */
-    public static testMethod void testPanelRDBatch() {
+    @isTest
+    private static void testPanelRDBatch() {
         STG_PanelRDBatch_CTRL panel = new STG_PanelRDBatch_CTRL();
         system.assertEquals('idPanelRDBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -648,7 +1202,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the RD Custom Field Mapping panel
     * @return void
     */
-    public static testMethod void testPanelRDCustomFieldMapping() {
+    @isTest
+    private static void testPanelRDCustomFieldMapping() {
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
         system.assertEquals('idPanelRDFieldMap', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -684,7 +1239,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the RD Custom Installments panel
     * @return void
     */
-    public static testMethod void testPanelRDCustomInstallment() {
+    @isTest
+    private static void testPanelRDCustomInstallment() {
         STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
         system.assertEquals('idPanelRDInstPd', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -722,7 +1278,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Relationships panel
     * @return void
     */
-    public static testMethod void testPanelRel() {
+    @isTest
+    private static void testPanelRel() {
         STG_PanelRel_CTRL panel = new STG_PanelRel_CTRL();
         system.assertEquals('idPanelRel', panel.idPanel());
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = true;
@@ -767,7 +1324,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Automatic Relationships panel
     * @return void
     */
-    public static testMethod void testPanelRelAuto() {
+    @isTest
+    private static void testPanelRelAuto() {
         STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
         system.assertEquals('idPanelRelAuto', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -809,7 +1367,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Reciprocal Relationships panel
     * @return void
     */
-    public static testMethod void testPanelRelReciprocal() {
+    @isTest
+    private static void testPanelRelReciprocal() {
         STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
         system.assertEquals('idPanelRelReciprocal', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -847,7 +1406,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the User Defined Rollups panel
     * @return void
     */
-    public static testMethod void testPanelUserRollup() {
+    @isTest
+    private static void testPanelUserRollup() {
         STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
         system.assertEquals('idPanelUserRollup', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -909,7 +1469,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the User Rollup Settings panel
     * @return void
     */
-    public static testMethod void TEST_userRollupSettings() {
+    @isTest
+    private static void TEST_userRollupSettings() {
         Test.setCurrentPageReference(new PageReference('Page.STG_SettingsManager'));
 
         //pass the controller into the extension
@@ -1015,7 +1576,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Customizable Rollups CRLP panel
     * @return void
     */
-    public static testMethod void testPanelCRLP() {
+    @isTest
+    private static void testPanelCRLP() {
         STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
         System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
         System.assertEquals(true, panel.isAdmin);
@@ -1061,7 +1623,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Schedule panel
     * @return void
     */
-    public static testMethod void testPanelSchedule() {
+    @isTest
+    private static void testPanelSchedule() {
         STG_PanelSchedule_CTRL panel = new STG_PanelSchedule_CTRL();
         system.assertEquals('idPanelSchedule', panel.idPanel());
         STG_Panel.stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
@@ -1076,7 +1639,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Trigger Handler panel
     * @return void
     */
-    public static testMethod void testPanelTDTM() {
+    @isTest
+    private static void testPanelTDTM() {
         STG_PanelTDTM_CTRL panel = new STG_PanelTDTM_CTRL();
         system.assertEquals('idPanelTDTM', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -1116,7 +1680,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Error Log panel
     * @return void
     */
-    public static testMethod void testPanelErrorLog() {
+    @isTest
+    private static void testPanelErrorLog() {
         STG_PanelErrorLog_CTRL panel = new STG_PanelErrorLog_CTRL();
         system.assertEquals('idPanelErrorLog', panel.idPanel());
         UTIL_SoqlListView_CTRL slv = new UTIL_SoqlListView_CTRL();
@@ -1152,7 +1717,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Health Check panel
     * @return void
     */
-    public static testMethod void testPanelHealthCheck() {
+    @isTest
+    private static void testPanelHealthCheck() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
         system.assertEquals('idPanelHealthCheck', panel.idPanel());
         system.assertEquals(null, panel.runDetector());
@@ -1162,7 +1728,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Level Assignment Batch panel
     * @return void
     */
-    public static testMethod void testPanelLvlAssignBatch() {
+    @isTest
+    private static void testPanelLvlAssignBatch() {
         STG_PanelLvlAssignBatch_CTRL panel = new STG_PanelLvlAssignBatch_CTRL();
         system.assertEquals('idPanelLvlAssignBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -1174,7 +1741,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Remove Duplicate Primary OCRs Batch panel.
     * @return void
     */
-    public static testMethod void testPanelPanelPrimaryContactRoleMergeBatch() {
+    @isTest
+    private static void testPanelPanelPrimaryContactRoleMergeBatch() {
         STG_PanelPrimaryContactRoleMerge_CTRL panel = new STG_PanelPrimaryContactRoleMerge_CTRL();
         system.assertEquals('idPanelPrimaryContactRoleMergeBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -1183,4 +1751,122 @@ public with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
         system.assertEquals(true, panel.isRunningBatch);
     }
+
+    //Helper Methods
+    /**
+     * @description Builds a read only user with readonly profile
+     * @return User
+    */
+    private static User createReadOnlyUser() {
+        User usr = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        return usr;
+    }
+
+    /**
+    * @description create a instance of opportunity naming settings
+    * @return opportunity naming settings
+    */
+    private static Opportunity_Naming_Settings__c setUpOppNamingSettings() {
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+        return OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+
+    }
+
+    /**
+    * @description create a instance of custom field mapping settings
+    * @return custom field mapping
+    */
+    private static npe03__Custom_Field_Mapping__c setUpCustomFieldMapping() {
+        npe03__Custom_Field_Mapping__c settings = new npe03__Custom_Field_Mapping__c(
+            npe03__Recurring_Donation_Field__c = 'Name',
+            npe03__Opportunity_Field__c = 'Description',
+            Name = 'CFMName00001-Test'
+        );
+        insert settings;
+
+        return settings;
+
+    }
+
+    /**
+    * @description create a instance of custom installment settings
+    * @return custom installment settings
+    */
+    private static npe03__Custom_Installment_Settings__c setUpCustomInstallmentSettings() {
+        npe03__Custom_Installment_Settings__c settings = new npe03__Custom_Installment_Settings__c(
+            Name = 'TestInstallment',
+            npe03__Value__c = 10,
+            npe03__Increment__c = 'Days'
+        );
+        insert settings;
+
+        return settings;
+    }
+
+    /**
+    * @description create a instance of payment field mapping settings
+    * @return payment field mapping settings
+    */
+    private static npe01__Payment_Field_Mapping_Settings__c setUpPaymentFieldMapSettings() {
+        npe01__Payment_Field_Mapping_Settings__c settings = new npe01__Payment_Field_Mapping_Settings__c(
+            Name = 'TestMapping',
+            npe01__Opportunity_Field__c = 'Opportunity',
+            npe01__Payment_Field__c = 'npe01__OppPayment__c'
+        );
+        insert settings;
+
+        return settings;
+    }
+
+    /**
+    * @description create a instance of relationship lookup settings
+    * @return relationship lookup settings
+    */
+    private static npe4__Relationship_Lookup__c setUpRelationshipLookup() {
+        npe4__Relationship_Lookup__c settings = new npe4__Relationship_Lookup__c(
+            Name = 'TestMapping',
+            npe4__Male__c = 'bar',
+            npe4__Female__c = 'baz',
+            npe4__Neutral__c = 'byz'
+
+        );
+        insert settings;
+
+        return settings;
+    }
+
+    /**
+    * @description create a instance of relationship auto create settings
+    * @return relationship auto create settings
+    */
+     private static npe4__Relationship_Auto_Create__c setUpRelationshipAutoCreate() {
+        npe4__Relationship_Auto_Create__c settings = new npe4__Relationship_Auto_Create__c(
+            Name = 'TestMapping',
+            npe4__Object__c = 'Contact',
+            npe4__Field__c = 'ReportsToId',
+            npe4__Relationship_Type__c = 'coworker'
+
+        );
+        insert settings;
+
+        return settings;
+    }
+
+    /**
+    * @description create a instance of user roll up field settings
+    * @return user roll up field settings
+    */
+     private static npo02__User_Rollup_Field_Settings__c setUpUserRollupFieldSettings() {
+        npo02__User_Rollup_Field_Settings__c settings = new npo02__User_Rollup_Field_Settings__c(
+            Name = 'Household Test Rollup',
+            npo02__Target_Field__c = 'lastoppamount__c',
+            npo02__Source_Field__c = 'Amount',
+            npo02__Object_Name__c = 'npo02__Household__c',
+            npo02__Field_Action__c = 'MAX'
+        );
+        insert settings;
+
+        return settings;
+    }
+
 }

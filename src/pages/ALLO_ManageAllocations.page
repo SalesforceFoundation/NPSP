@@ -150,14 +150,16 @@
     })(jQuery);
 
     </script>
+
     <apex:form id="theForm">
         <div class="slds-scope">
             <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
                 parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}" parentRecordAction="/{!parentId}"
-                header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}"
-                saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}"/>
+                header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}" cancelReRender="cancelBTN" cancelDisabledOnClick="true"
+                saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}" saveDisabledOnClick="true"/>
+
             <c:UTIL_PageMessages id="messages"/>
             <div>
                 <apex:outputPanel id="theTable">

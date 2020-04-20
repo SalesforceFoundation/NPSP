@@ -1,0 +1,85 @@
+<template>
+    <article class="slds-card slds-card_extension slds-m-vertical_small">
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-grid_vertical-align-end">
+
+                <template if:false={isWidget}>
+                    <div class="slds-size_5-of-12 slds-p-right_small">
+                        <lightning-input class="slds-truncate"
+                                         data-name="customLabel"
+                                         field-level-help={labelHelpText}
+                                         label={field.label}
+                                         onblur={handleOnBlurCustomLabel}
+                                         onclick={stopPropagation}
+                                         type="text"
+                                         value={field.customLabel}
+                                         data-qa-locator={qaLocatorInputFieldLabel}>
+                        </lightning-input>
+                    </div>
+                </template>
+
+                <div class="slds-size_5-of-12 slds-p-right_small">
+                    <c-util-input type={field.dataType}
+                                  form-field-type={field.elementType}
+                                  field-api-name={fieldApiName}
+                                  object-api-name={targetObjectApiName}
+                                  label={field.customLabel}
+                                  default-value={field.defaultValue}
+                                  value={field.value}
+                                  variant="label-hidden"
+                                  onchangevalue={handleOnChange}
+                                  data-qa-locator={qaLocatorInputDefaultValue}>
+                    </c-util-input>
+                </div>
+
+                <template if:true={isWidget}>
+                    <div class="slds-size_5-of-12 slds-p-right_small"></div>
+                </template>
+
+                <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
+                    <template if:false={isWidget}>
+                        <lightning-input aria-label="Required"
+                                         checked={isRequired}
+                                         data-name="required"
+                                         disabled={field.isRequiredFieldDisabled}
+                                         onchange={handleOnChangeRequiredField}
+                                         onclick={stopPropagation}
+                                         type="checkbox"
+                                         variant="label-hidden"
+                                         data-qa-locator={qaLocatorCheckboxRequired}>
+                        </lightning-input>
+                    </template>
+                </div>
+
+                <div class="slds-size_1-of-12 slds-p-bottom_x-small">
+                    <div class="slds-float_right">
+                        <lightning-button-icon class="slds-m-right_xxx-small "
+                                               icon-name="utility:delete"
+                                               alternative-text={labelGeAssistiveFormFieldRemove}
+                                               size="x-small"
+                                               onclick={handleDeleteFormElement}
+                                               disabled={isDisabled}
+                                               data-qa-locator={qaLocatorButtonDelete}>
+                        </lightning-button-icon>
+                        <lightning-button-icon class="slds-m-right_xxx-small "
+                                               icon-name="utility:chevronup"
+                                               alternative-text={labelGeAssistiveFormFieldUp}
+                                               size="x-small"
+                                               onclick={handleFormElementUp}
+                                               disabled={isFirst}
+                                               data-qa-locator={qaLocatorButtonUp}>
+                        </lightning-button-icon>
+                        <lightning-button-icon icon-name="utility:chevrondown"
+                                               alternative-text={labelGeAssistiveFormFieldDown}
+                                               size="x-small"
+                                               onclick={handleFormElementDown}
+                                               disabled={isLast}
+                                               data-qa-locator={qaLocatorButtonDown}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </article>
+</template>

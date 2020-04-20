@@ -5,7 +5,7 @@ project:
         name: Cumulus
         name_managed: Nonprofit Success Pack
         namespace: npsp
-        api_version: 46.0
+        api_version: 47.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
@@ -36,6 +36,7 @@ tasks:
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
         class_path: cumulusci.tasks.util.DownloadZip
+        group: Performance Tests
         options:
             dir: ldv_tests
             subfolder: Cumulus-LDV-Tests-master
@@ -44,18 +45,21 @@ tasks:
     deploy_ldv_tests:
         description: Deploy the LDV-Tests repo to your org.
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Performance Tests
         options:
             path: ldv_tests/src
 
     deploy_dev_config:
         description: Deploys the post-install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
         options:
             path: unpackaged/config/dev
 
     deploy_trial_config:
         description: Deploys the post-install configuration for a trial/new org.
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
         options:
             path: unpackaged/config/trial
             namespace_inject: $project_config.project__package__namespace
@@ -63,6 +67,7 @@ tasks:
     deploy_qa_config:
         description: Deploys additional fields used for QA purposes only
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
         options:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
@@ -70,6 +75,7 @@ tasks:
     retrieve_qa_config:
         description: Retrieves additional fields used for QA purposes
         class_path: cumulusci.tasks.salesforce.sourcetracking.RetrieveChanges
+        group: Salesforce Metadata
         options:
             path: unpackaged/config/qa
             namespace_tokenize: $project_config.project__package__namespace
@@ -78,6 +84,7 @@ tasks:
     deploy_qa_namespaced_config:
         description: Deploys additional configuration required for namespaced QA orgs
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
         options:
             path: unpackaged/config/qa_namespaced
             namespace_inject: $project_config.project__package__namespace
@@ -85,6 +92,7 @@ tasks:
     deploy_qa_bdi_metadata_config:
         description: Deploys Custom Metadata for BDI QA
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: NPSP
         options:
             path: unpackaged/config/qa_bdi_custom_metadata
             namespace_inject: $project_config.project__package__namespace
@@ -92,6 +100,7 @@ tasks:
     deploy_regression_bdi_metadata_config:
         description: Deploys Custom Metadata for BDI Regression
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: NPSP
         options:
             path: unpackaged/config/regression_bdi_custom_metadata
             namespace_inject: $project_config.project__package__namespace
@@ -99,6 +108,7 @@ tasks:
     deploy_rd2_config:
         description: Deploys updates to fully enable Enhanced Recurring Donations
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: NPSP
         options:
             path: unpackaged/config/rd2_post_config
             namespace_inject: $project_config.project__package__namespace
@@ -106,6 +116,7 @@ tasks:
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: NPSP
         options:
             path: unpackaged/config/reports
             namespace_inject: $project_config.project__package__namespace
@@ -113,13 +124,23 @@ tasks:
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post-install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
         options:
             path: unpackaged/config/delete
+
+    deploy_trial_translations:
+        description: Deploys the translations for trial configured organizations
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: NPSP
+        options:
+            path: unpackaged/config/trial_translations
+            namespace_inject: $project_config.project__package__namespace
 
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
         class_path: cumulusci.tasks.salesforce.EnsureRecordTypes
+        group: NPSP
         options:
             record_type_label: NPSP Default
             record_type_developer_name: NPSP_Default
@@ -128,6 +149,7 @@ tasks:
     is_rd2_enabled:
         description: This preflight check ensures that Enhanced Recurring Donations is enabled
         class_path: tasks.is_rd2_enabled
+        group: NPSP
 
     robot:
         options:
@@ -163,12 +185,14 @@ tasks:
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Org Config
         options:
             path: unpackaged/config/platformencryption_permset
             namespace_inject: $project_config.project__package__namespace
 
     platformencryption_assign_permset:
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: Org Config
         options:
             apex: >
                 PermissionSet p = [
@@ -184,12 +208,14 @@ tasks:
 
     platformencryption_create_tenant_secret:
         description: 'Create a placeholder Tenant Secret to use Platform Encryption'
+        group: Org Config
         class_path: cumulusci.tasks.sfdx.SFDXOrgTask
         options:
             command: 'force:data:record:create -s TenantSecret -v "Description=test"'
 
     platformencryption_deploy_field_configuration:
         class_path: cumulusci.tasks.salesforce.Deploy
+        group: Org Config
         options:
             path: unpackaged/config/platformencryption_fields
             namespace_inject: $project_config.project__package__namespace
@@ -206,6 +232,7 @@ tasks:
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
         class_path: cumulusci.tasks.bulkdata.LoadData
+        group: Test Data
         options:
             sql_path: 'datasets/dev_org/test_data.sql'
             mapping: 'datasets/mapping.yml'
@@ -213,6 +240,7 @@ tasks:
     test_data_1k:
         description: 'Loads a test data set for most NPSP objects based on 1024 Contacts'
         class_path: cumulusci.tasks.bulkdata.LoadData
+        group: Test Data
         options:
             sql_path: 'datasets/1k/test_data.sql'
             mapping: 'datasets/mapping.yml'
@@ -220,6 +248,7 @@ tasks:
     test_data_100k:
         description: 'Loads a test data set for most NPSP objects based on 102400 Contacts.  NOTE: The sqlite data set is not included in the repo for this task so you need to load it into the correct filesystem location'
         class_path: cumulusci.tasks.bulkdata.LoadData
+        group: Test Data
         options:
             database_url: 'sqlite:///datasets/100k/test_data.db'
             mapping: 'datasets/100k/mapping.yml'
@@ -227,6 +256,7 @@ tasks:
     test_data_delete:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
         class_path: cumulusci.tasks.bulkdata.DeleteData
+        group: Test Data
         options:
             objects:
                 - Opportunity
@@ -243,6 +273,7 @@ tasks:
     test_data_relationships:
         description: 'Runs execute anonymous to insert the default relationships'
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: NPSP
         options:
             apex: >
                 List<npe4__Relationship_Lookup__c> defaultRelationships = new List<npe4__Relationship_Lookup__c>{
@@ -273,6 +304,7 @@ tasks:
     test_data_delete_managed:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
         class_path: cumulusci.tasks.bulkdata.DeleteData
+        group: Test Data
         options:
             objects:
                 - Opportunity
@@ -290,6 +322,7 @@ tasks:
     npsp_default_settings:
         description: Configure the default NPSP Settings including Membership RecordType
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: NPSP
         options:
             path: scripts/configure_npsp_default_settings.cls
             apex: initializeNPSPSettings();
@@ -297,12 +330,14 @@ tasks:
     enable_customizable_rollups:
         description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only)
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: NPSP
         options:
             apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
 
     enable_incremental_rollups:
         description: Configure NPSP Customizable Rollups to activate Incremental Rollups (unmanaged deploys only)
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: NPSP
         options:
             apex: >
                 STG_SettingsService.stgService.stgCRLP.AccountHardCreditNonSkew_Incremental__c = true;
@@ -312,6 +347,7 @@ tasks:
     add_second_currency:
         description: Add CAD as a 2nd currency for a multicurrency org
         class_path: tasks.multicurrency.ConfigureCAD
+        group: Org Config
 
     uninstall_packaged_incremental:
         description: Deletes any metadata from the package in the target org not in the local workspace
@@ -333,6 +369,7 @@ tasks:
     enable_pilot_in_scratch_org:
         description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: NPSP
         options:
             apex: >
                 %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
@@ -350,6 +387,7 @@ tasks:
     cleanup_translation_metadata:
         description: Delete extraneous and translation-excluded metadata from translation files after using retrieve_unpackaged to pull down cleaned translations from a scratch org.
         class_path: cumulusci.tasks.metadata.modify.RemoveElementsXPath
+        group: NPSP
         options:
             output_style: salesforce
             elements:
@@ -478,7 +516,7 @@ tasks:
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Stage__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
@@ -503,6 +541,17 @@ tasks:
                   xpath: //ns:fields/ns:help[../ns:name='DonationCampaignImported__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
+
+    set_user_language:
+        description: Update the language of the Current User to the specified language as '-o param1 English' (Other languages are are Spanish, French, German and Dutch).
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: Org Config
+        options:
+            apex: >-
+                User u = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
+                Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'english' => 'en_US', 'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL' };
+                u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
+                Update u;
 
 
 flows:
@@ -579,6 +628,7 @@ flows:
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
+        group: NPSP
         steps:
             1:
                 task: deploy
@@ -588,21 +638,49 @@ flows:
                 task: update_admin_profile
 
     deploy_rd2_testing:
-        description: 'Configure everything for enhanced recurring donations testing in a scratch org'
+        description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
+        group: NPSP
         steps:
             1:
-                task: enable_customizable_rollups
-            2:
-                task: enable_pilot_in_scratch_org
-            3:
                 task: execute_anon
+                # Enables RD2 in Custom Settings. Do this before enabling CRLP so it does not create a rollup for NextDonationDate.
                 options:
                     apex: >
                         npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
                         rdSettings.%%%NAMESPACE%%%isRecurringDonations2Enabled__c = true;
                         upsert rdSettings;
-            4:
+            2:
+                task: enable_customizable_rollups
+                # Enable customizable rollups after enabling RD2
+            3:
                 task: deploy_rd2_config
+                # Deploys the unpackaged configuration required for RD2
+            4:
+                task: custom_settings_value_wait
+                # Wait for CRLP to be fully enabled before continuing with data migration
+                options:
+                    object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
+                    field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
+                    value: true
+            5:
+                task: execute_anon
+                # Execute the data migration job in case there is any RD test data in the org
+                options:
+                    apex: >
+                        %%%NAMESPACE%%%RD2_DataMigration_BATCH rdMigrationBatch = new %%%NAMESPACE%%%RD2_DataMigration_BATCH();
+                        Database.executeBatch(rdMigrationBatch, rdMigrationBatch.batchSize);
+            6:
+                task: batch_apex_wait
+                # Wait until after the data migration job has completed
+                options:
+                    class_name: RD2_DataMigration_BATCH
+            7:
+                task: execute_anon
+                # Execute the nightly job to update the RD records as needed
+                options:
+                    apex: >
+                        %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH();
+                        Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
 
     config_managed:
         steps:
@@ -638,6 +716,7 @@ flows:
 
     config_offsetfiscal:
         description: 'Configure an offset fiscal year'
+        group: Org Config
         steps:
             1:
                 task: deploy
@@ -646,12 +725,14 @@ flows:
 
     config_multicurrency:
         description: 'Configure a second currency'
+        group: Org Config
         steps:
             1:
                 task: add_second_currency
 
     config_platformencryption:
         description: 'Configure Platform Encryption org to encrypt standard fields'
+        group: Org Config
         steps:
             1:
                 task: platformencryption_deploy_permset
@@ -664,6 +745,7 @@ flows:
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
+        group: Test Data
         steps:
             1:
                 task: test_data_delete
@@ -672,6 +754,7 @@ flows:
 
     test_data_dev_org_managed:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
+        group: Test Data
         steps:
             1:
                 task: test_data_delete_managed
@@ -682,6 +765,7 @@ flows:
 
     test_data_1k:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
+        group: Test Data
         steps:
             1:
                 task: test_data_delete
@@ -690,6 +774,7 @@ flows:
 
     ldv_tests:
         description: 'Deploys and runs LDV tests'
+        group: Performance Tests
         steps:
             1:
                 task: download_ldv_tests
@@ -718,6 +803,7 @@ flows:
 
     test_performance_LDV:
         description: 'Runs BDI performance tests against a pre-existing org'
+        group: Performance Tests
         steps:
             1:
                 task: test_performance
@@ -731,19 +817,38 @@ flows:
                 task: ensure_record_type
 
     rd2_pilot_org:
+        group: NPSP
         steps:
             1:
                 flow: install_prod
             2:
-                task: enable_pilot_in_scratch_org
-                options:
-                    managed: True
-            3:
                 task: load_dataset
                 options:
                     mapping: datasets/rd2_pilot/mapping_managed.yml
                     sql_path: datasets/rd2_pilot/data.sql
                     database_url: ""
+
+    create_testing_user:
+        description: Creates a testing User assigned a new NPSP_Standard_User profile with access to all NPSP objects & fields. Perfect for testing security with a non-system admin type User. Use with the "qa_org" flow.
+        group: NPSP
+        steps:
+            1:
+                task: deploy
+                options:
+                    namespace_inject: $project_config.project__package__namespace
+                    path: unpackaged/config/npsp_standard_user_profile
+            2:
+                task: update_admin_profile
+                options:
+                    namespace_inject: $project_config.project__package__namespace
+                    profile_name: NPSP_Standard_User
+                    package_xml: lib/npsp_standard_user_profile.xml
+            3:
+                task: execute_anon
+                options:
+                    path: scripts/New_Testing_User.cls
+                    apex: createTestingUser();
+
 
 orgs:
     scratch:
@@ -758,6 +863,8 @@ orgs:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
             config_file: orgs/beta_multicurrency.json
+        beta_nonenglish:
+            config_file: orgs/beta_nonenglish.json
         beta_personaccounts:
             config_file: orgs/beta_personaccounts.json
         beta_platformencryption:
@@ -766,6 +873,9 @@ orgs:
             config_file: orgs/beta_statecountry.json
         prerelease:
             config_file: orgs/prerelease.json
+        prerelease_namespaced:
+            config_file: orgs/prerelease.json
+            namespaced: True
         trial:
             config_file: orgs/trial.json
         enterprise:
@@ -839,7 +949,7 @@ plans:
                         name: NPSP Reports & Dashboards
                         is_required: False
     rd2:
-        slug: npsp-rd2-pilot
+        slug: enhanced-recurring-donations
         title: Enhanced Recurring Donations Metadata Updates
         tier: additional
         is_listed: False

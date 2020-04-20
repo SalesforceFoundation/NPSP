@@ -18,9 +18,19 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
+        <help>支援エントリのバッチのデフォルト項目値。直接編集しないでください。これは、バッチを編集する UI で更新する必要があります。</help>
+        <label>バッチのデフォルト</label>
+        <name>Batch_Defaults__c</name>
+    </fields>
+    <fields>
         <help>このバッチの説明 (省略可能)。</help>
         <label>バッチ説明</label>
         <name>Batch_Description__c</name>
+    </fields>
+    <fields>
+        <help>このバッチの作成に使用するバッチ支援エントリ機能のバージョン。</help>
+        <label>バッチ支援エントリバージョン</label>
+        <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
         <help>各バッチで一度に処理されるレコードの数。</help>
@@ -90,6 +100,12 @@
         <help>このバッチで入力が予測されているすべての支援の総額。</help>
         <label>予測合計バッチ金額</label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <help>このバッチの支援エントリフォームで使用するテンプレート。</help>
+        <label>フォームテンプレート</label>
+        <name>Form_Template__c</name>
+        <relationshipLabel>NPSP データインポートバッチ</relationshipLabel>
     </fields>
     <fields>
         <help>このバッチは、バッチ支援エントリでの使用を想定しています。[バッチ支援エントリ] タブでバッチを設定すると、自動的に支援バッチとなります。この項目を手動で変更すると、意図しない結果を生むことがあります。</help>

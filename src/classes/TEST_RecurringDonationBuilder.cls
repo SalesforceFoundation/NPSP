@@ -284,13 +284,11 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets number of Installments
-    * @param numberOfInstallments Number of Installments
+    * @description Sets Number of Planned Installments for a Fixed Length RD
+    * @param numberOfInstallments Number of Planned Installments
     * @return TEST_RecurringDonationBuilder Builder instance
     */
-    public TEST_RecurringDonationBuilder withInstallments(Integer numberOfInstallments) {
-        validateMode(Mode.Legacy);
-
+    public TEST_RecurringDonationBuilder withPlannedInstallments(Integer numberOfInstallments) {
         valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
         return this;
     }
@@ -308,13 +306,11 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Paid Installments
-    * @param Total Paid installments
+    * @description Sets Number of Paid Installments (a Rollup Field used by both Legacy and Enhanced)
+    * @param Total Number of Paid installments
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withPaidInstallments(Integer installment) {
-        validateMode(Mode.Enhanced);
-
         valuesByFieldName.put('npe03__Total_Paid_Installments__c', installment);
         return this;
     }
@@ -324,7 +320,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodYearly() {
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodYearly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
     }
 
     /***
@@ -334,7 +330,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     public TEST_RecurringDonationBuilder withInstallmentPeriodQuarterly() {
         validateMode(Mode.Legacy);
 
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
     }
 
     /***
@@ -342,7 +338,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodMonthly() {
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodMonthly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
     }
 
     /***
@@ -350,7 +346,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodWeekly() {
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodWeekly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
     }
 
     /***
@@ -368,7 +364,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
-        return withScheduleType(System.Label.npe03.RecurringDonationMultiplyValue);
+        return withScheduleType(RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY);
     }
 
     /***
@@ -388,7 +384,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatusOpen() {
-        return withOpenEndedStatus(System.Label.npe03.RecurringDonationOpenStatus);
+        return withOpenEndedStatus(RD_Constants.OPEN_ENDED_STATUS_OPEN);
     }
 
     /***
@@ -396,7 +392,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatusClosed() {
-        return withOpenEndedStatus(System.Label.npe03.RecurringDonationClosedStatus);
+        return withOpenEndedStatus(RD_Constants.OPEN_ENDED_STATUS_CLOSED);
     }
 
     /***
@@ -462,6 +458,15 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @param recurringType Recurring Type value
     * @return TEST_RecurringDonationBuilder Builder instance
     */
+    public TEST_RecurringDonationBuilder withRecurringTypeFixed() {
+        return withRecurringType(RD2_Constants.RECURRING_TYPE_FIXED);
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
     public TEST_RecurringDonationBuilder withRecurringType(String recurringType) {
         validateMode(Mode.Enhanced);
 
@@ -476,8 +481,6 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withNextDonationDate(Date dt) {
-        validateMode(Mode.Enhanced);
-
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
         return this;
     }
@@ -521,8 +524,8 @@ public without sharing class TEST_RecurringDonationBuilder {
         }
 
         if (calculateNextDonationDate) {
-            RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
+            new RD2_RecurringDonation(rd)
+                .reviseNextDonationDateBeforeInsert(new RD2_ScheduleService());
         }
 
         return rd;
@@ -621,5 +624,37 @@ public without sharing class TEST_RecurringDonationBuilder {
         rdRecord += '}';
 
         return (npe03__Recurring_Donation__c)JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
+    }
+
+    /**
+     * @description Builds a fully mocked RecurringDonation record with subqueries on Opportunities and Schedules. This is
+     * used to support mocked tests against the RD2_OpportunityEvaluationService without having to insert any records.
+     * @param rd Mocked Recurring Donation using TEST_RecurringDonationBuilder
+     * @param opps Mocked Related Opportunties (or an empty collection)
+     * @param schedules Mockked RecurringDonationSchedule records (can be built using the RD2_ScheduleService)
+     * @return RecurringDonation with the Subqueries fully populated.
+     */
+    public static npe03__Recurring_Donation__c mockRecurringDonationFullQueryResult(npe03__Recurring_Donation__c rd,
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
+
+        if (opps == null) {
+            opps = new List<Opportunity>();
+        }
+
+        if (schedules == null) {
+            schedules = new List<RecurringDonationSchedule__c>();
+        }
+
+        Contact contact = new Contact(
+            Id = rd.npe03__Contact__c,
+            AccountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
+            LastName = UTIL_UnitTestData_TEST.getUniqueString()
+        );
+
+        rd = addForeignKey(rd, 'npe03__Contact__r', contact);
+        rd = addRelatedList(rd, 'npe03__Donations__r', opps);
+        rd = addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
+
+        return rd;
     }
 }

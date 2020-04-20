@@ -13,9 +13,7 @@
     </div>
 
     <apex:form id="form">
-        <apex:actionFunction name="refreshPanels" 
-            action="{!refreshPanels}" 
-            reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
+        <apex:actionFunction name="refreshPanels" action="{!refreshPanels}" reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
             status="statusLoad" />
     </apex:form>
 
@@ -24,14 +22,18 @@
         if (!namespace || namespace === '') {
             namespace = 'c';
         }
+
+        var isSimpleVersion = {!isSimpleVersion};
+        var compName = namespace + (isSimpleVersion === true ? ':RD2_EnablementDelegateSimple' : ':RD2_EnablementDelegate');
+
         $Lightning.use(namespace + ":RD2_EnablementApp", function () {
             $Lightning.createComponent(
-                namespace + ":RD2_EnablementDelegate",
+                compName,
                 {},
                 "enablementDelegateDiv",
                 function () {
                     $A.eventService.addHandler({
-                        "event": "c:RD2_EnhancementEnabledEvent",
+                        "event": namespace + ":RD2_EnhancementEnabledEvent",
                         "handler": refreshPanels
                     });
                 }

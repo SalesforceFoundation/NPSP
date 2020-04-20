@@ -55,6 +55,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use, 0);
     }
 
     /**
@@ -96,6 +97,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use, null);
     }
 
     /**

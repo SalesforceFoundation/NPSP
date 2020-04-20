@@ -1,0 +1,99 @@
+<template>
+    <div class='slds-card slds-card_extension'
+         if:false={isAccessible}>
+        <div class='slds-p-top_x-large'>
+            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
+                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
+                                 size='large'
+                                 variant='lake-mountain'>
+            </c-util-illustration>
+        </div>
+    </div>
+
+    <template if:true={isAccessible}>
+        <lightning-layout multiple-rows='true'
+                          class='ge-form-container slds-p-bottom_medium'>
+            <template if:true={isSingleGiftEntry}>
+                <lightning-layout-item size='12'>
+                    <c-util-page-header pretext={CUSTOM_LABELS.geHeaderSingleGiftEntry}
+                                        title={title}
+                                        icon-name='standard:contract'
+                                        icon-size='medium'>
+                    </c-util-page-header>
+                </lightning-layout-item>
+            </template>
+
+            <template if:false={isPermissionError}>
+                <template if:true={hasPendingDonations}>
+                    <lightning-layout-item size='12'>
+                        <c-ge-review-donations ontogglemodal={toggleModal}
+                                               onchangeselecteddonation={handleChangeSelectedDonation}
+                                               opportunities={opportunities}
+                                               donor-id={selectedDonorId}
+                                               selected-donation={selectedDonation}>
+                        </c-ge-review-donations>
+                    </lightning-layout-item>
+                </template>
+            </template>
+
+            <lightning-layout-item size='12'
+                                   class='slds-card slds-p-around_small'>
+                <template if:true={hasPageLevelError}>
+                    <c-util-page-level-message variant='error'>
+                        <ul slot='body'
+                            class='slds-list_dotted slds-text-color_error'>
+                            <template for:each={pageLevelErrorMessageList}
+                                      for:item='errorMessageWrapper'>
+                                <li key={errorMessageWrapper.index}>
+                                    {errorMessageWrapper.errorMessage}
+                                </li>
+                            </template>
+                        </ul>
+                    </c-util-page-level-message>
+                </template>
+                <template if:true={isPermissionError}>
+                    <div class="illustrationContainer">
+                        <c-util-illustration title={permissionErrorTitle}
+                                            message={permissionErrorMessage}
+                                            size='large'
+                                            variant='lake-mountain'>
+                        </c-util-illustration>
+                    </div>
+                </template>
+                <template if:false={isPermissionError}
+                          for:each={sections}
+                          for:item='section'>
+                    <c-ge-form-section key={section.id}
+                                       section={section}
+                                       onlookuprecordselect={handleLookupRecordSelect}
+                                       onchangedonationdonor={handleChangeDonationDonor}
+                                       widget-data={widgetData}>
+                    </c-ge-form-section>
+                </template>
+
+                <article if:false={isPermissionError} class='slds-align_absolute-center slds-p-vertical_small'>
+                    <lightning-button label={cancelButtonText}
+                                      title={cancelButtonText}
+                                      onclick={handleCancel}
+                                      class='slds-m-left_x-small'>
+                    </lightning-button>
+                    <lightning-button variant='brand'
+                                      label={saveActionLabel}
+                                      title={saveActionLabel}
+                                      onclick={handleSave}
+                                      class='slds-m-left_x-small'
+                                      disabled={isUpdateActionDisabled}>
+                    </lightning-button>
+                </article>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <div if:true={showSpinner}
+             class='spinnerContainer'>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
+                               variant='brand'
+                               size='large'>
+            </lightning-spinner>
+        </div>
+    </template>
+</template>

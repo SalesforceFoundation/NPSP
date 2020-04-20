@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2017, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -34,8 +34,78 @@
 * @description Utility for Profiles
 */
 public class UTIL_Profile {
+
     /** @description System Administrator Profile Name */
-    public static final String SYSTEM_ADMINISTRATOR = 'System Administrator';
+    public static final String SYSTEM_ADMINISTRATOR {
+        get {
+            switch on (UserInfo.getLanguage()) {
+                when 'es' {
+                    return 'Administrador del sistema';
+                }
+                when 'de' {
+                    return 'Systemadministrator';
+                }
+                when 'ja' {
+                    return 'システム管理者';
+                }
+                when 'fr' {
+                    return 'Administrateur système';
+                }
+                when 'NL_nl' {
+                    return 'Systeembeheerder';
+                }
+            }
+            return 'System Administrator';
+        }
+    }
+
+    /** @description Read Only Profile Name */
+    public static final String PROFILE_STANDARD_USER {
+        get {
+            switch on (UserInfo.getLanguage()) {
+                when 'es' {
+                    return 'Usuario estándar';
+                }
+                when 'de' {
+                    return 'Lesezugriff';
+                }
+                when 'ja' {
+                    return '標準ユーザ';
+                }
+                when 'fr' {
+                    return 'Utilisateur standard';
+                }
+                when 'NL_nl' {
+                    return 'Standaardgebruiker';
+                }
+            }
+            return 'Standard User';
+        }
+    }
+
+    /** @description Read Only Profile Name */
+    public static final String PROFILE_READ_ONLY {
+        get {
+            switch on (UserInfo.getLanguage()) {
+                when 'es' {
+                    return 'Sólo lectura';
+                }
+                when 'de' {
+                    return 'Standardbenutzer';
+                }
+                when 'ja' {
+                    return '参照のみ';
+                }
+                when 'fr' {
+                    return 'Lecture seule';
+                }
+                when 'NL_nl' {
+                    return 'Alleen-lezen';
+                }
+            }
+            return 'Read Only';
+        }
+    }
 
     /** @description static instance of the current class (UTIL_Profile). It is used as the instance in a Singleton context */
     private static UTIL_Profile utilProfile;

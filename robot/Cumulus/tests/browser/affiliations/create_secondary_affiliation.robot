@@ -30,8 +30,8 @@ Create Secondary Affiliation for Contact
     Populate Modal Form                  Organization=&{account}[Name]
     Click Modal Button                   Save
     Wait Until Modal Is Closed
-    Select Tab                           Related
-    Verify Occurrence                    Organization Affiliations        1
+    Validate Related Record Count        Organization Affiliations          1
     Verify Allocations                   Organization Affiliations        &{account}[Name]=Current 
-    Click Related Item Link              Organization Affiliations        &{account}[Name]
+    Click Related Table Item Link        Organization Affiliations        &{account}[Name]
+    Current Page Should Be               Details                          npe5__Affiliation__c
     Save Current Record ID For Deletion  npe5__Affiliation__c    

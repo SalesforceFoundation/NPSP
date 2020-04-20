@@ -35,7 +35,7 @@
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = CAO_Constants.OCR_DONOR_ROLE;
     public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     public static final Integer DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE = 1000;
@@ -59,6 +59,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c dataImportSettings;
     static Customizable_Rollup_Settings__c customizableRollupSettings;
     static Levels_Settings__c levelsSettings;
+    static Gift_Entry_Settings__c giftEntrySettings;
 
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -74,6 +75,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c orgDataImportSettings;
     static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
     static Levels_Settings__c orgLevelsSettings;
+    static Gift_Entry_Settings__c orgGiftEntrySettings;
+
 
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after
@@ -292,6 +295,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
     * in the database.
     */
+    @AuraEnabled
     public static Data_Import_Settings__c getDataImportSettings() {
         if(Test.isRunningTest() && dataImportSettings == null) {
             dataImportSettings = new Data_Import_Settings__c();
@@ -305,6 +309,25 @@ public without sharing class UTIL_CustomSettingsFacade {
         // we'll only config those setting that are null
         configDataImportSettings(dataImportSettings);
         return dataImportSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Gift Entry Settings.
+    * @return Gift_Entry_Settings Custom settings record for Gift Entry Settings. At the org level, if no user level
+    * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
+    * in the database.
+    */
+    public static Gift_Entry_Settings__c getGiftEntrySettings() {
+        if(Test.isRunningTest() && giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_Settings__c();
+        } else if (giftEntrySettings == null) {
+            giftEntrySettings = Gift_Entry_Settings__c.getInstance();
+            if (giftEntrySettings.Id == null){
+                giftEntrySettings = getOrgGiftEntrySettings();
+            }
+        }
+       
+        return giftEntrySettings;
     }
 
     /*******************************************************************************************************
@@ -502,6 +525,28 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     /*******************************************************************************************************
+    * @description Returns the org-level Gift Entry settings. Default org-level settings will be created
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Gift_Entry_Settings__c Org-level settings for Gift Entry.
+    */
+    public static Gift_Entry_Settings__c getOrgGiftEntrySettings() {
+        if (orgGiftEntrySettings == null) {
+            orgGiftEntrySettings = Gift_Entry_Settings__c.getOrgDefaults();
+
+            if (orgGiftEntrySettings.Id == null) {
+                orgGiftEntrySettings.Setupownerid = UserInfo.getOrganizationId();
+                if (!Test.isRunningTest()) {
+                    upsert orgGiftEntrySettings;
+                }
+
+            }
+        }
+        return orgGiftEntrySettings;
+    }
+
+
+
+    /*******************************************************************************************************
      * Private methods that will configure the default org-level custom settings.
      **/
     private static void configContactsSettings(npe01__Contacts_And_Orgs_Settings__c cs) {
@@ -548,7 +593,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         }
 
-        hs.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
+        hs.npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE;
         hs.npo02__Always_Rollup_to_Primary_Contact__c = false;
         hs.npo02__Enable_Opp_Rollup_Triggers__c = true;
         hs.npo02__Excluded_Account_Opp_Rectypes__c = null;
@@ -588,12 +633,15 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Opportunity_Forecast_Months__c = 12;
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
+            settings.InstallmentOppAutoCreateOption__c = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
             settings.DisableRollupsWhenCreatingInstallments__c = false;
+            settings.NextDonationDateMatchRangeDays__c = RD2_Constants.DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS;
 
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
+            settings.UseFiscalYearForRecurringDonationValue__c = false;
 
-            List<RecordType> oppRecordTypes = [select id from RecordType where SObjectType = 'Opportunity' and IsActive = true];
+            List<RecordType> oppRecordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND IsActive = true];
             if (oppRecordTypes.size() > 0) {
                 settings.npe03__Record_Type__c = oppRecordTypes[0].id;
             }
@@ -667,7 +715,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             dis.Donation_Date_Range__c = 0;
         }
         if (dis.Default_Data_Import_Field_Mapping_Set__c == null) {
-            dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+            dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         }
         if (dis.Field_Mapping_Method__c  == null) {
             dis.Field_Mapping_Method__c  = BDI_DataImportService.FM_HELP_TEXT;
@@ -845,10 +893,13 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
-        recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
+        recurringDonationsSettings.UseFiscalYearForRecurringDonationValue__c = settings.UseFiscalYearForRecurringDonationValue__c;
+        recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
+        recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
         recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
+        recurringDonationsSettings.NextDonationDateMatchRangeDays__c = settings.NextDonationDateMatchRangeDays__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
@@ -875,6 +926,19 @@ public without sharing class UTIL_CustomSettingsFacade {
 
       orgHouseholdNamingSettings = householdNamingSettings;
       return householdNamingSettings;
+    }
+
+    public static Gift_Entry_Settings__c getGiftEntrySettingsForTests(Gift_Entry_Settings__c myGiftEntrySettings) {
+        if (giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_Settings__c();
+        }
+
+        giftEntrySettings.Default_Gift_Entry_Template__c = myGiftEntrySettings.Default_Gift_Entry_Template__c;
+
+        orgGiftEntrySettings = giftEntrySettings;
+
+        return giftEntrySettings;
+
     }
 
     /*******************************************************************************************************
@@ -1025,7 +1089,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         Data_Import_Settings__c dis = getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c =
-                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         setDataImportSettings(dis);
     }
 

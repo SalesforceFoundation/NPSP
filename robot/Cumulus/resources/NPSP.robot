@@ -166,100 +166,24 @@ New Contact for HouseHold
     Wait Until Modal Is Closed
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
-    Wait Until Location Contains    /view
+    Current Page Should be    Details    Contact
     ${contact_id} =           Save Current Record ID For Deletion      Contact
-    [return]                  ${contact_id} 
-        
-    
-Create Opportunities
-    [Arguments]    ${opp_name}    ${hh_name}    ${stage}
-    Populate Form
-    ...                       Opportunity Name= ${opp_name}
-    ...                       Amount=100 
-    Select Value From Dropdown    Stage    ${stage}
-    Populate Lookup Field    Account Name    ${hh_name}
-    Open Date Picker    Close Date
-    Pick Date    Today
-    Set Checkbutton To    Do Not Automatically Create Payment    checked
-    Click Modal Button        Save
-
-Create Engagement Plan
-    ${plan_name} =     Generate Random String
-    Select App Launcher Tab  Engagement Plan Templates
-    Click Special Object Button       New
-    Wait For Locator    frame    Manage Engagement Plan Template
-    # Choose Frame    Manage Engagement Plan Template
-    # Wait For Locator    id    idName
-    Select Frame And Click Element    Manage Engagement Plan Template    id    idName
-    Enter Eng Plan Values    idName    ${plan_name}
-    Enter Eng Plan Values    idDesc    This plan is created via Automation  
-    Click Button    Add Task
-    Wait Until Page Contains  Task 1
-    Enter Task Id and Subject    Task 1    ${task1}
-    Click Task Button    1    Add Dependent Task
-    Enter Task Id and Subject    Task 1-1    ${sub_task}
-    Click Button    Add Task
-    Wait Until Page Contains  Task 2
-    Enter Task Id and Subject    Task 2    ${task2}
-    Page Scroll To Locator    button    Save
-    Click Button    Save
-    Wait Until Location Contains    /view
-    ${ns} =  Get NPSP Namespace Prefix
-    Save Current Record ID For Deletion    ${ns}Engagement_Plan_Template__c
-    [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
-    
-Create Level
-    ${level_name}=    Generate Random String
-    Select App Launcher Tab  Levels
-    Click Special Object Button       New
-    Choose Frame    Levels
-    Enter Level Values
-    ...            Level Name=${level_name}
-    ...            Minimum Amount=0.1
-    ...            Maximum Amount=0.9
-    Enter Level Dd Values    Target    Contact
-    Enter Level Dd Values    Source Field    Total Gifts
-    Enter Level Dd Values    Level Field    Level
-    Enter Level Dd Values    Previous Level Field    Previous Level
-    Set Focus To Element   xpath: //input[@value='Save']
-    Click Button  Save
-    Unselect Frame
-    Wait For Locator  obj-header  Level
-    ${level_id} =   Save Current Record ID For Deletion  Level__c  
-    [Return]    ${level_id}  ${level_name}
-
-Verify Engagement Plan
-    [Arguments]       ${plan_name}     @{others}
-    Select App Launcher Tab  Engagement Plan Templates
-    Click Link    link=${plan_name}
-    Check Field Value    Engagement Plan Template Name    ${plan_name}
-    Select Tab    Related
-    Check Related List Values    Engagement Plan Tasks      @{others}
-
-Create GAU
-    ${gau_name} =         Generate Random String
-    Select App Launcher Tab    General Accounting Units
-    Click Object Button       New
-    Populate Form
-    ...                    General Accounting Unit Name=${gau_name}
-    ...                    Largest Allocation=5
-    Click Modal Button        Save
-    #Sleep    2
-    [Return]           ${gau_name}    
+    [return]                  ${contact_id}
 
 Run Donations Batch Process
-    Open NPSP Settings  Bulk Data Processes  Rollup Donations Batch
-    Click Settings Button    idPanelOppBatch    Run Batch
+    Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
+    Click Settings Button       idPanelOppBatch                    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Account_AccSoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Contact_SoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Account_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Contact_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppAccRollup_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
+    Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
+    Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
+    Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
+    Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
+    
      
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
@@ -267,24 +191,15 @@ Scroll Page To Location
 
 Open NPSP Settings
     [Arguments]    ${topmenu}    ${submenu}
-    Select App Launcher Tab      NPSP Settings
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Choose Frame    Nonprofit Success Pack Settings
-    Wait Until Element Is Visible  text:${topmenu}
-    # Click Link With Text    text=${topmenu}
-    Click Element With Locator    npsp_settings.side_panel    idPanelBulkProcesses
-    Wait Until Element Is Visible  text:${submenu}
-    Click Link With Text    text=${submenu}
+    Go To Page                Custom         NPSP_Settings
+    Open Main Menu            ${topmenu}
+    Open Sub Link             ${submenu}
     Sleep  1
     
 Click Data Import Button
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
-    
-Click Field And Select Date
-    [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}    
-    Click BGE Button    ${date}    
+       
      
 Process Data Import Batch
     [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch

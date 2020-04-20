@@ -14,6 +14,10 @@
             <translation><!-- Card Expired --></translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>Commitment Completed</masterLabel>
+            <translation><!-- Commitment Completed --></translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Deceased Donor</masterLabel>
             <translation><!-- Deceased Donor --></translation>
         </picklistValues>
@@ -29,6 +33,11 @@
             <masterLabel>Unknown</masterLabel>
             <translation><!-- Unknown --></translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This Recurring Donation&apos;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year. --></help>
+        <label><!-- Current Year Value --></label>
+        <name>CurrentYearValue__c</name>
     </fields>
     <fields>
         <help><!-- Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. NOTE: If the Always use last day of month checkbox is selected, it supersedes the Day of Month value. --></help>
@@ -160,9 +169,14 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
+        <help><!-- The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;. --></help>
         <label><!-- Installment Frequency --></label>
         <name>InstallmentFrequency__c</name>
+    </fields>
+    <fields>
+        <help><!-- This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only). --></help>
+        <label><!-- Next Year Value --></label>
+        <name>NextYearValue__c</name>
     </fields>
     <fields>
         <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
@@ -182,17 +196,21 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Default value is Open, meaning a recurring donation with no end date. --></help>
+        <help><!-- Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field. --></help>
         <label><!-- Recurring Type --></label>
         <name>RecurringType__c</name>
+        <picklistValues>
+            <masterLabel>Fixed</masterLabel>
+            <translation><!-- Fixed --></translation>
+        </picklistValues>
         <picklistValues>
             <masterLabel>Open</masterLabel>
             <translation><!-- Open --></translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date. --></help>
-        <label><!-- Start Date --></label>
+        <help><!-- The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation takes effect. The default is the current date. --></help>
+        <label><!-- Effective Date --></label>
         <name>StartDate__c</name>
     </fields>
     <fields>
@@ -212,6 +230,10 @@
             <translation><!-- Lapsed --></translation>
         </picklistValues>
     </fields>
+    <quickActions>
+        <label><!-- Close Recurring Donation --></label>
+        <name>Close_Recurring_Donation</name>
+    </quickActions>
     <quickActions>
         <label>הזדמנות חדשה</label>
         <name>New_Opportunity</name>

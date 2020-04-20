@@ -41,8 +41,8 @@ public class UTIL_UnitTestData_TEST {
     /** @description A mock Account Id .*/
     public static final String MOCK_ACCOUNT_ID = Account.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
 
-    public static final String PROFILE_STANDARD_USER = 'Standard User';
-    public static final String PROFILE_READONLY_USER = 'Read Only';
+    public static final String PROFILE_STANDARD_USER = UTIL_Profile.PROFILE_STANDARD_USER;
+    public static final String PROFILE_READONLY_USER = UTIL_Profile.PROFILE_READ_ONLY;
 
     // =====================================================================================================
     // Methods to retrieve configured Stage/Status labels for the Opportunity and Task objects
@@ -386,6 +386,21 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+    * @description Build multiple Organization Accounts
+    * @param size size of organization accounts being created
+    * @return List<Account>
+    */
+    public static List<Account> buildOrganizationAccounts(Integer size) {
+        List<Account> organizations = new List<Account>();
+
+        for (Integer i = 0; i < size; i++) {
+            organizations.add(buildOrganizationAccount());
+        }
+
+        return organizations;
+    }
+
+    /**
      * @description Builds an Organization Account
      * @return Account
      */
@@ -398,7 +413,7 @@ public class UTIL_UnitTestData_TEST {
 
     /***
     * @description Builds a Household Account
-    * @return Account 
+    * @return Account
     */
     public static Account buildHouseholdAccount() {
         return createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
@@ -439,6 +454,74 @@ public class UTIL_UnitTestData_TEST {
         insert listConT;
     }
 
+    //Utility method for creating a sample template.
+    public static FORM_Template createSampleTemplate () {
+
+        FORM_Element field = new FORM_Element('field',
+                                              'True',
+                                               null,
+                                               'CustomLabel',
+                                               new List<String>{'Account_1_Name','Account_1_Country'});
+
+        FORM_Element widget = new FORM_Element('widget',
+                                               'DisplayRule',
+                                               'ComponentName',
+                                                new List<String>{'Contact_1_First_Name',                        'Contact_1_Last_Name'});
+
+        FORM_Element[] elements = new FORM_Element[]{field,widget};
+
+        FORM_Section section = new FORM_Section('SectionLabel',
+                                                'Accordion',
+                                                'Expanded',
+                                                'True',
+                                                elements);
+
+        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
+                                            new FORM_Section[]{section});
+
+        FORM_Template template = new FORM_Template('Sample Template',
+                                                   'This is the description.',
+                                                   '1.0',
+                                                   layout);
+        return template;
+    }
+
+    //Utility method for creating sample column headers.
+    public static List<Custom_Column_Header__c> createSampleColumnHeaders () {
+
+        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
+        columnHeader.Name = 'sampleColumnHeader';
+        columnHeader.List_Name__c = 'Sample List';
+        columnHeader.Index__c = 0;
+        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
+
+        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
+        columnHeader2.Name = 'sampleColumnHeader2';
+        columnHeader2.List_Name__c = 'Sample List 2';
+        columnHeader2.Index__c = 0;
+        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
+
+        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
+        columnHeader3.Name = 'sampleColumnHeader3';
+        columnHeader3.List_Name__c = 'Sample List 2';
+        columnHeader3.Index__c = 1;
+        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
+
+        return new List<Custom_Column_Header__c> { columnHeader, columnHeader2, columnHeader3 };
+    }
+
+    // Method to create instance of field mappings to use in test data
+    public static BDI_MappingServiceAdvanced createSampleFieldMappings() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =                                                            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+
+        return mappingService;
+    }
 
     /**
      * @description Create Engagement Plan Templates for unit testing.
@@ -485,66 +568,21 @@ public class UTIL_UnitTestData_TEST {
     /**
      * @description Create a new user for unit testing.
      * @param strUsername The username for the user to be created
-     * @param strRolename The name of the UserRole to associate with the user (will be created if does not exist)
      * @return User
      */
-    public static User createNewUserWithRoleForTests(String strUsername, String strRolename) {
-        Profile p = [
-            SELECT Id
-            FROM Profile
-            WHERE Name = :PROFILE_STANDARD_USER
-        ];
-
-        UserRole r;
+    public static User createNewUserForTests(String strUsername) {
         User u;
 
         // to work around mixed DML errors during tests, you must
         // create user roles and accounts in their own transactions.
         // got this hack from the web.
-        System.runAs(new User(Id = UserInfo.getUserId())) {
-            Integer existingRoleCount = [
-                SELECT COUNT()
-                FROM UserRole
-                WHERE Name = :strRolename
-            ];
-
-            if (existingRoleCount >= 1) {
-                r = [
-                    SELECT Id
-                    FROM UserRole
-                    WHERE Name = :strRolename
-                    LIMIT 1
-                ];
-            } else {
-                r = new UserRole(Name=strRolename);
-                insert r;
-            }
-
-            u = new User(
-                Alias = 'jsmith',
-                Email = 'jsmith@acme.com',
-                EmailEncodingKey = 'UTF-8',
-                LanguageLocaleKey = 'en_US',
-                LastName = 'Smith',
-                LocaleSidKey = 'en_US',
-                ProfileId = p.Id,
-                TimeZoneSidKey = 'America/Los_Angeles',
-                UserRoleId = r.Id,
-                Username = strUsername
-            );
+        System.runAs(getCurrentUserForRunAs()) {
+            u = buildUser('Smith', PROFILE_STANDARD_USER);
+            u.Username = strUsername;
 
             insert u;
         }
         return u;
-    }
-
-    /**
-     * @description Create a new user for unit testing.
-     * @param strUsername The username for the user to be created
-     * @return User
-     */
-    public static User createNewUserForTests(String strUsername) {
-        return createNewUserWithRoleForTests(strUsername, 'COO');
     }
 
     /**
@@ -555,7 +593,7 @@ public class UTIL_UnitTestData_TEST {
     public static User createNewInactiveUserForTests(String strUsername) {
         User u = createNewUserForTests(strUsername);
 
-        System.runAs(new User(Id = UserInfo.getUserId())) {
+        System.runAs(UTIL_UnitTestData_TEST.getCurrentUserForRunAs())  {
             u.IsActive = false;
             update u;
         }
@@ -595,6 +633,15 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+     * @description Build a non-English User having specified profile, but do not insert
+     * @param profileName Profile Name
+     * @return User
+     */
+    public static User createNonEnglishUserWithoutInsert(String profileName) {
+        return buildUser(buildUniqueLastName(), profileName, 'es');
+    }
+
+    /**
       * @description Generate a unique string to append to indexed fields to make them unique
       */
     public static String getUniqueString() {
@@ -612,13 +659,25 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
-     * @description Set new User fields
+     * @description Build a new User using the Locale and Language settings from the Current User
      * @param lastName Last Name
      * @param profileName Profile Name
      * @return User
      */
     private static User buildUser(String lastName, String profileName) {
-        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName];
+        return buildUser(lastName, profileName, UserInfo.getLocale());
+    }
+
+    /**
+     * @description Build a new User using the specified Locale.
+     * @param lastName Last Name
+     * @param profileName Profile Name
+     * @param localSidKey An NPSP supported locale key (EN_us, es, de, fr, or NL_nl)
+     * @return User
+     */
+    private static User buildUser(String lastName, String profileName, String localSidKey) {
+        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1];
+
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
         String email = lastName.left(70) + '@email.npsp';
 
@@ -628,17 +687,23 @@ public class UTIL_UnitTestData_TEST {
             ProfileId = p.Id,
             Username = email,
             Alias = alias,
-            TimeZoneSidKey = 'America/Los_Angeles',
-            LocaleSidKey = 'en_US',
-            LanguageLocaleKey = 'en_US',
+            TimeZoneSidKey = UserInfo.getTimeZone().toString(),
+            LocaleSidKey = (localSidKey != null ? localSidKey : UserInfo.getLocale()),
+            LanguageLocaleKey = UserInfo.getLanguage(),
             EmailEncodingKey = 'ISO-8859-1'
         );
+    }
+
+    /**
+     * @description Retrieve the current User record
+     */
+    public static User getCurrentUserForRunAs() {
+        return new User(Id = UserInfo.getUserId());
     }
 
     // =====================================================================================================
     // Methods to configure Household Naming Settings
     // =====================================================================================================
-
 
     /*********************************************************************************************************
     * @description Turns on Automatic Household Naming
@@ -924,45 +989,18 @@ public class UTIL_UnitTestData_TEST {
      * @description Verify that a new User is inserted with the specified Username
      */
     @IsTest
-    private static void shouldCreateNewUserWithDefaultRole() {
+    private static void shouldCreateNewUser() {
         String randomUsername = 'test@test.com.' + getUniqueString();
 
         User returnedUser = createNewUserForTests(randomUsername);
         User queriedUser = [
             SELECT
-                Username,
-                UserRole.Name
+                Username
             FROM User
             WHERE Id = :returnedUser.Id
         ];
 
         System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assertEquals('COO', queriedUser.UserRole.Name);
-    }
-
-    /**
-     * @description Verify that a new User is inserted with the specified Username and a random Role Name
-     */
-    @IsTest
-    private static void shouldCreateNewUserWithRandomRole() {
-        String randomUsername = 'test@test.com.' + getUniqueString();
-        String randomRolename = 'RoleName' + getUniqueString();
-
-        User returnedUser = createNewUserWithRoleForTests(
-            randomUsername,
-            randomRolename
-        );
-
-        User queriedUser = [
-            SELECT
-                Username,
-                UserRole.Name
-            FROM User
-            WHERE Id = :returnedUser.Id
-        ];
-
-        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assert(randomRoleName.equalsIgnoreCase(queriedUser.UserRole.Name));
     }
 
     /**

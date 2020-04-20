@@ -22,9 +22,19 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
+        <help>De standaardveldwaarden voor een batch in Opgave van gift. Niet rechtstreeks bewerken. Dit moet worden bijgewerkt in de UI waar u uw batch bewerkt.</help>
+        <label>Standaardwaarden voor Batch</label>
+        <name>Batch_Defaults__c</name>
+    </fields>
+    <fields>
         <help>Een optionele beschrijving van deze batch.</help>
         <label>Batchomschrijving</label>
         <name>Batch_Description__c</name>
+    </fields>
+    <fields>
+        <help>De versie van de voorziening Batchinvoer van giften, die is gebruikt om deze batch te maken.</help>
+        <label>Versie van Batchinvoer van giften</label>
+        <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
         <help>Het aantal records om tegelijkertijd te verwerken in elke batch.</help>
@@ -94,6 +104,12 @@
         <help>Het verwachte totale bedrag van alle giften ingevoerd in deze Batch.</help>
         <label>Verwachte totale bedrag van batch</label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <help>De te gebruiken sjabloon voor het formulier Opgave van gift voor deze batch.</help>
+        <label>Formuliersjabloon</label>
+        <name>Form_Template__c</name>
+        <relationshipLabel>Batches van NPSP-gegevensimport</relationshipLabel>
     </fields>
     <fields>
         <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>

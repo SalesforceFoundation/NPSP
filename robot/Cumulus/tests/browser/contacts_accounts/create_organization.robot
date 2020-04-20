@@ -27,15 +27,15 @@ Create Organization Foundation
     ${loc}                                 Get NPSP Locator                      object.field                                Description
     Press Keys                             ${loc}                                Account created with Robot Automation 
     Click Modal Button                     Save
-    Verify Toast Message                   Account "${account_name}" was created.
     Wait Until Modal Is Closed
     Current Page Should Be                 Details                               Account
     ${account_id}                          Save Current Record ID For Deletion   Account
     Verify Record Is Created In Database   Account                               ${account_id}    
-    Select Tab                             Details 
-    Confirm Field Value                    Phone                                 contains                                    1234567                                     
-    Confirm Field Value                    Billing Address                       contains                                    50 Fremont st                               
-    Confirm Field Value                    Description                           contains                                    Account created with Robot Automation       
+    Select Tab                             Details
+
+    Navigate To And Validate Field Value   Phone                contains         1234567
+    Navigate To And Validate Field Value   Billing Address      contains         50 Fremont st
+    Navigate To And Validate Field Value   Description          contains         Account created with Robot Automation
     
     #Verify Account is only displayed in expected views
     Go To Page                             Listing                               Account
@@ -46,4 +46,4 @@ Create Organization Foundation
     Search Field By Value                  Search this list                      ${account_name}
     Verify Record   	                   ${account_name}
     Change View To                         Household Accounts
-    Page Should Not Contain                ${account_name}
+    Wait Until Page Does Not Contain       ${account_name}

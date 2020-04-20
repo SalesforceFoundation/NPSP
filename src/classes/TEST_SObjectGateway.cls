@@ -90,7 +90,10 @@ public class TEST_SObjectGateway {
                     npe03__Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
-                    Status__c
+                    Status__c,
+                    ClosedReason__c,
+                    CurrentYearValue__c,
+                    NextYearValue__c
                 FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];
@@ -171,6 +174,33 @@ public class TEST_SObjectGateway {
     * @description Retrieves Opportunities
     */
     public class OpportunityGateway {
+        private Set<String> fields = new Set<String>{
+            'Name',
+            'Description',
+            'AccountId',
+            'RecordTypeId',
+            'Amount',
+            'CampaignId',
+            'CloseDate',
+            'StageName',
+            'IsClosed',
+            'IsWon',
+            'Closed_Lost_Reason__c',
+            'npe03__Recurring_Donation__c',
+            'Recurring_Donation_Installment_Number__c',
+            'npe01__Contact_Id_for_Role__c',
+            'Primary_Contact__c'
+        };
+
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public OpportunityGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
 
         /***
         * @description Retrieves Opportunities for the related Recurring Donation
@@ -187,19 +217,84 @@ public class TEST_SObjectGateway {
         * @return List<Opportunity>
         */
         public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
-            return [
-                SELECT
-                    Name, AccountId, RecordTypeId,
-                    Amount, CampaignId, CloseDate,
-                    StageName, isClosed, isWon,
-                    Closed_Lost_Reason__c,
-                    npe03__Recurring_Donation__c, 
-                    Recurring_Donation_Installment_Number__c,
-                    npe01__Contact_Id_for_Role__c, 
-                    Primary_Contact__c
-                FROM Opportunity
-                WHERE npe03__Recurring_Donation__c IN :rds
-            ];
+            String soql = new UTIL_Query()
+                .withFrom(Opportunity.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe03__Recurring_Donation__c IN :rds')
+                .build();
+
+            return (List<Opportunity>) Database.query(soql);
+        }
+
+        /***
+        * @description Retrieves Opportunity for specified Opportunity Id
+        * @param oppId An Opportunity Id
+        * @return Opportunity
+        */
+        public Opportunity getRecord(Id oppId) {
+            List<Opportunity> opps = getRecords(new Set<Id>{ oppId });
+
+            return opps == null || opps.isEmpty() ? null : opps[0];
+        }
+
+        /***
+        * @description Retrieves Opportunities for specified Opportunity Ids
+        * @param oppIds Opportunity Ids
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecords(Set<Id> oppIds) {
+            String soql = new UTIL_Query()
+                .withFrom(Opportunity.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('Id IN :oppIds')
+                .build();
+
+            return (List<Opportunity>) Database.query(soql);
+        }
+    }
+
+    /***
+    * @description Retrieves payments
+    */
+    public class PaymentGateway {
+        private Set<String> fields = new Set<String>{
+            'Name',
+            'npe01__Payment_Method__c',
+            'npe01__Payment_Amount__c',
+            'npe01__Opportunity__c'
+        };
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public PaymentGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
+
+        /***
+        * @description Retrieves payments for the related Opportunity
+        * @param opp Opportunity
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(Opportunity opp) {
+            return getRecords(new List<Opportunity>{ opp });
+        }
+
+        /***
+        * @description Retrieves payments for related Opportunities
+        * @param opps Opportunity records
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(List<Opportunity> opps) {
+            String soql = new UTIL_Query()
+                .withFrom(npe01__OppPayment__c.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe01__Opportunity__c IN :opps')
+                .build();
+
+            return (List<npe01__OppPayment__c>) Database.query(soql);
         }
     }
 
@@ -267,7 +362,7 @@ public class TEST_SObjectGateway {
                 .withWhere('ApexClass.Name = :className')
                 .withLimit(1)
                 .build();
-            
+
             List<SObject> records = Database.query(soql);
             return records == null  || records.isEmpty() ? null : (AsyncApexJob) records[0];
         }

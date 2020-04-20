@@ -1,6 +1,7 @@
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from NPSP import npsp_lex_locators
 from logging import exception
 
@@ -12,6 +13,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         Waits for the current page to be a Manage Household page
         """
         self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
+        self.npsp.wait_for_locator("frame","Manage Household")
 
 
     def _go_to_page(self, filter_name=None):
@@ -34,6 +36,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
            self.selenium.click_button("Save")
         self.selenium.unselect_frame()
 
+    @capture_screenshot_on_error
     def add_contact(self, option, value):
         """
          Performs a lookup of the contact provided as parameter and adds the contact to the hold based on the option

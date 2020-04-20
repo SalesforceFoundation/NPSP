@@ -39,7 +39,7 @@ public class RD2_DataMigrationMapper {
     /**
     * @description Defines mock "Day of Month" last day value for dry run data migration
     */
-    private static final String DRY_RUN_DAY_OF_MONTH_LAST_DAY = '28';
+    private static final String DRY_RUN_DAY_OF_MONTH_LAST_DAY = '30';
 
     /**
     * @description Recurring Donation to convert to enhanced format
@@ -128,13 +128,13 @@ public class RD2_DataMigrationMapper {
     private void setInstallmentFields(npe03__Recurring_Donation__c rd) {
 
         Set<String> frequencyOneInstallmentPeriods = new Set<String>{
-            System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-            System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-            System.Label.npe03.RecurringDonationInstallmentPeriodWeekly,
-            System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th
+            RD_Constants.INSTALLMENT_PERIOD_YEARLY,
+            RD_Constants.INSTALLMENT_PERIOD_MONTHLY,
+            RD_Constants.INSTALLMENT_PERIOD_WEEKLY,
+            RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH
         };
 
-        if (rd.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
+        if (rd.npe03__Installment_Period__c == RD_Constants.INSTALLMENT_PERIOD_QUARTERLY) {
             rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
             rd.InstallmentFrequency__c = 3;
 
@@ -147,7 +147,7 @@ public class RD2_DataMigrationMapper {
             handleCustomInstallmentPeriod(rd);
         }
 
-        if (rd.npe03__Schedule_Type__c == System.Label.npe03.RecurringDonationDivideValue
+        if ((rd.npe03__Schedule_Type__c == RD_Constants.SCHEDULE_TYPE_DIVIDE_BY || rd.npe03__Schedule_Type__c == null)
             && rd.npe03__Installment_Amount__c != null
             && rd.npe03__Installment_Amount__c != 0
         ) {
@@ -233,7 +233,7 @@ public class RD2_DataMigrationMapper {
      * @return void
      */
     private void setDayOfMonth(npe03__Recurring_Donation__c rd) {
-        Set<String> lastDaysOfMonth = new Set<String>{ '29', '30', '31' };
+        final String lastDayOfMonth = '31';
 
         if (rd.Always_Use_Last_Day_Of_Month__c == false
             && String.isEmpty(rd.Day_of_Month__c)
@@ -242,7 +242,7 @@ public class RD2_DataMigrationMapper {
         }
 
         if (rd.Always_Use_Last_Day_Of_Month__c == true
-            || lastDaysOfMonth.contains(rd.Day_of_Month__c)
+            || rd.Day_of_Month__c == lastDayOfMonth
         ) {
             rd.Day_of_Month__c = isDryRunMode
                 ? DRY_RUN_DAY_OF_MONTH_LAST_DAY
@@ -266,8 +266,9 @@ public class RD2_DataMigrationMapper {
             installmentDate = rd.npe03__Date_Established__c;
         }
 
-        return installmentDate.day().format();
+        return installmentDate == null ? null : installmentDate.day().format();
     }
+
 
     /**
      * @description Sets Status field
@@ -278,9 +279,9 @@ public class RD2_DataMigrationMapper {
         String openEndedStatus = rd.npe03__Open_Ended_Status__c;
 
         if (String.isNotBlank(openEndedStatus)
-            && openEndedStatus != System.Label.npe03.RecurringDonationOpenStatus
-            && openEndedStatus != System.Label.npe03.RecurringDonationClosedStatus
-            && openEndedStatus != 'None'
+            && openEndedStatus != RD_Constants.OPEN_ENDED_STATUS_OPEN
+            && openEndedStatus != RD_Constants.OPEN_ENDED_STATUS_CLOSED
+            && openEndedStatus != RD_Constants.OPEN_ENDED_STATUS_NONE
         ) {
             throw new MigrationException(
                 String.format(
@@ -290,7 +291,7 @@ public class RD2_DataMigrationMapper {
             );
         }
 
-        if (openEndedStatus == System.Label.npe03.RecurringDonationClosedStatus) {
+        if (openEndedStatus == RD_Constants.OPEN_ENDED_STATUS_CLOSED) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
 
         } else {
@@ -304,7 +305,16 @@ public class RD2_DataMigrationMapper {
      * @return void
      */
     private void setOtherFields(npe03__Recurring_Donation__c rd) {
-        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+        if (rd.npe03__Open_Ended_Status__c == RD_Constants.OPEN_ENDED_STATUS_NONE
+                || rd.npe03__Open_Ended_Status__c == null) {
+            rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_FIXED;
+        } else {
+            rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+        }
+
+        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN) {
+            rd.npe03__Installments__c = null;
+        }
     }
 
     /**
@@ -317,7 +327,7 @@ public class RD2_DataMigrationMapper {
         List<Opportunity> opps = new List<Opportunity>();
 
         if (allRelatedOpps == null || allRelatedOpps.isEmpty()
-            || rd.npe03__Open_Ended_Status__c != System.Label.npe03.RecurringDonationOpenStatus        
+            || rd.npe03__Open_Ended_Status__c != RD_Constants.OPEN_ENDED_STATUS_OPEN
         ) {
             return opps;
         }
