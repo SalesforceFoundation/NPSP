@@ -289,7 +289,6 @@ export default class geListView extends LightningElement {
                 if (columnEntry) {
                     if (checkNestedProperty(this.columnEntriesByName[this.sortedBy],
                         'typeAttributes', 'label', 'fieldName')) {
-                        debugger;
                         orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
                     } else {
                         orderedByFieldApiName = columnEntry.fieldApiName;
