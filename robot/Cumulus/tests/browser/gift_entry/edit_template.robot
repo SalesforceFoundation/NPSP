@@ -16,9 +16,9 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Test Cases ***
 
 Edit GE Template And Verify Changes
-    [Documentation]                           This test case checks if advanced mapping is enabled and if disabled, enables it. 
-    ...                                       Checks if gift entry is disabled and if enabled, disables it and verifies that GE page has error. 
-    ...                                       Then enables gift entry and verifies that gift entry page lands on templates page and has default template  
+    [Documentation]                           This test case makes edits to Default gift entry template and verifies that edits are saved 
+    ...                                       and available when a Single gift or batch gift are created. 
+ 
     [tags]                                    unstable  feature:GE          W-039559   
                        
     Go To Page                                Landing                       GE_Gift_Entry

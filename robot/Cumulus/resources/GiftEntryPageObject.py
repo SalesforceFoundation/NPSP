@@ -104,11 +104,13 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         status=element.get_attribute("aria-expanded")
         if status=="false":
             time.sleep(2)       
-        field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(field)  
-        self.selenium.scroll_element_into_view(field_checkbox)   
-        self.selenium.click_element(field_checkbox)
-        loc=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
-        self.selenium.wait_until_page_contains_element(loc)
+        field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")  
+        self.selenium.scroll_element_into_view(field_checkbox)
+        check=self.selenium.get_webelement(field_checkbox)
+        if not check.is_selected():   
+            self.selenium.click_element(field_checkbox)
+        label=": "+field    
+        self.selenium.wait_until_page_contains(label)
 
 
     @capture_screenshot_on_error                
@@ -120,13 +122,13 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                 if section=="Required":
                     label=section+" "+field
                     if value=='checked':
-                        field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(label)
+                        field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(label,"input")
                         self.selenium.scroll_element_into_view(field_checkbox)
                         cb_loc=self.selenium.get_webelement(field_checkbox)
                         if not cb_loc.is_selected():
                             self.salesforce._jsclick(field_checkbox)
                     elif value=='unchecked': 
-                        field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(label)
+                        field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(label,"input")
                         self.selenium.scroll_element_into_view(field_checkbox)
                         cb_loc=self.selenium.get_webelement(field_checkbox)
                         if cb_loc.is_selected():
