@@ -61,34 +61,6 @@ CREATE TABLE "Account" (
 	npsp__batch__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Account" VALUES('0016g000008CFExAAO','GenePoint','','345 Shoreline Park
-Mountain View, CA 94043
-USA','Mountain View','CA','','','false','','57500.0','85000.0','2019','2019-11-09','','','','85000.0','2020-01-02','0.0','','','','30000.0','','','2.0','0.0','0.0','115000.0','85000.0','30000.0','0.0','2.0','1.0','1.0','','30000.0','0.0','115000.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEvAAO','United Oil & Gas, UK','','Kings Park, 17th Avenue, Team Valley Trading Estate,
-Gateshead, Tyne and Wear NE26 3HS
-United Kingdom','','UK','','','false','','0.0','0.0','','','','','','0.0','','0.0','','','','','','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','','0.0','0.0','0.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEwAAO','United Oil & Gas, Singapore','','9 Tagore Lane
-Singapore, Singapore 787472
-Singapore','Singapore','Singapore','','','false','','0.0','0.0','','','','','','0.0','','0.0','','','','','','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','','0.0','0.0','0.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEnAAO','Edge Communications','','312 Constitution Place
-Austin, TX 78767
-USA','Austin','TX','','','false','','61666.666666666664','110000.0','2019','2019-09-22','','','','75000.0','2020-01-05','0.0','','','','75000.0','','','3.0','0.0','0.0','185000.0','110000.0','75000.0','0.0','3.0','2.0','1.0','','50000.0','0.0','185000.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEoAAO','Burlington Textiles Corp of America','','525 S. Lexington Ave','Burlington','NC','USA','27215','false','','235000.0','235000.0','2019','2019-11-11','','','','235000.0','2019-11-11','0.0','','','','235000.0','','','1.0','0.0','0.0','235000.0','235000.0','0.0','0.0','1.0','1.0','0.0','','235000.0','0.0','235000.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEpAAO','Pyramid Construction Inc.','','2 Place Jussieu','Paris','','France','75251','false','','0.0','0.0','','','','','','0.0','','0.0','','','','','','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','','0.0','0.0','0.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEqAAO','Dickenson plc','','1301 Hoch Drive','Lawrence','KS','USA','66045','false','','0.0','0.0','','','','','','0.0','','0.0','','','','','','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','','0.0','0.0','0.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFErAAO','Grand Hotels & Resorts Ltd','','2334 N. Michigan Avenue, Suite 1500
-Chicago, IL 60601, USA','Chicago','IL','','','false','','216666.66666666666','650000.0','2019','2019-09-29','','','','350000.0','2019-12-19','0.0','','','','350000.0','','','3.0','0.0','0.0','650000.0','650000.0','0.0','0.0','3.0','3.0','0.0','','90000.0','0.0','650000.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEtAAO','Express Logistics and Transport','','620 SW 5th Avenue Suite 400
-Portland, Oregon 97204
-United States','Portland','OR','','','false','','220000.0','220000.0','2019','2019-10-02','','','','220000.0','2019-10-02','0.0','','','','220000.0','','','1.0','0.0','0.0','220000.0','220000.0','0.0','0.0','1.0','1.0','0.0','','220000.0','0.0','220000.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEuAAO','University of Arizona','','888 N Euclid 
-Hallis Center, Room 501
-Tucson, AZ 85721
-United States','Tucson','AZ','','','false','','70000.0','140000.0','2019','2019-10-06','','','','90000.0','2019-10-10','0.0','','','','90000.0','','','2.0','0.0','0.0','140000.0','140000.0','0.0','0.0','2.0','2.0','0.0','','50000.0','0.0','140000.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEsAAO','United Oil & Gas Corp.','','1301 Avenue of the Americas 
-New York, NY 10019
-USA','New York','NY','','','false','','350000.0','2100000.0','2019','2019-10-26','','','','915000.0','2019-12-29','0.0','','','','120000.0','','','6.0','0.0','0.0','2100000.0','2100000.0','0.0','0.0','6.0','6.0','0.0','','120000.0','0.0','2100000.0','','false','','','','','','false','','','','','','','','','','','');
-INSERT INTO "Account" VALUES('0016g000008CFEyAAO','sForce','','The Landmark @ One Market','San Francisco','CA','US','94087','false','','0.0','0.0','','','','','','0.0','','0.0','','','','','','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','','0.0','0.0','0.0','','false','','','','','','false','','','','','','','','','','','');
 INSERT INTO "Account" VALUES('0016g000007WEfsAAG','Clerr and Nazarian Household','0126g000000MyJkAAK','840 Mount Street','Bay City','MI','','48706','true','Household Account','0.0','0.0','','','Danny Clerr and Bryce Nazarian','','Danny and Bryce','0.0','','0.0','','','','','','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','','0.0','0.0','0.0','','false','','','','','','false','','','','','','2.0','a0e6g000000OuHTAA0','','','0036g000006JcfhAAC','');
 INSERT INTO "Account" VALUES('0016g000007WEftAAG','Ivans Household','0126g000000MyJkAAK','','','','','','true','Household Account','75.0','75.0','2018','2018-11-04','Sehar Ivans','','Sehar','75.0','2018-11-04','0.0','','','','75.0','','','1.0','0.0','75.0','0.0','0.0','0.0','1.0','0.0','0.0','0.0','','75.0','0.0','75.0','','false','','','','','','false','','','','','','1.0','a0e6g000000OuHTAA0','','','0036g000006JcfiAAC','');
 INSERT INTO "Account" VALUES('0016g000007WEfuAAG','Ivans Household','0126g000000MyJkAAK','','','','','','true','Household Account','0.0','0.0','','','Lakshmi and Calvin Ivans','','Lakshmi and Calvin','0.0','','0.0','','','','','','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','','0.0','0.0','0.0','','false','','','','','','false','','','','','','2.0','a0e6g000000OuHTAA0','','','0036g000006JcfkAAC','');
@@ -224,10 +196,6 @@ CREATE TABLE "Campaign" (
 	parent_id VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Campaign" VALUES('7016g000000nnrsAAA','GC Product Webinar - Jan 7, 2002','true','2019-06-22','2019-06-22','Completed','Webinar','','','');
-INSERT INTO "Campaign" VALUES('7016g000000nnrtAAA','User Conference - Jun 17-19, 2002','true','2019-11-30','2019-12-02','Planned','Conference','','','');
-INSERT INTO "Campaign" VALUES('7016g000000nnruAAA','DM Campaign to Top Customers - Nov 12-23, 2001','true','2019-04-27','2019-05-08','Completed','Direct Mail','','','');
-INSERT INTO "Campaign" VALUES('7016g000000nnrvAAA','International Electrical Engineers Association Trade Show - Mar 4-5, 2002','true','2019-08-17','2019-08-18','Planned','Trade Show','','','');
 INSERT INTO "Campaign" VALUES('7016g000000gmWNAAY','Give a Life','false','2018-10-01','2018-11-05','Planned','Telemarketing','','','7016g000000gmWUAAY');
 INSERT INTO "Campaign" VALUES('7016g000000gmWOAAY','No More Hostile Architecture','true','2019-01-01','2019-11-30','In Progress','Advocacy','','','7016g000000gmWTAAY');
 INSERT INTO "Campaign" VALUES('7016g000000gmWPAAY','Petition Drives','true','2019-01-01','2019-12-31','In Progress','Advocacy','','','7016g000000gmWOAAY');
@@ -488,18 +456,6 @@ CREATE TABLE "CampaignMemberStatus" (
 	campaign_id VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTR4EAM','false','false','Sent','7016g000000nnrsAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTR5EAM','false','false','Received','7016g000000nnrsAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTR6EAM','true','false','Responded','7016g000000nnrsAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTR7EAM','false','false','Sent','7016g000000nnrtAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTR8EAM','false','false','Received','7016g000000nnrtAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTR9EAM','true','false','Responded','7016g000000nnrtAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTRAEA2','false','false','Sent','7016g000000nnruAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTRBEA2','false','false','Received','7016g000000nnruAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTRCEA2','true','false','Responded','7016g000000nnruAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTRDEA2','false','false','Sent','7016g000000nnrvAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTREEA2','false','false','Received','7016g000000nnrvAAA');
-INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000xTRFEA2','true','false','Responded','7016g000000nnrvAAA');
 INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000gthDEAQ','false','true','Sent','7016g000000gmWNAAY');
 INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000gthEEAQ','true','false','Responded','7016g000000gmWNAAY');
 INSERT INTO "CampaignMemberStatus" VALUES('01Y6g000000gthFEAQ','false','true','Sent','7016g000000gmWOAAY');
@@ -568,32 +524,6 @@ CREATE TABLE "Case" (
 	parent_id VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Case" VALUES('5006g000006lqWaAAI','false','Starting generator after electrical failure','Closed','Phone','Electrical','High','','0016g000008CFEnAAO','0036g0000072X8QAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWbAAI','false','Performance inadequate for second consecutive week','Closed','Phone','Electrical','High','','0016g000008CFEsAAO','0036g0000072X8hAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWcAAI','false','Seeking guidance on electrical wiring installation for GC5060','New','Web','Electrical','Low','','0016g000008CFEsAAO','0036g0000072X8XAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWdAAI','false','Easy installation process','Closed','Web','Other','Low','','0016g000008CFEtAAO','0036g0000072X8ZAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWeAAI','false','Maintenance guidelines for generator unclear','Closed','Phone','Other','Medium','','0016g000008CFEtAAO','0036g0000072X8ZAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWfAAI','false','Electrical circuit malfunctioning','Closed','Phone','Electrical','Medium','','0016g000008CFEtAAO','0036g0000072X8aAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWgAAI','false','Generator assembly instructions unclear','Closed','Phone','Other','Low','','0016g000008CFExAAO','0036g0000072X8gAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWhAAI','false','Structural breakdown of rotor assembly','Closed','Phone','Structural','Medium','','0016g000008CFErAAO','0036g0000072X8VAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWiAAI','false','Customer service for portable generators needs beefing up','Closed','Web','Other','Low','','0016g000008CFErAAO','0036g0000072X8VAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWjAAI','false','Mechanical maintenance guidelines for generator misleading','Closed','Phone','Mechanical','Medium','','0016g000008CFEvAAO','0036g0000072X8dAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWkAAI','false','Maintenance guidelines for generator unclear','Closed','Web','Other','Low','','0016g000008CFEwAAO','0036g0000072X8eAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWlAAI','false','Electronic panel fitting loose','Closed','Web','Electronic','Medium','','0016g000008CFEwAAO','0036g0000072X8fAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWmAAI','false','Repeated motor breakdown while shutting off','Closed','Web','Electrical','Medium','','0016g000008CFEuAAO','0036g0000072X8bAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWnAAI','false','Starting up generator consumes excessive power','Closed','Web','Other','Medium','','0016g000008CFErAAO','0036g0000072X8WAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWoAAI','false','Delay in installation; spare parts unavailable','Closed','Phone','Other','High','','0016g000008CFErAAO','0036g0000072X8WAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWpAAI','false','Frequent mechanical breakdown','Closed','Web','Mechanical','Medium','','0016g000008CFEwAAO','0036g0000072X8fAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWqAAI','false','Maintenance guidelines for generator unclear','New','Web','Other','Low','','0016g000008CFExAAO','0036g0000072X8gAAE','');
-INSERT INTO "Case" VALUES('5006g000006lqWrAAI','false','Shutting down of generator','Closed','Web','Mechanical','Medium','','0016g000008CFEnAAO','0036g0000072X8RAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWsAAI','false','Cannot start generator after electrical failure','Closed','Phone','Electrical','Medium','','0016g000008CFEnAAO','0036g0000072X8RAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWtAAI','false','Structural failure of generator base','Closed','Web','Structural','High','','0016g000008CFEoAAO','0036g0000072X8SAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWuAAI','false','Power generation below stated level','Closed','Phone','Electrical','Medium','','0016g000008CFEoAAO','0036g0000072X8SAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWvAAI','false','Generator GC3060 platform structure is weakening','Closed','Phone','Structural','High','','0016g000008CFEsAAO','0036g0000072X8XAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWwAAI','false','Signal panel on GC5060 blinks intermittently','Closed','Web','Electronic','Medium','','0016g000008CFEsAAO','0036g0000072X8XAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWxAAI','false','Electric surge damaging adjacent equipment','Closed','Phone','Electrical','High','','0016g000008CFEsAAO','0036g0000072X8XAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWyAAI','false','Design issue with mechanical rotor','New','Web','Mechanical','Low','','0016g000008CFEsAAO','0036g0000072X8YAAU','');
-INSERT INTO "Case" VALUES('5006g000006lqWzAAI','false','Motor design hindering performance','Closed','Phone','Electrical','Medium','','0016g000008CFEsAAO','0036g0000072X8YAAU','');
 INSERT INTO "Case" VALUES('5006g000006DYN7AAO','false','Household goods needed','New','Phone','Problem','Medium','Alex needs household goods for herself and Daniel as they prepare to move to their new home.','0016g000007WEh6AAG','0036g000006JchIAAS','');
 CREATE TABLE "Contact" (
 	sf_id VARCHAR(255) NOT NULL, 
@@ -933,28 +863,6 @@ CREATE TABLE "Lead" (
 	npsp__batch__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Lead" VALUES('00Q6g0000038l6vEAA','Pamela','Owenby','Hendrickson Trading','false','false','false','false','true','Closed - Not Converted','Partner Referral','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6wEAA','Norm','May','Greenwich Media','false','false','false','false','true','Working - Contacted','Web','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6xEAA','Pat','Stumuller','Pyramid Construction Inc.','false','false','false','false','true','Closed - Converted','Phone Inquiry','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6yEAA','Andy','Young','Dickenson plc','false','false','false','false','true','Closed - Converted','Purchased List','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6zEAA','Kristen','Akin','Aethna Home Products','false','false','false','false','true','Working - Contacted','Partner Referral','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l70EAA','David','Monaco','Blues Entertainment Corp.','false','false','false','false','true','Working - Contacted','Purchased List','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l71EAA','Carolyn','Crenshaw','Ace Iron and Steel Inc.','false','false','false','false','true','Closed - Not Converted','Phone Inquiry','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l72EAA','Jack','Rogers','Burlington Textiles Corp of America','false','false','false','false','true','Closed - Converted','Web','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l73EAA','Bill','Dadio Jr','Zenith Industrial Partners','false','false','false','false','true','Closed - Not Converted','Web','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l74EAA','Eugena','Luce','Pacific Retail Group','false','false','false','false','true','Closed - Not Converted','Purchased List','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l75EAA','Sandra','Eberhard','Highland Manufacturing Ltd.','false','false','false','false','true','Working - Contacted','Purchased List','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l76EAA','Betty','Bair','American Banking Corp.','false','false','false','false','true','Working - Contacted','Purchased List','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6lEAA','Bertha','Boxer','Farmers Coop. of Florida','false','false','false','false','true','Working - Contacted','Web','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6mEAA','Phyllis','Cotton','Abbott Insurance','false','false','false','false','true','Open - Not Contacted','Web','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6nEAA','Jeff','Glimpse','Jackson Controls','false','false','false','false','true','Open - Not Contacted','Phone Inquiry','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6oEAA','Mike','Braund','Metropolitan Health Services','false','false','false','false','true','Open - Not Contacted','Purchased List','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6pEAA','Patricia','Feager','International Shipping Co.','false','false','false','false','true','Working - Contacted','Partner Referral','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6qEAA','Brenda','Mcclure','Cadinal Inc.','false','false','false','false','true','Working - Contacted','Web','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6rEAA','Violet','Maccleod','Emerson Transport','false','false','false','false','true','Working - Contacted','Phone Inquiry','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6sEAA','Kathy','Snyder','TNR Corp.','false','false','false','false','true','Working - Contacted','Purchased List','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6tEAA','Tom','James','Delphi Chemicals','false','false','false','false','true','Working - Contacted','Web','','','','','','','','');
-INSERT INTO "Lead" VALUES('00Q6g0000038l6uEAA','Shelly','Brownell','Western Telecommunications Corp.','false','false','false','false','true','Working - Contacted','Partner Referral','','','','','','','','');
 INSERT INTO "Lead" VALUES('00Q6g000001B1mFEAS','Joshua','Kim','Self','false','false','false','false','true','Open - Not Contacted','Web','','','','','','','','');
 INSERT INTO "Lead" VALUES('00Q6g000001B1mGEAS','Katie','Beaker','Self','false','false','false','false','true','Open - Not Contacted','','','','','','','','','');
 INSERT INTO "Lead" VALUES('00Q6g000001B1mHEAS','Chloe','Jackson','Self','false','false','false','false','true','Open - Not Contacted','Web','','','','','','','','');
@@ -1014,37 +922,6 @@ CREATE TABLE "Opportunity" (
 	npsp__primary_contact__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXAAAY','Dickenson Mobile Generators','2019-11-18','false','','Qualification','New Customer','15000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEqAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXBAAY','United Oil Office Portable Generators','2019-11-06','false','','Negotiation/Review','Existing Customer - Upgrade','125000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXCAAY','Express Logistics Standby Generator','2019-10-02','false','','Closed Won','New Customer','220000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEtAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXDAAY','GenePoint Standby Generator','2019-11-09','false','','Closed Won','New Customer','85000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFExAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXEAAY','Grand Hotels Kitchen Generator','2019-09-27','false','','Id. Decision Makers','Existing Customer - Upgrade','15000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFErAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXFAAY','United Oil Refinery Generators','2019-12-21','false','','Proposal/Price Quote','Existing Customer - Upgrade','270000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXGAAY','United Oil SLA','2019-12-28','false','','Closed Won','Existing Customer - Upgrade','120000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXHAAY','Grand Hotels Guest Portable Generators','2020-01-05','false','','Value Proposition','Existing Customer - Upgrade','250000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFErAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXIAAY','Edge Emergency Generator','2020-01-05','false','','Closed Won','New Customer','75000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEnAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXJAAY','University of AZ Portable Generators','2019-10-06','false','','Closed Won','New Customer','50000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEuAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXKAAY','Pyramid Emergency Generators','2019-11-14','false','','Prospecting','','100000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEpAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXLAAY','Express Logistics Portable Truck Generators','2019-09-30','false','','Value Proposition','Existing Customer - Upgrade','80000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEtAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXMAAY','GenePoint Lab Generators','2019-12-30','false','','Id. Decision Makers','','60000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFExAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXNAAY','GenePoint SLA','2020-01-02','false','','Closed Won','Existing Customer - Upgrade','30000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFExAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXOAAY','United Oil Installations','2019-11-02','false','','Negotiation/Review','Existing Customer - Upgrade','270000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXPAAY','Edge Installation','2019-10-27','false','','Closed Won','Existing Customer - Upgrade','50000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEnAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXQAAY','Edge SLA','2019-09-22','false','','Closed Won','Existing Customer - Upgrade','60000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEnAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXRAAY','United Oil Installations','2019-11-01','false','','Closed Won','Existing Customer - Upgrade','270000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXSAAY','Grand Hotels Generator Installations','2019-12-19','false','','Closed Won','Existing Customer - Upgrade','350000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFErAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXTAAY','United Oil Refinery Generators','2019-12-14','false','','Closed Won','New Customer','915000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXUAAY','University of AZ Installations','2019-10-03','false','','Proposal/Price Quote','Existing Customer - Upgrade','100000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEuAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXVAAY','Express Logistics SLA','2019-10-01','false','','Perception Analysis','Existing Customer - Upgrade','120000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEtAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXWAAY','University of AZ SLA','2019-10-10','false','','Closed Won','Existing Customer - Upgrade','90000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEuAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXXAAY','Burlington Textiles Weaving Plant Generator','2019-11-11','false','','Closed Won','New Customer','235000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEoAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXYAAY','United Oil Installations','2019-11-13','false','','Closed Won','Existing Customer - Upgrade','235000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXZAAY','United Oil Emergency Generators','2019-10-26','false','','Closed Won','Existing Customer - Upgrade','440000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXaAAI','Grand Hotels SLA','2019-09-29','false','','Closed Won','Existing Customer - Upgrade','90000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFErAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXbAAI','United Oil Standby Generators','2019-12-29','false','','Closed Won','Existing Customer - Upgrade','120000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXcAAI','Grand Hotels Emergency Generators','2019-12-17','false','','Closed Won','New Customer','210000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFErAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXdAAI','United Oil Plant Standby Generators','2019-11-30','false','','Needs Analysis','Existing Customer - Upgrade','675000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEsAAO','','','','','','','','','');
-INSERT INTO "Opportunity" VALUES('0066g00000kvzXeAAI','Edge Emergency Generator','2020-01-11','false','','Id. Decision Makers','Existing Customer - Replacement','35000.0','','false','','','','','','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000008CFEnAAO','','','','','','','','','');
 INSERT INTO "Opportunity" VALUES('0066g00000mEB4yAAG','Candace Evans Donation 1/10/2020','2020-01-10','false','0126g000000MyKnAAK','Posted','','','0036g000006JcekAAC','false','','','','','All Opportunities','','','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000007WEfZAAW','','','','','','','','','0036g000006JcekAAC');
 INSERT INTO "Opportunity" VALUES('0066g00000mEBiDAAW','Candace Evans Donation (25) 12/1/2020','2020-12-01','false','0126g000000MyKnAAK','Pledged','','100.0','0036g000006JcekAAC','false','','','','','All Opportunities','','','','','false','','','','','','','','','','','false','','false','','','','','','','','25.0','','','0016g000007WEfZAAW','7016g000000gmWNAAY','a0A6g0000041b4qEAA','','','','','','','0036g000006JcekAAC');
 INSERT INTO "Opportunity" VALUES('0066g00000mEB3mAAG','Celia Boston Donation 1/22/2018','2018-01-22','false','0126g000000MyKnAAK','Posted','Donation','50.0','0032F00000UawOIQAZ','false','','','','','All Opportunities','2018-01-31','Acknowledged','','','false','','','','','','','','','','','false','','false','','','','','','','','','','','0016g000007WEgHAAW','7016g000000gmWUAAY','','','','','','','','0036g000006JcgMAAS');
