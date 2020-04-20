@@ -36,7 +36,7 @@
 */
 public class UTIL_String {
     
-    /*********************************************************************************************************
+    /**
      * @description Removes from a string all values that are not an english language alpha character
      * @param target The target string for the operation
      * @return String
@@ -51,7 +51,7 @@ public class UTIL_String {
 
     }
 
-    /*********************************************************************************************************
+    /**
      * @description Removes from a string all values that are not a numeric character
      * @param target The target string for the operation
      * @return String
@@ -66,8 +66,8 @@ public class UTIL_String {
 
     }
 
-    /*********************************************************************************************************
-     * @description Removes from a string all values that are not a numeric or an english language character  
+    /**
+     * @description Removes from a string all values that are not a numeric or an english language character
      * @param target The target string for the operation
      * @return String
      */
@@ -79,5 +79,29 @@ public class UTIL_String {
 
         return target.replaceAll('[^A-Za-z0-9]', '');
 
-    }    
+    }
+
+    /**
+    * @description Builds an internal URL string from a fully composed URL and also sanitizes an existing internal URL
+    * @param url The url to be sanitized
+    * @return String - The new sanitized internal url. If the fully qualified url is invalid, the method returns null.
+    */
+    public static String getInternalUrlPath(String url) {
+        try {
+
+            String internalUrl = '';
+
+            if (url.startsWith('/')) {
+                internalUrl = '/' + url.replaceFirst('/+', '');
+            } else {
+                internalUrl = new Url(url).getPath();
+            }
+
+            return internalUrl;
+
+        } catch(Exception ex) {
+
+            return null;
+        }
+    }
 }
