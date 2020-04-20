@@ -36,6 +36,7 @@
         <members>ADDR_Validator_REST</members>
         <members>ADDR_Validator_TDTM</members>
         <members>ADDR_Validator_TEST</members>
+        <members>ADDR_Validator_UTIL</members>
         <members>ADV_Adapter</members>
         <members>ADV_Adapter_TEST</members>
         <members>ADV_PackageInfo_SVC</members>
@@ -770,6 +771,7 @@
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
+        <members>RD2_EnablementDelegateSimple</members>
         <members>RD2_EnhancementEnabledEvent</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
@@ -995,6 +997,8 @@
         <members>DataImport__c.Contact1Imported__c</members>
         <members>DataImport__c.Contact1_Alternate_Email__c</members>
         <members>DataImport__c.Contact1_Birthdate__c</members>
+        <members>DataImport__c.Contact1_Consent_Message__c</members>
+        <members>DataImport__c.Contact1_Consent_Opt_In__c</members>
         <members>DataImport__c.Contact1_Firstname__c</members>
         <members>DataImport__c.Contact1_Home_Phone__c</members>
         <members>DataImport__c.Contact1_Lastname__c</members>
@@ -1071,9 +1075,25 @@
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
+        <members>DataImport__c.Payment_Authorized_Date__c</members>
+        <members>DataImport__c.Payment_Authorized_UTC_Timestamp__c</members>
+        <members>DataImport__c.Payment_Card_Expiration_Month__c</members>
+        <members>DataImport__c.Payment_Card_Expiration_Year__c</members>
+        <members>DataImport__c.Payment_Card_Last_4__c</members>
+        <members>DataImport__c.Payment_Card_Network__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
+        <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
+        <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
+        <members>DataImport__c.Payment_Elevate_ID__c</members>
+        <members>DataImport__c.Payment_Elevate_Original_Payment_ID__c</members>
+        <members>DataImport__c.Payment_Gateway_ID__c</members>
+        <members>DataImport__c.Payment_Gateway_Payment_ID__c</members>
         <members>DataImport__c.Payment_Method__c</members>
+        <members>DataImport__c.Payment_Origin_ID__c</members>
+        <members>DataImport__c.Payment_Origin_Name__c</members>
+        <members>DataImport__c.Payment_Origin_Type__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
+        <members>DataImport__c.Payment_Type__c</members>
         <members>DataImport__c.Status__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
@@ -1324,8 +1344,24 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
+        <members>npe01__OppPayment__c.Authorized_Date__c</members>
+        <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Card_Expiration_Month__c</members>
+        <members>npe01__OppPayment__c.Card_Expiration_Year__c</members>
+        <members>npe01__OppPayment__c.Card_Last_4__c</members>
+        <members>npe01__OppPayment__c.Card_Network__c</members>
+        <members>npe01__OppPayment__c.Elevate_Original_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_Created_Date__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_Created_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Gateway_ID__c</members>
+        <members>npe01__OppPayment__c.Gateway_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Origin_ID__c</members>
+        <members>npe01__OppPayment__c.Origin_Name__c</members>
+        <members>npe01__OppPayment__c.Origin_Type__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
+        <members>npe01__OppPayment__c.Type__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
@@ -1583,6 +1619,7 @@
         <members>RD2_EnablementEnableConfirm</members>
         <members>RD2_EnablementEnableIntro</members>
         <members>RD2_EnablementEnableMessage</members>
+        <members>RD2_EnablementEnableSimpleIntro</members>
         <members>RD2_EnablementEnableTitle</members>
         <members>RD2_EnablementEnableWarning</members>
         <members>RD2_EnablementIntro</members>
@@ -1591,6 +1628,7 @@
         <members>RD2_EnablementMetaDeployIntro</members>
         <members>RD2_EnablementMetaDeployLaunch</members>
         <members>RD2_EnablementMetaDeployLaunchLinkLabel</members>
+        <members>RD2_EnablementMetaDeploySimpleIntro</members>
         <members>RD2_EnablementMetaDeployTitle</members>
         <members>RD2_EnablementMigrationButton</members>
         <members>RD2_EnablementMigrationCompleteMessage</members>
@@ -1605,6 +1643,7 @@
         <members>RD2_EnablementPrepIntro</members>
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
+        <members>RD2_EnablementSimpleIntro</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
@@ -1966,18 +2005,27 @@
         <members>commonYes</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
+        <members>conMergeDRSPickBtnLabel</members>
+        <members>conMergeDRSStep1</members>
         <members>conMergeErrNoPersonAccounts</members>
+        <members>conMergeErrorNoDRSFound</members>
         <members>conMergeErrorNoDeleteObjPermission</members>
         <members>conMergeErrorNoDeleteRecAccess</members>
+        <members>conMergeErrorNoReadDSRObjPermission</members>
         <members>conMergeFoundContacts</members>
+        <members>conMergeFoundDRS</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
         <members>conMergePortalUser</members>
+        <members>conMergeSearchConText</members>
         <members>conMergeSearchPlaceholder</members>
+        <members>conMergeSeeDupConDRS</members>
+        <members>conMergeSeeDupConText</members>
         <members>conMergeSelectAll</members>
         <members>conMergeSelectContact</members>
         <members>conMergeSelectedContacts</members>
         <members>conMergeStageComplete</members>
+        <members>conMergeTooManyContactError</members>
         <members>conMergeWinnerAsstText</members>
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanMissingField</members>
@@ -2866,8 +2914,24 @@
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Role</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Contact</members>
         <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Role</members>
+        <members>Data_Import_Field_Mapping.Payment_Authorized_Date</members>
+        <members>Data_Import_Field_Mapping.Payment_Authorized_UTC_Timestamp</members>
+        <members>Data_Import_Field_Mapping.Payment_Card_Expiration_Month</members>
+        <members>Data_Import_Field_Mapping.Payment_Card_Expiration_Year</members>
+        <members>Data_Import_Field_Mapping.Payment_Card_Last_4</members>
+        <members>Data_Import_Field_Mapping.Payment_Card_Network</members>
         <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_Created_Date</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_Created_UTC_Timestamp</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_ID</members>
+        <members>Data_Import_Field_Mapping.Payment_Elevate_Original_Payment_ID</members>
+        <members>Data_Import_Field_Mapping.Payment_Gateway_ID</members>
+        <members>Data_Import_Field_Mapping.Payment_Gateway_Payment_ID</members>
         <members>Data_Import_Field_Mapping.Payment_Method</members>
+        <members>Data_Import_Field_Mapping.Payment_Origin_ID</members>
+        <members>Data_Import_Field_Mapping.Payment_Origin_Name</members>
+        <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
+        <members>Data_Import_Field_Mapping.Payment_Type</members>
         <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
         <members>Data_Import_Object_Mapping.Account1</members>
         <members>Data_Import_Object_Mapping.Account2</members>
@@ -3380,6 +3444,7 @@
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
         <members>DataImportBatch__c.BatchGiftEntryTabColumns</members>
+        <members>DuplicateRecordSet.ContactMergeDRS</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>

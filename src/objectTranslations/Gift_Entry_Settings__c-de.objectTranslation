@@ -41,13 +41,13 @@
         <value><!-- Gift Entry Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts. --></help>
-        <label><!-- Default Gift Entry Template --></label>
+        <help>Dies ist eine Ausgangsvorlage, die für die Schenkungseingabe zur Eingabe einzelner Schenkungen oder Batches von Schenkungen verwendet wird. Dies ist die Standardvorlage für die Eingabe einzelner Schenkungen.</help>
+        <label>Standardvorlage für Schenkungseingabe</label>
         <name>Default_Gift_Entry_Template__c</name>
     </fields>
     <fields>
-        <help><!-- Enables the Gift Entry tool. This feature requires Advanced Mapping. --></help>
-        <label><!-- Enable Gift Entry --></label>
+        <help>Aktiviert das Schenkungseingabe-Tool. Für dieses Feature ist erweiterte Zuordnung erforderlich.</help>
+        <label>Schenkungseingabe aktivieren</label>
         <name>Enable_Gift_Entry__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
