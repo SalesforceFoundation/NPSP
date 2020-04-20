@@ -52,6 +52,19 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         elif action=="Delete":
             self.selenium.wait_until_page_does_not_contain(name)     
 
+    def verify_template_is_not_available(self,template):
+        """Verify that a gift template is not available for selection while creating a new batch"""
+        field=npsp_lex_locators["adv_mappings"]["field_mapping"].format("Template")
+        self.selenium.click_element(field)
+        element=self.selenium.get_webelement(field)
+        status=element.get_attribute("aria-activedescendant")
+        if status is not None:
+            self.selenium.page_should_not_contain(template)
+        else:
+            self.selenium.wait_until_page_contains("Default Gift Entry Template")
+            self.selenium.page_should_not_contain(template)  
+        self.selenium.click_button("Cancel")
+    
     def get_template_record_id(self,template):
         """ Parses the current url to get the object id of the current record.
             Expects url format like: [a-zA-Z0-9]{15,18}
