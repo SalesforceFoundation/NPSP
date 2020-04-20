@@ -928,6 +928,11 @@ plans:
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
+            6:
+                task: update_dependencies
+                options:
+                    dependencies:
+                        - github: "https://github.com/SalesforceFoundation/pmm"
     new_org:
         slug: trailhead
         title: Install NPSP for Trailhead Playgrounds
