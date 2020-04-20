@@ -42,18 +42,6 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     /** @description Action type specified to delete all Data Import records */
     public static final String ACTION_DELETE_ALL = 'deleteAll';
 
-    @TestVisible
-    /** @description Identifier for when Salesforce classic is displayed for the user */
-    static final String UI_CLASSIC_THEME = 'Theme3';
-
-    @TestVisible
-    /** @description Identifier for when Lightning Experience is displayed for the user */
-    static final String UI_LIGHTNING_THEME = 'Theme4d';
-
-    @TestVisible
-    /** @description UI Theme identifier to use for unit tests */
-    static String testUITheme;
-
     /** @description The list of found Data Import records to be deleted */
     @TestVisible
     private List<DataImport__c> dataImports;
