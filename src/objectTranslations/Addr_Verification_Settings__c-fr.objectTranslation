@@ -9,22 +9,22 @@
         <value><!-- Address Verification Settings --></value>
     </caseValues>
     <fields>
-        <help>URL utilisée pour vérification d’adresse.</help>
+        <help>URL utilisée pour la vérification d’adresse.</help>
         <label>URL de vérification d’adresse</label>
         <name>Address_Verification_Endpoint__c</name>
     </fields>
     <fields>
-        <help>L’ID d’authentification de votre paire de clés secrètes.</help>
+        <help>L’ID d’authentification.</help>
         <label>ID d’authentification</label>
         <name>Auth_ID__c</name>
     </fields>
     <fields>
-        <help>Le jeton d’authentification de votre paire de clés secrètes.</help>
+        <help>Le jeton d’authentification.</help>
         <label>Jeton d’authentification</label>
         <name>Auth_Token__c</name>
     </fields>
     <fields>
-        <help>Classe Salesforce responsable de contacter l’API SmartyStreets et de vérifier les adresses.</help>
+        <help>Classe Salesforce responsable de contacter le service Web et de vérifier les adresses.</help>
         <label>Service de vérification</label>
         <name>Class__c</name>
     </fields>
@@ -34,13 +34,13 @@
         <name>Enable_Automatic_Verification__c</name>
     </fields>
     <fields>
-        <help><!-- Prevents the Cicero API from overwriting Addresses during verification. --></help>
-        <label><!-- Prevent Address Overwrite --></label>
+        <help>Empêche l’API Cicero de remplacer les adresses lors de la vérification.</help>
+        <label>Empêcher le remplacement de l’adresse</label>
         <name>Prevent_Address_Overwrite__c</name>
     </fields>
     <fields>
-        <help>Marque les adresses ambigües comme invalides, lorsque l’API renvoie plus d’une adresse. Si laissé non coché Salesforce acceptera la première adresse suggérée comme adresse valide.</help>
-        <label>Rejeter les adresses ambigües</label>
+        <help>Marque les adresses ambiguës comme non valides, lorsque l’API renvoie plus d’une adresse. Si cette option n’est pas sélectionnée, Salesforce acceptera la première adresse suggérée comme adresse valide.</help>
+        <label>Rejeter les adresses ambiguës</label>
         <name>Reject_Ambiguous_Addresses__c</name>
     </fields>
     <fields>
@@ -49,13 +49,13 @@
         <name>Timeout__c</name>
     </fields>
     <fields>
-        <help>Indique si vous utilisez le service de vérification d’adresses SmartyStreets.</help>
-        <label><!-- DEPRECATED - Using SmartyStreets --></label>
+        <help>Indique si vous utilisez le service de vérification d’adresse SmartyStreets.</help>
+        <label>DÉPRÉCIÉ - Utilisation de SmartyStreets</label>
         <name>Using_SmartyStreets__c</name>
     </fields>
     <fields>
         <help>URL utilisée pour la vérification de code postal.</help>
-        <label>Point term. de vérif de code postal</label>
+        <label>Point term. de vérif. de code postal</label>
         <name>Zipcode_Verification_Endpoint__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

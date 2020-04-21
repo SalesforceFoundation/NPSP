@@ -32,7 +32,7 @@
     </values>
     <values>
         <field>Relationship_Field__c</field>
-        <value xsi:type="xsd:string">Opportunity__c</value>
+        <value xsi:type="xsd:string">npsp__Opportunity__c</value>
     </values>
     <values>
         <field>Relationship_To_Predecessor__c</field>

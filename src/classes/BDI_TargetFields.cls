@@ -35,24 +35,32 @@
 * @description Wrapper class used to hold source field to target field mappings.
 */
 public class BDI_TargetFields {
-    private Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject = new Map<SObjectType, Set<SObjectField>>();
+    private Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject =
+            new Map<SObjectType, Set<SObjectField>>();
 
-    public Map<SObjectType, Set<SObjectField>> getTargetFieldsByTargetObject(){
+    public Map<SObjectType, Set<SObjectField>> getTargetFieldsByTargetObject() {
         return targetFieldsByTargetObject;
     }
 
-    /*******************************************************************************************************
-    * @description Add a target field to the collection
+    /*****************************************************************************************
+    * @description Add a target field to the collection.
     */
-    public void addTargetField(String objName, String fieldName){
-        SObjectType objectToken;
-        SObjectField fieldToken;
+    public void addTargetField(String objName, String fieldName) {
+        addTargetField(
+                UTIL_Describe.getObjectDescribe(objName).getSObjectType(),
+                UTIL_Describe.getFieldDescribe(
+                        objName, fieldName.toLowerCase()).getSobjectField()
+        );
+    }
 
-        objectToken = UTIL_Describe.getObjectDescribe(objName).getSObjectType();
-        fieldToken = UTIL_Describe.getFieldDescribe(objName, fieldName.toLowerCase()).getSobjectField();
-
+    /*****************************************************************************************
+    * @description Add a target field to the collection.
+    */
+    public void addTargetField(SObjectType objectToken, SObjectField fieldToken) {
         if (targetFieldsByTargetObject.get(objectToken) == null) {
-            targetFieldsByTargetObject.put(objectToken, new Set<SObjectField>{fieldToken});
+            targetFieldsByTargetObject.put(objectToken, new Set<SObjectField>{
+                    fieldToken
+            });
         } else {
             targetFieldsByTargetObject.get(objectToken).add(fieldToken);
         }

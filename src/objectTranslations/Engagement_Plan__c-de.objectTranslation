@@ -8,7 +8,7 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value>Engagementpläne</value>
+        <value>Engagementplan</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
@@ -41,7 +41,7 @@
         <value>Engagementplänen</value>
     </caseValues>
     <fields>
-        <label><!-- Account --></label>
+        <label>Account</label>
         <name>Account__c</name>
         <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
@@ -70,7 +70,7 @@
         <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Opportunity --></label>
+        <label>Opportunity</label>
         <name>Opportunity__c</name>
         <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
@@ -80,7 +80,7 @@
         <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Status --></label>
+        <label>Status</label>
         <name>Status__c</name>
     </fields>
     <fields>
@@ -99,5 +99,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Engagementplan</nameFieldLabel>
+    <nameFieldLabel>Engagementplan-Nummer</nameFieldLabel>
 </CustomObjectTranslation>

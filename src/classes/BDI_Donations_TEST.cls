@@ -108,7 +108,7 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
-        BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
 
         // manually insert checkbox field mapping
         fieldMapper.addMappedField('Opportunity', 
@@ -200,7 +200,7 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
-        BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
 
         // manually insert checkbox field mapping
         fieldMapper.addMappedField('Opportunity', 
@@ -2706,7 +2706,12 @@ public with sharing class BDI_Donations_TEST {
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
+        // Since we have a hard time constraining the length of translated labels, truncate here
+        if(expectedStatus.length() > 255) {
+            expectedStatus = expectedStatus.substring(0,255);
+        }        
+
         list<DataImport__c> listDI = [select Status__c, DonationImported__c, DonationImportStatus__c, 
             Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c, Payment_Possible_Matches__c from DataImport__c];
         system.assertEquals(1, listDI.size());
@@ -2794,6 +2799,99 @@ public with sharing class BDI_Donations_TEST {
                         oppWithWrittenOffPmt.npe01__OppPayment__r[0].npe01__Paid__c,
                         'The written-off Payment should be unchanged.');
             }
+        }
+    }
+
+    @isTest
+    static void givenUserSelectedOppHasWrittenOffPmtsWhenProcessedThenOppShouldBeUpdated() {
+        // Create an Opportunity with two written-off Payments
+        Account a = new Account(Name = 'testAcct');
+        insert a;
+
+        Opportunity o = new Opportunity(
+                Name = 'testOpp',
+                AccountId = a.Id,
+                Amount = 25,
+                StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+                CloseDate = Date.today(),
+                npe01__Do_Not_Automatically_Create_Payment__c = true);
+        insert o;
+
+        npe01__OppPayment__c p0 = new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 25,
+                npe01__Opportunity__c = o.Id,
+                npe01__Written_Off__c = true,
+                npe01__Scheduled_Date__c = Date.today()
+        );
+
+        npe01__OppPayment__c p1 = new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 25,
+                npe01__Opportunity__c = o.Id,
+                npe01__Written_Off__c = true,
+                npe01__Scheduled_Date__c = Date.today()
+        );
+        insert new List<npe01__OppPayment__c>{
+                p0, p1
+        };
+
+        // Create the Data Import record that mocks a User manually setting the
+        // DonationImported__c field via the BGE UI
+        DataImport__c d = new DataImport__c();
+        d.Account1Imported__c = a.Id;
+        d.Account1ImportStatus__c = Label.bdiDryRunMatched;
+        d.Donation_Amount__c = 333;
+        d.Donation_Date__c = o.CloseDate;
+        d.Donation_Donor__c = 'Account1';
+        d.DonationImported__c = o.Id;
+        d.DonationImportStatus__c = Label.bdiMatchedByUser;
+        d.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        insert d;
+
+        //Run the Data Import process
+        Data_Import_Settings__c diSettings =
+                UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c =
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                        UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c =
+                BDI_DataImport_API.ExactMatchOrCreate;
+        diSettings.Donation_Date_Range__c = 1;
+
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        List<Opportunity> opportunities = [
+                SELECT AccountId,
+                        Account.Name,
+                        Amount
+                FROM Opportunity
+                WHERE AccountId = :a.Id
+        ];
+
+        System.assertEquals(1, opportunities.size(),
+                'The Account should still only have one Opportunity ' +
+                        'since the selected Opportunity should have been updated.');
+        System.assertEquals(a.Id, opportunities[0].AccountId,
+                'The Opportunity AccountId should not have been changed.');
+        System.assertEquals(a.Name, opportunities[0].Account.Name,
+                'The Account Name should not have changed.');
+        System.assertEquals(d.Donation_Amount__c, opportunities[0].Amount,
+                'The selected Opportunity should have been updated with the information ' +
+                        'from the Data Import record.');
+
+        for (npe01__OppPayment__c oppPayment : [
+                SELECT npe01__Written_Off__c,
+                        npe01__Payment_Amount__c
+                FROM npe01__OppPayment__c
+                WHERE Id = :p0.Id
+                OR Id = :p1.Id
+        ]) {
+            System.assertEquals(true, oppPayment.npe01__Written_Off__c,
+                    'The existing written-off Payments should be unchanged.');
+            System.assertEquals(25, oppPayment.npe01__Payment_Amount__c,
+                    'The existing written-off Payments should be unchanged.');
         }
     }
 

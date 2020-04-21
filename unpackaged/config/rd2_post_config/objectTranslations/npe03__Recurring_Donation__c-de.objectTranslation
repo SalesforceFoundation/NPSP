@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum auf den letzten Tag des Monats. Die Ratenlaufzeit muss monatl. o. vierteljährl. o. eine benutzerdef. Ratenlaufzeit in Monaten sein.</help>
+        <label>Ersetzt:Immer letzten Tag des Monats verwenden</label>
+        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <label>Ersetzt:Ratenbetrag</label>
+        <name>npe03__Installment_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Der Betrag für jede Raten-Opportunity.</help>
+        <label>Betrag</label>
+        <name>npe03__Amount__c</name>
+    </fields>
+    <fields>
+        <help>Das Datum der ersten Erfassung dieser wiederkehrenden Spende. Standardwert ist der aktuelle Tag.</help>
+        <label>Erstelldatum</label>
+        <name>npe03__Date_Established__c</name>
+    </fields>
+    <fields>
+        <help>Legt bei monatlicher Ratenlaufzeit den spezifischen Tag im Monat für zukünftige Raten-Opportunities fest.</help>
+        <label>Tag des Monats</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last Day Of Month</masterLabel>
+            <translation>Letzter Tag des Monats</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Das Datum, zu dem die neuen oder aktualisierten Zeitplaninformationen (Betrag, Tag des Monats usw.) für diese wiederkehrende Spende in Kraft treten. Der Standardwert ist das aktuelle Datum.</help>
+        <label>Inkrafttreten</label>
+        <name>%%%NAMESPACE%%%StartDate__c</name>
+    </fields>
+    <fields>
+        <help>Wählen Sie bei einer Wiederkehrenden Spende mit offenem Ende &quot;Offen&quot;. Wählen Sie &quot;Keine&quot; bei einer Wiederkehrenden Spende mit fester Dauer. Wählen Sie &quot;Geschlossen&quot;, um eine wiederkehrende Spende zu schließen.</help>
+        <label>Ersetzt:Status &quot;Unbefristet&quot;</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <help>Gibt Salesforce an, wie der Betrag für die einzelnen untergeordneten Opportunities auf der Grundlage dessen, was Sie in das Betragsfeld eingegeben haben, berechnet werden soll. Nur für Wiederkehrende Spenden mit fester Dauer.</help>
+        <label>Ersetzt:Zeitplantyp</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <help>Die Summe aller Opportunities für befristete wiederkehrende Spenden</help>
+        <label>Ersetzt:Gesamt</label>
+        <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <help>Die Ratenlaufzeit definiert zusammen mit der Häufigkeit der Ratenzahlung den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als "alle 3 Monate".</help>
+        <label>Ratenlaufzeit</label>
+        <name>npe03__Installment_Period__c</name>
+    </fields>
+    <fields>
+        <help>NPSP berechnet diesen Wert automatisch danach, wann eine Raten-Opportunity beim letzten Mal als "Bezahlt" gekennzeichnet wurde (schreibgeschützt).</help>
+        <label>Letztes Spendendatum</label>
+        <name>npe03__Last_Payment_Date__c</name>
+    </fields>
+    <fields>
+        <help>Der für diese Wiederkehrende Spende bezahlte Gesamtbetrag. Berechnung automatisch als Gesamtbetrag aller Geschlossenen/gewonnenen Raten-Opportunities (schreibgeschützt).</help>
+        <label>Bezahlter Gesamtbetrag</label>
+        <name>npe03__Paid_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtzahl der für diese Wiederkehrende Spende gezahlten Raten-Opportunities (schreibgeschützt).</help>
+        <label>Summe der bezahlten Raten</label>
+        <name>npe03__Total_Paid_Installments__c</name>
+    </fields>
+    <fields>
+        <help>Wird automatisch anhand des aktiven Zeitplans/der aktiven Zeitpläne für wiederkehrende Spenden berechnet. Schreibgeschützt.</help>
+        <label>Nächstes Spendendatum</label>
+        <name>npe03__Next_Payment_Date__c</name>
+    </fields>
+    <layouts>
+        <layout>Enhanced Recurring Donations Layout</layout>
+        <sections>
+            <label>Zeitplandetails</label>
+            <section>Schedule Details</section>
+        </sections>
+        <sections>
+            <label>Statistik für wiederkehrende Spenden</label>
+            <section>Recurring Donation Statistics</section>
+        </sections>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Name für wiederkehrende Spende</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Name für wiederkehrende Spende</label>
+    </standardFields>
+</CustomObjectTranslation>

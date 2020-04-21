@@ -55,6 +55,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, 0);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, 0);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use, 0);
     }
 
     /**
@@ -66,16 +67,15 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         Account donorAccount = new Account(Name = 'foo');
         insert donorAccount;
 
-        insert new npe03__Recurring_Donation__c(
-            Name = 'foo',
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
-            npe03__Date_Established__c= System.today(),
-            npe03__Organization__c = donorAccount.Id,
-            npe03__Amount__c = 20,
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
-        );
-
+        insert new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(System.today())
+            .withAccount(donorAccount.Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+            
         MockTelemetryBatch batch = new MockTelemetryBatch();
         batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
@@ -97,6 +97,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
 
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll, null);
         assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount, null);
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use, null);
     }
 
     /**

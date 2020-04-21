@@ -2,51 +2,57 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- GAU Allocation --></value>
+        <value>Asignación de CCG</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- GAU Allocation --></value>
+        <value>Asignaciones de CCG</value>
     </caseValues>
     <fields>
-        <help>Monto de la oportunidad a asignar a esta cuenta contable general. Dejar en blanco para asignaciones basadas en porcentaje.</help>
-        <label>Cuenta</label>
+        <help>Importe de la oportunidad asignado a esta cuenta contable general. Se deja en blanco para asignaciones basadas en porcentaje.</help>
+        <label>Importe</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>Opcionalmente atribuye asignaciones a una campaña. Todas las nuevas oportunidades creadas con esta campaña en el campo Origen de campaña principal serán automáticamente asignadas del mismo modo.</help>
+        <help>La campaña asociada con esta asignación. Utilice este campo si desea que las nuevas oportunidades asociadas con esta campaña se asignen de la misma manera.</help>
         <label>Campaña</label>
         <name>Campaign__c</name>
-        <relationshipLabel>Asignación CCG</relationshipLabel>
+        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
     </fields>
     <fields>
-        <help>La cuenta contable general a atribuir la asignación. Solo cuentas contables generales activas están disponibles para nuevas asignaciones.</help>
+        <help>La cuenta contable general a la que se atribuye esta asignación. Solo las cuentas contables generales activas están disponibles para nuevas asignaciones.</help>
         <label>Cuenta Contable General</label>
         <lookupFilter>
-            <errorMessage>Asignaciones solo pueden ser asignadas a cuentas contables generales activadas. Asignaciones asignadas a cuentas contables inactivas no pueden ser modificadas.</errorMessage>
-            <informationalMessage>Solo cuentas contables activadas pueden ser seleccionadas.</informationalMessage>
+            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
+            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
         </lookupFilter>
         <name>General_Accounting_Unit__c</name>
-        <relationshipLabel>Asignación CCG</relationshipLabel>
+        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
     </fields>
     <fields>
-        <help>Oportunidad relacionada. Todas las oportunidades cerradas ganadas van a ser consideradas para los campos de resumen en el registro de la cuenta contable general.</help>
+        <help>La oportunidad a la que desea atribuir esta asignación. NPSP totaliza todas las oportunidades de una etapa Cerrada/Ganada en la Cuenta contable general de esta asignación.</help>
         <label>Oportunidad</label>
         <name>Opportunity__c</name>
-        <relationshipLabel>Asignación CCG</relationshipLabel>
+        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
     </fields>
     <fields>
-        <help>Porcentaje del importe de la oportunidad a asignar a esta cuenta contable general. Modificar el monto de la oportunidad en oportunidades asignadas por porcentaje cambia el monto de la asignación.</help>
+        <help>Asignaciones de atributos a un pago.</help>
+        <label>Pago</label>
+        <name>Payment__c</name>
+        <relationshipLabel>Asignaciones de pago</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Importe del porcentaje de una oportunidad asignado a la Cuenta de contabilidad general de esta asignación. Si modifica más adelante el importe de la oportunidad, NPSP actualizará el importe de la asignación en la Cuenta contable general.</help>
         <label>Porcentaje</label>
         <name>Percent__c</name>
     </fields>
     <fields>
-        <help>Opcionalmente atribuye asignaciones a una donación recurrente. Todas las nuevas oportunidades creadas con esta donación recurrente serán automáticamente asignadas del mismo modo.</help>
-        <label>Donación Recurrente</label>
+        <help>La donación recurrente a la que se atribuye esta asignación. NPSP asigna automáticamente todas las nuevas oportunidades asociadas con la donación recurrente de la misma manera.</help>
+        <label>Donación recurrente</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel>Asignación CCG</relationshipLabel>
+        <relationshipLabel>Asignaciones de CCG</relationshipLabel>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Allocation Layout</layout>
         <sections>
@@ -54,7 +60,7 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- GAU Allocation Name --></nameFieldLabel>
+    <nameFieldLabel>Nombre de asignación de CCG</nameFieldLabel>
     <webLinks>
         <label>Gestionar asignaciones</label>
         <name>Manage_Allocations</name>

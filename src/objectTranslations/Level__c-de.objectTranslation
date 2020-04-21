@@ -40,6 +40,10 @@
         <plural>true</plural>
         <value>Ebenen</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- LevelEdit --></label>
+        <name>LevelEdit</name>
+    </fieldSets>
     <fields>
         <help>Gibt an, ob diese Ebene aktuell verwendet wird.</help>
         <label>Aktiv</label>
@@ -57,22 +61,22 @@
         <relationshipLabel>Ebenen</relationshipLabel>
     </fields>
     <fields>
-        <help>Das Feld (Entwicklername) des Zielobjekts, um die Suche für die aktuelle Ebene zu speichern.  Beachten Sie, dass dieses Feld die Hierarchie, zu der diese Ebene gehört, implizit definiert.</help>
+        <help>Gibt an, welches Feld im Zielobjekt verwendet werden soll, um die aktuelle Ebene zu speichern. </help>
         <label>Ebenenfeld</label>
         <name>Level_Field__c</name>
     </fields>
     <fields>
-        <help>Der Höchstbetrag, unter dem der Wert liegen muss, um dieser Ebene zugewiesen zu werden.  Wenn das Feld leer gelassen wird, wird diese Ebene bei einem beliebigen Betrag zugewiesen, der größer oder gleich dem Mindestbetrag dieser Ebene ist.</help>
+        <help>Der Betrag unter dem der Wert liegen muss, damit NPSP diese Ebene zuweist. Wenn das Feld leer gelassen wird, weist NPSP diese Ebene einem beliebigen Betrag zugewiesen, der größer oder gleich dem Mindestbetrag dieser Ebene ist.</help>
         <label>Höchstbetrag (&lt;)</label>
         <name>Maximum_Amount__c</name>
     </fields>
     <fields>
-        <help>Der Mindestbetrag, um dieser Ebene zugewiesen zu werden.  Wenn das Feld leer gelassen wird, wird diese Ebene bei einem beliebigen Betrag zugewiesen, der kleiner als der Höchstbetrag dieser Ebene ist.</help>
+        <help>Der Mindestbetrag, der benötigt wird, damit NPSP diese Ebene zuweist. Wenn das Feld leer gelassen wird, weist NPSP diese Ebene einem beliebigen Betrag zu, der kleiner als der Höchstbetrag dieser Ebene ist.</help>
         <label>Mindestbetrag (&gt;=)</label>
         <name>Minimum_Amount__c</name>
     </fields>
     <fields>
-        <help>Das Feld (Entwicklername) des Zielobjekts, um die Suche für die vorherige Ebene des Objekts zu speichern.  Optional.</help>
+        <help>Gibt an, welches Feld im Zielobjekt verwendet werden soll, um die vorherige Ebene zu speichern.</help>
         <label>Vorhergehendes Ebenenfeld</label>
         <name>Previous_Level_Field__c</name>
     </fields>
@@ -82,12 +86,12 @@
         <name>Source_Field__c</name>
     </fields>
     <fields>
-        <help>Das Objekt, auf das diese Ebene anwendbar ist.</help>
+        <help>Das Objekt, auf das diese Ebene angewendet wird.</help>
         <label>Ziel</label>
         <name>Target__c</name>
         <picklistValues>
             <masterLabel>Account</masterLabel>
-            <translation><!-- Account --></translation>
+            <translation>Account</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Contact</masterLabel>
@@ -106,9 +110,9 @@
             <section>long text section</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Ebene</nameFieldLabel>
+    <nameFieldLabel> Name der Ebene</nameFieldLabel>
     <validationRules>
-        <errorMessage>Ziel ist ein erforderliches Feld auf der Ebene.  Geben Sie das Zielobjekt für diese Ebene an.</errorMessage>
+        <errorMessage>Ziel ist ein Pflichtfeld auf der Ebene. Geben Sie das Zielobjekt für diese Ebene an.</errorMessage>
         <name>Target_Required</name>
     </validationRules>
 </CustomObjectTranslation>

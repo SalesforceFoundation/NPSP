@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Trigger Handler --></value>
+        <value>トリガハンドラ</value>
     </caseValues>
     <fields>
         <help>このモジュールが有効であることを示します。</help>
@@ -35,31 +35,31 @@
         <name>Trigger_Action__c</name>
         <picklistValues>
             <masterLabel>AfterDelete</masterLabel>
-            <translation><!-- AfterDelete --></translation>
+            <translation>AfterDelete</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>AfterInsert</masterLabel>
-            <translation><!-- AfterInsert --></translation>
+            <translation>AfterInsert</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>AfterUndelete</masterLabel>
-            <translation><!-- AfterUndelete --></translation>
+            <translation>AfterUndelete</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>AfterUpdate</masterLabel>
-            <translation><!-- AfterUpdate --></translation>
+            <translation>AfterUpdate</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>BeforeDelete</masterLabel>
-            <translation><!-- BeforeDelete --></translation>
+            <translation>BeforeDelete</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>BeforeInsert</masterLabel>
-            <translation><!-- BeforeInsert --></translation>
+            <translation>BeforeInsert</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>BeforeUpdate</masterLabel>
-            <translation><!-- BeforeUpdate --></translation>
+            <translation>BeforeUpdate</translation>
         </picklistValues>
     </fields>
     <fields>
@@ -68,8 +68,8 @@
         <name>User_Managed__c</name>
     </fields>
     <fields>
-        <help><!-- Semicolon separated list of Salesforce usernames that this trigger will NOT run for. Leave blank to run for all users. --></help>
-        <label><!-- Usernames to Exclude --></label>
+        <help>このトリガハンドラの対象にしないユーザ名のセミコロン区切りリスト。すべてのユーザを対象にする場合は、空白のままにします。</help>
+        <label>除外するユーザ名</label>
         <name>Usernames_to_Exclude__c</name>
     </fields>
     <layouts>
@@ -79,9 +79,9 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label>新規セクション</label>
             <section>New Section</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Trigger Handler Name --></nameFieldLabel>
+    <nameFieldLabel>トリガハンドラ名</nameFieldLabel>
 </CustomObjectTranslation>

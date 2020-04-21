@@ -368,7 +368,7 @@ public without sharing class HH_HouseholdNaming {
             
             if (hs != null && hs.npo02__Advanced_Household_Naming__c == true) {
                 // AfterUpdate data
-                list<id> hhlist = new list<id>();
+                list<id> hhList = new list<id>();
 
                 for (SObject h : listHHNew) {
                     string customname = '';
@@ -421,24 +421,37 @@ public without sharing class HH_HouseholdNaming {
 
                     } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                         if (h.get('Name') == system.Label.npo02.NameReplacementText)
-                           hhlist.add(h.id);
+                           hhList.add(h.id);
                         else if (h.get('npo02__Informal_Greeting__c') == system.Label.npo02.NameReplacementText)
-                           hhlist.add(h.id);
+                           hhList.add(h.id);
                         else if (h.get('npo02__Formal_Greeting__c') == system.Label.npo02.NameReplacementText)
-                            hhlist.add(h.id);
+                            hhList.add(h.id);
                         else if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != mapIdHHOld.get(h.id).get('npo02__SYSTEM_CUSTOM_NAMING__c'))
-                            hhlist.add(h.id);
+                            hhList.add(h.id);
                         else if (h.getSObjectType() == Account.sObjectType && h.get('npe01__One2OneContact__c') != mapIdHHOld.get(h.id).get('npe01__One2OneContact__c'))
-                            hhlist.add(h.id);
+                            hhList.add(h.id);
                     }
                 }
-                if (!hhlist.isEmpty()){
-                    HH_HouseholdNaming hn = new HH_HouseholdNaming();
-                    hn.UpdateNames(hhlist);
-                }
+                renameHHAccounts(hhList);
             }
         }
-
     }
 
+    /*******************************************************************************************************
+    * @description for the list of HH AccountId's, update their Household Names
+    * @param accountIds the list of Account (Id's) that need updating.
+    * @return void
+    */
+    public static void renameHHAccounts(List<Id> accountIds) {
+        if (accountIds.isEmpty()) {
+            return;
+        }
+
+        if (accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
+            HH_HouseholdNaming hhName = new HH_HouseholdNaming();
+            hhName.UpdateNames(accountIds);
+        } else {
+            HH_HouseholdNaming.FutureUpdateNames(accountIds);
+        }
+    }    
 }

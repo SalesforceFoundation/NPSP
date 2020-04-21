@@ -9,13 +9,13 @@
         <value><!-- Batch Data Entry Settings --></value>
     </caseValues>
     <fields>
-        <help>Si seleccionado, nunca se agregará nombre a las oportunidades, incluso si esta en blanco</help>
-        <label>Permitir nombres de op. en blanco</label>
+        <help>Si se establece, la entrada de datos de lote nunca asignará un nombre a las oportunidades, incluso si esta en blanco (no se incluye en la página BDE).</help>
+        <label>Permitir nombres oportunidades en blanco</label>
         <name>Allow_Blank_Opportunity_Names__c</name>
     </fields>
     <fields>
-        <help>Generar automáticamente el nombre de las oportunidades creadas en el lote utilizando valores en los campos.</help>
-        <label>Agregar nombre a las oportunidades</label>
+        <help>Este parámetro genera automáticamente el nombre del registro para los registros de oportunidades introducidos en lotes en base al valor de los campos introducidos.</help>
+        <label>Nomenclatura de oportunidades</label>
         <name>Opportunity_Naming__c</name>
     </fields>
     <gender><!-- Feminine --></gender>

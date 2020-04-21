@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Het bedrag voor de Opportunity van elke termijn.</help>
+        <label>Bedrag</label>
+        <name>npe03__Amount__c</name>
+    </fields>
+    <fields>
+        <help>De initiële datum van inceptie voor deze terugkerende donatie. De standaardwaarde is de huidige datum.</help>
+        <label>Datum van instellen</label>
+        <name>npe03__Date_Established__c</name>
+    </fields>
+    <fields>
+        <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op laatste dag van de maand, onafh. van Volgende Donatiedatum. Termijnperiode moet Maandelijks of Driemaandelijks zijn, of een aangepaste periode met maanden.</help>
+        <label>Verouderd:Altijd laatste dag van maand gebruiken</label>
+        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help>Kies Open voor een doorlopende Terugkerende donatie (een Terugkerende donatie voor onbepaalde duur). Kies Geen voor een Terugkerende donatie met een vaste duur. Kies Gesloten om de Terugkerende donatie te sluiten.</help>
+        <label>Verouderd:Status voor onbepaalde duur</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <help>Meldt aan Salesforce de manier waarop het bedrag voor elke onderliggende opportunity moet worden berekend op basis van wat u hebt opgegeven in het veld. Alleen Terugkerende donaties met vaste duur.</help>
+        <label>Verouderd:Planningstype</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <label>Verouderd:Termijnbedrag</label>
+        <name>npe03__Installment_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Het totale bedrag van alle Opportunities, voor Terugkerende donaties zonder onbepaalde duur.</help>
+        <label>Verouderd:Totaal</label>
+        <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <help>Stelt de specifieke dag van de maand in voor toekomstige Opportunities voor termijnen wanneer de Termijnperiode Maandelijks is.</help>
+        <label>Dag van de Maand</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last Day Of Month</masterLabel>
+            <translation>Laatste dag van de maand</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>De Termijnperiode, samen met Frequentie van termijnen, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
+        <label>Termijnperiode</label>
+        <name>npe03__Installment_Period__c</name>
+    </fields>
+    <fields>
+        <help>NPSP berekent deze waarde automatisch op basis van de laatste maal dat een termijn voor een Opportunity is aangeduid als betaald (alleen-lezen).</help>
+        <label>Datum van laatste donatie</label>
+        <name>npe03__Last_Payment_Date__c</name>
+    </fields>
+    <fields>
+        <help>Het totale betaalde bedrag voor deze terugkerende donatie. Wordt automatisch berekend als het totale bedrag aan termijnen van alle gesloten/gewonnen Opportunities (alleen-lezen).</help>
+        <label>Totaal betaald bedrag</label>
+        <name>npe03__Paid_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Totale aantal betaalde termijnen voor Opportunities voor deze Terugkerende donatie (alleen-lezen).</help>
+        <label>Aantal betaalde termijnen</label>
+        <name>npe03__Total_Paid_Installments__c</name>
+    </fields>
+    <fields>
+        <help>Wordt automatisch berekend met behulp van actieve terugkerende planning(en). Alleen-lezen.</help>
+        <label>Datum van volgende donatie</label>
+        <name>npe03__Next_Payment_Date__c</name>
+    </fields>
+    <layouts>
+        <layout>Enhanced Recurring Donations Layout</layout>
+        <sections>
+            <label>Planningsdetails</label>
+            <section>Schedule Details</section>
+        </sections>
+        <sections>
+            <label>Statistieken over terugkerende donatie(s)</label>
+            <section>Recurring Donation Statistics</section>
+        </sections>
+        <sections>
+            <label>Aangepaste koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Naam van terugkerende donatie</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Naam van terugkerende donatie</label>
+    </standardFields>
+</CustomObjectTranslation>

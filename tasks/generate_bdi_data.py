@@ -17,7 +17,7 @@ START_DATE = date(2019, 1, 1)  # Per https://salesforce.quip.com/gLfGAPtqVzUS
 
 class GenerateBDIData(ModuleDataFactory):
     """Generate data specific to the Honeybees test cases"""
-    def make_records(self, num_records, factories):
+    def make_records(self, num_records, factories, batchnum, **other_options):
         """Make the 4 batches of DIs described here:
         https://salesforce.quip.com/YfOpAwKbhcat
         """
@@ -32,7 +32,7 @@ class GenerateBDIData(ModuleDataFactory):
             counter=Adder(0),
             Donation_Donor__c="Account1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Account1_Name__c=factory.LazyAttribute(lambda o: f"Alan Alda BDITEST {o.counter(0)} - {JOB_ID}"),
+            Account1_Name__c=factory.LazyAttribute(lambda o: f"Alan Alda BDITEST {batchnum} {o.counter(0)} - {JOB_ID}"),
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI Text {o.counter(0)} - BDI {JOB_ID}"),
             GAU_Allocation_1_GAU__c=gau.id,
             ASC_Role__c="match",
@@ -46,7 +46,7 @@ class GenerateBDIData(ModuleDataFactory):
             counter=Adder(0),
             Donation_Donor__c="Account1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Account1_Name__c=factory.LazyAttribute(lambda o: f"Boris Becker BDITEST {o.counter(0)} - {JOB_ID}"),
+            Account1_Name__c=factory.LazyAttribute(lambda o: f"Boris Becker BDITEST {batchnum} {o.counter(0)} - {JOB_ID}"),
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)} - BDI {JOB_ID}"),
             GAU_Allocation_1_GAU__c=gau.id,
             ASC_Role__c="match",
@@ -59,7 +59,7 @@ class GenerateBDIData(ModuleDataFactory):
             counter=Adder(0),
             Donation_Donor__c="Contact1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Charisma Carpenter BDITEST {o.counter(0)} - {JOB_ID}"),
+            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Charisma Carpenter BDITEST {batchnum} {o.counter(0)} - {JOB_ID}"),
             Opportunity_Contact_Role_1_Role__c="Influencer",
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)} - {JOB_ID}"),
             GAU_Allocation_1_GAU__c=gau.id,
@@ -70,7 +70,7 @@ class GenerateBDIData(ModuleDataFactory):
             counter=Adder(0),
             Donation_Donor__c="Contact1",
             Opp_Do_Not_Automatically_Create_Payment__c=False,
-            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Danny Devito BDITEST {o.counter(0)} - {JOB_ID}"),
+            Contact1_Lastname__c=factory.LazyAttribute(lambda o: f"Danny Devito BDITEST {batchnum} {o.counter(0)} - {JOB_ID}"),
             Opportunity_Contact_Role_1_Role__c="Influencer",
             CO1_Text__c=factory.LazyAttribute(lambda o: f"BDI text{o.counter(0)}"),
             GAU_Allocation_1_GAU__c=gau.id,

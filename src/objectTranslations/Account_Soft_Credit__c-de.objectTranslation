@@ -3,69 +3,77 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credit</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credit</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credit</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Account-Soft Credits</value>
     </caseValues>
     <fields>
-        <label><!-- Account --></label>
+        <help>Der Account, der diesen Soft Credit erhält.</help>
+        <label>Account</label>
         <name>Account__c</name>
-        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
+        <relationshipLabel>Soft Credits-Account</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Amount --></label>
+        <help>Der Betrag für den Soft Credit</help>
+        <label>Betrag</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <label><!-- Opportunity --></label>
+        <help>Die Opportunity, auf die dieser &quot;Soft Credit&quot; angewendet wird.</help>
+        <label>Opportunity</label>
         <name>Opportunity__c</name>
-        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
+        <relationshipLabel>Soft Credits-Account</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Role --></label>
+        <help>Die mit diesem Soft Credit verbundene Rolle. Mithilfe der Rolle wird beschrieben, in welchem Verhältnis der Account zu der Opportunity stand.</help>
+        <label>Rolle</label>
         <name>Role__c</name>
         <picklistValues>
-            <masterLabel>Influence</masterLabel>
-            <translation><!-- Influence --></translation>
+            <masterLabel>Donation Source</masterLabel>
+            <translation>Spendenquelle</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Influencer</masterLabel>
+            <translation>Einflussnehmer</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Match</masterLabel>
-            <translation><!-- Match --></translation>
+            <translation>Übereinstimmung</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
-    <nameFieldLabel><!-- Account Soft Credit Name --></nameFieldLabel>
+    <gender>Masculine</gender>
+    <nameFieldLabel>Name des Soft Credit-Accounts</nameFieldLabel>
 </CustomObjectTranslation>

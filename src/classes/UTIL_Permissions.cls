@@ -37,6 +37,30 @@ public with sharing class UTIL_Permissions {
 
     private final static String INSUFFICIENT_PERMISSION_MESSAGE = System.Label.flsError;
 
+    private static UTIL_Permissions utilPermissionsInstance;
+
+    /**
+    * @description Returns static instance of this class.  Primarily used to facilitate
+    * dependency injection in tests.
+    * @return Instance of UTIL_Permission class.
+    */
+    public static UTIL_Permissions getInstance(){
+        if (utilPermissionsInstance == null) {
+            utilPermissionsInstance = new UTIL_Permissions();
+        }
+        return utilPermissionsInstance;
+    }
+
+    /**
+    * @description Sets instance member variable holding instance of this class.  Primarily
+    * used to facilitate dependency injection in tests.
+    * @param utilPermissions An instance of the UTIL_Permissions class.
+    */
+    @TestVisible
+    private static void setInstance(UTIL_Permissions utilPermissions){
+        utilPermissionsInstance = utilPermissions;
+    }
+
     /*** Object Level Security ***/
 
     /**
@@ -141,6 +165,17 @@ public with sharing class UTIL_Permissions {
             }
         }
         return true;
+    }
+
+    /**
+    * @description Determines whether the running user has delete permissions on the given object
+    * This is an instance method which can be mocked.
+    *
+    * @param sObjectType Name of the sObject to check
+    * @return returns boolean to indicate whether the user has permission
+    */
+    public Boolean canDelete(SObjectType sObjectType) {
+        return UTIL_Describe.getObjectDescribe(sObjectType).isDeletable();
     }
 
     /*** Field Level Security ***/
@@ -304,13 +339,27 @@ public with sharing class UTIL_Permissions {
         return canRead(SObjFields);
     }
 
+    /***
+    * @description Determines whether the running user has create permissions on the sObject and fields provided
+    * @param sObjType the sObjectType to check create permissions
+    * @param sObjFields the list of SObjectFields to check create permissions
+    * @return Boolean true when the user has permissions for the SObjType and fields provided
+    */
+    public Boolean canCreate(SObjectType sObjType, Set<SObjectField> sObjFields) {
+        if (!canCreate(sObjType)) {
+            return false;
+        }
+
+        return canCreate(SObjFields);
+    }
+
     /*******************************************************************************************************************
     * @description Determines whether the running user has read permissions on the sObject provided
     *
     * @param sObjType the sObjectType to check read permissions
     * @return Boolean true when the user has permissions for the SObjType provided
     */
-    private Boolean canRead(SObjectType sObjType) {
+    public Boolean canRead(SObjectType sObjType) {
         return canRead(String.valueOf(sObjType), false);
     }
 
@@ -320,7 +369,7 @@ public with sharing class UTIL_Permissions {
     * @param sObjFields the list of SObjectFields to check read permissions
     * @return Boolean true when the user has permissions for the SObjFields provided
     */
-    private Boolean canRead(Set<SObjectField> sObjFields) {
+    public Boolean canRead(Set<SObjectField> sObjFields) {
         for (SObjectField field : sObjFields) {
             if (!canRead(field.getDescribe(), false)) {
                 return false;
@@ -328,6 +377,34 @@ public with sharing class UTIL_Permissions {
         }
 
         return true;
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has create permissions for the fields
+    * provided
+    *
+    * @param sObjFields the list of SObjectFields to check create permissions
+    * @return Boolean true when the user has permissions for the SObjFields provided
+    */
+    public Boolean canCreate(Set<SObjectField> sObjFields) {
+        for (SObjectField field : sObjFields) {
+            if (!canCreate(field.getDescribe(), false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has create permissions for the object
+    * provided
+    *
+    * @param sObjType the sObjectType to check update permissions
+    * @return Boolean true when the user has permissions for the SObjType provided
+    */
+    public Boolean canCreate(SObjectType sObjType) {
+        return canCreate(String.valueOf(sObjType), false);
     }
 
     /*******************************************************************************************************************
@@ -351,7 +428,7 @@ public with sharing class UTIL_Permissions {
     * @param sObjType the sObjectType to check update permissions
     * @return Boolean true when the user has permissions for the SObjType provided
     */
-    private Boolean canUpdate(SObjectType sObjType) {
+    public Boolean canUpdate(SObjectType sObjType) {
         return canUpdate(String.valueOf(sObjType), false);
     }
 
@@ -361,7 +438,7 @@ public with sharing class UTIL_Permissions {
     * @param sObjFields the list of SObjectFields to check update permissions
     * @return Boolean true when the user has permissions for the SObjFields provided
     */
-    private Boolean canUpdate(Set<SObjectField> sObjFields) {
+    public Boolean canUpdate(Set<SObjectField> sObjFields) {
         for (SObjectField field : sObjFields) {
             if (!canUpdate(field.getDescribe(), false)) {
                 return false;

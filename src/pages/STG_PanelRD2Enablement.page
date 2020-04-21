@@ -1,0 +1,44 @@
+<apex:page controller="RD2_EnablementDelegate_CTRL" id="RD2_Enablement" standardStylesheets="false">
+
+    <apex:slds/>
+    <apex:includeLightning/>
+
+    <div class="slds-scope">
+        <div class="slds-m-around_large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2Enablement}" />
+        </div>
+
+        <div id="enablementDelegateDiv">
+        </div>
+    </div>
+
+    <apex:form id="form">
+        <apex:actionFunction name="refreshPanels" action="{!refreshPanels}" reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
+            status="statusLoad" />
+    </apex:form>
+
+    <script>
+        var namespace = '{!namespace}';
+        if (!namespace || namespace === '') {
+            namespace = 'c';
+        }
+
+        var isSimpleVersion = {!isSimpleVersion};
+        var compName = namespace + (isSimpleVersion === true ? ':RD2_EnablementDelegateSimple' : ':RD2_EnablementDelegate');
+
+        $Lightning.use(namespace + ":RD2_EnablementApp", function () {
+            $Lightning.createComponent(
+                compName,
+                {},
+                "enablementDelegateDiv",
+                function () {
+                    $A.eventService.addHandler({
+                        "event": namespace + ":RD2_EnhancementEnabledEvent",
+                        "handler": refreshPanels
+                    });
+                }
+            );
+        });
+    </script>
+
+</apex:page>

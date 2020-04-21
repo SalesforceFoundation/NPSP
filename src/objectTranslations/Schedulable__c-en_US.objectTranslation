@@ -22,27 +22,7 @@
         <help><!-- How ofter to run the job. --></help>
         <label><!-- Frequency --></label>
         <name>Frequency__c</name>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation><!-- Daily --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Hourly</masterLabel>
-            <translation><!-- Hourly --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation><!-- Monthly --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Quarterly</masterLabel>
-            <translation><!-- Quarterly --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation><!-- Weekly --></translation>
-        </picklistValues>
-    </fields>
+        </fields>
     <fields>
         <help><!-- Last time the job was run. --></help>
         <label><!-- Last Time Run --></label>

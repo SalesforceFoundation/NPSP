@@ -277,6 +277,230 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>AssistiveTextActive</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveTextActive</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>AssistiveTextComplete</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveTextComplete</shortDescription>
+        <value>Complete</value>
+    </labels>
+    <labels>
+        <fullName>AssistiveTextError</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveTextError</shortDescription>
+        <value>Expired</value>
+    </labels>
+    <labels>
+        <fullName>AssistiveTextInfo</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveText for &quot;Info&quot;</shortDescription>
+        <value>Info</value>
+    </labels>
+    <labels>
+        <fullName>AssistiveTextNewWindow</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveTextNewWindow</shortDescription>
+        <value>Link opens in a new window</value>
+    </labels>
+    <labels>
+        <fullName>AssistiveTextRecordIcon</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive Text for a record icon</shortDescription>
+        <value>Record Icon</value>
+    </labels>
+    <labels>
+        <fullName>AssistiveTextWarning</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveTextWarning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressCompletedDate</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressCompletedDate</shortDescription>
+        <value>Completed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressExtendedStatus</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressExtendedStatus</shortDescription>
+        <value>Extended Status:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressJobItemsProcessed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressJobItemsProcessed</shortDescription>
+        <value>Batches Processed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatus</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatus</shortDescription>
+        <value>Status:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusComplete</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusComplete</shortDescription>
+        <value>Complete</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusCompleteErrors</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusCompleteErrors</shortDescription>
+        <value>Complete with Errors</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusFailed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusFailed</shortDescription>
+        <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusHolding</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusHolding</shortDescription>
+        <value>Holding</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusError</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusError</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusPreparing</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusPreparing</shortDescription>
+        <value>Preparing</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusProcessing</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusProcessing</shortDescription>
+        <value>Processing</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusQueued</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusQueued</shortDescription>
+        <value>Queued</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusStopped</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusStopped</shortDescription>
+        <value>Stopped</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusSuccess</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusSuccess</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTimeElapsed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTimeElapsed</shortDescription>
+        <value>Time Elapsed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTimeElapsedDays</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTimeElapsedDays</shortDescription>
+        <value>day(s)</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTitleRD2DataMigration</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTitleRD2DataMigration</shortDescription>
+        <value>Data Migration Run</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalJobItems</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalJobItems</shortDescription>
+        <value>Total Batches:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecords</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecords</shortDescription>
+        <value>Total Records:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecordsProcessed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecordsProcessed</shortDescription>
+        <value>Records Processed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecordsFailed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecordsFailed</shortDescription>
+        <value>Records Failed:</value>
+    </labels>
+    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -408,6 +632,13 @@
         <protected>false</protected>
         <shortDescription>Account Model Conversion Progress</shortDescription>
         <value>Account Model Conversion Progress</value>
+    </labels>
+    <labels>
+        <fullName>CONV_ConversionAccessDenied</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when user does not have permissions for the conversion process</shortDescription>
+        <value>You don&apos;t have the required system permissions to convert. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>CONV_Fundamental_Changes</fullName>
@@ -696,6 +927,14 @@
         <protected>true</protected>
         <shortDescription>ConfirmDeleteAccount</shortDescription>
         <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmDeleteLeaveAccountEmpty</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
     </labels>
     <labels>
         <fullName>CRLP_AvailableRollupType</fullName>
@@ -1278,6 +1517,612 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
     </labels>
+     <labels>
+        <fullName>RD2_AmountMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donations data if value on the amount is valid or not</shortDescription>
+        <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ContactChangeIsRestricted</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate RD Contact/Account update when a closed opportunity exists on the RD</shortDescription>
+        <value>You can&apos;t change the Household Account or Contact on a Recurring Donation that has Closed Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrencyChangeIsRestrictedOnOpp</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Currency change restriction on an Opportunity</shortDescription>
+        <value>You can&apos;t change the Opportunity currency to a different currency than the related Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Currency change restriction on a Recurring Donation</shortDescription>
+        <value>You can&apos;t change the Recurring Donation currency when there is a related closed Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrentScheduleTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Details of the schedule which is currently in effect</shortDescription>
+        <value>Current Schedule</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DataMigrationInvalidCloseAction</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Open Opportunities cannot be migrated due to No_Action configuration</shortDescription>
+        <value>In NPSP Settings | Recurring Donations, select any value other than "No_Action" for Open Opportunity Behavior on RD Close. After data migration is complete, you may change the setting back to the previous value.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DataMigrationInvalidInstallmentPeriod</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Installment Period cannot be converted to enhanced Recurring Donation format</shortDescription>
+        <value>Recurring Donation Installment Period &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DataMigrationInvalidOpenEndedStatus</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Open Ended Status cannot be converted to enhanced Recurring Donation format</shortDescription>
+        <value>Recurring Donation Open Ended Status &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DayOfMonthMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donations data if it is valid day of month</shortDescription>
+        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 30 or select Last Day of Month.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DayOfMonthIsRequiredForMonthlyInstallment</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate RD data if day of month is blank when installment is monthly</shortDescription>
+        <value>You must enter a value for Day of Month when Installment Period is Monthly.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DisableCustomizableRollupWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning displayed on Customizable Rollups page when enhanced RDs are enabled</shortDescription>
+        <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDisabledHeader</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement page header displayed due to missing prerequisites</shortDescription>
+        <value>Almost there! Just need you to check on a couple of things first . . .</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDisabledMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement page message displayed due to missing prerequisites</shortDescription>
+        <value>(1) If you're not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen.&lt;br/&gt;(2) Enable Customizable Rollups by going to NPSP Settings | Donations | Customizable Rollups.&lt;br/&gt;&lt;br/&gt;Return here to the Upgrade to Enhanced Recurring Donations page.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunBatchTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation batch job title</shortDescription>
+        <value>Validate Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation button label</shortDescription>
+        <value>Validate Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunComplete</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation section message displayed on a successful validation</shortDescription>
+        <value>Validation completed successfully.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunNextButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed to enable the migration context</shortDescription>
+        <value>Ready to Migrate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunOutdatedError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when migration validation is outdated</shortDescription>
+        <value>It&apos;s been longer than 7 days since you completed a migration validation. Refresh the page and click Validate Migration to confirm that your data will migrate without errors.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunOutdatedInfo</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Information displayed when migration validation is outdated</shortDescription>
+        <value>It&apos;s been longer than 7 days since you completed a migration validation. Click Validate Migration to confirm that your data will migrate without errors.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunSkipButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed when validation can be skipped</shortDescription>
+        <value>Skip Validation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunStopButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed when validation batch can be stopped</shortDescription>
+        <value>Stop Validation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation section title</shortDescription>
+        <value>Validate Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation section introduction and guidelines</shortDescription>
+        <value>NPSP simulates migrating your existing data to the Enhanced Recurring Donations model and identifies errors. If there are errors, go to NPSP Settings | System Tools | Error Log. After you fix the errors, return here and validate the migration again. Once the validation completes without errors, you can proceed to the next step.&lt;br/&gt;&lt;br/&gt;The validation process may take some time to complete. You can leave this page and return later to check the progress.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableConfirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement section confirmation message</shortDescription>
+        <value>I confirm that I have completed the preparation and validation tasks above and I'm ready to enable Enhanced Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement section introduction and details</shortDescription>
+        <value>This step replaces the current Recurring Donations processing logic with Enhanced Recurring Donations logic.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement section enable guidelines</shortDescription>
+        <value>Enable the Enhanced Recurring Donations functionality.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableSimpleIntro</fullName>
+         <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple enablement section introduction and details</shortDescription>
+        <value>This step changes the processing logic for Recurring Donations to use Enhanced Recurring Donations logic. Recurring Donations will not function the same way as before.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement section title</shortDescription>
+        <value>Enable Enhanced Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement section warning</shortDescription>
+        <value>&lt;b&gt;WARNING: NPSP doesn't provide a way to revert back to legacy Recurring Donations.&lt;/b&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement page introduction and guidelines</shortDescription>
+        <value>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
+        &lt;br/&gt;&lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
+        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployConfirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MetaDeploy section confirmation message</shortDescription>
+        <value>Confirm that you have installed the Enhanced Recurring Donations metadata.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployConfirmError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message on confirmation check when org does not have metadata deployed</shortDescription>
+        <value>You have not yet installed the Enhanced Recurring Donations metadata. Click Launch MetaDeploy and follow the instructions.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MetaDeploy section introduction and guidelines</shortDescription>
+        <value>Use MetaDeploy to install new metadata (picklist values, help text, etc.) for Enhanced Recurring Donations. MetaDeploy is a service that exists outside of your Salesforce org. Once you've installed the metadata, return to this page to continue the upgrade to Enhanced Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployLaunch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MetaDeploy section launch guidelines</shortDescription>
+        <value>Install the Enhanced Recurring Donations metadata using the MetaDeploy service.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployLaunchLinkLabel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MetaDeploy link label</shortDescription>
+        <value>Launch MetaDeploy</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeploySimpleIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple metaDeploy section introduction and guidelines</shortDescription>
+        <value>Use our MetaDeploy service to install the Enhanced Recurring Donations metadata. The metadata includes: new picklist values, updated help text, and a new page layout. MetaDeploy is a service that exists outside of your Salesforce org.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeployTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MetaDeploy section title</shortDescription>
+        <value>Install Enhanced Recurring Donations Metadata</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration button label</shortDescription>
+        <value>Run Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationCompleteMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed on a successful migration</shortDescription>
+        <value>&lt;b&gt;Upgrade process complete!&lt;/b&gt;&lt;br/&gt;
+        &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
+        &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to upgrade.&lt;/li&gt;
+        &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles and remove the old Recurring Donations page layout.&lt;/li&gt;
+        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;
+        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;
+        &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your profiles and permission sets.&lt;/li&gt;
+        &lt;li&gt;Adjust Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
+        &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationErrorMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed on a migration error</shortDescription>
+        <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section introduction and guidelines</shortDescription>
+        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model. This process may take some time. You can leave this page and return later to check the progress.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationSkipButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed enabling move back to the validation context</shortDescription>
+        <value>Back to Validate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStepDryRun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section validation context guidelines</shortDescription>
+        <value>You may validate the data migration again by clicking Validate Migration.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStepFinal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section migration context guidelines</shortDescription>
+        <value>Click Run Migration to begin the data migration process.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStopButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed when migration can be stopped</shortDescription>
+        <value>Stop Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section title</shortDescription>
+        <value>Run Data Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section warning</shortDescription>
+        <value>&lt;b&gt;WARNING: Run Migration modifies existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven't already done so.&lt;/b&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementPrepIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement preparation task introduction and guidelines</shortDescription>
+        <value>To limit potential errors and to protect your data, perform these preparation tasks before you begin the upgrade to Enhanced Recurring Donations:</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementPrepTasks</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement preparation tasks introduction and guidelines</shortDescription>
+        <value>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
+&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;
+&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementPrepTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement preparation tasks title</shortDescription>
+        <value>Preparation Tasks</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementSimpleIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple enablement page introduction and guidelines</shortDescription>
+        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage than ever before. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The job can only be executed when Enhanced RD is enabled in the org</shortDescription>
+        <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations Data Migration job.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ErrorEnhancedRDBatchJobCannotBeRun</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The RD2 Batch job can only be executed when Enhanced RD is enabled</shortDescription>
+        <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displayed when Installment Frequency on a Recurring Donation is not valid</shortDescription>
+        <value>Installment Frequency is required. Enter a value between 1 and 20.</value>
+    </labels>
+     <labels>
+        <fullName>RD2_InstallmentPeriodMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
+        <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Require Planned Installments field on the RD when Recurring Type is Fixed</shortDescription>
+        <value>Number of Planned Installments is required when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberInstallmentsNotAllowedWhenOpen</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disallow a value in Planned Installments on the RD for Recurring Type is Open</shortDescription>
+        <value>Number of Planned Installments is for Fixed Recurring Donations only. Remove the value in Number of Planned Installments or change the Recurring Type to Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberInstallmentsCannotBeLessThanPaid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Planned Installments field is greater than number of Paid Installments</shortDescription>
+        <value>Number of Planned Installments can&apos;t be less than the Number of Paid Installments.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PageNotAvailableHeader</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
+        <value>Page Not Available</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PageNotAvailableMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
+        <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCEndDate</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The end date of the recurring donation schedule</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Details of a schedule that will take effect at a future date</shortDescription>
+        <value>Future Schedule</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Active Schedules Component</shortDescription>
+        <value>Active Schedules</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerColumnDate</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date Column Header</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerErrorEnhancedRDNot</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Enhanced RD is not enabled</shortDescription>
+        <value>This component must be used on a Recurring Donations record page.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerErrorInvalidUsage</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the component is used on a Non-Recurring Donations page</shortDescription>
+        <value>You must enable Enhanced Recurring Donations to use this component.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerFLSInstallment</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when no field can be displayed on the upcoming installments</shortDescription>
+        <value>You don&apos;t have permissions to view Upcoming Installments. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerFLSSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when no field can be displayed on the active schedules</shortDescription>
+        <value>You don&apos;t have permissions to view Active Schedules. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerMessageNoSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when there is no future schedule to render</shortDescription>
+        <value>There are no scheduled installment Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerMessageNoActiveSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when there is no active schedule to render</shortDescription>
+        <value>There is no active schedule for this Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Schedule Visualizer Component</shortDescription>
+        <value>Upcoming Installments</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationNameSuffix</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Name Suffix</shortDescription>
+        <value>Recurring</value>
+    </labels>
+    <labels>
+        <fullName>RD_ContactMustBelongToAccount</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donations data if contact is not found with HH Account</shortDescription>
+        <value>You must select a Contact associated with this Household Account.</value>
+    </labels>
+    <labels>
+        <fullName>RD_DonorIsRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donations data if contact and account are missing</shortDescription>
+        <value>You must select an Account or Contact.</value>
+    </labels>
     <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1286,7 +2131,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Refresh Opportunities</shortDescription>
         <value>Refresh Opportunities</value>
     </labels>
-        <labels>
+    <labels>
+        <fullName>RD_ErrorAddDonationLimitedToLegacyMode</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh Opportunities button action can be executed in the legacy mode only</shortDescription>
+        <value>The Refresh Opportunities button has no function in Enhanced Recurring Donations. Ask your administrator to remove this button from Recurring Donation page layouts.</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorAddDonationMissingId</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1299,8 +2152,16 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>You do not have permission to create a donation record</shortDescription>
-        <value>You do not have permission to create a donation record. Please contact your system administrator for more information.</value>
+        <shortDescription>You do not have permission to Refresh opportunities</shortDescription>
+        <value>You don&apos;t  have the required permissions to Refresh Opportunities. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD_ErrorLegacyBatchJobCannotBeRun</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The legacy RD Batch job cannot be executed when Enhanced RD is enabled</shortDescription>
+        <value>The legacy Recurring Donations batch job cannot be executed because Enhanced Recurring Donations is enabled in this org.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</fullName>
@@ -1317,6 +2178,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>The total Amount of all Closed Won Opps is not equal to the RD Amount.</shortDescription>
         <value>The combined Amount of all related Closed Won and Pledged Opportunities must match the Amount of a Fixed Length Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD_RefreshOppsContinueMessage</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirmation message displayed to user before the process runs</shortDescription>
+        <value>This process updates all future installment Opportunities to match the current data for this Recurring Donation. For some installments, NPSP may delete and recreate new installments.
+&lt;br/&gt;&lt;br/&gt;Click Continue to start the process or Cancel to return to the Recurring Donation page.</value>
     </labels>
     <labels>
         <fullName>REL_Create_New_Relationship</fullName>
@@ -1462,7 +2332,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resources Page - Title</shortDescription>
-        <value>Welcome to Salesforce and the</value>
+        <value>Welcome to Salesforce and the Nonprofit Success Pack (NPSP)!</value>
     </labels>
     <labels>
         <fullName>RP_TrailheadLinkLabel</fullName>
@@ -1510,7 +2380,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <fullName>RP_Videos</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Youtube Videos</shortDescription>
+        <shortDescription>Nonprofit Success Pack (NPSP) Resources Page - Youtube Videos</shortDescription>
         <value>How-To videos</value>
     </labels>
     <labels>
@@ -1600,8 +2470,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>ADDR_CopyConAddrHHObjBTN</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label that appears when user does not pass FLS check to copy the address</shortDescription>
-        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+        <shortDescription>When user does not have FLS or object level permissions to copy the address</shortDescription>
+        <value>You don&apos;t have the required object or field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
     </labels>
     <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
@@ -1969,6 +2839,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error: record not created, missing required fields:</value>
     </labels>
     <labels>
+        <fullName>bdiAdvancedMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Advanced Mapping settings page</shortDescription>
+        <value>Advanced Mapping for Data Import &amp; Gift Entry</value>
+    </labels>
+    <labels>
         <fullName>bdiBatchException</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2111,14 +2989,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiCreated</shortDescription>
         <value>Created</value>
-    </labels>
-    <labels>
-        <fullName>bdiAdvancedMapping</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Data Import Advanced Mapping Summary</shortDescription>
-        <value>Data Import Advanced Mapping</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
@@ -2532,7 +3402,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiFMUILongDeploymentLink</shortDescription>
-        <value>You can view the deployment status here.</value>
+        <value>View the deployment status here.</value>
     </labels>
     <labels>
         <fullName>bdiFMUILongDeploymentMessage</fullName>
@@ -2807,6 +3677,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>Error message for long deployment</shortDescription>
         <value>Modifying this Object Group is taking longer than expected.</value>
+    </labels>
+    <labels>
+        <fullName>bdiMigrationLongDeployment</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error message for long deployment</shortDescription>
+        <value>Converting Help Text mappings to Advanced Mapping is taking longer than expected.</value>
     </labels>
     <labels>
         <fullName>bdiOMUIGroupNameHelp</fullName>
@@ -3531,6 +4409,34 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Gift Entry</value>
     </labels>
     <labels>
+        <fullName>bgeUnmappedFieldsNoticeHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <value>Field Mapping Changed</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title used for the Batch Gift Entry tab unmapped fields notice.</shortDescription>
+        <value>Batch Includes Unmapped Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeMessageAdvancedMapping</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message for Batch Gift Entry unmapped fields when Advanced Mapping enabled.</shortDescription>
+        <value>The following fields are included in this Batch, but their Field Mappings were deleted: {0}. To fix this, go to Advanced Mapping in NPSP Settings and map the fields again.</value>
+    </labels>
+    <labels>
+        <fullName>bgeUnmappedFieldsNoticeMessageHelpTextMapping</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message for Batch Gift Entry unmapped fields when Advanced Mapping disabled.</shortDescription>
+        <value>The following fields are included in this Batch, but their Field Mappings were deleted: {0}. To fix this, go to the NPSP Data Import object and map the fields again using Help Text.</value>
+    </labels>
+    <labels>
         <fullName>bgeWizardShowAdvancedOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -3608,6 +4514,254 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>commonAssistiveError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of an error page level message.</shortDescription>
+        <value>error</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of an info page level message.</shortDescription>
+        <value>info</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of a success page level message.</shortDescription>
+        <value>success</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of a warning page level message.</shortDescription>
+        <value>warning</value>
+    </labels>
+    <labels>
+        <fullName>commonBack</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Back</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
+        <fullName>commonBatches</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batches</shortDescription>
+        <value>Batches</value>
+    </labels>
+    <labels>
+        <fullName>commonCancel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>commonClone</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Clone</shortDescription>
+        <value>Clone</value>
+    </labels>
+    <labels>
+        <fullName>commonDefaultValue</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Default Value</shortDescription>
+        <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>commonDelete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>commonEdit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>commonError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field Label</shortDescription>
+        <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>commonMissingRequiredFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message about missing required fields</shortDescription>
+        <value>These required fields must be completed: {0}</value>
+    </labels>
+    <labels>
+        <fullName>commonNewGift</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Gift</shortDescription>
+        <value>New Gift</value>
+    </labels>
+    <labels>
+        <fullName>commonNext</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
+        <fullName>commonNo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No</shortDescription>
+        <value>No</value>
+    </labels>
+    <labels>
+        <fullName>commonNoItems</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notification for empty tables</shortDescription>
+        <value>No items to display.</value>
+    </labels>
+    <labels>
+        <fullName>commonOpen</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Open</shortDescription>
+        <value>Open</value>
+    </labels>
+    <labels>
+        <fullName>commonReadMore</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Read More</shortDescription>
+        <value>Read More</value>
+    </labels>
+    <labels>
+        <fullName>commonRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Required</shortDescription>
+        <value>Required</value>
+    </labels>
+    <labels>
+        <fullName>commonSave</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>commonSaveAndClose</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save and Close</shortDescription>
+        <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>commonTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template</shortDescription>
+        <value>Template</value>
+    </labels>
+    <labels>
+        <fullName>commonTemplates</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Templates</shortDescription>
+        <value>Templates</value>
+    </labels>
+    <labels>
+        <fullName>commonUpdate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Update</shortDescription>
+        <value>Update</value>
+    </labels>
+    <labels>
+        <fullName>commonViewAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View All</shortDescription>
+        <value>View All</value>
+    </labels>
+    <labels>
+        <fullName>commonViewMore</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View More</shortDescription>
+        <value>View More</value>
+    </labels>
+    <labels>
+        <fullName>commonUnknownError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unknown Error</shortDescription>
+        <value>Unknown Error</value>
+    </labels>
+    <labels>
+        <fullName>commonWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
+        <fullName>commonYes</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Yes</shortDescription>
+        <value>Yes</value>
+    </labels>
+    <labels>
         <fullName>conFailedAccountCreate</fullName>
         <categories>Data Import, Contacts</categories>
         <language>en_US</language>
@@ -3622,6 +4776,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>conMergeBtnLabel</shortDescription>
         <value>Merge</value>
+    </labels>
+     <labels>
+        <fullName>conMergeErrorNoDeleteObjPermission</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete permission on the Contact object is required to for merging</shortDescription>
+        <value>You must have Delete permissions on Contacts in order to merge Contacts.</value>
+    </labels>
+     <labels>
+        <fullName>conMergeErrorNoDeleteRecAccess</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Record sharing permission on the Contact object is required to for merging</shortDescription>
+        <value>You don&apos;t have the record sharing permissions to merge these Contacts. Select other Contact records or your system administrator may need to adjust sharing permissions.</value>
     </labels>
     <labels>
         <fullName>conMergeErrNoPersonAccounts</fullName>
@@ -3710,6 +4880,78 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>conMergeWinnerAsstText</shortDescription>
         <value>Choose this column as the master record</value>
+    </labels>
+    <labels>
+	<fullName>conMergeDRSStep1</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DRS Contact Merge Step 1</shortDescription>
+        <value>Select the Duplicate Record Sets you want to merge</value>
+    </labels>
+    <labels>
+        <fullName>conMergeFoundDRS</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+	<protected>true</protected>
+	<shortDescription>conMergeFoundDRS</shortDescription>
+        <value>Duplicate Record Sets</value>
+    </labels>
+    <labels>
+	<fullName>conMergeDRSPickBtnLabel</fullName>
+	<categories>Contact Merge</categories>
+	<language>en_US</language>
+	<protected>true</protected>
+   	<shortDescription>conMergeDRSPickBtnLabel</shortDescription>
+	<value>Pick</value>
+    </labels>
+    <labels>
+	<fullName>conMergeErrorNoDRSFound</fullName>
+	<categories>Contact Merge</categories>
+	<language>en_US</language>
+	<protected>true</protected>
+	<shortDescription>Error to be displayed when no DRS records are found</shortDescription>
+	<value>&lt;b&gt;No Duplicate Record Sets.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No Duplicate Record Sets found. Make sure duplicate rules are enabled. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;More Info&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+	<fullName>conMergeErrorNoReadDSRObjPermission</fullName>
+	<categories>Contact Merge</categories>
+	<language>en_US</language>
+	<protected>true</protected>
+	<shortDescription>Read permission on the Contact object is required to for merging</shortDescription>
+	<value>You must have Read permissions on Duplicate Record Sets in order to merge Contacts.</value>
+    </labels>
+    <labels>
+        <fullName>conMergeTooManyContactError</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error to be displayed when there are to many contact records</shortDescription>
+        <value>Too many duplicate contacts. Please use Search contact option to merge contacts</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSearchConText</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to be display before the &#39;Search Contact&#39; button</shortDescription>
+        <value>Search for specific Contacts to see if they have duplicates</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSeeDupConText</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to be display before the &#39;See Duplicate Contact&#39; button</shortDescription>
+        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSeeDupConDRS</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeSeeDupConDRS</shortDescription>
+        <value>See Duplicate Contacts</value>
     </labels>
     <labels>
         <fullName>engagementPlanCantEdit</fullName>
@@ -3823,6 +5065,1171 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>flsReadAccessError</shortDescription>
         <value>You do not have permissions to access {0}.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveActiveSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Active section icon</shortDescription>
+        <value>Active Section.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveBatchHeaderRemoveField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Trash can button to remove field from batch header</shortDescription>
+        <!-- {0} is a string. Name of a DataImportBatch__c field e.g. npsp__Batch_Description__c -->
+        <value>Remove the {0} field from the batch header.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFieldDown</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move field down</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>Move the {0} field down.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFieldUp</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move field up</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>Move the {0} field up.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsCollapseAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to collapse all Object Groups and Template Components</shortDescription>
+        <value>Collapse all Object Groups and Template Components.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsExpandAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to expand all Object Groups and Template Components</shortDescription>
+        <value>Expand all Object Groups and Template Components.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsRemoveField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Trash can button to remove field from template</shortDescription>
+        <!-- {0} is a string. Name of a form field e.g. Account 1: Name -->
+        <value>Remove the {0} field from the template.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsSectionEdit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Edit the {0} section settings.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveModalCancelAndDiscard</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to cancel and discard changes to section settings</shortDescription>
+        <value>Cancel and discard changes to Section Settings.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveRemoveSelectedOption</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt Text: Button to remove selected option</shortDescription>
+        <value>Remove selected option</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSectionDown</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section down</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Move the {0} section down.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSectionUp</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section up</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Move the {0} section up.</value>
+    </labels>
+     <labels>
+        <fullName>geAssistiveShowMenu</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button/Picklist for selecting a list view</shortDescription>
+        <value>Show menu.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSpinner</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: lightning-spinner</shortDescription>
+        <value>Content is loading.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyAdvancedFieldMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Advanced Form Fields header</shortDescription>
+        <value>For more advanced gift entry options, select fields from the following Object Groups.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchFieldBundleInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text block about inability to set default values for Field Bundles</shortDescription>
+        <value>You can't set default values for fields included in this section.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text block about adding or removing fields in the batch header</shortDescription>
+        <value>Choose fields to include in your Batch Header. Select the checkbox to add a field and deselect to remove the field from the form. If you'd like additional custom fields available for the Batch Header, add them in the NPSP Data Import Batch object.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text block about setting up batch header fields</shortDescription>
+        <value>For each field, you can edit the field label, mark it as required, or assign a default value. Default values can be overwritten by the person who creates the batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body of required field added to Batch Header</shortDescription>
+        <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
+        <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
+        <value>These required fields were automatically added to the Batch Header:</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchDefaultValues</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Info about setting default values on New Batch screen</shortDescription>
+        <value>Set default values for this batch. You can override default values when you enter gifts.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyEmptyFormSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body for illustration card when a form section is empty</shortDescription>
+        <value>Select fields to add to this section.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFieldBundlesLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Field Bundles header</shortDescription>
+        <value>Each field bundle is a managed set of fields that allow users to perform different gift entry actions.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields sidebar text block</shortDescription>
+        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsDescLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Form Fields header</shortDescription>
+        <value>These fields are commonly included in gift entry forms. Custom Object Groups are also found in this section.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsLeftColAdditional</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>More information about adding and mapping fields</shortDescription>
+        <value>
+        Set up a field by completing the following steps:
+        &lt;/br&gt;
+        &lt;/br&gt;
+        &lt;ol&gt;
+            &lt;li&gt; Create the field on the target object. &lt;/li&gt;
+            &lt;li&gt; Create the field on the NPSP Data Import object. &lt;/li&gt;
+            &lt;li&gt; If this is part of a new Object Group, create additional fields for a new Object group and create the new Object Group in NPSP Settings. &lt;/li&gt;
+            &lt;li&gt; Add Field Mapping in NPSP Settings to connect the NPSP Data Import field to the target field. &lt;/li&gt;
+        &lt;/ol&gt;
+        See NPSP documentation about Advanced Mapping for additional details.
+        </value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for deleting a section without required fields</shortDescription>
+        <value>Deleting this section also removes any fields in it.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields main section text block</shortDescription>
+        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering sections or fields.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyGiftEntryHelp</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Information about enabling Gift Entry in NPSP Settings</shortDescription>
+        <value>Before you enable Gift Entry, you must enable Advanced Mapping.
+&lt;br/&gt;&lt;br/&gt;
+Use Gift Entry templates to enter single gifts or batches of gifts. All gifts entered through the older Batch Gift Entry tool are not displayed in Gift Entry and vice versa.
+&lt;br/&gt;&lt;br/&gt;
+If preferred, you can disable Gift Entry and instead use older Batch Gift Entry (or Single Gift Entry, if using GEM).</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingApplyNewPayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about applying a new Payment to an Opportunity</shortDescription>
+        <value>You are currently adding a new Payment to Opportunity: </value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingNewOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about creating a new Opportunity</shortDescription>
+        <value>You are currently creating a new Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingNoPayments</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when an Opportunity has no Payments that are not paid</shortDescription>
+        <value>This Opportunity does not have any Payments that are not paid.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingPendingDonation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when an existing gift found</shortDescription>
+        <value>This donor has pending donations.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingSelectRecord</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body for modal to review matching Opportunities and Payments</shortDescription>
+        <value>Select the record you want to update.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingUpdatingDonation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about Payment or Opportunity that will be updated</shortDescription>
+        <value>You are currently updating: </value>
+    </labels>
+    <labels>
+        <fullName>geBodyTemplateInfoLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Info sidebar text block</shortDescription>
+        <value>Enter details about this Gift Entry Template.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyTemplatesTabDescription</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template landing screen text block</shortDescription>
+        <value>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template's dropdown menu for more options. Any templates that are in use can't be deleted.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavBackFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to go back to form fields</shortDescription>
+        <value>Back: Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavBackTemplateInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to go back to configure template information</shortDescription>
+        <value>Back: Template Info</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavBatchHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to continue and configure the batch header</shortDescription>
+        <value>Next: Batch Header</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to choose fields to include on your form</shortDescription>
+        <value>Next: Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonCancelAndClear</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and clear form</shortDescription>
+        <value>Cancel &amp; Clear Form</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsAddSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to add new section to template</shortDescription>
+        <value>Add Section</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsCollapseAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to collapse all</shortDescription>
+        <value>Collapse All</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsExpandAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to expand all</shortDescription>
+        <value>Expand All</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsModalDeleteSectionAndFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to delete a section and remove its fields</shortDescription>
+        <value>Delete Section and Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingNewOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button in Review Donations modal to create a new Opportunity</shortDescription>
+        <value>Alternatively, create a new Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingNewPayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to add a new Payment to an Opportunity</shortDescription>
+        <value>Add new Payment</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingReviewDonations</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to open Review Donations modal</shortDescription>
+        <value>Review Donations</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingUpdateDonationSelection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to open Review Donations modal and change Opportunity/Payment selection</shortDescription>
+        <value>Select a different donation.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingUpdateOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to select an existing Opportunity to update</shortDescription>
+        <value>Update this Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingUpdatePayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to select an existing Payment to update</shortDescription>
+        <value>Update this Payment</value>
+    </labels>
+    <labels>
+        <fullName>geButtonNewBatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter batch of gifts button</shortDescription>
+        <value>New Batch</value>
+    </labels>
+    <labels>
+        <fullName>geButtonNewSingleGift</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter a single gift button</shortDescription>
+        <value>New Single Gift</value>
+    </labels>
+    <labels>
+        <fullName>geButtonSaveNewGift</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Create gift and enter another one</shortDescription>
+        <value>Save &amp; Enter New Gift</value>
+    </labels>
+    <labels>
+        <fullName>geButtonTemplatesTabCreateTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Create Template button</shortDescription>
+        <value>Create Template</value>
+    </labels>
+    <labels>
+        <fullName>geDisableGiftEntryInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast reporting Gift Entry is disabled</shortDescription>
+        <value>Gift Entry Disabled</value>
+    </labels>
+    <labels>
+        <fullName>geDonationColumnLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for column in batch gift entry table that links to the matched Gift.</shortDescription>
+        <value>Donation</value>
+    </labels>
+    <labels>
+        <fullName>geErrorAmountDoesNotMatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common error when a total doesn't match Donation Amount.</shortDescription>
+        <value>Total amount doesn't match the {0}</value>
+    </labels>
+    <labels>
+        <fullName>geDonorColumnLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
+        <value>Donor</value>
+    </labels>
+    <labels>
+        <fullName>geEnableGiftEntrySuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast reporting Gift Entry is enabled</shortDescription>
+        <value>Gift Entry Enabled</value>
+    </labels>
+    <labels>
+        <fullName>geErrorCompleteThisField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field level validation error message when a required field is not filled in</shortDescription>
+        <value>Complete this field.</value>
+    </labels>
+    <labels>
+        <fullName>geEditBatchInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to edit batch information</shortDescription>
+        <value>Edit Batch Info</value>
+    </labels>
+    <labels>
+        <fullName>geErrorExistingTemplateName</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message when template name is not unique</shortDescription>
+        <value>This name has been used by another template. Please enter a unique name.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorTypeValidation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for gift entered without required donor info, 2 fields present</shortDescription>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
+        <!-- {1} = user label for the Donation Donor field -->
+        <!-- {2} = user label for Contact1: Contact1 Imported or Account1: Account1 Imported field -->
+        <!-- {3} = user label for Contact1: Contact1 Last Name or Account1: Account1 Name field  -->
+        <value>When you select {0} for {1}, you must enter information in at least one of the following fields: {2} or {3}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorTypeValidationSingle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for gift entered without required donor info, 1 field present</shortDescription>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
+        <!-- {1} = user label for the Donation Donor field -->
+        <!-- {2} = user label for Contact1: Contact1 Imported, Account1: Account1 Imported, Contact1: Contact1 Last Name, or Account1: Account1 Name field -->
+        <value>When you select {0} for {1}, you must enter information in {2}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorTypeInvalid</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for when Donation Donor doesn't match fields on the form</shortDescription>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
+        <!-- {1} = user label for the Donation Donor field -->
+        <value>You've selected {0} for {1}, but the required {0} fields aren't available on your form. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFieldPermission</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message for insufficient field access</shortDescription>
+        <value>You don't have permission to edit this field.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorObjectCRUDHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header of full page error when insufficient access to all objects on the form</shortDescription>
+        <value>Check Your Object Permissions</value>
+    </labels>
+    <labels>
+        <fullName>geErrorObjectCRUDBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body of full page error when insufficient access to all objects on the form</shortDescription>
+        <value>You must have permission to edit all objects in the form. Check with your Salesforce admin about access for the following objects: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFLSHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header of full page error when insufficient field access to what's on the form</shortDescription>
+        <value>Check Your Field Permissions</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFLSBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body of full page error when insufficient field access to what's on the form</shortDescription>
+        <value>You must have permission to edit all fields in the form. Check with your Salesforce admin about accessing the following fields: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelAdvancedMappingBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message body when Advanced Mapping and Gift Entry are off</shortDescription>
+        <value>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message header when Advanced Mapping and Gift Entry are off</shortDescription>
+        <value>Enable Advanced Mapping and Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelFieldPermission1</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access with fields listed</shortDescription>
+        <!-- {0} is a list. Name of fields e.g. npsp__Amount__c, npsp__Description__c -->
+        <value>To save changes to this template you must have permission to edit all of the fields in the form. Please remove the following fields: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelFieldPermission2</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
+        <value>Alternatively, exit this form without saving and check your permissions on both the target object and on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelMissingRequiredFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message for required field missing on template</shortDescription>
+        <!-- Label should be followed by a list of fields e.g. npsp__Amount__c, npsp__Description__c -->
+        <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelMissingRequiredGroupFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message for required group of fields is missing</shortDescription>
+        <value>At least one of the following fields is required: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorRequiredField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message for required field missing on NPSP Data Import object</shortDescription>
+        <value>Required field</value>
+    </labels>
+    <labels>
+        <fullName>geGauAllocationsBundle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of GAU Allocations field bundle</shortDescription>
+        <value>GAU Allocations</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderAdvancedFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for advanced form fields</shortDescription>
+        <value>Advanced Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchEnterInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to enter batch info</shortDescription>
+        <value>Enter Batch Info</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchGiftEntry</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Gift Entry header</shortDescription>
+        <value>Batch Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchHeaderLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to select batch header fields</shortDescription>
+        <value>Select Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchHeaderRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to configure batch header fields</shortDescription>
+        <value>Configure Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchSelectTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to select template</shortDescription>
+        <value>Select Template</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchSetDefaultValues</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to set default values</shortDescription>
+        <value>Set Default Values</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderCustomTableHeaders</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for selecting fields to include as columns</shortDescription>
+        <value>Select Fields to Display</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderEmptyFormSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for illustration card when a form section is empty</shortDescription>
+        <value>No fields yet</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFieldBundles</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for field bundles (aka widgets)</shortDescription>
+        <value>Field Bundles</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsDefaultSectionName</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of default form section in a new template</shortDescription>
+        <value>Gift Entry Form</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Form Fields sidebar</shortDescription>
+        <value>Form Fields &amp; Field Bundles</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for deleting section in settings modal</shortDescription>
+        <value>Delete Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalRenameSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for renaming section in settings modal</shortDescription>
+        <value>Rename Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalSectionSettings</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for form fields section settings modal</shortDescription>
+        <value>Section Settings</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Form Fields body</shortDescription>
+        <value>Configure Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderGiftEntry</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry</shortDescription>
+        <value>Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingGiftBy</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Donor Information</shortDescription>
+        <!-- {0} = Account or Contact record Name -->
+        <value>Gift by {0}</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingReviewDonations</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for modal to review matching Opportunities and Payments</shortDescription>
+        <!-- {0} = an Account or Contact record Name -->
+        <value>Review Donations for {0}</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label with key Opportunity information</shortDescription>
+        <!-- {0} = Opportunity Amount {1} = Opportunity Close Date {2} = Opportunity Stage -->
+        <value>{0} on {1} ({2})</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingPayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label with key Payment information</shortDescription>
+        <!-- {0} = Payment Amount {1} = Payment Scheduled Date -->
+        <value>{0} on {1}</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderNewSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for a new section</shortDescription>
+        <value>New Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderNewTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template header</shortDescription>
+        <value>New Template</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderPageLevelError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for page level errors</shortDescription>
+        <value>Review the errors on this page.</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderSingleGiftEntry</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Single Gift Entry Header</shortDescription>
+        <value>Single Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderTemplateInfoLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for gift entry template information</shortDescription>
+        <value>Gift Entry Template Information</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAccount1Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Account1 Object Group</shortDescription>
+        <value>The fields in this section are only for Organization Accounts. This organization can be the donor or have an Affiliation with Contact1.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAccount2Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Account2 Object Group</shortDescription>
+        <value>The fields in this section are only for Organization Accounts. This organization can have an Affiliation with Contact2.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAddressMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Address Object Group</shortDescription>
+        <value>The Address record that's associated with Contact1's Household Account. NPSP automation may also populate this address to Contact1's household and all contacts within the same household. If you're using the EDA Address object, you should create a new Object Group for the object and use its fields on your template.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAllocation1Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for GAU Allocation 1 object group</shortDescription>
+        <value>This Object Group only allows you to enter a single GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAllocation2Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for GAU Allocation 2 object group</shortDescription>
+        <value>This Object Group only allows you to enter a second GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAllocationBundle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text about GAU Allocation field bundle</shortDescription>
+        <value>Use this field bundle to allocate donations across multiple General Accounting Units.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Batch Header Field Label</shortDescription>
+        <value>You can rename the user-facing field labels.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextContact1Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Contact1 Object Group</shortDescription>
+        <value>The primary Contact in a Household Account. This Contact can be the donor or have an Affiliation with the organization in Account1.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextContact2Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Contact2 Object Group</shortDescription>
+        <value>The secondary Contact in Contact1's Household Account. This Contact could also have an Affiliation with the organization in Account2.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextFormFieldsFieldCustomLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields individual field help text</shortDescription>
+        <!-- {0} is a string. Name of an Object Mapping Group e.g. Account 1, Contact 2 -->
+        <!-- {1} is a string. Name of a standard or custom object field e.g. Name, Amount -->
+        <!-- {2} is a string. Name of a standard or custom object e.g. Account, Contact -->
+        <value>This field uses the {0} Object Group to target the {1} field on the {2} object.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextFormFieldsFieldLabelLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Form Fields Field Label</shortDescription>
+        <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextHouseholdMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Household Object Group</shortDescription>
+        <value>Additional information about Contact1's Household Account.</value>
+    </labels>
+    <labels>
+        <fullName>geLabelCustomTableSelectedFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for fields that are included as columns</shortDescription>
+        <value>Visible Fields</value>
+    </labels>
+    <labels>
+        <fullName>geLabelCustomTableSourceFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for fields that aren't included as columns</shortDescription>
+        <value>Available Fields</value>
+    </labels>
+    <labels>
+        <fullName>geLabelSectionName</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the Section Name field</shortDescription>
+        <value>Section Name</value>
+    </labels>
+    <labels>
+        <fullName>geLabelTemplateInfoDescriptionField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the Description field</shortDescription>
+        <value>Description</value>
+    </labels>
+    <labels>
+        <fullName>geLabelTemplateInfoNameField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the Template Name field</shortDescription>
+        <value>Template Name</value>
+    </labels>
+    <labels>
+        <fullName>geSearchPlaceholder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry lookup placeholder text</shortDescription>
+        <value>Search...</value>
+    </labels>
+    <labels>
+        <fullName>geSelectPlaceholder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Placeholder text for a picklist field</shortDescription>
+        <value>Select...</value>
+    </labels>
+    <labels>
+        <fullName>geTabBatchHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Batch Header navigation subtab</shortDescription>
+        <value>Batch Header</value>
+    </labels>
+    <labels>
+        <fullName>geTabFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Form Fields navigation subtab</shortDescription>
+        <value>Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geTabTemplateInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Template Info navigation subtab</shortDescription>
+        <value>Template Info</value>
+    </labels>
+    <labels>
+        <fullName>geTextListViewItemCount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to show the record count in the list view, one record</shortDescription>
+        <value>{0} item</value>
+    </labels>
+    <labels>
+        <fullName>geTextListViewItemsCount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to show the record count in the list view, more than one record</shortDescription>
+        <value>{0} items</value>
+    </labels>
+    <labels>
+        <fullName>geTextListViewSortedBy</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to display what the table is currently sorted by</shortDescription>
+        <!-- &#8226; is the character entity reference for a center dot -->
+        <value>&#8226; Sorted By {0}</value>
+    </labels>
+    <labels>
+        <fullName>geTextListViewUpdatedAgo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displays how long ago the last record in the current list view was updated</shortDescription>
+        <!-- &#8226; is the character entity reference for a center dot -->
+        <value>&#8226; Updated {0}</value>
+    </labels>
+    <labels>
+        <fullName>geToastListViewUpdated</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>List view successfully updated</shortDescription>
+        <value>List view updated.</value>
+    </labels>
+    <labels>
+        <fullName>geToastSaveFailed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save and system error isn't displayed</shortDescription>
+        <value>Your changes cannot be saved. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>geToastSelectActiveSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning when attempting to add a gift field and a section hasn't been selected.</shortDescription>
+        <value>Please select a section.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateCreateSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully created</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The "{0}" template was created.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateDeleteError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body for toast error if deleting template used by a batch or is set as default</shortDescription>
+        <value>This template is in use and cannot be deleted.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateDeleteSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully deleted</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The "{0}" template was deleted.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateTabsError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save a template with errors</shortDescription>
+        <!-- {0} is a list of strings. Names of the tabs with errors. -->
+        <value>Please review the following: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateUpdateSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully updated</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The "{0}" template was updated.</value>
+    </labels>
+    <labels>
+        <fullName>geWarningFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for deleting a section if it contains required fields</shortDescription>
+        <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>
@@ -4102,6 +6509,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The picklist value is not supported</shortDescription>
+        <value>The picklist value &quot;{0}&quot; is not supported.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidRecordtypeId</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -4140,6 +6555,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthDetailsMissingOppPayments</shortDescription>
         <value>{0} Opportunities that should have Payments are missing those Payments.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsMissingRequiredPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The picklist value is not supported</shortDescription>
+        <value>The required picklist value &quot;{0}&quot; is missing.</value>
     </labels>
     <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
@@ -4781,6 +7204,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder. Note that you should add filter criteria on the report to exclude any Opportunity types and Opportunity record types you&apos;ve excluded in NPSP Payments Settings. You can create the missing Payment records using the Create Missing Payments button on NPSP Settings | Bulk Data Processes | Create Missing Payments.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionMissingPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>A Required picklist value is missing for this specific field</shortDescription>
+        <value>Add the required picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -4858,6 +7289,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
         <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See the Manage Trigger Handlers article in the Power Of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionUnsupportedPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The picklist value is not supported in this specific field</shortDescription>
+        <value>Deactivate or delete the picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
@@ -5937,6 +8376,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>A written off Payment must have a Payment Date.</value>
     </labels>
     <labels>
+        <fullName>ProgressMarkerAssistiveTextProgress</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ProgressMarkerAssistiveTextProgress</shortDescription>
+        <value>Progress:</value>
+    </labels>
+    <labels>
         <fullName>pscDeleteRow</fullName>
         <categories>Manage Soft Credits</categories>
         <language>en_US</language>
@@ -6580,7 +9027,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgCRLPReset</shortDescription>
-        <value>Reset Customizable Rollups</value>
+        <value>Reset to Defaults</value>
     </labels>
     <labels>
         <fullName>stgDefaultValue</fullName>
@@ -6589,6 +9036,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgDefaultValue</shortDescription>
         <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>stgDeletePermissionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The user do not have delete permission to delete custom setting.</shortDescription>
+        <value>You don&apos;t have the required system permissions to delete this setting. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>stgDIFMNonAdminError</fullName>
@@ -6670,6 +9125,14 @@ To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
 &lt;br/&gt;
 &lt;br/&gt;
 Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
+    </labels>
+    <labels>
+        <fullName>stgEditPermissionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The user do not have edit permission to edit custom setting.</shortDescription>
+        <value>You don&apos;t have the required system permissions to edit this setting. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>stgErrorINaming</fullName>
@@ -7070,7 +9533,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpErrorNotifyOn</shortDescription>
-        <value>When selected, NPSP will display notifications for certain types of errrors.</value>
+        <value>When selected, NPSP will display notifications for certain types of errors.</value>
     </labels>
     <labels>
         <fullName>stgHelpErrorNotifyTo</fullName>
@@ -7496,7 +9959,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>When selected, NPSP copies the Campaign you specified on the Recurring Donation record to all of its child Opportunities. If this is not selected, NPSP copies the Campaign to the first child Opportunity only.</value>
+        <value>When selected, NPSP copies the Campaign you specified on the Recurring Donation to its installment Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDBatch</fullName>
@@ -7598,7 +10061,15 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
+        <value>The Opportunity record type assigned to the Recurring Donation&apos;s installment Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDInstallmentCreateOptionMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help Text for Recurring Donation Setting Installment Opportunity Auto-Creation</shortDescription>
+        <value>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
@@ -7946,6 +10417,30 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <value>When checked, Dated Exchange Rates are used for currency conversion. If unchecked, the standard exchange rate is used even if Advanced Currency Management is enabled.</value>
     </labels>
     <labels>
+        <fullName>stgInstallmentOppDisableAll</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disable Installments Auto-Creation process</shortDescription>
+        <value>Disable All Installments</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppDisableFirst</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disable First Installment Auto-Creation on Create</shortDescription>
+        <value>Disable First Installment on Create</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppEnableAll</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Always Create Next Installment</shortDescription>
+        <value>Always Create Next Installment</value>
+    </labels>
+    <labels>
         <fullName>stgInstallScriptError</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -8137,6 +10632,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelField</shortDescription>
         <value>Field</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelFieldValueNone</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Display the value None</shortDescription>
+        <value>None</value>
     </labels>
     <labels>
         <fullName>stgLabelHHGeneral</fullName>
@@ -8851,6 +11354,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>People</value>
     </labels>
     <labels>
+        <fullName>stgNavRD2Enablement</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgNavRD2Enablement</shortDescription>
+        <value>Upgrade to Enhanced Recurring Donations</value>
+    </labels>
+    <labels>
         <fullName>stgNavRDBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -9001,6 +11512,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgSelectOne</shortDescription>
         <value>Select one</value>
+    </labels>
+    <labels>
+        <fullName>stgStatusDisabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgStatusDisabled</shortDescription>
+        <value>Disabled</value>
+    </labels>
+    <labels>
+        <fullName>stgStatusEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgStatusEnabled</shortDescription>
+        <value>Enabled</value>
     </labels>
     <labels>
         <fullName>stgTools</fullName>

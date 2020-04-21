@@ -2,29 +2,29 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Filter Group --></value>
+        <value>Grupo de filtros</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Filter Group --></value>
+        <value>Grupos de filtros</value>
     </caseValues>
     <fields>
-        <label><!-- Description --></label>
+        <label>Descripción</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <label><!-- Deleted --></label>
+        <label>Eliminada</label>
         <name>Is_Deleted__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Filter Group Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Vínculos personalizados</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label>Nueva sección</label>
             <section>New Section</section>
         </sections>
     </layouts>

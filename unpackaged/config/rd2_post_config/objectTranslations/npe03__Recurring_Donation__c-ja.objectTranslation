@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>廃止:Always use last day of month</label>
+        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <label>廃止:単価</label>
+        <name>npe03__Installment_Amount__c</name>
+    </fields>
+    <fields>
+        <label>廃止:状況</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <label>廃止:スケジュールタイプ</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <label>廃止:合計</label>
+        <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <name>npe03__Amount__c</name>
+        <help>継続支援の 1 回の支払額。</help>
+        <label>金額</label>
+    </fields>
+    <fields>
+        <name>npe03__Date_Established__c</name>
+        <help>この継続支援の始期。デフォルトは現在の日付です。</help>
+        <label>開始日</label>
+    </fields>
+    <fields>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <help>[間隔] が [毎月] の場合、割賦支援の特定の日付を設定します。</help>
+        <label>日付</label>
+        <picklistValues>
+            <masterLabel>Last Day Of Month</masterLabel>
+            <translation>末日</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <name>npe03__Installment_Period__c</name>
+        <help>[間隔] と [頻度] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+        <label>間隔</label>
+    </fields>
+    <fields>
+        <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
+        <help>[頻度] と [間隔] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+        <label>頻度</label>
+    </fields>
+    <fields>
+        <name>npe03__Last_Payment_Date__c</name>
+        <help>この値は、継続支援が前回支払い済みとマークされた日に基づいて、NPSP により自動的に計算されます (参照のみ)。</help>
+        <label>前回の支援日</label>
+    </fields>
+    <fields>
+        <name>npe03__Paid_Amount__c</name>
+        <help>この継続支援の支払総額。すべての完了/成立支援の合計金額が自動的に計算されます (参照のみ)。</help>
+        <label>合計支払金額</label>
+    </fields>
+    <fields>
+        <name>npe03__Total_Paid_Installments__c</name>
+        <help>この継続支援で支払われた合計回数 (参照のみ)。</help>
+        <label>支払回数</label>
+    </fields>
+    <fields>
+        <name>npe03__Next_Payment_Date__c</name>
+        <help>有効な割賦スケジュールを使用して自動的に計算されます。参照のみになります。</help>
+        <label>次回の支援日</label>
+    </fields>
+    <layouts>
+        <layout>Enhanced Recurring Donations Layout</layout>
+        <sections>
+            <label>スケジュールの詳細</label>
+            <section>Schedule Details</section>
+        </sections>
+        <sections>
+            <label>継続支援の統計情報</label>
+            <section>Recurring Donation Statistics</section>
+        </sections>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>継続支援名</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>継続支援名</label>
+    </standardFields>
+</CustomObjectTranslation>

@@ -3,50 +3,50 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeine Verrechnungseinheit</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeinen Verrechnungseinheiten</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeine Verrechnungseinheit</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeinen Verrechnungseinheiten</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeinen Verrechnungseinheit</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeinen Verrechnungseinheiten</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeinen Verrechnungseinheit</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>Allgemeinen Verrechnungseinheiten</value>
     </caseValues>
     <fields>
-        <help>Aktive allgemeine Verrechnungseinheiten sind für die Auswahl für Zuordnungen verfügbar. Inaktive allgemeine Verrechnungseinheiten können keine neuen Zuordnungen haben.</help>
+        <help>Legt fest, ob diese allgemeine Verrechnungseinheit zur Auswahl für Zuordnungen zur Verfügung steht. Nur aktive allgemeine Verrechnungseinheiten stehen zur Auswahl zur Verfügung.</help>
         <label>Aktiv</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help>Der Durchschnitt aller Zuordnungen insgesamt zu dieser allgemeinen Verrechnungseinheit</help>
+        <help>Der Durchschnitt aller Zuordnungen insgesamt zu dieser allgemeinen Verrechnungseinheit. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Durchschnitt Zuordnung</label>
         <name>Average_Allocation__c</name>
     </fields>
@@ -56,12 +56,12 @@
         <name>Description__c</name>
     </fields>
     <fields>
-        <help>Der erste Opportunity-Schlusstermin einer Zuordnung, der mit dieser allgemeinen Verrechnungseinheit verknüpft ist</help>
+        <help>Der Schlusstermin der ersten Opportunity, die dieser allgemeinen Verrechnungseinheit zugewiesen ist. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Erstes Zuordnungsdatum</label>
         <name>First_Allocation_Date__c</name>
     </fields>
     <fields>
-        <help>Die größte Zuordnung insgesamt zu dieser allgemeinen Verrechnungseinheit</help>
+        <help>Der Betrag der größten Zuordnung zu dieser allgemeinen Verrechnungseinheit. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Größte Zuordnung</label>
         <name>Largest_Allocation__c</name>
     </fields>
@@ -71,61 +71,61 @@
         <name>Last_Allocation_Date__c</name>
     </fields>
     <fields>
-        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in den letzten N Tagen Der Wert von N kann in den Einstellungen geändert werden.</help>
+        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in den letzten N Tagen Der Wert N kann in den Einstellungen geändert werden.</help>
         <label>Anzahl Zuordnungen in d. letzten N Tagen</label>
         <name>Number_of_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase im letzten Jahr</help>
+        <help>Gesamtanzahl der Zuordnungen von geschlossenen/gewonnenen Opportunities im letzten Jahr. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Anzahl der Zuordnungen letztes Jahr</label>
         <name>Number_of_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in diesem Jahr</help>
+        <help>Die Gesamtzahl der Zuordnungen dieses Jahr aus geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Anzahl der Zuordnungen dieses Jahr</label>
         <name>Number_of_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase vor zwei Jahren</help>
+        <help>Die Gesamtanzahl der Zuordnungen von geschlossenen/gewonnenen Opportunities vor zwei Jahren. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Anzahl der Zuordnungen vor zwei Jahren</label>
         <name>Number_of_Allocations_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>Die kleinste Zuordnung insgesamt zu dieser allgemeinen Verrechnungseinheit</help>
+        <help>Der Betrag der kleinsten Zuordnung zu dieser allgemeinen Verrechnungseinheit. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Kleinste Zuordnung</label>
         <name>Smallest_Allocation__c</name>
     </fields>
     <fields>
-        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in den letzten N Tagen Der Wert von N kann in den Einstellungen geändert werden.</help>
+        <help>Die Anz. aller Zuordn‘en von geschl./gew. Opp. in den letzten N Tagen. (Der Wert N wird in den NPSP-Einstellungen unter &quot;Spenden&quot;, &quot;Zuordnungen zur allgemeinen Verrechnungseinheit&quot; festgelegt.) NPSP aktualisiert dieses Feld in einem nächtl. gepl. Auftr.</help>
         <label>Zuordnungen gesamt in d. letzten N Tagen</label>
         <name>Total_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase im letzten Jahr</help>
+        <help>Die Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase im letzten Jahr.</help>
         <label>Zuordnungen gesamt im letzten Jahr</label>
         <name>Total_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in diesem Jahr</help>
+        <help>Die Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in diesem Jahr. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Zuordnungen gesamt in diesem Jahr</label>
         <name>Total_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase vor zwei Jahren</help>
+        <help>Gesamtsumme aller Zuordnungen von geschlossenen/gewonnenen Opportunities vor zwei Jahren. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Zuordnungen gesamt vor zwei Jahren</label>
         <name>Total_Allocations_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase</help>
+        <help>Die Gesamtsumme aller Zuordnungen von geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Zuordnungen insgesamt</label>
         <name>Total_Allocations__c</name>
     </fields>
     <fields>
-        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase</help>
+        <help>Die Gesamtanzahl der Zuordnungen von geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
         <label>Anzahl der Zuordnungen gesamt</label>
         <name>Total_Number_of_Allocations__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
@@ -141,7 +141,7 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
+    <nameFieldLabel>Name der allgemeinen Verrechnungseinheit</nameFieldLabel>
     <webLinks>
         <label>Rollups neu berechnen</label>
         <name>Recalculate_Rollups</name>

@@ -4,6 +4,8 @@
 
 # Issues Closed
 
+# Community Ideas Delivered
+
 # New Metadata
 
 # Deleted Metadata

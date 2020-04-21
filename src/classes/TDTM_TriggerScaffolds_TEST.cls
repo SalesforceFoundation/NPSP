@@ -35,27 +35,50 @@
  * @description Test class to provide coverage for TDTM triggers on objects for which there are currently no TDTM classes. 
  *
 ***/
-
 @isTest
-public with sharing class TDTM_TriggerScaffolds_TEST {
+private with sharing class TDTM_TriggerScaffolds_TEST {
 
     /*************************************************************************** 
     * @description Currently we don't have any Trigger_Handler__c record for Lead. This test is 
     * just for test coverage, and to verify no exception gets thrown.
     **/
-    public static testmethod void tdtmLead() {
-    	insert new Lead(Company = 'Pencil Makers', LastName = 'Smith');
-    	
-    	System.assert(true); //Just checking that we get to this point = no exception thrown
+    @IsTest
+    private static void tdtmLead() {
+        insert new Lead(Company = 'tdtmLead', LastName = 'Smith');
+
+        System.assert(true); //Just checking that we get to this point = no exception thrown
     }
     
     /*************************************************************************** 
     * @description Currently we don't have any Trigger_Handler__c record for Campaign. This test is 
     * just for test coverage, and to verify no exception gets thrown.
     **/
-    public static testmethod void tdtmCampaign() {
-        insert new Campaign(Name = 'Make Us Famous');
+    @IsTest
+    private static void tdtmCampaign() {
+        insert new Campaign(Name = 'tdtmCampaign');
         
         System.assert(true); //Just checking that we get to this point = no exception thrown 
+    }
+
+    /***************************************************************************
+    * @description Currently we don't have any Trigger_Handler__c record for Grant_Deadline__c. This test is
+    * just for test coverage, and to verify no exception gets thrown.
+    **/
+    @IsTest
+    private static void tdtmGrantDeadline() {
+        List<Account> accts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert accts;
+        Opportunity opp = UTIL_UnitTestData_TEST.oppsForAccountList(accts, null,
+            UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), 100, null, null)[0];
+        insert opp;
+
+        Test.startTest();
+        insert new Grant_Deadline__c(
+            Name = 'tdtmGrantDeadline',
+            Opportunity__c = opp.Id
+        );
+        Test.stopTest();
+
+        System.assert(true); //Just checking that we get to this point = no exception thrown
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label>DEPRECATED:Always use last day of month</label>
+        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <label>DEPRECATED:Installment Amount</label>
+        <name>npe03__Installment_Amount__c</name>
+    </fields>
+    <fields>
+        <label>DEPRECATED:Open Ended Status</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <label>DEPRECATED:Schedule Type</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <label>DEPRECATED:Total</label>
+        <name>npe03__Total__c</name>
+    </fields>
+</CustomObjectTranslation>

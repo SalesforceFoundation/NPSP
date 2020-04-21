@@ -1,49 +1,42 @@
 *** Settings ***
-
+Library  String
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/LeadsPageObject.py
+
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
-
 
 *** Test Cases ***
 
 Convert Lead To Account
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
-    ${company} =              Generate Random String  
-    Go To Object Home         Lead
-    Click Object Button       New
-    Populate Form
-    ...                       First Name=${first_name}
-    ...                       Last Name=${last_name}
-    ...                       Company=${company}
-    Populate Field By Placeholder          Street            50 Fremont Street  
-    Populate Field By Placeholder          City              San Francisco
-    Populate Field By Placeholder          Zip/Postal Code   95320
-    Populate Field By Placeholder          State/Province    CA
-    Populate Field By Placeholder          Country           USA 
-    Click Dropdown            Lead Status
-    Click Link                link=Working - Contacted
-    Click Modal Button        Save    
+    ${company} =              Generate Random String
+    Go To Page                       Listing                 Lead
+    Click Object Button              New
+    Populate Modal Form
+    ...                              First Name=${first_name}
+    ...                              Last Name=${last_name}
+    ...                              Company=${company}
+    ...                              Street=50 Fremont Street
+    ...                              City=San Francisco
+    ...                              Zip/Postal Code=95320
+    ...                              State/Province=CA
+    ...                              Country=USA
+    Select Value From Dropdown       Lead Status              Working - Contacted
+    Click Modal Button               Save
     Wait Until Modal Is Closed
-    Go To Object Home         Lead
-    Click Link                link=${first_name} ${last_name}
-    Wait Until Page Contains    Convert
-    Click Link                link=Convert
-    Click Lead Button    vfFrameId    button    Convert
-    #Sleep    2
-    # Select Frame with Name      vfFrameId
-    # Click Element             //input[@value="Convert"]
-    #Sleep    2
-    Go To Object Home         Contact
-    Reload Page
-    Page Should Contain Link    ${first_name} ${last_name}
-    Go To Object Home         Account
-    Reload Page
-    Page Should Contain Link    ${last_name} Household
-    Page Should Contain Link    ${company}
+    Go To Page                       Listing                 Lead
+    Click Link                       link=${first_name} ${last_name}
+    Click Actions Link               Convert
+    Current Page Should Be           Custom                  Lead
+    Click lead convert button
+    Go To Page                       Listing                 Contact
+    Page Should Contain Link         ${first_name} ${last_name}
+    Go To Page                       Listing                 Account
+    Page Should Contain Link         ${last_name} Household
+    Page Should Contain Link         ${company}
 
-*** Keywords ***
-Click Lead Button
-    [Arguments]       ${frame_name}    ${ele_path}     @{others}
-    Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}

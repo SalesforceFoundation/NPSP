@@ -96,6 +96,31 @@ public class ERR_Handler {
         return errors;
     }
 
+
+    /*******************************************************************************************************
+    * @description Constructs errors for records that failed in the DML operation.
+    * Errors are displayed on a page.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The errors that occurred during the DML operation performed using the Database class.
+    */
+    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
+        return getErrors(dmlResults, sObjects, true);
+    }
+
+    /*******************************************************************************************************
+    * @description Constructs errors for records that failed in the DML operation.
+    * Errors are not displayed on a page.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The errors that occurred during the DML operation performed using the Database class.
+    */
+    public static Errors getErrorsOnly(List<Object> dmlResults, List<SObject> sObjects) {
+        return getErrors(dmlResults, sObjects, false);
+    }
+
     /*******************************************************************************************************
     * @description Processes the results of a single DML operation performed using the Database class to determine
     *              if errors occurred. It does not store errors or send error email notifications. These operations
@@ -103,9 +128,10 @@ public class ERR_Handler {
     *
     * @param dmlResults The results of a single DML operation performed using the Database class.
     * @param sObjects The records the DML operation was performed on.
+    * @param displayErrors Indicates if errors should be displayed on a page
     * @return Errors The errors that occurred during the DML operation performed using the Database class.
     */
-    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
+    private static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects, Boolean displayErrors) {
         Errors errors = new Errors();
 
         if (dmlResults == null || dmlResults.isEmpty()) {
@@ -137,7 +163,7 @@ public class ERR_Handler {
                 //no error record will be saved, or error notification sent.
 
                 //Displaying an error message to the user
-                if (ApexPages.currentPage() != null) {
+                if (displayErrors && ApexPages.currentPage() != null) {
                     ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
                 }
             }
@@ -300,6 +326,8 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * Display message on the current Visualforce page (if any).
+    *
     * @param errorRecords The errors to store.
     * @param context The context the errors were raised on.
     * @return void
@@ -322,24 +350,70 @@ public class ERR_Handler {
     }
 
     /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorResult The error result
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void processErrorsOnly(Errors errorResult, String context) {
+        if (errorResult == null || errorResult.errorsExist != true) {
+            return;
+        }
+
+        for (Error__c error : errorResult.errorRecords) {
+            if (String.isBlank(error.Context_Type__c)) {
+                error.Context_Type__c = context;
+            }
+        }
+
+        processErrorsOnly(errorResult.errorRecords, context);
+    }
+
+    /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void processErrorsOnly(List<Error__c> errorRecords, String context) {
+        if (errorRecords == null || errorRecords.isEmpty()) {
+            return;
+        }
+
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c || isRD2MigrationContext(context)) {
+            Database.insert(errorRecords, false);
+        }
+
+        ERR_Notifier.sendErrorNotifications(context);
+    }
+
+    /*******************************************************************************************************
     * @description Stores errors in the database (if enabled), do not generate apex page messages and sends error notifications (if enabled).
     * @param errorRecords The errors to store.
     * @param context The context the errors were raised on.
     * @return void
     */
     public static void sendErrorNotification(Exception e, String context) {
-
         if (e == null) {
             return;
         }
 
         Error__c error = createError(e, context);
-        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-            Database.insert(error, false);
-        }
+        processErrorsOnly(new List<Error__c>{ error }, context);
+    }
 
-        //ERR_Notifier takes care of checking the settings itself.
-        ERR_Notifier.sendErrorNotifications(context);
+    /***
+    * @description returns true if this method is calling from data migration
+    * or validate migration context
+    * @param The context the errors were raised on.
+    * @returns Boolean
+    */
+    public static Boolean isRD2MigrationContext(String context) {
+        return String.isNotBlank(context)
+            && (
+                context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN)
+                || context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_MIGRATION)
+            );
     }
 
     /*******************************************************************************************************
@@ -348,6 +422,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
+    @TestVisible
     private static Error__c createError(String msg, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
@@ -365,6 +440,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
+    @TestVisible
     private static Error__c createError(Exception e, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();

@@ -47,6 +47,12 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     public override String idPanel() { return 'idPanelDataImportAdvancedMapping'; }
 
     /*******************************************************************************************************
+    * @description Partial url path and parameters for building a link to a deployment status page
+    */
+    private final String DEPLOYMENT_STATUS_PAGE_PATH = '/lightning/setup/DeployStatus/page?' +
+        'address=/changemgmt/monitorDeploymentsDetails.apexp?asyncId=';
+
+    /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
     */
     public Boolean isPolling {
@@ -75,8 +81,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     private Data_Import_Settings__c dataImportSettings { get; set; }
 
+    private Gift_Entry_Settings__c giftEntrySettings { get; set; }
+
     /*******************************************************************************************************
-    * @description Boolean used for toggle value in the visualforce page
+    * @description Boolean used for the Advanced Mapping toggle value in the visualforce page
     */
     public Boolean isAdvancedMappingEnabled {
         get {
@@ -84,6 +92,17 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 return true;
             }
             return false;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description Boolean used for the Gift Entry toggle value in the visualforce page
+    */
+    public Boolean isGiftEntryEnabled {
+        get {
+            giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
+            return giftEntrySettings.Enable_Gift_Entry__c;
         }
         set;
     }
@@ -208,6 +227,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             dataImportSettings =
                 BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded));
+            disableGiftEntry();
             addPageMessage(ApexPages.Severity.INFO, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             addPageMessage(ApexPages.Severity.ERROR,
@@ -257,17 +277,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 successMessage();
             } else if (deploymentResult.status == Metadata.DeployStatus.FAILED) {
                 isPolling = false;
-
-                String href =
-                    '/lightning/setup/DeployStatus/page?' +
-                    'address=/changemgmt/monitorDeploymentsDetails.apexp?asyncId=' +
-                    deploymentResult.id;
-                String url = String.format(
-                    Label.bdiErrorDeploymentFailedLink,
-                    new List<String>{String.valueOf(href)});
-                String message = Label.bdiErrorDeploymentFailed + ' ' + url;
-
-                addPageMessage(ApexPages.Severity.ERROR, message);
+                addPageMessage(ApexPages.Severity.ERROR,
+                    Label.bdiErrorDeploymentFailed + ' ' +
+                    deploymentStatusUrl());
             }
 
         } else if (deploymentResult == null
@@ -282,8 +294,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         if (timeoutCount > MAX_TIME_OUT && isPolling == true) {
             isPolling = false;
             addPageMessage(ApexPages.Severity.WARNING,
-                Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain);
-            return null;
+                Label.stgDeploymentTimedOut + ' ' +
+                Label.bdiMigrationLongDeployment + ' ' +
+                deploymentStatusUrl());
         }
 
         return null;
@@ -302,12 +315,29 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
+    * @description Builds the message with a url to deployment status that we display when a deployment
+    * times out.
+    */
+    private String deploymentStatusUrl() {
+        String href = DEPLOYMENT_STATUS_PAGE_PATH + deploymentResult.id;
+        String url = String.format(
+            label.bdiErrorDeploymentFailedLink,
+            new String[]{ String.valueOf(href) });
+
+        return url;
+    }
+
+    /*******************************************************************************************************
     * @description Checks to see if we have a saved custom metadata deployment id and sets deploymentResult
     */
     private void setDeploymentStatus() {
         if (dataImportSettings.CMT_Deployment_ID__c != null) {
-            deploymentResult =
-                CMT_MetadataAPI.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
+            try {
+                deploymentResult =
+                    CMT_MetadataAPI.getDeploymentResult(dataImportSettings.CMT_Deployment_ID__c);
+            } catch (Exception e) {
+                deploymentResult = null;
+            }
         }
     }
 
@@ -327,5 +357,43 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     private void addPageMessage(ApexPages.Severity severity, String message) {
         ApexPages.addMessage(new ApexPages.Message(severity, message));
+    }
+
+    /*******************************************************************************************************
+    * @description Action Method to enable Gift Entry
+    * @return null
+    */
+    public PageReference enableGiftEntry() {
+        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
+        if (!giftEntrySettings.Enable_Gift_Entry__c) {
+                giftEntrySettings.Enable_Gift_Entry__c = true;
+            try {
+                upsert giftEntrySettings;
+                addPageMessage(ApexPages.Severity.CONFIRM, System.Label.geEnableGiftEntrySuccess);
+            } catch(DmlException e) {
+                addPageMessage(ApexPages.Severity.ERROR,
+                        e.getDmlMessage(0));
+            }
+        }
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Action Method to disable Gift Entry
+    * @return null
+    */
+    public PageReference disableGiftEntry() {
+        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
+        if (giftEntrySettings.Enable_Gift_Entry__c) {
+                giftEntrySettings.Enable_Gift_Entry__c = false;
+            try {
+                upsert giftEntrySettings;
+                addPageMessage(ApexPages.Severity.INFO, System.Label.geDisableGiftEntryInfo);
+            } catch(DmlException e) {
+                addPageMessage(ApexPages.Severity.ERROR,
+                        e.getDmlMessage(0));
+            }
+        }
+        return null;
     }
 }

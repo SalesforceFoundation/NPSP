@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,23 +13,23 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
-* @date 2014 
+* @date 2014
 * @group Utilities
 * @description Calls all classes to execute at a specific run of the master scheduler.
 */
@@ -39,7 +39,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @description Empty constructor.
     */
     public UTIL_MasterSchedulableHelper() {}
-    
+
     /*******************************************************************************************************
     * @description Abort deprecated master scheduled jobs. They are all replaced by standard scheduled jobs.
     * @return void
@@ -47,9 +47,9 @@ public without sharing class UTIL_MasterSchedulableHelper {
     public static void abortOldScheduledJobs() {
         //Abort the old NPSPv3 schedulable, since we have changed the name and are using a new class now (as of July 24 2014).
         //Abort the scheduled jobs from the old NPSP packages.
-        List<String> jobNames = new List<String>{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates', 
+        List<String> jobNames = new List<String>{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates',
             'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3', 'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
-        List<CronTrigger> oldScheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
+        List<CronTrigger> oldScheduledJobs = [select Id, CronJobDetail.Id from CronTrigger
            where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
         if(oldScheduledJobs != null && oldScheduledJobs.size() > 0) {
             for(CronTrigger job : oldScheduledJobs) {
@@ -71,15 +71,26 @@ public without sharing class UTIL_MasterSchedulableHelper {
         get {
             if (defaultScheduledJobs == null) {
                 jobsToAbort.clear();
+
                 defaultScheduledJobs = new Map<String, List<String>>{
                     'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
-                    // Start the Recurring Donations job one hour before the Rollup jobs to avoid any conflict with
-                    // the Opps that may be created/modified by the RD job.
-                    'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 22 ? * *', 'RD_RecurringDonations_BATCH'},
                     'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
                     'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'},
                     'NPSP 09 - Data Import Batch Processing'    => new List<String>{'0 0 22 ? * *', 'BDI_DataImportBatch_SCHED'}
                 };
+
+                // Start the Recurring Donations job one hour before the Rollup jobs to avoid any conflict with
+                // the Opps that may be created/modified by the RD job.
+                if (RD2_EnablementService.isRecurringDonations2Enabled) {
+                    defaultScheduledJobs.put('NPSP 06 - Enhanced Recurring Donation Updates',
+                        new List<String>{'0 0 22 ? * *', 'RD2_OpportunityEvaluation_BATCH'} );
+                    jobsToAbort.add('NPSP 06 - Recurring Donation Updates');
+                } else {
+                    defaultScheduledJobs.put('NPSP 06 - Recurring Donation Updates',
+                        new List<String>{'0 0 22 ? * *', 'RD_RecurringDonations_BATCH'} );
+                    jobsToAbort.add('NPSP 06 - Enhanced Recurring Donation Updates');
+                }
+
                 if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
                     // When the Customizable Rollups Engine is enabled, the actual rollup job target classes change, but
                     // keep the naming similar and stagger the job start times slightly.
@@ -141,7 +152,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     public static void setScheduledJobs() {
 
         Map<String, CronTrigger> scheduledJobs = new Map<String, CronTrigger>();
-        
+
         //query for all scheduled apex
         for (CronTrigger ct : [SELECT Id, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive
                 FROM CronTrigger WHERE CronJobDetail.JobType = '7']) {
@@ -160,7 +171,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 CronTrigger currentJob = scheduledJobs.get(jobName);
                 if (currentJob.CreatedBy.Name == 'Nonprofit Success Pack' || !currentJob.CreatedBy.isActive) {
                     System.abortJob(currentJob.Id);
-                    
+
                     //reuse their CronExpression so it's scheduled at the time they chose
                     defaultScheduledJobs.get(jobName)[0] = currentJob.CronExpression;
 

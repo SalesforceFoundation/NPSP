@@ -35,13 +35,26 @@
 * @description Test class for Opportunity Naming.
 */
 @isTest
-private class OPP_OpportunityNaming_TEST
+public with sharing class OPP_OpportunityNaming_TEST
 {
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+    private static final Date CLOSE_DATE = Date.today().addDays(1);
+    private static final String CLOSE_DATE_FORMATTED = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day()).format('yyyy.MM.dd');
+    private static final Decimal OPP_AMOUNT = 8;
+
+    /****
+     * @description Creates data required for unit tests
+     */
+    @TestSetup
+    private static void setUp() {
+        insert UTIL_UnitTestData_TEST.getContact();
+    }
+
     /*********************************************************************************************************
     * @description Returns an active record type id for the current profile.
     */
-    private static boolean hasActiveRecType() {
-        Schema.RecordTypeInfo giftRecTypeInfo = UTIL_RecordTypes.getRecordTypeInfoForGiftsTests(Opportunity.sObjectType);
+    private static Boolean hasActiveRecType() {
+        Schema.RecordTypeInfo giftRecTypeInfo = UTIL_RecordTypes.getRecordTypeInfoForGiftsTests(Opportunity.SObjectType);
 
         if (giftRecTypeInfo == null) {
             return false;
@@ -62,8 +75,9 @@ private class OPP_OpportunityNaming_TEST
             Opportunity_Name_Format__c = '{!Account.Name} {!Contact.Name} {!CloseDate} {!RecordType.Name}',
             Attribution__c = Label.oppNamingBoth
         );
-        if (hasActiveRecType())
+        if (hasActiveRecType()) {
             ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeIdForGiftsTests(Opportunity.sObjectType);
+        }
         insert ons;
 
         Account acc = new Account(Name='accname');
@@ -73,22 +87,24 @@ private class OPP_OpportunityNaming_TEST
         insert con;
 
         Opportunity opp = new Opportunity(
-            AccountId = acc.id,
+            AccountId = acc.Id,
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             Name='temp',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
-            Primary_Contact__c = con.id
+            Primary_Contact__c = con.Id
         );
-        if (hasActiveRecType())
-            opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType));
+        if (hasActiveRecType()) {
+            opp.RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType));
+        }
         insert opp;
 
-        list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        string oppName = 'accname conname 2000.01.01';
-        if (hasActiveRecType())
-            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType);
-        system.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting.');
+        List<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.Id];
+        String oppName = 'accname conname 2000.01.01';
+        if (hasActiveRecType()) {
+            oppName += ' ' + UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType);
+        }
+        System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting.');
 
         acc.Name = 'newname';
         update acc;
@@ -97,16 +113,16 @@ private class OPP_OpportunityNaming_TEST
         OPP_OpportunityNamingBTN_CTRL ctrl = new OPP_OpportunityNamingBTN_CTRL(sc);
 
         PageReference pageRef = Page.OPP_OpportunityNamingBTN;
-        pageRef.getParameters().put('id', String.valueOf(opp.Id));
         Test.setCurrentPage(pageRef);
 
         ctrl.buttonClick();
 
-        queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        oppname = 'newname conname 2000.01.01';
-        if (hasActiveRecType())
-            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType);
-        system.assertEquals(oppName, queryOpp[0].Name, 'The name should be recalculated after clicking the button.');
+        queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.Id];
+        oppName = 'newname conname 2000.01.01';
+        if (hasActiveRecType()) {
+            oppName += ' ' + UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType);
+        }
+        System.assertEquals(oppName, queryOpp[0].Name, 'The name should be recalculated after clicking the button.');
 
     }
 
@@ -121,8 +137,10 @@ private class OPP_OpportunityNaming_TEST
             Opportunity_Name_Format__c = '{!Account.Name} {!Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name} {!Campaign.Name} {!Type} {!RecordType.Name}',
             Attribution__c = Label.oppNamingBoth
         );
-        if (hasActiveRecType())
-            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeIdForGiftsTests(Opportunity.sObjectType);
+        if (hasActiveRecType()) {
+            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
+        }
+
         insert ons;
 
         Account acc = new Account(Name='accname');
@@ -132,23 +150,26 @@ private class OPP_OpportunityNaming_TEST
         insert con;
 
         Opportunity opp = new Opportunity(
-            AccountId = acc.id,
+            AccountId = acc.Id,
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             Name='temp',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
-            npe01__Contact_Id_for_Role__c = con.id
+            npe01__Contact_Id_for_Role__c = con.Id
         );
-        if (hasActiveRecType())
-            opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType));
+        if (hasActiveRecType()) {
+            opp.RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType,
+                UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType));
+        }
         insert opp;
 
-        list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
+        List<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.Id];
 
-        string oppname = 'accname';
-        if (hasActiveRecType())
-            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType);
-        system.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+        String oppname = 'accname';
+        if (hasActiveRecType()) {
+            oppname += ' ' + UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType);
+        }
+        System.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
 
     }
 
@@ -164,70 +185,81 @@ private class OPP_OpportunityNaming_TEST
             Name = 'foo',
             Opportunity_Record_Types__c = '',
             Opportunity_Name_Format__c = '{!Account.Name} {!Amount} {!Type} {!RecordType.Name}',
-            Attribution__c = Label.oppNamingOrganizational
+            Attribution__c = STG_PanelOppNaming_CTRL.AttributionOptions.Organization_Donations.name()
         ));
         onsList.add(new Opportunity_Naming_Settings__c(
             Name = 'foo2',
             Opportunity_Name_Format__c = '{!Contact.Name} {!Contact.HasOptedOutOfFax} {!Type} {!RecordType.Name}',
-            Attribution__c = Label.oppNamingIndividual
+            Attribution__c = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name()
         ));
 
-        if (hasActiveRecType())
-            onsList[1].Opportunity_Record_Types__c = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
+        if (hasActiveRecType()) {
+            onsList[1].Opportunity_Record_Types__c = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
+        }
 
         Contact con = new Contact(LastName='conname', HasOptedOutOfFax=true);
         insert con;
 
-        list<Contact> queryCon = [SELECT Id, AccountId FROM Contact WHERE Id = :con.id];
+        List<Contact> queryCon = [SELECT Id, AccountId FROM Contact WHERE Id = :con.Id];
 
-        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(10, null);
+        List<Account> listAcc = UTIL_UnitTestData_TEST.createMultipleTestAccounts(10, null);
         insert listAcc;
 
-        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountListByRecTypeId(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), Date.newInstance(2000, 1, 1), 8, null,null);
+        List<Opportunity> listOpp = UTIL_UnitTestData_TEST.oppsForAccountListByRecTypeId(
+            listAcc,
+            null,
+            UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Date.newInstance(2000, 1, 1),
+            8, null,null);
 
-        opportunity opp = new Opportunity(
-            AccountId = queryCon[0].accountId,
+        Opportunity opp = new Opportunity(
+            AccountId = queryCon[0].AccountId,
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             Name='Test',
             Amount=8.8,
             CloseDate = Date.newInstance(2000, 1, 1),
             npe01__Contact_Id_for_Role__c = con.id
         );
-        if (hasActiveRecType())
-            opp.RecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
+        if (hasActiveRecType()) {
+            opp.RecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
+        }
         listOpp.add(opp);
         insert listOpp;
 
         //inserting settings after the fact so opps aren't named prematurely
         insert onsList;
+
         //blank out cached version so the inserted setting takes effect
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
         //verify opps haven't been renamed yet
-        list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id IN :listOpp];
+        List<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id IN :listOpp];
         for (Opportunity thisopp : queryOpp) {
-            system.assert(thisopp.name.contains('Test'));
+            System.assert(thisopp.Name.contains('Test'));
         }
 
-        test.startTest();
+        Test.startTest();
         STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
         ctrl.runBatch();
 
-        test.stopTest();
+        Test.stopTest();
 
-        queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :queryCon[0].accountId];
+        queryOpp = [
+            SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c
+            FROM Opportunity
+            WHERE AccountId = :queryCon[0].AccountId];
 
-        string oppname = 'conname true';
-        if (hasActiveRecType())
-            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.sObjectType);
+        String oppname = 'conname true';
+        if (hasActiveRecType()) {
+            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests(Opportunity.SObjectType);
+        }
+        System.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the individual attributed setting.');
 
-        system.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the individual attributed setting.');
-
-        queryOpp = [SELECT Name FROM Opportunity WHERE AccountId != :queryCon[0].accountId];
+        queryOpp = [SELECT Name FROM Opportunity WHERE AccountId != :queryCon[0].AccountId];
 
         for (Opportunity thisopp : queryOpp) {
-            system.assert(!thisopp.name.contains('8.00'), 'Opportunities have been renamed by batch process.');
-            system.assert(thisopp.name.contains('8'), 'Opportunities have been renamed by batch process.');
+            System.assert(!thisopp.Name.contains('8.00'), 'Opportunities have been renamed by batch process.');
+            System.assert(thisopp.Name.contains('8'), 'Opportunities have been renamed by batch process.');
         }
     }
 
@@ -256,7 +288,7 @@ private class OPP_OpportunityNaming_TEST
             Name='temp',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
-            npe01__Contact_Id_for_Role__c = con.id
+            npe01__Contact_Id_for_Role__c = getContact().id
         );
 
         Exception oppException;
@@ -276,4 +308,299 @@ private class OPP_OpportunityNaming_TEST
         System.assertEquals(1, errors.size(), 'An error record should be created.');
 
     }
+
+     /***
+    * @description Verify the Opportunity name is generated when
+    * non-English user creates an Opportunity
+    */
+    @isTest
+    private static void shouldGenerateOppNameWhenNonEnglishUserCreatesAnOpp() {
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Both.name();
+        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+
+        Contact contact = getContact();
+
+        System.runAs(buildSpanishUser()) {
+            Opportunity opp = buildOpportunity(contact.Id);
+            insert opp;
+
+            String oppName = oppGateway.getRecord(opp.Id).Name;
+
+            String expectedName = contact.Name
+                + ' $' + OPP_AMOUNT
+                + ' ' + CLOSE_DATE_FORMATTED;
+            System.assertEquals(expectedName, oppName, 'The name should be generated based on the setting; missing fields should be excluded.');
+        }
+    }
+
+    /***
+    * @description Verify the Opportunity name is re-generated when
+    * non-English user clicks refresh name button
+    */
+    @isTest
+    private static void shouldGenerateOppNameWhenNonEnglishUserClicksRefreshName() {
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+
+        Contact contact = getContact();
+        Opportunity opp;
+
+        System.runAs(buildSpanishUser()) {
+            opp = buildOpportunity(contact.Id);
+            insert opp;
+        }
+
+        Decimal newAmount = OPP_AMOUNT + 10;
+        opp = oppGateway.getRecord(opp.Id);
+        opp.Amount = newAmount;
+        update opp;
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(opp);
+        OPP_OpportunityNamingBTN_CTRL ctrl = new OPP_OpportunityNamingBTN_CTRL(sc);
+
+        PageReference pageRef = Page.OPP_OpportunityNamingBTN;
+        pageRef.getParameters().put('id', String.valueOf(opp.Id));
+        Test.setCurrentPage(pageRef);
+
+        ctrl.buttonClick();
+
+        String expectedName = contact.Name
+            + ' $' + newAmount
+            + ' ' + CLOSE_DATE_FORMATTED;
+        System.assertEquals(expectedName, opp.Name, 'The name should be updated after the refresh name button is clicked.');
+    }
+
+    /***
+    * @description Verify the Opportunity name is generated
+    * when non-English user executes the Opp Naming batch
+    */
+    @isTest
+    private static void shouldGenerateOppNameWhenNonEnglishUserExecutesTheBatch() {
+        Opportunity opp;
+        Contact contact = getContact();
+
+        System.runAs(buildSpanishUser()) {
+            opp = buildOpportunity(contact.Id);
+            String originalOppName = opp.Name;
+            insert opp;
+
+            System.assertEquals(originalOppName, oppGateway.getRecord(opp.Id).Name,
+                'The name should not be generated since naming is not configured in settings');
+
+            String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+            setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+
+            Test.startTest();
+            STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
+            ctrl.runBatch();
+            Test.stopTest();
+        }
+
+        String expectedName = contact.Name
+            + ' $' + OPP_AMOUNT
+            + ' ' + CLOSE_DATE_FORMATTED;
+        System.assertEquals(expectedName, oppGateway.getRecord(opp.Id).Name,
+            'The name should be generated after the batch is run.');
+    }
+
+    /***
+    * @description Verifies Attribution value specified in settings is correctly
+    * converted to the expected AttributionOption and label
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnSelectedOptionAndLabel() {
+        STG_PanelOppNaming_CTRL.AttributionOptions option = STG_PanelOppNaming_CTRL.AttributionOptions.Both;
+        String label = System.Label.oppNamingBoth;
+
+        assertSelectedAttribution(System.Label.oppNamingBoth, option, label);
+        assertSelectedAttribution(option.name(), option, label);
+
+        option = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations;
+        label = System.Label.oppNamingIndividual;
+
+        assertSelectedAttribution(System.Label.oppNamingIndividual, option, label);
+        assertSelectedAttribution(option.name(), option, label);
+        assertSelectedAttribution('Contact Donations', option, label);
+
+        option = STG_PanelOppNaming_CTRL.AttributionOptions.Organization_Donations;
+        label = System.Label.oppNamingOrganizational;
+
+        assertSelectedAttribution(System.Label.oppNamingOrganizational, option, label);
+        assertSelectedAttribution(option.name(), option, label);
+        assertSelectedAttribution('Organization Donations', option, label);
+    }
+
+    /***
+    * @description Verifies expected AttributionOption is null and label is blank
+    * when settings Attribution is null
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnBlankLabelWhenAttributionIsNull() {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(null);
+
+        System.assertEquals(null, attributionSettings.selectedOption,
+            'The selected Attribution option should be null'
+        );
+
+        System.assertEquals('', attributionSettings.selectedLabel,
+            'The selected Attribution label should be blank'
+        );
+    }
+
+    /***
+    * @description Verifies expected AttributionOption and label are the same as
+    * settings Attribution value when it is not recognized as the AttributionOption
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnValueAsIsWhenAttributionIsNotAnOption() {
+        String attribution = 'foo';
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(attribution);
+
+        System.assertEquals(attribution, attributionSettings.selectedOption,
+            'The selected Attribution option should match input value'
+        );
+
+        System.assertEquals(attribution, attributionSettings.selectedLabel,
+            'The selected Attribution label should match input value when option is not recognized'
+        );
+    }
+
+    /***
+    * @description Asserts Attribution value specified in settings is correctly
+    * converted to the expected AttributionOption and label
+    * @param attribution Attribution value as provied in the settings
+    * @param option Epxected Attribution option
+    * @param label Expected Attribution label
+    * @return void
+    */
+    private static void assertSelectedAttribution(String attribution, STG_PanelOppNaming_CTRL.AttributionOptions option, String label) {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(attribution);
+
+        System.assertEquals(option.name(), attributionSettings.selectedOption,
+            'The selected Attribution option should match'
+        );
+
+        System.assertEquals(label, attributionSettings.selectedLabel,
+            'The selected Attribution label should match'
+        );
+    }
+
+    /***
+    * @description Verifies attribution options are returned as SelectOptions
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnSelectOptions() {
+        List<STG_PanelOppNaming_CTRL.AttributionOptions> options = STG_PanelOppNaming_CTRL.AttributionOptions.values();
+
+        List<SelectOption> selectOptions = STG_PanelOppNaming_CTRL.listSOOpportunityAttribution;
+
+        System.assertEquals(options.size(), selectOptions.size(), 'Panel should return options');
+        for (Integer i = 0; i < options.size(); i++) {
+            System.assertEquals(options[i].name(), selectOptions[i].getValue(), 'Options should match');
+        }
+    }
+
+    /***
+    * @description Verifies isBoth() returns true when settings Attribution value is Both
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnTrueWhenOptionIsBoth() {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(STG_PanelOppNaming_CTRL.AttributionOptions.Both.name());
+
+        System.assertEquals(true, attributionSettings.isBoth(),
+            'The selected Attribution option should be Both'
+        );
+
+        attributionSettings.withSelected(System.Label.oppNamingBoth);
+
+        System.assertEquals(true, attributionSettings.isBoth(),
+            'The selected Attribution option should be Both'
+        );
+    }
+
+    /***
+    * @description Verifies isBoth() returns false when settings Attribution value is not Both
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnFalseWhenOptionIsNotBoth() {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name());
+
+        System.assertEquals(false, attributionSettings.isBoth(),
+            'The selected Attribution option should not be Both'
+        );
+
+        attributionSettings.withSelected(System.Label.oppNamingOrganizational);
+
+        System.assertEquals(false, attributionSettings.isBoth(),
+            'The selected Attribution option should not be Both'
+        );
+    }
+
+    // Helpers
+    //////////////
+
+    /***
+     * @description Builds a user using Spanish language and locale
+     * @return User
+     */
+    private static User buildSpanishUser() {
+        User usr = UTIL_UnitTestData_Test.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
+
+        usr.LanguageLocaleKey = 'es';
+        usr.LocaleSidKey = 'es';
+        return usr;
+    }
+
+    /***
+     * @description Creates Opportunity naming settings
+     * @param valueByField Other field values mapped by their field name
+     * @return Opportunity Naming Settings
+     */
+    public static Opportunity_Naming_Settings__c setUpOppNamingSettings(Map<String, Object> valueByField) {
+        Opportunity_Naming_Settings__c settings = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
+        );
+
+        for (String field : valueByField.keySet()) {
+            settings.put(field, valueByField.get(field));
+        }
+        insert settings;
+
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
+
+        return settings;
+    }
+
+    /***
+     * @description Builds opportunity with specified fields
+     * @param contactId The contact assigned to the opportunity
+     * @return Opportunity
+     */
+    private static Opportunity buildOpportunity(Id contactId) {
+        return new TEST_OpportunityBuilder()
+            .withAmount(OPP_AMOUNT)
+            .withContact(contactId)
+            .withClosedWonStage()
+            .withCloseDate(CLOSE_DATE)
+            .build();
+    }
+
+    /***
+     * @description Returns contact record
+     * @return Contact
+     */
+    private static Contact getContact() {
+        return [
+            SELECT Name, FirstName, LastName, AccountId, Account.Name
+            FROM Contact
+            LIMIT 1
+        ];
+    }
+
 }

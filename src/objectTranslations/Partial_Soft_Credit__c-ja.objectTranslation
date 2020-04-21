@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>部分的ソフトクレジット</value>
     </caseValues>
     <fields>
         <help>ソフトクレジットされる金額</help>
@@ -43,7 +43,7 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Partial Soft Credit Name --></nameFieldLabel>
+    <nameFieldLabel>部分的ソフトクレジット名</nameFieldLabel>
     <webLinks>
         <label>ソフトクレジットの管理</label>
         <name>Manage_Soft_Credits</name>

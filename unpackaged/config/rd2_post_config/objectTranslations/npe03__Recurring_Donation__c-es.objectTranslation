@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
+        <label>Desusado:Utilizar siempre último día del mes</label>
+        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <label>Desusado:Importe de cuota</label>
+        <name>npe03__Installment_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Para donaciones recurrentes sin finalización definida, es el importe total de todas las oportunidades.</help>
+        <label>Desusado:Total</label>
+        <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <help>Elija Abierto para donaciones recurrentes sin finalización definida. Seleccione Ninguno para donaciones recurrentes con duración fija. Seleccione Cerrada para cerrar una donación recurrente.</help>
+        <label>Desusado:Estado sin finalización definida</label>
+        <name>npe03__Open_Ended_Status__c</name>
+    </fields>
+    <fields>
+        <help>Especifica como se debe calcular el importe de las oportunidades recurrentes, basado en el campo Importe. Solo para donaciones recurrentes con duración fija.</help>
+        <label>Desusado:Tipo de programación</label>
+        <name>npe03__Schedule_Type__c</name>
+    </fields>
+    <fields>
+        <help>El importe de cada oportunidad de cuota.</help>
+        <label>Importe</label>
+        <name>npe03__Amount__c</name>
+    </fields>
+    <fields>
+        <help>La fecha de efecto inicial de esta donación recurrente. El valor predeterminado es la fecha vigente.</help>
+        <label>Fecha establecida</label>
+        <name>npe03__Date_Established__c</name>
+    </fields>
+    <fields>
+        <help>Establece el día específico del mes para Oportunidades de cuota futuras cuando el Período de cuota es Mensualmente.</help>
+        <label>Día del mes</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last Day Of Month</masterLabel>
+            <translation>Último día del mes</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Período de cuota junto con Frecuencia de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
+        <label>Frecuencia</label>
+        <name>npe03__Installment_Period__c</name>
+    </fields>
+    <fields>
+        <help>NPSP calcula este valor automáticamente en base a la última vez que una oportunidad de cuota se marcó como pagada (solo lectura).</help>
+        <label>Fecha de última donación</label>
+        <name>npe03__Last_Payment_Date__c</name>
+    </fields>
+    <fields>
+        <help>El importe total pagado en esta donación recurrente. Se calcula automáticamente como el importe total de todas las oportunidades de cuotas Cerradas/Ganadas.</help>
+        <label>Importe total pagado</label>
+        <name>npe03__Paid_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Número total de oportunidades de cuotas pagadas en esta donación recurrente (solo lectura)</help>
+        <label>Cantidad de cuotas pagadas</label>
+        <name>npe03__Total_Paid_Installments__c</name>
+    </fields>
+    <fields>
+        <help>Se calcula automáticamente empleando las programaciones recurrentes activas. Es de solo lectura.</help>
+        <label>Fecha de próxima donación</label>
+        <name>npe03__Next_Payment_Date__c</name>
+    </fields>
+    <layouts>
+        <layout>Enhanced Recurring Donations Layout</layout>
+        <sections>
+            <label>Detalles de programación</label>
+            <section>Schedule Details</section>
+        </sections>
+        <sections>
+            <label>Datos estadísticos de Donación recurrente</label>
+            <section>Recurring Donation Statistics</section>
+        </sections>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nombre de donación recurrente</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de donación recurrente</label>
+    </standardFields>
+</CustomObjectTranslation>

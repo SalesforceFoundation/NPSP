@@ -1,0 +1,87 @@
+<!--
+    Copyright (c) 2019, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2019
+  @group Notification
+  @description Displays a notification, not a toast, as an alert with specified severity
+-->
+<aura:component>
+    <aura:attribute name="message" type="String" default="" description="Notification message" />
+
+    <aura:attribute name="severity" type="String" default="" description="info, warning, error" />
+
+    <aura:attribute name="theme" type="String" default="light"
+        description="light notification or the theme applicable to the specified severity" />
+
+    <aura:attribute name="size" type="String" default="small"
+        description="Icon size: small, large, x-small, or xx-small" />
+
+
+    <aura:if isTrue="{!equals(v.severity, 'warning')}">
+        <div class="{!'slds-scoped-notification slds-media slds-media_center ' + if(equals(v.theme, 'light'), 'slds-scoped-notification_light', 'slds-theme_warning')}"
+            role="alert">
+            <div class="slds-media__figure slds-text-align_center">
+                <lightning:icon iconName="utility:warning" alternativeText="{!$Label.c.AssistiveTextWarning}"
+                    size="{!v.size}" variant="warning" />
+            </div>
+            <div class="slds-media__body">
+                <lightning:formattedRichText value="{!v.message}" />
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!equals(v.severity, 'error')}">
+        <div class="{!'slds-scoped-notification slds-media slds-media_center ' + if(equals(v.theme, 'light'), '', 'slds-theme_error')}"
+            role="alert">
+            <div class="slds-media__figure slds-text-align_center">
+                <lightning:icon iconName="utility:error" alternativeText="{!$Label.c.AssistiveTextError}"
+                    size="{!v.size}" variant="{!if(equals(v.theme, 'light'), 'error', 'inverse')}" />
+            </div>
+            <div class="{!'slds-media__body ' + if(equals(v.theme, 'light'), ' errorFont', '')}">
+                <lightning:formattedText value="{!v.message}" />
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!equals(v.severity, 'info')}">
+        <div
+            class="{!'slds-scoped-notification slds-media slds-media_center ' + if(equals(v.theme, 'light'), 'slds-theme_shade', 'slds-theme_info')}">
+            <div class="slds-media__figure slds-text-align_center">
+                <lightning:icon iconName="utility:info" alternativeText="{!$Label.c.AssistiveTextInfo}" size="{!v.size}"
+                    variant="{!if(equals(v.theme, 'light'), 'info', 'inverse')}" />
+            </div>
+            <div class="slds-media__body">
+                <lightning:formattedRichText value="{!v.message}" />
+            </div>
+        </div>
+    </aura:if>
+
+</aura:component>

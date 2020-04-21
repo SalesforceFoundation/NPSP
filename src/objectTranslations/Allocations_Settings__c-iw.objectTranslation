@@ -41,6 +41,11 @@
         <name>Excluded_Opp_Types__c</name>
     </fields>
     <fields>
+        <help><!-- Indicates whether Allocations can be set at the Payment level. Review the documentation about Payment-level Allocations before changing this setting. --></help>
+        <label><!-- Payment Allocations Enabled --></label>
+        <name>Payment_Allocations_Enabled__c</name>
+    </fields>
+    <fields>
         <help>ערך זה משפיע על מספר הימים שיש לספור עבור שדות סיכום של הקצאות במשך N ימים.</help>
         <label>ערך N יום לסיכום</label>
         <name>Rollup_N_Day_Value__c</name>

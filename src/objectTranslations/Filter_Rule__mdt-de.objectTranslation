@@ -3,125 +3,127 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregel</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregeln</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregel</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregeln</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregel</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregeln</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregel</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Filter Rule --></value>
+        <value>Filterregeln</value>
     </caseValues>
     <fields>
-        <label><!-- Value --></label>
+        <label>Wert</label>
         <name>Constant__c</name>
     </fields>
     <fields>
-        <label><!-- Field --></label>
+        <label>Feld</label>
         <name>Field__c</name>
+        <relationshipLabel>Filter_Rules</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Filter Group --></label>
+        <label>Filtergruppe</label>
         <name>Filter_Group__c</name>
-        <relationshipLabel><!-- Filter Rules --></relationshipLabel>
+        <relationshipLabel>Filterregeln</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Deleted --></label>
+        <label>Gelöscht</label>
         <name>Is_Deleted__c</name>
     </fields>
     <fields>
-        <label><!-- Object --></label>
+        <label>Objekt</label>
         <name>Object__c</name>
+        <relationshipLabel>Filter_Rules</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Operator --></label>
+        <label>Operator</label>
         <name>Operator__c</name>
         <picklistValues>
             <masterLabel>Contains</masterLabel>
-            <translation><!-- Contains --></translation>
+            <translation>Enthält</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Does Not Contain</masterLabel>
-            <translation><!-- Does Not Contain --></translation>
+            <translation>Enthält nicht</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Equals</masterLabel>
-            <translation><!-- Equals --></translation>
+            <translation>Gleich</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Greater Than</masterLabel>
-            <translation><!-- Greater Than --></translation>
+            <translation>Größer als</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Greater or Equal</masterLabel>
-            <translation><!-- Greater or Equal --></translation>
+            <translation>Größer/Gleich</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>In List</masterLabel>
-            <translation><!-- In List --></translation>
+            <translation>In Liste</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Is Included</masterLabel>
-            <translation><!-- Is Included --></translation>
+            <translation>Ist eingeschlossen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Is Not Included</masterLabel>
-            <translation><!-- Is Not Included --></translation>
+            <translation>Ist nicht eingeschlossen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Less Than</masterLabel>
-            <translation><!-- Less Than --></translation>
+            <translation>Kleiner als</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Less or Equal</masterLabel>
-            <translation><!-- Less or Equal --></translation>
+            <translation>Kleiner/Gleich</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Not Equals</masterLabel>
-            <translation><!-- Not Equals --></translation>
+            <translation>Ungleich</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Not In List</masterLabel>
-            <translation><!-- Not In List --></translation>
+            <translation>Nicht in Liste</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Starts With</masterLabel>
-            <translation><!-- Starts With --></translation>
+            <translation>Beginnt mit</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Filter Rule Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Benutzerdefinierte Links</label>
             <section>Custom Links</section>
         </sections>
     </layouts>

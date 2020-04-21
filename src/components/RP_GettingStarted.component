@@ -15,7 +15,7 @@
             <h2 class="slds-text-heading_medium slds-align_absolute-center">{!$Label.RP_TrailheadSubtitle}</h2>
             <p class="slds-m-vertical_large">{!$Label.RP_TrailheadParagraph}</p>
 
-            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISBLANK(linksData.trailheadLink))}" value="{!linksData.trailheadLink}"> {!$Label.RP_TrailheadLinkLabel} </apex:outputLink>
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" style="text-align: center" rendered="{!NOT(ISBLANK(linksData.trailheadLink))}" value="{!linksData.trailheadLink}"> {!$Label.RP_TrailheadLinkLabel} </apex:outputLink>
 
         </div>
 
@@ -26,9 +26,9 @@
             <h2 class="slds-col slds-text-heading_medium slds-align_absolute-center">{!$Label.RP_USSubtitle}</h2>
             <p class="slds-m-vertical_large">{!$Label.RP_USParagraph}</p>
 
-            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISBLANK(linksData.usLink))}" value="{!linksData.usLink}"> {!$Label.RP_UsHubLinkLabel} </apex:outputLink>
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" style="text-align: center" rendered="{!NOT(ISBLANK(linksData.usLink))}" value="{!linksData.usLink}"> {!$Label.RP_UsHubLinkLabel} </apex:outputLink>
 
-            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISBLANK(linksData.salesforceOrgLink))}" value="{!linksData.salesforceOrgLink}"> {!$Label.RP_SalesforceOrgLinkLabel} </apex:outputLink>
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" style="text-align: center" rendered="{!NOT(ISBLANK(linksData.salesforceOrgLink))}" value="{!linksData.salesforceOrgLink}"> {!$Label.RP_SalesforceOrgLinkLabel} </apex:outputLink>
 
         </div>
 
@@ -39,11 +39,11 @@
             <h2 class="slds-text-heading_medium slds-align_absolute-center">{!$Label.RP_DeeperSubtitle}</h2>
             <p class="slds-m-vertical_large">{!$Label.RP_DeeperParagraph}</p>
 
-            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISBLANK(linksData.npspLink))}" value="{!linksData.npspLink}"> {!$Label.RP_NpspLinkLabel} </apex:outputLink>
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" style="text-align: center" rendered="{!NOT(ISBLANK(linksData.npspLink))}" value="{!linksData.npspLink}"> {!$Label.RP_NpspLinkLabel} </apex:outputLink>
 
-            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISBLANK(linksData.webinarLink))}" value="{!linksData.webinarLink}"> {!$Label.RP_WebinarLinkLabel} </apex:outputLink>
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" style="text-align: center" rendered="{!NOT(ISBLANK(linksData.webinarLink))}" value="{!linksData.webinarLink}"> {!$Label.RP_WebinarLinkLabel} </apex:outputLink>
 
-            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" rendered="{!NOT(ISBLANK(linksData.customerJourneyLink))}" value="{!linksData.customerJourneyLink}"> {!$Label.RP_CustomerJourneyLinkLabel} </apex:outputLink>
+            <apex:outputLink target="_blank" styleClass="slds-align_absolute-center links" style="text-align: center" rendered="{!NOT(ISBLANK(linksData.customerJourneyLink))}" value="{!linksData.customerJourneyLink}"> {!$Label.RP_CustomerJourneyLinkLabel} </apex:outputLink>
 
 
         </div>

@@ -1781,7 +1781,9 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
 
-        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(extractIds(listAccT));
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(
+            UTIL_SObject.extractIds(listAccT)
+        );
 
         testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
     }
@@ -1824,8 +1826,7 @@ public with sharing class ADDR_Addresses_TEST {
             Contact[] expectedContacts = contactsByAccountId.get(account.Id);
             Contact[] actualContacts = contactRepo.getContacts(account.Id);
 
-            System.assertEquals(expectedContacts.size(), actualContacts.size());
-            System.assert(extractIds(expectedContacts).containsAll(extractIds(actualContacts)));
+            System.assertEquals(UTIL_SObject.extractIds(expectedContacts), UTIL_SObject.extractIds(actualContacts));
         }
     }
 
@@ -1989,15 +1990,6 @@ public with sharing class ADDR_Addresses_TEST {
                 MailingCountry, MailingLatitude, MailingLongitude
             FROM Contact
         ];
-    }
-
-    /*********************************************************************************************************
-    * @description Extracts Ids of Sobjects
-    * @param sobjects List of Sobjects
-    * @return Set<Id> Set of Sobjects' Ids
-    **********************************************************************************************************/
-    static Set<Id> extractIds(List<Sobject> sobjects) {
-        return (new Map<Id, Sobject>(sobjects)).keySet();
     }
 
     /*********************************************************************************************************

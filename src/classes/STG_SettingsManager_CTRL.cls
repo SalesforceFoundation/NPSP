@@ -51,12 +51,12 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns the string Id of the current panel.
     */
-    public static string idPanelCurrent { get; set; }
+    public static String idPanelCurrent { get; set; }
 
     /*******************************************************************************************************
     * @description This string sets an error message during NPSP Settings load.
     */
-    public string errorMsg { get; set; }
+    public String errorMsg { get; set; }
 
     /*********************************************************************************************************
     * @description Action Method called by javascript when idPanelCurrent has been changed.
