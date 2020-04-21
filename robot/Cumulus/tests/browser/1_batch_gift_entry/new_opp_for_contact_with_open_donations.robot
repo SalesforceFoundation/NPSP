@@ -35,6 +35,7 @@ Create a new opportunity for a contact with open donations
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
     Search Field By Value    Search Accounts    &{account}[Name]
+    Wait Until Modal Is Open
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Click BGE Button    Update this Opportunity

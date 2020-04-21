@@ -924,8 +924,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()  
         
     def click_bge_button(self,text):  
-        """clicks on buttons for BGE"""  
-        self.builtin.log("This test is using javascript to click on button as regular click wouldn't work with Summer19", "WARN")    
+        """clicks on buttons for BGE"""      
         locator=npsp_lex_locators['bge']['button'].format(text)
         time.sleep(1)
         element = self.selenium.driver.find_element_by_xpath(locator)
