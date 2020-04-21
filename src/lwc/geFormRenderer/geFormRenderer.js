@@ -49,6 +49,8 @@ import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
+import {WIDGET_TYPE_DI_FIELD_VALUE} from 'c/geConstants';
+
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
@@ -156,7 +158,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
-        registerListener('paymentError', this.handlePaymentError, this)
+        registerListener('paymentError', this.handleAsyncWidgetError, this);
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -296,7 +298,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }));
         }
-    }
+    };
 
     /*******************************************************************************
     * @description Handles errors for the Single Gift Entry save flow.
@@ -438,7 +440,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     *
     * @param {object} event: Onclick event from the form save button
     */
-    handleSave(event) {
+    async handleSave(event) {
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         const isFormReadyToSave = this.prepareFormForSave(sectionsList);
 
@@ -448,8 +450,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
-            let inMemoryDataImport =
-                this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
+            let inMemoryDataImport;
+            try {
+                inMemoryDataImport = await this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
+            } catch(ex) {
+                // exceptions that we expect here are all async widget-related
+                this.handleAsyncWidgetError(ex);
+                return;
+            }
 
             // handle save depending mode
             if (this.batchId) {
@@ -869,7 +877,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * Handle payment errors at the form level
      * @param event The paymentError event object
      */
-    handlePaymentError(event) {
+    handleAsyncWidgetError(event) {
         let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
         let errorObjects = [];
         if(event.error.isObject) {
@@ -888,7 +896,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             errorMessage: event.error.message[0],
             multilineMessages: isNotEmpty(errorObjects) ? errorObjects : errorResponse
         }];
-
+        this.showSpinner = false;
         this.hasPageLevelError = true;
     }
 
@@ -908,8 +916,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {object} dataImportWithDonorData: Object holding data import values from
     * the 'Review Donations' modal.
     */
-    buildDataImportFromSections(sections, dataImportWithDonorData) {
-        let dataImportRecord = this.buildDataImportRecord(sections, dataImportWithDonorData);
+    async buildDataImportFromSections(sections, dataImportWithDonorData) {
+        let dataImportRecord = await this.buildDataImportRecord(sections, dataImportWithDonorData);
 
         if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
             dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
@@ -928,13 +936,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @param dataImportWithDonorData        Existing account or contact record to attach to the data import record
      * @return {{widgetValues: {}, diRecord: {}}}
      */
-    buildDataImportRecord(sectionList, dataImportWithDonorData) {
+    async buildDataImportRecord(sectionList, dataImportWithDonorData) {
         let fieldData = {};
-        let widgetValues = {};
+        let widgetValues = [];
 
         sectionList.forEach(section => {
             fieldData = {...fieldData, ...(section.values)};
-            widgetValues = {...widgetValues, ...(section.widgetValues)};
+            widgetValues = widgetValues.concat(section.widgetValues);
         });
 
         // Build the DI Record
@@ -956,9 +964,33 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
 
-        // Set DataImport__c.Additional_Object_JSON__c if we've retrieved values from form widgets.
+        // resolve widget data to wherever it needs to go, a field on the di object or elsewhere.
         if (widgetValues) {
-            diRecord[ADDITIONAL_OBJECT_JSON__C] = JSON.stringify(widgetValues);
+            let diFieldPayloads = [];
+
+            widgetValues.forEach(widgetValue => {
+                if(widgetValue.type === WIDGET_TYPE_DI_FIELD_VALUE && !isUndefined(widgetValue.payload)) {
+                    diFieldPayloads.push(widgetValue.payload);
+                }
+            });
+
+            // diFieldValues is an array of objects where the key is the field name
+            // and the value is the value to be stored
+            const diFieldValuesArray = await Promise.all(diFieldPayloads);
+            let additionalObjectValues = {};
+
+            diFieldValuesArray.forEach(fieldValues => {
+                Object.entries(fieldValues).forEach(([key, value]) => {
+                    if(key === ADDITIONAL_OBJECT_JSON__C) {
+                        // need to accumulate these values so we can serialize them
+                        // before placing them into the data import object
+                        Object.assign(additionalObjectValues, value);
+                    } else {
+                        diRecord[key] = value;
+                    }
+                })
+            });
+            diRecord[ADDITIONAL_OBJECT_JSON__C] = JSON.stringify(additionalObjectValues);
         }
 
         return diRecord;

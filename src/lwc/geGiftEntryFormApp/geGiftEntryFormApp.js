@@ -24,7 +24,7 @@ const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName
 const PAYMENT_METHOD__C = DI_PAYMENT_METHOD_FIELD.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
-const TOKENIZE_TIMEOUT = 10000; // 10 seconds, long enough for cold starts?
+const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     PENDING: 'PENDING',
     AUTHORIZED: 'AUTHORIZED',
@@ -48,37 +48,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
 
     dataImportRecord = {};
-    tokenPromise;
     errorCallback;
     isFailedPurchase = false;
-
-    connectedCallback() {
-        registerListener('tokenRequested', this.handleTokenRequested, this);
-    }
-
-    disconnectedCallback() {
-        unregisterListener('tokenRequested', this.handleTokenRequested, this);
-    }
 
     get isBatchMode() {
         return this.sObjectName &&
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
-    }
-
-    handleTokenRequested() {
-        this.tokenPromise = new Promise((resolve, reject) => {
-            registerListener('tokenResponse', message => {
-                if (message.error) {
-                    reject(message);
-                } else if (message.token) {
-                    resolve(message.token);
-                }
-            }, this);
-            setTimeout(() => {
-                reject('Request timed out');
-                unregisterListener('tokenResponse', resolve, this);
-            }, TOKENIZE_TIMEOUT);
-        });
     }
 
     /*******************************************************************************
@@ -174,9 +149,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.loadingText = this.CUSTOM_LABELS.geTextSaving;
         }
 
-        inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
         this.dataImportRecord = await upsertDataImport({ dataImport: inMemoryDataImport });
-    }
+    };
 
     /*******************************************************************************
     * @description Re-apply Data Import id and relevant payment/elevate fields.
