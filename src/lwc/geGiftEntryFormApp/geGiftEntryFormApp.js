@@ -17,6 +17,7 @@ import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Me
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
 import { isNotEmpty, format } from 'c/utilCommon';
+import { LABEL_NEW_LINE } from 'c/geConstants';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
@@ -24,7 +25,7 @@ const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName
 const PAYMENT_METHOD__C = DI_PAYMENT_METHOD_FIELD.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
-const TOKENIZE_TIMEOUT = 10000; // 10 seconds
+
 const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     PENDING: 'PENDING',
     AUTHORIZED: 'AUTHORIZED',
@@ -200,7 +201,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     let errors = this.getFailedPurchaseMessage(purchaseResponse);
                     let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
                     let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
-                    let splitErrorResponse = formattedErrorResponse.split('/newline/');
+
+                    // We use the hex value for line feed (new line) 0x0A
+                    let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
                     
                     const form = this.template.querySelector('c-ge-form-renderer');
                     form.showSpinner = false;

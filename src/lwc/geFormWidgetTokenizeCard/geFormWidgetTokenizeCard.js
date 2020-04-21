@@ -5,7 +5,7 @@ import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { format } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE } from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 
@@ -147,9 +147,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
         /** This event can be used to extend handling payment errors at the form level by adding additional detail
          * objects.
+         * We use the hex value for line feed (new line) 0x0A
          */
         let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
-        let splitErrorResponse = formattedErrorResponse.split('/newline/');
+        let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
         return {
             error: {
                 message: splitErrorResponse,
