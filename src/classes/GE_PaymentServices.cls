@@ -59,9 +59,6 @@ public with sharing class GE_PaymentServices {
 
     public GE_PaymentServices() {
         config = new Configuration().keyValueMap;
-        if (config.isEmpty()) {
-            throw new PaymentServicesException(System.Label.gePaymentServicesConfigError);
-        }
     }
 
     public void setPurchaseCallBody(String jsonString) {

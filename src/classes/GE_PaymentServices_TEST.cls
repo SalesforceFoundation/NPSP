@@ -145,21 +145,6 @@ public class GE_PaymentServices_TEST {
         System.assertEquals(testApiKey, service.config.get(GE_PaymentServices.API_Key));
     }
 
-    @IsTest
-    private static void shouldThrowConfigNotFoundError() {
-        Boolean exceptionThrown = false;
-        try {
-            // Instantiate GE_PaymentServices when not yet configured
-            GE_PaymentServices paymentServices = new GE_PaymentServices();
-        } catch (GE_PaymentServices.PaymentServicesException pse) {
-            System.assertEquals(System.Label.gePaymentServicesConfigError, pse.getMessage());
-            exceptionThrown = true;
-        }
-        System.assertEquals(true, exceptionThrown,
-                'An Exception should be thrown if' +
-                        'Payment Services has not been configured.');
-    }
-
     /**
      * @description When GE_PaymentServices is initialized with its
      *              default payment service names, it should use the apiKey

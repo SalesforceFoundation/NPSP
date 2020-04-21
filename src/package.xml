@@ -2197,7 +2197,6 @@
         <members>gePaymentProcessError</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
-        <members>gePaymentServicesConfigError</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
