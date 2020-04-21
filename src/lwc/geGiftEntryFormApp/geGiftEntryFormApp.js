@@ -177,8 +177,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @description Method attempts to make a purchase call to Payment
     * Services. Immediately attempts to the charge the card provided in the Payment
     * Services iframe (GE_TokenizeCard).
-    *
-    * @param {object} dataImportRecord: A DataImport__c record
     */
     processPayment = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
@@ -230,8 +228,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @description Posts an http request through the `sendPurchaseRequest` apex
     * method and parses the response.
     *
-    * @param {object} dataImportRecord: A DataImport__c record
-    *
     * @return {object} response: An http response object
     */
     makePurchaseCall = async () => {
@@ -248,8 +244,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @description Builds parts of the purchase request body that requires data
     * from the Data Import record upfront. We pass this into the `sendPurchaseRequest`
     * method and is eventually merged in with the rest of the purchase request body.
-    *
-    * @param {object} dataImportRecord: A DataImport__c record
     *
     * @return {object}: Object that we can deserialize and apply to the purchase
     * request body in apex.
@@ -329,13 +323,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     /*******************************************************************************
     * @description Sends the Data Import into BDI for processing and navigates to
     * the opportunity record detail page on success.
-    *
-    * @param {object} dataImportRecord: A DataImport__c record
-    * @param {boolean} hasUserSelectedDonation: True if a selection had been made in
-    * the 'Review Donations' modal.
-    * Determines BDI matching criteria.
-    *   true = "single match or create" and means we are updating
-    *   false = "do not match"
     */
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
