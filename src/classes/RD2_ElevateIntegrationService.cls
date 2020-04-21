@@ -145,4 +145,41 @@ public inherited sharing class RD2_ElevateIntegrationService {
             UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.Elevate.name());
         }
     }
+
+    /***
+    * @description Match Opportunities originated in Elevate that are not referencing any Recurring Donation
+    * with an Recurring Donation having the same Commitment Id value 
+    * @param opps Opportunities
+    * @return void
+    */
+    public void matchOppsToRecurringDonations(List<Opportunity> opps) {
+        Map<String, List<Opportunity>> oppsByCommitmentId = new Map<String, List<Opportunity>>();
+
+        //extract Opps originated in Elevate that are not referencing a Recurring Donation 
+        for (Opportunity opp : opps) {
+            if (opp.npe03__Recurring_Donation__c != null || String.isBlank(opp.CommitmentId__c)) {
+                continue;
+            }
+
+            if (!oppsByCommitmentId.containsKey(opp.CommitmentId__c)) {
+                oppsByCommitmentId.put(opp.CommitmentId__c, new List<Opportunity>());
+            }
+            oppsByCommitmentId.get(opp.CommitmentId__c).add(opp);
+        }
+
+        if (oppsByCommitmentId.isEmpty()) {
+            return;
+        }
+
+        //set the Recurring Donation field on Opps matching the same Commitment Id
+        for (npe03__Recurring_Donation__c rd : [
+            SELECT CommitmentId__c
+            FROM npe03__Recurring_Donation__c
+            WHERE CommitmentId__c IN :oppsByCommitmentId.keySet()]) {
+            
+            for (Opportunity opp : oppsByCommitmentId.get(rd.CommitmentId__c)) {
+                opp.npe03__Recurring_Donation__c = rd.Id;
+            }
+        }
+    }
 }
