@@ -24,7 +24,7 @@
             id: 'payments',
             // TODO: Replace clientId value below with the productId provided by onboarding
             // Currently hardcoded to a specific value as needed by payment services.
-            clientId: 'bees',
+            clientId: '{!productId}',
             designSystem: 'Lightning',
             styles: '' +
                 '.logo {' +

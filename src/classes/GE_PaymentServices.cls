@@ -49,7 +49,7 @@ public with sharing class GE_PaymentServices {
     @TestVisible protected final String SFDO_ROLES = 'sfdo.roles';
     @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
     @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
-    @TestVisible static final String PRODUCTID = 'productId';
+    @TestVisible protected final String PRODUCTID = 'productId';
 
     // Names of Payment Service configuration sets
     @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
@@ -133,6 +133,10 @@ public with sharing class GE_PaymentServices {
         return config.get(ELEVATE_SDK);
     }
 
+    public String getProductId() {
+        return config.get(PRODUCTID);
+    }
+
     /*******************************************************************************************************
     * @description Inner class to assist in constructing the Payload portion of a JSON Web Token.
     */
@@ -159,7 +163,8 @@ public with sharing class GE_PaymentServices {
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
             generator.writeStringField('sub', UserInfo.getUserName()); // Subject
-            generator.writeStringField('sfdo.id', 'bees');
+            generator.writeStringField('sfdo.id',
+                    paymentServicesInstance.config.get(paymentServicesInstance.PRODUCTID));
             generator.writeStringField('sfdo.product', 'CRM'); // Product
             if (paymentServicesInstance.config.get(
                     paymentServicesInstance.SFDO_ROLES) != null) {
