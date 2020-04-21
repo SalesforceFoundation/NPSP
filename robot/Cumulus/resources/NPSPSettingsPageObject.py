@@ -66,6 +66,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.select_value_from_list(list_name,value)
         time.sleep(2) # waiting for 2 seconds in case there is slowness
     
+    @capture_screenshot_on_error
     def verify_selection(self,list_name,value):
         """waits to exit edit mode and verifies list contains specified value"""
         edit_button=npsp_lex_locators['npsp_settings']['batch-button'].format('idPanelCon','Edit')
@@ -82,7 +83,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
     
-
+    @capture_screenshot_on_error
     def wait_for_message(self,message):
         """Waits for the text passed in message to be displayed on the page for 6 min"""
         i=0
