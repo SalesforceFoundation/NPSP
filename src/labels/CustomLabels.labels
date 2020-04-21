@@ -4943,7 +4943,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to be display before the &#39;See Duplicate Contact&#39; button</shortDescription>
-        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot;https://powerofus.force.com/s/article/IP-About-Duplicate-Detection&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
+        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>conMergeSeeDupConDRS</fullName>
