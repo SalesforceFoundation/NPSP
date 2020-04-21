@@ -800,6 +800,27 @@ flows:
                     include_packaged_objects: True
             9:
                 task: disable_triggers
+                options:
+                    handlers:
+                    # Disable all trigger handlers other than Engagement Plans
+                        - Account
+                        - npsp__Account_Soft_Credit__c
+                        - npsp__Address__c
+                        - npsp__Allocation__c
+                        - Campaign
+                        - CampaignMember
+                        - Contact
+                        - npsp__General_Accounting_Unit__c
+                        - npsp__Level__c
+                        - npe01__OppPayment__c
+                        - npe03__Recurring_Donation__c
+                        - npe5__Affiliation__c
+                        - npo02__Household__c
+                        - Opportunity
+                        - npsp__Partial_Soft_Credit__c
+                        - npe4__Relationship__c
+                        - User
+
             10:
                 task: load_dataset
                 options:

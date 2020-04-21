@@ -1932,9 +1932,7 @@ CREATE TABLE "npsp__General_Accounting_Unit__c" (
 );
 INSERT INTO "npsp__General_Accounting_Unit__c" VALUES('a0b6g000000WlnXAAS','Transitional Housing Capital Campaign','true','5465.0','Transitional Housing program specific','2018-06-30','12500.0','2019-05-07','1.0','1.0','0.0','4.0','75.0','12500.0','12500.0','0.0','14825.0','27325.0','5.0');
 INSERT INTO "npsp__General_Accounting_Unit__c" VALUES('a0b6g000000WlnYAAS','Food Pantry Programs','true','0.0','','','0.0','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0');
-INSERT INTO "npsp__General_Accounting_Unit__c" VALUES('a0b6g000000WlnZAAS','HUD Transitional Housing Grant','true','0.0','','','0.0','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0');
 INSERT INTO "npsp__General_Accounting_Unit__c" VALUES('a0b6g000000WlnaAAC','General Fund','true','918.7755102040817','','2018-01-01','10000.0','2019-09-23','28.0','37.0','0.0','12.0','10.0','31365.0','33145.0','0.0','11875.0','45020.0','49.0');
-INSERT INTO "npsp__General_Accounting_Unit__c" VALUES('a0b6g000000WlnbAAC','Restricted Fund','true','0.0','','','0.0','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0');
 INSERT INTO "npsp__General_Accounting_Unit__c" VALUES('a0b6g000000WlncAAC','Women''s Services','true','0.0','Fund for NMH annual women''s services.','','0.0','','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0','0.0');
 CREATE TABLE "npsp__Grant_Deadline__c" (
 	sf_id VARCHAR(255) NOT NULL, 
