@@ -56,42 +56,27 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
 
-        findMatchingElevateRecurringDonations(opps, triggerAction);
+        matchOppsToRecurringDonations(opps, triggerAction);
         evaluateOpportunities(opps, oldOpps, triggerAction);
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return null;
     }
 
-     /**
-    * @description When new opportunities are inserted that have a value in the CommitmentId field
-    * look for matching existing Recurring Donations with that same CommmitmentId.
-    * @param opps Inserted Opportunities
+    /**
+    * @description Match new Opportunities not referencing any Recurring Donation and originated from Elevate 
+    * with a Recurring Donation having the same Commitment Id.
+    * @param opps Opportunities to be created
     * @param triggerAction BeforeInsert, AfterInsert, etc.
+    * @return void
     */
-    private void findMatchingElevateRecurringDonations(List<Opportunity> opps, TDTM_Runnable.Action triggerAction) {
+    private void matchOppsToRecurringDonations(List<Opportunity> opps, TDTM_Runnable.Action triggerAction) {
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert) {
             return;
         }
 
-        Map<String, List<Opportunity>> oppsByCommitmentId = new Map<String, List<Opportunity>>();
-
-        for (Opportunity opp : opps) {
-            if (opp.npe03__Recurring_Donation__c == null && opp.CommitmentId__c != null) {
-                List<Opportunity> oppsUnderRd = oppsByCommitmentId.get(opp.CommitmentId__c);
-
-                if(oppsUnderRd == null) {
-                    oppsUnderRd = new List<Opportunity>();
-                    oppsByCommitmentId.put(opp.CommitmentId__c, oppsUnderRd);
-                }
-
-                oppsUnderRd.add(opp);
-            }
-        }
-
         new RD2_ElevateIntegrationService()
-            .matchOpportunitiesToRds(oppsByCommitmentId);
-
+            .matchOppsToRecurringDonations(opps);
     }
 
     /***

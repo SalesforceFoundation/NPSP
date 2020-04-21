@@ -129,52 +129,82 @@ private class RD2_ElevateIntegrationService_TEST {
 
     }
 
-        /***
+    /***
     * @description Verifies that any new opportunities are linked to a existing RD if the CommitmentId matches
     */
     @isTest
-    private static void shouldLinkOppsToRDMatchingCommitmentIdOnOppInsert() {
+    private static void shouldLinkOppToRDMatchingCommitmentIdOnOppInsert() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            getRecurringDonationBaseBuilder()
-                .withCommitmentId(COMMITMENT_ID)
-                .build(),
-            getRecurringDonationBaseBuilder()
-                .withCommitmentId('NOTHING')
-                .build(),
-            getRecurringDonationBaseBuilder()
-                .build()
-        };
+        npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
 
-        insert rds;
-        List<Opportunity> opps = new List<Opportunity>{
-            getOpportunityBaseBuilder()
-                .withCommitmentId(COMMITMENT_ID)
-                .build(),
-            getOpportunityBaseBuilder()
-                .withCommitmentId('BAD_ID')
-                .build(),
-            getOpportunityBaseBuilder()
-                .build()
-        };
+        insert rd;
+
+        Opportunity opp = getOpportunityBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
 
         Test.startTest();
-        insert opps;
+        insert opp;
         Test.stopTest();
 
-        Set<Id> oppIds = new Map<Id, Opportunity>(opps).keySet();
+        opp = oppGateway.getRecord(opp.Id);
+        
+        System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
+            'The Recurring Donation field on Opp should be linked to the matching RD');
+    }
 
-        for (Opportunity opp : oppGateway.getRecords(oppIds)) {
-            if (opp.CommitmentId__c == COMMITMENT_ID) {
-                System.assertEquals(rds[0].Id, opp.npe03__Recurring_Donation__c,
-                    'The Opp.RecurringDonationId should match the related RD');
-            } else {
-                System.assertEquals(null, opp.npe03__Recurring_Donation__c,
-                    'The RecurringDonationId should be null');
-            }
-        }
+    /***
+    * @description Verifies that Opportunity should not link to a RD that does not have a matching CommitmentId 
+    */
+    @isTest
+    private static void shouldNotLinkOppToRDIfCommitmentIdDoesntMatch() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID + 'random')
+            .build();
+
+        insert rd;
+
+        Opportunity opp = getOpportunityBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+
+        opp = oppGateway.getRecord(opp.Id);
+        
+        System.assertEquals(null, opp.npe03__Recurring_Donation__c,
+            'The opportunty should not link to any RD if the Commitment Id feild does not match');
+    }
+
+    /***
+    * @description Verifies that when Enhanced RD is not enable, the opportunity will not link to any RD through CommitmentId 
+    */
+    @isTest
+    private static void shouldNotLinkOppsToRDThroughCommitmentIdWhenRD2NotEnable() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+
+        insert rd;
+
+        Opportunity opp = getOpportunityBaseBuilder()
+        .withCommitmentId(COMMITMENT_ID)
+        .build();
+
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+
+        opp = oppGateway.getRecord(opp.Id);
+        System.assertEquals(null, opp.npe03__Recurring_Donation__c,
+        'The Opportunity should not link to any RD through CommitmentId if Enhanced RD is not enable');
     }
 
     /***
@@ -205,7 +235,37 @@ private class RD2_ElevateIntegrationService_TEST {
 
         opp = oppGateway.getRecord(opp.Id);
         System.assertEquals(rds[1].Id, opp.npe03__Recurring_Donation__c,
-            'The Opp.RecurringDonationId should still be linked to the original RD');
+            'The Recurring Donation field on Opp should be linked to original RD');
+    }
+
+    /**
+    * @description Verifies that Opportunity should not link to RD during update DML operation
+    */
+    @isTest
+    private static void shouldNotLinkOppToRDThroughCommitmentIdOnUpdate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+
+        insert rd;
+
+        Opportunity opp = getOpportunityBaseBuilder()
+            .build();
+
+        insert opp;
+
+        opp.CommitmentId__c = COMMITMENT_ID;
+
+        Test.startTest();
+        update opp;
+        Test.stopTest();
+
+        opp = oppGateway.getRecord(opp.Id);
+        
+        System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
+            'The Opportunity should not link to any RD through CommitmentId on update');
     }
 
     // Helpers
@@ -234,6 +294,20 @@ private class RD2_ElevateIntegrationService_TEST {
             .withAmount(100)
             .withCloseDate(Date.Today())
             .withClosedWonStage();
+    }
+
+    /**
+     * @description Instantiate a legacy recurring donation for a specific ContactId
+     * @param contactId
+     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
+     */
+    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
+        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withOpenEndedStatusOpen()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1');
     }
 
     /****
