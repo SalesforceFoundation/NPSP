@@ -5,7 +5,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
 Suite Setup     Open Test Browser
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+# Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
 &{method}         Default Value=Check
@@ -32,6 +32,6 @@ Edit GE Template And Verify Changes
     ...                                       Opportunity: Close Date=&{date}
     ...                                       Payment: Check/Reference Number=&{check}
     ...                                       Payment: Payment Method=&{method} 
-    Add Field Bundle TO New Section           GAU Allocations
+    Add Field Bundle To New Section           GAU Allocations
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing              GE_Gift_Entry

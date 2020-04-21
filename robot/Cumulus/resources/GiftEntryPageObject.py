@@ -30,7 +30,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         """
         self.selenium.wait_until_location_contains("GE_Gift_Entry", timeout=60, 
                                                    message="Current page is not Gift Entry landing page")
-        self.selenium.wait_until_page_contains("Default Gift Entry Template")                                               
+        self.selenium.wait_until_page_contains("Create Template")                                               
 
     def click_gift_entry_button(self,title):
         """clicks on Gift Entry button identified with title"""
@@ -120,10 +120,13 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         if status=="false":
             time.sleep(2)       
         field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")  
-        self.selenium.scroll_element_into_view(field_checkbox)
         check=self.selenium.get_webelement(field_checkbox)
-        if not check.is_selected():   
-            self.selenium.click_element(field_checkbox)
+        if not check.is_selected():
+            try:
+                self.salesforce._jsclick(field_checkbox)
+            except ElementClickInterceptedException:
+                self.selenium.execute_javascript("window.scrollBy(0,0)")
+                self.salesforce._jsclick(field_checkbox)
         label=": "+field    
         self.selenium.wait_until_page_contains(label)
 
@@ -180,11 +183,15 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         except ElementClickInterceptedException:
             self.selenium.execute_javascript("window.scrollBy(0,100)")
             self.selenium.click_button("Add Section")
-        checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(bundle)
+        checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(bundle,"input")
         self.selenium.scroll_element_into_view(checkbox)
         cb_loc=self.selenium.get_webelement(checkbox)
         if not cb_loc.is_selected():
-            self.selenium.click_element(checkbox)    
+            try:
+                self.salesforce._jsclick(checkbox) 
+            except ElementClickInterceptedException:
+                self.selenium.execute_javascript("window.scrollBy(0,100)")
+                self.salesforce._jsclick(checkbox)   
 
 
 
