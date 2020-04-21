@@ -297,8 +297,7 @@ private class RD2_ElevateIntegrationService_TEST {
     }
 
     /**
-     * @description Instantiate a legacy recurring donation for a specific ContactId
-     * @param contactId
+     * @description Instantiate a legacy recurring donation
      * @return TEST_RecurringDonationBuilder New Recurring Donation builder
      */
     private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder() {
