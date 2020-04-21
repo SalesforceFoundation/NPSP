@@ -1,3 +1,4 @@
+// Server / Platform  Imports
 import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
@@ -5,11 +6,12 @@ import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPur
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 
-//import GeFormService from 'c/geFormService';
+// Function / Class imports
 import { showToast } from 'c/utilTemplateBuilder';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { isNotEmpty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
+// Schema Imports
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
@@ -17,8 +19,8 @@ import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
-import { isNotEmpty } from 'c/utilCommon';
 
+// Constants
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
