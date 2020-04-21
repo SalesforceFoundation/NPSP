@@ -39,7 +39,7 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled(cacheable=true)
     public static String getOrgDomain() {
-        String url = System.URL.getOrgDomainUrl().getHost();
+        String url = System.Url.getOrgDomainUrl().getHost();
         String[] urlParts = url.split('\\.');
 
         return urlParts[0];
@@ -121,7 +121,7 @@ public with sharing class GE_GiftEntryController {
     /*******************************************************************************************************
     * @description Saves the data import record, dry runs the record, and returns updated
     * totals with the new row.
-    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @param diRecord: the NPSP_Data_Import__c record to update
     * @param updateGift: If true, BDI will attempt to match to an existing opportunity/payment
     * @return String serialized DataImportModel
     */
@@ -178,12 +178,11 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Run the DataImport process on a single gift
-    * @param @param diRecord DataImport record to be processed
+    * @param diRecord DataImport record to be processed
     * @param isDryRun Boolean to set if the process should only return import results and not process
     * @param updateGift Boolean to determine our matching criteria.
     *                   true = "single match or create" and means we are updating
     *                   false = "do not match"
-    * @return void
     */
     private static void processDataImport(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
         try {
@@ -203,7 +202,7 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Return the imported Opportunity (Donation) from a DataImport process
-    * @param diObjId Id of DataImport object that created or matching this Opportunity
+    * @param diRecordId Id of DataImport object that created or matching this Opportunity
     * @return Id of the Opportunity
     */
     private static String getOpportunityIdFromImport(Id diRecordId) {
