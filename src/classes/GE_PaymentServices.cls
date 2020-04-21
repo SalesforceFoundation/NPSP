@@ -46,7 +46,6 @@ public with sharing class GE_PaymentServices {
     @TestVisible static final String JWT_TOKEN = 'jwttoken';
     @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids';
     @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayids';
-    @TestVisible protected final String SFDO_ROLES = 'sfdo.roles';
     @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
     @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
     @TestVisible protected final String PRODUCTID = 'productId';
@@ -163,13 +162,7 @@ public with sharing class GE_PaymentServices {
             generator.writeStringField('sfdo.id',
                     paymentServicesInstance.config.get(paymentServicesInstance.PRODUCTID));
             generator.writeStringField('sfdo.product', 'CRM'); // Product
-            if (paymentServicesInstance.config.get(
-                    paymentServicesInstance.SFDO_ROLES) != null) {
-                generator.writeStringField(
-                        paymentServicesInstance.SFDO_ROLES,
-                        paymentServicesInstance.config.get(paymentServicesInstance.SFDO_ROLES)
-                );
-            }
+            generator.writeStringField('sfdo.roles', 'Payments.Purchase');
 
             return generator.getAsString();
         }
