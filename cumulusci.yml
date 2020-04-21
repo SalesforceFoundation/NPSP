@@ -12,6 +12,11 @@ project:
         repo_url: https://github.com/SalesforceFoundation/NPSP
         prefix_beta: uat/
         prefix_release: rel/
+        release_notes:
+            parsers:
+                6:
+                    class_path: cumulusci.tasks.release_notes.parser.GithubLinesParser
+                    title: Community Ideas Delivered
     apexdoc:
         homepage: ApexDocContent/homepage.htm
         banner: ApexDocContent/projectheader.htm
