@@ -32,6 +32,11 @@ project:
         # npe5
         - github: https://github.com/SalesforceFoundation/Affiliations
 
+sources:
+    pmm:
+        github: "https://github.com/SalesforceFoundation/pmm"
+
+
 tasks:
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
@@ -648,7 +653,13 @@ flows:
             3:
                 task: deploy_pmm_trial_config
                 ui_options:
-                    name: "Program Management Module Configuration"
+                    name: "Configure Program Management Module"
+            4:
+                task: pmm:deploy_customer_profiles
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: "Install Program Management Module Profile"
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
