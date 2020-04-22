@@ -137,10 +137,10 @@ public with sharing class GE_PaymentServices {
     * @description Inner class to assist in constructing the Payload portion of a JSON Web Token.
     */
     public with sharing class JWTPayload {
-        GE_PaymentServices paymentServicesInstance;
+        String sfdoId;
 
         public JWTPayload(GE_PaymentServices serviceInstance) {
-            this.paymentServicesInstance = serviceInstance;
+            sfdoId = serviceInstance.config.get(serviceInstance.PRODUCTID);
         }
 
         private Long getEpochTimestamp(DateTime dt) {
@@ -159,8 +159,9 @@ public with sharing class GE_PaymentServices {
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
             generator.writeStringField('sub', UserInfo.getUserName()); // Subject
-            generator.writeStringField('sfdo.id',
-                    paymentServicesInstance.config.get(paymentServicesInstance.PRODUCTID));
+            if (sfdoId != null) {
+                generator.writeStringField('sfdo.id', sfdoId);
+            }
             generator.writeStringField('sfdo.product', 'CRM'); // Product
             generator.writeStringField('sfdo.roles', 'Payments.Purchase');
 
