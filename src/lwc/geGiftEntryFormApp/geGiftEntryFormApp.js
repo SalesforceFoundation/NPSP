@@ -5,9 +5,8 @@ import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPur
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 
-//import GeFormService from 'c/geFormService';
 import { showToast } from 'c/utilTemplateBuilder';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { registerListener, unregisterListener, fireEvent } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
@@ -17,7 +16,8 @@ import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, format } from 'c/utilCommon';
+import { LABEL_NEW_LINE } from 'c/geConstants';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
@@ -25,7 +25,7 @@ const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName
 const PAYMENT_METHOD__C = DI_PAYMENT_METHOD_FIELD.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
-const TOKENIZE_TIMEOUT = 10000; // 10 seconds
+
 const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     PENDING: 'PENDING',
     AUTHORIZED: 'AUTHORIZED',
@@ -50,6 +50,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     dataImportRecord = {};
     errorCallback;
+    isFailedPurchase = false;
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -124,7 +125,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 await this.processPayment();
             }
 
-            await this.processDataImport();
+            if (!this.isFailedPurchase) {
+                await this.processDataImport();
+            }
         } catch (error) {
             this.errorCallback(error);
         }
@@ -193,10 +196,23 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
                 this.dataImportRecord = await upsertDataImport({ dataImport: this.dataImportRecord });
 
-                const isFailedPurchase = purchaseResponse.statusCode !== 201;
-                if (isFailedPurchase) {
+                this.isFailedPurchase = purchaseResponse.statusCode !== 201;
+                if (this.isFailedPurchase) {
                     let errors = this.getFailedPurchaseMessage(purchaseResponse);
-                    throw new Error(errors);
+                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
+                    let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+
+                    // We use the hex value for line feed (new line) 0x0A
+                    let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
+                    
+                    const form = this.template.querySelector('c-ge-form-renderer');
+                    form.showSpinner = false;
+                    fireEvent(null, 'paymentError', {
+                        error: {
+                            message: splitErrorResponse,
+                            isObject: true
+                        }
+                     });
                 }
             }
         }
@@ -320,7 +336,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         // Also checking for lowercase M in message in case they fix it.
         return response.body.Message ||
             response.body.message ||
-            response.body.errors.map(error => error.message).join(', ') ||
+            JSON.stringify(response.body.errors.map(error => error.message)) ||
             this.CUSTOM_LABELS.commonUnknownError;
     }
 
