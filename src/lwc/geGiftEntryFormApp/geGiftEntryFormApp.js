@@ -9,6 +9,7 @@ import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submi
 // Function / Class imports
 import { showToast } from 'c/utilTemplateBuilder';
 import { isNotEmpty } from 'c/utilCommon';
+import { fireEvent } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 
 // Schema Imports
@@ -27,6 +28,8 @@ import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
+import { isNotEmpty, format } from 'c/utilCommon';
+import { LABEL_NEW_LINE } from 'c/geConstants';
 
 // Constants
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
@@ -43,6 +46,7 @@ const PAYMENT_TRANSACTION_ID = DI_PAYMENT_GATEWAY_TRANSACTION_ID.fieldApiName;
 const PAYMENT_AUTHORIZED_AT = DI_PAYMENT_AUTHORIZED_AT.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
+
 const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     PENDING: 'PENDING',
     AUTHORIZED: 'AUTHORIZED',
@@ -68,6 +72,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     dataImportRecord = {};
     errorCallback;
+    isFailedPurchase = false;
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -142,7 +147,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 await this.processPayment();
             }
 
-            await this.processDataImport();
+            if (!this.isFailedPurchase) {
+                await this.processDataImport();
+            }
         } catch (error) {
             this.errorCallback(error);
         }
@@ -208,7 +215,24 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.dataImportRecord = await upsertDataImport({ dataImport: this.dataImportRecord });
 
                 if (isNotEmpty(errors)) {
-                    throw new Error(errors);
+                    this.isFailedPurchase = true;
+
+                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
+                    let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+
+                    // We use the hex value for line feed (new line) 0x0A
+                    let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
+
+                    const form = this.template.querySelector('c-ge-form-renderer');
+                    form.showSpinner = false;
+                    fireEvent(null, 'paymentError', {
+                        error: {
+                            message: splitErrorResponse,
+                            isObject: true
+                        }
+                    });
+                } else {
+                    this.isFailedPurchase = false;
                 }
             }
         }
@@ -367,7 +391,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         // Also checking for lowercase M in message in case they fix it.
         return response.body.Message ||
             response.body.message ||
-            response.body.errors.map(error => error.message).join(', ') ||
+            JSON.stringify(response.body.errors.map(error => error.message)) ||
             this.CUSTOM_LABELS.commonUnknownError;
     }
 
