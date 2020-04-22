@@ -149,7 +149,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 self.builtin.log("As expected Gift Entry is Disabled")
 
     def Check_Crlp_Not_Enabled_By_Default(self):
-        """Verifies that advanced mapping is not enabled by default
+        """Verifies that customizable rollups settings is not enabled by default
            By checking 'Configure Customizable Rollups' is not visible on the page"""
         locator=npsp_lex_locators['id'].format("navigateCRLPs")
         ispresent = False
