@@ -196,9 +196,7 @@ Validate Batch Process When CRLP Checked
     Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
 
 Run Donations Batch Process
-    Go To Page                   Custom                         NPSP_Settings
-    Open Main Menu               Donations
-    Click Link With Text         Customizable Rollups
+    Open NPSP Settings            Donations                     Customizable Rollups
     ${crlp_enabled} =            Check Crlp Not Enabled By Default
 
     #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
