@@ -130,7 +130,8 @@ private class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
-    * @description Verifies that any new opportunities are linked to a existing RD if the CommitmentId matches
+    * @description Verifies that a new opportunity is linked to an existing RD
+    * when the CommitmentId matches and the opportunity is not referencing any RD 
     */
     @isTest
     private static void shouldLinkOppToRDMatchingCommitmentIdOnOppInsert() {
@@ -139,7 +140,6 @@ private class RD2_ElevateIntegrationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
             .withCommitmentId(COMMITMENT_ID)
             .build();
-
         insert rd;
 
         Opportunity opp = getOpportunityBaseBuilder()
@@ -157,16 +157,16 @@ private class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
-    * @description Verifies that Opportunity should not link to a RD that does not have a matching CommitmentId 
+    * @description Verifies that a new opportunity is not linked to an existing RD
+    * when the CommitmentId does not matches and the opportunity is not referencing any RD 
     */
     @isTest
-    private static void shouldNotLinkOppToRDIfCommitmentIdDoesntMatch() {
+    private static void shouldNotLinkOppToRDWhenCommitmentIdDoesNotMatch() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
             .withCommitmentId(COMMITMENT_ID + 'random')
             .build();
-
         insert rd;
 
         Opportunity opp = getOpportunityBaseBuilder()
@@ -180,23 +180,23 @@ private class RD2_ElevateIntegrationService_TEST {
         opp = oppGateway.getRecord(opp.Id);
         
         System.assertEquals(null, opp.npe03__Recurring_Donation__c,
-            'The opportunty should not link to any RD if the Commitment Id feild does not match');
+            'The Opp should not link to any RD if the Commitment Id field does not match');
     }
 
     /***
-    * @description Verifies that when Enhanced RD is not enable, the opportunity will not link to any RD through CommitmentId 
+    * @description Verifies that a new opportunity is not linked to an existing RD
+    * when the CommitmentId matches and RD2 is not enabled
     */
     @isTest
-    private static void shouldNotLinkOppsToRDThroughCommitmentIdWhenRD2NotEnable() {
+    private static void shouldNotLinkOppToRDWhenCommitmentIdMatchesAndRD2NotEnabled() {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
             .withCommitmentId(COMMITMENT_ID)
             .build();
-
         insert rd;
 
         Opportunity opp = getOpportunityBaseBuilder()
-        .withCommitmentId(COMMITMENT_ID)
-        .build();
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
 
         Test.startTest();
         insert opp;
@@ -204,14 +204,15 @@ private class RD2_ElevateIntegrationService_TEST {
 
         opp = oppGateway.getRecord(opp.Id);
         System.assertEquals(null, opp.npe03__Recurring_Donation__c,
-        'The Opportunity should not link to any RD through CommitmentId if Enhanced RD is not enable');
+            'The Opportunity should not link to any RD through CommitmentId when RD2 is not enabled');
     }
 
     /***
-    * @description Verifies that an Opps already linked to an RD on insert will not link to another through CommitmentId
+    * @description Verifies that a new opportunity is not linked to an existing RD
+    * when the CommitmentId matches and the opportunity is already referencing an RD 
     */
     @isTest
-    private static void shouldNotLinkAlreadyAssignedOppsToRDMatchingCommitmentIdOnOppInsert() {
+    private static void shouldNotLinkAlreadyAssignedOppToRDMatchingCommitmentIdOnOppInsert() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
@@ -221,7 +222,6 @@ private class RD2_ElevateIntegrationService_TEST {
             getRecurringDonationBaseBuilder()
                 .build()
         };
-
         insert rds;
 
         Opportunity opp = getOpportunityBaseBuilder()
@@ -238,27 +238,24 @@ private class RD2_ElevateIntegrationService_TEST {
             'The Recurring Donation field on Opp should be linked to original RD');
     }
 
-    /**
-    * @description Verifies that Opportunity should not link to RD during update DML operation
+    /***
+    * @description Verifies that an existing opportunity is not linked to an RD
+    * when the CommitmentId matches on opportunity update
     */
     @isTest
-    private static void shouldNotLinkOppToRDThroughCommitmentIdOnUpdate() {
+    private static void shouldNotLinkOppToRDWhenCommitmentIdMatchesOnUpdate() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
             .withCommitmentId(COMMITMENT_ID)
             .build();
-
         insert rd;
 
-        Opportunity opp = getOpportunityBaseBuilder()
-            .build();
-
+        Opportunity opp = getOpportunityBaseBuilder().build();
         insert opp;
 
-        opp.CommitmentId__c = COMMITMENT_ID;
-
         Test.startTest();
+        opp.CommitmentId__c = COMMITMENT_ID;
         update opp;
         Test.stopTest();
 
