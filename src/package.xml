@@ -2147,7 +2147,6 @@
         <members>geErrorPageLevelFieldPermission2</members>
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
-        <members>geErrorPurchaseRequestTimeout</members>
         <members>geErrorRequestTimedout</members>
         <members>geErrorRequiredField</members>
         <members>geErrorUncertainCardChargePart1</members>

@@ -115,7 +115,6 @@ import geErrorPageLevelFieldPermission1 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLevelFieldPermission2';
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
-import geErrorPurchaseRequestTimeout from '@salesforce/label/c.geErrorPurchaseRequestTimeout';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geErrorUncertainCardChargePart1 from '@salesforce/label/c.geErrorUncertainCardChargePart1';
 import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertainCardChargePart2';
@@ -315,7 +314,6 @@ class GeLabelService {
         geErrorPageLevelFieldPermission2,
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
-        geErrorPurchaseRequestTimeout,
         geErrorRequiredField,
         geErrorUncertainCardChargePart1,
         geErrorUncertainCardChargePart2,

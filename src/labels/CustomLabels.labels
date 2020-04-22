@@ -5666,14 +5666,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The card has been successfully charged but the payment has not been recorded in Salesforce. Please correct the errors and resubmit the form to record the donation in Salesforce.</value>
     </labels>
     <labels>
-        <fullName>geErrorPurchaseRequestTimeout</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Failure message description for system error &amp; uncertain if card charged</shortDescription>
-        <value>A system error occurred. Check {0} to determine if the card was charged. If it was not charged, retry processing this donation through Gift Entry.</value>
-    </labels>
-    <labels>
         <fullName>geDonorColumnLabel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
