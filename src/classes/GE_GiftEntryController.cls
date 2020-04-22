@@ -32,7 +32,7 @@
 * @date 2020
 * @group HGE
 * @group-content
-* @description Controller for the Gift Entry lightning web components and procesing
+* @description Controller for the Gift Entry lightning web components and processing
 * form save.
 */
 public with sharing class GE_GiftEntryController {
