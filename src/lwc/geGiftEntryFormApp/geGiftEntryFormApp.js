@@ -5,9 +5,9 @@ import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPur
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 
-import { showToast } from 'c/utilTemplateBuilder';
-import { registerListener, unregisterListener, fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
+import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -16,7 +16,7 @@ import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
-import { isNotEmpty, format } from 'c/utilCommon';
+import { isNotEmpty, validateJSONString, hasNestedProperty, format } from 'c/utilCommon';
 import { LABEL_NEW_LINE } from 'c/geConstants';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
@@ -189,7 +189,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
             const purchaseResponse = await this.makePurchaseCall();
             if (purchaseResponse) {
-
                 this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(purchaseResponse);
                 this.dataImportRecord[PAYMENT_DECLINED_REASON__C] =
                     this.getPaymentDeclinedReason(purchaseResponse);
@@ -198,21 +197,19 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
                 this.isFailedPurchase = purchaseResponse.statusCode !== 201;
                 if (this.isFailedPurchase) {
-                    let errors = this.getFailedPurchaseMessage(purchaseResponse);
-                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
-                    let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
 
-                    // We use the hex value for line feed (new line) 0x0A
-                    let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
-                    
-                    const form = this.template.querySelector('c-ge-form-renderer');
-                    form.showSpinner = false;
-                    fireEvent(null, 'paymentError', {
-                        error: {
-                            message: splitErrorResponse,
-                            isObject: true
-                        }
-                     });
+                    if (hasNestedProperty(purchaseResponse, 'body', 'errors')) {
+                        this.catchPurchaseCallValidationErrors(purchaseResponse);
+                    } else {
+                        const errorMessage =
+                            this.CUSTOM_LABELS.commonPaymentServices + ': ' +
+                            this.getFailedPurchaseMessage(purchaseResponse)
+
+                        throw new HttpRequestError(
+                            errorMessage,
+                            purchaseResponse.status,
+                            purchaseResponse.statusCode);
+                    }
                 }
             }
         }
@@ -250,10 +247,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     */
     makePurchaseCall = async () => {
         let purchaseResponseString = await sendPurchaseRequest({
-            requestBodyParameters: this.buildRequestBodyParameters()
+            requestBodyParameters: this.buildPurchaseRequestBodyParameters(),
+            dataImportRecordId: this.dataImportRecord.Id
         });
         let response = JSON.parse(purchaseResponseString);
-        response.body = JSON.parse(response.body);
+        if (response.body && validateJSONString(response.body)) {
+            response.body = JSON.parse(response.body);
+        }
 
         return response;
     }
@@ -268,7 +268,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @return {object}: Object that we can deserialize and apply to the purchase
     * request body in apex.
     */
-    buildRequestBodyParameters() {
+    buildPurchaseRequestBodyParameters() {
         const names = this.getCardholderNames();
         const firstName = isNotEmpty(names.firstName) ? names.firstName : names.accountName;
         const lastName = isNotEmpty(names.lastName) ? names.lastName : names.accountName;
@@ -320,7 +320,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     */
     getPaymentDeclinedReason(response) {
         const isSuccessfulPurchase = response.statusCode === 201;
-        return isSuccessfulPurchase ? null : JSON.stringify(response.body);
+        return isSuccessfulPurchase ? null : this.getFailedPurchaseMessage(response);
     }
 
     /*******************************************************************************
@@ -336,8 +336,27 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         // Also checking for lowercase M in message in case they fix it.
         return response.body.Message ||
             response.body.message ||
+            response.errorMessage ||
             JSON.stringify(response.body.errors.map(error => error.message)) ||
             this.CUSTOM_LABELS.commonUnknownError;
+    }
+
+    catchPurchaseCallValidationErrors(purchaseResponse) {
+        let errors = this.getFailedPurchaseMessage(purchaseResponse);
+        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
+        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+
+        // We use the hex value for line feed (new line) 0x0A
+        let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
+
+        const form = this.template.querySelector('c-ge-form-renderer');
+        form.showSpinner = false;
+        fireEvent(null, 'paymentError', {
+            error: {
+                message: splitErrorResponse,
+                isObject: true
+            }
+        });
     }
 
     /*******************************************************************************
@@ -360,23 +379,31 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.navigateToRecordPage(opportunityId);
             })
             .catch(error => {
-                // TODO: Placeholder method for handling the scenario in which
-                // we've charged a card successfully, but BDI processing failed.
-                this.doSomethingLoud(error);
+                this.catchBDIProcessingError(error);
             });
     }
 
-    // TODO: Placeholder method, remove/replace in work item to better handle purchase call errors
-    doSomethingLoud(error) {
-        this.errorCallback(error);
-        // TODO: Potentially have to check for other types of status that MAY
-        // indicate a charge could still occur (pending, authorized, etc)
-        if (this.dataImportRecord[PAYMENT_STATUS__C] === PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED) {
-            showToast('HEY!',
-                'Card was charged. Please fix the outstanding errors and try again.',
-                'error',
-                'sticky');
+    /*******************************************************************************
+    * @description Catches a BDI processing error and transforms the error into
+    * something we can ingest in the form renderer.
+    */
+    catchBDIProcessingError(error) {
+        const hasPaymentBeenCaptured = this.checkForCapturedPayment();
+        if (hasPaymentBeenCaptured) {
+            error = new CardChargedBDIError(error);
         }
+        this.errorCallback(error);
+    }
+
+    /*******************************************************************************
+    * @description Method checks to see if the current data import record has a
+    * successful payment transaction.
+    *
+    * TODO: Update to check for the elevate transaction id in the future.
+    */
+    checkForCapturedPayment() {
+        return this.dataImportRecord[PAYMENT_STATUS__C] === PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
+            isNotEmpty(this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C]);
     }
 
     handleSectionsRetrieved(event) {
@@ -410,8 +437,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.dispatchEvent(new CustomEvent('editbatch'));
     }
 
-    handleReviewDonationsModal(event) {
-        this.dispatchEvent(new CustomEvent('togglereviewdonationsmodal', { detail: event.detail }));
+    handleToggleModal(event) {
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail: event.detail }));
     }
 
     navigateToRecordPage(recordId) {

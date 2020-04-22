@@ -929,8 +929,14 @@
             </svg>
         </template>
         <div class="slds-text-longform">
-            <h3 class="slds-text-heading_medium">{title}</h3>
-            <p class="slds-text-body_regular">{message}</p>
+            <h3 if:true={hasTitle}
+                class="slds-text-heading_medium">
+                {title}
+            </h3>
+            <p if:true={hasMessage}
+               class="slds-text-body_regular">
+               {message}
+            </p>
             <slot name="body"></slot>
         </div>
     </div>

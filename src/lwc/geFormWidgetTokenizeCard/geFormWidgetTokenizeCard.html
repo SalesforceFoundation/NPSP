@@ -16,23 +16,28 @@
 
                     <lightning-layout-item size='12'
                                            padding='around-small'>
-                        <c-util-alert-banner if:true={alert.show}
-                                theme={alert.theme}
-                                variant={alert.variant}
-                                icon={alert.icon}
-                                message={alert.message}>
-                        </c-util-alert-banner>
-                        <div class='iframe-container'>
-                            <template if:true={isLoading}>
-                                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
-                                </lightning-spinner>
-                            </template>
-                            <iframe class='payment-services-iframe'
-                                    title={CUSTOM_LABELS.commonPaymentServices}
-                                    src={tokenizeCardPageUrl}
-                                    data-id={CUSTOM_LABELS.commonPaymentServices}>
-                            </iframe>
-                        </div>
+                        <template if:true={isDisabled}>
+                            <p class='slds-text-body_regular slds-p-vertical_medium'>{disabledMessage}</p>
+                        </template>
+                        <template if:false={isDisabled}>
+                            <c-util-alert-banner if:true={alert.show}
+                                                 theme={alert.theme}
+                                                 variant={alert.variant}
+                                                 icon={alert.icon}
+                                                 message={alert.message}>
+                            </c-util-alert-banner>
+                            <div class='iframe-container'>
+                                <template if:true={isLoading}>
+                                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+                                    </lightning-spinner>
+                                </template>
+                                <iframe class='payment-services-iframe'
+                                        title={CUSTOM_LABELS.commonPaymentServices}
+                                        src={tokenizeCardPageUrl}
+                                        data-id={CUSTOM_LABELS.commonPaymentServices}>
+                                </iframe>
+                            </div>
+                        </template>
                     </lightning-layout-item>
 
                 </lightning-layout>

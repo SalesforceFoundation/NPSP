@@ -291,12 +291,12 @@ const sort = (objects, attribute, direction = "desc", isNullsLast) => {
 * @param {string} property: Name of the property to check.
 * @return {list} remainingProperties: Destructure all other arguments so we can
 * check N levels deep of the object.
-* e.g. checkNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+* e.g. hasNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
 */
-const checkNestedProperty = (object, property, ...remainingProperties) => {
+const hasNestedProperty = (object, property, ...remainingProperties) => {
     if (object === undefined) return false
     if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
-    return checkNestedProperty(object[property], ...remainingProperties)
+    return hasNestedProperty(object[property], ...remainingProperties)
 }
 
 /*******************************************************************************
@@ -422,7 +422,7 @@ export {
     shiftToIndex,
     removeByProperty,
     format,
-    checkNestedProperty,
+    hasNestedProperty,
     getNestedProperty,
     getLikeMatchByKey,
     arraysMatch,

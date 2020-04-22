@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
-import { format, sort, deepClone, checkNestedProperty } from 'c/utilCommon';
+import { format, sort, deepClone, hasNestedProperty } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -283,7 +283,7 @@ export default class geListView extends LightningElement {
                 let orderedByFieldApiName;
 
                 if (columnEntry) {
-                    if (checkNestedProperty(this.columnEntriesByName[this.sortedBy],
+                    if (hasNestedProperty(this.columnEntriesByName[this.sortedBy],
                         'typeAttributes', 'label', 'fieldName')) {
                         orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
                     } else {
@@ -652,7 +652,7 @@ export default class geListView extends LightningElement {
 
         // Set sortedBy to correct fieldName if a URL type column.
         let sortedBy = this.sortedBy;
-        if (checkNestedProperty(columnEntry, 'typeAttributes', 'label', 'fieldName')) {
+        if (hasNestedProperty(columnEntry, 'typeAttributes', 'label', 'fieldName')) {
             sortedBy = columnEntry.typeAttributes.label.fieldName;
         }
 

@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import {checkNestedProperty, isUndefined} from 'c/utilCommon';
+import {hasNestedProperty, isUndefined} from 'c/utilCommon';
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -67,7 +67,7 @@ export default class GeFormWidget extends LightningElement {
     }
 
     get totalAmount() {
-        return checkNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
+        return hasNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
     }
 
     /**

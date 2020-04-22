@@ -31,6 +31,7 @@ import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import commonPercent from '@salesforce/label/c.commonPercent';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
+import commonReviewForm from '@salesforce/label/c.commonReviewForm';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
 import commonTemplate from '@salesforce/label/c.commonTemplate';
@@ -116,6 +117,10 @@ import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPa
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
 import geErrorPurchaseRequestTimeout from '@salesforce/label/c.geErrorPurchaseRequestTimeout';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
+import geErrorUncertainCardChargePart1 from '@salesforce/label/c.geErrorUncertainCardChargePart1';
+import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertainCardChargePart2';
+import geErrorUncertainCardChargePart3 from '@salesforce/label/c.geErrorUncertainCardChargePart3';
+import geErrorUncertainCardChargePart4 from '@salesforce/label/c.geErrorUncertainCardChargePart4';
 import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
@@ -161,6 +166,8 @@ import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTab
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
+import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
+import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
@@ -184,8 +191,6 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
-import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 
 class GeLabelService {
 
@@ -226,6 +231,7 @@ class GeLabelService {
         commonPercent,
         commonReadMore,
         commonRequired,
+        commonReviewForm,
         commonSave,
         commonSaveAndClose,
         commonTemplate,
@@ -311,6 +317,10 @@ class GeLabelService {
         geErrorPageLevelMissingRequiredGroupFields,
         geErrorPurchaseRequestTimeout,
         geErrorRequiredField,
+        geErrorUncertainCardChargePart1,
+        geErrorUncertainCardChargePart2,
+        geErrorUncertainCardChargePart3,
+        geErrorUncertainCardChargePart4,
         geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
         geHeaderBatchGiftEntry,

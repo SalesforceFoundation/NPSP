@@ -54,6 +54,8 @@ global class ERR_Handler_API {
         CONV,
         /* @description Customizable Rollups context. */
         CRLP,
+        /* @description Gift Entry context. */
+        GE,
         /* @description Households context. */
         HH,
         /* @description Lead Conversion context. */

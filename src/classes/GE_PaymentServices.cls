@@ -221,6 +221,7 @@ public with sharing class GE_PaymentServices {
         public Integer statusCode;
         public String status;
         public String body;
+        public String error;
         public Map<String, Object> headers = new Map<String, Object>{};
 
         public ResponseWrapper() {}

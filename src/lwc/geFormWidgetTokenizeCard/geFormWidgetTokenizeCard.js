@@ -4,6 +4,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { format } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
+import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE } from 'c/geConstants';
 
@@ -16,6 +17,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track visualforceOrigin;
     @track isLoading = true;
     @track alert = {};
+    @track disabledMessage;
+    @track isDisabled = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
@@ -34,6 +37,37 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     renderedCallback() {
         this.registerPostMessageListener();
+        registerListener('disableGeFormWidgetTokenizeCard', this.handleDisableWidget, this);
+    }
+
+    disconnectedCallback() {
+        unregisterListener('disableGeFormWidgetTokenizeCard');
+    }
+
+    /*******************************************************************************
+    * @description Handles receipt of an event to disable this widget.
+    */
+    handleDisableWidget(event) {
+        this.toggleWidget(true, event.detail.message);
+    }
+
+    /*******************************************************************************
+    * @description Handles enabling the widget. Likely to be bound to a button
+    * in the future.
+    */
+    handleEnableWidget() {
+        this.toggleWidget(false);
+    }
+
+    /*******************************************************************************
+    * @description Function enables or disables the widget based on provided args.
+    *
+    * @param {boolean} isDisabled: Determines whether or not the widget is disabled.
+    * @param {string} message: Text to be disabled in the widgets body when disabled.
+    */
+    toggleWidget(isDisabled, message) {
+        this.isDisabled = isDisabled;
+        this.disabledMessage = message || null;
     }
 
     /*******************************************************************************
@@ -79,7 +113,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     async handleMessage(message) {
         if (message.error || message.token) {
-            if(isFunction(this.tokenCallback)) {
+            if (isFunction(this.tokenCallback)) {
                 this.tokenCallback(message);
             }
         } else if (message.isLoaded) {
@@ -95,29 +129,29 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
 
-        const tokenPromise = new Promise((resolve, reject) => {
-
-            const timer = setTimeout(() => reject(this.handleTokenizationTimeout()), TOKENIZE_TIMEOUT);
-
-            this.tokenCallback = message => {
-                clearTimeout(timer);
-                this.alert = {};
-                if(message.error) {
-                    reject(this.handleTokenizationError(message));
-                } else if(message.token) {
-                    resolve({ [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: message.token });
-                }
-            };
-
-        });
-
         if (iframe) {
+            const tokenPromise = new Promise((resolve, reject) => {
+
+                const timer = setTimeout(() => reject(this.handleTokenizationTimeout()), TOKENIZE_TIMEOUT);
+
+                this.tokenCallback = message => {
+                    clearTimeout(timer);
+                    this.alert = {};
+                    if (message.error) {
+                        reject(this.handleTokenizationError(message));
+                    } else if (message.token) {
+                        resolve({ [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: message.token });
+                    }
+                };
+
+            });
+
             iframe.contentWindow.postMessage(
                 { action: 'createToken' },
                 this.visualforceOrigin);
-        }
 
-        return tokenPromise;
+            return tokenPromise;
+        }
     }
 
     handleTokenizationTimeout() {
@@ -172,10 +206,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     @api
-    load() {}
+    load() { }
 
     @api
-    reset() {}
+    reset() { }
 
     @api
     get allFieldsByAPIName() {

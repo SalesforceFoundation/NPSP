@@ -10,6 +10,14 @@ export default class UtilIllustration extends LightningElement {
     // Pulled from https://lightningdesignsystem.com/components/illustration
     @api variant;
 
+    get hasTitle() {
+        return this.title ? true : false;
+    }
+
+    get hasMessage() {
+        return this.message ? true : false;
+    }
+
     get illustrationSize() {
         return this.size ? 'slds-illustration_' + this.size : 'slds-illustration_small';
     }
