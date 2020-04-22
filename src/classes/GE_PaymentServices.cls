@@ -48,7 +48,7 @@ public with sharing class GE_PaymentServices {
     @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayids';
     @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
     @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
-    @TestVisible protected final String PRODUCTID = 'productId';
+    @TestVisible static final String PRODUCTID = 'productId';
 
     // Names of Payment Service configuration sets
     @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
@@ -116,7 +116,7 @@ public with sharing class GE_PaymentServices {
     }
 
     public String getJwt() {
-        JWTPayload jwtPayload = new JWTPayload(this);
+        JWTPayload jwtPayload = new JWTPayload(config.get(PRODUCTID));
         String jwt = UTIL_Jwt.getSignedJWTFromString(
                 jwtPayload.getAsString(),
                 config.get(API_KEY)
@@ -139,8 +139,8 @@ public with sharing class GE_PaymentServices {
     public with sharing class JWTPayload {
         String sfdoId;
 
-        public JWTPayload(GE_PaymentServices serviceInstance) {
-            sfdoId = serviceInstance.config.get(serviceInstance.PRODUCTID);
+        public JWTPayload(String sfdoId) {
+            this.sfdoId = sfdoId;
         }
 
         private Long getEpochTimestamp(DateTime dt) {
