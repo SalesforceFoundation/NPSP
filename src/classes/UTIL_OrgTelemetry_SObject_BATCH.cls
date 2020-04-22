@@ -57,13 +57,16 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      */
     public static final Integer RECURRING_DONATIONS_BATCH_SIZE = 200;
 
+    public static final Integer GE_BATCH_IMPORTS_SIZE = 2000;
+
     /**
      * @description BatchJobMode is to add support for other query types in this same batch job
      * that aren't yet needed, but may be in the future
      */
     public enum TelemetryBatchJobMode {
         RECURRING_DONATIONS,
-        OPPORTUNITIES
+        OPPORTUNITIES,
+        GE_BATCH_IMPORTS
     }
 
     /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
@@ -103,6 +106,9 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private Integer oppsWithPayments = 0;
 
     private final String recurringDonationOpenStatusValue = RD_Constants.OPEN_ENDED_STATUS_OPEN;
+
+    @TestVisible
+    private Integer geBatchDataImportCount = 0;
 
     /**
      * @description Constructor
@@ -144,6 +150,13 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 soqlQuery = 'SELECT npe03__Amount__c, npe03__Open_Ended_Status__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
+            when GE_BATCH_IMPORTS {
+                soqlQuery = 'SELECT Id FROM DataImport__c WHERE CreatedDate = Last_n_days:30 '+
+                            'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
+                            'AND NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c >= 2 ' +
+                            'AND Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
+            }
+
             when else {
                 // If no conditions are met, this returns an empty query to avoid an NPE
                 soqlQuery = 'SELECT Id FROM Account LIMIT 0';
@@ -179,6 +192,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
             when RECURRING_DONATIONS {
                 handleRecurringDonationsJobMode((List<npe03__Recurring_Donation__c>) scope);
+            }
+
+            when GE_BATCH_IMPORTS {
+                handleDataImportJobMode((List<DataImport__c>) scope);
             }
         }
     }
@@ -290,6 +307,12 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         }
     }
 
+    private void handleDataImportJobMode(List<DataImport__c> dataImports) {
+        for (DataImport__c dataImport : dataImports) {
+            geBatchDataImportCount++;
+        }
+    }
+
     /**
      * @description When the entire batch job is done, submit the final count variables to the LMO
      * @param context Batch context
@@ -305,6 +328,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 when RECURRING_DONATIONS {
                     Database.executeBatch(this, RECURRING_DONATIONS_BATCH_SIZE);
                 }
+
+                when GE_BATCH_IMPORTS {
+                    Database.executeBatch(this, GE_BATCH_IMPORTS_SIZE);
+                }
             }
 
         } else {
@@ -316,6 +343,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
                 when RECURRING_DONATIONS {
                     setRecurringDonationsCounts();
+                }
+
+                when GE_BATCH_IMPORTS {
+                    setGEBatchCounts();
                 }
             }
         }
@@ -342,7 +373,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * @description Sets counts related to payments in LMO
      */
     private void setPaymentCounts() {
-        STG_SettingsService stgSvc = new STG_SettingsService();
         featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), oppsWithMultiplePaymentsCount);
 
         /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
@@ -353,6 +383,14 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), oppsWithPayments);
         }
         */
+    }
+
+    /**
+    * @description Sets counts related to Data Imports in LMO
+    */
+    private void setGEBatchCounts() {
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(),
+                geBatchDataImportCount);
     }
 
     /** @description Returns whether or not another batch should be chained*/

@@ -150,6 +150,39 @@ private class UTIL_OrgTelemetry_Batch_TEST {
     }
 
     /**
+     * @description Confirms that when there are no qualified Data Import records, the finish method sets
+     * telemetry and does not queue up the batch job
+     */
+    @IsTest
+    private static void shouldHandleNoDataImportsToCount() {
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+        batch.finish(null);
+
+        System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS),
+                'The Data Import Batch should not be executed');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch, 0);
+    }
+
+
+    @IsTest
+    private static void shouldHandleDataImportsToCount() {
+        createQualifiedDIRecords(100);
+
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        System.assertEquals(100, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES),
+                'The Data Import batch should be executed');
+
+        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch, 100);
+    }
+
+
+    /**
      * @description Asserts on the provided telemetry integer metric
      */
     private static void assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName metric, Integer expectedValue) {
@@ -182,6 +215,11 @@ private class UTIL_OrgTelemetry_Batch_TEST {
             payments.add(new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id));
         }
         insert payments;
+    }
+
+    private static void createQualifiedDIRecords(Integer numberOfRecords) {
+        List<DataImport__c> dataImports = UTIL_UnitTestData_TEST.createDIRecordsInABatch(numberOfRecords);
+        insert dataImports;
     }
 
     /**

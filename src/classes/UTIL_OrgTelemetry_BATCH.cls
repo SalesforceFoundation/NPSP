@@ -59,7 +59,9 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd,
+                UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountGERowsLast30DaysBatch
+
         };
 
     /**
@@ -94,6 +96,7 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
     public void finish(Database.BatchableContext info) {
         handleOpportunityBatchExecution();
         handleRecurringDonationExecution();
+        handleDataImportExecution();
     }
 
     /**
@@ -134,6 +137,22 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), 0);
+        }
+    }
+
+    /**
+    * @description Handles execution of batch job for recurring donations counts
+    */
+    private void handleDataImportExecution() {
+        Boolean hasDataImports = [SELECT Id FROM DataImport__c LIMIT 1].isEmpty() == false;
+
+        if (hasDataImports) {
+            executeTelemetrySObjectBatch(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS,
+                    UTIL_OrgTelemetry_SObject_BATCH.GE_BATCH_IMPORTS_SIZE
+            );
+        } else {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), 0);
         }
     }
 
