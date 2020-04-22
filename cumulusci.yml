@@ -654,6 +654,8 @@ flows:
                 task: deploy_pmm_trial_config
                 ui_options:
                     name: "Configure Program Management Module"
+                options:
+                    unmanaged: False
             4:
                 task: pmm:deploy_customer_profiles
                 options:
