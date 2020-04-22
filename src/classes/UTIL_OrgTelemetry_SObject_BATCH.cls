@@ -57,7 +57,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      */
     public static final Integer RECURRING_DONATIONS_BATCH_SIZE = 200;
 
-    public static final Integer GE_BATCH_IMPORTS_SIZE = 2000;
+    public static final Integer DATA_IMPORTS_BATCH_SIZE = 2000;
 
     /**
      * @description BatchJobMode is to add support for other query types in this same batch job
@@ -66,7 +66,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public enum TelemetryBatchJobMode {
         RECURRING_DONATIONS,
         OPPORTUNITIES,
-        GE_BATCH_IMPORTS
+        DATA_IMPORTS
     }
 
     /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
@@ -150,7 +150,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 soqlQuery = 'SELECT npe03__Amount__c, npe03__Open_Ended_Status__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
-            when GE_BATCH_IMPORTS {
+            when DATA_IMPORTS {
                 soqlQuery = 'SELECT Id FROM DataImport__c WHERE CreatedDate = Last_n_days:30 '+
                             'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
                             'AND NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c >= 2 ' +
@@ -194,7 +194,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                 handleRecurringDonationsJobMode((List<npe03__Recurring_Donation__c>) scope);
             }
 
-            when GE_BATCH_IMPORTS {
+            when DATA_IMPORTS {
                 handleDataImportJobMode((List<DataImport__c>) scope);
             }
         }
@@ -329,8 +329,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                     Database.executeBatch(this, RECURRING_DONATIONS_BATCH_SIZE);
                 }
 
-                when GE_BATCH_IMPORTS {
-                    Database.executeBatch(this, GE_BATCH_IMPORTS_SIZE);
+                when DATA_IMPORTS {
+                    Database.executeBatch(this, DATA_IMPORTS_BATCH_SIZE);
                 }
             }
 
@@ -345,7 +345,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                     setRecurringDonationsCounts();
                 }
 
-                when GE_BATCH_IMPORTS {
+                when DATA_IMPORTS {
                     setGEBatchCounts();
                 }
             }

@@ -76,7 +76,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         setupOppsWithPayments();
 
-        createDIRecords(NUM_DATA_IMPORT_RECORDS);
+        createQualifiedDIRecords(NUM_DATA_IMPORT_RECORDS);
     }
 
     /**
@@ -95,7 +95,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         insert payments;
     }
 
-    private static void createDIRecords (Integer numOfRecords) {
+    private static void createQualifiedDIRecords (Integer numOfRecords) {
        insert UTIL_UnitTestData_TEST.createDIRecordsInABatch(numOfRecords);
     }
 
@@ -116,7 +116,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         rdBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         UTIL_OrgTelemetry_SObject_BATCH geBatch =
-                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS);
+                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
         geBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         Test.startTest();
@@ -167,18 +167,17 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 * @description Confirms RECURRING_DONATIONS job mode queries for the correct SObject type with the correct limit
 */
     @IsTest
-    private static void geDataImportsJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
+    private static void dataImportsJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
         UTIL_OrgTelemetry_SObject_BATCH geBatch =
-                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS);
+                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
         geBatch.chunkSize = NUM_DATA_IMPORT_RECORDS;
 
         String geBatchQuery = geBatch.start(null).getQuery();
-        System.debug('geBatchQuery ' + geBatchQuery);
         System.assert(geBatchQuery.endsWith('LIMIT 100'), 'The query should be limited with the specified chunk size');
 
         List<SObject> actualRecords = Database.query(geBatchQuery);
         System.assert(Database.query(geBatchQuery) instanceof List<DataImport__c>,
-                'GE_BATCH_IMPORTS job mode should query Data Imports');
+                'DATA IMPORTS job mode should query Data Imports');
 
         assertOnOrderedSObjects(queryDataImportsInIdOrder(), actualRecords);
     }
@@ -225,12 +224,15 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         assertOnOrderedSObjects(expectedRecords, actualRecords);
     }
 
+    /**
+    * @description Confirms DATA_IMPORTS job modes query for the correct SObject type with the correct Id offset
+    */
     @IsTest
     private static void dataImportsJobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
         List<SObject> expectedRecords = queryDataImportsInIdOrder();
 
         UTIL_OrgTelemetry_SObject_BATCH geBatch =
-                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS);
+                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
 
         //offset the first Id
         geBatch.lastProcessedId = expectedRecords[0].Id;
@@ -332,7 +334,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     private static void shouldCalculateDataImportMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH geBatch =
                 new UTIL_OrgTelemetry_SObject_BATCH(
-                        UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS
+                        UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS
                 );
 
         String geBatchQuery = geBatch.start(null).getQuery();
@@ -439,7 +441,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @IsTest
     private static void shouldCaptureDataImportMetricsInFeatureManagement() {
         UTIL_OrgTelemetry_SObject_BATCH geBatch =
-                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS);
+                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS);
         geBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
         geBatch.geBatchDataImportCount = NUM_DATA_IMPORT_RECORDS;
         Test.startTest();

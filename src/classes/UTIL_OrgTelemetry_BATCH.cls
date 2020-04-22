@@ -148,8 +148,8 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
 
         if (hasDataImports) {
             executeTelemetrySObjectBatch(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_IMPORTS,
-                    UTIL_OrgTelemetry_SObject_BATCH.GE_BATCH_IMPORTS_SIZE
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS,
+                    UTIL_OrgTelemetry_SObject_BATCH.DATA_IMPORTS_BATCH_SIZE
             );
         } else {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), 0);
@@ -159,7 +159,7 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
     /**
     * @description Executes Telemetry SObject Batch with given mode and size
     */
-    private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+    public virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
         Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(mode), batchSize);
     }
 }
