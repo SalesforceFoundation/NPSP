@@ -26,6 +26,7 @@ export default class GeFormWidget extends LightningElement {
         const thisWidget = this.widgetComponent;
         // Need to make sure all widget components support returnValue()
         if(this.isValid && typeof thisWidget.returnValues === 'function') {
+            // thisWidget.returnValues() can return promises
             widgetAndValues = thisWidget.returnValues();
         }
         return widgetAndValues;
@@ -44,7 +45,7 @@ export default class GeFormWidget extends LightningElement {
         return isValid;
     }
 
-    get widgetComponent(){
+    get widgetComponent() {
         return this.template.querySelector('[data-id="widgetComponent"]');
     }
 

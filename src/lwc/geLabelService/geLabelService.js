@@ -161,6 +161,7 @@ import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTab
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
+import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
@@ -357,6 +358,7 @@ class GeLabelService {
         geLabelTemplateInfoNameField,
         gePaymentProcessError,
         gePaymentProcessingErrorBanner,
+        gePaymentRequestTimedOut,
         geSearchPlaceholder,
         geSelectPlaceholder,
         geTabBatchHeader,
