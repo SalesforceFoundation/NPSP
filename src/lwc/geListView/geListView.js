@@ -150,12 +150,6 @@ export default class geListView extends LightningElement {
         return '';
     }
 
-    get isShowStandardFooter() {
-        return this.showStandardFooter === 'true' ||
-            this.showStandardFooter === true ||
-            this.showStandardFooter === 1;
-    }
-
     get hasRecords() {
         return this.recordsToDisplay && this.recordsToDisplay.length > 0;
     }
