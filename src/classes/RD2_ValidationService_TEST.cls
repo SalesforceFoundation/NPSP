@@ -303,35 +303,6 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies if it displays error message when installment period
-    * is monthly and day of month value is not valid
-    */
-    @isTest
-    private static void shouldFailWhenDayOfMonthIsNotValidForMonthlyInstallments() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        String day = '31';
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withContact(getContact().Id)
-            .withDayOfMonth(day)
-            .build();
-
-        String errMessage = '';
-        try {
-            insert rd;
-        } catch (Exception e) {
-            errMessage = e.getMessage();
-        }
-
-        String expectedMessage = String.format(
-            System.Label.RD2_DayOfMonthMustBeValid,
-            new String[]{ day }
-        );
-        System.assert(errMessage.contains(expectedMessage),
-            'The error message should contain invalid Day Of Month message: ' + errMessage);
-    }
-
-    /***
     * @description Verifies if it creates RDs when installment period is monthly and day of month value is valid
     */
     @isTest

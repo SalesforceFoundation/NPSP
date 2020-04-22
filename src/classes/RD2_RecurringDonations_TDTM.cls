@@ -93,7 +93,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        transformDataBeforeInsert(rds, triggerAction);
+        transformDataBeforeValidation(rds, triggerAction);
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
@@ -137,6 +137,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, BeforeUpdate, etc.
     */
+    @TestVisible
     private void transformDataInBeforeContext(List<npe03__Recurring_Donation__c> rds,
         List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction
     ) {
@@ -168,16 +169,28 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     /***
     * @description Data Transformation Actions for Before Insert; and before validation
     * - Assign Installment Frequency to the recurring donation record if the field is null on insert
+    * - Set Day of Month to be the Last_Day if the original value is "31"
     * @param rds Trigger.new records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    private void transformDataBeforeInsert(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
-        if (triggerAction != TDTM_Runnable.Action.BeforeInsert) {
+    @TestVisible
+    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+        //data transformation happens in the Before context only
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert
+            && triggerAction != TDTM_Runnable.Action.BeforeUpdate
+        ) {
             return;
         }
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.InstallmentFrequency__c == null) {
+
+            //map the Day of Month value of "31" to the Last_Day value
+            if (rd.Day_of_Month__c == '31') {
+                rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
+            }
+
+            //set the default installment frequency when value is not provided on the RD insert
+            if (rd.InstallmentFrequency__c == null && triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
             }
         }
