@@ -18,11 +18,12 @@ Suite Teardown  Run keywords
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
 &{contact2_fields}         Email=test@example.com
-&{opportunity1_fields}     Type=Donation   Name=Opp Allocation Sync test Donation       Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
-&{opportunity2_fields}     Type=Donation   Name=Payment Allocation Sync test Donation   Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
+&{contact3_fields}         Email=test@example.com
+&{opportunity1_fields}     Type=Donation   Name=Opp Allocation Sync test Donation           Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
+&{opportunity2_fields}     Type=Donation   Name=Payment Allocation Sync test Donation       Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
+&{opportunity3_fields}     Type=Donation   Name=$0 opp with default allocations enabled     Amount=0    StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
 
 *** Test Cases ***
-
 Create Payment Allocations and Verify Opportunity Allocations Sync
     [Documentation]                        Once Allocations are Enabled and a Default GAU is added, create an opportunity via API.
     ...                                    Open Opportunity and open payments from the related tab. Verify that total payment is assigned to Default GAU
@@ -85,6 +86,16 @@ Update GAU Allocations and Verify Payment Allocations Sync
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
     
+Allocations Behavior when $0 with Default Allocations Enabled
+    [Documentation] 
+    [tags]
+    Go To Page                             Detail
+    ...                                    Opportunity
+    ...                                    object_id=${data}[contact3_opportunity][Id]
+    Select Tab                             Related
+    Verify Allocations                     GAU Allocations
+    ...    &{def_gau}[Name]=$0.00
+
 ***Keywords***
 
 Enable Payment Allocations
@@ -124,6 +135,7 @@ Setup Test Data
     Set suite variable    ${date}
     Setupdata             contact1            ${contact1_fields}     ${opportunity1_fields}
     Setupdata             contact2            ${contact2_fields}     ${opportunity2_fields}
+    Setupdata             contact3            ${contact3_fields}     ${opportunity3_fields}
     @{records} =          Salesforce Query    npe01__OppPayment__c    
     ...    select=Id
     ...    npe01__Opportunity__c=${data}[contact1_opportunity][Id]
