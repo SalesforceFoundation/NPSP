@@ -162,11 +162,8 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static DataImport__c upsertDataImport(DataImport__c dataImport) {
         try {
-            if (String.isNotBlank(dataImport.Id)) {
-                Database.update(dataImport);
-            } else {
-                Database.insert(dataImport);
-            }
+
+            upsert dataImport Id;
 
             return dataImport;
         } catch(Exception e) {
