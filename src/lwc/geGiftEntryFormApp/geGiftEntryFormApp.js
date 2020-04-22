@@ -14,6 +14,14 @@ import GeLabelService from 'c/geLabelService';
 // Schema Imports
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DI_PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import DI_PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
+import DI_PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
+import DI_PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
+import DI_PAYMENT_GATEWAY_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_ID__c';
+import DI_PAYMENT_GATEWAY_TRANSACTION_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
+import DI_PAYMENT_AUTHORIZED_AT from '@salesforce/schema/DataImport__c.Payment_Authorized_UTC_Timestamp__c';
+import DI_PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
 import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
@@ -25,6 +33,14 @@ const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
 const PAYMENT_METHOD__C = DI_PAYMENT_METHOD_FIELD.fieldApiName;
+const PAYMENT_ELEVATE_ID = DI_PAYMENT_ELEVATE_ID.fieldApiName;
+const PAYMENT_CARD_NETWORK = DI_PAYMENT_CARD_NETWORK.fieldApiName;
+const PAYMENT_LAST_4 = DI_PAYMENT_LAST_4.fieldApiName;
+const PAYMENT_EXPIRATION_MONTH = DI_PAYMENT_EXPIRATION_MONTH.fieldApiName;
+const PAYMENT_EXPIRATION_YEAR = DI_PAYMENT_EXPIRATION_YEAR.fieldApiName;
+const PAYMENT_GATEWAY_ID = DI_PAYMENT_GATEWAY_ID.fieldApiName;
+const PAYMENT_TRANSACTION_ID = DI_PAYMENT_GATEWAY_TRANSACTION_ID.fieldApiName;
+const PAYMENT_AUTHORIZED_AT = DI_PAYMENT_AUTHORIZED_AT.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
 const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
@@ -37,6 +53,7 @@ const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     RETRYABLEERROR: 'RETRYABLEERROR',
     REFUNDISSUED: 'REFUNDISSUED'
 });
+const PAYMENT_SUCCESS_STATUS_CODE = 201;
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -186,19 +203,54 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             const purchaseResponse = await this.makePurchaseCall();
             if (purchaseResponse) {
 
-                this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(purchaseResponse);
-                this.dataImportRecord[PAYMENT_DECLINED_REASON__C] =
-                    this.getPaymentDeclinedReason(purchaseResponse);
+                let errors = this.processPurchaseResponse(purchaseResponse);
 
                 this.dataImportRecord = await upsertDataImport({ dataImport: this.dataImportRecord });
 
-                const isFailedPurchase = purchaseResponse.statusCode !== 201;
-                if (isFailedPurchase) {
-                    let errors = this.getFailedPurchaseMessage(purchaseResponse);
+                if (isNotEmpty(errors)) {
                     throw new Error(errors);
                 }
             }
         }
+    }
+
+    /*******************************************************************************
+     * @description Updates the dataImportRecord fields with response values from
+     * payment services.
+     *
+     * @param {object} response The response object from payment services returned when
+     * purchase call is made.
+     *
+     * @return string A concatenated string of errors returned from the purchase call to
+     * payment services
+     */
+    processPurchaseResponse(response) {
+        let errors = '';
+        let responseBody = response.body;
+
+        this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(response);
+        this.dataImportRecord[PAYMENT_ELEVATE_ID] = responseBody.id;
+
+        if (response.statusCode === PAYMENT_SUCCESS_STATUS_CODE) {
+
+            if (isNotEmpty(responseBody.cardData)) {
+                this.dataImportRecord[PAYMENT_CARD_NETWORK] = responseBody.cardData.brand;
+                this.dataImportRecord[PAYMENT_LAST_4] = responseBody.cardData.last4;
+                this.dataImportRecord[PAYMENT_EXPIRATION_MONTH] = responseBody.cardData.expirationMonth;
+                this.dataImportRecord[PAYMENT_EXPIRATION_YEAR] = responseBody.cardData.expirationYear;
+            }
+            this.dataImportRecord[PAYMENT_GATEWAY_ID] = responseBody.gatewayId;
+            this.dataImportRecord[PAYMENT_TRANSACTION_ID] = responseBody.gatewayTransactionId;
+            this.dataImportRecord[PAYMENT_AUTHORIZED_AT] = responseBody.authorizedAt;
+
+        } else {
+            this.dataImportRecord[PAYMENT_DECLINED_REASON__C] =
+                this.getPaymentDeclinedReason(response);
+
+            errors = this.getFailedPurchaseMessage(response);
+        }
+
+        return errors;
     }
 
     /*******************************************************************************
@@ -298,7 +350,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @return {string}: Reason the payment was declined
     */
     getPaymentDeclinedReason(response) {
-        const isSuccessfulPurchase = response.statusCode === 201;
+        const isSuccessfulPurchase = response.statusCode === PAYMENT_SUCCESS_STATUS_CODE;
         return isSuccessfulPurchase ? null : JSON.stringify(response.body);
     }
 
