@@ -183,7 +183,6 @@ public with sharing class GE_GiftEntryController {
     */
     private static void processDataImport(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
         try {
-            Id diRecordId = diRecord.Id;
 
             Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
 
