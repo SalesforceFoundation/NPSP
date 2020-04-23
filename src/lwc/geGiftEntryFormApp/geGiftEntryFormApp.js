@@ -8,9 +8,10 @@ import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submi
 
 // Function / Class imports
 import { showToast } from 'c/utilTemplateBuilder';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, format } from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
+import { LABEL_NEW_LINE } from 'c/geConstants';
 
 // Schema Imports
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
@@ -28,8 +29,6 @@ import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
-import { isNotEmpty, format } from 'c/utilCommon';
-import { LABEL_NEW_LINE } from 'c/geConstants';
 
 // Constants
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
@@ -217,7 +216,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 if (isNotEmpty(errors)) {
                     this.isFailedPurchase = true;
 
-                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
+                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, JSON.stringify(errors)];
                     let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
 
                     // We use the hex value for line feed (new line) 0x0A
@@ -245,11 +244,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
      * @param {object} response The response object from payment services returned when
      * purchase call is made.
      *
-     * @return string A concatenated string of errors returned from the purchase call to
+     * @return {array} A concatenated string of errors returned from the purchase call to
      * payment services
      */
     processPurchaseResponse(response) {
-        let errors = '';
+        let errors = [];
         let responseBody = response.body;
 
         this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(response);
@@ -391,7 +390,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         // Also checking for lowercase M in message in case they fix it.
         return response.body.Message ||
             response.body.message ||
-            JSON.stringify(response.body.errors.map(error => error.message)) ||
+            response.body.errors.map(error => error.message) ||
             this.CUSTOM_LABELS.commonUnknownError;
     }
 
