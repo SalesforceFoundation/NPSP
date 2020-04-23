@@ -68,6 +68,14 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
+    * @description Returns the Elevate Integration service enablement status
+    * @return Boolean
+    */
+    public static Boolean isIntegrationEnabled() {
+        return config.isIntegrationEnabled();
+    }
+
+    /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation
@@ -110,14 +118,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
         // If any of the restricted fields has been changed, prevent the RD update
         return !isChanged;
-    }
-
-    /***
-    * @description Returns the Elevate Integration service enablement status
-    * @return Boolean
-    */
-    public static Boolean isIntegrationEnabled() {
-        return config.isIntegrationEnabled();
     }
 
     /**
