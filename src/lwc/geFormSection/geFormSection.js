@@ -1,4 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
+import {getSubsetObject} from "c/utilCommon";
 
 export default class GeFormSection extends LightningElement {
     @api section;
@@ -111,26 +112,45 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    load(data){
+    load(data) {
         const fields = this.template.querySelectorAll('c-ge-form-field');
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
+        fields.forEach(fieldCmp => {
+            if (Object.keys(data).includes(fieldCmp.sourceFieldAPIName)) {
+                fieldCmp.load(
+                    getSubsetObject(
+                        data,
+                        [fieldCmp.sourceFieldAPIName]));
+            }
 
-        fields.forEach(field => {
-            field.load(data);
+            if (data.recordTypeId || data.recordTypeId === null) {
+                fieldCmp.recordTypeId = data.recordTypeId;
+            }
         });
 
+        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
         widgetList.forEach(widget => {
             widget.load(data);
         });
     }
 
     @api
-    reset() {
+    reset(fieldMappingDevNames = null) {
         const fields = this.template.querySelectorAll('c-ge-form-field');
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
 
         fields.forEach(field => {
-            field.reset();
+            if (fieldMappingDevNames) {
+                // reset the fields elements related to
+                // these field mappings
+                if (fieldMappingDevNames.includes(
+                    field.element.dataImportFieldMappingDevNames[0]
+                )) {
+                    field.reset();
+                }
+            } else {
+                // reset all field elements in this section
+                field.reset();
+            }
         });
 
         widgetList.forEach(widget => {
@@ -138,17 +158,53 @@ export default class GeFormSection extends LightningElement {
         });
     }
 
-    handleChangeLookup(event) {
-        const changeLookupEvent = new CustomEvent(
-            'changelookup',
-            { detail: event.detail });
-        this.dispatchEvent(changeLookupEvent);
+    handleLookupRecordSelect(event) {
+        const selectEvent = new CustomEvent(
+            'lookuprecordselect',
+            {
+                detail: event.detail,
+                objectMappingDevName: event.objectMappingDevName
+            });
+        this.dispatchEvent(selectEvent);
     }
 
-    handleChangePicklist(event) {
-        const changePicklistEvent = new CustomEvent(
-            'changepicklist',
+    handleChangeDonationDonor(event) {
+        const changeDonationDonorEvent = new CustomEvent(
+            'changedonationdonor',
             { detail: event.detail });
-        this.dispatchEvent(changePicklistEvent);
+        this.dispatchEvent(changeDonationDonorEvent);
     }
+
+    /**
+     * @description Inspects all fields and widgets in the section and
+     *              returns a list of DataImport__c field api names used as
+     *              source fields.  Helps to only send relevant data down from
+     *              geFormRenderer to each section during load() flow.
+     */
+    @api
+    get sourceFields() {
+        let fields = Object.keys(this.getAllFieldsByAPIName());
+
+        this.template.querySelectorAll('c-ge-form-widget')
+            .forEach(widgetCmp => {
+                fields.push(...widgetCmp.allFieldsByAPIName);
+            });
+
+        return fields;
+    }
+
+    @api
+    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
+        this.template.querySelectorAll('c-ge-form-field')
+            .forEach(field => {
+                // Currently only picklists need their selected record's RecordType Id,
+                // since they use it to update their available options
+                if (field.isPicklist) {
+                    if (field.objectMappingDevName === objectMappingDevName) {
+                        field.recordTypeId = recordTypeId;
+                    }
+                }
+            });
+    }
+
 }

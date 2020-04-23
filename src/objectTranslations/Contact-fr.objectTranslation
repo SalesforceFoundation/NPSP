@@ -191,6 +191,10 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
+        <label>Nouveau don</label>
+        <name>New_Gift</name>
+    </webLinks>
+    <webLinks>
         <label>Recalculer des cumuls</label>
         <name>Recalculate_Rollups</name>
     </webLinks>

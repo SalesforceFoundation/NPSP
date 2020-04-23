@@ -634,6 +634,13 @@
         <value>Account Model Conversion Progress</value>
     </labels>
     <labels>
+        <fullName>CONV_ConversionAccessDenied</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when user does not have permissions for the conversion process</shortDescription>
+        <value>You don&apos;t have the required system permissions to convert. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>CONV_Fundamental_Changes</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -920,6 +927,14 @@
         <protected>true</protected>
         <shortDescription>ConfirmDeleteAccount</shortDescription>
         <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmDeleteLeaveAccountEmpty</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
     </labels>
     <labels>
         <fullName>CRLP_AvailableRollupType</fullName>
@@ -1572,7 +1587,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if it is valid day of month</shortDescription>
-        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 28 or select Last Day of Month.</value>
+        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 30 or select Last Day of Month.</value>
     </labels>
     <labels>
         <fullName>RD2_DayOfMonthIsRequiredForMonthlyInstallment</fullName>
@@ -1711,6 +1726,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Enable the Enhanced Recurring Donations functionality.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementEnableSimpleIntro</fullName>
+         <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple enablement section introduction and details</shortDescription>
+        <value>This step changes the processing logic for Recurring Donations to use Enhanced Recurring Donations logic. Recurring Donations will not function the same way as before.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementEnableTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1777,6 +1800,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Launch MetaDeploy</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementMetaDeploySimpleIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple metaDeploy section introduction and guidelines</shortDescription>
+        <value>Use our MetaDeploy service to install the Enhanced Recurring Donations metadata. The metadata includes: new picklist values, updated help text, and a new page layout. MetaDeploy is a service that exists outside of your Salesforce org.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementMetaDeployTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1814,7 +1845,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed on a migration error</shortDescription>
-        <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
+        <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationIntro</fullName>
@@ -1897,6 +1928,16 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Enablement preparation tasks title</shortDescription>
         <value>Preparation Tasks</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementSimpleIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple enablement page introduction and guidelines</shortDescription>
+        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage than ever before. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
@@ -2019,6 +2060,22 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You must enable Enhanced Recurring Donations to use this component.</value>
     </labels>
     <labels>
+        <fullName>RD2_ScheduleVisualizerFLSInstallment</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when no field can be displayed on the upcoming installments</shortDescription>
+        <value>You don&apos;t have permissions to view Upcoming Installments. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerFLSSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when no field can be displayed on the active schedules</shortDescription>
+        <value>You don&apos;t have permissions to view Active Schedules. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ScheduleVisualizerMessageNoSchedule</fullName>
         <categories>Recurring-Donations, Error, Component</categories>
         <language>en_US</language>
@@ -2095,8 +2152,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>You do not have permission to create a donation record</shortDescription>
-        <value>You do not have permission to create a donation record. Please contact your system administrator for more information.</value>
+        <shortDescription>You do not have permission to Refresh opportunities</shortDescription>
+        <value>You don&apos;t  have the required permissions to Refresh Opportunities. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorLegacyBatchJobCannotBeRun</fullName>
@@ -2413,8 +2470,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>ADDR_CopyConAddrHHObjBTN</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label that appears when user does not pass FLS check to copy the address</shortDescription>
-        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+        <shortDescription>When user does not have FLS or object level permissions to copy the address</shortDescription>
+        <value>You don&apos;t have the required object or field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
     </labels>
     <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
@@ -4561,6 +4618,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Field Label</value>
     </labels>
     <labels>
+        <fullName>commonMissingRequiredFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message about missing required fields</shortDescription>
+        <value>These required fields must be completed: {0}</value>
+    </labels>
+    <labels>
         <fullName>commonNewGift</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4815,6 +4880,78 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>conMergeWinnerAsstText</shortDescription>
         <value>Choose this column as the master record</value>
+    </labels>
+    <labels>
+	<fullName>conMergeDRSStep1</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DRS Contact Merge Step 1</shortDescription>
+        <value>Select the Duplicate Record Sets you want to merge</value>
+    </labels>
+    <labels>
+        <fullName>conMergeFoundDRS</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+	<protected>true</protected>
+	<shortDescription>conMergeFoundDRS</shortDescription>
+        <value>Duplicate Record Sets</value>
+    </labels>
+    <labels>
+	<fullName>conMergeDRSPickBtnLabel</fullName>
+	<categories>Contact Merge</categories>
+	<language>en_US</language>
+	<protected>true</protected>
+   	<shortDescription>conMergeDRSPickBtnLabel</shortDescription>
+	<value>Pick</value>
+    </labels>
+    <labels>
+	<fullName>conMergeErrorNoDRSFound</fullName>
+	<categories>Contact Merge</categories>
+	<language>en_US</language>
+	<protected>true</protected>
+	<shortDescription>Error to be displayed when no DRS records are found</shortDescription>
+	<value>&lt;b&gt;No Duplicate Record Sets.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No Duplicate Record Sets found. Make sure duplicate rules are enabled. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;More Info&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+	<fullName>conMergeErrorNoReadDSRObjPermission</fullName>
+	<categories>Contact Merge</categories>
+	<language>en_US</language>
+	<protected>true</protected>
+	<shortDescription>Read permission on the Contact object is required to for merging</shortDescription>
+	<value>You must have Read permissions on Duplicate Record Sets in order to merge Contacts.</value>
+    </labels>
+    <labels>
+        <fullName>conMergeTooManyContactError</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error to be displayed when there are to many contact records</shortDescription>
+        <value>Too many duplicate contacts. Please use Search contact option to merge contacts</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSearchConText</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to be display before the &#39;Search Contact&#39; button</shortDescription>
+        <value>Search for specific Contacts to see if they have duplicates</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSeeDupConText</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to be display before the &#39;See Duplicate Contact&#39; button</shortDescription>
+        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSeeDupConDRS</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeSeeDupConDRS</shortDescription>
+        <value>See Duplicate Contacts</value>
     </labels>
     <labels>
         <fullName>engagementPlanCantEdit</fullName>
@@ -8901,6 +9038,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Default Value</value>
     </labels>
     <labels>
+        <fullName>stgDeletePermissionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The user do not have delete permission to delete custom setting.</shortDescription>
+        <value>You don&apos;t have the required system permissions to delete this setting. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>stgDIFMNonAdminError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -8980,6 +9125,14 @@ To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
 &lt;br/&gt;
 &lt;br/&gt;
 Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
+    </labels>
+    <labels>
+        <fullName>stgEditPermissionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The user do not have edit permission to edit custom setting.</shortDescription>
+        <value>You don&apos;t have the required system permissions to edit this setting. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>stgErrorINaming</fullName>

@@ -174,9 +174,7 @@ public with sharing class RD2_ValidationService {
      * @param rd Recurring Donation record to validate
      */
     private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd) {
-        if (rd.InstallmentFrequency__c == null
-            || rd.InstallmentFrequency__c < 1
-            || rd.InstallmentFrequency__c > 20) {
+        if (!(new RD2_RecurringDonation(rd)).isValidInstallmentFrequency()) {
             rd.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
     }
@@ -279,23 +277,24 @@ public with sharing class RD2_ValidationService {
             return;
         }
 
-        if (rd.Day_of_Month__c != RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
-            Integer dayOfMonth;
-            try {
-                dayOfMonth = Integer.valueOf(rd.Day_of_Month__c);
+        if (rd.Day_of_Month__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+            return;
+        }
 
-            } catch (Exception e) {
-            }
+        Integer dayOfMonth;
+        try {
+            dayOfMonth = Integer.valueOf(rd.Day_of_Month__c);
+        } catch (Exception e) {
+        }
 
-            Boolean isValid = dayOfMonth > 0 && dayOfMonth < 29;
+        Boolean isValid = dayOfMonth > 0 && dayOfMonth < 31;
 
-            if (!isValid) {
-                rd.addError(
-                    String.format(
-                        System.Label.RD2_DayOfMonthMustBeValid,
-                        new String[]{ rd.Day_of_Month__c })
-                );
-            }
+        if (!isValid) {
+            rd.addError(
+                String.format(
+                    System.Label.RD2_DayOfMonthMustBeValid,
+                    new String[]{ rd.Day_of_Month__c })
+            );
         }
     }
 

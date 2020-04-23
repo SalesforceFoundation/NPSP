@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 @isTest
-private with sharing class UTIL_Permissions_TEST {
+public with sharing class UTIL_Permissions_TEST {
 
     // Read Only users don't have access to custom objects or fields
     private static User getReadOnlyUser() {
@@ -236,6 +236,70 @@ private with sharing class UTIL_Permissions_TEST {
         System.runAs(getSysAdmin()) {
             System.assert(perms.canRead(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
             System.assert(perms.canUpdate(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
+        }
+    }
+
+    /***
+    * @description Stub for UTIL_Permissions instance
+    */
+    public class Stub implements System.StubProvider {
+        public Boolean hasRead = true;
+        public Boolean hasUpdate = true;
+        public Boolean hasCreate = true;
+        public Boolean hasDelete = true;
+        public SObjectType readSObjType;
+        public SObjectType updateSObjType;
+        public SObjectType createSObjType;
+        public SObjectType deleteSObjType;
+        public Set<SObjectField> readSObjFields = new Set<SObjectField>();
+        public Set<SObjectField> updateSObjFields = new Set<SObjectField>();
+        public Set<SObjectField> createSObjFields = new Set<SObjectField>();
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String methodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            switch on methodName {
+                when 'canRead' {
+                    readSObjType = (SObjectType) args[0];
+                    readSObjFields = getArgumentFields(args);
+
+                    return hasRead;
+
+                } when 'canUpdate' {
+                    updateSObjType = (SObjectType) args[0];
+                    updateSObjFields = getArgumentFields(args);
+
+                    return hasUpdate;
+
+                } when 'canCreate' {
+                    createSObjType = (SObjectType) args[0];
+                    createSObjFields = getArgumentFields(args);
+
+                    return hasCreate;
+
+                } when 'canDelete' {
+                    deleteSObjType = (SObjectType) args[0];
+
+                    return hasDelete;
+
+                } when else {
+                    return null;
+                }
+            }
+        }
+
+        /***
+        * @description Extracts SObject fields from the second argument if specified
+        * @param args Method arguments
+        * @return Set<SObjectField> Fields specified in the second argument of the stubbed method
+        */
+        private Set<SObjectField> getArgumentFields(List<Object> args) {
+            return args.size() > 1 ? (Set<SObjectField>) args[1] : new Set<SObjectField>();
         }
     }
 

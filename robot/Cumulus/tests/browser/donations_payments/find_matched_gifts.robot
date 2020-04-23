@@ -2,71 +2,100 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
-...             robot/Cumulus/resources/NPSPSettingsPageObject.py
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
-Suite Setup     Open Test Browser
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
+Suite Teardown  Delete Records and Close Browser
 
+***Keywords***
+
+# Set up all the required data for the test based on the keyword requests
+Setup Test Data
+    ${ns} =  Get NPSP Namespace Prefix
+    &{account_fields} =	Create Dictionary  Type=Organization   ${ns}Matching_Gift_Company__c=true   ${ns}Matching_Gift_Percent__c=100
+    setupdata   org     account_data=${account_fields}
+    &{opportunity3_fields} =  Create Dictionary  Type=MatchingGift   Name=Rollup test $75 donation   Amount=75   AccountId=${data}[org][Id]
+    setupdata   org     opportunity_data=${opportunity3_fields}
+
+    # Create opportunities for contact1 and contact2
+    Setupdata   contact1   ${contact1_fields}     opportunity_data=${opportunity1_fields}
+    Setupdata   contact2   ${contact2_fields}     opportunity_data=${opportunity2_fields}
+
+
+*** Variables ***
+&{contact1_fields}        Email=contact1@example.com
+&{opportunity1_fields}    Type=Donation   Name=Contact1 $50 donation    Amount=50
+&{contact2_fields}        Email=contact2@example.com
+&{opportunity2_fields}    Type=Donation   Name=Contact2 $25 Donation    Amount=25
 
 *** Test Cases ***
 
 Find Matching Gifts
-    [tags]  unstable
-    ${ns} =  Get NPSP Namespace Prefix
-    &{Org} =  API Create Organization Account    ${ns}Matching_Gift_Company__c=true  ${ns}Matching_Gift_Percent__c=100
-    &{contact1} =  API Create Contact    Email=automation@example.com
-    &{opportunity1} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=&{Contact1}[FirstName] $50 donation    Amount=50
-    Go To Record Home  &{opportunity1}[Id]
-    Click More Actions Button
-    Click Link    link=Edit
-    Populate Lookup Field    Matching Gift Account    &{Org}[Name]
-    Select Value From Dropdown   Matching Gift Status              Potential
-    Click Modal Button        Save
-    &{contact2} =  API Create Contact    Email=automation@example.com
-    &{opportunity2} =  API Create Opportunity    &{Contact2}[AccountId]    Donation    Name=&{Contact2}[FirstName] $25 donation    Amount=25
-    &{opportunity3} =  API Create Opportunity    &{Org}[Id]    MatchingGift    Name=&{Org}[Name] $75 matching gift    Amount=75
-    Go To Record Home  &{opportunity3}[Id]
-    Click More Actions Button
-    Click Link    link=Find Matched Gifts
-    Choose Frame    vfFrameId
-    Page Should Contain Link    &{Contact1}[FirstName] $50 donation    limit=1
-    Set Checkbutton To     &{Contact1}[FirstName] $50 donation    checked
-    Click Link    link=Find More Gifts
-    Populate Modal Field    Primary Contact    &{Contact2}[FirstName] &{Contact2}[LastName]
-    Click Button With Value    Search
-    Set Checkbutton To     &{Contact2}[FirstName] $25 donation    checked
-    Click Button With Value    Save 
-    Current Page Should Be    Details    Opportunity
-    Select Tab    Related  
-    Verify Related Object Field Values    Contact Roles
-    ...                     &{contact1}[FirstName] &{contact1}[LastName]=Matched Donor
-    ...                     &{contact2}[FirstName] &{contact2}[LastName]=Matched Donor
-    Go To Record Home  &{opportunity3}[Id]
-    Select Tab    Related
-    Verify Related Object Field Values    Partial Soft Credits
-    ...                     &{contact1}[FirstName] &{contact1}[LastName]=$50.00
-    ...                     &{contact2}[FirstName] &{contact2}[LastName]=$25.00  
-    Go To Record Home  &{opportunity3}[Id]
-    Select Tab    Related
-    Verify Related Object Field Values    Matched Gifts
-    ...                     &{opportunity1}[Name]=$50.00
-    ...                     &{opportunity2}[Name]=$25.00  
-    Go To Record Home  &{opportunity1}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Matching Gift Information
-    Scroll Element Into View    ${locator}
-    Navigate To And Validate Field Value    Matching Gift    contains    &{opportunity3}[Name]
-    Go To Record Home  &{opportunity2}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Matching Gift Information
-    Scroll Element Into View    ${locator}
-    Navigate To And Validate Field Value    Matching Gift    contains    &{opportunity3}[Name]
-    Run Donations Batch Process
-    Go To Record Home    &{Contact1}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
-    Scroll Element Into View    ${locator}
-    Navigate To And Validate Field Value    Total Gifts    contains    $50.00
-    Navigate To And Validate Field Value   Soft Credit Total    contains    $50.00
-    Go To Record Home    &{Contact2}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
-    Scroll Element Into View    ${locator}
-    Navigate To And Validate Field Value    Total Gifts    contains    $25.00
-    Navigate To And Validate Field Value    Soft Credit Total    contains    $25.00
+
+     Go To Page                             Details
+     ...                                    Opportunity
+     ...                                    object_id=${data}[contact1_opportunity][Id]
+     Click More Actions Button
+     Click Link                             link=Edit
+     Populate Lookup Field                  Matching Gift Account             ${data}[org][Name]
+     Select Value From Dropdown             Matching Gift Status              Potential
+     Click Modal Button                     Save
+     Go To Page                             Details
+     ...                                    Opportunity
+     ...                                    object_id=${data}[org_opportunity][Id]
+     Navigate to Matching Gifts Page
+
+     Page Should Contain Link               Contact1 $50 donation               limit=1
+     Set Checkbutton To                     Contact1 $50 donation               checked
+     Click Link                             link=Find More Gifts
+     Populate Modal Field                   Primary Contact                     ${data}[contact2][FirstName] ${data}[contact2][LastName]
+     Click Button With Value                Search
+     Set Checkbutton To                     Contact2 $25 Donation                checked
+     Click Button With Value                Save
+     Current Page Should Be                 Details    Opportunity
+     Select Tab                             Related
+      Verify Related Object Field Values    Contact Roles
+      ...                                   ${data}[contact1][FirstName] ${data}[contact1][LastName]=Matched Donor
+      ...                                   ${data}[contact2][FirstName] ${data}[contact2][LastName]=Matched Donor
+
+     Go To Page                             Detail
+       ...                                  Opportunity
+       ...                                  object_id=${data}[org_opportunity][Id]
+
+     Select Tab                            Related
+     Verify Related Object Field Values    Partial Soft Credits
+      ...                                  ${data}[contact1][FirstName] ${data}[contact1][LastName]=$50.00
+      ...                                  ${data}[contact2][FirstName] ${data}[contact2][LastName]=$25.00
+
+     Go To Page                              Detail
+      ...                                    Opportunity
+      ...                                    object_id=${data}[org_opportunity][Id]
+
+      Select Tab    Related
+      Verify Related Object Field Values    Matched Gifts
+      ...                                  ${data}[contact1_opportunity][Name]=$50.00
+      ...                                  ${data}[contact2_opportunity][Name]=$25.00
+
+      Go To Record Home                    ${data}[contact1_opportunity][Id]
+      Navigate To And Validate Field Value    Matching Gift    contains    ${data}[org_opportunity][Name]
+
+      Go To Record Home  ${data}[contact2_opportunity][Id]
+      Navigate To And Validate Field Value    Matching Gift    contains    ${data}[org_opportunity][Name]
+
+      Run Donations Batch Process
+
+      Go To Record Home    ${data}[contact1][Id]
+
+      Navigate To And Validate Field Value    Total Gifts    contains    $50.00
+      Navigate To And Validate Field Value   Soft Credit Total    contains    $50.00
+
+      Go To Record Home    ${data}[contact2][Id]
+
+      Navigate To And Validate Field Value    Total Gifts    contains    $25.00
+      Navigate To And Validate Field Value    Soft Credit Total    contains    $25.00
+

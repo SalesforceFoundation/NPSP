@@ -4,6 +4,7 @@ import time
 import random
 import string
 from datetime import datetime
+from datetime import timedelta
 
 
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -158,11 +159,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.driver.execute_script('arguments[0].click()', element)
            
         
-        
+    @capture_screenshot_on_error
     def click_flexipage_dropdown(self, title,value):
         """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
-        self.selenium.set_focus_to_element(locator)
+        self.selenium.wait_until_page_contains_element(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('flexipage-popup')
         option=npsp_lex_locators['span'].format(value)
@@ -487,7 +488,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.salesforce._clear(field)
         else :    
             self.salesforce._populate_field(locator, value)
-        
+
+    @capture_screenshot_on_error
     def validate_related_record_count(self,title,value):
 
         self.select_tab("Related")
@@ -511,6 +513,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            
         
     def check_record_related_item(self,title,value):
+        """Verifies that the given value is displayed under the related list identified by title on a record view page"""
+        self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
         self.selenium.wait_until_page_contains_element(locator)
         actual_value=self.selenium.get_webelement(locator).text
@@ -625,47 +629,46 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.get_webelement("//*[@title='Go!']").click()
         time.sleep(1)
 
-    def add_gau_allocation(self,field, value):
-        locator = npsp_lex_locators["gaus"]["input_field"].format(field)
-        self.salesforce._populate_field(locator,value)
-            
-        
+
+
+
     def click_save(self, page):
         if  page== "GAU":
             id="j_id0:theForm:j_id9:j_id10:saveBTN"
             locator = npsp_lex_locators["id"].format(id)
             self.selenium.get_webelement(locator).click()
-     
+
     def enter_payment_schedule(self, *args):
-        """Enter values into corresponding fields in Levels page"""                 
+        """Enter values into corresponding fields in Levels page"""
         #if name == "Payments":
         #id = ["paymentCount","intervals","intervalunits"]
         id = ["paymentCount","vfForm:intervalnumber","intervalunits"]
         for i in range(len(args)):
             locator = npsp_lex_locators['id'].format(id[i])
             loc = self.selenium.get_webelement(locator)
-            self.selenium.set_focus_to_element(locator)       
+            self.selenium.set_focus_to_element(locator)
             self.selenium.select_from_list_by_label(loc,args[i])
-            time.sleep(2)    
-                
+            time.sleep(2)
+
     def verify_payment_split(self, amount, no_payments):
-        loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
+        #loc = "//input[@value= '{}']"
+        input_loc = npsp_lex_locators['button']
         values = int(amount)/int(no_payments)
-        #global self.val
         values_1 = "{:0.2f}".format(values)
         self.val = str(values_1)
-        locator =  loc.format(self.val)
-        list_payments = self.selenium.get_webelements(locator)
+        input_field =  input_loc.format(self.val)
+        list_payments = self.selenium.get_webelements(input_field)
         self.t_loc=len(list_payments)
         if  self.t_loc == int(no_payments):
             for i in list_payments:
-                self.selenium.page_should_contain_element(i)             
-            return str(self.t_loc)
+                self.selenium.page_should_contain_element(i)
+            actual_payments = str(self.t_loc)
         else:
-            return str(self.t_loc)
-       
-    def verify_date_split(self,date, no_payments, interval): 
-        ddate=[]  
+            actual_payments = str(self.t_loc)
+        assert no_payments == actual_payments, "Expected {} number of payment but found {}".format(no_payments,actual_payments)
+
+    def verify_date_split(self,date, no_payments, interval):
+        ddate=[]
         mm, dd, yyyy = date.split("/")
         mm, dd, yyyy = int(mm), int(dd), int(yyyy)
         locator = npsp_lex_locators['payments']['date_loc'].format(date)
@@ -678,9 +681,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             new_date = "/".join(dates)
             mm = mm + int(interval)
             dates = list(map(str, date_list))
-            #if new_date not in t_dates: 
-            locator1 = npsp_lex_locators['payments']['date_loc'].format(new_date)
-            t_dates = self.selenium.get_webelement(locator1)                  
+            #if new_date not in t_dates:
+            date_locator = npsp_lex_locators['payments']['date_loc'].format(new_date)
+            t_dates = self.selenium.get_webelement(date_locator)
             self.selenium.page_should_contain_element(t_dates)
         elif mm > 12:
             yyyy = yyyy + 1
@@ -688,7 +691,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             #return "pass"
 #         else:
 #             return "fail"
-        
+
     def click_viewall_related_list (self,title):  
         """clicks on the View All link under the Related List"""      
         locator=npsp_lex_locators['record']['related']['viewall'].format(title)
@@ -732,23 +735,16 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locators=npsp_lex_locators['payments']['no_payments']
         list_ele=self.selenium.get_webelements(locators)
         l_no_payments = len(list_ele)
-        #return list_ele
-        #return l_no_payments, self.t_loc
-        #if self.t_loc == l_no_payments:
         for element in list_ele:
             payment_com=self.selenium.get_webelement(element).text
             cc=payment_com.replace("$","")
             if cc == str(self.val) and self.t_loc == l_no_payments :
-                return 'pass'
-            #return cc, self.val
+                result = 'pass'
             else:
-                return "fail"
+                result = "fail"
+        assert result == 'pass', "Expected payment value not present."
         
-    def select_value_from_list(self,list_name,value): 
-        locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
-        loc = self.selenium.get_webelement(locator)
-        self.selenium.set_focus_to_element(locator)       
-        self.selenium.select_from_list_by_label(loc,value)
+
         
     def select_value_from_bge_dd(self, list_name,value):
         list_found = False
@@ -850,7 +846,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
      
     @capture_screenshot_on_error                
     def wait_for_batch_to_process(self, batch,status):
-        """Checks every 30 secs for upto 7mins for batch with given status
+        """Checks every 30 secs for upto 9mins for batch with given status
         """
         i = 0
         sec=0
@@ -858,7 +854,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         error = npsp_lex_locators['batch_status'].format(batch,"Errors")
         while True:
             i += 1
-            if i > 14:
+            if i > 18:
                 self.selenium.capture_page_screenshot()
                 raise AssertionError("Timed out waiting for batch {} with status {} to load.".format(batch,status))
             elif self.check_if_element_exists(error):
@@ -878,18 +874,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-    def click_panel_sub_link (self,title):  
-        """clicks on the button on the payments page"""      
-        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
-        self.selenium.get_webelement(locator).click()
 
-    @capture_screenshot_on_error
-    def click_settings_button (self,panel_id,btn_value):  
-        """clicks on the buttons on npsp settings object using panel id and button value"""      
-        locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
-        self.selenium.click_element(locator)   
 
-    def verify_payment_details(self):
+
+    def verify_payment_details(self, numpayments):
+        """Gets the payment details from the UI and compares with the expected number of payments"""
         locator = "//tbody/tr/td[2]/span/span"
         locs1 = self.selenium.get_webelements(locator)
         locator2 = "//tbody/tr/td[3]/span/span"
@@ -901,7 +890,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 pass
             else:
                 return "fail"
-        return len(locs1)
+        self.builtin.should_be_equal_as_strings(len(locs1), numpayments)
 
     # def verify_opportunities(self, len_value):
     #     locator = "//tbody/tr[12]/th"
@@ -1151,7 +1140,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def checkbox_status(self,cbx_name,status):
         """verifies if the specified checkbox is with expected status in readonly mode"""
         locator=npsp_lex_locators["custom_settings"]["cbx_status"].format(cbx_name,status)
-        self.selenium.page_should_contain_element(locator)
+        self.selenium.page_should_contain_element(locator, message='{cbx_name} checkbox is supposed to be {status}')
                 
     def go_to_setup_page(self,page):
         """ Navigates to the specified page in Salesforce Setup """
@@ -1242,7 +1231,24 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, engagement_data=None, task_data=None):
+    @capture_screenshot_on_error
+    def scroll_button_into_view_and_click_using_js(self, value):
+        """Scrolls the button element into view and clicksthe button using JS """
+        xpath = npsp_lex_locators['button'].format(value)
+        self.selenium.wait_until_element_is_visible(xpath)
+        javascript = (
+            "window.document.evaluate("
+            f"    '{xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null"
+            ").singleNodeValue.scrollIntoView(true)"
+
+        )
+        self.selenium.execute_javascript(javascript)
+        time.sleep(2)
+        self.npsp.click_button_with_value(value)
+        time.sleep(1)
+
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None,
+                  recurringdonation_data=None, gau_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
@@ -1254,12 +1260,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # get the data variable, or an empty dictionary if not set
 
         data = self.builtin.get_variable_value("${data}", {})
+        ns=self.get_npsp_namespace_prefix()
 
         if account_data is not None:
             # create the account based on the user input specified account type
-            name = self.randomString(10);
+            acctname = self.randomString(10);
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
-            account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
+            account_data.update( {'Name' : acctname,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
             account = self.salesforce.salesforce_get("Account",account_id)
             # save the account object to data dictionary
@@ -1297,7 +1304,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 data[f"{name}_engagement"] = engagement
             else:
                 data[name] = engagement
-
+        # set a recurring donation for a contact
+        if recurringdonation_data is not None:
+            recurringdonation_data.update( {'npe03__Contact__c' : data[name]["Id"] } )
+            rd_id = self.salesforce.salesforce_insert("npe03__Recurring_Donation__c", **recurringdonation_data)
+            recurringdonation = self.salesforce.salesforce_get("npe03__Recurring_Donation__c",rd_id)
+            data[f"{name}_rd"] = recurringdonation
+        #set gau data
+        if gau_data is not None:
+            object_key =  f"{ns}General_Accounting_Unit__c"
+            gauname = gau_data['Name']
+            random = self.randomString(10);
+            gau_data.update( {'name' : f"{random}{gauname}"} )
+            gau_id = self.salesforce.salesforce_insert(object_key, **gau_data)
+            gau = self.salesforce.salesforce_get(object_key,gau_id)
+            data[name] = gau
+        # set opportunity association with a contact or account
         if opportunity_data is not None:
             # create opportunity
             rt_id = self.salesforce.get_record_type_id("Opportunity",opportunity_data["Type"])
@@ -1309,12 +1331,27 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 Automatically_create_key = 'npe01__Do_Not_Automatically_Create_Payment__c'
                 Automatically_create_value = 'true'
                 opportunity_data.update({Automatically_create_key : Automatically_create_value})
+            if 'StageName' not in opportunity_data:
+                opportunity_data.update( {'StageName' : 'Closed Won'} )
+            if 'AccountId' not in opportunity_data:
+                opportunity_data.update( {'AccountId' : data[name]["AccountId"] } )
 
-            opportunity_data.update( {'AccountId' : data[name]["AccountId"], 'RecordTypeId': rt_id } )
+            opportunity_data.update( {'RecordTypeId': rt_id } )
             opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
             opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
             # save the opportunity
             data[f"{name}_opportunity"] = opportunity
+
+            if payment_data is not None:
+                numdays = 30
+                i = 1
+                while i <= int(payment_data['NumPayments']):
+                    payment_schedule_data = {}
+                    numdays = numdays*2
+                    scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                    payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date, 'npe01__Payment_Amount__c' : payment_data['Amount'] } )
+                    payment_id = self.salesforce.salesforce_insert("npe01__OppPayment__c", **payment_schedule_data)
+                    i = i+1
 
         self.builtin.set_suite_variable('${data}', data)
 
@@ -1397,7 +1434,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
         self.salesforce.populate_lookup_field(field,value)
-    
+
+    def edit_record_dropdown_value(self,field,value):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field and enters a value into the field"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        time.sleep(2)
+        self.click_flexipage_dropdown(field, value)
+
     def edit_record_checkbox(self,field,status):
         """Scrolls just a little below the field
            Clicks on Edit icon next to field

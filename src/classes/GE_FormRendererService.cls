@@ -36,6 +36,8 @@
 */
 public with sharing class GE_FormRendererService {
 
+    private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
+
     @AuraEnabled
     public static FORM_RenderWrapper getRenderWrapperById(Id templateId) {
         FORM_Service formService = new FORM_Service();
@@ -134,7 +136,9 @@ public with sharing class GE_FormRendererService {
                         // Update the element's required by doing an OR between the element's required, DI source field, target field
                         // Update the element's required to make sure we are respecting the source/target/template builder's required
                         // with the most up to date information. 
-                        element.required = element.required || fieldMapping.Source_Field_Required;
+                        element.required = element.required || 
+                            (fieldMapping.Source_Field_Required &&
+                                     fieldMapping.Source_Field_Data_Type != BOOLEAN_DATA_TYPE);
                     }
                 }
             }
@@ -230,9 +234,9 @@ public with sharing class GE_FormRendererService {
         }
 
         String relationshipField;
-        if (donorType == 'Account') {
+        if (donorType == 'Account1') {
             relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
-        } else if (donorType == 'Contact') {
+        } else if (donorType == 'Contact1') {
             relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
         }
 

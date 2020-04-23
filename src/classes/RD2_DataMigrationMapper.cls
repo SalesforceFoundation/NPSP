@@ -39,7 +39,7 @@ public class RD2_DataMigrationMapper {
     /**
     * @description Defines mock "Day of Month" last day value for dry run data migration
     */
-    private static final String DRY_RUN_DAY_OF_MONTH_LAST_DAY = '28';
+    private static final String DRY_RUN_DAY_OF_MONTH_LAST_DAY = '30';
 
     /**
     * @description Recurring Donation to convert to enhanced format
@@ -147,7 +147,7 @@ public class RD2_DataMigrationMapper {
             handleCustomInstallmentPeriod(rd);
         }
 
-        if (rd.npe03__Schedule_Type__c == RD_Constants.SCHEDULE_TYPE_DIVIDE_BY
+        if ((rd.npe03__Schedule_Type__c == RD_Constants.SCHEDULE_TYPE_DIVIDE_BY || rd.npe03__Schedule_Type__c == null)
             && rd.npe03__Installment_Amount__c != null
             && rd.npe03__Installment_Amount__c != 0
         ) {
@@ -233,7 +233,7 @@ public class RD2_DataMigrationMapper {
      * @return void
      */
     private void setDayOfMonth(npe03__Recurring_Donation__c rd) {
-        Set<String> lastDaysOfMonth = new Set<String>{ '29', '30', '31' };
+        final String lastDayOfMonth = '31';
 
         if (rd.Always_Use_Last_Day_Of_Month__c == false
             && String.isEmpty(rd.Day_of_Month__c)
@@ -242,7 +242,7 @@ public class RD2_DataMigrationMapper {
         }
 
         if (rd.Always_Use_Last_Day_Of_Month__c == true
-            || lastDaysOfMonth.contains(rd.Day_of_Month__c)
+            || rd.Day_of_Month__c == lastDayOfMonth
         ) {
             rd.Day_of_Month__c = isDryRunMode
                 ? DRY_RUN_DAY_OF_MONTH_LAST_DAY

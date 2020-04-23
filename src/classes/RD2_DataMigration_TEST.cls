@@ -499,7 +499,6 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldSetAmountFromInstallmentAmountWhenScheduleTypeIsDivideBy() {
         Integer installments = 4;
-
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withInstallmentPeriodYearly()
@@ -509,10 +508,7 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
 
-        rd = getRecords()[0];
-        rd.Status__c = null;//simulate legacy Recurring Donation (Status default on insert is Active)
-
-        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(getRecords()[0])
             .convertToEnhancedRD();
 
         System.assertEquals(AMOUNT_VALUE / installments, convertedRD.npe03__Amount__c, 'Amount should be copied from Installment Amount');
@@ -525,16 +521,46 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldNotChangeAmountWhenScheduleTypeIsMultiplyBy() {
+        Integer installments = 4;
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withInstallmentPeriodYearly()
+            .withPlannedInstallments(installments)
+            .withScheduleType(RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY)
+            .withOpenEndedStatusNone()
+            .build();
+        insert rd;
 
-        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
-            getLegacyRecurringDonationBuilder()
-                .withScheduleTypeMultiplyValue()
-                .build()
-        ).convertToEnhancedRD();
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(getRecords()[0])
+            .convertToEnhancedRD();
 
         System.assertEquals(AMOUNT_VALUE, convertedRD.npe03__Amount__c, 'Amount should be unchanged');
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, convertedRD.RecurringType__c, 'Recurring Type should be Fixed');
+        System.assertEquals(installments, convertedRD.npe03__Installments__c, 'Number of Planned Installments should be unchanged');
     }
 
+    /**
+     * @description Verifies Amount is set from Installment Amount when Schedule Type is null
+     */
+    @IsTest
+    private static void shouldSetAmountFromInstallmentAmountWhenScheduleTypeIsNull() {
+        Integer installments = 4;
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withInstallmentPeriodYearly()
+            .withPlannedInstallments(installments)
+            .withScheduleType(null)
+            .withOpenEndedStatusNone()
+            .build();
+        insert rd;
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(getRecords()[0])
+            .convertToEnhancedRD();
+
+        System.assertEquals(AMOUNT_VALUE / installments, convertedRD.npe03__Amount__c, 'Amount should be copied from Installment Amount');
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, convertedRD.RecurringType__c, 'Recurring Type should be Fixed');
+        System.assertEquals(installments, convertedRD.npe03__Installments__c, 'Number of Planned Installments should be unchanged');
+    }
 
     /**
      * @description Verifies Start Date is set to Date Established when
@@ -594,10 +620,10 @@ private class RD2_DataMigration_TEST {
      * @description Verifies Day of Month is unchanged when it is not the last day of month
      */
     @IsTest
-    private static void shouldNotChangeDayOfMonth() {
+    private static void shouldNotChangeDayOfMonthWhenDayOfMonthIsNot31() {
         TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
 
-        for (Integer i = 1; i < 29; i++) {
+        for (Integer i = 1; i < 31; i++) {
             String dayOfMonth = String.valueOf(i);
 
             npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
@@ -612,29 +638,19 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies Day of Month is set as Last Day for specific RDs
+     * @description Verifies Day of Month is set as Last Day when Day of Month has "31" as the value
      */
     @IsTest
-    private static void shouldSetDayOfMonthAsTheLastDay() {
-        List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
-        TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
-
-        for (Integer i = 28; i <= 31; i++) {
-            Boolean useLastDayOfMonth = i == 28;
-
-            convertedRDs.add(new RD2_DataMigrationMapper(
-                rdBuilder
-                    .withAlwaysUseLastDayOfMonth(useLastDayOfMonth)
-                    .withDayOfMonth(String.valueOf(i))
+    private static void shouldSetDayOfMonthAsTheLastDayWhenDayOfMonthIs31() {
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
+                getLegacyRecurringDonationBuilder()
+                    .withAlwaysUseLastDayOfMonth(false)
+                    .withDayOfMonth(String.valueOf('31'))
                     .build()
-                ).convertToEnhancedRD()
-            );
-        }
+            ).convertToEnhancedRD();
 
-        for (npe03__Recurring_Donation__c convertedRD : convertedRDs) {
-            System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, convertedRD.Day_of_Month__c,
-                'Day of Month should be Last Day');
-        }
+        System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, convertedRD.Day_of_Month__c,
+            'Day of Month should be Last Day when original value is "31"');
     }
 
     /**
@@ -646,8 +662,6 @@ private class RD2_DataMigration_TEST {
         TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
 
         for (Integer i = 1; i <= 31; i++) {
-            Boolean useLastDayOfMonth = i == 28;
-
             convertedRDs.add(new RD2_DataMigrationMapper(
                 rdBuilder
                     .withNextPaymentDate(Date.newInstance(2019, 10, i))
@@ -672,8 +686,6 @@ private class RD2_DataMigration_TEST {
         TEST_RecurringDonationBuilder rdBuilder = getLegacyRecurringDonationBuilder();
 
         for (Integer i = 1; i <= 31; i++) {
-            Boolean useLastDayOfMonth = i == 28;
-
             convertedRDs.add(new RD2_DataMigrationMapper(
                 rdBuilder
                     .withDateEstablished(Date.newInstance(2019, 10, i))
@@ -1594,6 +1606,10 @@ private class RD2_DataMigration_TEST {
         Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
+        if (isDayOfMonthRestrictedPicklistError(errors)) {
+            return;//the org does not have the Last Day picklist added, so return from the test
+        }
+
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
         rd = getRecords()[0];
@@ -1634,6 +1650,10 @@ private class RD2_DataMigration_TEST {
         Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
+        if (isDayOfMonthRestrictedPicklistError(errors)) {
+            return;//the org does not have the Last Day picklist added, so return from the test
+        }
+
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
         rd = getRecords()[0];
@@ -1758,12 +1778,12 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies no error is logged when legacy Recurring Donation has Day Of MOnth > 28
+     * @description Verifies no error is logged when legacy Recurring Donation has Day Of Month "31" and
      * when migration is run in a dry run mode
      */
     @IsTest
     private static void shouldNotLogErrorWhenDayOfMonthIsLastDayInDryRunMode() {
-        final String dayOfMonth = '29';
+        final String dayOfMonth = '31';
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withDayOfMonth(dayOfMonth)
@@ -1779,7 +1799,6 @@ private class RD2_DataMigration_TEST {
                 actualException = e;
             }
         }
-
         System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
 
         Id jobId = executeAndFinishDryRun();
@@ -2217,9 +2236,9 @@ private class RD2_DataMigration_TEST {
     private static void assertDayOfMonth(npe03__Recurring_Donation__c rd, Integer expectedDayOfMonth) {
         System.assertNotEquals(null, rd.Day_of_Month__c, 'Day of Month should not be null');
 
-        if (expectedDayOfMonth < 29) {
+        if (expectedDayOfMonth < 31) {
             System.assertEquals(expectedDayOfMonth, Integer.valueOf(rd.Day_of_Month__c),
-                'Day of Month should match the expected day when less than 29: '+ JSON.serialize(rd));
+                'Day of Month should match the expected day when less than 31: '+ JSON.serialize(rd));
         } else {
             System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, rd.Day_of_Month__c,
                 'Day of Month should be set as the Last Day');
@@ -2227,7 +2246,7 @@ private class RD2_DataMigration_TEST {
     }
 
     /****
-    * @description Asserts if the error message contains Donor is required field error
+    * @description Asserts if the error message contain message about Donor being required on the RD
     * @param jobId Batch job Id
     * @param rd Recurring Donation record
     * @return void
@@ -2246,7 +2265,19 @@ private class RD2_DataMigration_TEST {
         } else {
             System.assertEquals(getLogContextMigration(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
         }
+    }
 
+    /****
+    * @description Checks if the logged error is generated on a day > 28 in the month
+    * and the RD2 metadata has not been deployed
+    * @param List<Error__c> Errors (if any)
+    * @return Boolean
+    */
+    private static Boolean isDayOfMonthRestrictedPicklistError(List<Error__c> errors) {
+        return !errors.isEmpty() 
+            && errors[0].Full_Message__c.contains(
+                Schema.npe03__Recurring_Donation__c.Day_of_Month__c.getDescribe().getLabel()
+            );
     }
 
     /***

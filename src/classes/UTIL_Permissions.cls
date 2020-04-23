@@ -167,6 +167,17 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+    /**
+    * @description Determines whether the running user has delete permissions on the given object
+    * This is an instance method which can be mocked.
+    *
+    * @param sObjectType Name of the sObject to check
+    * @return returns boolean to indicate whether the user has permission
+    */
+    public Boolean canDelete(SObjectType sObjectType) {
+        return UTIL_Describe.getObjectDescribe(sObjectType).isDeletable();
+    }
+
     /*** Field Level Security ***/
 
     /**
@@ -326,6 +337,20 @@ public with sharing class UTIL_Permissions {
         }
 
         return canRead(SObjFields);
+    }
+
+    /***
+    * @description Determines whether the running user has create permissions on the sObject and fields provided
+    * @param sObjType the sObjectType to check create permissions
+    * @param sObjFields the list of SObjectFields to check create permissions
+    * @return Boolean true when the user has permissions for the SObjType and fields provided
+    */
+    public Boolean canCreate(SObjectType sObjType, Set<SObjectField> sObjFields) {
+        if (!canCreate(sObjType)) {
+            return false;
+        }
+
+        return canCreate(SObjFields);
     }
 
     /*******************************************************************************************************************

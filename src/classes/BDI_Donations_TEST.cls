@@ -2706,7 +2706,12 @@ public with sharing class BDI_Donations_TEST {
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
+        // Since we have a hard time constraining the length of translated labels, truncate here
+        if(expectedStatus.length() > 255) {
+            expectedStatus = expectedStatus.substring(0,255);
+        }        
+
         list<DataImport__c> listDI = [select Status__c, DonationImported__c, DonationImportStatus__c, 
             Donation_Possible_Matches__c, PaymentImported__c, PaymentImportStatus__c, Payment_Possible_Matches__c from DataImport__c];
         system.assertEquals(1, listDI.size());
