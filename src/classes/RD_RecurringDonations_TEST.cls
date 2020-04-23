@@ -119,10 +119,10 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
         String rdName = actualRdById.get(rds[0].id).Name;
-        System.assertEquals(RD2_NamingService_TEST.getExpectedName(c, '100'), rdName, 'RD name should match');
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(c, '100', null), rdName, 'RD name should match');
 
         rdName = actualRdById.get(rds[1].id).Name;
-        System.assertEquals(RD2_NamingService_TEST.getExpectedName(a, '200'), rdName, 'RD name should match');
+        System.assertEquals(RD2_NamingService_TEST.getExpectedName(a, '200', null), rdName, 'RD name should match');
     }
 
     /***
