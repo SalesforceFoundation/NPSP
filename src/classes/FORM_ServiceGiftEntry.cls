@@ -56,7 +56,7 @@ public with sharing class FORM_ServiceGiftEntry {
     /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
     */
-    @AuraEnabled
+    @AuraEnabled(Cacheable=true)
     public static SObject[] retrieveRecords(String[] selectFields,
         String sObjectApiName, String[] whereClauses, String orderByClause, Integer limitClause) {
 
