@@ -216,7 +216,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 if (isNotEmpty(errors)) {
                     this.isFailedPurchase = true;
 
-                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, JSON.stringify(errors)];
+                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
                     let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
 
                     // We use the hex value for line feed (new line) 0x0A
@@ -244,11 +244,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
      * @param {object} response The response object from payment services returned when
      * purchase call is made.
      *
-     * @return {array} A concatenated string of errors returned from the purchase call to
+     * @return {string} A concatenated string of errors returned from the purchase call to
      * payment services
      */
     processPurchaseResponse(response) {
-        let errors = [];
+        let errors = '';
         let responseBody = response.body;
 
         this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(response);
@@ -390,7 +390,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         // Also checking for lowercase M in message in case they fix it.
         return response.body.Message ||
             response.body.message ||
-            response.body.errors.map(error => error.message) ||
+            JSON.stringify(response.body.errors.map(error => error.message)) ||
             this.CUSTOM_LABELS.commonUnknownError;
     }
 
