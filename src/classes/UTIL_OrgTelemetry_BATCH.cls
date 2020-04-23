@@ -59,7 +59,9 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd,
+                UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountGERowsLast30DaysBatch
+
         };
 
     /**
@@ -94,6 +96,7 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
     public void finish(Database.BatchableContext info) {
         handleOpportunityBatchExecution();
         handleRecurringDonationExecution();
+        handleDataImportExecution();
     }
 
     /**
@@ -138,9 +141,25 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
     }
 
     /**
+    * @description Handles execution of batch job for recurring donations counts
+    */
+    private void handleDataImportExecution() {
+        Boolean hasDataImports = [SELECT Id FROM DataImport__c LIMIT 1].isEmpty() == false;
+
+        if (hasDataImports) {
+            executeTelemetrySObjectBatch(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS,
+                    UTIL_OrgTelemetry_SObject_BATCH.DATA_IMPORTS_BATCH_SIZE
+            );
+        } else {
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), 0);
+        }
+    }
+
+    /**
     * @description Executes Telemetry SObject Batch with given mode and size
     */
-    private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+    public virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
         Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(mode), batchSize);
     }
 }
