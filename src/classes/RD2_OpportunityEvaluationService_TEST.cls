@@ -39,11 +39,12 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     /***
-    * @description Installment Opportunities Auto Creation Setting API value 
+    * @description Installment Opportunities Auto Creation Setting API value
     */
     private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
     private static final String OPTION_NAME_DISABLE_ALL = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
     private static final String OPTION_NAME_ALWAYS_CREATE_NEXT = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
+    private static final String MOCK_COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final Integer MONTHS_TO_DEC = START_DATE.monthsBetween(Date.newInstance(2019, 12, 15));
@@ -52,7 +53,6 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
     private static final Decimal RD_NEW_AMOUNT = 200;
-
 
     /****
     * @description Creates data required for unit tests
@@ -188,10 +188,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, evalService.isNewOpportunityCandidate(rdNew), 
+        System.assertEquals(true, evalService.isNewOpportunityCandidate(rdNew),
             'RD having Schedules and no related Opp should be eligible for an Installment Opp');
 
-        System.assertEquals(false, evalService.isNewOpportunityCandidate(rdOld), 
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rdOld),
             'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
 
@@ -256,7 +256,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @param closeAction Recurring Donation settings Open Opportunity Behaviour close action
      * @return npe03__Recurring_Donation__c Created Recurring Donation with related Opps
      */
-    private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {        
+    private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'npe03__Open_Opportunity_Behavior__c' => closeAction
         });
@@ -315,9 +315,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
         });
-        
+
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
-        
+
         Test.startTest();
         insert rd;
         Test.stopTest();
@@ -345,7 +345,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.startTest();
         insert rd;
         Test.stopTest();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
         System.assertEquals(0, opps.size(),
@@ -354,7 +354,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
     /**
     * @description Verifies on installment Opportunity is created
-    * when RD is updated, there is already a Closed current Opp 
+    * when RD is updated, there is already a Closed current Opp
     * and Installment Auto Creation Setting is set to Disable First Installment.
     */
     @IsTest
@@ -364,7 +364,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
         });
-        
+
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         insert rd;
 
@@ -375,14 +375,14 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
 
         rd.npe03__Amount__c = 2000;
-        
+
         Test.startTest();
         update rd;
         Test.stopTest();
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
-        System.assertEquals(2, opps.size(), 
+        System.assertEquals(2, opps.size(),
             'A new Opportunity should be created: ' + opps);
     }
 
@@ -403,11 +403,60 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.startTest();
         insert rd;
         Test.stopTest();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
         System.assertEquals(1, opps.size(),
             'The installment Opportunity should be created: ' + opps);
+    }
+
+
+    /**
+    * @description Verifies no installment Opportunity is created on RD insert when
+    * Elevate integration is enabled and Commitment Id is specified on the RD.
+    */
+    @IsTest
+    private static void shouldNotCreateOppOnElevateRdInsertWhenIntegrationIsEnabled() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
+
+        npe03__Recurring_Donation__c rd = setUpElevateTestData(configStub, MOCK_COMMITMENT_ID);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, opps.size(),
+            'No installment Opportunity should be created for the Elevate RD when integration is enabled: ' + opps);
+    }
+
+    /**
+    * @description Verifies an installment Opportunity is created on RD insert when
+    * Elevate integration is enabled and Commitment Id is not specified on the RD.
+    */
+    @IsTest
+    private static void shouldCreateOppOnNonElevateRDInsertWhenIntegrationIsEnabled() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
+
+        npe03__Recurring_Donation__c rd = setUpElevateTestData(configStub, null);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(),
+            'An installment Opportunity should be created for the non-Elevate RD: ' + opps);
+    }
+
+    /**
+    * @description Verifies an installment Opportunity is created on RD insert when
+    * Elevate integration is disabled and Commitment Id is specified on the RD.
+    */
+    @IsTest
+    private static void shouldCreateOppOnElevateRDInsertWhenIntegrationIsDisabled() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(false);
+
+        npe03__Recurring_Donation__c rd = setUpElevateTestData(configStub, MOCK_COMMITMENT_ID);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(),
+            'An installment Opportunity should be created for the Elevate RD when integration is disabled: ' + opps);
     }
 
     /***
@@ -430,7 +479,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.startTest();
         insert rd;
         Test.stopTest();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
         System.assertEquals(1, opps.size(),
@@ -444,7 +493,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     @IsTest
     private static void shouldNotThrowExceptionWhenRDIsClosedAndHasNoOpp() {
         Exception actualException;
-        
+
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'npe03__Open_Opportunity_Behavior__c' => RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
         });
@@ -513,7 +562,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
-     
+
     /**
      * @description Verifies Opps are processed when currency on RD is changed only
      */
@@ -670,7 +719,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-     * @description Verifies the calendar Current and Next Year Values 
+     * @description Verifies the calendar Current and Next Year Values
      * should be calculated when a Recurring Donation is created
      */
     @IsTest
@@ -726,7 +775,7 @@ private class RD2_OpportunityEvaluationService_TEST {
                     oppBuilder.withOpenStage().build()
                 );
             }
-        }    
+        }
         insert opps;
 
         Test.startTest();
@@ -774,7 +823,7 @@ private class RD2_OpportunityEvaluationService_TEST {
                     oppBuilder.withClosedLostStage().build()
                 );
             }
-        }        
+        }
         insert opps;
 
         Test.startTest();
@@ -827,12 +876,12 @@ private class RD2_OpportunityEvaluationService_TEST {
         for (Integer i = monthsToMigration; i < MONTHS_TO_YEAR_END + 2; i++) {//data migration applied in Oct
             opps.add(oppBuilder
                 .withName()
-                .withCloseDate(START_DATE.addMonths(i))   
-                .withClosedLostStage()             
+                .withCloseDate(START_DATE.addMonths(i))
+                .withClosedLostStage()
                 .withInstallmentNumberMigrationFlag()
                 .build()
             );
-        }        
+        }
         insert opps;
 
         Test.startTest();
@@ -905,7 +954,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * with their matching projected installments
      */
     @IsTest
-    private static void yearValuesShouldExcludeInstallmentWhenMatchingOppExists() {        
+    private static void yearValuesShouldExcludeInstallmentWhenMatchingOppExists() {
         //set current date override
         final Date nextCloseDate = START_DATE.addMonths(MONTHS_TO_DEC);
         final Date today = nextCloseDate.addDays(-1);
@@ -927,12 +976,12 @@ private class RD2_OpportunityEvaluationService_TEST {
                 opps.add(
                     oppBuilder.withClosedWonStage().build()
                 );
-            } else {                
+            } else {
                 opps.add(
                     oppBuilder.withOpenStage().build()
                 );
             }
-        }        
+        }
         insert opps;
 
         Test.startTest();
@@ -954,7 +1003,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @description The Current and Next Year Value should exclude future Closed Lost Opps.
      */
     @IsTest
-    private static void yearValuesShouldExcludeFutureClosedLostOpp() {        
+    private static void yearValuesShouldExcludeFutureClosedLostOpp() {
         //set current date override
         final Date today = START_DATE.addMonths(1).addDays(1);
         RD2_ScheduleService.currentDate = today;
@@ -1139,7 +1188,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(RD_AMOUNT * 7 + 10 + RD_NEW_AMOUNT * 2, rd.CurrentYearValue__c,
-            'Current Year Value should include July 2019 - Jan 2020 past Opps, ' 
+            'Current Year Value should include July 2019 - Jan 2020 past Opps, '
             + 'a Feb 2020 open Opp with updated Amount and March 1st projected installment '
             + 'for the current fiscal year ending on March 31, 2020');
         System.assertEquals(RD_NEW_AMOUNT * 12, rd.NextYearValue__c,
@@ -1219,7 +1268,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be calculated when RD is created');
     }
-    
+
     /**
      * @description Verifies the calendar year Current and Next Year Values
      * should be calculated when custom settings Use Fiscal Year is checked
@@ -1261,12 +1310,12 @@ private class RD2_OpportunityEvaluationService_TEST {
         //set current date override
         final Date startDate = Date.newInstance(2020, 1, 1);
         final Date today = Date.newInstance(2020, 4, 1);//the next fiscal year is starting today
-        RD2_ScheduleService.currentDate = today;        
+        RD2_ScheduleService.currentDate = today;
 
         setUpUseFiscalYear(true);
         UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(4, true);
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withStartDate(startDate)
@@ -1292,7 +1341,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build()
         );
         insert opps;
-        
+
         new RD2_OpportunityEvaluationService()
             .withRds(new Set<Id>{ rd.Id })
             .evaluateOpportunities();
@@ -1305,7 +1354,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-     * @description Verifies field values from Recurring Donation 
+     * @description Verifies field values from Recurring Donation
      * are copied into mapped fields on Opportunity record when RD is created
      */
     @IsTest
@@ -1326,12 +1375,12 @@ private class RD2_OpportunityEvaluationService_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
         System.assertEquals(1, opps.size(), 'The number of returned Opps should match');
-        System.assertEquals(rd.Name, opps[0].Description, 
+        System.assertEquals(rd.Name, opps[0].Description,
             'The RD Name should be copied into the Opportunity record Description field');
     }
 
     /**
-     * @description Verifies field values from Recurring Donation 
+     * @description Verifies field values from Recurring Donation
      * are copied into mapped fields on Opportunity record when RD is updated
     */
     @IsTest
@@ -1341,7 +1390,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_CustomFieldMapper_TEST.createCustomFieldMapping('Name', 'Description');
-        
+
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         insert rd;
 
@@ -1352,16 +1401,16 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assert(String.isBlank(opps[0].Description), 'Description should not be specified');        
-       
+        System.assert(String.isBlank(opps[0].Description), 'Description should not be specified');
+
         Test.startTest();
-        rd.npe03__Amount__c = 2000; 
+        rd.npe03__Amount__c = 2000;
         update rd;
         Test.stopTest();
 
         opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'The number of returned Opps should match');
-        System.assertEquals(rd.Name, opps[0].Description, 
+        System.assertEquals(rd.Name, opps[0].Description,
             'The RD Name should be copied into the Opportunity record Description field');
     }
 
@@ -1377,7 +1426,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         Date today = Date.newInstance(2020, 3, 2);
         RD2_ScheduleService.currentDate = today;
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withStartDate(startDate)
@@ -1398,16 +1447,16 @@ private class RD2_OpportunityEvaluationService_TEST {
         }
         insert opps;
 
-        Test.startTest();        
+        Test.startTest();
         new RD2_OpportunityEvaluationService()
             .withRds(new Set<Id>{ rd.Id })
             .evaluateOpportunities();
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c, 
+        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c,
             'Current Year Value should include actual and planned installment amounts');
-        System.assertEquals(RD_AMOUNT * 7, rd.NextYearValue__c, 
+        System.assertEquals(RD_AMOUNT * 7, rd.NextYearValue__c,
             'Next Year Value should match the expected planned installment amount');
     }
 
@@ -1423,7 +1472,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         Date today = Date.newInstance(2020, 3, 2);
         RD2_ScheduleService.currentDate = today;
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withStartDate(startDate)
@@ -1462,12 +1511,12 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(paidInstallments, rd.npe03__Total_Paid_Installments__c, 
+        System.assertEquals(paidInstallments, rd.npe03__Total_Paid_Installments__c,
             'Number of paid installments should match the RD field');
 
-        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c, 
+        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c,
             'Current Year Value should include actual and planned installment amounts');
-        System.assertEquals(RD_AMOUNT * 6 + extraOppAmount, rd.NextYearValue__c, 
+        System.assertEquals(RD_AMOUNT * 6 + extraOppAmount, rd.NextYearValue__c,
             'Next Year Value should match the expected planned installment and the future open Opp amounts');
     }
 
@@ -1541,5 +1590,28 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_Settings_TEST.setUpConfiguration(
             new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => isEnabled }
         );
+    }
+
+    /****
+    * @description Sets up a Recurring Donation used in the Elevate tests
+    * @param configStub Elevate Integration Service configuration stub
+    * @param commitmentId RD Commitment Id
+    * @return npe03__Recurring_Donation__c
+    */
+    private static npe03__Recurring_Donation__c setUpElevateTestData(PS_IntegrationServiceConfig_TEST.Stub configStub, String commitmentId) {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withCommitmentId(commitmentId)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        return rd;
     }
 }

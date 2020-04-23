@@ -123,6 +123,35 @@ private class RD2_OpportunityEvaluation_TEST {
             'Next Year Value should be zero for a Closed RD');
     }
 
+
+   /**
+    * @description Verifies no installment Opportunity is created by the RD batch when
+    * Elevate integration is enabled and Commitment Id is specified on the RD.
+    */
+    @IsTest
+    private static void shouldNotCreateNextOppForElevateRDWhenIntegrationIsEnabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        final Date today = START_DATE.addMonths(1);
+        RD2_ScheduleService.currentDate = today;
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        assertBatchJobIteration(1);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(),
+            'No installment Opportunity should be created for the Elevate RD when integration is enabled: ' + opps);
+    }
+
     /**
      * @description Verifies an Opp with Close Date today is not created if it already exists
      */
@@ -228,9 +257,9 @@ private class RD2_OpportunityEvaluation_TEST {
         assertRecordsFailed(batch, 0);
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(opps.size(), oppById.size(), 
+        System.assertEquals(opps.size(), oppById.size(),
             'No new Opp should be created: ' + oppById.values());
-        System.assertEquals(nextCloseDate, oppById.get(opps[2].Id).CloseDate, 
+        System.assertEquals(nextCloseDate, oppById.get(opps[2].Id).CloseDate,
             'Close Date should be unchanged for the future Opp');
     }
 
@@ -601,17 +630,17 @@ private class RD2_OpportunityEvaluation_TEST {
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(2, oppById.size(), 
+        System.assertEquals(2, oppById.size(),
             'New Opp should be created for the Next Donation Date offset by the closed Opp: ' + oppById.values());
-        
+
         Opportunity actualOpp = oppById.remove(opp.Id);
         System.assertEquals(true, actualOpp.IsClosed && !actualOpp.IsWon, 'Existing Closed Lost Opp should stay closed');
 
         //verify the Next Donation Date is advanced and a new Opp is created
         actualOpp = oppById.values()[0];
-        
+
         System.assertEquals(false, actualOpp.IsClosed, 'New Opp should be open: ' + actualOpp);
-        System.assertEquals(nextCloseDate.addMonths(1), actualOpp.CloseDate, 
+        System.assertEquals(nextCloseDate.addMonths(1), actualOpp.CloseDate,
             'New Opp Close Date should be the Next Donation Date after the closed Opp Close Date: ' + actualOpp);
     }
 
@@ -821,7 +850,7 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-    * Verifies that no future installment will be created for a fixed length RD 
+    * Verifies that no future installment will be created for a fixed length RD
     * when number of open Opps plus closed won Opps equals number of planned installments
     */
     @isTest
@@ -865,19 +894,19 @@ private class RD2_OpportunityEvaluation_TEST {
 
         List<Opportunity> actualOpps = oppGateway.getRecords(rd);
 
-        System.assertEquals(plannedInstallments, actualOpps.size(), 
+        System.assertEquals(plannedInstallments, actualOpps.size(),
             'No new installment Opp should be created when: open Opps + paid Opps = planned installments. ' + actualOpps);
     }
 
     /**
     * @description Verifies that the next installment Opp should be created for a fixed length RD
-    * when number of open Opps plus closed won Opps is less than number of planned installments  
+    * when number of open Opps plus closed won Opps is less than number of planned installments
     */
     @isTest
     private static void shouldCreateNextOppWhenFixedLengthRDHasNotReachedPlannedInstallmentCount() {
         final Integer plannedInstallments = 3;
         final Integer paidInstallments = 2;
-        
+
         final Date startDate = Date.newInstance(2020, 1, 1);
         Date today = Date.newInstance(2020, 3, 1);
         RD2_ScheduleService.currentDate = today;
@@ -892,7 +921,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withPaidInstallments(paidInstallments)
             .build();
         insert rd;
-        
+
         List<Opportunity> opps = new List<Opportunity>();
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
         for (Integer month = 0; month < paidInstallments; month++){
@@ -913,13 +942,13 @@ private class RD2_OpportunityEvaluation_TEST {
         assertBatchJobIteration(1);
 
         List<Opportunity> actualOpps = oppGateway.getRecords(rd);
-        System.assertEquals(plannedInstallments + 1, actualOpps.size(), 
+        System.assertEquals(plannedInstallments + 1, actualOpps.size(),
             'The next installment Opp should be created since one Opp is Closed Lost: ' + opps);
 
         Opportunity nextDonationDateOpp = actualOpps[actualOpps.size() - 1];
-        System.assertEquals(false, nextDonationDateOpp.IsClosed, 
+        System.assertEquals(false, nextDonationDateOpp.IsClosed,
             'The newly created Opp should be open: ' + nextDonationDateOpp);
-        System.assertEquals(today.addMonths(1), nextDonationDateOpp.CloseDate, 
+        System.assertEquals(today.addMonths(1), nextDonationDateOpp.CloseDate,
             'The Next Donation Date should advance and the newly created Opp should match it');
     }
 
