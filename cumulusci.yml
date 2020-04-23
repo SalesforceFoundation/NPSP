@@ -607,7 +607,7 @@ flows:
             3:
                 task: deploy_dev_config_delete
             4:
-                task: config_trial
+                flow: config_trial
             5:
                 task: npsp_default_settings
             6:
