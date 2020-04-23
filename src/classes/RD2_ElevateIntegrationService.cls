@@ -112,21 +112,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
         return !isChanged;
     }
 
-
-    /***
-    * @description Contains configuration related to the Elevate integration service config and permissions
-    */
-    @TestVisible
-    private static PS_IntegrationServiceConfig config {
-        get {
-            if (config == null) {
-                config = new PS_IntegrationServiceConfig();
-            }
-            return config;
-        }
-        set;
-    }
-
     /***
     * @description Returns the Elevate Integration service enablement status
     * @return Boolean
@@ -134,7 +119,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
     public static Boolean isIntegrationEnabled() {
         return config.isIntegrationEnabled();
     }
-
 
     /**
     * @description For each CommitmentId, find any existing Opportunities with the matching Commitmentid
