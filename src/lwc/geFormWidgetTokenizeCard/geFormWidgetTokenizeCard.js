@@ -23,13 +23,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
 
-
-    get tokenizeCardHeader() {
-        return GeLabelService.format(
-            this.CUSTOM_LABELS.geHeaderPaymentServices,
-            [this.CUSTOM_LABELS.commonPaymentServices]);
-    }
-
     async connectedCallback() {
         this.domain = await getOrgDomain();
         this.visualforceOrigin = this.buildVisualforceOriginUrl(this.domain);
