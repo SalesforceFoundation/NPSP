@@ -527,7 +527,7 @@ public class UTIL_UnitTestData_TEST {
      * @description Utility method to create Data Import Records in a Gift Batch
      * @return {dataImports} List of Data Import records
     */
-    public static List<DataImport__c> createDIRecordsInABatch (Integer numberOfRecords) {
+    public static List<DataImport__c> createDIRecordsInANewGEBatch (Integer numberOfRecords) {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         DataImportBatch__c batch = createGiftBatches(200, 2, 1)[0];
         insert batch;

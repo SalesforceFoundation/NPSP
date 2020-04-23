@@ -157,13 +157,16 @@ private class UTIL_OrgTelemetry_Batch_TEST {
     @IsTest
     private static void shouldHandleNoDataImportsToCount() {
         MockTelemetryBatch batch = new MockTelemetryBatch();
-        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
         batch.finish(null);
 
-        System.assertEquals(null, batch.countByBatchMode.get(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS),
+        System.assertEquals(null, batch.countByBatchMode.get(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS),
                 'The Data Import Batch should not be executed');
 
-        assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch, 0);
+        assertOnTelemetryIntegerMetric(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch, 0);
     }
 
 
@@ -173,16 +176,17 @@ private class UTIL_OrgTelemetry_Batch_TEST {
     * error that gets thrown when multiple tests in the same class set a FeatureParameter
     */
     @IsTest
-    private static void shouldHandleDataImportsToCount() {
+    private static void shouldHandleGEDataImportsBatchToCount() {
         createQualifiedDIRecords(NUM_DATA_IMPORT_RECORDS);
 
         MockTelemetryBatch batch = new MockTelemetryBatch();
-        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
 
         batch.finish(null);
 
         System.assertEquals(1, batch.countByBatchMode.get(
-                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.DATA_IMPORTS),
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS),
                 'The Data Import batch should be executed'
         );
 
@@ -227,7 +231,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
     }
 
     private static void createQualifiedDIRecords(Integer numberOfRecords) {
-        List<DataImport__c> dataImports = UTIL_UnitTestData_TEST.createDIRecordsInABatch(numberOfRecords);
+        List<DataImport__c> dataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(numberOfRecords);
         insert dataImports;
     }
 
@@ -241,7 +245,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         private Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer> countByBatchMode = 
             new Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer>();
 
-        public virtual override void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+        private virtual override void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
             if (!countByBatchMode.containsKey(mode)) {
                 countByBatchMode.put(mode, 0);
             }
