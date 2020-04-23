@@ -77,9 +77,9 @@
         </template>
     </template>
 
-    <template if:true={isShowStandardFooter}>
+    <template if:true={showStandardFooter}>
         <footer class="slds-card__footer slds-m-top_none">
-            <template if:true={hasRecords}>
+            <template if:true={showViewMore}>
                 <a class="slds-card__footer-action"
                    onclick={handleViewMore}
                    data-qa-locator={qaLocatorViewMore}>
