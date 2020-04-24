@@ -5877,7 +5877,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 4</shortDescription>
         <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>For more information, please see {0} troubleshooting documentation.</value>
+        <value>For more information, please see {0} troubleshooting documentation on the Power of Us Hub.</value>
     </labels>
     <labels>
         <fullName>commonGauAllocations</fullName>
