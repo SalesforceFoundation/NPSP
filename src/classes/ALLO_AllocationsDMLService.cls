@@ -227,10 +227,8 @@ public inherited sharing class ALLO_AllocationsDMLService {
         // Process Deletions
         if (allocationsWrapper.allocationsForDelete != null && allocationsWrapper.allocationsForDelete.size() > 0) {
             deletes = Database.delete(allocationsWrapper.allocationsForDelete, false);
-        }
 
-        // Handle Deletes and Update Maps and Errors
-        if (deletes != null) {
+            // Handle Deletes and Update Maps and Errors
             for (Integer i=0; i < deletes.size(); i++) {
                 Allocation__c deletedAlloc = allocationsWrapper.allocationsForDelete[i];
                 Database.DeleteResult delResult = deletes[i];
@@ -263,10 +261,8 @@ public inherited sharing class ALLO_AllocationsDMLService {
         // Process Inserts
         if (allocationsWrapper.allocationsForInsert != null && allocationsWrapper.allocationsForInsert.size() > 0) {
             inserts = Database.insert(allocationsWrapper.allocationsForInsert, false);
-        }
 
-        // Handle Inserts and Update Maps and Errors
-        if (inserts != null) {
+            // Handle Inserts and Update Maps and Errors
             for (Integer i=0; i < inserts.size(); i++) {
                 Allocation__c insertedAlloc = allocationsWrapper.allocationsForInsert[i];
                 Database.SaveResult insResult = inserts[i];
@@ -298,10 +294,8 @@ public inherited sharing class ALLO_AllocationsDMLService {
         // Process Updates
         if (allocationsWrapper.allocationsForUpdate != null && allocationsWrapper.allocationsForUpdate.size() > 0) {
             updates = Database.update(allocationsWrapper.allocationsForUpdate, false);
-        }
 
-        // Handle Updates and Update Maps and Errors
-        if (updates != null) {
+            // Handle Updates and Update Maps and Errors
             for (Integer i=0; i < updates.size(); i++) {
                 Allocation__c updatedAlloc = allocationsWrapper.allocationsForUpdate[i];
                 Database.SaveResult updResult = updates[i];
