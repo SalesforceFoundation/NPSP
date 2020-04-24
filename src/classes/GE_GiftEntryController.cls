@@ -121,21 +121,21 @@ public with sharing class GE_GiftEntryController {
     /*******************************************************************************************************
     * @description Saves the data import record, dry runs the record, and returns updated
     * totals with the new row.
-    * @param diRecord: the NPSP_Data_Import__c record to update
+    * @param dataImport: the NPSP_Data_Import__c record to update
     * @param updateGift: If true, BDI will attempt to match to an existing opportunity/payment
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static Id submitDataImportToBDI(DataImport__c diRecord, Boolean updateGift) {
+    public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
         // Check for widget data and convert it to the correct format for processing
-        diRecord.Additional_Object_JSON__c =
-            GE_FormRendererService.convertWidgetDataToObjectJSON(diRecord.Additional_Object_JSON__c);
+        dataImport.Additional_Object_JSON__c =
+            GE_FormRendererService.convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
 
         // Run the BDI process on this new Data Import
-        processDataImport(diRecord, false, updateGift);
+        processDataImport(dataImport, false, updateGift);
 
         // Get the ID of the created Opportunity so we can return it
-        Id oppId = getOpportunityIdFromImport(diRecord.Id);
+        Id oppId = getOpportunityIdFromImport(dataImport.Id);
 
         return oppId;
     }
@@ -175,18 +175,18 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Run the DataImport process on a single gift
-    * @param diRecord DataImport record to be processed
+    * @param dataImport DataImport record to be processed
     * @param isDryRun Boolean to set if the process should only return import results and not process
     * @param updateGift Boolean to determine our matching criteria.
     *                   true = "single match or create" and means we are updating
     *                   false = "do not match"
     */
-    private static void processDataImport(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
+    private static void processDataImport(DataImport__c dataImport, Boolean isDryRun, Boolean updateGift) {
         try {
 
             Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
 
-            List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
+            List<DataImport__c> listDI = new List<DataImport__c>{dataImport};
 
             BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
         } catch (Exception e) {
@@ -198,16 +198,16 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Return the imported Opportunity (Donation) from a DataImport process
-    * @param diRecordId Id of DataImport object that created or matching this Opportunity
+    * @param dataImportId Id of DataImport object that created or matching this Opportunity
     * @return Id of the Opportunity
     */
-    private static String getOpportunityIdFromImport(Id diRecordId) {
+    private static String getOpportunityIdFromImport(Id dataImportId) {
         try {
             DataImport__c di = [
                     SELECT DonationImported__c,
                             FailureInformation__c
                     FROM DataImport__c
-                    WHERE Id = :diRecordId
+                    WHERE Id = :dataImportId
             ];
             if(di.FailureInformation__c != null) {
                 String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(di.FailureInformation__c);
