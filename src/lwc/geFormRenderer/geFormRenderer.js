@@ -331,15 +331,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     catchHttpRequestError(error) {
-        const isForbidden = error.statusCode === 403;
-        if (isForbidden) {
-            this.displayPageLevelErrorMessages([error]);
-        }
-
         this.hasPurchaseCallTimedout = error.statusCode === 408;
         if (this.hasPurchaseCallTimedout) {
             this.formatTimeoutCustomLabels(error.dataImportRecord);
         }
+
+        this.displayPageLevelErrorMessages([error]);
 
         return;
     }

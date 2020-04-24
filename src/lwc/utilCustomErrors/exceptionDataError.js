@@ -24,6 +24,7 @@ class ExceptionDataError extends Error {
             this.errorMessage = apexExceptionWrapper.errorMessage;
             this.DMLErrorMessageMapping = apexExceptionWrapper.DMLErrorMessageMapping;
             this.DMLErrorFieldNameMapping = apexExceptionWrapper.DMLErrorFieldNameMapping;
+
         } else {
             this.message = apexException;
         }

@@ -4743,7 +4743,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Common label for Payment Services</shortDescription>
-        <value>Payment Services</value>
+        <value>Salesforce.org Elevate</value>
     </labels>
     <labels>
         <fullName>commonPercent</fullName>
