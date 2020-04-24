@@ -11,8 +11,8 @@
 
     <!-- libraries needed --> 
     <ltng:require scripts="{!join(',',
-        $Resource.CumulusStaticResources + '/jquery/jquery-2.2.4.min.js',
-        $Resource.CumulusStaticResources + '/jquery-ui/jquery-ui-1.11.4.min.js')}"
+        $Resource.CumulusStaticResources + '/jquery/jquery-3.5.0.min.js',
+        $Resource.CumulusStaticResources + '/jquery-ui/jquery-ui-1.12.1.min.js')}"
         afterScriptsLoaded="{!c.afterScriptsLoaded}" />
 
     <!-- markup follows... -->
