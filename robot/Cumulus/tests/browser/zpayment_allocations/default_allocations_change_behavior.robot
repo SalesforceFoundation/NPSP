@@ -5,20 +5,23 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Run keywords
+...             Disable Default And Payment Allocations
+...             Delete Records and Close Browser
 
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
 &{contact2_fields}         Email=test@example.com
-&{opportunity1_fields}     Type=Donation   Name=$0 opp with default allocations enabled     Amount=0    StageName=Prospecting    
-&{opportunity2_fields}     Type=Donation   Name=$0 opp with default allocations disabled    Amount=0    StageName=Prospecting    
+&{opportunity1_fields}     Type=Donation   Name=$0 opp with default allocations enabled     Amount=0    StageName=Prospecting   npe01__Do_Not_Automatically_Create_Payment__c=false   
+&{opportunity2_fields}     Type=Donation   Name=$0 opp with default allocations disabled    Amount=0    StageName=Prospecting   npe01__Do_Not_Automatically_Create_Payment__c=false 
 
 *** Test Cases ***
 Allocations Behavior when $0 with Default Allocations Enabled
-    [Documentation] 
-    [tags]
+    [Documentation]             Enable payment allocation and make sure default allocations are enabled
+    ...                         Create a $0 opportunity.Default GAU allocation should still be created for opportunity. 
+    [tags]                      unstabe     W-035595    feature:Payment Allocations
     Enable Default Allocations
-    Setupdata                   contact1            ${contact1_fields}     ${opportunity2_fields}
+    Setupdata                   contact1            ${contact1_fields}     ${opportunity1_fields}
     Go To Page                  Detail
     ...                         Opportunity
     ...                         object_id=${data}[contact1_opportunity][Id]
@@ -27,11 +30,12 @@ Allocations Behavior when $0 with Default Allocations Enabled
     ...                         &{def_gau}[Name]=$0.00
 
 Allocations Behavior when $0 with Default Allocations Disabled
-    [Documentation]
-    [tags]
+    [Documentation]             Enable payment allocation and make sure default allocations are DISABLED. Create a $0 opportunity
+    ...                         Add a GAU with 100% and verify that GAU allocation is still there on Opportunity after save
+    [tags]                      unstable    W-035647    feature:Payment Allocations
     Disable Default Allocations
-    Setupdata                   contact2            ${contact2_fields}     ${opportunity2_fields}
-    &{allocation} =             API Create GAU Allocation   &{gau}[Id]     ${data}[contact2_opportunity][Id]    
+    Setupdata                   contact2                    ${contact2_fields}     ${opportunity2_fields}
+    &{allocation} =             API Create GAU Allocation   &{gau}[Id]             ${data}[contact2_opportunity][Id]    
     ...                         Percent__c=0.0 
     Go To Page                  Detail
     ...                         Opportunity
@@ -47,11 +51,18 @@ Enable Default Allocations
     API Modify Allocations Setting
     ...               Default_Allocations_Enabled__c=true
     ...               Default__c=&{def_gau}[Id]    
+    ...               Payment_Allocations_Enabled__c=true	
     
 Disable Default Allocations
     API Modify Allocations Setting
     ...               Default_Allocations_Enabled__c=false    
-    
+
+Disable Default And Payment Allocations
+    API Modify Allocations Setting
+    ...               Default_Allocations_Enabled__c=false
+    ...               Payment_Allocations_Enabled__c=false
+    ...               Default__c=None
+
 Setup Test Data
     &{gau} =              API Create GAU  
     Set suite variable    &{gau}  
