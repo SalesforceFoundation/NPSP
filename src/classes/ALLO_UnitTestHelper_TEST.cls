@@ -72,7 +72,7 @@ public class ALLO_UnitTestHelper_TEST {
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
         insert accs;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withInstallmentPeriodYearly()
             .withDateEstablished(Date.newInstance(1984,01,29))
             .withAccount(accs[0].Id)
@@ -591,16 +591,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @return Map of Error__c records by Related Record ID
      */
     public static Map<Id, Error__c> getErrorsByRecordId() {
-        List<Error__c> errs =  [SELECT  Id,
-                                        Context_Type__c,
-                                        Datetime__c,
-                                        Error_Type__c,
-                                        Full_Message__c,
-                                        Object_Type__c,
-                                        Related_Record_ID__c,
-                                        Record_URL__c,
-                                        Retry_Pending__c
-                                FROM Error__c];
+        List<Error__c> errs = new TEST_SObjectGateway.ErrorGateway().getRecords();
 
         Map<Id, Error__c> errsByRecordId = new Map<Id, Error__c>();
 
