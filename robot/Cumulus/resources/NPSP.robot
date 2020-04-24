@@ -136,6 +136,27 @@ API Create GAU
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
 
+API Create GAU Allocation
+    [Arguments]      ${gau_id}    ${opp_id}     &{fields}
+    ${ns} =          Get Npsp Namespace Prefix
+    ${all_id} =      Salesforce Insert  ${ns}Allocation__c
+    ...              General_Accounting_Unit__c=${gau_id}
+    ...              Opportunity__c=${opp_id}
+    ...              &{fields} 
+    &{gau_alloc} =   Salesforce Get  ${ns}Allocation__c  ${all_id}
+    [return]         &{gau_alloc} 
+
+API Modify Allocations Setting
+    [Arguments]         &{fields}
+    ${ns} =             Get Npsp Namespace Prefix
+    @{records} =        Salesforce Query      ${ns}Allocations_Settings__c
+    ...                 select=Id
+    &{setting} =        Get From List  ${records}  0
+    Salesforce Update  ${ns}Allocations_Settings__c     &{setting}[Id]
+    ...                 &{fields} 
+    &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  &{setting}[Id]
+    [return]            &{alloc_setting}
+
 API Create DataImportBatch
     [Arguments]      &{fields}
     ${name} =   Generate Random String
