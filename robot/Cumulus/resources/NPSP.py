@@ -1434,6 +1434,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.wait_until_page_contains_element(footer)
         self.salesforce.populate_lookup_field(field,value)
 
+    @capture_screenshot_on_error
     def edit_record_dropdown_value(self,field,value):
         """Scrolls just a little below the field
            Clicks on Edit icon next to field and enters a value into the field"""
