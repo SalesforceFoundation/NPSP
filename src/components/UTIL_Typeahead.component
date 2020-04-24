@@ -2,7 +2,7 @@
 <apex:component controller="UTIL_Typeahead">
 
     <script type="text/javascript">
-        window.jQuery || document.write('<script src="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"><\/script>');
+        window.jQuery || document.write('<script src="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"><\/script>');
         window.typeahead || document.write('<script src="{!URLFOR($Resource.CumulusStaticResources, '/Typeahead/typeahead.bundle.min.js')}"><\/script>');
     </script>
 
@@ -77,7 +77,7 @@
           color: #999
         }
 
-        .tt-dropdown-menu {
+        .tt-menu {
           width: 100%;
           margin-top: 5px;
           padding: 8px 0;
@@ -117,7 +117,7 @@
         if (!boxData) boxData = {};
 
         boxData['{!searchBoxId}'] = { 
-            setSelectedValue : 
+            setSelectedValue :
                 function( ctrl, id, value ) {
 
                     // put the id on the input tag
@@ -133,14 +133,14 @@
 
                     // if destinations are defined, set them too
                     j$('[id$={!destinationForSelectedId}]').val( id );
-                    j$('[id$={!destinationForSelectedValue}]').val( value );
                 },
 
             fieldList: 
                 ['{!objectIdField}', '{!primaryField}'],
 
             boxQuery: 
-                function( queryString, typeaheadCallback ) {
+                function( queryString, typeaheadCallback, typeaheadCallback) {
+
                     Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.UTIL_Typeahead.searchRecords}', 
                         queryString, 
@@ -176,32 +176,19 @@
 
             j$('#{!searchBoxId}').typeahead({
                 minLength: {!minSearchLength},
-                hint: true,
-                autoselect: true,
+                hint: false,
+                autoselect: false,
                 highlight: true
             },
             {
                 source: boxData['{!searchBoxId}'].boxQuery, // calls our remoting function
                 name: '{!searchBoxId}Typeahead',
-                //displayKey: ,
-                /*templates: {
-                    suggestion: function(c) { 
-                        return '<p><strong>' + c.name + '</strong><br />' + c.addr + '</p>';
-                    }
-                    //, empty: '<p>No results found.</p>'
-                    //, header: '' 
-                    //, footer: ''
-                }
-                */
+                async: true,
+                displayKey: 'value',
             }).on('typeahead:selected', function (object, datum) {
                 boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, htmlDecode(datum.value) );
             }).on('typeahead:autocompleted', function (object, datum) {
                 boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, htmlDecode(datum.value) );
-            //}).on('typeahead:cursorchanged', function (object, datum) {
-                //boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, datum.value );
-            //}).on('typeahead:closed', function (object, datum) {
-            //     console.log('typeahead:closed');
-            // });
             }).keyup( function(ev) {
                 // if they press backspace or escape, we want to clear the selection
                 if ( ev.which == 8 || ev.which == 27 ) {
