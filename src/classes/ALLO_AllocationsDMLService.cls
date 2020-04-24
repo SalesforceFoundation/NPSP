@@ -178,21 +178,8 @@ public inherited sharing class ALLO_AllocationsDMLService {
             // Process Updates
             dmlErrors = (dmlErrors || processAllocationUpdateResults());
 
-            if (dmlErrors) {
-                // Rollback to a consistent state && clean the allocationResults for the next try of the loop
-                // Removing Allocations associated with Errored records via parentRecordId in errors Set
-                // Errors will remain to be logged
-                Database.rollback(sp);
-
-                // Revert Maps of existing Allocations to versions prior to DML Operation
-                allocationsWrapper.oppsAllocations = backupOppsAllocations;
-                allocationsWrapper.paymentAllocations = backupPaymentAllocations;
-
-                // Removes and Allocations associated with Parents with one or more DML Errors
-                removeAllDMLAssociatedWithErroredRecords();
-
-                // Insert DML Lists need special handling to clear id and read only timestamp fields from prior execution
-                removeIdAndTimestampsFromDMLList(allocationsWrapper.allocationsForInsert);
+            if (dmLErrors) { // Need to remove errored DML, revert changes and get ready to retry
+                handleDMLErrors(sp, backupOppsAllocations, backupPaymentAllocations);
             }
         } while (dmlIteration <= numberOfDatabaseRetries && dmlErrors);
 
@@ -202,6 +189,34 @@ public inherited sharing class ALLO_AllocationsDMLService {
 
         // Convert any errors that were not explicitly DML errors here to RecordErrors
         processFunctionalErrors();
+    }
+
+    /**
+     * @description Rolls back to a SavePoint restores Allocations to original lists prior to DML execution,
+     *              removes allocations associated with a parent whose allocations error, and removes the ID
+     *              and timestamps form the DML Insert List.  This is required to be able to retry without the
+     *              records that errored in a consistent state.
+     * @param sp Savepoint to roll back to
+     * @param backupOppsAllocations clone of the Opportunity Allocations Map from the ALLO_AllocationsWrapper to
+     *        restore oppsAllocations to
+     * @param backupPmtAllocations clone of the Payment Allocations Map from the ALLO_AllocationsWrapper to
+     *        restore paymentAllocations to
+     **/
+    private void handleDMLErrors(Savepoint sp, Map<Id, List<Allocation__c>> backupOppsAllocations, Map<Id, List<Allocation__c>> backupPaymentAllocations) {
+        // Rollback to a consistent state && clean the allocationResults for the next try of the loop
+        // Removing Allocations associated with Errored records via parentRecordId in errors Set
+        // Errors will remain to be logged
+        Database.rollback(sp);
+
+        // Revert Maps of existing Allocations to versions prior to DML Operation
+        allocationsWrapper.oppsAllocations = backupOppsAllocations;
+        allocationsWrapper.paymentAllocations = backupPaymentAllocations;
+
+        // Removes and Allocations associated with Parents with one or more DML Errors
+        removeAllDMLAssociatedWithErroredRecords();
+
+        // Insert DML Lists need special handling to clear id and read only timestamp fields from prior execution
+        removeIdAndTimestampsFromDMLList(allocationsWrapper.allocationsForInsert);
     }
 
     /**
