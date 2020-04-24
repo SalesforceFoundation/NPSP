@@ -524,6 +524,49 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+     * @description Utility method to create Data Import Records in a Gift Batch
+     * @return {dataImports} List of Data Import records
+    */
+    public static List<DataImport__c> createDIRecordsInANewGEBatch (Integer numberOfRecords) {
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        DataImportBatch__c batch = createGiftBatches(200, 2, 1)[0];
+        insert batch;
+
+        for (Integer i = 0; i < numberOfRecords; i++) {
+            DataImport__c dataImport = BDI_DataImport_TEST.newDI('John'+i,'Doe'+i, 200);
+            dataImport.NPSP_Data_Import_Batch__c = batch.Id;
+            dataImports.add(dataImport);
+        }
+
+        return dataImports;
+    }
+
+    /**
+     * @description Utility Method to create gift batches
+     * @return {dataImportBatches} List of Data Import Batch records
+    */
+    public static List<DataImportBatch__c> createGiftBatches (Integer batchProcessSize, Integer batchGEVersion, Integer numberOfRecords) {
+
+        List<DataImportBatch__c> dataImportBatches = new List<DataImportBatch__c>();
+        for (Integer i = 0 ;i < numberOfRecords; i++) {
+            DataImportBatch__c batch = new DataImportBatch__c();
+            batch.Name = 'Test Batch'+i;
+            batch.Batch_Process_Size__c = batchProcessSize;
+            batch.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+            batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                    UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+            batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
+            batch.Process_Using_Scheduled_Job__c = true;
+            batch.GiftBatch__c = true;
+            batch.Batch_Gift_Entry_Version__c = batchGEVersion;
+            dataImportBatches.add(batch);
+        }
+
+        return dataImportBatches;
+
+    }
+
+    /**
      * @description Create Engagement Plan Templates for unit testing.
      * @param n The number of Engagement Plan Templates to be created
      * @return List of Engagement Plan Templates
