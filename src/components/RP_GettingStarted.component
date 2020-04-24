@@ -53,7 +53,7 @@
     <img id="mountainsImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_Mountains.png' )}" width="2000" height="80" />
 
 
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-2.2.4.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
 
     <script type="text/javascript">
 
