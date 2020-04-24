@@ -262,6 +262,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.dataImportRecord[PAYMENT_EXPIRATION_MONTH] = responseBody.cardData.expirationMonth;
                 this.dataImportRecord[PAYMENT_EXPIRATION_YEAR] = responseBody.cardData.expirationYear;
             }
+            this.dataImportRecord[PAYMENT_DECLINED_REASON__C] = '';
             this.dataImportRecord[PAYMENT_GATEWAY_ID] = responseBody.gatewayId;
             this.dataImportRecord[PAYMENT_TRANSACTION_ID] = responseBody.gatewayTransactionId;
             this.dataImportRecord[PAYMENT_AUTHORIZED_AT] = responseBody.authorizedAt;
@@ -401,7 +402,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
 
-        submitDataImportToBDI({ diRecord: this.dataImportRecord, updateGift: this.hasUserSelectedDonation })
+        submitDataImportToBDI({ dataImport: this.dataImportRecord, updateGift: this.hasUserSelectedDonation })
             .then(opportunityId => {
                 this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
                 this.navigateToRecordPage(opportunityId);

@@ -354,6 +354,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     handleCatchOnSave( error ) {
         // var inits
+        const errorMessage = error.body.message;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         const exceptionWrapper = JSON.parse(error.body.message);
         const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
