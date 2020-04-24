@@ -4,6 +4,7 @@ import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
@@ -337,7 +338,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         this.hasPurchaseCallTimedout = error.statusCode === 408;
         if (this.hasPurchaseCallTimedout) {
-            this.formatTimeoutCustomLabels();
+            this.formatTimeoutCustomLabels(error.dataImportRecord);
         }
 
         return;
@@ -1647,15 +1648,37 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return allFields;
     }
 
-    formatTimeoutCustomLabels() {
+    /*******************************************************************************
+    * @description Method formats custom labels for the purchase call timeout error
+    * scenario.
+    *
+    * @param {object} dataImportRecord: Data Import record related to the error
+    * received from geGiftEntryFormApp.
+    */
+    formatTimeoutCustomLabels(dataImportRecord) {
+        const donorName = this.getDonorName();
+        const formattedDonationAmount =
+            getNumberAsLocalizedCurrency(dataImportRecord[DONATION_AMOUNT.fieldApiName]);
+
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorUncertainCardChargePart1,
-            [this.CUSTOM_LABELS.commonPaymentServices]);
+            [formattedDonationAmount, donorName, this.CUSTOM_LABELS.commonPaymentServices]);
+
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart3 = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorUncertainCardChargePart3,
             [this.CUSTOM_LABELS.commonPaymentServices]);
+
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart4 = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorUncertainCardChargePart4,
             [this.CUSTOM_LABELS.commonPaymentServices]);
+    }
+
+    getDonorName() {
+        const names = this.fabricatedCardholderNames;
+        if (names.firstName && names.lastName) {
+            return `${names.firstName} ${names.lastName}`;
+        } else {
+            return names.accountName;
+        }
     }
 }

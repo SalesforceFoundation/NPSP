@@ -129,6 +129,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 await this.processDataImport();
             }
         } catch (error) {
+            error.dataImportRecord = this.dataImportRecord;
             this.errorCallback(error);
         }
     }
