@@ -43,7 +43,7 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled(cacheable=true)
     public static String getOrgDomain() {
-        String url = System.URL.getOrgDomainUrl().getHost();
+        String url = System.Url.getOrgDomainUrl().getHost();
         String[] urlParts = url.split('\\.');
 
         return urlParts[0];
@@ -163,16 +163,16 @@ public with sharing class GE_GiftEntryController {
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static Id submitDataImportToBDI(DataImport__c diRecord, Boolean updateGift) {
+    public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
         // Check for widget data and convert it to the correct format for processing
-        diRecord.Additional_Object_JSON__c =
-            GE_FormRendererService.convertWidgetDataToObjectJSON(diRecord.Additional_Object_JSON__c);
+        dataImport.Additional_Object_JSON__c =
+            GE_FormRendererService.convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
 
         // Run the BDI process on this new Data Import
-        processDataImport(diRecord, false, updateGift);
+        processDataImport(dataImport, false, updateGift);
 
         // Get the ID of the created Opportunity so we can return it
-        Id oppId = getOpportunityIdFromImport(diRecord.Id);
+        Id oppId = getOpportunityIdFromImport(dataImport.Id);
 
         return oppId;
     }
@@ -199,11 +199,8 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static DataImport__c upsertDataImport(DataImport__c dataImport) {
         try {
-            if (String.isNotBlank(dataImport.Id)) {
-                Database.update(dataImport);
-            } else {
-                Database.insert(dataImport);
-            }
+
+            upsert dataImport Id;
 
             return dataImport;
         } catch (Exception e) {
@@ -215,20 +212,18 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Run the DataImport process on a single gift
-    * @param @param diRecord DataImport record to be processed
+    * @param dataImport DataImport record to be processed
     * @param isDryRun Boolean to set if the process should only return import results and not process
     * @param updateGift Boolean to determine our matching criteria.
     *                   true = "single match or create" and means we are updating
     *                   false = "do not match"
-    * @return void
     */
-    private static void processDataImport(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
+    private static void processDataImport(DataImport__c dataImport, Boolean isDryRun, Boolean updateGift) {
         try {
-            Id diRecordId = diRecord.Id;
 
             Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
 
-            List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
+            List<DataImport__c> listDI = new List<DataImport__c>{dataImport};
 
             BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
         } catch (Exception e) {
@@ -240,16 +235,16 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Return the imported Opportunity (Donation) from a DataImport process
-    * @param diObjId Id of DataImport object that created or matching this Opportunity
+    * @param dataImportId Id of DataImport object that created or matching this Opportunity
     * @return Id of the Opportunity
     */
-    private static String getOpportunityIdFromImport(Id diRecordId) {
+    private static String getOpportunityIdFromImport(Id dataImportId) {
         try {
             DataImport__c di = [
                     SELECT DonationImported__c,
                             FailureInformation__c
                     FROM DataImport__c
-                    WHERE Id = :diRecordId
+                    WHERE Id = :dataImportId
             ];
             if(di.FailureInformation__c != null) {
                 throw new BDIException(di.FailureInformation__c);
