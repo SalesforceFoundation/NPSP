@@ -1,8 +1,7 @@
 <apex:page showHeader="true" sidebar="false" title="{!$Label.stgNPSPSettingsTitle}" controller="STG_SettingsManager_CTRL"
            action="{!onNpspSettingsLoad}" docType="html-5.0" standardStylesheets="false">
 
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/CollapsibleList/CollapsibleList.js')}"/>
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -445,4 +444,5 @@
             refresheEvent.fire();
         }
     </script>
+
 </apex:page>
