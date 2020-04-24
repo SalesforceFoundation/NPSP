@@ -29,6 +29,7 @@ Create Clone and Delete Template
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Custom                        GE_Gift_Entry
     Page Should Contain                       ${template}
+    Capture Page Screenshot
     Store Template Record Id                  ${template}
     
     #Clone Template
