@@ -28,7 +28,7 @@ import {
     getSubsetObject,
     validateJSONString
 } from 'c/utilCommon';
-import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
+import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -408,7 +408,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleCatchOnSave( error ) {
         // var inits
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        const exceptionWrapper = JSON.parse(error.body.message);
+        const exceptionWrapper = new ExceptionDataError(error);
         const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
         this.hasPageLevelError = true;
 
