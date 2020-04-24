@@ -111,7 +111,8 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
 	public UTIL_iSoqlListViewConsumer getslvConsumer() { return this; }
     
     /*********************************************************************************************************
-    * @description Returns the string Id of the Error Log panel. 
+    * @description Returns the string Id of the Error Log panel.
+    * @return String 'idPanelErrorLog'
     */
     public override string idPanel() { return 'idPanelErrorLog'; }
 
