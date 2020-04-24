@@ -16,7 +16,7 @@ Create Clone and Delete Template
     [Documentation]                           Create a Template and verify template shows up in gift entry landing page. 
     ...                                       Clone the template and verify that template name has to be unique.
     ...                                       Delete Template and verify that template is not avaialable for selection while creating a batch.  
-    [tags]                                    feature:GE                    W-039556   
+    [tags]                                    unstable  feature:GE                    W-039556   
     #Create Template                             
     Go To Page                                Custom                        GE_Gift_Entry
     Click Gift Entry Button                   Create Template
