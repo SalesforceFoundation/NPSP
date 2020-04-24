@@ -61,7 +61,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountBDIRows,
         Data_CountBGERows,
         Data_CountGERowsBatch,
-        Data_CountFixedLengthRd
+        Data_CountFixedLengthRd,
+        Data_CountGERowsLast30DaysBatch
     }
 
     /**
@@ -163,7 +164,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
     /**
      * @description Called by the batch job to process an individual telemetry type
-     * Submits specific feature teletry statistics back to the License Management Org to assist
+     * Submits specific feature telemetry statistics back to the License Management Org to assist
      * with understanding how our customers are using NPSP functionality.
      * Each feature below must be matched to a SubscriberToLmo feature of the same name.
      * @param telemetryCategory
@@ -208,10 +209,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
             when Data_CountBGERows {
                 handleBGECount();
-            }
-
-            when Data_CountGERowsBatch {
-                handleGEBatchCount();
             }
 
             when Data_CountErrorLog {
@@ -416,25 +413,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeCount);
         } catch (Exception ex) {
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);
-        }
-    }
-
-    /**
-     * @description Total number of Gift Entry Data Import records connected to a new GE batch (version = 2)
-     * created in the last 30 days
-     */
-    private void handleGEBatchCount() {
-        try {
-            Integer geBatchDataImportCount = Database.countQuery(
-                'SELECT count() FROM DataImport__c '+
-                'WHERE CreatedDate = Last_n_days:30 '+
-                'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
-                'AND NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c >= 2'
-            );
-            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(),
-                geBatchDataImportCount);
-        } catch (Exception ex) {
-            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), -1);
         }
     }
 
