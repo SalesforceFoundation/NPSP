@@ -224,24 +224,27 @@ public inherited sharing class ALLO_AllocationsDMLService {
         List<Database.DeleteResult> deletes = null;
         boolean dmlErrorsPresent = false;
 
+        // Nothing to do, return
+        if (allocationsWrapper.allocationsForDelete == null || allocationsWrapper.allocationsForDelete.isEmpty()) {
+            return dmlErrorsPresent;
+        }
+
         // Process Deletions
-        if (allocationsWrapper.allocationsForDelete != null && allocationsWrapper.allocationsForDelete.size() > 0) {
-            deletes = Database.delete(allocationsWrapper.allocationsForDelete, false);
+        deletes = Database.delete(allocationsWrapper.allocationsForDelete, false);
 
-            // Handle Deletes and Update Maps and Errors
-            for (Integer i=0; i < deletes.size(); i++) {
-                Allocation__c deletedAlloc = allocationsWrapper.allocationsForDelete[i];
-                Database.DeleteResult delResult = deletes[i];
-                Id parentRecordId = (deletedAlloc.Opportunity__c != null) ? deletedAlloc.Opportunity__c : deletedAlloc.Payment__c;
-                allRecordIdsWithDML.add(parentRecordId);
+        // Handle Deletes and Update Maps and Errors
+        for (Integer i=0; i < deletes.size(); i++) {
+            Allocation__c deletedAlloc = allocationsWrapper.allocationsForDelete[i];
+            Database.DeleteResult delResult = deletes[i];
+            Id parentRecordId = (deletedAlloc.Opportunity__c != null) ? deletedAlloc.Opportunity__c : deletedAlloc.Payment__c;
+            allRecordIdsWithDML.add(parentRecordId);
 
-                if (delResult.isSuccess()) {
-                    // Removes the successfully deleted Allocation from the appropriate Allocations List
-                    allocationsWrapper.removeAllocation(deletedAlloc);
-                } else {
-                    dmlErrorsPresent = true;
-                    handleError(parentRecordId, deletedAlloc, delResult);
-                }
+            if (delResult.isSuccess()) {
+                // Removes the successfully deleted Allocation from the appropriate Allocations List
+                allocationsWrapper.removeAllocation(deletedAlloc);
+            } else {
+                dmlErrorsPresent = true;
+                handleError(parentRecordId, deletedAlloc, delResult);
             }
         }
 
@@ -258,23 +261,26 @@ public inherited sharing class ALLO_AllocationsDMLService {
         List<Database.SaveResult> inserts = null;
         Boolean dmlErrorsPresent = false;
 
-        // Process Inserts
-        if (allocationsWrapper.allocationsForInsert != null && allocationsWrapper.allocationsForInsert.size() > 0) {
-            inserts = Database.insert(allocationsWrapper.allocationsForInsert, false);
+        // Nothing to do, return
+        if (allocationsWrapper.allocationsForInsert == null || allocationsWrapper.allocationsForInsert.isEmpty()) {
+            return dmlErrorsPresent;
+        }
 
-            // Handle Inserts and Update Maps and Errors
-            for (Integer i=0; i < inserts.size(); i++) {
-                Allocation__c insertedAlloc = allocationsWrapper.allocationsForInsert[i];
-                Database.SaveResult insResult = inserts[i];
-                Id parentRecordId = (insertedAlloc.Opportunity__c != null) ? insertedAlloc.Opportunity__c : insertedAlloc.Payment__c;
-                allRecordIdsWithDML.add(parentRecordId);
-                if (insResult.isSuccess()) {
-                    // add the successfully inserted Allocation to the Opportunity Allocations List, indexed by the Opportunity Id
-                    allocationsWrapper.addAllocation(insertedAlloc);
-                } else {
-                        dmlErrorsPresent = true;
-                        handleError(parentRecordId, insertedAlloc, insResult);
-                }
+        // Process Inserts
+        inserts = Database.insert(allocationsWrapper.allocationsForInsert, false);
+
+        // Handle Inserts and Update Maps and Errors
+        for (Integer i=0; i < inserts.size(); i++) {
+            Allocation__c insertedAlloc = allocationsWrapper.allocationsForInsert[i];
+            Database.SaveResult insResult = inserts[i];
+            Id parentRecordId = (insertedAlloc.Opportunity__c != null) ? insertedAlloc.Opportunity__c : insertedAlloc.Payment__c;
+            allRecordIdsWithDML.add(parentRecordId);
+            if (insResult.isSuccess()) {
+                // add the successfully inserted Allocation to the Opportunity Allocations List, indexed by the Opportunity Id
+                allocationsWrapper.addAllocation(insertedAlloc);
+            } else {
+                    dmlErrorsPresent = true;
+                    handleError(parentRecordId, insertedAlloc, insResult);
             }
         }
 
@@ -291,26 +297,30 @@ public inherited sharing class ALLO_AllocationsDMLService {
         List<Database.SaveResult> updates = null;
         Boolean dmlErrorsPresent = false;
 
+        // Nothing to do, return
+        if (allocationsWrapper.allocationsForUpdate == null || allocationsWrapper.allocationsForUpdate.isEmpty()) {
+            return dmlErrorsPresent;
+        }
+
         // Process Updates
-        if (allocationsWrapper.allocationsForUpdate != null && allocationsWrapper.allocationsForUpdate.size() > 0) {
-            updates = Database.update(allocationsWrapper.allocationsForUpdate, false);
+        updates = Database.update(allocationsWrapper.allocationsForUpdate, false);
 
-            // Handle Updates and Update Maps and Errors
-            for (Integer i=0; i < updates.size(); i++) {
-                Allocation__c updatedAlloc = allocationsWrapper.allocationsForUpdate[i];
-                Database.SaveResult updResult = updates[i];
-                Id parentRecordId = (updatedAlloc.Opportunity__c != null) ? updatedAlloc.Opportunity__c : updatedAlloc.Payment__c;
-                allRecordIdsWithDML.add(parentRecordId);
+        // Handle Updates and Update Maps and Errors
+        for (Integer i=0; i < updates.size(); i++) {
+            Allocation__c updatedAlloc = allocationsWrapper.allocationsForUpdate[i];
+            Database.SaveResult updResult = updates[i];
+            Id parentRecordId = (updatedAlloc.Opportunity__c != null) ? updatedAlloc.Opportunity__c : updatedAlloc.Payment__c;
+            allRecordIdsWithDML.add(parentRecordId);
 
-                if (updResult.isSuccess()) {
-                    // Replaces the Updated Allocation in the Opportunity Allocations List, indexed by Opportunity Id
-                    allocationsWrapper.replaceAllocation(updatedAlloc);
-                } else {
-                    dmlErrorsPresent = true;
-                    handleError(parentRecordId, updatedAlloc, updResult);
-                }
+            if (updResult.isSuccess()) {
+                // Replaces the Updated Allocation in the Opportunity Allocations List, indexed by Opportunity Id
+                allocationsWrapper.replaceAllocation(updatedAlloc);
+            } else {
+                dmlErrorsPresent = true;
+                handleError(parentRecordId, updatedAlloc, updResult);
             }
         }
+
         return dmlErrorsPresent;
     }
 
