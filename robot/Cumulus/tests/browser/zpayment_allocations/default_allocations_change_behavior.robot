@@ -46,8 +46,6 @@ Allocations Behavior when $0 with Default Allocations Disabled
 
 ***Keywords***
 Enable Default Allocations
-    &{def_gau} =  API Create GAU    Name=default gau
-    Set suite variable              &{def_gau}
     API Modify Allocations Setting
     ...               Default_Allocations_Enabled__c=true
     ...               Default__c=&{def_gau}[Id]    
@@ -55,7 +53,9 @@ Enable Default Allocations
     
 Disable Default Allocations
     API Modify Allocations Setting
-    ...               Default_Allocations_Enabled__c=false    
+    ...               Default_Allocations_Enabled__c=false
+    ...               Default__c=&{def_gau}[Id]    
+    ...               Payment_Allocations_Enabled__c=true    
 
 Disable Default And Payment Allocations
     API Modify Allocations Setting
@@ -64,6 +64,8 @@ Disable Default And Payment Allocations
     ...               Default__c=None
 
 Setup Test Data
-    &{gau} =              API Create GAU  
-    Set suite variable    &{gau}  
+    &{def_gau} =  API Create GAU    Name=default gau
+    Set suite variable              &{def_gau}
+    &{gau} =      API Create GAU  
+    Set suite variable              &{gau}  
     
