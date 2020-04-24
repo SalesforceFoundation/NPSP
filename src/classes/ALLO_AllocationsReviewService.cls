@@ -109,15 +109,17 @@ public inherited sharing class ALLO_AllocationsReviewService {
             // As soon as we find at least one reason to review we stop looking
             return true;
         }
-        // Payment Allocations are reviewed if Payment Allocations is enabled
-        if (ALLO_AllocationsSettings.getSettings().isPaymentAllocationsEnabled()) {
-            if (opp.npe01__OppPayment__r != null) {
-                for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
-                    List<Allocation__c> paymentAllocs = allocationsWrapper.getPaymentAllocationsFor(payment);
-                    if (isRequiresReview(payment, paymentAllocs, oppAllocs)) {
-                        return true;
-                    }
-                }
+        // Done with checks if Payment Allocations is not enabled, or no Payments are present.
+        if (!ALLO_AllocationsSettings.getSettings().isPaymentAllocationsEnabled() ||
+            opp.npe01__OppPayment__r == null) {
+                return false;
+        }
+
+        // Review Payment Allocations
+        for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
+            List<Allocation__c> paymentAllocs = allocationsWrapper.getPaymentAllocationsFor(payment);
+            if (isRequiresReview(payment, paymentAllocs, oppAllocs)) {
+                return true;
             }
         }
 
