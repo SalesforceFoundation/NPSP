@@ -50,7 +50,7 @@ import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -360,7 +360,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {string} message: Message to display in the UI
     */
     dispatchdDisablePaymentServicesWidgetEvent(message) {
-        fireEvent(this, 'disableGeFormWidgetTokenizeCard',
+        fireEvent(this, DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
             { detail: { message: message } });
     }
 

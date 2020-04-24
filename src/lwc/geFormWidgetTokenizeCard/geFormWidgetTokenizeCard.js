@@ -6,7 +6,7 @@ import { format } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 
@@ -30,11 +30,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     renderedCallback() {
         this.registerPostMessageListener();
-        registerListener('disableGeFormWidgetTokenizeCard', this.handleDisableWidget, this);
+        registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleDisableWidget, this);
     }
 
     disconnectedCallback() {
-        unregisterListener('disableGeFormWidgetTokenizeCard');
+        unregisterListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME);
     }
 
     /*******************************************************************************
