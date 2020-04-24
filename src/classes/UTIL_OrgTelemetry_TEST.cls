@@ -515,31 +515,6 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
-     * @description Confirms BGE row counts related to new Gift Entry batches are calculated correctly
-     */
-    @IsTest
-    private static void validateCountOfNewGiftEntryBGERowsTelemetry() {
-        Test.startTest();
-        Integer currQueryCount = Limits.getQueries();
-
-        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountGERowsBatch);
-
-        System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
-        Test.stopTest();
-
-        System.assertEquals(
-            NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountGERowsLast30DaysBatch and set correctly'
-        );
-    }
-
-    /**
      * @description Builds test data import records
      */
     private static List<DataImport__c> buildDataImports(Integer numDataImports, Id diBatchId) {
