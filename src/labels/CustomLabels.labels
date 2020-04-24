@@ -2837,7 +2837,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloSuccessfulRecordRetry</shortDescription>
-        <value>Allocations reprocessing completed successfully. </value>
+        <value>Allocations reprocessing completed successfully.</value>
     </labels>
     <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
