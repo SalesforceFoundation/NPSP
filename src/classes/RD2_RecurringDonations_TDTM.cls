@@ -93,6 +93,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
+        autoPopulateAccounts(rds, oldRds, triggerAction);
         transformDataBeforeInsert(rds, triggerAction);
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
@@ -125,6 +126,22 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             namingService.autogenerateNamesOnChange(rds, oldRds);
+        }
+    }
+
+    /***
+    * @description Autopopulates accounts on the Recurring donation if contact only is entered
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    public void autoPopulateAccounts(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            namingService.autoPopulateAccounts(rds);
+
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            namingService.autoPopulateAccountsOnChange(rds, oldRds);
         }
     }
 

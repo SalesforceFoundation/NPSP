@@ -91,7 +91,7 @@ public with sharing class RD2_NamingService {
             return userDefaultCurrencySymbol;
         }
         set;
-    }    
+    }
 
     /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
@@ -115,6 +115,27 @@ public with sharing class RD2_NamingService {
 
         autogenerateNames(changedRds);
     }
+
+     /***
+    * @description AutoPopulates account on Recurring Donations  if fields related to account or contact have changed
+    * @param rds New/changed Recurring Donations
+    * @param oldRds Old Recurring Donations
+    * @return none
+    */
+    public void autoPopulateAccountsOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
+
+        Map<Id, npe03__Recurring_Donation__c> oldRdById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
+        List<npe03__Recurring_Donation__c> changedRds = new List<npe03__Recurring_Donation__c>();
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (hasChanged(rd, oldRdById.get(rd.Id))) {
+                changedRds.add(rd);
+            }
+        }
+
+        autoPopulateAccounts(changedRds);
+    }
+
 
     /***
     * @description Determines if Name construct fields have changed
@@ -151,11 +172,11 @@ public with sharing class RD2_NamingService {
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.Name = constructName(rd, donorById);
         }
-    }   
+    }
 
     /***
     * @description Constructs recurring donation name
-    * Name formatting: 
+    * Name formatting:
     *   If multi-currency, then "{!DonorName} {ISO Code} {!Amount} - Recurring".
     *   Otherwise, "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
     *
@@ -170,15 +191,48 @@ public with sharing class RD2_NamingService {
 
         String nameSuffix = ' ' + formatAmount(rd) + ' - ' + System.Label.RecurringDonationNameSuffix;
 
-        String donorName = donor == null 
-            ? '' 
+        String donorName = donor == null
+            ? ''
             : donor.Name.abbreviate(MAX_NAME_LENGTH - nameSuffix.length());
 
         return donorName + nameSuffix;
     }
 
     /***
-    * @description Formats amount used to construct the name    
+    * @description Autopopulates Accounts in the Recurring Donations if only contact is populated
+    * @param rds New Recurring Donation records
+    * @return none
+    */
+    public void autoPopulateAccounts(List<npe03__Recurring_Donation__c> rds) {
+        if (rds == null || rds.isEmpty()) {
+            return;
+        }
+
+        Map<Id, RD2_Donor.Record> donorById = donorGateway.getDonors(rds);
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.npe03__Organization__c == null ) {
+                rd.npe03__Organization__c = populateAccountFromContact(rd, donorById);
+            }
+        }
+    }
+
+    /***
+    * @description Populates Account from contact if account is null in Recurring Donations
+    * @param rd Recurring Donation record
+    * @param donorById Account/Contact donor record by Id
+    * @return the account id of the Recurring Donation record
+    */
+    private Id populateAccountFromContact(npe03__Recurring_Donation__c rd,  Map<Id, RD2_Donor.Record> donorById) {
+        if (rd.npe03__Contact__c == null ) {
+            return null;
+        }
+        RD2_Donor.Record donor = donorById.get(rd.npe03__Contact__c);
+        return donor.accId;
+    }
+
+    /***
+    * @description Formats amount used to construct the name
     * @param rd Recurring Donation record
     * @return String Formatted amount
     */
@@ -200,7 +254,7 @@ public with sharing class RD2_NamingService {
         } else {
             if (String.isNotBlank(userDefaultCurrencySymbol) && userDefaultCurrencySymbol.length() > 1) {
                 formattedAmount = userDefaultCurrencySymbol + ' ' + formattedAmount;
-                
+
             } else {
                 formattedAmount = userDefaultCurrencySymbol + formattedAmount;
             }

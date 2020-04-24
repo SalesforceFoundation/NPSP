@@ -129,6 +129,34 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assert(rd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
     }
 
+    /***
+    * @description Verifies if account is auto populated on Recurring Donations when only
+    * contact is entered.
+    */
+    @isTest
+    private static void shouldAutoPopulateAccountWhenContactOnlyEnteredInRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.id)
+            .withAmount(100)
+            .withDefaultValues()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+
+    }
+
 
     /****
     * @description Verifies integration dispatcher is called

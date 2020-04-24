@@ -49,6 +49,7 @@ public with sharing class RD2_Donor {
     public class Record {
         public Id recordId { get; private set; }
         public String name { get; private set; }
+        public Id accId { get; private set; }
 
         /***
         * @description Constructor
@@ -58,6 +59,12 @@ public with sharing class RD2_Donor {
         public Record(Id recordId, String name) {
             this.recordId = recordId;
             this.name = name;
+        }
+
+        public Record(Id recordId, String name, id accId) {
+            this.recordId = recordId;
+            this.name = name;
+            this.accId = accId;
         }
     }
 
@@ -92,11 +99,11 @@ public with sharing class RD2_Donor {
             }
 
             for (Contact c : [
-                SELECT Name
+                SELECT Name, AccountId
                 FROM Contact
                 WHERE Id IN :contactIds
             ]) {
-                donorById.put(c.Id, new Record(c.Id, c.Name));
+                donorById.put(c.Id, new Record(c.Id, c.Name, c.AccountId));
             }
 
             return donorById;
