@@ -147,8 +147,8 @@ API Create GAU Allocation
     [Arguments]      ${gau_id}    ${opp_id}     &{fields}
     ${ns} =          Get Npsp Namespace Prefix
     ${all_id} =      Salesforce Insert  ${ns}Allocation__c
-    ...              General_Accounting_Unit__c=${gau_id}
-    ...              Opportunity__c=${opp_id}
+    ...              ${ns}General_Accounting_Unit__c=${gau_id}
+    ...              ${ns}Opportunity__c=${opp_id}
     ...              &{fields} 
     &{gau_alloc} =   Salesforce Get  ${ns}Allocation__c  ${all_id}
     [return]         &{gau_alloc} 

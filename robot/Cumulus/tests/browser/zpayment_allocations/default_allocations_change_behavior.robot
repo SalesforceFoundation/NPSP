@@ -36,7 +36,7 @@ Allocations Behavior when $0 with Default Allocations Disabled
     Disable Default Allocations
     Setupdata                   contact2                    ${contact2_fields}     ${opportunity2_fields}
     &{allocation} =             API Create GAU Allocation   &{gau}[Id]             ${data}[contact2_opportunity][Id]    
-    ...                         Percent__c=0.0 
+    ...                         ${ns}Percent__c=0.0 
     Go To Page                  Detail
     ...                         Opportunity
     ...                         object_id=${data}[contact2_opportunity][Id]
@@ -47,25 +47,28 @@ Allocations Behavior when $0 with Default Allocations Disabled
 ***Keywords***
 Enable Default Allocations
     API Modify Allocations Setting
-    ...               Default_Allocations_Enabled__c=true
-    ...               Default__c=&{def_gau}[Id]    
-    ...               Payment_Allocations_Enabled__c=true	
+    ...               ${ns}Default_Allocations_Enabled__c=true
+    ...               ${ns}Default__c=&{def_gau}[Id]    
+    ...               ${ns}Payment_Allocations_Enabled__c=true	
     
 Disable Default Allocations
     API Modify Allocations Setting
-    ...               Default_Allocations_Enabled__c=false
-    ...               Default__c=&{def_gau}[Id]    
-    ...               Payment_Allocations_Enabled__c=true    
+    ...               ${ns}Default_Allocations_Enabled__c=false
+    ...               ${ns}Default__c=&{def_gau}[Id]    
+    ...               ${ns}Payment_Allocations_Enabled__c=true    
 
 Disable Default And Payment Allocations
     API Modify Allocations Setting
-    ...               Default_Allocations_Enabled__c=false
-    ...               Payment_Allocations_Enabled__c=false
-    ...               Default__c=None
+    ...               ${ns}Default_Allocations_Enabled__c=false
+    ...               ${ns}Payment_Allocations_Enabled__c=false
+    ...               ${ns}Default__c=None
 
 Setup Test Data
     &{def_gau} =  API Create GAU    Name=default gau
     Set suite variable              &{def_gau}
     &{gau} =      API Create GAU  
-    Set suite variable              &{gau}  
+    Set suite variable              &{gau} 
+    ${ns} =       Get Npsp Namespace Prefix
+    Set suite variable              ${ns}
+
     
