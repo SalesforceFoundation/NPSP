@@ -5868,7 +5868,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure msg description for system error &amp; uncertain if card charged - Part 3</shortDescription>
         <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>If the card was charged, wait for {0} to send the processed payment to Salesforce, and update the gift and donor records as needed.</value>
+        <value>If the card was charged, note the Transaction ID in {0}, and search for records with that ID in Salesforce. Update the gift and donor records as needed.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart4</fullName>
