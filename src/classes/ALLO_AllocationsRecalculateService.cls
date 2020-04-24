@@ -236,9 +236,12 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
                 }
                 remainder -= (allocation.Amount__c != null) ? allocation.Amount__c : 0;
             }
+            Boolean isRemainderAndAmountOppositeSign = (amount >= 0 && remainder < 0) || (amount < 0 && remainder > 0);
+            Boolean isRemainderAndAmountSameSign = (amount >= 0 && remainder > 0) || (amount < 0 && remainder < 0);
+            Boolean isRemainderAndAmountZero = amount == 0 && remainder == 0;
 
             //if our remainder is not the same sign as the amount, only create percentage based Allocations
-            if ((amount >= 0 && remainder < 0) || (amount < 0 && remainder > 0)) {
+            if (isRemainderAndAmountOppositeSign) {
                 remainder = amount;
 
                 //TODO: log error: not able to create allocations. chatter post?
@@ -249,17 +252,17 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
                     }
                 }
 
-                if (ALLO_AllocationsSettings.getSettings().isDefaultAllocationsEnabled() && ((amount >= 0 && remainder > 0) || (amount < 0 && remainder < 0))) {
+                if (ALLO_AllocationsSettings.getSettings().isDefaultAllocationsEnabled() && isRemainderAndAmountSameSign) {
                     Allocation__c defaultAllo = makeDefaultAllocation(targetObj, remainder);
                     proposedAllocations.add(defaultAllo);
                 }
 
             //Create Default Allocation if needed
-            } else if (ALLO_AllocationsSettings.getSettings().isDefaultAllocationsEnabled() && ((amount >= 0 && remainder > 0)||(amount < 0 && remainder < 0))) {
+            } else if (ALLO_AllocationsSettings.getSettings().isDefaultAllocationsEnabled() && isRemainderAndAmountSameSign) {
                 proposedAllocations.add(makeDefaultAllocation(targetObj, remainder));
                 proposedAllocations.addAll((List<Allocation__c>)listAlloForInsert);
             //add objects to DML wrapper in all other cases (no remainder, or positive remainder without default allocations enabled)
-            } else if (ALLO_AllocationsSettings.getSettings().isDefaultAllocationsEnabled() && amount == 0 && remainder == 0 && listAlloForInsert.isEmpty()) {
+            } else if (ALLO_AllocationsSettings.getSettings().isDefaultAllocationsEnabled() && isRemainderAndAmountZero && listAlloForInsert.isEmpty()) {
                 // Adding Default Allocation for $0
                 proposedAllocations.add(makeDefaultAllocation(targetObj, 0));
             } else {
@@ -317,8 +320,9 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
                     updatesToAllocation = true;
                 }
 
+                Boolean isAllocAndParentSignDifferent = curAllocAmount != null && ((curAllocAmount > 0 && parentAmount < 0) || (curAllocAmount < 0 && parentAmount > 0));
                 // Amount requires sign update.  Only allowed for Payments...
-                if (allocation.Payment__c != null && curAllocAmount != null && ((curAllocAmount > 0 && parentAmount < 0) || (curAllocAmount < 0 && parentAmount > 0))) {
+                if (allocation.Payment__c != null && isAllocAndParentSignDifferent) {
                     curAllocAmount = -1 * curAllocAmount;
                     updatesToAllocation = true;
                 }
@@ -345,7 +349,9 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
             allocationsWrapper.addRecordError(parentObj, Label.alloPercentExceed100);
             errorsFound = true;
         }
-        if ((sumOfAllocations > parentAmount && parentAmount > 0) || (sumofAllocations < parentAmount && parentAmount < 0)) {
+
+        Boolean isParentAmountExceeded = (sumOfAllocations > parentAmount && parentAmount > 0) || (sumofAllocations < parentAmount && parentAmount < 0);
+        if (isParentAmountExceeded) {
             allocationsWrapper.addRecordError(parentObj, Label.alloOverallocatedError);
             errorsFound = true;
         }
