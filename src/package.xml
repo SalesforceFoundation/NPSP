@@ -1036,6 +1036,7 @@
         <members>DataImport__c.Donation_Date__c</members>
         <members>DataImport__c.Donation_Description__c</members>
         <members>DataImport__c.Donation_Donor__c</members>
+        <members>DataImport__c.Donation_Elevate_Recurring_ID__c</members>
         <members>DataImport__c.Donation_Member_Level__c</members>
         <members>DataImport__c.Donation_Membership_End_Date__c</members>
         <members>DataImport__c.Donation_Membership_Origin__c</members>
@@ -1217,6 +1218,7 @@
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
         <members>Opportunity.DisableContactRoleAutomation__c</members>
+        <members>Opportunity.Elevate_Recurring_ID_c__c</members>
         <members>Opportunity.Fair_Market_Value__c</members>
         <members>Opportunity.Gift_Strategy__c</members>
         <members>Opportunity.Grant_Contract_Date__c</members>

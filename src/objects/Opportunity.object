@@ -856,6 +856,19 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Elevate_Recurring_ID_c__c</fullName>
+        <description>The external, unique ID of the Recurring Donation in Elevate that this donation Opportunity is linked to.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>The external, unique ID of the Recurring Donation in Elevate that this donation Opportunity is linked to.</inlineHelpText>
+        <label>Elevate_Recurring_ID__c</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Fair_Market_Value__c</fullName>
         <description>The Fair Market Value of an In-Kind gift.</description>
         <externalId>false</externalId>
