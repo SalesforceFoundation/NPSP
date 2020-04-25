@@ -1217,8 +1217,8 @@
         <members>Opportunity.Ask_Date__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
+        <members>Opportunity.CommitmentId__c</members>
         <members>Opportunity.DisableContactRoleAutomation__c</members>
-        <members>Opportunity.Elevate_Recurring_ID_c__c</members>
         <members>Opportunity.Fair_Market_Value__c</members>
         <members>Opportunity.Gift_Strategy__c</members>
         <members>Opportunity.Grant_Contract_Date__c</members>
@@ -2888,6 +2888,7 @@
         <members>Data_Import_Field_Mapping.Donation_Amount</members>
         <members>Data_Import_Field_Mapping.Donation_Date</members>
         <members>Data_Import_Field_Mapping.Donation_Description</members>
+        <members>Data_Import_Field_Mapping.Donation_Elevate_Recurring_ID</members>
         <members>Data_Import_Field_Mapping.Donation_Member_Level</members>
         <members>Data_Import_Field_Mapping.Donation_Membership_End_Date</members>
         <members>Data_Import_Field_Mapping.Donation_Membership_Origin</members>
