@@ -32,7 +32,7 @@
 */
 @IsTest
 public with sharing class PS_IntegrationServiceConfig_TEST {
-
+    
     /***
     * @description Stub for the integration service config instance
     */
