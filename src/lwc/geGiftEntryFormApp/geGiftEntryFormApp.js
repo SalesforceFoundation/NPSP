@@ -61,6 +61,7 @@ const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     REFUNDISSUED: 'REFUNDISSUED'
 });
 const PAYMENT_SUCCESS_STATUS_CODE = 201;
+const BAD_REQUEST_STATUS_CODE = 400;
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -200,6 +201,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
         return inMemoryDataImport;
     }
+
     /*******************************************************************************
     * @description Method attempts to make a purchase call to Payment
     * Services. Immediately attempts to the charge the card provided in the Payment
@@ -220,35 +222,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
                 if (isNotEmpty(errors)) {
                     this.isFailedPurchase = true;
-
-                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
-                    let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
-
-                    // We use the hex value for line feed (new line) 0x0A
-                    let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
-
-                    const form = this.template.querySelector('c-ge-form-renderer');
-                    form.showSpinner = false;
-                    fireEvent(null, 'paymentError', {
-                        error: {
-                            message: splitErrorResponse,
-                            isObject: true
-                        }
-                    });
+                    this.handleFailedPurchaseCall(purchaseResponse);
                 } else {
                     this.isFailedPurchase = false;
-                    if (hasNestedProperty(purchaseResponse, 'body', 'errors')) {
-                        this.catchPurchaseCallValidationErrors(purchaseResponse);
-                    } else {
-                        const errorMessage =
-                            this.CUSTOM_LABELS.commonPaymentServices + ': ' +
-                            this.getFailedPurchaseMessage(purchaseResponse)
-            
-                        throw new HttpRequestError(
-                            errorMessage,
-                            purchaseResponse.status,
-                            purchaseResponse.statusCode);
-                    }
                 }
             }
         }
@@ -292,6 +268,65 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
 
         return errors;
+    }
+
+    /*******************************************************************************
+    * @description Method attempts to handle a failed purchase call response.
+    *
+    * @param {object} purchaseResponse: Response from
+    * GE_GiftEntryController.sendPurchaseRequest()
+    */
+    handleFailedPurchaseCall(purchaseResponse) {
+        const hasPurchaseCallValidationErrors = purchaseResponse.statusCode === BAD_REQUEST_STATUS_CODE;
+        if (hasPurchaseCallValidationErrors) {
+            this.catchPurchaseCallValidationErrors(purchaseResponse);
+        } else {
+            this.throwHttpRequestError(purchaseResponse);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Dispatch an event to the form renderer whenever we have a field
+    * validation error from the purchase call. Various http 400 errors. Thus far
+    * the body of the response from these calls have had an errors array property.
+    *
+    * @param {object} purchaseResponse: Response from
+    * GE_GiftEntryController.sendPurchaseRequest()
+    */
+    catchPurchaseCallValidationErrors(purchaseResponse) {
+        let errors = this.getFailedPurchaseMessage(purchaseResponse);
+        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
+        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+
+        // We use the hex value for line feed (new line) 0x0A
+        let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
+
+        const form = this.template.querySelector('c-ge-form-renderer');
+        form.showSpinner = false;
+        fireEvent(null, 'paymentError', {
+            error: {
+                message: splitErrorResponse,
+                isObject: true
+            }
+        });
+    }
+
+    /*******************************************************************************
+    * @description Throw an HttpRequestError for non-400 and non-200 responses from
+    * a purchase call.
+    *
+    * @param {object} purchaseResponse: Response from
+    * GE_GiftEntryController.sendPurchaseRequest()
+    */
+    throwHttpRequestError(purchaseResponse) {
+        const errorMessage =
+            this.CUSTOM_LABELS.commonPaymentServices + ': ' +
+            this.getFailedPurchaseMessage(purchaseResponse)
+
+        throw new HttpRequestError(
+            errorMessage,
+            purchaseResponse.status,
+            purchaseResponse.statusCode);
     }
 
     /*******************************************************************************
@@ -414,24 +449,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             response.errorMessage ||
             JSON.stringify(response.body.errors.map(error => error.message)) ||
             this.CUSTOM_LABELS.commonUnknownError;
-    }
-
-    catchPurchaseCallValidationErrors(purchaseResponse) {
-        let errors = this.getFailedPurchaseMessage(purchaseResponse);
-        let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
-        let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
-
-        // We use the hex value for line feed (new line) 0x0A
-        let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
-
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.showSpinner = false;
-        fireEvent(null, 'paymentError', {
-            error: {
-                message: splitErrorResponse,
-                isObject: true
-            }
-        });
     }
 
     /*******************************************************************************
