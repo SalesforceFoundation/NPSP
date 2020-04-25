@@ -32,6 +32,11 @@ project:
         # npe5
         - github: https://github.com/SalesforceFoundation/Affiliations
 
+sources:
+    pmm:
+        github: "https://github.com/SalesforceFoundation/pmm"
+
+
 tasks:
     download_ldv_tests:
         description: Downloads the NPSP-LDV-Tests repository
@@ -62,6 +67,14 @@ tasks:
         group: Salesforce Metadata
         options:
             path: unpackaged/config/trial
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_pmm_trial_config:
+        description: Deploys the PMM customizations for the trial metadata. PMM must be installed.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/config/trial_pmm
             namespace_inject: $project_config.project__package__namespace
 
     deploy_qa_config:
@@ -571,7 +584,7 @@ flows:
             3:
                 task: deploy_dev_config_delete
             4:
-                task: deploy_trial_config
+                flow: config_trial
             5:
                 task: npsp_default_settings
             6:
@@ -594,7 +607,7 @@ flows:
             3:
                 task: deploy_dev_config_delete
             4:
-                task: deploy_trial_config
+                flow: config_trial
             5:
                 task: npsp_default_settings
             6:
@@ -625,6 +638,28 @@ flows:
                 flow: config_qa_namespaced
             4:
                 task: snapshot_changes
+
+    config_trial:
+        steps:
+            1:
+                task: deploy_trial_config
+                ui_options:
+                    name: "NPSP Trial Experience"
+            2:
+                task: update_dependencies
+                options:
+                    dependencies:
+                        - github: "https://github.com/SalesforceFoundation/pmm"
+            3:
+                task: deploy_pmm_trial_config
+                ui_options:
+                    name: "Configure Program Management Module"
+            4:
+                task: pmm:deploy_customer_profiles
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: "Install Program Management Module Profile"
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
@@ -698,9 +733,13 @@ flows:
             2:
                 task: deploy_dev_config_delete
             3:
-                task: deploy_trial_config
+                flow: config_trial
                 options:
-                    unmanaged: False
+                    deploy_trial_config:
+                        unmanaged: False
+                    deploy_pmm_trial_config:
+                        unmanaged: False
+
             4:
                 task: update_admin_profile
                 options:
@@ -919,6 +958,11 @@ plans:
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
+            6:
+                task: update_dependencies
+                options:
+                    dependencies:
+                        - github: "https://github.com/SalesforceFoundation/pmm"
     new_org:
         slug: trailhead
         title: Install NPSP for Trailhead Playgrounds
