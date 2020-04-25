@@ -3611,6 +3611,7 @@
         <members>utilExpandableSection</members>
         <members>utilIllustration</members>
         <members>utilInput</members>
+        <members>utilNumberFormatter</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
