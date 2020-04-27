@@ -154,7 +154,7 @@ private class BDI_MigrationMappingHelper_TEST {
                         BDI_MigrationMappingUtility.MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
 
         Map <String, String> objectFieldMappingStrings =
-                helper.getDataImportObjectDeveloperNameByLabel();
+                helper.getDataImportObjectDeveloperNamesByLabel();
 
         if (existingMigratedObjectMappings.size() > 0) {
             System.assert(objectFieldMappingStrings.size() > 0,

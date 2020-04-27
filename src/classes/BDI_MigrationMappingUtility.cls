@@ -384,7 +384,7 @@ public with sharing class BDI_MigrationMappingUtility {
         queuedMetadataTypesForDeploy.clear();
 
         Map<String, String> dataImportObjectDeveloperNameByLabel =
-                helper.getDataImportObjectDeveloperNameByLabel();
+                helper.getDataImportObjectDeveloperNamesByLabel();
         Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
                 new Map<String, Data_Import_Field_Mapping__mdt>();
 
