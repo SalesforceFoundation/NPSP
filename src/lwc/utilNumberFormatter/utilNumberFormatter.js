@@ -3,7 +3,8 @@ import CURRENCY from '@salesforce/i18n/currency';
 import { isNull } from 'c/util';
 
 // map for translating the currency amt into the lowest denominator; e.g. dollars into cents
-const currencyMultiplier = new Map([['USD', 100]]);
+const DEFAULT_MULTIPLIER = 100;
+const currencyMultiplier = new Map([['USD', DEFAULT_MULTIPLIER]]);
 
 const numberFormat = (locale, currency) => {
     return new Intl.NumberFormat(locale, {
@@ -42,7 +43,7 @@ const getNumberAsCurrencyByCode = (amount, currencyCode) => {
 * @param {integer} number: Number to convert into lowest common denominator
 */
 const getCurrencyLowestCommonDenominator = (number) => {
-    let multiplier = isNull(currencyMultiplier.get(CURRENCY)) ? 100 : currencyMultiplier.get(CURRENCY);
+    let multiplier = isNull(currencyMultiplier.get(CURRENCY)) ? DEFAULT_MULTIPLIER : currencyMultiplier.get(CURRENCY);
     return number * multiplier;
 }
 
