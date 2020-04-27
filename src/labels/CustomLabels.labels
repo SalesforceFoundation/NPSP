@@ -5458,6 +5458,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You are currently updating: </value>
     </labels>
     <labels>
+        <fullName>geBodyPaymentNotProcessingPayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating card is not being charged</shortDescription>
+        <value>You aren't processing a card payment for this gift.</value>
+    </labels>
+    <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5616,6 +5624,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Enter a single gift button</shortDescription>
         <value>New Single Gift</value>
+    </labels>
+    <labels>
+        <fullName>geButtonPaymentAlternate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to toggle payment processing fields</shortDescription>
+        <value>Alternatively, charge a card now.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonPaymentDoNotCharge</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to toggle off payment processing</shortDescription>
+        <value>Do Not Charge Card</value>
     </labels>
     <labels>
         <fullName>geButtonSaveNewGift</fullName>
