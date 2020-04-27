@@ -12,6 +12,7 @@ import { isNotEmpty, format } from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 import { LABEL_NEW_LINE } from 'c/geConstants';
+import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 
 // Schema Imports
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
@@ -332,7 +333,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
 
         return JSON.stringify({
-            amount: this.dataImportRecord[DONATION_AMOUNT__C],
+            amount: getCurrencyLowestCommonDenominator(this.dataImportRecord[DONATION_AMOUNT__C]),
             email: 'test@test.test',
             firstName: firstName,
             lastName: lastName,
