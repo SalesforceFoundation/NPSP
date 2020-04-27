@@ -10,14 +10,46 @@
 
                     <lightning-layout-item size='12'>
                         <div class='credit-card-header slds-p-vertical_small slds-p-horizontal_x-small'>
-                            <h1 class="slds-text-body_regular">{CUSTOM_LABELS.commonPaymentServices}</h1>
+                            <lightning-layout vertical-align='center'>
+                                <lightning-layout-item size='6'>
+                                    <h1 class='slds-text-body_regular'>{CUSTOM_LABELS.commonPaymentServices}</h1>
+                                </lightning-layout-item>
+                                <lightning-layout-item size='6'>
+                                    <button if:false={hasUserDisabledWidget}
+                                            onclick={userDisableWidget}
+                                            class='slds-button slds-button_base slds-float_right do-not-charge-card-button'>
+                                        Do Not Charge Card
+                                        <lightning-icon icon-name='utility:close'
+                                                        alternative-text='Do Not Charge Card'
+                                                        class='do-not-charge-card-icon'
+                                                        size='xx-small'
+                                                        title='Do Not Charge Card'>
+                                        </lightning-icon>
+                                    </button>
+                                </lightning-layout-item>
+                            </lightning-layout>
                         </div>
                     </lightning-layout-item>
 
                     <lightning-layout-item size='12'
                                            padding='around-small'>
                         <template if:true={isDisabled}>
-                            <p class='slds-text-body_regular slds-p-vertical_medium'>{disabledMessage}</p>
+                            <template if:true={hasUserDisabledWidget}>
+                                <p class='fade-in'>
+                                    <span class='slds-content-message'>
+                                        You aren't processing a card payment for this gift.
+                                    </span>
+                                    <lightning-button variant='base'
+                                                      label='Alternatively, charge a card now.'
+                                                      title='Alternatively, charge a card now.'
+                                                      onclick={userEnableWidget}
+                                                      class='slds-m-left_xx-small'>
+                                    </lightning-button>
+                                </p>
+                            </template>
+                            <template if:false={hasUserDisabledWidget}>
+                                <p class='slds-text-body_regular slds-p-vertical_medium'>{disabledMessage}</p>
+                            </template>
                         </template>
                         <template if:false={isDisabled}>
                             <c-util-alert-banner if:true={alert.show}

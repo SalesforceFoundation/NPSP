@@ -19,6 +19,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track alert = {};
     @track disabledMessage;
     @track isDisabled = false;
+    @track hasUserDisabledWidget = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
@@ -35,6 +36,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     disconnectedCallback() {
         unregisterListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME);
+    }
+
+    userDisableWidget() {
+        this.toggleWidget(true);
+        this.hasUserDisabledWidget = true;
+        // TODO: dispatch an event to form renderer to clear the token from the data import record
+    }
+
+    userEnableWidget() {
+        this.isLoading = true;
+        this.toggleWidget(false);
+        this.hasUserDisabledWidget = false;
     }
 
     /*******************************************************************************
