@@ -46,7 +46,7 @@ public class ALLO_AllocationsUtil_TEST {
      *              [ALLO_AllocationsUtil.getOpportunityIdFor]
      */
     @isTest
-    private static void confirmGetOpportunityIdForReturnsTheOpportunityIdAssociatedWiththeTheObject() {
+    private static void confirmGetOpportunityIdForReturnsTheOpportunityIdAssociatedWithTheObject() {
         List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert ctcs;
 
