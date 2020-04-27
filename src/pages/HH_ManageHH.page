@@ -3,7 +3,7 @@
         <apex:includeLightning />
         <apex:slds />
         <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
-        <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-2.2.4.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.js')}"/>
 
         <style>
             .required {

@@ -1,9 +1,8 @@
 <apex:page standardController="Batch__c" extensions="BDE_BatchEntry_CTRL" tabStyle="Batch_Data_Entry__tab" action="{!initializeBatchEntry}">
 
-	<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-	<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
-	<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4.min.js')}"/>
-	<apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4-smoothness.min.css')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4-smoothness.min.css')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/BDE_jqtablesorter/BDE_jqtablesorter.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/BDE_jqtablesorter/style.css')}"/>
 
@@ -242,7 +241,7 @@
                     <apex:outputPanel layout="block" styleclass="sticky" >
                         <apex:inputField id="npspcontactid" value="{!currentItem.npspocr.ContactID}" required="false" styleClass="sticky-npspcontactid"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
                         <input type="checkbox" id="sticky-npspcontactid" class="defaultCheckbox" style="display:none;" />
-                        <label for="sticky-npspcontactid" class="ui-icon ui-icon-pin-s" style="position:relative;top:0px;">Toggle</label>                                                
+                        <label for="sticky-npspcontactid" class="ui-icon ui-icon-pin-s" style="position:relative;top:0px;">Toggle</label>
                     </apex:outputPanel>
                 </apex:pageblocksectionitem>             
              
@@ -252,7 +251,7 @@
                     <apex:outputPanel layout="block" styleclass="sticky" >
                         <apex:inputField value="{!currentItem.sobj[field.fieldName]}" styleClass="sticky-{!field.fieldName}"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
                         <input type="checkbox" id="sticky-{!field.fieldName}" class="defaultCheckbox" style="display:none;" />
-                        <label title="Click to make this value the default" for="sticky-{!field.fieldName}" class="ui-icon ui-icon-pin-s" style="position:relative;top:0px;">Toggle</label>                                                
+                        <label title="Click to make this value the default" for="sticky-{!field.fieldName}" class="ui-icon ui-icon-pin-s">Toggle</label>
                     </apex:outputPanel>
                     </apex:pageblocksectionitem> 
                 </apex:repeat>
