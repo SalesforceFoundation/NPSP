@@ -833,6 +833,18 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>Donation_Elevate_Recurring_ID__c</fullName>
+        <description>The external, unique ID of the Recurring Donation in Elevate that this donation Opportunity is linked to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The external, unique ID of the Recurring Donation in Elevate that this donation Opportunity is linked to.</inlineHelpText>
+        <label>Donation Elevate Recurring ID</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Member_Level__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.npe01__Member_Level__c</inlineHelpText>
