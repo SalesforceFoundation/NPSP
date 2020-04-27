@@ -1759,7 +1759,6 @@
         <members>alloModifyCurrency</members>
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
-        <members>alloNullZeroInvalidStateError</members>
         <members>alloObjectUnsupported</members>
         <members>alloOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>

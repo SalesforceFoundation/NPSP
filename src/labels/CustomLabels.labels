@@ -2712,14 +2712,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Percent field can't contain a negative value.</value>
     </labels>
     <labels>
-        <fullName>alloNullZeroInvalidStateError</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error when Allocations are cleared because amounts can't convert to percentages</shortDescription>
-        <value>Warning! Allocations couldn’t be converted to percentages and were cleared. If the parent amount becomes a non-blank or zero amount, Allocations will be recreated from the defaults for this record.</value>
-    </labels>
-    <labels>
         <fullName>alloObjectUnsupported</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
@@ -2732,7 +2724,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when Allocations are cleared because amounts can't convert to percentages</shortDescription>
+        <shortDescription>TBD</shortDescription>
         <value>The amount allocated exceeds the {0} amount. Update Allocation amounts so that the total equals the {0} amount.</value>
     </labels>
     <labels>
