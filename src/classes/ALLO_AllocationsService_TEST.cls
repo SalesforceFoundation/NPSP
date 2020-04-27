@@ -43,7 +43,7 @@ public class ALLO_AllocationsService_TEST {
      *
      */
     @isTest
-    private static void confirmProcessRecordsUpdatesAllocationsCorrectlyWhenPaymentAllocationsAreEnabled() {
+    private static void confirmAllocationServiceUpdatesAllocationsCorrectlyWhenPaymentAllocationsAreEnabled() {
         ALLO_UnitTestHelper_TEST.AllocationSetupTest alloSetupTest = new ALLO_UnitTestHelper_TEST.AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
@@ -707,7 +707,7 @@ public class ALLO_AllocationsService_TEST {
         baseMessage = 'Before Processing - Opportunity 7 - ';
         pmts = oppsById.get(oppIds[7]).npe01__OppPayment__r;
 
-        // Opportunity 7 - Payment 0, Amount ($10) - No Amount or Percent, GAU 1
+        // Opportunity 7 - Payment 0, Amount ($10) - Fully Allocated
         message = baseMessage + 'Payment 0';
         allocs = allocsByPmtId.get(pmts[0].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
@@ -804,35 +804,35 @@ public class ALLO_AllocationsService_TEST {
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[7].Id, 0, 10, gaus[0].Id, message + ' - Allocation 0');
 
-        // Opportunity 6 - Payment 8, Amoount $0 - Payment Allocations, 10% Allocation for GAU 0
+        // Opportunity 6 - Payment 8, Amount $0 - Payment Allocations, 10% Allocation for GAU 0
         message = baseMessage + 'Payment 8';
         allocs = allocsByPmtId.get(pmts[8].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[8].Id, 0, 10, gaus[0].Id, message + ' - Allocation 0');
 
-        // Opportunity 6 - Payment 9, Amoount (null) - Payment Allocations, 10% Allocation for GAU 0, $10 for Default GAU
+        // Opportunity 6 - Payment 9, Amount (null) - Payment Allocations, 10% Allocation for GAU 0, $10 for Default GAU
         message = baseMessage + 'Payment 9';
         allocs = allocsByPmtId.get(pmts[9].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[9].Id, 0, 10, gaus[0].Id, message + ' - Allocation 0');
 
-        // Opportunity 6 - Payment 10, Amoount $0 - Payment Allocations, 100% Allocation for GAU 1
+        // Opportunity 6 - Payment 10, Amount $0 - Payment Allocations, 100% Allocation for GAU 1
         message = baseMessage + 'Payment 10';
         allocs = allocsByPmtId.get(pmts[10].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[10].Id, 0, 100, gaus[1].Id, message + ' - Allocation 0');
 
-        // Opportunity 6 - Payment 11, Amoount (null) - Payment Allocations, 100% Allocation for GAU 1
+        // Opportunity 6 - Payment 11, Amount (null) - Payment Allocations, 100% Allocation for GAU 1
         message = baseMessage + 'Payment 11';
         allocs = allocsByPmtId.get(pmts[11].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[11].Id, 0, 100, gaus[1].Id, message + ' - Allocation 0');
 
-        // Opportunity 6 - Payment 12, Amoount ($10) - No Amount or Percent, GAU 1
+        // Opportunity 6 - Payment 12, Amount ($10) - No Amount or Percent, GAU 1
         message = baseMessage + 'Payment 12';
         allocs = allocsByPmtId.get(pmts[12].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
@@ -843,7 +843,7 @@ public class ALLO_AllocationsService_TEST {
         baseMessage = 'After Processing - Opportunity 7 - ';
         pmts = oppsById.get(oppIds[7]).npe01__OppPayment__r;
 
-        // Opportunity 7 - Payment 0, Amoount ($10) - No Amount or Percent, GAU 1
+        // Opportunity 7 - Payment 0, Amoount ($10), GAU 1, 100%, $10
         message = baseMessage + 'Payment 0';
         allocs = allocsByPmtId.get(pmts[0].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
