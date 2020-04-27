@@ -56,9 +56,9 @@ public with sharing class GE_PaymentServices {
 
     @TestVisible Map<String, String> config;
 
-    private enum ElevateEndpoints { TOKENIZE, PURCHASE }
+    public enum ElevateEndpoints { TOKENIZE, PURCHASE }
 
-    private String getEndpoint(ElevateEndpoints endpoint) {
+    public String getEndpoint(ElevateEndpoints endpoint) {
         if (endpoint === ElevateEndpoints.TOKENIZE) {
             return '/v1/payments/public/tokens';
         }

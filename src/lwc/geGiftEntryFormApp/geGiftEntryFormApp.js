@@ -5,8 +5,7 @@ import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
-import { isNotEmpty, validateJSONString, hasNestedProperty, format } from 'c/utilCommon';
-import { LABEL_NEW_LINE } from 'c/geConstants';
+import { isNotEmpty, validateJSONString, format } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
@@ -35,6 +34,7 @@ import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Do
 /*******************************************************************************
 * @description Constants
 */
+import { LABEL_NEW_LINE, HTTP_CODES } from 'c/geConstants';
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
@@ -60,8 +60,6 @@ const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     RETRYABLEERROR: 'RETRYABLEERROR',
     REFUNDISSUED: 'REFUNDISSUED'
 });
-const PAYMENT_SUCCESS_STATUS_CODE = 201;
-const BAD_REQUEST_STATUS_CODE = 400;
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -155,7 +153,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 await this.processDataImport();
             }
         } catch (error) {
-            error.dataImportRecord = this.dataImportRecord;
             this.errorCallback(error);
         }
     }
@@ -247,7 +244,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(response);
         this.dataImportRecord[PAYMENT_ELEVATE_ID] = responseBody.id;
 
-        if (response.statusCode === PAYMENT_SUCCESS_STATUS_CODE) {
+        if (response.statusCode === HTTP_CODES.Created) {
 
             if (isNotEmpty(responseBody.cardData)) {
                 this.dataImportRecord[PAYMENT_CARD_NETWORK] = responseBody.cardData.brand;
@@ -277,7 +274,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * GE_GiftEntryController.sendPurchaseRequest()
     */
     handleFailedPurchaseCall(purchaseResponse) {
-        const hasPurchaseCallValidationErrors = purchaseResponse.statusCode === BAD_REQUEST_STATUS_CODE;
+        const hasPurchaseCallValidationErrors = purchaseResponse.statusCode === HTTP_CODES.Bad_Request;
         if (hasPurchaseCallValidationErrors) {
             this.catchPurchaseCallValidationErrors(purchaseResponse);
         } else {
@@ -429,7 +426,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @return {string}: Reason the payment was declined
     */
     getPaymentDeclinedReason(response) {
-        const isSuccessfulPurchase = response.statusCode === PAYMENT_SUCCESS_STATUS_CODE;
+        const isSuccessfulPurchase = response.statusCode === HTTP_CODES.Created;
         return isSuccessfulPurchase ? null : this.getFailedPurchaseMessage(response);
     }
 
