@@ -2582,6 +2582,7 @@
         <members>stgHelpDefaultGAU</members>
         <members>stgHelpDisableHHAccountAddr</members>
         <members>stgHelpEnableSoftCreditRollups</members>
+        <members>stgHelpEnhancedRDBatch</members>
         <members>stgHelpErrorLog</members>
         <members>stgHelpErrorNotifyOn</members>
         <members>stgHelpErrorNotifyTo</members>

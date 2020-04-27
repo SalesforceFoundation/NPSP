@@ -53,6 +53,15 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     public Boolean isRunningBatch { get; set; }
 
     /*********************************************************************************************************
+    * Description The Recurring Donation Batch Introduction Text
+    */
+    public String getPageIntro() {
+        return (RD2_EnablementService.isRecurringDonations2Enabled)
+            ? System.Label.stgHelpEnhancedRDBatch
+            : System.Label.stgHelpRDBatch;
+    }
+
+    /*********************************************************************************************************
     * @description Action Method to execute the RD Batch process
     * @return null
     */
