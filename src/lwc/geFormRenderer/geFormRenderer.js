@@ -19,6 +19,7 @@ import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
     getQueryParameters,
     isEmpty,
+    isObject,
     isNotEmpty,
     format,
     isUndefined,
@@ -50,7 +51,7 @@ import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -331,7 +332,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     catchHttpRequestError(error) {
-        this.hasPurchaseCallTimedout = error.statusCode === 408;
+        this.hasPurchaseCallTimedout = error.statusCode === HTTP_CODES.Request_Timeout;
         if (this.hasPurchaseCallTimedout) {
             this.formatTimeoutCustomLabels(error.dataImportRecord);
         }
@@ -1654,8 +1655,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     formatTimeoutCustomLabels(dataImportRecord) {
         const donorName = this.getDonorName();
-        const formattedDonationAmount =
-            getNumberAsLocalizedCurrency(dataImportRecord[DONATION_AMOUNT.fieldApiName]);
+        const donationAmountFormField = this.getFormFieldBySourceName(DONATION_AMOUNT.fieldApiName);
+        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
 
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorUncertainCardChargePart1,
@@ -1676,6 +1677,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return `${names.firstName} ${names.lastName}`;
         } else {
             return names.accountName;
+        }
+    }
+
+    /*******************************************************************************
+    * @description Get a form field's value and label properties by the source
+    * field api name.
+    *
+    * @param {string} sourceFieldApiName: A field api name from the DataImport__c
+    * custom object.
+    */
+    getFormFieldBySourceName(sourceFieldApiName) {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        for (let i = 0; i < sectionsList.length; i++) {
+            const matchingFormField = sectionsList[i].getFieldValueAndLabel([sourceFieldApiName]);
+            if (isObject(matchingFormField) && matchingFormField.hasOwnProperty(sourceFieldApiName)) {
+                return matchingFormField[sourceFieldApiName];
+            }
         }
     }
 }
