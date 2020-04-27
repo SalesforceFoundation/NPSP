@@ -152,7 +152,8 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      * @return PageReference 
      */
     public PageReference close() {
-        String retUrl = ApexPages.currentPage().getParameters().get('retURL');
+        String retUrl = UTIL_String.getInternalUrlPath(ApexPages.currentPage().getParameters().get('retURL'));
+
         PageReference p;
         if (!String.isBlank(retUrl)) {
             p = new PageReference(retUrl);

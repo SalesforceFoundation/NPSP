@@ -49,18 +49,19 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
      * @description List of High Level Telemetry Data Types to be processed asynchronously by this batch job.
      */
     private final List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> telemetryTypes =
-        new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRecurringDonations,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd
-        };
+            new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRecurringDonations,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd,
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountGERowsLast30DaysBatch
+            };
 
     /**
      * @description Return the list of TelemetryType enum values to be processed by this batch job
@@ -71,7 +72,8 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
         if (!Test.isRunningTest()) {
             return telemetryTypes;
         } else {
-            return new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog
+            return new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{
+                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog
             };
         }
     }
@@ -94,6 +96,7 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
     public void finish(Database.BatchableContext info) {
         handleOpportunityBatchExecution();
         handleRecurringDonationExecution();
+        handleDataImportExecution();
     }
 
     /**
@@ -105,14 +108,17 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
 
         if (hasRecurringDonations || hasPayments) {
             executeTelemetrySObjectBatch(
-                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES,
-                UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES,
+                    UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
             );
         } else {
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
+            featureManager.setPackageIntegerValue(
+                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
+            featureManager.setPackageIntegerValue(
+                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
 
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
+            featureManager.setPackageIntegerValue(
+                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name(), 0);
             /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
                  you move forward with Data_OppPaymentsWithoutPaymentsEnabled */
             //featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), 0);
@@ -127,20 +133,42 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
 
         if (hasRecurringDonations) {
             executeTelemetrySObjectBatch(
-                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS,
-                UTIL_OrgTelemetry_SObject_BATCH.RECURRING_DONATIONS_BATCH_SIZE
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS,
+                    UTIL_OrgTelemetry_SObject_BATCH.RECURRING_DONATIONS_BATCH_SIZE
             );
         } else {
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
-            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), 0);
+            featureManager.setPackageIntegerValue(
+                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
+            featureManager.setPackageIntegerValue(
+                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
+            featureManager.setPackageIntegerValue(
+                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), 0);
+        }
+    }
+
+    /**
+    * @description Handles execution of batch job for recurring donations counts
+    */
+    private void handleDataImportExecution() {
+        Boolean hasDataImports = [SELECT Id FROM DataImport__c LIMIT 1].isEmpty() == false;
+
+        if (hasDataImports) {
+            executeTelemetrySObjectBatch(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS,
+                    UTIL_OrgTelemetry_SObject_BATCH.DATA_IMPORTS_BATCH_SIZE
+            );
+        } else {
+            featureManager.setPackageIntegerValue(
+                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), 0);
         }
     }
 
     /**
     * @description Executes Telemetry SObject Batch with given mode and size
     */
-    private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+    @TestVisible
+    private virtual void executeTelemetrySObjectBatch(
+            UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
         Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(mode), batchSize);
     }
 }

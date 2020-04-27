@@ -90,7 +90,7 @@
 
     </apex:outputPanel>
 
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, 'jquery/jquery-2.2.4.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, 'jquery/jquery-3.5.0.min.js')}"/>
 
     <script>
         $(function() {

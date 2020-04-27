@@ -52,7 +52,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     /*******************************************************************************************************
     * @description Helper and constructor that enables and supports mocking of test data
 	*/
-    private BDI_MigrationMappingUtility util;
+    private BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+    private BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(helper);
     public STG_InstallScript(BDI_MigrationMappingUtility util) {
         this.util = util;
     }
