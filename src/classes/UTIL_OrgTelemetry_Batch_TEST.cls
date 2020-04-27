@@ -36,6 +36,7 @@
 @IsTest
 private class UTIL_OrgTelemetry_Batch_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
+    private static Integer NUM_DATA_IMPORT_RECORDS = 100;
 
     /**
      * @description Confirms that when there are no Recurring Donations, the finish method sets
@@ -150,6 +151,51 @@ private class UTIL_OrgTelemetry_Batch_TEST {
     }
 
     /**
+     * @description Confirms that when there are no qualified Data Import records, the finish method sets
+     * telemetry and does not queue up the batch job
+     */
+    @IsTest
+    private static void shouldHandleNoDataImportsToCount() {
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
+        batch.finish(null);
+
+        System.assertEquals(null, batch.countByBatchMode.get(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS),
+                'The Data Import Batch should not be executed');
+
+        assertOnTelemetryIntegerMetric(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch, 0);
+    }
+
+
+    /**
+    * @description Confirms that when there are qualified Data Import records, the batch job is queued.
+     * Using shouldExecutePaymentsTelemetryBatch to test instead of finish to prevent internal
+    * error that gets thrown when multiple tests in the same class set a FeatureParameter
+    */
+    @IsTest
+    private static void shouldHandleGEDataImportsBatchToCount() {
+        createQualifiedDIRecords(NUM_DATA_IMPORT_RECORDS);
+
+        MockTelemetryBatch batch = new MockTelemetryBatch();
+        batch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
+
+        batch.finish(null);
+
+        System.assertEquals(1, batch.countByBatchMode.get(
+                UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS),
+                'The Data Import batch should be executed'
+        );
+
+        assertOnTelemetryIntegerMetric(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch, null);
+    }
+
+
+    /**
      * @description Asserts on the provided telemetry integer metric
      */
     private static void assertOnTelemetryIntegerMetric(UTIL_OrgTelemetry_SVC.TelemetryParameterName metric, Integer expectedValue) {
@@ -184,6 +230,11 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         insert payments;
     }
 
+    private static void createQualifiedDIRecords(Integer numberOfRecords) {
+        List<DataImport__c> dataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(numberOfRecords);
+        insert dataImports;
+    }
+
     /**
      * @description Mock implementation of UTIL_OrgTelemetry_BATCH that overrides executeTelemetrySObjectBatch
      * to prevent UTIL_OrgTelemetry_SObject_BATCH from running. Running the UTIL_OrgTelemetry_SObject_BATCH 
@@ -194,7 +245,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
         private Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer> countByBatchMode = 
             new Map<UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode, Integer>();
 
-        private virtual void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
+        private virtual override void executeTelemetrySObjectBatch(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode mode, Integer batchSize) {
             if (!countByBatchMode.containsKey(mode)) {
                 countByBatchMode.put(mode, 0);
             }
