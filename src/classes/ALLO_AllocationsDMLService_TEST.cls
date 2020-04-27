@@ -215,7 +215,7 @@ public class ALLO_AllocationsDMLService_TEST {
     }
 
     /**
-     * @description Confirms DML Processing with partial success
+     * @description Confirms DML Processing With Failures and Retries Exceeded
      *              [ALLO_AllocationsDMLService.processAllocationResults]
      */
     @isTest
@@ -426,7 +426,7 @@ public class ALLO_AllocationsDMLService_TEST {
             )
         );
 
-        // Opportunity 6 - Payment 1 (Will change Default Alloc to $5, and delete the $1 Allocation for GAU1)
+        // Opportunity 6 - Payment 1 (Will change Default Alloc and GAU 0 to $5, and delete the $1 Allocation for GAU1)
         allocs = allocWrapper.paymentAllocations.get(pmts[1].Id);
         message = baseMessage + 'Opportunity 6 - Payment 1 - ';
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 3, message + 'Allocations');
