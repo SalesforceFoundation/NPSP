@@ -814,7 +814,7 @@ private class BDI_MigrationMappingUtility_TEST {
                     };
                 }
             }
-            if (stubbedMethodName == 'getDataImportObjectDeveloperNameByLabel') {
+            if (stubbedMethodName == 'getDataImportObjectDeveloperNamesByLabel') {
                 // create object mapping sets
                     Data_Import_Object_Mapping_Set__mdt migratedObjectMappingSet =
                             new Data_Import_Object_Mapping_Set__mdt(
