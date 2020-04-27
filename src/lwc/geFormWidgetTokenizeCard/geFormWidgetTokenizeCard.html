@@ -15,8 +15,8 @@
                                     <h1 class='slds-text-body_regular'>{CUSTOM_LABELS.commonPaymentServices}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <button if:false={hasUserDisabledWidget}
-                                            onclick={userDisableWidget}
+                                    <button if:true={displayDoNotChargeCardButton}
+                                            onclick={handleUserDisabledWidget}
                                             class='slds-button slds-button_base slds-float_right do-not-charge-card-button'>
                                         {CUSTOM_LABELS.geButtonPaymentDoNotCharge}
                                         <lightning-icon icon-name='utility:close'
@@ -42,7 +42,7 @@
                                     <lightning-button variant='base'
                                                       label={CUSTOM_LABELS.geButtonPaymentAlternate}
                                                       title={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                      onclick={userEnableWidget}
+                                                      onclick={handleUserEnabledWidget}
                                                       class='slds-m-left_xx-small'>
                                     </lightning-button>
                                 </p>

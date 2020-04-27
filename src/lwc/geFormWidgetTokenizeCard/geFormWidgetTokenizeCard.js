@@ -20,9 +20,14 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track disabledMessage;
     @track isDisabled = false;
     @track hasUserDisabledWidget = false;
+    @track hasEventDisabledWidget = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
+
+    get displayDoNotChargeCardButton() {
+        return this.hasEventDisabledWidget || this.hasUserDisabledWidget ? false : true;
+    }
 
     async connectedCallback() {
         this.domain = await getOrgDomain();
@@ -31,38 +36,38 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     renderedCallback() {
         this.registerPostMessageListener();
-        registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleDisableWidget, this);
+        registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleEventDisabledWidget, this);
     }
 
     disconnectedCallback() {
         unregisterListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME);
     }
 
-    userDisableWidget() {
+    /*******************************************************************************
+    * @description Handles a user's onclick event for disabling the widget.
+    */
+    handleUserDisabledWidget() {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
         // TODO: dispatch an event to form renderer to clear the token from the data import record
     }
 
-    userEnableWidget() {
+    /*******************************************************************************
+    * @description Handles a user's onclick event for re-enabling the widget.
+    */
+    handleUserEnabledWidget() {
         this.isLoading = true;
         this.toggleWidget(false);
         this.hasUserDisabledWidget = false;
     }
 
     /*******************************************************************************
-    * @description Handles receipt of an event to disable this widget.
+    * @description Handles receipt of an event to disable this widget. Currently
+    * used when we've charged a card, but BDI processing failed.
     */
-    handleDisableWidget(event) {
+    handleEventDisabledWidget(event) {
         this.toggleWidget(true, event.detail.message);
-    }
-
-    /*******************************************************************************
-    * @description Handles enabling the widget. Likely to be bound to a button
-    * in the future.
-    */
-    handleEnableWidget() {
-        this.toggleWidget(false);
+        this.hasEventDisabledWidget = true;
     }
 
     /*******************************************************************************
