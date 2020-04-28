@@ -37,6 +37,10 @@
 */
 public with sharing class GE_GiftEntryController {
 
+    public static final Integer TIMEOUT_STATUS_CODE = 408;
+    public static final String TIMED_OUT = 'timed out';
+    public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
+
     @AuraEnabled(cacheable=true)
     public static String getOrgDomain() {
         String url = System.Url.getOrgDomainUrl().getHost();
@@ -45,8 +49,16 @@ public with sharing class GE_GiftEntryController {
         return urlParts[0];
     }
 
+    /*******************************************************************************************************
+    * @description Creates and posts an elevate purchase request
+    *
+    * @param requestBodyParameters: JSON containing parameters for the purchase call request body
+    * @param dataImportRecordId: Record ID of the related Data Import
+    *
+    * @return String: http response wrapper
+    */
     @AuraEnabled
-    public static String sendPurchaseRequest(String requestBodyParameters) {
+    public static String sendPurchaseRequest(String requestBodyParameters, String dataImportRecordId) {
         try {
             GE_PaymentServices paymentServices = new GE_PaymentServices();
             paymentServices.setPurchaseCallBody(requestBodyParameters);
@@ -54,18 +66,43 @@ public with sharing class GE_GiftEntryController {
 
             return JSON.serialize(response);
         } catch (Exception ex) {
-            Boolean hasTimedout =
-                ex.getTypeName() == 'System.CalloutException' &&
-                ex.getMessage().contains('timed out');
+            Boolean isCalloutException = ex instanceof System.CalloutException;
+            Boolean hasTimedout = isCalloutException && ex.getMessage().contains(TIMED_OUT);
 
             if (hasTimedout) {
-                ex.setMessage('Request to charge card timed out.');
+                return getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
+            } else {
+                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+                throw returnDmlException(JSONExceptionData);
             }
-
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-
-            throw returnDmlException(JSONExceptionData);
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an http request wrapper for a timeout
+    *
+    * @param ex: A timeout System.CalloutException
+    * @param dataImportRecordId: Record ID of the related Data Import to include in our error logs
+    *
+    * @return String: http response wrapper
+    */
+    private static String getPurchaseCallTimeoutResponse(Exception ex, String dataImportRecordId) {
+        GE_PaymentServices.ResponseWrapper response = new GE_PaymentServices.ResponseWrapper();
+        response.statusCode = TIMEOUT_STATUS_CODE;
+        response.status = ex.getMessage();
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => PURCHASE_CALL_TIMEOUT_MESSAGE });
+
+        // Log NPSP Error record
+        String objectAndRecordId = String.format(
+            System.Label.stgErrorInvalidNameFormat,
+            new String[] {
+                Schema.SObjectType.DataImport__c.getLabel(),
+                dataImportRecordId
+            });
+        ex.setMessage(PURCHASE_CALL_TIMEOUT_MESSAGE + ' ' + objectAndRecordId);
+        ERR_Handler.processError(ex, ERR_Handler_API.Context.GE);
+
+        return JSON.serialize(response);
     }
 
     /*******************************************************************************************************
@@ -166,7 +203,7 @@ public with sharing class GE_GiftEntryController {
             upsert dataImport Id;
 
             return dataImport;
-        } catch(Exception e) {
+        } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw returnDmlException(JSONExceptionData);
@@ -210,17 +247,16 @@ public with sharing class GE_GiftEntryController {
                     WHERE Id = :dataImportId
             ];
             if(di.FailureInformation__c != null) {
-                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(di.FailureInformation__c);
-
-                throw returnAuraException(JSONExceptionData);
+                throw new BDIException(di.FailureInformation__c);
             }
             return di.DonationImported__c;
         } catch(Exception e) {
+
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw returnAuraException(JSONExceptionData);
         }
     }
 
-
+    private class BDIException extends Exception {}
 }
