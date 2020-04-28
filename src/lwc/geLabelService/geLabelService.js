@@ -193,7 +193,6 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import geWarningPaymentNotProcessingTransaction from '@salesforce/label/c.geWarningPaymentNotProcessingTransaction';
 
 class GeLabelService {
 
@@ -396,7 +395,6 @@ class GeLabelService {
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
-        geWarningPaymentNotProcessingTransaction,
     });
 
     /*******************************************************************************
