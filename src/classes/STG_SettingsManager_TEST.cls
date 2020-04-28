@@ -1756,7 +1756,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verifies that when RD2 is not enabled, the legacy RD batch description should be displayed  
     */
     @isTest
-    private static void shouldDisplayLegacyRDBatchIntroHelpTextWhenRD2NotEnabled() {
+    private static void shouldDisplayLegacyRDPageDescriptionWhenRD2IsNotEnabled() {
         STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
 
         Test.startTest();
@@ -1770,7 +1770,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verifies that when RD2 is enabled, the RD2 batch description should be displayed  
     */
     @isTest
-    private static void shouldDispRD2BatchIntroHelpTextWhenRD2IsEnabled() {
+    private static void shouldDisplayRD2PageDescriptionWhenRD2IsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
 

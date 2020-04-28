@@ -55,8 +55,8 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * Description The Recurring Donation Batch Introduction Text
     */
-    public String getPageIntro() {
-        return (RD2_EnablementService.isRecurringDonations2Enabled)
+    public String getPageDescription() {
+        return isRD2Enabled
             ? System.Label.stgHelpEnhancedRDBatch
             : System.Label.stgHelpRDBatch;
     }
@@ -71,7 +71,7 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
             isRunningBatch = true;
 
             // Call the batch job, using the Recurring Donations Batch Size field in Custom Settings
-            if (RD2_EnablementService.isRecurringDonations2Enabled) {
+            if (isRD2Enabled) {
                 RD2_OpportunityEvaluation_BATCH rdBatchJob = new RD2_OpportunityEvaluation_BATCH();
                 Integer batchSize = rdBatchJob.batchSize;
                 Database.executeBatch(rdBatchJob, batchSize);
