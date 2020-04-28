@@ -1760,7 +1760,7 @@ private with sharing class STG_SettingsManager_TEST {
         STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
 
         Test.startTest();
-        String batchDescription = controller.getPageIntro();
+        String batchDescription = controller.getPageDescription();
         Test.stopTest();
 
         System.assertEquals(System.Label.stgHelpRDBatch, batchDescription, 'The Legacy RD batch description should be displayed');
@@ -1775,7 +1775,7 @@ private with sharing class STG_SettingsManager_TEST {
         STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
 
         Test.startTest();
-        String batchDescription = controller.getPageIntro();
+        String batchDescription = controller.getPageDescription();
         Test.stopTest();
 
         System.assertEquals(System.Label.stgHelpEnhancedRDBatch, batchDescription, 'RD2 batch description should be displayed');
