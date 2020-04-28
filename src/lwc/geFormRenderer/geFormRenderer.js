@@ -162,7 +162,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
         registerListener('paymentError', this.handleAsyncWidgetError, this);
-        registerListener('doNotChargeState', this.setCreditCardWidgetState, this);
+        registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -907,10 +907,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * Informs the Form renderer when the credit card widget is in a 'do not charge' state
+     * @description Informs the form renderer when the credit card widget is in a 'do not charge' state
      * @param event
      */
-    setCreditCardWidgetState (event) {
+    handleDoNotChargeCardState (event) {
         this._isCreditCardWidgetInDoNotChargeState = true;
     }
 
