@@ -56,6 +56,20 @@ public with sharing class GE_PaymentServices {
 
     @TestVisible Map<String, String> config;
 
+    public enum ElevateEndpoints { TOKENIZE, PURCHASE }
+
+    public String getEndpoint(ElevateEndpoints endpoint) {
+        if (endpoint === ElevateEndpoints.TOKENIZE) {
+            return '/v1/payments/public/tokens';
+        }
+
+        if (endpoint === ElevateEndpoints.PURCHASE) {
+            return '/v1/payments/verified/purchase';
+        }
+
+        return null;
+    }
+
     public GE_PaymentServices() {
         config = new Configuration().keyValueMap;
     }
@@ -64,7 +78,7 @@ public with sharing class GE_PaymentServices {
         Map<String, Object> requestBodyParameters =
                 (Map<String, Object>) JSON.deserializeUntyped(jsonString);
         this.purchaseCallBody = new PurchaseCallBody(
-                'USD',
+                UserInfo.getDefaultCurrency(),
                 config.get(SFDO_MERCHANTIDS),
                 config.get(SFDO_GATEWAYIDS)
         ).applyAll(requestBodyParameters);
@@ -82,10 +96,10 @@ public with sharing class GE_PaymentServices {
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
         request.setHeader(JWT_TOKEN, getJwt());
+        request.setHeader(SFDO_USERNAME, UserInfo.getUserName());
         if (config.get(SFDO_MERCHANTIDS) != null) {
             request.setHeader(SFDO_MERCHANTIDS, config.get(SFDO_MERCHANTIDS));
         }
-        request.setHeader(SFDO_USERNAME, UserInfo.getUserName());
 
         // Set the body as a JSON object...
         String purchaseCallBodyString = purchaseCallBody.getAsJson();
@@ -95,20 +109,6 @@ public with sharing class GE_PaymentServices {
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
 
         return responseWrapper;
-    }
-
-    public enum ElevateEndpoints { TOKENIZE, PURCHASE }
-
-    public String getEndpoint(ElevateEndpoints endpoint) {
-        if (endpoint === ElevateEndpoints.TOKENIZE) {
-            return '/v1/payments/public/tokens';
-        }
-
-        if (endpoint === ElevateEndpoints.PURCHASE) {
-            return '/v1/payments/verified/purchase';
-        }
-
-        return null;
     }
 
     public String getEndpointRoot() {
@@ -241,7 +241,10 @@ public with sharing class GE_PaymentServices {
         public Integer statusCode;
         public String status;
         public String body;
+        public String error;
         public Map<String, Object> headers = new Map<String, Object>{};
+
+        public ResponseWrapper() {}
 
         public ResponseWrapper(HttpResponse response) {
             this.statusCode = response.getStatusCode();
