@@ -104,6 +104,19 @@ public with sharing class RD2_ValidationService {
         set;
     }
 
+    /**
+    * @description Status to State Mapper 
+    */
+    private static RD2_StatusMapper statusMapper {
+        get {
+            if (statusMapper == null) {
+                statusMapper = new RD2_StatusMapper();
+            }
+            return statusMapper;
+        }
+        set;
+    }
+
 
     /**
     * @description Constructor for the RD2_ValidationService class
@@ -132,6 +145,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
+            validateStatusMapping(rd);
         }
     }
 
@@ -152,6 +166,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
+            validateStatusMapping(rd);
 
             Boolean isValid = validateDonorChange(rd, oldRd);
             if (isValid) {
@@ -263,6 +278,17 @@ public with sharing class RD2_ValidationService {
             && !noClosedOppRDIds.contains(rd.Id)
         ) {
             rd.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
+        }
+    }
+
+    /**
+    * @description Validate the RD Status has the mapped State configure
+    * @param rd The Recurring Donation to validate
+    * @return void 
+    */
+    private void validateStatusMapping(npe03__Recurring_Donation__c rd) {
+        if (String.isBlank(statusMapper.getStatusType(rd.Status__c))) {
+            rd.addError('error');
         }
     }
 
