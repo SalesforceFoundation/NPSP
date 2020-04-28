@@ -271,7 +271,7 @@ public with sharing class RD2_ValidationService {
     */
     private Boolean isAccountUpdatedToContactAccount(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         Map<Id,Id> rdWithAccIdFromContact = getAccountIdFromContactInRecurringDonations();
-        System.debug('what is in here' + rdWithAccIdFromContact.get(rd.id));
+
         return
             oldRd.npe03__Organization__c == null
             && rd.npe03__Organization__c == rdWithAccIdFromContact.get(rd.id)
@@ -397,16 +397,16 @@ public with sharing class RD2_ValidationService {
     * @return Map<Id, Id>
     */
     private Map<Id,Id> getAccountIdFromContactInRecurringDonations() {
-        Map<Id, Id> rdByAccountId = new Map<Id, Id>();
+        Map<Id, Id> rdWithAccountId = new Map<Id, Id>();
 
-        for (npe03__Recurring_Donation__c r: [
+        for (npe03__Recurring_Donation__c rd : [
             SELECT Id, npe03__Contact__r.AccountId
             FROM npe03__Recurring_Donation__c
             WHERE Id IN :rds
-            ]) {
-                rdByAccountId.put(r.Id, r.npe03__Contact__r.AccountId);
+        ]) {
+                rdWithAccountId.put(rd.Id, rd.npe03__Contact__r.AccountId);
 
-            }
-        return rdByAccountId;
+           }
+        return rdWithAccountId;
     }
 }
