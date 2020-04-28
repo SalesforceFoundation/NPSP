@@ -42,6 +42,8 @@ import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
 import DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
@@ -58,6 +60,7 @@ import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PARENT_OPPORTUNITY_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
+
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
@@ -104,6 +107,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     @track formTemplateId;
     _batchDefaults;
+    _isCreditCardWidgetInDoNotChargeState = false;
 
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
@@ -158,6 +162,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
         registerListener('paymentError', this.handleAsyncWidgetError, this);
+        registerListener('doNotChargeState', this.setCreditCardWidgetState, this);
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -451,7 +456,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             let inMemoryDataImport;
             try {
-                inMemoryDataImport = await this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
+                inMemoryDataImport = await this.buildDataImportFromSections(
+                    sectionsList, this.selectedDonationDataImportFieldValues
+                );
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
                 this.handleAsyncWidgetError(ex);
@@ -900,6 +907,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
+     * Informs the Form renderer when the credit card widget is in a 'do not charge' state
+     * @param event
+     */
+    setCreditCardWidgetState (event) {
+        this._isCreditCardWidgetInDoNotChargeState = true;
+    }
+
+    /**
      * Track widget data so that our widgets can react to the overall state of the form
      * @param payload   An object to store in widgetData
      */
@@ -920,6 +935,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
             dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        }
+
+        if (this._isCreditCardWidgetInDoNotChargeState) {
+            dataImportRecord[DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD] = '';
+            dataImportRecord[DATA_IMPORT_PAYMENT_STATUS_FIELD] = '';
         }
 
         if (this.dataImport && this.dataImport.Id) {
