@@ -130,11 +130,11 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies if account is auto populated on Recurring Donations when only
+    * @description Verifies if organization account is auto populated on Recurring Donations when only
     * contact is entered.
     */
     @isTest
-    private static void shouldAutoPopulateAccountWhenContactOnlyEnteredInRD() {
+    private static void shouldAutoPopulateOrgAccountWhenContactOnlyEnteredInRD() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
@@ -151,6 +151,72 @@ private with sharing class RD2_RecurringDonations_TEST {
 
 
         rd = rdGateway.getRecord(rd.Id);
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+
+    }
+
+    /***
+    * @description Verifies if HH Account is auto populated on Recurring Donations when only
+    * contact is entered.
+    */
+    @isTest
+    private static void shouldAutoPopulateHHAccountWhenContactOnlyEnteredInRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.id)
+            .withAmount(100)
+            .withDefaultValues()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+
+    }
+
+    /***
+    * @description Verifies if account is auto populated on Recurring Donations when
+    * Account is removed while updating the record.
+    */
+    @isTest
+    private static void shouldAutoPopulateAccountWhenAccountIsNulledOutDuringEdit() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.id)
+            .withAmount(100)
+            .withDefaultValues()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+
+        rd.npe03__Organization__c = null;
+        update rd;
+
+        rd = rdGateway.getRecord(rd.id);
 
         System.assertNotEquals(null, rd.npe03__Organization__c,
             'Account in recurring donations should be auto populated from contact');

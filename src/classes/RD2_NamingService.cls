@@ -128,7 +128,7 @@ public with sharing class RD2_NamingService {
         List<npe03__Recurring_Donation__c> changedRds = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (hasChanged(rd, oldRdById.get(rd.Id))) {
+            if (isAccountNullWhenContactExists(rd, oldRdById.get(rd.Id))) {
                 changedRds.add(rd);
             }
         }
@@ -155,6 +155,15 @@ public with sharing class RD2_NamingService {
         }
 
         return hasChanged;
+    }
+
+    @TestVisible
+    private Boolean isAccountNullWhenContactExists(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        Boolean isAccountNull = (rd.npe03__Organization__c == null && rd.npe03__Contact__c != null )
+            || rd.npe03__Contact__c != oldRd.npe03__Contact__c;
+
+        return isAccountNull;
+
     }
 
     /***

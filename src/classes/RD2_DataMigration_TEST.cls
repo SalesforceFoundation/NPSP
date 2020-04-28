@@ -1855,6 +1855,55 @@ private class RD2_DataMigration_TEST {
             'Number of Planned Installments should be set to null');
     }
 
+    /**
+     * @description Verifies if the Accounts are populated in Enhanced Recurring
+     * when household contact is only populated.
+     */
+    @IsTest
+    private static void shouldPopulateAccountWhenContactIsOnlyEntered() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+        insert rd;
+
+        Id jobId = runDataMigration();
+
+        npe03__Recurring_Donation__c convertedRD = getRecords()[0];
+
+        System.assertNotEquals(null, convertedRD.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact post Datamigration is run' + convertedRD);
+    }
+
+    /**
+     * @description Verifies if the Accounts are populated after data migration is run
+     * when household contact is only populated and have closed opps in legacy RD.
+    */
+    @IsTest
+    private static void shouldPopulateAccountWhenContactIsOnlyEnteredWithClosedOpps() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+
+        insert rd;
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(TODAY)
+            .withClosedWonStage()
+            .build();
+
+        Id jobId = runDataMigration();
+
+        npe03__Recurring_Donation__c convertedRD = getRecords()[0];
+
+        System.assertNotEquals(null, convertedRD.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact post Datamigration is run' + convertedRD);
+    }
+
 
     // HELPER METHODS
     //////////////////////
@@ -2274,7 +2323,7 @@ private class RD2_DataMigration_TEST {
     * @return Boolean
     */
     private static Boolean isDayOfMonthRestrictedPicklistError(List<Error__c> errors) {
-        return !errors.isEmpty() 
+        return !errors.isEmpty()
             && errors[0].Full_Message__c.contains(
                 Schema.npe03__Recurring_Donation__c.Day_of_Month__c.getDescribe().getLabel()
             );

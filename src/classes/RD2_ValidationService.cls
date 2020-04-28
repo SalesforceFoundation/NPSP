@@ -135,7 +135,7 @@ public with sharing class RD2_ValidationService {
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
 
-            Boolean isValid = validateDonorChange(rd, oldRd);	            
+            Boolean isValid = validateDonorChange(rd, oldRd);
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
@@ -219,6 +219,7 @@ public with sharing class RD2_ValidationService {
 
         if (noClosedOppRDIds.contains(rd.Id)
             || isOrganizationChange(accountById.get(rd.npe03__Organization__c), accountById.get(oldRd.npe03__Organization__c))
+            || isAccountUpdatedToContactAccount(rd, oldRd)
         ) {
             return true;
         }
@@ -260,6 +261,22 @@ public with sharing class RD2_ValidationService {
             && oldAcct != null
             && newAcct.npe01__SYSTEMIsIndividual__c == false
             && oldAcct.npe01__SYSTEMIsIndividual__c == false;
+    }
+
+    /***
+    * @description Return true when account is changed from null to contact's account and contact is not changed.
+    * @param new recurring donation record
+    * @param old recurring donation record
+    * @return Boolean True when account is updated to contact's account from null value
+    */
+    private Boolean isAccountUpdatedToContactAccount(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        Map<Id,Id> rdWithAccIdFromContact = getAccountIdFromContactInRecurringDonations();
+        System.debug('what is in here' + rdWithAccIdFromContact.get(rd.id));
+        return
+            oldRd.npe03__Organization__c == null
+            && rd.npe03__Organization__c == rdWithAccIdFromContact.get(rd.id)
+            && rd.npe03__Contact__c == oldRd.npe03__Contact__c;
+
     }
 
     /***
@@ -373,5 +390,23 @@ public with sharing class RD2_ValidationService {
         }
 
         return rdIds;
+    }
+
+    /**
+    * @description Get a map of Recurring donations Id with contact's account Id
+    * @return Map<Id, Id>
+    */
+    private Map<Id,Id> getAccountIdFromContactInRecurringDonations() {
+        Map<Id, Id> rdByAccountId = new Map<Id, Id>();
+
+        for (npe03__Recurring_Donation__c r: [
+            SELECT Id, npe03__Contact__r.AccountId
+            FROM npe03__Recurring_Donation__c
+            WHERE Id IN :rds
+            ]) {
+                rdByAccountId.put(r.Id, r.npe03__Contact__r.AccountId);
+
+            }
+        return rdByAccountId;
     }
 }
