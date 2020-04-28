@@ -16,8 +16,6 @@ import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submi
 /*******************************************************************************
 * @description Schema imports
 */
-
-// Schema Imports
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DI_PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
