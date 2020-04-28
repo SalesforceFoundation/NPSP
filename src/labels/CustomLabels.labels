@@ -5638,7 +5638,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link to toggle off payment processing</shortDescription>
+        <shortDescription>Link to toggle payment processing off</shortDescription>
         <value>Do Not Charge Card</value>
     </labels>
     <labels>
