@@ -139,21 +139,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         Contact contact = getContact();
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(contact.id)
-            .withAmount(100)
-            .withDefaultValues()
-            .build();
-
-        Test.startTest();
-        insert rd;
-        Test.stopTest();
-
-
-        rd = rdGateway.getRecord(rd.Id);
-
-        System.assertNotEquals(null, rd.npe03__Organization__c,
-            'Account in recurring donations should be auto populated from contact');
+        testAndAssertIfAccountisPopulated(contact);
 
     }
 
@@ -164,25 +150,11 @@ private with sharing class RD2_RecurringDonations_TEST {
     @isTest
     private static void shouldAutoPopulateHHAccountWhenContactOnlyEnteredInRD() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
+        //HH contact
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(contact.id)
-            .withAmount(100)
-            .withDefaultValues()
-            .build();
-
-        Test.startTest();
-        insert rd;
-        Test.stopTest();
-
-
-        rd = rdGateway.getRecord(rd.Id);
-
-        System.assertNotEquals(null, rd.npe03__Organization__c,
-            'Account in recurring donations should be auto populated from contact');
+       testAndAssertIfAccountisPopulated(contact);
 
     }
 
@@ -197,21 +169,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(contact.id)
-            .withAmount(100)
-            .withDefaultValues()
-            .build();
-
-        Test.startTest();
-        insert rd;
-        Test.stopTest();
-
-
-        rd = rdGateway.getRecord(rd.Id);
-
-        System.assertNotEquals(null, rd.npe03__Organization__c,
-            'Account in recurring donations should be auto populated from contact');
+        npe03__Recurring_Donation__c rd = testAndAssertIfAccountisPopulated(contact);
 
         rd.npe03__Organization__c = null;
         update rd;
@@ -774,6 +732,30 @@ private with sharing class RD2_RecurringDonations_TEST {
             FROM Contact
             LIMIT 1
         ];
+    }
+
+    /****
+    * @description Verifies Account is populated after data migration is run
+    * @return Recurring Donation
+    */
+    private static npe03__Recurring_Donation__c testAndAssertIfAccountisPopulated(Contact contact) {
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.id)
+            .withAmount(100)
+            .withDefaultValues()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+
+        return rd;
+
     }
 
 }
