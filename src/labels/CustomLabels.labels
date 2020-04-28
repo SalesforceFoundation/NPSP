@@ -5458,7 +5458,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You are currently updating: </value>
     </labels>
     <labels>
-        <fullName>geBodyPaymentNotProcessingPayment</fullName>
+        <fullName>geBodyPaymentNotProcessingTransaction</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -6555,6 +6555,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Warning message for deleting a section if it contains required fields</shortDescription>
         <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
+    </labels>
+    <labels>
+        <fullName>geWarningPaymentNotProcessingTransaction</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about logging a Closed/Won Opportunity &amp; Paid Payment</shortDescription>
+        <value>Unless you update the Opportunity Stage on this form, this gift will be recorded with a Closed/Won Stage with a Paid Payment.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>

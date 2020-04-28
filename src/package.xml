@@ -2104,7 +2104,7 @@
         <members>geBodyMatchingPendingDonation</members>
         <members>geBodyMatchingSelectRecord</members>
         <members>geBodyMatchingUpdatingDonation</members>
-        <members>geBodyPaymentNotProcessingPayment</members>
+        <members>geBodyPaymentNotProcessingTransaction</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geBodyWidgetFields</members>
@@ -2236,6 +2236,7 @@
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
+        <members>geWarningPaymentNotProcessingTransaction</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>

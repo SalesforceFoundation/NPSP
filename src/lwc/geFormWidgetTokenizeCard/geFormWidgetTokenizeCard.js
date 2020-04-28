@@ -49,6 +49,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleUserDisabledWidget() {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
+        this.alert = {
+            theme: 'warning',
+            message: this.CUSTOM_LABELS.geWarningPaymentNotProcessingTransaction,
+            variant: 'inverse',
+            icon: 'utility:warning'
+        };
         // TODO: dispatch an event to form renderer to clear the token from the data import record
     }
 

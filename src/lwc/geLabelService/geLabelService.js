@@ -75,7 +75,7 @@ import geBodyMatchingNoPayments from '@salesforce/label/c.geBodyMatchingNoPaymen
 import geBodyMatchingPendingDonation from '@salesforce/label/c.geBodyMatchingPendingDonation';
 import geBodyMatchingSelectRecord from '@salesforce/label/c.geBodyMatchingSelectRecord';
 import geBodyMatchingUpdatingDonation from '@salesforce/label/c.geBodyMatchingUpdatingDonation';
-import geBodyPaymentNotProcessingPayment from '@salesforce/label/c.geBodyPaymentNotProcessingPayment';
+import geBodyPaymentNotProcessingTransaction from '@salesforce/label/c.geBodyPaymentNotProcessingTransaction';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geBodyTemplatesTabDescription from '@salesforce/label/c.geBodyTemplatesTabDescription';
 import geBodyWidgetFields from '@salesforce/label/c.geBodyWidgetFields';
@@ -193,6 +193,7 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
+import geWarningPaymentNotProcessingTransaction from '@salesforce/label/c.geWarningPaymentNotProcessingTransaction';
 
 class GeLabelService {
 
@@ -277,7 +278,7 @@ class GeLabelService {
         geBodyMatchingPendingDonation,
         geBodyMatchingSelectRecord,
         geBodyMatchingUpdatingDonation,
-        geBodyPaymentNotProcessingPayment,
+        geBodyPaymentNotProcessingTransaction,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
         geBodyWidgetFields,
@@ -395,6 +396,7 @@ class GeLabelService {
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
+        geWarningPaymentNotProcessingTransaction,
     });
 
     /*******************************************************************************
