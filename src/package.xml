@@ -2236,7 +2236,6 @@
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
-        <members>geWarningPaymentNotProcessingTransaction</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
