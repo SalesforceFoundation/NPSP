@@ -40,6 +40,8 @@
 global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
+
+    @TestVisible
     private static final String PAYMENT_SERVICES_SUCCESSFUL_CHARGE = 'captured';
 
     public BDI_MappingService mappingService;
@@ -499,7 +501,12 @@ global with sharing class BDI_DataImportService {
     * @param dataImports a list of Data Import records to import
     */
     public void process(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports) {
-        List<DataImport__c> filteredDataImports = new List<DataImport__c>();
+        // All data imports not meeting custom criteria will be filtered out before processing.
+        List<DataImport__c> filteredDataImports = shouldProcess(dataImports);
+
+        if (filteredDataImports.isEmpty()) {
+            return;
+        }
 
         // initialize our performance logger
         perfLogger = new BDI_PerfLogger(filteredDataImports[0].NPSP_Data_Import_Batch__c, filteredDataImports.size());
