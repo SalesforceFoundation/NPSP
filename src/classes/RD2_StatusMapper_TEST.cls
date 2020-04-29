@@ -35,5 +35,42 @@
 */
 @IsTest(IsParallel=true)
 public with sharing class RD2_StatusMapper_TEST {
+    /***
+    * @description RD2_StatusMapper Stub
+    */
+    public class Stub implements System.StubProvider {
 
+        /**
+        * @description Hard coded validate status
+        * @param status status to check
+        * @return Convert to mapped status, return null when status is not Active or Closed 
+        */
+        private String convertStatusType(String status) {
+            if (status == RD2_Constants.STATUS_ACTIVE) {
+                return RD2_Constants.STATUS_ACTIVE;
+    
+            } else if (status == RD2_Constants.STATUS_CLOSED) {
+                return RD2_Constants.STATUS_CLOSED;
+            } else {
+                return null;
+            }
+        }
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String methodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            switch on methodName {
+                when 'getStatusType' {
+                    return convertStatusType((String) args[0]);
+                } when else {
+                    return null;
+                }
+            }
+        }
+    }
 }
