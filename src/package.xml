@@ -2104,6 +2104,7 @@
         <members>geBodyMatchingPendingDonation</members>
         <members>geBodyMatchingSelectRecord</members>
         <members>geBodyMatchingUpdatingDonation</members>
+        <members>geBodyPaymentNotProcessingTransaction</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geBodyWidgetFields</members>
@@ -2124,6 +2125,8 @@
         <members>geButtonMatchingUpdatePayment</members>
         <members>geButtonNewBatch</members>
         <members>geButtonNewSingleGift</members>
+        <members>geButtonPaymentAlternate</members>
+        <members>geButtonPaymentDoNotCharge</members>
         <members>geButtonSaveNewGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDisableGiftEntryInfo</members>

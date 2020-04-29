@@ -75,6 +75,7 @@ import geBodyMatchingNoPayments from '@salesforce/label/c.geBodyMatchingNoPaymen
 import geBodyMatchingPendingDonation from '@salesforce/label/c.geBodyMatchingPendingDonation';
 import geBodyMatchingSelectRecord from '@salesforce/label/c.geBodyMatchingSelectRecord';
 import geBodyMatchingUpdatingDonation from '@salesforce/label/c.geBodyMatchingUpdatingDonation';
+import geBodyPaymentNotProcessingTransaction from '@salesforce/label/c.geBodyPaymentNotProcessingTransaction';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geBodyTemplatesTabDescription from '@salesforce/label/c.geBodyTemplatesTabDescription';
 import geBodyWidgetFields from '@salesforce/label/c.geBodyWidgetFields';
@@ -95,6 +96,8 @@ import geButtonMatchingUpdateOpportunity from '@salesforce/label/c.geButtonMatch
 import geButtonMatchingUpdatePayment from '@salesforce/label/c.geButtonMatchingUpdatePayment';
 import geButtonNewBatch from '@salesforce/label/c.geButtonNewBatch';
 import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
+import geButtonPaymentAlternate from '@salesforce/label/c.geButtonPaymentAlternate';
+import geButtonPaymentDoNotCharge from '@salesforce/label/c.geButtonPaymentDoNotCharge';
 import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
@@ -274,6 +277,7 @@ class GeLabelService {
         geBodyMatchingPendingDonation,
         geBodyMatchingSelectRecord,
         geBodyMatchingUpdatingDonation,
+        geBodyPaymentNotProcessingTransaction,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
         geBodyWidgetFields,
@@ -294,6 +298,8 @@ class GeLabelService {
         geButtonMatchingUpdatePayment,
         geButtonNewBatch,
         geButtonNewSingleGift,
+        geButtonPaymentAlternate,
+        geButtonPaymentDoNotCharge,
         geButtonSaveNewGift,
         geButtonTemplatesTabCreateTemplate,
         geErrorAmountDoesNotMatch,
