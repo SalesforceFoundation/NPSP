@@ -41,7 +41,7 @@ public with sharing class GE_PaymentServices {
 
     // Properties used to configure headers in
     // HTTP Requests to Elevate payment services
-    @TestVisible static final String API_Key = 'apiKey';
+    @TestVisible static final String API_KEY = 'apiKey';
     @TestVisible static final String BASE_URL = 'baseURL';
     @TestVisible static final String JWT_TOKEN = 'jwttoken';
     @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids';
@@ -282,7 +282,7 @@ public with sharing class GE_PaymentServices {
                             )) {
                         if (configRecord.Service__c == PAYMENTS_SERVICE_NAME) {
                             keyValueMap.put(configRecord.Key__c, configRecord.Value__c);
-                        } else if (configRecord.Key__c == API_Key &&
+                        } else if (configRecord.Key__c == API_KEY &&
                                 configRecord.Service__c == MAKANA_SERVICE_NAME) {
                             makanaKey = configRecord.Value__c;
                         }
@@ -290,8 +290,8 @@ public with sharing class GE_PaymentServices {
 
                     // If the payments service config does not have an Api key
                     // and makana does, use the makana Api key
-                    if (makanaKey != null && keyValueMap.get(API_Key) == null) {
-                        keyValueMap.put(API_Key, makanaKey);
+                    if (makanaKey != null && keyValueMap.get(API_KEY) == null) {
+                        keyValueMap.put(API_KEY, makanaKey);
                     }
                 }
                 return keyValueMap;
