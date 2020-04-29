@@ -30,14 +30,14 @@
 * @author Salesforce.org
 * @date 2020
 * @group Recurring Donations
-* @description Recurring Donation status mapping wrapper
+* @description Enhanced Recurring Donation Status Mapping Setting
 *
 */
 public with sharing class RD2_StatusMapper {
 
     /**
     * @description Get the mapped State from the Status
-    * @param status Recurring Donation status
+    * @param status Recurring Donation Status
     * @return String 
     */
     public String getState(String status) {

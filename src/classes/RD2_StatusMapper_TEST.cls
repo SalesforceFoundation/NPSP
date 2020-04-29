@@ -30,7 +30,7 @@
 * @author Salesforce.org
 * @date 2020
 * @group Recurring Donations
-* @description Unit tests for the Enhanced RD Settings
+* @description Unit tests for Enhanced Recurring Donation Status Mapping Setting
 *
 */
 @IsTest(IsParallel=true)
