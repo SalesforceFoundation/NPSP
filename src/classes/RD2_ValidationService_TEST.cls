@@ -774,7 +774,133 @@ private with sharing class RD2_ValidationService_TEST {
         );
     }
 
+    /***
+    * @description Verifies that RD is inserted successfully when Status is mapped
+    */
+    @isTest
+    private static void shouldSuccessfullyInsertRDWhenStatusIsMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            new RD2_StatusMapper_TEST.Stub()
+        );
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusActive()
+            .build();
+        
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assert(rd.Id != null, 'RD insert should succeed when Status is mapped');
+    }
+
+    /***
+    * @description Verifies that RD fail to inserted when Status is not mapped
+    */
+    @isTest
+    private static void shouldFailRDInsertWhenStatusIsNotMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            new RD2_StatusMapper_TEST.Stub()
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatus(RD2_Constants.STATUS_LAPSED)
+            .build();
+    
+        String errMessage = '';
+        try {
+            Test.startTest();
+            insert rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        
+        String expectedMessage =  String.format(
+            System.Label.RD2_StatusMustBeMapped,
+            new String[]{rd.Status__c});
+
+        System.assert(errMessage.contains(expectedMessage),
+            'RD should fail to inserted when the status is not mapped:' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that RD is updated successfully when Status is mapped
+    */
+    @isTest
+    private static void shouldSuccessfullyUpdateRDWhenStatusIsMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            new RD2_StatusMapper_TEST.Stub()
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusActive()
+            .build();
+        insert rd;
+        
+        
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage),
+            'RD update should succeed when Status is mapped: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that RD fail to update when Status is not mapped
+    */
+    @isTest
+    private static void shouldFailRDUpdateWhenStatusIsNotMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            new RD2_StatusMapper_TEST.Stub()
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusActive()
+            .build();
+        insert rd;
+        
+        
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.Status__c = RD2_Constants.STATUS_LAPSED;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        String expectedMessage =  String.format(
+            System.Label.RD2_StatusMustBeMapped,
+            new String[]{rd.Status__c});
+
+        System.assert(errMessage.contains(expectedMessage),
+            'RD update should fail when Status is not mapped: ' + errMessage
+        );
+    }
 
     // Helper Methods
     /////////////////////

@@ -107,7 +107,7 @@ public with sharing class RD2_ValidationService {
     /**
     * @description Status to State Mapper 
     */
-    private static RD2_StatusMapper statusMapper {
+    public static RD2_StatusMapper statusMapper {
         get {
             if (statusMapper == null) {
                 statusMapper = new RD2_StatusMapper();
@@ -145,7 +145,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
-            validateStatusMapping(rd);
+            validateStatusIsMapped(rd);
         }
     }
 
@@ -166,7 +166,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
-            validateStatusMapping(rd);
+            validateStatusIsMapped(rd);
 
             Boolean isValid = validateDonorChange(rd, oldRd);
             if (isValid) {
@@ -286,9 +286,13 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @return void 
     */
-    private void validateStatusMapping(npe03__Recurring_Donation__c rd) {
+    private void validateStatusIsMapped(npe03__Recurring_Donation__c rd) {
         if (String.isBlank(statusMapper.getStatusType(rd.Status__c))) {
-            rd.addError('error');
+            rd.addError(
+                String.format(
+                    System.Label.RD2_StatusMustBeMapped,
+                    new String[]{rd.Status__c})
+            );
         }
     }
 
