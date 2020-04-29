@@ -309,4 +309,23 @@ public with sharing class GE_PaymentServices {
         }
     }
 
+    /**
+     * @description Checks whether an org is a customer of Elevate Payment Services.
+     *              After onboarding within Elevate, these configuration key-value
+     *              pairs should exist in the org.  If this required set of keys is not
+     *              found, then NPSP cannot successfully make callouts to Elevate.
+    */
+    @AuraEnabled
+    public static Boolean isElevateCustomer() {
+        return new Configuration().keyValueMap.keySet().containsAll(
+                new List<String>{
+                        ELEVATE_SDK,
+                        PRODUCTID,
+                        BASE_URL,
+                        API_KEY,
+                        SFDO_MERCHANTIDS,
+                        SFDO_GATEWAYIDS
+                });
+    }
+
 }

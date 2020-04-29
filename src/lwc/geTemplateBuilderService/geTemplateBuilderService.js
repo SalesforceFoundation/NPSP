@@ -4,6 +4,7 @@ import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
+import isElevateCustomer from '@salesforce/apex/GE_PaymentServices.isElevateCustomer';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
@@ -109,21 +110,31 @@ class GeTemplateBuilderService {
     * @param {object} objectMappingByDevName: Map of object mappings.
     */
     addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName, fieldMappingsByObjMappingDevName) => {
+        isElevateCustomer()
+            .then(isElevateCustomer => {
+                GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
 
-        GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
+                fieldMappingByDevName.geFormWidgetAllocation =
+                    GeWidgetService.definitions.geFormWidgetAllocation;
 
-        fieldMappingByDevName.geFormWidgetAllocation = GeWidgetService.definitions.geFormWidgetAllocation;
-        fieldMappingByDevName.geFormWidgetTokenizeCard = GeWidgetService.definitions.geFormWidgetTokenizeCard;
+                objectMappingByDevName.Widgets = {
+                    DeveloperName: 'Widgets',
+                    MasterLabel: labelGeHeaderFieldBundles
+                };
 
-        objectMappingByDevName.Widgets = {
-            DeveloperName: 'Widgets',
-            MasterLabel: labelGeHeaderFieldBundles
-        };
+                fieldMappingsByObjMappingDevName.Widgets = [
+                    fieldMappingByDevName.geFormWidgetAllocation
+                ];
 
-        fieldMappingsByObjMappingDevName.Widgets = [
-            fieldMappingByDevName.geFormWidgetAllocation,
-            fieldMappingByDevName.geFormWidgetTokenizeCard
-        ]
+                if (isElevateCustomer) {
+                    fieldMappingByDevName.geFormWidgetTokenizeCard =
+                        GeWidgetService.definitions.geFormWidgetTokenizeCard;
+                    fieldMappingsByObjMappingDevName.Widgets.push(
+                        fieldMappingByDevName.geFormWidgetTokenizeCard
+                    );
+                }
+            })
+            .catch(error => handleError(error));
     }
 }
 
