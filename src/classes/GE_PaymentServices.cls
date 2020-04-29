@@ -39,6 +39,10 @@ public with sharing class GE_PaymentServices {
 
     PurchaseCallBody purchaseCallBody;
 
+    // Names of Payment Service configuration sets
+    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
+    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
+
     // Properties used to configure headers in
     // HTTP Requests to Elevate payment services
     @TestVisible static final String API_KEY = 'apiKey';
@@ -50,9 +54,14 @@ public with sharing class GE_PaymentServices {
     @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
     @TestVisible static final String PRODUCTID = 'productId';
 
-    // Names of Payment Service configuration sets
-    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
-    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
+    @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String>{
+            ELEVATE_SDK,
+            PRODUCTID,
+            BASE_URL,
+            API_KEY,
+            SFDO_MERCHANTIDS,
+            SFDO_GATEWAYIDS
+    };
 
     @TestVisible Map<String, String> config;
 
@@ -313,19 +322,12 @@ public with sharing class GE_PaymentServices {
      * @description Checks whether an org is a customer of Elevate Payment Services.
      *              After onboarding within Elevate, these configuration key-value
      *              pairs should exist in the org.  If this required set of keys is not
-     *              found, then NPSP cannot successfully make callouts to Elevate.
+     *              in the org, NPSP cannot load the Elevate SDK or successfully make
+     *              callouts to Elevate services.
     */
     @AuraEnabled
     public static Boolean isElevateCustomer() {
-        return new Configuration().keyValueMap.keySet().containsAll(
-                new List<String>{
-                        ELEVATE_SDK,
-                        PRODUCTID,
-                        BASE_URL,
-                        API_KEY,
-                        SFDO_MERCHANTIDS,
-                        SFDO_GATEWAYIDS
-                });
+        return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
     }
 
 }

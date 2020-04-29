@@ -184,4 +184,31 @@ public class GE_PaymentServices_TEST {
         System.assertEquals(testMerchantId,
                 service.config.get(GE_PaymentServices.SFDO_MERCHANTIDS));
     }
+
+    @IsTest
+    private static void shouldRequireConfigurationKeysToBeAnElevateCustomer() {
+        List<Payment_Services_Configuration__c> requiredConfigs = new
+                List<Payment_Services_Configuration__c>();
+
+        for (Integer i = 0; i < GE_PaymentServices.REQUIRED_CONFIG_KEYS.size(); i++) {
+            requiredConfigs.add(new Payment_Services_Configuration__c(
+                    Service__c = GE_PaymentServices.PAYMENTS_SERVICE_NAME,
+                    Key__c = GE_PaymentServices.REQUIRED_CONFIG_KEYS.get(i),
+                    Value__c = String.valueOf(i)
+            ));
+        }
+        insert requiredConfigs;
+
+        System.assertEquals(true, GE_PaymentServices.isElevateCustomer(),
+                'The org should be considered an Elevate customer when ' +
+                        'all required configuration keys are present.');
+
+        // Now delete a required configuration key and validate that
+        // GE_PaymentServices.isElevateCustomer returns false
+        delete [SELECT Id FROM Payment_Services_Configuration__c LIMIT 1];
+        System.assertEquals(false, GE_PaymentServices.isElevateCustomer(),
+                'The org should not be considered an Elevate customer without ' +
+                        'all required configuration keys present.');
+    }
+
 }
