@@ -782,7 +782,7 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .mapStatusToState(
+            .overrideDefaultMapping(
                 new Map<String, String>{
                     RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
             );
@@ -818,7 +818,7 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .mapStatusToState(
+            .overrideDefaultMapping(
                 new Map<String, String>{
                     RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
             );
@@ -858,7 +858,7 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .mapStatusToState(
+            .overrideDefaultMapping(
                 new Map<String, String>{
                     RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
                     RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED}
@@ -898,7 +898,7 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .mapStatusToState(
+            .overrideDefaultMapping(
                 new Map<String, String>{
                     RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
             );

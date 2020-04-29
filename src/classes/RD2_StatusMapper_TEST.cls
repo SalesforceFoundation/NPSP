@@ -50,10 +50,10 @@ public with sharing class RD2_StatusMapper_TEST {
         };
 
         /**
-        * @description Override default Status to State Mapping
-        * @param statusToStateMap new Status to State map;
+        * @description Override default Status Mapping Settings
+        * @param statusToStateMap new Status Mapping Settings;
         */
-        public Stub mapStatusToState(Map<String, String> statusToStateMap) {
+        public Stub overrideDefaultMapping(Map<String, String> statusToStateMap) {
             this.statusToStateMap = statusToStateMap;
             return this;
         }

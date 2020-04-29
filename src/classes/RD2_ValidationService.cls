@@ -105,7 +105,7 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description Status to State Mapper 
+    * @description Contains the current Status to State map configuration
     */
     public static RD2_StatusMapper statusMapper {
         get {
