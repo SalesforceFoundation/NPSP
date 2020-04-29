@@ -1041,6 +1041,7 @@
         <members>DataImport__c.Donation_Date__c</members>
         <members>DataImport__c.Donation_Description__c</members>
         <members>DataImport__c.Donation_Donor__c</members>
+        <members>DataImport__c.Donation_Elevate_Recurring_ID__c</members>
         <members>DataImport__c.Donation_Member_Level__c</members>
         <members>DataImport__c.Donation_Membership_End_Date__c</members>
         <members>DataImport__c.Donation_Membership_Origin__c</members>
@@ -1224,6 +1225,7 @@
         <members>Opportunity.Ask_Date__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
+        <members>Opportunity.CommitmentId__c</members>
         <members>Opportunity.DisableContactRoleAutomation__c</members>
         <members>Opportunity.Fair_Market_Value__c</members>
         <members>Opportunity.Gift_Strategy__c</members>
@@ -1996,6 +1998,7 @@
         <members>commonCardType</members>
         <members>commonClone</members>
         <members>commonCreditNumber</members>
+        <members>commonCriticalError</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
@@ -2017,6 +2020,7 @@
         <members>commonPercent</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
+        <members>commonReviewForm</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
         <members>commonTemplate</members>
@@ -2100,6 +2104,7 @@
         <members>geBodyMatchingPendingDonation</members>
         <members>geBodyMatchingSelectRecord</members>
         <members>geBodyMatchingUpdatingDonation</members>
+        <members>geBodyPaymentNotProcessingTransaction</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geBodyWidgetFields</members>
@@ -2120,6 +2125,8 @@
         <members>geButtonMatchingUpdatePayment</members>
         <members>geButtonNewBatch</members>
         <members>geButtonNewSingleGift</members>
+        <members>geButtonPaymentAlternate</members>
+        <members>geButtonPaymentDoNotCharge</members>
         <members>geButtonSaveNewGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDisableGiftEntryInfo</members>
@@ -2128,6 +2135,7 @@
         <members>geEditBatchInfo</members>
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
+        <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
         <members>geErrorDonorTypeValidation</members>
@@ -2144,7 +2152,12 @@
         <members>geErrorPageLevelFieldPermission2</members>
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
+        <members>geErrorRequestTimedout</members>
         <members>geErrorRequiredField</members>
+        <members>geErrorUncertainCardChargePart1</members>
+        <members>geErrorUncertainCardChargePart2</members>
+        <members>geErrorUncertainCardChargePart3</members>
+        <members>geErrorUncertainCardChargePart4</members>
         <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>
@@ -2928,6 +2941,7 @@
         <members>Data_Import_Field_Mapping.Donation_Amount</members>
         <members>Data_Import_Field_Mapping.Donation_Date</members>
         <members>Data_Import_Field_Mapping.Donation_Description</members>
+        <members>Data_Import_Field_Mapping.Donation_Elevate_Recurring_ID</members>
         <members>Data_Import_Field_Mapping.Donation_Member_Level</members>
         <members>Data_Import_Field_Mapping.Donation_Membership_End_Date</members>
         <members>Data_Import_Field_Mapping.Donation_Membership_Origin</members>
@@ -3575,6 +3589,7 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
@@ -3596,11 +3611,13 @@
         <members>utilAlertBanner</members>
         <members>utilCard</members>
         <members>utilCommon</members>
+        <members>utilCustomErrors</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
         <members>utilExpandableSection</members>
         <members>utilIllustration</members>
         <members>utilInput</members>
+        <members>utilNumberFormatter</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
