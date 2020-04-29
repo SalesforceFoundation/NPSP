@@ -443,6 +443,7 @@ private with sharing class RD2_ValidationService_TEST {
         insert rd;
 
         Test.startTest();
+        rd.npe03__Organization__c = null;
         rd.npe03__Contact__c = householdContacts[1].Id;
         update rd;
         Test.stopTest();
@@ -610,7 +611,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies DML should fail when installment frequency is updated to null 
+    * @description Verifies DML should fail when installment frequency is updated to null
     */
     @isTest
     private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesToNull() {
@@ -641,7 +642,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty) 
+    * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty)
     */
     @isTest
     private static void shouldBlockRDUpdateWhenInstallmentFrequencyIsOutOfRange() {
@@ -651,7 +652,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build(3);
-            
+
         insert rds;
 
         rds[0].InstallmentFrequency__c = 20;
@@ -688,7 +689,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build();
-            
+
         insert rd;
 
         rd.InstallmentFrequency__c = 20;
@@ -696,7 +697,7 @@ private with sharing class RD2_ValidationService_TEST {
         Test.startTest();
         update rd;
         Test.stopTest();
-        
+
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(20, rd.InstallmentFrequency__c,
