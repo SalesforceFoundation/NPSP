@@ -41,17 +41,21 @@ public with sharing class RD2_StatusMapper_TEST {
     public class Stub implements System.StubProvider {
 
         /***
-        * @description Mock RD Status Mapping Settings 
+        * @description Mock RD Status Mapping Settings
         */
-        private Map<String, String> statusToStateMap = new Map<String, String>();
+        private Map<String, String> statusToStateMap = new Map<String, String> {
+            RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
+            RD2_Constants.STATUS_LAPSED => RD2_Constants.STATUS_LAPSED,
+            RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED
+        };
 
         /**
-        * @description Hard coded validate status
-        * @param status Status to mapped from
-        * @param state State to mapped to
+        * @description Override default Status to State Mapping
+        * @param statusToStateMap new Status to State map;
         */
-        public String mapStatusToState(String status, String state) {
-            statusToStateMap.put(status, state);
+        public Stub mapStatusToState(Map<String, String> statusToStateMap) {
+            this.statusToStateMap = statusToStateMap;
+            return this;
         }
 
         public Object handleMethodCall(

@@ -282,12 +282,13 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description Validate the RD Status has the mapped State configure
+    * @description Validate the RD Status is configured in the Status Mapping Settings
     * @param rd The Recurring Donation to validate
-    * @return void 
+    * @return void
     */
+    @TestVisible
     private void validateStatusIsMapped(npe03__Recurring_Donation__c rd) {
-        if (String.isBlank(statusMapper.getStatusType(rd.Status__c))) {
+        if (String.isBlank(statusMapper.getState(rd.Status__c))) {
             rd.addError(
                 String.format(
                     System.Label.RD2_StatusMustBeMapped,

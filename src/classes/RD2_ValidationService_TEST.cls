@@ -780,9 +780,15 @@ private with sharing class RD2_ValidationService_TEST {
     @isTest
     private static void shouldSuccessfullyInsertRDWhenStatusIsMapped() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .mapStatusToState(
+                new Map<String, String>{
+                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
+            );
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
-            new RD2_StatusMapper_TEST.Stub()
+            mapperStub
         );
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
@@ -790,12 +796,18 @@ private with sharing class RD2_ValidationService_TEST {
             .withStatusActive()
             .build();
         
-        Test.startTest();
-        insert rd;
-        Test.stopTest();
+        String errMessage = '';
+        try {
+            Test.startTest();
+            insert rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
 
-        rd = rdGateway.getRecord(rd.Id);
-        System.assert(rd.Id != null, 'RD insert should succeed when Status is mapped');
+        System.assert(String.isBlank(errMessage),
+            'RD insert should succeed when Status is mapped: ' + errMessage
+        );
     }
 
     /***
@@ -804,14 +816,20 @@ private with sharing class RD2_ValidationService_TEST {
     @isTest
     private static void shouldFailRDInsertWhenStatusIsNotMapped() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .mapStatusToState(
+                new Map<String, String>{
+                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
+            );
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
-            new RD2_StatusMapper_TEST.Stub()
+            mapperStub
         );
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
-            .withStatus(RD2_Constants.STATUS_LAPSED)
+            .withStatusClosed()
             .build();
     
         String errMessage = '';
@@ -838,9 +856,16 @@ private with sharing class RD2_ValidationService_TEST {
     @isTest
     private static void shouldSuccessfullyUpdateRDWhenStatusIsMapped() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .mapStatusToState(
+                new Map<String, String>{
+                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
+                    RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED}
+            );
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
-            new RD2_StatusMapper_TEST.Stub()
+            mapperStub
         );
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
@@ -871,9 +896,15 @@ private with sharing class RD2_ValidationService_TEST {
     @isTest
     private static void shouldFailRDUpdateWhenStatusIsNotMapped() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .mapStatusToState(
+                new Map<String, String>{
+                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
+            );
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
-            new RD2_StatusMapper_TEST.Stub()
+            mapperStub
         );
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
