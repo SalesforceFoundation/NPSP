@@ -175,9 +175,12 @@ private with sharing class RD2_RecurringDonations_TEST {
         update rd;
 
         rd = rdGateway.getRecord(rd.id);
+        Contact con = getContact(contact.Id);
 
         System.assertNotEquals(null, rd.npe03__Organization__c,
-            'Account in recurring donations should be auto populated from contact');
+            'Account in recurring donations should not be null and should be populated');
+        System.assertEquals(con.AccountId, rd.npe03__Organization__c,
+            'Account in Recurring Donations should match to the account id in the contact in the recurring donation');
 
     }
 
@@ -753,10 +756,10 @@ private with sharing class RD2_RecurringDonations_TEST {
         Contact con = getContact(contact.Id);
 
         System.assertNotEquals(null, rd.npe03__Organization__c,
-            'Account in recurring donations should be auto populated from contact');
-
+            'Account in recurring donations should not be null and should be populated');
         System.assertEquals(con.AccountId, rd.npe03__Organization__c,
             'Account in Recurring Donations should match to the account id in the contact in the recurring donation');
+
         return rd;
 
     }

@@ -1872,8 +1872,11 @@ private class RD2_DataMigration_TEST {
         npe03__Recurring_Donation__c convertedRD = getRecords()[0];
 
         System.assertNotEquals(null, convertedRD.npe03__Organization__c,
-            'Account in recurring donations should be auto populated from contact post Datamigration is run' + convertedRD);
-    }
+             'Account in recurring donations should not be null and should be populated post Datamigration is run' + convertedRD);
+        System.assertEquals(getContact().AccountId, convertedRD.npe03__Organization__c,
+            'Account in Recurring Donations should match to the contact account in the recurring donation post Datamigration is run' );
+
+   }
 
     /**
      * @description Verifies if the Accounts are populated after data migration is run
@@ -1902,6 +1905,8 @@ private class RD2_DataMigration_TEST {
 
         System.assertNotEquals(null, convertedRD.npe03__Organization__c,
             'Account in recurring donations should be auto populated from contact post Datamigration is run' + convertedRD);
+        System.assertEquals(getContact().AccountId, convertedRD.npe03__Organization__c,
+            'Account in Recurring Donations should match to the contact account in the recurring donation post Datamigration is run' );
     }
 
 
