@@ -37,8 +37,6 @@
 */
 public with sharing class GE_GiftEntryController {
 
-    private static final String PAYMENT_SERVICES_SUCCESSFUL_CHARGE = 'captured';
-
     @AuraEnabled(cacheable=true)
     public static String getOrgDomain() {
         String url = System.Url.getOrgDomainUrl().getHost();
@@ -185,13 +183,6 @@ public with sharing class GE_GiftEntryController {
     */
     private static void processDataImport(DataImport__c dataImport, Boolean isDryRun, Boolean updateGift) {
         try {
-            String paymentStatus = dataImport.Payment_Status__c;
-
-            if(!String.isNotBlank(paymentStatus) &&
-                dataImport.Payment_Status__c.toLowerCase() != PAYMENT_SERVICES_SUCCESSFUL_CHARGE) {
-
-                return;
-            }
 
             Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
 
