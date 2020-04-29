@@ -405,6 +405,8 @@
         <members>RD2_ScheduleService_TEST</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
+        <members>RD2_StatusMapper</members>
+        <members>RD2_StatusMapper_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>
@@ -1319,6 +1321,9 @@
         <members>Filter_Rule__mdt.Operator__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
+        <members>RecurringDonationStatusMapping__mdt.IsDeleted__c</members>
+        <members>RecurringDonationStatusMapping__mdt.State__c</members>
+        <members>RecurringDonationStatusMapping__mdt.Status__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -2998,6 +3003,7 @@
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
+        <members>RecurringDonationStatusMapping__mdt</members>
         <members>Rollup__mdt</members>
         <name>CustomObject</name>
     </types>
@@ -3503,6 +3509,7 @@
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
+        <members>RecurringDonationStatusMapping__mdt-Recurring Donation Status Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
