@@ -40,6 +40,7 @@
 global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
+    private static final String PAYMENT_SERVICES_SUCCESSFUL_CHARGE = 'captured';
 
     public BDI_MappingService mappingService;
 
@@ -494,14 +495,14 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
     * @param apexJobId the apexJob that this is executing under
-    * @param diSettings the settings to control processing behavior
-    * @param listDI a list of Data Import records to import
-    * @return void
+    * @param dataImportSettings the settings to control processing behavior
+    * @param dataImports a list of Data Import records to import
     */
     public void process(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports) {
+        List<DataImport__c> filteredDataImports = new List<DataImport__c>();
 
         // initialize our performance logger
-        perfLogger = new BDI_PerfLogger(dataImports[0].NPSP_Data_Import_Batch__c, dataImports.size());
+        perfLogger = new BDI_PerfLogger(filteredDataImports[0].NPSP_Data_Import_Batch__c, filteredDataImports.size());
         BDI_PerfLogger.PerfLog pl;
 
         SavePoint sp = Database.setSavepoint();
@@ -510,7 +511,7 @@ global with sharing class BDI_DataImportService {
             this.diSettings = dataImportSettings;
 
             // first set a clean state for each DI
-            for (DataImport__c dataImport : dataImports) {
+            for (DataImport__c dataImport : filteredDataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
@@ -518,7 +519,7 @@ global with sharing class BDI_DataImportService {
             }
 
             this.flsService = new BDI_DataImportFLSService(
-                    dataImports,
+                    filteredDataImports,
                     mappingService,
                     getFieldAccessLevelsToValidate()
             );
@@ -629,6 +630,29 @@ global with sharing class BDI_DataImportService {
                     BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE);
         }
         return fieldAccessLevelsToValidate;
+    }
+
+    /**
+     * @description Before processing data import records, this method filters out any data imports that do not meet
+     * custom criteria that applies to all data imports before allowing them to be processed.
+     * @param dataImports {List<DataImport__c>} List of data import records to be filtered
+     *
+     * @return List<DataImport__c>
+    */
+    private List<DataImport__c> shouldProcess(List<DataImport__c> dataImports) {
+        List<DataImport__c> dataImportsToProcess = new List<DataImport__c>();
+
+        for (DataImport__c dataImport : dataImports) {
+            String paymentStatus = dataImport.Payment_Status__c;
+
+            if(!String.isNotBlank(paymentStatus) &&
+                dataImport.Payment_Status__c.toLowerCase() != PAYMENT_SERVICES_SUCCESSFUL_CHARGE) {
+
+                dataImportsToProcess.add(dataImport);
+            }
+        }
+
+        return dataImportsToProcess;
     }
 
     /**
