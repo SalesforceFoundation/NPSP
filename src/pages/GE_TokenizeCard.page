@@ -43,9 +43,17 @@
                 '}'
         })
         .then(() => {
+            isLoaded();
+
+            setTimeout(function() {
+                isLoaded();
+            }, 3000);
+        });
+
+        function isLoaded() {
             const message = JSON.stringify({ isLoaded: true });
             postMessage(message);
-        });
+        }
 
         /*******************************************************************************
         * @description Method listens for messages from geFormWidgetTokenizeCard

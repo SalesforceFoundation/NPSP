@@ -9,13 +9,40 @@
 }
 
 .credit-card-container {
-    border: 1px solid #0170D2;
+    border: 1px solid #E2E1E0;
     border-radius: 0.25rem;
     min-height: 5rem;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
 .credit-card-header {
-    background-color: #0170D2;
-    color: #FFFFFF;
+    background-color: #E2E1E0;
+    font-weight: bold;
+}
+
+.do-not-charge-card-button {
+    line-height: 0;
+    font-weight: 100;
+    color: rgb(112, 110, 107);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.do-not-charge-card-icon {
+    padding-left: 0.45rem;
+    padding-right: 0.15rem;
+    padding-bottom: 0.1rem;
+}
+
+.fade-in {
+    animation: fade 1s;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

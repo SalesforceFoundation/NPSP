@@ -4,6 +4,7 @@ import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
@@ -14,21 +15,23 @@ import {
     CONTACT_FIRST_NAME_INFO,
     CONTACT_LAST_NAME_INFO
 } from 'c/utilTemplateBuilder';
-import { registerListener } from 'c/pubsubNoPageRef';
+import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
     getQueryParameters,
     isEmpty,
+    isObject,
     isNotEmpty,
     format,
     isUndefined,
-    checkNestedProperty,
+    hasNestedProperty,
     arraysMatch,
     deepClone,
     getSubsetObject,
     validateJSONString
 } from 'c/utilCommon';
+import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
@@ -48,7 +51,7 @@ import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -119,6 +122,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track selectedDonationDataImportFieldValues = {};
     @track hasPreviouslySelectedDonation = false;
 
+    @track hasPurchaseCallTimedout = false;
+
     _donationDonor;
     _account1Imported;
     _contact1Imported;
@@ -128,7 +133,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get title() {
-        return checkNestedProperty(this.donorRecord, 'fields', 'Name', 'value') ?
+        return hasNestedProperty(this.donorRecord, 'fields', 'Name', 'value') ?
             GeLabelService.format(
                 this.CUSTOM_LABELS.geHeaderMatchingGiftBy,
                 [this.donorRecord.fields.Name.value]) :
@@ -305,27 +310,73 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {object} error: Object containing errors
     */
     handleSingleGiftErrors(error) {
-        const hasTokenizationError = error.error;
-        if (hasTokenizationError) {
-            // TODO: Handle tokenization errors
-            let tokenizationErrors = error.error;
-            if (typeof error.error === 'object') {
-                tokenizationErrors =
-                    Object.keys(tokenizationErrors).map(e => {
-                        return tokenizationErrors[e];
-                    }).join(', ');
-            }
-            return;
+        this.loadingText = null;
+
+        const hasHttpRequestError = error instanceof HttpRequestError;
+        if (hasHttpRequestError) {
+            return this.catchHttpRequestError(error);
+        }
+
+        const cardHasBeenChargedErrorButBDIFailed = error instanceof CardChargedBDIError;
+        if (cardHasBeenChargedErrorButBDIFailed) {
+            return this.catchCardChargedBDIFailedError(error);
         }
 
         const hasAuraErrors = error.body && error.body.message;
         if (hasAuraErrors) {
-            this.handleCatchOnSave(error);
-            return;
+            return this.handleCatchOnSave(error);
         }
 
         // Handle any other error
         handleError(error);
+    }
+
+    catchHttpRequestError(error) {
+        this.hasPurchaseCallTimedout = error.statusCode === HTTP_CODES.Request_Timeout;
+        if (this.hasPurchaseCallTimedout) {
+            this.formatTimeoutCustomLabels(error.dataImportRecord);
+        }
+
+        this.displayPageLevelErrorMessages([error]);
+
+        return;
+    }
+
+    catchCardChargedBDIFailedError(error) {
+        this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
+        this.toggleModalByComponentName('gePurchaseCallModalError');
+        this.addPageLevelErrorMessage(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed, 0);
+        this.handleCatchOnSave(error.apexException);
+
+        return;
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event to the geFormWidgetTokenizeCard component
+    * to disable itself and display the provided message.
+    *
+    * @param {string} message: Message to display in the UI
+    */
+    dispatchdDisablePaymentServicesWidgetEvent(message) {
+        fireEvent(this, DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
+            { detail: { message: message } });
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event and notifies the parent component to display
+    * an aura overlay library modal with a lightning web component in its body.
+    *
+    * @param {string} modalBodyComponentName: Name of the LWC to render in the
+    * overlay library modal's body.
+    */
+    toggleModalByComponentName(modalBodyComponentName) {
+        const detail = {
+            modalProperties: {
+                componentName: modalBodyComponentName,
+                showCloseButton: false
+            }
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
     handleSaveBatchGiftEntry(dataImportRecord, formControls) {
@@ -355,7 +406,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleCatchOnSave( error ) {
         // var inits
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        const exceptionWrapper = JSON.parse(error.body.message);
+        const exceptionWrapper = new ExceptionDataError(error);
         const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
         this.hasPageLevelError = true;
 
@@ -375,17 +426,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         errorMessage = errorMessageObject.errorMessage;
                     }
 
-                    this.pageLevelErrorMessageList = [{
-                        index: 0,
-                        errorMessage: errorMessage
-                    }];
+                    this.addPageLevelErrorMessage(errorMessage, this.pageLevelErrorMessageList.length);
                 }
 
                 // If there are no specific fields the error has to go to,
                 // put it on the page level error message.
                 for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
-                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                        {index: dmlIndex+1, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                    const errorMessage = exceptionWrapper.DMLErrorMessageMapping[dmlIndex];
+                    const index = dmlIndex + 1;
+                    this.addPageLevelErrorMessage(errorMessage, index);
                 }
 
             } else {
@@ -419,18 +468,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     // With the fields noted.
                     if (hiddenFieldList.length > 0) {
                         let combinedFields = hiddenFieldList.join(', ');
-                        this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                                                            { index: key, errorMessage: errorMessage + ' [' + combinedFields + ']' }];
+                        this.addPageLevelErrorMessage(`${errorMessage} [${combinedFields}]`, key);
                     }
                 }
             }
         } else {
-            this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                                                { index: 0, errorMessage: exceptionWrapper.errorMessage }];
+            this.addPageLevelErrorMessage(exceptionWrapper.errorMessage, 0);
         }
 
         // focus either the page level or field level error messsage somehow
         window.scrollTo(0, 0);
+    }
+
+    /*******************************************************************************
+    * @description Add a list of error messages to the page level error message
+    * array.
+    *
+    * @param {array} errors: List of error mesages
+    */
+    displayPageLevelErrorMessages(errors) {
+        errors.forEach((error, index) => {
+            this.addPageLevelErrorMessage(error.message, index);
+        });
+        this.hasPageLevelError = true;
+    }
+
+    /*******************************************************************************
+    * @description Add an error message to the overall page level error messages
+    * array.
+    *
+    * @param {string} errorMessage: Error message to be displayed
+    * @param {integer} index: Position of the corresponding row in a DML exception
+    */
+    addPageLevelErrorMessage(errorMessage, index = 0) {
+        this.pageLevelErrorMessageList = [
+            ...this.pageLevelErrorMessageList,
+            { index: index, errorMessage: errorMessage }
+        ];
     }
 
     /*******************************************************************************
@@ -1570,5 +1644,56 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             allFields = Object.assign(allFields, fields);
         });
         return allFields;
+    }
+
+    /*******************************************************************************
+    * @description Method formats custom labels for the purchase call timeout error
+    * scenario.
+    *
+    * @param {object} dataImportRecord: Data Import record related to the error
+    * received from geGiftEntryFormApp.
+    */
+    formatTimeoutCustomLabels(dataImportRecord) {
+        const donorName = this.getDonorName();
+        const donationAmountFormField = this.getFormFieldBySourceName(DONATION_AMOUNT.fieldApiName);
+        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
+
+        this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorUncertainCardChargePart1,
+            [formattedDonationAmount, donorName, this.CUSTOM_LABELS.commonPaymentServices]);
+
+        this.CUSTOM_LABELS.geErrorUncertainCardChargePart3 = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorUncertainCardChargePart3,
+            [this.CUSTOM_LABELS.commonPaymentServices]);
+
+        this.CUSTOM_LABELS.geErrorUncertainCardChargePart4 = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorUncertainCardChargePart4,
+            [this.CUSTOM_LABELS.commonPaymentServices]);
+    }
+
+    getDonorName() {
+        const names = this.fabricatedCardholderNames;
+        if (names.firstName && names.lastName) {
+            return `${names.firstName} ${names.lastName}`;
+        } else {
+            return names.accountName;
+        }
+    }
+
+    /*******************************************************************************
+    * @description Get a form field's value and label properties by the source
+    * field api name.
+    *
+    * @param {string} sourceFieldApiName: A field api name from the DataImport__c
+    * custom object.
+    */
+    getFormFieldBySourceName(sourceFieldApiName) {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        for (let i = 0; i < sectionsList.length; i++) {
+            const matchingFormField = sectionsList[i].getFieldValueAndLabel([sourceFieldApiName]);
+            if (isObject(matchingFormField) && matchingFormField.hasOwnProperty(sourceFieldApiName)) {
+                return matchingFormField[sourceFieldApiName];
+            }
+        }
     }
 }

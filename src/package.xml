@@ -1998,6 +1998,7 @@
         <members>commonCardType</members>
         <members>commonClone</members>
         <members>commonCreditNumber</members>
+        <members>commonCriticalError</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
@@ -2019,6 +2020,7 @@
         <members>commonPercent</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
+        <members>commonReviewForm</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
         <members>commonTemplate</members>
@@ -2102,6 +2104,7 @@
         <members>geBodyMatchingPendingDonation</members>
         <members>geBodyMatchingSelectRecord</members>
         <members>geBodyMatchingUpdatingDonation</members>
+        <members>geBodyPaymentNotProcessingTransaction</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geBodyWidgetFields</members>
@@ -2122,6 +2125,8 @@
         <members>geButtonMatchingUpdatePayment</members>
         <members>geButtonNewBatch</members>
         <members>geButtonNewSingleGift</members>
+        <members>geButtonPaymentAlternate</members>
+        <members>geButtonPaymentDoNotCharge</members>
         <members>geButtonSaveNewGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDisableGiftEntryInfo</members>
@@ -2130,6 +2135,7 @@
         <members>geEditBatchInfo</members>
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
+        <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
         <members>geErrorDonorTypeValidation</members>
@@ -2146,7 +2152,12 @@
         <members>geErrorPageLevelFieldPermission2</members>
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
+        <members>geErrorRequestTimedout</members>
         <members>geErrorRequiredField</members>
+        <members>geErrorUncertainCardChargePart1</members>
+        <members>geErrorUncertainCardChargePart2</members>
+        <members>geErrorUncertainCardChargePart3</members>
+        <members>geErrorUncertainCardChargePart4</members>
         <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>
@@ -3578,6 +3589,7 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
@@ -3599,11 +3611,13 @@
         <members>utilAlertBanner</members>
         <members>utilCard</members>
         <members>utilCommon</members>
+        <members>utilCustomErrors</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
         <members>utilExpandableSection</members>
         <members>utilIllustration</members>
         <members>utilInput</members>
+        <members>utilNumberFormatter</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
