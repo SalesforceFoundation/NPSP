@@ -750,12 +750,28 @@ private with sharing class RD2_RecurringDonations_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
+        Contact con = getContact(contact.Id);
 
         System.assertNotEquals(null, rd.npe03__Organization__c,
             'Account in recurring donations should be auto populated from contact');
 
+        System.assertEquals(con.AccountId, rd.npe03__Organization__c,
+            'Account in Recurring Donations should match to the account id in the contact in the recurring donation');
         return rd;
 
+    }
+
+    /****
+    * @description Returns contact record for the specified contact Id
+    * @return Contact
+    */
+    private static Contact getContact(Id contactId) {
+        return [
+            SELECT FirstName, LastName, AccountId, Account.Name
+            FROM Contact
+            WHERE Id =:contactId
+            LIMIT 1
+        ];
     }
 
 }
