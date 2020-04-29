@@ -6,6 +6,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
 import { isNotEmpty, validateJSONString, format } from 'c/utilCommon';
+import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import GeLabelService from 'c/geLabelService';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
@@ -384,7 +385,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
 
         return JSON.stringify({
-            amount: this.dataImportRecord[DONATION_AMOUNT__C],
+            amount: getCurrencyLowestCommonDenominator(this.dataImportRecord[DONATION_AMOUNT__C]),
             email: 'test@test.test',
             firstName: firstName,
             lastName: lastName,
