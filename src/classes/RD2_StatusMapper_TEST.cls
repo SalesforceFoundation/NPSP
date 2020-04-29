@@ -40,20 +40,18 @@ public with sharing class RD2_StatusMapper_TEST {
     */
     public class Stub implements System.StubProvider {
 
+        /***
+        * @description Mock RD Status Mapping Settings 
+        */
+        private Map<String, String> statusToStateMap = new Map<String, String>();
+
         /**
         * @description Hard coded validate status
-        * @param status status to check
-        * @return Convert to mapped status, return null when status is not Active or Closed 
+        * @param status Status to mapped from
+        * @param state State to mapped to
         */
-        private String convertStatusType(String status) {
-            if (status == RD2_Constants.STATUS_ACTIVE) {
-                return RD2_Constants.STATUS_ACTIVE;
-    
-            } else if (status == RD2_Constants.STATUS_CLOSED) {
-                return RD2_Constants.STATUS_CLOSED;
-            } else {
-                return null;
-            }
+        public String mapStatusToState(String status, String state) {
+            statusToStateMap.put(status, state);
         }
 
         public Object handleMethodCall(
@@ -65,8 +63,8 @@ public with sharing class RD2_StatusMapper_TEST {
             List<Object> args
         ) {
             switch on methodName {
-                when 'getStatusType' {
-                    return convertStatusType((String) args[0]);
+                when 'getState' {
+                    return statusToStateMap.get((String) args[0]);
                 } when else {
                     return null;
                 }

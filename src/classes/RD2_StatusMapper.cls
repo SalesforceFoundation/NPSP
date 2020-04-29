@@ -40,7 +40,7 @@ public with sharing class RD2_StatusMapper {
     * @param status Recurring Donation status
     * @return String 
     */
-    public String getStatusType(String status) {
+    public String getState(String status) {
         if (status == RD2_Constants.STATUS_ACTIVE) {
             return RD2_Constants.STATUS_ACTIVE;
 
