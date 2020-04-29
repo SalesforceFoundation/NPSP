@@ -125,7 +125,9 @@ private with sharing class BDI_DataImportService_TEST {
                 BDI_MappingServiceHelpText.getInstance());
         service.injectDataImportSettings(diSettings);
 
-        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
+        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(1);
+        insert testDataImports;
+
         for (DataImport__c dataImport : testDataImports) {
             dataImport.Payment_Status__c = 'Bad Request';
         }
@@ -135,7 +137,7 @@ private with sharing class BDI_DataImportService_TEST {
         Test.stopTest();
 
         for (DataImport__c dataImport : [SELECT Status__c FROM DataImport__c]) {
-            System.assert(String.isBlank(dataImport.Status__c), 'Data Import should not have been processed.');
+            System.assertEquals(null, dataImport.Status__c, 'Data Import should not have been processed.');
         }
     }
 
@@ -151,6 +153,8 @@ private with sharing class BDI_DataImportService_TEST {
         service.injectDataImportSettings(diSettings);
 
         List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
+        insert testDataImports;
+
         for (DataImport__c dataImport : testDataImports) {
             dataImport.Payment_Status__c = BDI_DataImportService.PAYMENT_SERVICES_SUCCESSFUL_CHARGE;
         }

@@ -652,8 +652,8 @@ global with sharing class BDI_DataImportService {
         for (DataImport__c dataImport : dataImports) {
             String paymentStatus = dataImport.Payment_Status__c;
 
-            if(!String.isNotBlank(paymentStatus) &&
-                dataImport.Payment_Status__c.toLowerCase() != PAYMENT_SERVICES_SUCCESSFUL_CHARGE) {
+            if(String.isNotBlank(paymentStatus) &&
+                dataImport.Payment_Status__c.toLowerCase() == PAYMENT_SERVICES_SUCCESSFUL_CHARGE) {
 
                 dataImportsToProcess.add(dataImport);
             }
