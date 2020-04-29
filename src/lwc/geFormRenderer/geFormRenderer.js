@@ -45,8 +45,6 @@ import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
 import DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
-import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
-import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
@@ -294,11 +292,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     handleSaveSingleGiftEntry = async (inMemoryDataImport, formControls) => {
         if (inMemoryDataImport) {
+            const isWidgetInDoNotChargeState = this._isCreditCardWidgetInDoNotChargeState;
             const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
             this.dispatchEvent(new CustomEvent('submit', {
                 detail: {
                     inMemoryDataImport,
                     hasUserSelectedDonation,
+                    isWidgetInDoNotChargeState,
                     errorCallback: (error) => {
                         formControls.enableSaveButton();
                         formControls.toggleSpinner();
@@ -543,7 +543,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (this.batchId) {
                 this.handleSaveBatchGiftEntry(inMemoryDataImport, formControls);
             } else {
-                this.handleSaveSingleGiftEntry(inMemoryDataImport, formControls);
+                await this.handleSaveSingleGiftEntry(inMemoryDataImport, formControls);
             }
         }
     }
@@ -981,11 +981,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * @description Informs the form renderer when the credit card widget is in a 'do not charge' state
+     * @description Set variable that informs the form renderer when the
+     *  credit card widget is in a 'do not charge' state
      * @param event
      */
     handleDoNotChargeCardState (event) {
-        this._isCreditCardWidgetInDoNotChargeState = true;
+        this._isCreditCardWidgetInDoNotChargeState = event.isWidgetDisabled;
     }
 
     /**
@@ -1010,12 +1011,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
             dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
-
-        if (this._isCreditCardWidgetInDoNotChargeState) {
-            dataImportRecord[DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD] = '';
-            dataImportRecord[DATA_IMPORT_PAYMENT_STATUS_FIELD] = '';
-        }
-
         if (this.dataImport && this.dataImport.Id) {
             dataImportRecord.Id = this.dataImport.Id;
         }
