@@ -116,11 +116,11 @@ public with sharing class RD2_NamingService {
         autogenerateNames(changedRds);
     }
 
-     /***
-    * @description AutoPopulates account on Recurring Donations  if fields related to account or contact have changed
+    /***
+    * @description AutoPopulates account on Recurring Donations if the account is null and the contact is populated
+    * or the contact have been changed
     * @param rds New/changed Recurring Donations
     * @param oldRds Old Recurring Donations
-    * @return none
     */
     public void autoPopulateAccountsOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
 
@@ -157,6 +157,13 @@ public with sharing class RD2_NamingService {
         return hasChanged;
     }
 
+    /***
+    * @description Determines if Account is null when the contact is populated or the contact
+    * have been updated
+    * @param rd Changed Recurring Donation record
+    * @param oldRd Old Recurring Donation record
+    * @return Boolean
+    */
     @TestVisible
     private Boolean isAccountNullWhenContactExists(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         Boolean isAccountNull = (rd.npe03__Organization__c == null && rd.npe03__Contact__c != null )

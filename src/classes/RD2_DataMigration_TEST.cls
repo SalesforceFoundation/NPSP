@@ -1856,8 +1856,8 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies if the Accounts are populated in Enhanced Recurring
-     * when household contact is only populated.
+     * @description Verifies if the Accounts are populated after data migration is run
+     * when household contact is only populated and account is null.
      */
     @IsTest
     private static void shouldPopulateAccountWhenContactIsOnlyEntered() {
@@ -1877,7 +1877,7 @@ private class RD2_DataMigration_TEST {
 
     /**
      * @description Verifies if the Accounts are populated after data migration is run
-     * when household contact is only populated and have closed opps in legacy RD.
+     * when household contact is only populated with no account and have closed opps in legacy RD.
     */
     @IsTest
     private static void shouldPopulateAccountWhenContactIsOnlyEnteredWithClosedOpps() {

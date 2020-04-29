@@ -392,7 +392,7 @@ public with sharing class RD2_ValidationService {
         return rdIds;
     }
 
-    /**
+    /***
     * @description Get a map of Recurring donations Id with contact's account Id
     * @return Map<Id, Id>
     */
