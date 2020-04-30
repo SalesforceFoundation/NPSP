@@ -125,7 +125,7 @@ private with sharing class BDI_DataImportService_TEST {
                 BDI_MappingServiceAdvanced.getInstance());
         service.injectDataImportSettings(diSettings);
 
-        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(1);
+        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
         insert testDataImports;
 
         for (DataImport__c dataImport : testDataImports) {
