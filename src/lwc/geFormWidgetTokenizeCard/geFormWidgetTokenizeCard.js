@@ -6,6 +6,8 @@ import { format } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import { PAYMENT_TRANSACTION_STATUS_ENUM } from 'c/geConstants';
 import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
@@ -151,7 +153,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                     if (message.error) {
                         reject(this.handleTokenizationError(message));
                     } else if (message.token) {
-                        resolve({ [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: message.token });
+                        resolve({
+                            [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: message.token,
+                            [DATA_IMPORT_PAYMENT_STATUS_FIELD.fieldApiName]: PAYMENT_TRANSACTION_STATUS_ENUM.PENDING
+                        });
                     }
                 };
 

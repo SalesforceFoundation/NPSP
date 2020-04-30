@@ -1065,7 +1065,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             });
             diRecord[ADDITIONAL_OBJECT_JSON__C] = JSON.stringify(additionalObjectValues);
         }
-
         return diRecord;
     }
 
