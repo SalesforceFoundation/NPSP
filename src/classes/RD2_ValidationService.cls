@@ -91,6 +91,19 @@ public with sharing class RD2_ValidationService {
         set;
     }
 
+    /***
+    * @descripton Elevate integration service
+    */
+    private RD2_ElevateIntegrationService elevateService {
+        get {
+            if (elevateService == null) {
+                elevateService = new RD2_ElevateIntegrationService();
+            }
+            return elevateService;
+        }
+        set;
+    }
+
 
     /**
     * @description Constructor for the RD2_ValidationService class
@@ -127,15 +140,20 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     public void validateOnChange() {
-         for (Integer i = 0; i < rds.size(); i++) {
+        for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
+
+            if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
+                rd.addError(System.Label.RD2_ElevatePermissionRequired);
+                continue;
+            }
 
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
 
-            Boolean isValid = validateDonorChange(rd, oldRd);	            
+            Boolean isValid = validateDonorChange(rd, oldRd);
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
