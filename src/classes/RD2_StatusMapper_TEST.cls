@@ -1,8 +1,10 @@
 /*
     Copyright (c) 2020 Salesforce.org
     All rights reserved.
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -41,18 +43,31 @@ public with sharing class RD2_StatusMapper_TEST {
         /***
         * @description Mock RD Status Mapping Settings
         */
-        private Map<String, String> statusToStateMap = new Map<String, String> {
-            RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
-            RD2_Constants.STATUS_LAPSED => RD2_Constants.STATUS_LAPSED,
-            RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED
-        };
+        private Map<String, String> stateByStatus = new Map<String, String>();
 
         /**
-        * @description Override default Status Mapping Settings
-        * @param statusToStateMap new Status Mapping Settings;
+        * @description Load Status Mapping Settings mock with default values
+        * @return Stub
         */
-        public Stub overrideDefaultMapping(Map<String, String> statusToStateMap) {
-            this.statusToStateMap = statusToStateMap;
+        public Stub withDefaultMapping() {
+            stateByStatus.putAll(new Map<String, String> {
+                RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
+                RD2_Constants.STATUS_LAPSED => RD2_Constants.STATUS_LAPSED,
+                RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED
+            });
+
+            return this;
+        }
+
+        /**
+        * @description Add Status to State to the Statue Mapping Settings
+        * @param status The status to mapped from
+        * @param state The state to mapped to
+        * @return Stub
+        */
+        public Stub withStatusMapping(String status, String state) {
+            stateByStatus.put(status, state);
+
             return this;
         }
 
@@ -66,7 +81,7 @@ public with sharing class RD2_StatusMapper_TEST {
         ) {
             switch on methodName {
                 when 'getState' {
-                    return statusToStateMap.get((String) args[0]);
+                    return stateByStatus.get((String) args[0]);
                 } when else {
                     return null;
                 }
