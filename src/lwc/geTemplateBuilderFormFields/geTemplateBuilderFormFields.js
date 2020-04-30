@@ -124,9 +124,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     @track hasErrors = false;
     @track errors;
 
-    // TODO: Populate with dynamically excluded form fields
-    dynamicallyExcludedFormFields = []//[ 'geFormWidgetTokenizeCard' ];
-
     // identifiers for use with querySelectors
     LOCATORS = {
         FIELD_BUNDLES_SECTION_ID,
@@ -322,11 +319,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             fieldMapping.Source_Field_API_Name :
             fieldMapping.DeveloperName;
 
-        const isAllowed =
-            !EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME.includes(formFieldName) &&
-            !this.dynamicallyExcludedFormFields.includes(formFieldName);
-
-        return isAllowed;
+        return !EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME.includes(formFieldName);
     }
 
     /*******************************************************************************
