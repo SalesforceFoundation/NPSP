@@ -60,6 +60,19 @@ public with sharing class RD2_StatusMapper_TEST {
         }
 
         /**
+        * @description Put all Status value into Status Mapping Settings mock
+        * @return Stub
+        */
+        public Stub withAllMapping() {
+            List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions('npe03__Recurring_Donation__c',  String.valueOf(npe03__Recurring_Donation__c.Status__c));
+            for (SelectOption option : picklistValues) {
+                withStatusMapping(option.getValue(), option.getValue());
+            }
+
+            return this;
+        }
+
+        /**
         * @description Add Status to State to the Statue Mapping Settings
         * @param status The status to mapped from
         * @param state The state to mapped to
