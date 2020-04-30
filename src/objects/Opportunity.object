@@ -846,13 +846,13 @@
     </fields>
     <fields>
         <fullName>CommitmentId__c</fullName>
+        <caseSensitive>false</caseSensitive>
         <description>External identifier for Salesforce.org payment service integration.</description>
         <externalId>true</externalId>
         <inlineHelpText>External identifier for Salesforce.org payment service integration.</inlineHelpText>
         <label>Elevate Recurring Id</label>
         <length>100</length>
         <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
