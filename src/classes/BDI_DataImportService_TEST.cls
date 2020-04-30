@@ -122,7 +122,7 @@ private with sharing class BDI_DataImportService_TEST {
         Data_Import_Settings__c diSettings = getDataImportSettings();
 
         BDI_DataImportService service = new BDI_DataImportService(false,
-                BDI_MappingServiceHelpText.getInstance());
+                BDI_MappingServiceAdvanced.getInstance());
         service.injectDataImportSettings(diSettings);
 
         List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(1);
@@ -149,7 +149,7 @@ private with sharing class BDI_DataImportService_TEST {
         Data_Import_Settings__c diSettings = getDataImportSettings();
 
         BDI_DataImportService service = new BDI_DataImportService(false,
-                BDI_MappingServiceHelpText.getInstance());
+                BDI_MappingServiceAdvanced.getInstance());
         service.injectDataImportSettings(diSettings);
 
         List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
