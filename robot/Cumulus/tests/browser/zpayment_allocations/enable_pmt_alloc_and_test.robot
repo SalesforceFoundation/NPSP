@@ -18,11 +18,10 @@ Suite Teardown  Run keywords
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
 &{contact2_fields}         Email=test@example.com
-&{opportunity1_fields}     Type=Donation   Name=Opp Allocation Sync test Donation       Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
-&{opportunity2_fields}     Type=Donation   Name=Payment Allocation Sync test Donation   Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
+&{opportunity1_fields}     Type=Donation   Name=Opp Allocation Sync test Donation           Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
+&{opportunity2_fields}     Type=Donation   Name=Payment Allocation Sync test Donation       Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
 
 *** Test Cases ***
-
 Create Payment Allocations and Verify Opportunity Allocations Sync
     [Documentation]                        Once Allocations are Enabled and a Default GAU is added, create an opportunity via API.
     ...                                    Open Opportunity and open payments from the related tab. Verify that total payment is assigned to Default GAU
@@ -84,7 +83,7 @@ Update GAU Allocations and Verify Payment Allocations Sync
     Verify Payment Allocations    
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
-    
+
 ***Keywords***
 
 Enable Payment Allocations
