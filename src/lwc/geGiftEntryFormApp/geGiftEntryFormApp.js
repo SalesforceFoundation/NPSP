@@ -197,7 +197,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         inMemoryDataImport[PAYMENT_STATUS__C] =
             this._isCreditCardWidgetInDoNotChargeState ? '' : this.dataImportRecord[PAYMENT_STATUS__C];
         inMemoryDataImport[PAYMENT_DECLINED_REASON__C] =
-            this.dataImportRecord[PAYMENT_DECLINED_REASON__C];
+            this._isCreditCardWidgetInDoNotChargeState ? '' : this.dataImportRecord[PAYMENT_DECLINED_REASON__C];
         inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN__C] =
             this._isCreditCardWidgetInDoNotChargeState ? '' : this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
         return inMemoryDataImport;
