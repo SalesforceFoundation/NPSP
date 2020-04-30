@@ -366,6 +366,8 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>PS_IntegrationService</members>
+        <members>PS_IntegrationServiceConfig</members>
+        <members>PS_IntegrationServiceConfig_TEST</members>
         <members>PS_IntegrationService_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
@@ -379,6 +381,8 @@
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
+        <members>RD2_ElevateIntegrationService</members>
+        <members>RD2_ElevateIntegrationService_TEST</members>
         <members>RD2_EnablementDelegate_CTRL</members>
         <members>RD2_EnablementDelegate_TEST</members>
         <members>RD2_EnablementService</members>
@@ -1619,6 +1623,7 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>
