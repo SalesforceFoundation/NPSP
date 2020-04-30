@@ -35,7 +35,7 @@ import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Do
 /*******************************************************************************
 * @description Constants
 */
-import { LABEL_NEW_LINE, HTTP_CODES } from 'c/geConstants';
+import { LABEL_NEW_LINE, HTTP_CODES, PAYMENT_TRANSACTION_STATUS_ENUM } from 'c/geConstants';
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
@@ -50,17 +50,6 @@ const PAYMENT_TRANSACTION_ID = DI_PAYMENT_GATEWAY_TRANSACTION_ID.fieldApiName;
 const PAYMENT_AUTHORIZED_AT = DI_PAYMENT_AUTHORIZED_AT.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
-
-const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
-    PENDING: 'PENDING',
-    AUTHORIZED: 'AUTHORIZED',
-    CANCELED: 'CANCELED',
-    CAPTURED: 'CAPTURED',
-    DECLINED: 'DECLINED',
-    NONRETRYABLEERROR: 'NONRETRYABLEERROR',
-    RETRYABLEERROR: 'RETRYABLEERROR',
-    REFUNDISSUED: 'REFUNDISSUED'
-});
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
