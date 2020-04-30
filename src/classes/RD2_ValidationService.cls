@@ -145,7 +145,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
-            validateStatusIsMapped(rd);
+            validateStatus(rd);
         }
     }
 
@@ -166,7 +166,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
-            validateStatusIsMapped(rd);
+            validateStatus(rd);
 
             Boolean isValid = validateDonorChange(rd, oldRd);
             if (isValid) {
@@ -282,12 +282,12 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description Validate the RD Status is configured in the Status Mapping Settings
+    * @description Validates RD status is mapped to a valid state
     * @param rd The Recurring Donation to validate
     * @return void
     */
     @TestVisible
-    private void validateStatusIsMapped(npe03__Recurring_Donation__c rd) {
+    private void validateStatus(npe03__Recurring_Donation__c rd) {
         if (String.isBlank(statusMapper.getState(rd.Status__c))) {
             rd.addError(
                 String.format(

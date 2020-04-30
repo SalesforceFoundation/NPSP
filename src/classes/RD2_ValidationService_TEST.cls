@@ -778,14 +778,11 @@ private with sharing class RD2_ValidationService_TEST {
     * @description Verifies that RD is inserted successfully when Status is mapped
     */
     @isTest
-    private static void shouldSuccessfullyInsertRDWhenStatusIsMapped() {
+    private static void shouldCreateRDWhenStatusIsMapped() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .overrideDefaultMapping(
-                new Map<String, String>{
-                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
-            );
+            .withDefaultMapping();
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -818,10 +815,7 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .overrideDefaultMapping(
-                new Map<String, String>{
-                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
-            );
+            .withStatusMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -854,15 +848,11 @@ private with sharing class RD2_ValidationService_TEST {
     * @description Verifies that RD is updated successfully when Status is mapped
     */
     @isTest
-    private static void shouldSuccessfullyUpdateRDWhenStatusIsMapped() {
+    private static void shouldUpdateRDWhenStatusIsMapped() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .overrideDefaultMapping(
-                new Map<String, String>{
-                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
-                    RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED}
-            );
+            .withDefaultMapping();
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -898,10 +888,7 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .overrideDefaultMapping(
-                new Map<String, String>{
-                    RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE}
-            );
+            .withStatusMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
         RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
