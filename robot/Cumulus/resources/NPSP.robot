@@ -136,6 +136,39 @@ API Create GAU
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
 
+API Create GAU Allocation
+    [Documentation]  Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation
+    ...
+    ...                     Required parameters are:
+    ...
+    ...                     |   gau_id                   |   id of the gau that should be allocated    |
+    ...                     |   opp_id                   |   opportunity id    |
+    ...                     |   Amount__c or Percent__c  |   this should be either allocation amount or percent Ex:Amount__c=50.0 or Percent__c=10.0    |  
+    [Arguments]      ${gau_id}    ${opp_id}     &{fields}
+    ${ns} =          Get Npsp Namespace Prefix
+    ${all_id} =      Salesforce Insert  ${ns}Allocation__c
+    ...              ${ns}General_Accounting_Unit__c=${gau_id}
+    ...              ${ns}Opportunity__c=${opp_id}
+    ...              &{fields} 
+    &{gau_alloc} =   Salesforce Get  ${ns}Allocation__c  ${all_id}
+    [return]         &{gau_alloc} 
+
+API Modify Allocations Setting
+    [Documentation]     Can be used to modify either Default Allocations or Payment Allocations. 
+    ...
+    ...                 Required parameters are:
+    ...
+    ...                 |   field name and value   |   this would be key value pairs, Ex: Default_Allocations_Enabled__c=true   |
+    [Arguments]         &{fields}
+    ${ns} =             Get Npsp Namespace Prefix
+    @{records} =        Salesforce Query      ${ns}Allocations_Settings__c
+    ...                 select=Id
+    &{setting} =        Get From List  ${records}  0
+    Salesforce Update  ${ns}Allocations_Settings__c     &{setting}[Id]
+    ...                 &{fields} 
+    &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  &{setting}[Id]
+    [return]            &{alloc_setting}
+
 API Create DataImportBatch
     [Arguments]      &{fields}
     ${name} =   Generate Random String
