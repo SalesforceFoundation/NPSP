@@ -57,6 +57,21 @@ public inherited sharing class STG_PanelRDHealthCheck {
     /** @description Health Check Result reporting container */
     private HealthCheckResult result;
 
+
+    /**
+    * @description Contains the current Status to State map configuration
+    */
+    @TestVisible
+    private static RD2_StatusMapper statusMapper {
+        get {
+            if (statusMapper == null) {
+                statusMapper = new RD2_StatusMapper();
+            }
+            return statusMapper;
+        }
+        set;
+    }
+
     /**
      * @description Constructor
      * @param ctrl Health Check Panel Controller Class
@@ -125,6 +140,8 @@ public inherited sharing class STG_PanelRDHealthCheck {
         SupportedEnhancedRDValues supported = new SupportedEnhancedRDValues();
 
         result.withRecurringDonationScope();
+
+        validateStatusMappingSetting();
 
         validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
@@ -197,6 +214,27 @@ public inherited sharing class STG_PanelRDHealthCheck {
         }
     }
 
+    /**
+    * @description Validate that all RD Status are mapped to valid States
+    * @return void
+    */
+    @TestVisible
+    private void validateStatusMappingSetting() {
+        List<SelectOption> picklistValues = 
+            UTIL_Describe.getSelectOptions(RD_SOBJECT_NAME, String.valueOf(npe03__Recurring_Donation__c.Status__c));
+
+        for(SelectOption option : picklistValues) {
+            if (!option.getDisabled() && String.isBlank(statusMapper.getState(option.getValue()))) {
+                result.addError(
+                    String.format(
+                        System.Label.RD2_StatusMustBeMapped,
+                        new String[]{option.getLabel()}
+                    ),
+                    System.Label.RD2_StatusMustBeMappedSolution
+                );
+            }
+        }
+    }
     /**
      * @description Validates specified stage name exists as an open stage and it is active
      * @param oppStageName Opportunity Stage Name

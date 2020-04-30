@@ -257,6 +257,57 @@ private class STG_PanelRDHealthCheck_TEST {
         );
     }
 
+    /**
+    * @description Validate that the checking of RD Status Mapping Settings fail when at least one status is not mapped
+    */
+    @IsTest
+    private static void shouldValidateMissingRDStatusMappingSetting() {
+        configureEnhancedRDSettings();
+
+        //reset stub to move the Active Status from the mapping mock
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withAllMapping()
+            .withStatusMapping(RD2_Constants.STATUS_ACTIVE, null);
+        STG_PanelRDHealthCheck.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
+
+        Test.startTest();
+        healthCheck.validateStatusMappingSetting();
+        Test.stopTest();
+
+        String results = getValidationResults(ctrl);
+        System.assertEquals(1, ctrl.listDR.size(), 'There should one result in the Status Mapping validation.\n' + results);
+
+        System.assert(results.contains(RD2_Constants.STATUS_ACTIVE),
+            'The error should reference the "' + RD2_Constants.STATUS_ACTIVE + '" Status.\n' + results
+        );
+    }
+
+    /**
+    * @description Validate that RD Status Mapping Settings validation pass when all Status are mapped
+    */
+    @IsTest
+    private static void shouldValidateRDStatusMappingSetting() {
+        configureEnhancedRDSettings();
+
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
+
+        Test.startTest();
+        healthCheck.validateStatusMappingSetting();
+        Test.stopTest();
+
+        String results = getValidationResults(ctrl);
+        System.assertEquals(0, ctrl.listDR.size(),
+            'There should zero errors in the RD Status Mapping validation\n' + results
+        );
+    }
+
     // ==================================================================================
     // HELPER METHODS
     // ==================================================================================
@@ -295,6 +346,13 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     private static void configureEnhancedRDSettings() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withAllMapping();
+        STG_PanelRDHealthCheck.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
