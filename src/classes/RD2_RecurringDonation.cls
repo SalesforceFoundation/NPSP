@@ -37,7 +37,7 @@
 public inherited sharing class RD2_RecurringDonation {
 
     /**
-    * @description Recurring Donation record containing 
+    * @description Recurring Donation record containing
     * related Opportunities and Schedules in subqueries
     */
     npe03__Recurring_Donation__c rd;
@@ -77,20 +77,20 @@ public inherited sharing class RD2_RecurringDonation {
     * @param scheduleService RD Schedule Service
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {  
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
         return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r);
     }
 
     /**
     * @description Revises and modifies the Recurring Donation Next Donation Date.
-    * Whenever the Next Donation Date is being revised, review the status and the Next Donation Date 
-    * for a fixed-length RD in the case it should be closed. 
+    * Whenever the Next Donation Date is being revised, review the status and the Next Donation Date
+    * for a fixed-length RD in the case it should be closed.
     * If so, the next installment Opp should not be created when the last open Opp on the fixed-length RD is closed.
     * @param scheduleService RD Schedule Service
     * @param rdSchedules Existing Schedules on the Recurring Donation
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) { 
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
         return setNextDonationDate(
             scheduleService.getNextDonationDate(rd, rdSchedules)
         );
@@ -154,7 +154,7 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Sets the Number of Planned Installments to null when RecurringType is Open 
+    * @description Sets the Number of Planned Installments to null when RecurringType is Open
     * and Number of Planned Installments = 1 (default)
     * @return RD2_RecurringDonation This record instance
     */
@@ -210,7 +210,7 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     * @description Return the Recurring Donation record
-    * @return npe03__Recurring_Donation__c 
+    * @return npe03__Recurring_Donation__c
     */
     public npe03__Recurring_Donation__c getSObject() {
         return rd;
@@ -255,7 +255,7 @@ public inherited sharing class RD2_RecurringDonation {
     public Boolean isFixedLengthComplete() {
         return rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
     }
-    
+
     /**
     * @description Return number of planned installments on the Recurring Donation, default to 0 when null
     * @return Integer
@@ -352,4 +352,12 @@ public inherited sharing class RD2_RecurringDonation {
         }
         return false;
     }
+
+    /***
+    * @description Checks if the Recurring Donation is originated in Elevate
+    */
+    public Boolean isElevateRecord() {
+       return String.isNotBlank(rd.CommitmentId__c);
+    }
+
 }
