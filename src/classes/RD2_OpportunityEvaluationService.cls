@@ -171,7 +171,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 customFieldMapper = new RD2_CustomFieldMapper();
             }
             return customFieldMapper;
-        } 
+        }
         set;
     }
 
@@ -368,7 +368,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return RD2_OpportunityEvaluationService This service instance
      */
     private RD2_OpportunityEvaluationService handleOutdatedRecurringDonations(List<RD2_RecurringDonation> rdRecords) {
-        //reset Recurring Donations so just created/updated Opps are retrieved 
+        //reset Recurring Donations so just created/updated Opps are retrieved
         //in order to calculate the Current/Next Year Values
         rds = null;
 
@@ -416,10 +416,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean isNewOpportunityCandidate(RD2_RecurringDonation rd) {
+    private  Boolean isNewOpportunityCandidate(RD2_RecurringDonation rd) {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
-            && rd.hasSchedule();
+            && rd.hasSchedule()
+            && (!RD2_ElevateIntegrationService.isIntegrationEnabled() || !rd.isElevateRecord());
 
         if (!hasMandatoryConditions) {
             return false;
@@ -493,7 +494,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Returns query on Recurring Donation Schedule 
+     * @description Returns query on Recurring Donation Schedule
      * Return all schedules for the RD Schedule visualization.
      * The Schedule Service will filter them out if not applicable within the time period.
      * @return String RD Schedule subquery used in the Recurring Donation SOQL
@@ -542,8 +543,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 'OR CloseDate >= :startDate '
             )
             .withOrderBy('npe03__Recurring_Donation__c, CloseDate ASC')
-            .build();       
-            
+            .build();
+
         return '(' + oppSubquery + ')';
     }
 
@@ -599,7 +600,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         ]) {
             paidInstallmentsByRDId.put((Id) result.get('npe03__Recurring_Donation__c'), (Integer) result.get('paidInstallments'));
         }
-           
+
         return paidInstallmentsByRDId;
     }
 
