@@ -4,7 +4,7 @@ import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
-import isElevateCustomer from '@salesforce/apex/GE_PaymentServices.isElevateCustomer';
+import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;

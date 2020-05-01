@@ -325,9 +325,10 @@ public with sharing class GE_PaymentServices {
      *              in the org, NPSP cannot load the Elevate SDK or successfully make
      *              callouts to Elevate services.
     */
-    @AuraEnabled
-    public static Boolean isElevateCustomer() {
-        return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
+    public static Boolean isElevateCustomer {
+        get {
+            return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
+        }
     }
 
 }
