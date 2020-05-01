@@ -58,6 +58,17 @@ public with sharing class GE_PaymentServices {
 
     public enum ElevateEndpoints { TOKENIZE, PURCHASE }
 
+    public enum ElevateTransactionStatus {
+        PENDING,
+        AUTHORIZED,
+        CANCELED,
+        CAPTURED,
+        DECLINED,
+        NONRETRYABLEERROR,
+        RETRYABLEERROR,
+        REFUNDISSUED
+    }
+
     public String getEndpoint(ElevateEndpoints endpoint) {
         if (endpoint === ElevateEndpoints.TOKENIZE) {
             return '/v1/payments/public/tokens';
