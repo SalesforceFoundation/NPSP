@@ -72,6 +72,7 @@ Create Recurring Donation And Check Rollups
     ...                          select=Id
     ...                          npe01__One2OneContact__c=${data}[contact][Id]
     Go To Page                   Details                Account                        object_id=${account}[0][Id]
+    Wait Until Loading Is Complete
     Select Tab                   Details
     Navigate To And Validate Field Value                Total Gifts                    contains        $16.66    section=Membership Information
     Navigate To And Validate Field Value                Total Number of Gifts          contains        2         section=Membership Information
@@ -83,17 +84,20 @@ Create Recurring Donation And Check Rollups
 
     #Check Rollups on Recurring Donation
     Go To Page                   Details           npe03__Recurring_Donation__c                   object_id=${data}[contact_rd][Id]
+    Wait Until Loading Is Complete
     Navigate To And Validate Field Value           Number Of Paid Installments    contains        2
     Navigate To And Validate Field Value           Total Paid Amount              contains        $16.66
 
     #Check Rollups on Recurring Contact
     Go To Page                   Details          Contact                        object_id=${data}[contact][Id]
+    Wait Until Loading Is Complete
     Select Tab                   Details
     Navigate To And Validate Field Value          Total Gifts This Year          contains        $16.66    section=Soft Credit Total
     Navigate To And Validate Field Value          Total Gifts                    contains        $16.66    section=Soft Credit Total
 
     #Check Rollups on Recurring Account
     Go To Page                   Details          Account                        object_id=${account}[0][Id]
+    Wait Until Loading Is Complete
     Select Tab                   Details
     Navigate To And Validate Field Value          Total Gifts                    contains        $16.66    section=Membership Information
     Navigate To And Validate Field Value          Total Number of Gifts          contains        2         section=Membership Information
