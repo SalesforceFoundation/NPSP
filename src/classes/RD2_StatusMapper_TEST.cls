@@ -64,7 +64,11 @@ public with sharing class RD2_StatusMapper_TEST {
         * @return Stub
         */
         public Stub withAllMapping() {
-            List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions('npe03__Recurring_Donation__c',  String.valueOf(npe03__Recurring_Donation__c.Status__c));
+            List<SelectOption> picklistValues = 
+                UTIL_Describe.getSelectOptions(
+                    'npe03__Recurring_Donation__c',
+                    String.valueOf(npe03__Recurring_Donation__c.Status__c)
+                );
             for (SelectOption option : picklistValues) {
                 withStatusMapping(option.getValue(), option.getValue());
             }

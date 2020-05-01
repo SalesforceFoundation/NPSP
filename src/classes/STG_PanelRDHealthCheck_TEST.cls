@@ -264,7 +264,7 @@ private class STG_PanelRDHealthCheck_TEST {
     private static void shouldValidateMissingRDStatusMappingSetting() {
         configureEnhancedRDSettings();
 
-        //reset stub to move the Active Status from the mapping mock
+        //reset stub to remove the Active Status from the mapping mock
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
             .withAllMapping()
             .withStatusMapping(RD2_Constants.STATUS_ACTIVE, null);
