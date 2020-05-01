@@ -117,27 +117,6 @@ public with sharing class RD2_NamingService {
     }
 
     /***
-    * @description AutoPopulates account on Recurring Donations if the account is null and the contact is populated
-    * or the contact have been changed
-    * @param rds New/changed Recurring Donations
-    * @param oldRds Old Recurring Donations
-    */
-    public void autoPopulateAccountsOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
-
-        Map<Id, npe03__Recurring_Donation__c> oldRdById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
-        List<npe03__Recurring_Donation__c> changedRds = new List<npe03__Recurring_Donation__c>();
-
-        for (npe03__Recurring_Donation__c rd : rds) {
-            if (isAccountNullWhenContactExists(rd, oldRdById.get(rd.Id))) {
-                changedRds.add(rd);
-            }
-        }
-
-        autoPopulateAccounts(changedRds);
-    }
-
-
-    /***
     * @description Determines if Name construct fields have changed
     * @param rd Changed Recurring Donation record
     * @param oldRd Old Recurring Donation record
@@ -155,22 +134,6 @@ public with sharing class RD2_NamingService {
         }
 
         return hasChanged;
-    }
-
-    /***
-    * @description Determines if Account is null when the contact is populated or the contact
-    * have been updated
-    * @param rd Changed Recurring Donation record
-    * @param oldRd Old Recurring Donation record
-    * @return Boolean
-    */
-    @TestVisible
-    private Boolean isAccountNullWhenContactExists(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        Boolean isAccountNull = (rd.npe03__Organization__c == null && rd.npe03__Contact__c != null )
-            || rd.npe03__Contact__c != oldRd.npe03__Contact__c;
-
-        return isAccountNull;
-
     }
 
     /***
@@ -212,39 +175,6 @@ public with sharing class RD2_NamingService {
             : donor.Name.abbreviate(MAX_NAME_LENGTH - nameSuffix.length());
 
         return donorName + nameSuffix;
-    }
-
-    /***
-    * @description Autopopulates Accounts in the Recurring Donations if only contact is populated
-    * @param rds New Recurring Donation records
-    * @return none
-    */
-    public void autoPopulateAccounts(List<npe03__Recurring_Donation__c> rds) {
-        if (rds == null || rds.isEmpty()) {
-            return;
-        }
-
-        Map<Id, RD2_Donor.Record> donorById = donorGateway.getDonors(rds);
-
-        for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.npe03__Organization__c == null ) {
-                rd.npe03__Organization__c = populateAccountFromContact(rd, donorById);
-            }
-        }
-    }
-
-    /***
-    * @description Populates Account from contact if account is null in Recurring Donations
-    * @param rd Recurring Donation record
-    * @param donorById Account/Contact donor record by Id
-    * @return the account id of the Recurring Donation record
-    */
-    private Id populateAccountFromContact(npe03__Recurring_Donation__c rd,  Map<Id, RD2_Donor.Record> donorById) {
-        if (rd.npe03__Contact__c == null ) {
-            return null;
-        }
-        RD2_Donor.Record donor = donorById.get(rd.npe03__Contact__c);
-        return donor.accId;
     }
 
     /***
