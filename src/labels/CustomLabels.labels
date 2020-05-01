@@ -6277,7 +6277,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure message description for tokenization or purchase errors</shortDescription>
         <value>There was an error processing the payment. Please review the error and try again. Alternatively,
-            select Do Not Charge Card to enter a pledged donation without processing a card payment. {0} errors:
+            select Do Not Charge Card to enter a donation without processing a card payment. {0} errors:
             /0x0A/ {1} </value>
     </labels>
     <labels>
