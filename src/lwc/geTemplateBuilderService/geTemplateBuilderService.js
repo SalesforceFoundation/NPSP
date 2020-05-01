@@ -110,22 +110,23 @@ class GeTemplateBuilderService {
     * @param {object} objectMappingByDevName: Map of object mappings.
     */
     addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName, fieldMappingsByObjMappingDevName) => {
+        GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
+
+        fieldMappingByDevName.geFormWidgetAllocation =
+            GeWidgetService.definitions.geFormWidgetAllocation;
+
+        objectMappingByDevName.Widgets = {
+            DeveloperName: 'Widgets',
+            MasterLabel: labelGeHeaderFieldBundles
+        };
+
+        fieldMappingsByObjMappingDevName.Widgets = [
+            fieldMappingByDevName.geFormWidgetAllocation
+        ];
+
+        // If the org is an Elevate customer, add the Salesforce.org Elevate widget
         isElevateCustomer()
             .then(isElevateCustomer => {
-                GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
-
-                fieldMappingByDevName.geFormWidgetAllocation =
-                    GeWidgetService.definitions.geFormWidgetAllocation;
-
-                objectMappingByDevName.Widgets = {
-                    DeveloperName: 'Widgets',
-                    MasterLabel: labelGeHeaderFieldBundles
-                };
-
-                fieldMappingsByObjMappingDevName.Widgets = [
-                    fieldMappingByDevName.geFormWidgetAllocation
-                ];
-
                 if (isElevateCustomer) {
                     fieldMappingByDevName.geFormWidgetTokenizeCard =
                         GeWidgetService.definitions.geFormWidgetTokenizeCard;
