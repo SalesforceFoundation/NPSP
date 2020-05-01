@@ -37,6 +37,7 @@
 private class STG_PanelRDHealthCheck_TEST {
 
     private static final String BAD_PICKLIST_VALUE = 'Non Existent Value';
+    private static final String ERROR_MESSAGE = 'Error Message {0} {1}';
     private static final String PLEDGED_STAGE = UTIL_UnitTestData_TEST.getOpenStage();
 
     /**
@@ -97,6 +98,7 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     @IsTest
     private static void shouldValidateEnhancedRecurringDonationsConfig() {
+        Boolean isRD2Enabled = isRD2EnabledInTheOrg();
         configureEnhancedRDSettings();
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
@@ -116,19 +118,22 @@ private class STG_PanelRDHealthCheck_TEST {
             }
         }
 
-        // Since RD1 is enabled by default, there are 4 configuration errors:
-        // - Value of Quarterly in the Installment Period field
-        // - Value of 31 in the DayOfMonth field
-        System.assertEquals(2, errCount,
-            'Number of entries in the validation should match.\n' + results
-        );
+        if (!isRD2Enabled) {
+            // If RD2 is not enable in the org, there are 2 configuration errors:
+            // - Value of Quarterly in the Installment Period field
+            // - Value of 31 in the DayOfMonth field
+            System.assertEquals(2, errCount,
+                'Number of entries in the validation should match.\n' + results);
 
-        System.assert(errResults.contains(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY),
-            'The error should reference the "' + RD_Constants.INSTALLMENT_PERIOD_QUARTERLY + '" picklist value.\n' + errResults
-        );
-        System.assert(errResults.contains('31'),
-            'The error should reference the "31" picklist value.\n' + errResults
-        );
+            System.assert(errResults.contains(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY),
+                'The error should reference the "' + RD_Constants.INSTALLMENT_PERIOD_QUARTERLY + '" picklist value.\n' + errResults);
+            System.assert(errResults.contains('31'),
+                'The error should reference the "31" picklist value.\n' + errResults);
+
+        } else {
+            System.assertEquals(0, errCount,
+            'Number of entries in the validation should match.\n' + results);
+        }
     }
 
     /**
@@ -136,12 +141,12 @@ private class STG_PanelRDHealthCheck_TEST {
      * picklist values works as expected
      */
     @IsTest
-    private static void shouldValidateLegacyPeriodPicklistEntries() {
+    private static void shouldValidatePicklistEntriesAllExist() {
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
-        Set<String> supportedInstallmentPeriods = getLegacyPeriodPicklistForTest();
+        Set<String> supportedInstallmentPeriods = getPeriodPicklistForTest();
         healthCheck.validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
@@ -155,27 +160,44 @@ private class STG_PanelRDHealthCheck_TEST {
     }
 
     /**
-     * @description Validates that an unsupported InstallmentPeriod picklist entry is identified by the
-     * health check.
-     */
+    * @description Validates that an missing required picklist entry is identified
+    */
     @IsTest
-    private static void shouldIdentifyInvalidLegacyPeriodPicklistEntry() {
-
+    private static void shouldIdentifyInvalidRequiredPicklistEntry() {
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
-        Set<String> supportedInstallmentPeriods = getLegacyPeriodPicklistForTest();
+        Set<String> supportedInstallmentPeriods = getPeriodPicklistForTest();
         supportedInstallmentPeriods.add(BAD_PICKLIST_VALUE);
-        healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
-            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+        healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c', ERROR_MESSAGE, ERROR_MESSAGE);
 
         String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
-            'There should exactly one error in this picklist validation.\n' + results
-        );
+            'There should exactly one error in this picklist validation.\n' + results);
         System.assert(results.contains(BAD_PICKLIST_VALUE),
-            'The error should reference the "' + BAD_PICKLIST_VALUE + '" picklist value.\n' + results
-        );
+            'The error should reference the "' + BAD_PICKLIST_VALUE + '" picklist value.\n' + results);
+    }
+
+    /**
+     * @description Validates that an unsupported picklist entry is identified
+     */
+    @IsTest
+    private static void shouldIdentifyInvalidSupportedPicklistEntry() {
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
+
+        Set<String> supportedInstallmentPeriods = getPeriodPicklistForTest();
+
+        String missingPicklistValue = new List<String>(supportedInstallmentPeriods)[0];
+        supportedInstallmentPeriods.remove(missingPicklistValue);
+
+        healthCheck.validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c', ERROR_MESSAGE, ERROR_MESSAGE);
+
+        String results = getValidationResults(ctrl);
+        System.assertEquals(1, ctrl.listDR.size(),
+            'There should exactly one error in this picklist validation.\n' + results);
+        System.assert(results.contains(missingPicklistValue),
+        'The error should reference the "' + missingPicklistValue + '" picklist value.\n' + results);
     }
 
     /**
@@ -330,6 +352,8 @@ private class STG_PanelRDHealthCheck_TEST {
      * @description Configure RD Settings for Legacy RD's
      */
     private static void configureLegacyRDSettings() {
+        RD2_EnablementService_TEST.setRecurringDonations2Disabled();
+
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = false,
@@ -366,17 +390,34 @@ private class STG_PanelRDHealthCheck_TEST {
     }
 
     /**
-     * @description Returns a set of supported InstallmentPeriod picklist entries for Legacy RD's
+     * @description Returns a set of RD Period picklist values
      * @return Set<String>
      */
-    private static Set<String> getLegacyPeriodPicklistForTest() {
+    private static Set<String> getPeriodPicklistForTest() {
         Set<String> supportedInstallmentPeriods = new Set<String>();
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
+        List<SelectOption> periods =
+            UTIL_Describe.getSelectOptions('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c));
+        
+        for (SelectOption option : periods) {
+            supportedInstallmentPeriods.add(option.getValue());
+        }
 
         return supportedInstallmentPeriods;
+    }
+
+    /**
+    * @description Checking org set up to determine if RD2 is enabled in the org by checking 'Last Day' exists in the org
+    * @return Boolean
+    */
+    private static Boolean isRD2EnabledInTheOrg() {
+        List<SelectOption> dayOfMonthsValue =
+            UTIL_Describe.getSelectOptions('npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.Day_Of_Month__c));
+        for (SelectOption option : dayOfMonthsValue) {
+            if (option.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
