@@ -2120,7 +2120,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Recurring-Donations, Error, Health Check</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message when Enhanced RD status is not mapped</shortDescription>
+        <shortDescription>Solution when Enhanced RD status is not mapped</shortDescription>
         <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
     </labels>
     <labels>
