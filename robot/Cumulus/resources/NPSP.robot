@@ -262,3 +262,11 @@ Process Data Import Batch
     Click                                              Start Data Import
     Begin Data Import Process And Verify Status        BDI_DataImport_BATCH    ${status}
     Click Close Button    
+
+Enable Customizable Rollups
+    [Documentation]        Go to NPSP Settings and check if Customizable Rollups are enabled
+    ...                    if enabled does nothing but if disabled then enables.       
+    Go To Page                                Custom          NPSP_Settings
+    Open Main Menu                            Donations
+    Click Link With Text                      Customizable Rollups
+    Enable Customizable Rollups If Not Enabled         
