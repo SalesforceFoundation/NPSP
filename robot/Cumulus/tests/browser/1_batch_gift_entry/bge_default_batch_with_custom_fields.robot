@@ -60,6 +60,7 @@ Create New gift and process batch and validate
     Set Global Variable     ${camp_id}       &{campaign}[Id]
     Select Value From BGE DD    Donor Type    Contact
     Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Wait Until Modal Is Open
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Fill BGE Form
     ...    Donation Amount=100
