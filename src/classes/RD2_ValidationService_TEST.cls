@@ -626,7 +626,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build();
-
         insert rd;
 
         rd.InstallmentFrequency__c = null;
@@ -657,7 +656,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build(3);
-
         insert rds;
 
         rds[0].InstallmentFrequency__c = 20;
@@ -694,7 +692,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build();
-
         insert rd;
 
         rd.InstallmentFrequency__c = 20;
@@ -708,6 +705,82 @@ private with sharing class RD2_ValidationService_TEST {
         System.assertEquals(20, rd.InstallmentFrequency__c,
             'Installment Frequency should update when the value change is valid');
     }
+
+    /***
+    * @description Verifies user cannot change the RD originated in Elevate
+    * when Elevate integration is enabled and user has no permission
+    */
+    @isTest
+    private static void shouldBlockElevateRdUpdateWhenNonElevateUserUpdatesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.npe03__Amount__c += 10;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_ElevatePermissionRequired),
+            'RD update should fail when non-Elevate user attempts to change a restricted field: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies user can change the RD originated in Elevate
+    * when Elevate integration is enabled and user has permissions
+    */
+    @isTest
+    private static void shouldUpdateElevateRdWhenElevateUserUpdatesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.npe03__Amount__c += 10;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage),
+            'RD update should succeed when Elevate user attempts to change a restricted field: ' + errMessage
+        );
+    }
+
+
 
     // Helper Methods
     /////////////////////
