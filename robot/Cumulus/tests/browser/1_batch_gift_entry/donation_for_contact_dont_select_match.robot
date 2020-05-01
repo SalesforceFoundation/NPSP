@@ -33,6 +33,7 @@ Dont select match for contact new donation with grid changes
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Contact
     Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Wait Until Modal Is Open
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Page Should Contain Link    Review Donations
     Click Element With Locator    bge.field-input    Donation Amount
