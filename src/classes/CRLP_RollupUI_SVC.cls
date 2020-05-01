@@ -318,7 +318,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 };
                 List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, pscFieldsToReturn, false);
                 objNameToFieldTypeMap.put(obj, pscList);
-                
+
             } else {
                 List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
                 objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
@@ -455,7 +455,7 @@ public with sharing class CRLP_RollupUI_SVC {
         String objectLabel = UTIL_Describe.getObjectLabel(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            if (!dfr.name.toLowerCase().contains('__system')) {
+            if (excludeSystemAndEinsteinInsightsFields(dfr)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', objectName+' '+dfr.name);
                 fieldObject.put('label', objectLabel+': '+dfr.label);
@@ -692,7 +692,7 @@ public with sharing class CRLP_RollupUI_SVC {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup cmtRollup = (CRLP_RollupCMT.Rollup) JSON.deserialize(jsonRollup, CRLP_RollupCMT.Rollup.class);
-            
+
             if (cmtRollup.isDuplicate()) {
                 throw new RollupException(Label.CRLP_DuplicateTargetField);
             }
@@ -741,7 +741,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
             String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
-            
+
             // Return the unique record DeveloperName value of the FilterGroup__mdt record
             return jobId + '-' + cmtFilterGroup.recordName;
         } catch (Exception ex) {
@@ -951,7 +951,23 @@ public with sharing class CRLP_RollupUI_SVC {
 
     }
 
-    
+    /***
+    * @description Checks if the given field name is not system and einstein insights fields
+    * @param dfr the DescribeFieldResult of the field
+    * @return Boolean
+    */
+    private static Boolean excludeSystemAndEinsteinInsightsFields(Schema.DescribeFieldResult dfr) {
+        if (dfr.name.toLowerCase().contains('__system')
+                || dfr.name.toLowerCase().contains('topinsightid')
+                || dfr.name.toLowerCase().contains('activitymetric')
+                || dfr.name.toLowerCase().contains('opportunityscore')
+                || dfr.name.toLowerCase().contains('activitymetricrollup')) {
+            return false;
+
+        }
+        return true;
+    }
+
 
     public class RollupException extends Exception {}
 
