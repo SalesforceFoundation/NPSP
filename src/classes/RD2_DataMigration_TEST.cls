@@ -1856,11 +1856,10 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies if the Accounts are populated after data migration is run
-     * when household contact is only populated and account is null.
+     * @description Verifies Account on RD is populated when it is not already specified
      */
     @IsTest
-    private static void shouldPopulateAccountWhenContactIsOnlyEntered() {
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecified() {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withAccount(null)
@@ -1869,21 +1868,21 @@ private class RD2_DataMigration_TEST {
 
         Id jobId = runDataMigration();
 
-        npe03__Recurring_Donation__c convertedRD = getRecords()[0];
+        rd = getRecords()[0];
 
-        System.assertNotEquals(null, convertedRD.npe03__Organization__c,
-             'Account in recurring donations should not be null and should be populated post Datamigration is run' + convertedRD);
-        System.assertEquals(getContact().AccountId, convertedRD.npe03__Organization__c,
-            'Account in Recurring Donations should match to the contact account in the recurring donation post Datamigration is run' );
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+             'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd);
 
    }
 
     /**
-     * @description Verifies if the Accounts are populated after data migration is run
-     * when household contact is only populated with no account and have closed opps in legacy RD.
+     * @description Verifies Account on RD is populated when it is not already specified
+     * and there is a closed Opp on the RD
     */
     @IsTest
-    private static void shouldPopulateAccountWhenContactIsOnlyEnteredWithClosedOpps() {
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecifiedAndRDHasClosedOpp() {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withAccount(null)
@@ -1901,12 +1900,12 @@ private class RD2_DataMigration_TEST {
 
         Id jobId = runDataMigration();
 
-        npe03__Recurring_Donation__c convertedRD = getRecords()[0];
+        rd = getRecords()[0];
 
-        System.assertNotEquals(null, convertedRD.npe03__Organization__c,
-            'Account in recurring donations should be auto populated from contact post Datamigration is run' + convertedRD);
-        System.assertEquals(getContact().AccountId, convertedRD.npe03__Organization__c,
-            'Account in Recurring Donations should match to the contact account in the recurring donation post Datamigration is run' );
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd );
     }
 
 
