@@ -79,7 +79,7 @@ public class ALLO_UnitTestHelper_TEST {
      *              Opportunity 4  - $20, Allocation has percent but not amount
      *                               Opportunity Allocations (GAU1, 100%, (null))
      *              Opportunity 5  - $0, Percent Allocation with non zero amount
-     *                              Opportunity Allocations (GAU1, 50%, $20)
+     *                               Opportunity Allocations (GAU1, 50%, $20)
      *              Opportunity 6  - $20, Fully allocated at Opportunity level
      *                               Opportunity Allocations (GAU1, 100%, $20)
      *              Opportunity 7  - $20, Fully allocated at Opportunity level
@@ -88,7 +88,7 @@ public class ALLO_UnitTestHelper_TEST {
      *                                      Else Allocation (GAU2, 100%, $20)
      *              Opportunity 9  - $20, Campaign Parent, No Allocations Present
      *              Opportunity 10 - $20, Allocations need resizing
-     *                               Opportunity Allocations (GAU1, 50%, $10),
+     *                               Opportunity Allocations (GAU1, 50%, $40),
      *                               If Default Allocations Enabled (Default GAU, $40)
      *              Opportunity 11 - $20, Invalid Allocation that cannot be corrected
      *                               Opportunity Allocations (GAU1, $40)
@@ -405,7 +405,7 @@ public class ALLO_UnitTestHelper_TEST {
         // Opportunity 9  - $20, Campaign Parent, No Allocations Present
 
         // Opportunity 10 - $20, Allocations need resizing
-        //                  Opportunity Allocations (GAU1, 50%, $10),
+        //                  Opportunity Allocations (GAU1, 50%, $40),
         //                  If Default Allocations Enabled (Default GAU, $40)
         if (alloSetupTest.isDefaultAllocationsEnabled()) { // Only if defaults enabled...
             allosForInsert.add(
