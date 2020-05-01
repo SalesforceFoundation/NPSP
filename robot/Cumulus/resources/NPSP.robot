@@ -136,6 +136,39 @@ API Create GAU
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
 
+API Create GAU Allocation
+    [Documentation]  Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation
+    ...
+    ...                     Required parameters are:
+    ...
+    ...                     |   gau_id                   |   id of the gau that should be allocated    |
+    ...                     |   opp_id                   |   opportunity id    |
+    ...                     |   Amount__c or Percent__c  |   this should be either allocation amount or percent Ex:Amount__c=50.0 or Percent__c=10.0    |  
+    [Arguments]      ${gau_id}    ${opp_id}     &{fields}
+    ${ns} =          Get Npsp Namespace Prefix
+    ${all_id} =      Salesforce Insert  ${ns}Allocation__c
+    ...              ${ns}General_Accounting_Unit__c=${gau_id}
+    ...              ${ns}Opportunity__c=${opp_id}
+    ...              &{fields} 
+    &{gau_alloc} =   Salesforce Get  ${ns}Allocation__c  ${all_id}
+    [return]         &{gau_alloc} 
+
+API Modify Allocations Setting
+    [Documentation]     Can be used to modify either Default Allocations or Payment Allocations. 
+    ...
+    ...                 Required parameters are:
+    ...
+    ...                 |   field name and value   |   this would be key value pairs, Ex: Default_Allocations_Enabled__c=true   |
+    [Arguments]         &{fields}
+    ${ns} =             Get Npsp Namespace Prefix
+    @{records} =        Salesforce Query      ${ns}Allocations_Settings__c
+    ...                 select=Id
+    &{setting} =        Get From List  ${records}  0
+    Salesforce Update  ${ns}Allocations_Settings__c     &{setting}[Id]
+    ...                 &{fields} 
+    &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  &{setting}[Id]
+    [return]            &{alloc_setting}
+
 API Create DataImportBatch
     [Arguments]      &{fields}
     ${name} =   Generate Random String
@@ -170,7 +203,7 @@ New Contact for HouseHold
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id}
 
-Run Donations Batch Process
+Validate Batch Process When CRLP Unchecked
     Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
     Click Settings Button       idPanelOppBatch                    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
@@ -183,7 +216,26 @@ Run Donations Batch Process
     Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
     Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
     Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
-    
+
+Validate Batch Process When CRLP Checked
+    Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
+    Click Settings Button       idPanelOppBatch                    Run Batch
+
+    Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
+    Wait For Batch To Process    CRLP_RD_BATCH                            Completed
+    Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
+    Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
+    Wait For Batch To Process    CRLP_Account_BATCH                       Completed
+    Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
+
+Run Donations Batch Process
+    Open NPSP Settings            Donations                     Customizable Rollups
+    ${crlp_enabled} =            Check Crlp Not Enabled By Default
+
+    #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
+    Run Keyword if      ${crlp_enabled} != True
+        ...             Validate Batch Process When CRLP Unchecked
+        ...     ELSE    Validate Batch Process When CRLP Checked
      
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
