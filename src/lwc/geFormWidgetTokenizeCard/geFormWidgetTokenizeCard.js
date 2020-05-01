@@ -49,12 +49,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleUserDisabledWidget() {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
-        fireEvent(
-            null,
-            'doNotChargeState',
-            {
-                isWidgetDisabled : this.hasUserDisabledWidget
-            });
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isWidgetDisabled : this.hasUserDisabledWidget
+        });
     }
 
     /*******************************************************************************
@@ -64,12 +61,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.isLoading = true;
         this.toggleWidget(false);
         this.hasUserDisabledWidget = false;
-        fireEvent(
-            null,
-            'doNotChargeState',
-            {
-                isWidgetDisabled : this.hasUserDisabledWidget
-            });
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isWidgetDisabled : this.hasUserDisabledWidget
+        });
     }
 
     /*******************************************************************************
@@ -241,5 +235,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @api
     setNameOnCard(cardHolderName) {
         this.cardHolderName = cardHolderName;
+    }
+
+    dispatchApplicationEvent (eventName, payload) {
+        fireEvent(null, eventName, payload);
     }
 }
