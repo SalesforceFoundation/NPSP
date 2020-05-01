@@ -146,5 +146,17 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 self.click_toggle_button("Gift Entry")
                 self.wait_for_message("Gift Entry Disabled")
             else:
-                self.builtin.log("As expected Gift Entry is Disabled")    
-                                          
+                self.builtin.log("As expected Gift Entry is Disabled")
+
+    def Check_Crlp_Not_Enabled_By_Default(self):
+        """Verifies that customizable rollups settings is not enabled by default
+           By checking 'Configure Customizable Rollups' is not visible on the page"""
+        locator=npsp_lex_locators['id'].format("navigateCRLPs")
+        ispresent = False
+        if self.npsp.check_if_element_exists(locator):
+            ele=self.selenium.get_webelement(locator)
+            classname=ele.get_attribute("value")
+            if 'Configure Customizable Rollups' in classname:
+                self.builtin.log("This Org has Customizable Rollups Enabled")
+                isPresent = True
+            return isPresent
