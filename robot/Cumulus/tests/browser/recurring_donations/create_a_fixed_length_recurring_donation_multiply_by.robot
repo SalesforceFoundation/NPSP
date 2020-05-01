@@ -56,7 +56,7 @@ Create Fixed Length Recurring Donation Multiply By
     Click Object Button          Edit
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
-    
+
 
     #Open NPSP Settings and run Rollups Donations Batch job
     Run Donations Batch Process
