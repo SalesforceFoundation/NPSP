@@ -203,7 +203,7 @@ New Contact for HouseHold
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id}
 
-Run Donations Batch Process
+Validate Batch Process When CRLP Unchecked
     Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
     Click Settings Button       idPanelOppBatch                    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
@@ -216,7 +216,26 @@ Run Donations Batch Process
     Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
     Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
     Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
-    
+
+Validate Batch Process When CRLP Checked
+    Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
+    Click Settings Button       idPanelOppBatch                    Run Batch
+
+    Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
+    Wait For Batch To Process    CRLP_RD_BATCH                            Completed
+    Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
+    Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
+    Wait For Batch To Process    CRLP_Account_BATCH                       Completed
+    Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
+
+Run Donations Batch Process
+    Open NPSP Settings            Donations                     Customizable Rollups
+    ${crlp_enabled} =            Check Crlp Not Enabled By Default
+
+    #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
+    Run Keyword if      ${crlp_enabled} != True
+        ...             Validate Batch Process When CRLP Unchecked
+        ...     ELSE    Validate Batch Process When CRLP Checked
      
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
