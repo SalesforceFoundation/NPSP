@@ -1532,7 +1532,8 @@
     <fields>
         <fullName>Payment_Status__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The status of the transaction from Elevate. </inlineHelpText>
+        <description>The API status of the transaction from Elevate.</description>
+        <inlineHelpText>The API status of the transaction from Elevate.</inlineHelpText>
         <label>Payment Status</label>
         <length>255</length>
         <required>false</required>
