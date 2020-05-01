@@ -621,8 +621,42 @@ global with sharing class BDI_DataImportService {
     }
 
     /**
+     * @description Before processing data import records, this method filters out any data imports that do not meet
+     * custom criteria that applies to all data imports before allowing them to be processed.
+     * @param dataImports {List<DataImport__c>} List of data import records to be filtered
+     *
+     * @return List<DataImport__c>
+    */
+    private List<DataImport__c> shouldProcess(List<DataImport__c> dataImports) {
+        List<DataImport__c> dataImportsToProcess = new List<DataImport__c>();
+
+        for (DataImport__c dataImport : dataImports) {
+            /* Use a single boolean to determine if each data import should be processed. If new criteria is added
+            * it can be added to isSuccessfulPayment using conditional operators. */
+            Boolean shouldProcess = isSuccessfulPayment(dataImport);
+
+            if (shouldProcess) {
+                dataImportsToProcess.add(dataImport);
+            }
+        }
+
+        return dataImportsToProcess;
+    }
+
+    private Boolean isSuccessfulPayment(DataImport__c dataImport) {
+        String paymentStatus = dataimport.Payment_Status__c;
+
+        return String.isBlank(paymentStatus) ||
+            dataImport.Payment_Status__c.equalsIgnoreCase(
+                GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
+            );
+    }
+
+    /**
      * @description Provides the access levels that should be validated depending on whether
      * dry run is enabled.
+     *
+     * @return Set<BDI_DataImportFLSService.AccessLevel>
      */
     private Set<BDI_DataImportFLSService.AccessLevel> getFieldAccessLevelsToValidate() {
         Set<BDI_DataImportFLSService.AccessLevel> fieldAccessLevelsToValidate =
@@ -639,28 +673,6 @@ global with sharing class BDI_DataImportService {
         return fieldAccessLevelsToValidate;
     }
 
-    /**
-     * @description Before processing data import records, this method filters out any data imports that do not meet
-     * custom criteria that applies to all data imports before allowing them to be processed.
-     * @param dataImports {List<DataImport__c>} List of data import records to be filtered
-     *
-     * @return List<DataImport__c>
-    */
-    private List<DataImport__c> shouldProcess(List<DataImport__c> dataImports) {
-        List<DataImport__c> dataImportsToProcess = new List<DataImport__c>();
-
-        for (DataImport__c dataImport : dataImports) {
-            String paymentStatus = dataImport.Payment_Status__c;
-
-            if(String.isBlank(paymentStatus) ||
-                dataImport.Payment_Status__c.toLowerCase() == PAYMENT_SERVICES_SUCCESSFUL_CHARGE) {
-
-                dataImportsToProcess.add(dataImport);
-            }
-        }
-
-        return dataImportsToProcess;
-    }
 
     /**
      * @description Stamps Data Import records with their FLS exception details.
