@@ -5,10 +5,10 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 ...             robot/Cumulus/resources/PaymentPageObject.py
 Library         DateTime
-Suite Setup      Run keywords
+Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -21,12 +21,14 @@ Match Based on Number of Days from Donation Date Functionality
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
     Search Field By Value    Search Accounts    &{account}[Name]
+    Wait Until Modal Is Open
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    &{opp}[Name]
     ${pay_no}    Get BGE Card Header    &{opp}[Name]
     Log To Console    ${pay_no}
     Click Button With Title     Close this window
+    Wait Until Modal Is Closed
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
@@ -42,7 +44,6 @@ Match Based on Number of Days from Donation Date Functionality
     # Verify that the gift matched to existing opportunity and updated it to closed won status with gift date and payment is paid
     Go To Record Home    &{opp}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
-    ${date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     Select Tab    Related
@@ -75,6 +76,8 @@ Setup Test Data
     Set Suite Variable    &{account}
     ${api_date} =     Get Current Date    result_format=%Y-%m-%d
     Set Suite Variable    ${api_date}
+    ${date} =     Get Current Date    result_format=%-m/%-d/%Y
+    Set Suite Variable    ${date}
     ${opp_date} =     Get Current Date    result_format=%Y-%m-%d    increment=2 days
     &{opp} =     API Create Opportunity   &{account}[Id]    Donation  
     ...    StageName=Prospecting    
