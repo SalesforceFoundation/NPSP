@@ -29,6 +29,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
         self.selenium.wait_until_page_contains_element(locator, 
                                                error=f"click on {title} link was not successful even after 30 seconds")
+        self.selenium.capture_page_screenshot()                                        
         
     def open_sub_link(self,title):  
         """Waits for the link to load and clicks to make a part of page active"""  
@@ -38,6 +39,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"click on {title} sublink was not successful even after 30 seconds")
+        self.selenium.capture_page_screenshot()
     
     
     @capture_screenshot_on_error
@@ -47,7 +49,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"{btn_value} did not appear on page")
         self.selenium.wait_until_element_is_visible(locator, timeout=60)
-        self.selenium.click_element(locator)   
+        self.salesforce._jsclick(locator)   
     
     def select_value_from_list(self,list_name,value): 
         '''Selects value from list identified by list_name.
@@ -66,6 +68,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.select_value_from_list(list_name,value)
         time.sleep(2) # waiting for 2 seconds in case there is slowness
     
+    @capture_screenshot_on_error
     def verify_selection(self,list_name,value):
         """waits to exit edit mode and verifies list contains specified value"""
         edit_button=npsp_lex_locators['npsp_settings']['batch-button'].format('idPanelCon','Edit')
@@ -82,7 +85,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
     
-
+    @capture_screenshot_on_error
     def wait_for_message(self,message):
         """Waits for the text passed in message to be displayed on the page for 6 min"""
         i=0
