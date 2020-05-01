@@ -141,7 +141,7 @@ private class STG_PanelRDHealthCheck_TEST {
      * picklist values works as expected
      */
     @IsTest
-    private static void shouldValidatePicklistEntriesAllExist() {
+    private static void shouldValidatePicklistEntriesAllSupportedAndRequired() {
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
@@ -406,7 +406,7 @@ private class STG_PanelRDHealthCheck_TEST {
     }
 
     /**
-    * @description Checking org set up to determine if RD2 is enabled in the org by checking 'Last Day' exists in the org
+    * @description Checking if Day_Of_Month 'Last Day' value exists to determine if RD2 is enabled in the org
     * @return Boolean
     */
     private static Boolean isRD2EnabledInTheOrg() {
