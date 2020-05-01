@@ -45,7 +45,7 @@ public class ALLO_AllocationsService_TEST {
      *              Recurring Donation - Allocations (GAU0, 50%), (GAU1, $10)
      *              Campaign - Allocations (GAU1, $10)
      *
-     *              Test Data & Result1:
+     *              Test Data & Results:
      *              Opportunity 0  - $20, Recurring Donation Parent, Fully allocated
      *                               Opportunity Allocations (GAU0, 50%, $10), (GAU1, $10)
      *                               Result: No Change

@@ -93,6 +93,7 @@ public class ALLO_UnitTestHelper_TEST {
      *              Opportunity 11 - $20, Invalid Allocation that cannot be corrected
      *                               Opportunity Allocations (GAU1, $40)
      *              Opportunity 12 - $0, no Allocations
+     *              Opportunity 13 - $20, no Allocations
      *              *** If Payment Allocations Are Enabled ***
      *              Opportunity 6, Payment 0 - No Allocations are present
      *              Opportunity 6, Payment 1 - $10, Allocations Need Resizing
@@ -429,6 +430,8 @@ public class ALLO_UnitTestHelper_TEST {
         );
 
         // Opportunity 12 - $0, no Allocations
+
+        // Opportunity 13 - $20, no Allocations
 
         insert allosForInsert;
 
