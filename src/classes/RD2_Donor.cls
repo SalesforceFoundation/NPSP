@@ -56,16 +56,12 @@ public with sharing class RD2_Donor {
         * @param recordId Account/Contact SObject Id
         * @param name Account/Contact name
         */
-        public Record(Id recordId, String name) {
-            this.recordId = recordId;
-            this.name = name;
-        }
-
-        public Record(Id recordId, String name, id accId) {
+        public Record(Id recordId, String name, Id accId) {
             this.recordId = recordId;
             this.name = name;
             this.accId = accId;
         }
+
     }
 
     /***
@@ -95,7 +91,7 @@ public with sharing class RD2_Donor {
                 FROM Account
                 WHERE Id IN :accountIds
             ]) {
-                donorById.put(acc.Id, new Record(acc.Id, acc.Name));
+                donorById.put(acc.Id, new Record(acc.Id, acc.Name, null));
             }
 
             for (Contact c : [

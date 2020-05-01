@@ -46,7 +46,7 @@ public with sharing class RD2_Donor_TEST {
             Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
             Name = CAO_Constants.OCR_DONOR_ROLE
         );
-        RD2_Donor.Record donor = new RD2_Donor.Record(acc.Id, acc.Name);
+        RD2_Donor.Record donor = new RD2_Donor.Record(acc.Id, acc.Name, null);
 
         System.assertEquals(acc.Id, donor.recordId, 'Donor Id should match');
         System.assertEquals(acc.Name, donor.Name, 'Donor Name should match');
@@ -62,7 +62,7 @@ public with sharing class RD2_Donor_TEST {
             FirstName = 'Jane',
             LastName = 'Smith'
         );
-        RD2_Donor.Record donor = new RD2_Donor.Record(contact.Id, contact.FirstName + ' ' + contact.LastName);
+        RD2_Donor.Record donor = new RD2_Donor.Record(contact.Id, contact.FirstName + ' ' + contact.LastName, contact.AccountId);
 
         System.assertEquals(contact.Id, donor.recordId, 'Donor Id should match');
         System.assertEquals(contact.FirstName + ' ' + contact.LastName, donor.Name, 'Donor Name should match');
@@ -117,7 +117,7 @@ public with sharing class RD2_Donor_TEST {
         */
         public GatewayMock withDonors(List<Account> accounts) {
             for (Account acc : accounts) {
-                donorById.put(acc.Id, new RD2_Donor.Record(acc.Id, acc.Name));
+                donorById.put(acc.Id, new RD2_Donor.Record(acc.Id, acc.Name, null));
             }
             return this;
         }
@@ -131,7 +131,7 @@ public with sharing class RD2_Donor_TEST {
             for (Contact c : contacts) {
                 String contactName = (String.isBlank(c.FirstName) ? '' : c.FirstName + ' ') + c.LastName;
 
-                donorById.put(c.Id, new RD2_Donor.Record(c.Id, contactName));
+                donorById.put(c.Id, new RD2_Donor.Record(c.Id, contactName, c.AccountId));
             }
             return this;
         }
