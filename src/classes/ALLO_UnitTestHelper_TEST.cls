@@ -60,9 +60,66 @@ public class ALLO_UnitTestHelper_TEST {
     }
 
     /**
-     * @description Supports certain tests, creating Opportunities and Related Information
-     * @param paymentAllocationsEnabled Boolean if true, Payment Allocations will be enabled
-     * @param defaultAllocationsEnabled Boolean if true, Default Allocations will be enabled
+     * @description Test Data Set for batch/bulk testing of the Allocations Service classes.  Allocation Triggers
+     *              are disabled during setup of this data, so the Allocations Service classes will get the Allocations
+     *              in various states, and can be confirmed to test/react accordingly.
+     *              Payment Allocations are only created for tests when Payment Allocations are enabled.
+     *
+     *              Parent Allocation Data:
+     *              Recurring Donation - Allocations (GAU0, 50%), (GAU1, $10)
+     *              Campaign - Allocations (GAU1, $10)
+     *
+     *              Test Data:
+     *              Opportunity 0  - $20, Recurring Donation Parent, Fully allocated
+     *                               Opportunity Allocations (GAU0, 50%, $10), (GAU1, $10)
+     *              Opportunity 1  - $20, Recurring Donation Parent, No Allocations present
+     *              Opportunity 2  - $20, No Allocations present
+     *              Opportunity 3  - $20, Sum of Allocations < Opportunity Amount
+     *                               Opportunity Allocations (GAU1, $10)
+     *              Opportunity 4  - $20, Allocation has percent but not amount
+     *                               Opportunity Allocations (GAU1, 100%, (null))
+     *              Opportunity 5  - $0, Percent Allocation with non zero amount
+     *                              Opportunity Allocations (GAU1, 50%, $20)
+     *              Opportunity 6  - $20, Fully allocated at Opportunity level
+     *                               Opportunity Allocations (GAU1, 100%, $20)
+     *              Opportunity 7  - $20, Fully allocated at Opportunity level
+     *                               Opportunity Allocations (GAU1, 100%, $20)
+     *              Opportunity 8  - (null), If Default Allocations Enabled, Allocation (Default GAU, $20)
+     *                                      Else Allocation (GAU2, 100%, $20)
+     *              Opportunity 9  - $20, Campaign Parent, No Allocations Present
+     *              Opportunity 10 - $20, Allocations need resizing
+     *                               Opportunity Allocations (GAU1, 50%, $10),
+     *                               If Default Allocations Enabled (Default GAU, $40)
+     *              Opportunity 11 - $20, Invalid Allocation that cannot be corrected
+     *                               Opportunity Allocations (GAU1, $40)
+     *              Opportunity 12 - $0, no Allocations
+     *              *** If Payment Allocations Are Enabled ***
+     *              Opportunity 6, Payment 0 - No Allocations are present
+     *              Opportunity 6, Payment 1 - $10, Allocations Need Resizing
+     *                                         Payment Allocations (GAU0, 50%), (GAU1, $1). (Default GAU $10)
+     *              Opportunity 6, Payment 2 - $10, Needs Default Allocation
+     *                                         Payment Allocations (GAU0, $1)
+     *              Opportunity 6, Payment 3 - $10, Remove Default Allocation Because Fully Allocated
+     *                                         Payment Allocations (GAU0, 100%, $10), (Default GAU, $10)
+     *              Opportunity 6, Payment 4 - $0, Default Allocation needs resizing
+     *                                         Payment Allocations (Default GAU, $10)
+     *              Opportunity 6, Payment 5 - (null), Default Allocation needs resizing
+     *                                         Payment Allocations (Default GAU, $10)
+     *              Opportunity 6, Payment 6 - $0, Percent Allocation to update
+     *                                         Payment Allocations (GAU0, 10%, $1)
+     *              Opportunity 6, Payment 7 - (null), Percent Allocation to update
+     *                                         Payment Allocations (GAU0, 10%, $1)
+     *              Opportunity 6, Payment 8  - $0, Percent Allocation to update, Default Allocation to remove
+     *                                          Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
+     *              Opportunity 6, Payment 9  - (null), Percent Allocation to update, Default Allocation to remove
+     *                                          Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
+     *              Opportunity 6, Payment 10 - $0, Needs Allocations
+     *              Opportunity 6, Payment 11 - (null), Needs Allocations
+     *              Opportunity 6, Payment 12 - $10, Invalid Allocation (no amount or percent)
+     *                                          Payment Allocations (GAU1)
+     *              Opportunity 7, Payment 0 - $10, Fully allocated
+     *
+     * @param alloSetupTest - Instance of an Allocation Setup Test object, with config, GAUs, etc. in it.
      * @return List<Id> List of Opportunities Ids, in the order they were inserted
      */
     public static List<Id> createTestDataAndReturnOppIds(AllocationSetupTest alloSetupTest) {
@@ -103,6 +160,7 @@ public class ALLO_UnitTestHelper_TEST {
 
         List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>();
 
+        // Each Payment is on a different date in ascending order, so they can be selected in a specific order
         List<List<Object>> paymentData = new List<List<Object>> {
             new List<Object> {10,   opps[6].Id, System.today()},
             new List<Object> {10,   opps[7].Id, System.today()},
@@ -133,6 +191,7 @@ public class ALLO_UnitTestHelper_TEST {
         insert pmts;
 
         List<Allocation__c> allosForInsert = new list<Allocation__c>();
+
         // Recurring Donation Allocations
         allosForInsert.add(
             new Allocation__c(
@@ -153,8 +212,9 @@ public class ALLO_UnitTestHelper_TEST {
             )
         );
 
-        // Opportunity 0 Allocation(s) - Properly Allocated, parent Recurring Donation
-        allosForInsert.add(
+        // Opportunity 0  - $20, Recurring Donation Parent, Fully allocated
+        //                  Opportunity Allocations (GAU0, 50%, $10), (GAU1, $10)
+           allosForInsert.add(
             new Allocation__c(
                 Opportunity__c = opps[0].Id, Amount__c = 10, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id
             )
@@ -166,32 +226,36 @@ public class ALLO_UnitTestHelper_TEST {
             )
         );
 
-        // Opportunity 1 Allocation(s) - No Allocations present, parent Recurring Donation
+        // Opportunity 1  - $20, Recurring Donation Parent, No Allocations present
 
-        // Opportunity 2 Allocation(s) - No Allocations present, no parent
+        // Opportunity 2  - $20, No Allocations present
 
-        // Opportunity 3 Allocation(s) - Sum of Allocations Amount < Opp Amount
+        // Opportunity 3  - $20, Sum of Allocations < Opportunity Amount
+        //                  Opportunity Allocations (GAU1, $10)
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[3].Id, Amount__c = 10, General_Accounting_Unit__c = gaus[1].Id
                 )
         );
 
-        // Opportunity 4 Allocation(s) - Allocation with Percent and No Amount
+        // Opportunity 4  - $20, Allocation has percent but not amount
+        //                  Opportunity Allocations (GAU1, 100%, (null))
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[4].Id, Percent__c = 100, General_Accounting_Unit__c = gaus[1].Id
             )
         );
 
-        // Opportunity 5 Allocation(s) - Opportunity with Amount 0 and non zero Allocations
+        // Opportunity 5  - $0, Percent Allocation with non zero amount
+        //                      Opportunity Allocations (GAU1, 50%, $20)
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[5].Id, Amount__c = 20, Percent__c = 50, General_Accounting_Unit__c = gaus[1].Id
             )
         );
 
-        // Opportunity 6 Allocation(s) - Opportunity Allocated, Related Payment 0 not Allocated
+        // Opportunity 6  - $20, Fully allocated at Opportunity level
+        //                  Opportunity Allocations (GAU1, 100%, $20)
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[6].Id, Amount__c = 20, Percent__c = 100, General_Accounting_Unit__c = gaus[1].Id
@@ -199,7 +263,11 @@ public class ALLO_UnitTestHelper_TEST {
         );
 
         if (alloSetupTest.isPaymentAllocationsEnabled()) { // Only if Payment Allocations are Enabled
-            // Opportunity 6, Payment 1 - Payment Allocations, Default Allocation for $10 (Default), Percent Allocation for 50% (GAU0), Fixed for $1 (GAU1)
+
+            // Opportunity 6, Payment 0 - No Allocations are present
+
+            // Opportunity 6, Payment 1 - $10, Allocations Need Resizing
+            //                Payment Allocations (GAU0, 50%), (GAU1, $1). (Default GAU $10)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[2].Id, Amount__c = 10, General_Accounting_Unit__c = defaultGau.Id
@@ -217,14 +285,16 @@ public class ALLO_UnitTestHelper_TEST {
                 )
             );
 
-            // Opportunity 6 - Payment 2 - Fixed Amount Allocation for $1, GAU0
+            // Opportunity 6, Payment 2 - $10, Needs Default Allocation
+            //                            Payment Allocations (GAU0, $1)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[3].Id, Amount__c = 1, General_Accounting_Unit__c = gaus[0].Id
                 )
             );
 
-            // Opportunity 6 - Payment 3 - 100% Allocation for GAU0, Default Allocation for $10
+            // Opportunity 6, Payment 3 - $10, Remove Default Allocation Because Fully Allocated
+            //                            Payment Allocations (GAU0, 100%, $10), (Default GAU, $10)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[4].Id, Amount__c = 10, Percent__c = 100, General_Accounting_Unit__c = gaus[0].Id
@@ -236,33 +306,39 @@ public class ALLO_UnitTestHelper_TEST {
                 )
             );
 
-            // Opportunity 6 - Payment 4 ($0) - $10, Default GAU
+            // Opportunity 6, Payment 4 - $0, Default Allocation needs resizing
+            //                            Payment Allocations (Default GAU, $10)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[5].Id, Amount__c = 10, General_Accounting_Unit__c = defaultGAU.Id
                 )
             );
 
-            // Opportunity 6 - Payment 5 (null) - $10, Default GAU
+            // Opportunity 6, Payment 5 - (null), Default Allocation needs resizing
+            //                            Payment Allocations (Default GAU, $10)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[6].Id, Amount__c = 10, General_Accounting_Unit__c = defaultGAU.Id
                 )
             );
 
-            // Opportunity 6 - Payment 6 ($0) - 10%, GAU 0
+            // Opportunity 6, Payment 6 - $0, Percent Allocation to update
+            //                            Payment Allocations (GAU0, 10%, $1)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[7].Id, Amount__c = 1, Percent__c = 10, General_Accounting_Unit__c = gaus[0].Id
                 )
             );
 
-            // Opportunity 6 - Payment 7 (null) - 10%, GAU 0
+            // Opportunity 6, Payment 7 - (null), Percent Allocation to update
+            //                            Payment Allocations (GAU0, 10%, $1)
             allosForInsert.add(
                 new Allocation__c(Payment__c = pmts[8].Id, Amount__c = 1, Percent__c = 10, General_Accounting_Unit__c = gaus[0].Id
                 )
             );
-            // Opportunity 6 - Payment 8 ($0) - 10%, GAU 0, 10 Default GAU
+
+            // Opportunity 6, Payment 8  - $0, Percent Allocation to update, Default Allocation to remove
+            //                             Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[9].Id, Amount__c = 1, Percent__c = 10, General_Accounting_Unit__c = gaus[0].Id
@@ -273,27 +349,33 @@ public class ALLO_UnitTestHelper_TEST {
                     Payment__c = pmts[9].Id, Amount__c = 10, Percent__c = null, General_Accounting_Unit__c = defaultGAU.Id
                 )
             );
-            // Opportunity 6 - Payment 9 (null) - 10%, GAU 0, 10 Default GAU
+
+            // Opportunity 6, Payment 9  - (null), Percent Allocation to update, Default Allocation to remove
+            //                             Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[10].Id, Amount__c = 1, Percent__c = 10, General_Accounting_Unit__c = gaus[0].Id
                 )
             );
-            // Opportunity 6 - Payment 9 (null) - 10%, GAU 0, $10 Default GAU
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[10].Id, Amount__c = 10, Percent__c = null, General_Accounting_Unit__c = defaultGAU.Id
                 )
             );
 
-            // Opportunity 6 - Payment 13 ($10) - No Amount or Percent, GAU 0
+            // Opportunity 6, Payment 10 - $0, Needs Allocations
+
+            // Opportunity 6, Payment 11 - (null), Needs Allocations
+
+            // Opportunity 6, Payment 12 - $10, Invalid Allocation (no amount or percent)
+            //                             Payment Allocations (GAU1)
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[13].Id, Amount__c = null, Percent__c = null, General_Accounting_Unit__c = gaus[1].Id
                 )
             );
 
-            // Opportunity 7, Payment Allocation(s) - Payment Properly Allocated
+            // Opportunity 7, Payment 0 - $10, Fully allocated
             allosForInsert.add(
                 new Allocation__c(
                     Payment__c = pmts[1].Id, Amount__c = 10, Percent__c = 100,General_Accounting_Unit__c = gaus[1].Id
@@ -301,16 +383,16 @@ public class ALLO_UnitTestHelper_TEST {
             );
         }
 
-        // Opportunity 7 Allocation(s) - Opportunity Properly Allocated, Related Payment Properly Allocated
+        // Opportunity 7  - $20, Fully allocated at Opportunity level
+        //                  Opportunity Allocations (GAU1, 100%, $20)
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[7].Id, Amount__c = 20, Percent__c = 100, General_Accounting_Unit__c = gaus[1].Id
             )
         );
 
-        // Opportunity 8 Allocation(s) - Opportunity with null Amount
-        //      If Default Allocations Enabled, non zero fixed amount for Default Allocation
-        //      If Default Allocations Disabled non zero amount with percent value for gau 2
+        // Opportunity 8  - (null), If Default Allocations Enabled, Allocation (Default GAU, $20)
+        //                          Else Allocation (GAU2, 100%, $20)
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[8].Id,
@@ -320,9 +402,11 @@ public class ALLO_UnitTestHelper_TEST {
             )
         );
 
-        // Opportunity 9 - No allocations.  Parent Campaign
+        // Opportunity 9  - $20, Campaign Parent, No Allocations Present
 
-        // Opportunity 10 - Existing Allocations, Resize for Opportunity Amount Difference
+        // Opportunity 10 - $20, Allocations need resizing
+        //                  Opportunity Allocations (GAU1, 50%, $10),
+        //                  If Default Allocations Enabled (Default GAU, $40)
         if (alloSetupTest.isDefaultAllocationsEnabled()) { // Only if defaults enabled...
             allosForInsert.add(
                 new Allocation__c(
@@ -330,21 +414,22 @@ public class ALLO_UnitTestHelper_TEST {
                 )
             );
         }
-
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[10].Id, Amount__c = 40, Percent__c = 50, General_Accounting_Unit__c = gaus[1].Id
             )
         );
 
-        // Opportunity 11 - Invalid existing fixed allocation that is too large for the Opportunity Amount
+        // Opportunity 11 - $20, Invalid Allocation that cannot be corrected
+        //                  Opportunity Allocations (GAU1, $40)
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[11].Id, Amount__c = 40, Percent__c = null, General_Accounting_Unit__c = gaus[1].Id
             )
         );
 
-        // Opportunity 12 - $0 Amount, no Allocations
+        // Opportunity 12 - $0, no Allocations
+
         insert allosForInsert;
 
         // Need to query data so critical fields like LastModifiedDate are populated
