@@ -22,6 +22,7 @@ Best Match Donation Matching Behaviour
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
     Search Field By Value    Search Accounts    &{account}[Name]
+    Wait Until Modal Is Open
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    &{opp_match}[Name]
@@ -29,6 +30,7 @@ Best Match Donation Matching Behaviour
     ${pay_no}    Get BGE Card Header    &{opp_match}[Name]
     Log To Console    ${pay_no}
     Click Button    title:Close this window
+    Wait Until Modal Is Closed
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
