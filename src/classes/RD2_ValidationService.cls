@@ -289,9 +289,15 @@ public with sharing class RD2_ValidationService {
     @TestVisible
     private void validateStatus(npe03__Recurring_Donation__c rd) {
         if (String.isBlank(statusMapper.getState(rd.Status__c))) {
+            String errorMessage = String.join(
+                new List<String>{
+                    System.Label.RD2_StatusMustBeMapped,
+                    System.Label.RD2_StatusMustBeMappedSolution},
+                ' ');
+
             rd.addError(
                 String.format(
-                    System.Label.RD2_StatusMustBeMapped,
+                    errorMessage,
                     new String[]{rd.Status__c})
             );
         }

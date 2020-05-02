@@ -912,7 +912,11 @@ private with sharing class RD2_ValidationService_TEST {
         }
 
         String expectedMessage =  String.format(
-            System.Label.RD2_StatusMustBeMapped,
+            String.join(
+                new List<String>{
+                    System.Label.RD2_StatusMustBeMapped,
+                    System.Label.RD2_StatusMustBeMappedSolution},
+                ' '),
             new String[]{rd.Status__c});
 
         System.assert(errMessage.contains(expectedMessage),

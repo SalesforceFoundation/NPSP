@@ -1674,6 +1674,7 @@
         <members>RD2_ScheduleVisualizerMessageNoSchedule</members>
         <members>RD2_ScheduleVisualizerTitle</members>
         <members>RD2_StatusMustBeMapped</members>
+        <members>RD2_StatusMustBeMappedSolution</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
