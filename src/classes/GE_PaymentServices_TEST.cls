@@ -199,14 +199,14 @@ public class GE_PaymentServices_TEST {
         }
         insert requiredConfigs;
 
-        System.assertEquals(true, GE_PaymentServices.isElevateCustomer(),
+        System.assertEquals(true, GE_PaymentServices.isElevateCustomer,
                 'The org should be considered an Elevate customer when ' +
                         'all required configuration keys are present.');
 
         // Now delete a required configuration key and validate that
         // GE_PaymentServices.isElevateCustomer returns false
         delete [SELECT Id FROM Payment_Services_Configuration__c LIMIT 1];
-        System.assertEquals(false, GE_PaymentServices.isElevateCustomer(),
+        System.assertEquals(false, GE_PaymentServices.isElevateCustomer,
                 'The org should not be considered an Elevate customer without ' +
                         'all required configuration keys present.');
     }
