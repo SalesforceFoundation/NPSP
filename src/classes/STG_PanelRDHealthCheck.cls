@@ -223,7 +223,10 @@ public inherited sharing class STG_PanelRDHealthCheck {
         for(SelectOption option : picklistValues) {
             if (!option.getDisabled() && String.isBlank(statusMapper.getState(option.getValue()))) {
                 result.addError(
-                    System.Label.RD2_StatusMustBeMapped.replace('{0}', option.getLabel()),
+                    String.format(
+                        System.Label.RD2_StatusMustBeMapped,
+                        new String[] { option.getLabel()}
+                    ),
                     System.Label.RD2_StatusMustBeMappedSolution
                 );
             }
