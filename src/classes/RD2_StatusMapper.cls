@@ -34,81 +34,181 @@
 * @description Used to store and retrieve Recurring Donation status to status type mapping
 */
 public with sharing class RD2_StatusMapper {
-    private static final Set<String> REQUIRED_STATUSES = new Set<String>{
+    private static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
         RD2_Constants.STATUS_ACTIVE,
         RD2_Constants.STATUS_LAPSED,
         RD2_Constants.STATUS_CLOSED
     };
 
-    private Map<String, Record> recordByStatus {
+    /**
+     * @description Interface for retrieving mapping records from database
+     */
+    public interface Gateway {
+        List<RecurringDonationStatusMapping__mdt> getRecords();
+    }
+
+    /**
+     * @description Retrieves status to state mapping configuration
+     */
+    @TestVisible
+    private Gateway gateway {
         get {
-            if (recordByStatus == null) {
-                recordByStatus = getMapping();
+            if (gateway == null) {
+                gateway = new MappingGateway();
             }
-            return recordByStatus;
+            return gateway;
         }
         set;
     }
 
-    private Map<String, Record> getMapping() {
-        Map<String, Record> recordByStatus = new Map<String, Record>();
-
-        for (RecurringDonationStatusMapping__mdt mdt : [
-            SELECT 
-                MasterLabel,
-                Status__c,
-                State__c,
-                IsDeleted__c
-            FROM RecurringDonationStatusMapping__mdt
-            WHERE IsDeleted__c = false
-        ]) {
-            recordByStatus.put(mdt.Status__c, new Record(mdt));
+    /**
+     * @description Contains Recurring Donation Status picklist field values and labels
+     */
+    @TestVisible
+    private Map<String, String> statusLabelByValue {
+        get {
+            if (statusLabelByValue == null) {
+                statusLabelByValue = getActiveStatusValues();
+            }
+            return statusLabelByValue;
         }
-        //keep only active RD SObject Status__c picklist field values//TODO
-        //add required statuses if missing//TODO
-
-        return recordByStatus;
+        set;
     }
 
+    /**
+     * @description Contains status to state mapping
+     */
+    private Map<String, Mapping> mappingByStatus {
+        get {
+            if (mappingByStatus == null) {
+                mappingByStatus = getMappings();
+            }
+            return mappingByStatus;
+        }
+        set;
+    }
+
+    /**
+     * @description Returns status to state mapping
+     * @return Map<String, Mapping> Mapping by the status 
+     */
+    private Map<String, Mapping> getMappings() {
+        Map<String, Mapping> mappingByStatus = new Map<String, Mapping>();
+
+        for (String status : statusLabelByValue.keySet()) {            
+            mappingByStatus.put(
+                status, 
+                new Mapping(status, statusLabelByValue.get(status))
+            );
+        }
+
+        for (RecurringDonationStatusMapping__mdt record : gateway.getRecords()) {
+            Mapping mapping = mappingByStatus.get(record.Status__c);
+            if (mapping != null) {
+                mapping.withMappingRecord(record);
+            }
+        }
+
+        return mappingByStatus;
+    }
+
+    /**
+     * @description Returns Recurring Donation Status picklist field value and labels
+     * @return Map<String, String> State value mapped by the status key
+     */
+    private Map<String, String> getActiveStatusValues() { 
+        Map<String, String> labelByValue = new Map<String, String>();
+        List<Schema.PicklistEntry> statusEntries = npe03__Recurring_Donation__c.Status__c.getDescribe().getPicklistValues();
+        
+        for (Schema.PicklistEntry entry : statusEntries) {
+            if (entry.isActive()) {
+                labelByValue.put(entry.getValue(), entry.getLabel());
+            }
+        }
+
+        return labelByValue;
+    }
+
+    /**
+     * @description Returns all status to state mapping records
+     * @return Map<String, Mapping> Mapping by the status 
+     */
+    public Map<String, Mapping> getAll() {
+        return mappingByStatus;
+    }
+
+    /**
+     * @description Returns configured state for the specified status on the Recurring Donation
+     * @param status Status on the Recurring Donation
+     * @return String Mapped state
+     */
     public String getState(String status) {
-        Record record = recordByStatus.get(status);
+        Mapping mapping = mappingByStatus.get(status);
 
-        return record == null ? null : record.state;
+        return mapping == null ? null : mapping.state;
     }
 
-    public List<Record> getRecords() {
-        return recordByStatus.values();
-    }
 
-    public void saveRecords(List<Record> records) {
-        //TODO
-    }
-
-    public class Record {
-        public String label;
+    /**
+     * @description Contains mapping configuration detail
+     */
+    public class Mapping {
         public String status;
+        public String label;
+        public String masterLabel;
+        public String developerName;
         public String state;
         public Boolean isDeleted = false;
 
-        public Record(String status) {
-            this.label = status;
+        /**
+         * @description Constructor
+         * @param status Status picklist value
+         * @param label Status value label
+         */
+        public Mapping(String status, String label) {
             this.status = status;
+            this.label = label;
+
+            if (READ_ONLY_STATUS_VALUES.contains(status)) {
+                this.state = status;
+            }
         }
 
-        public Record(RecurringDonationStatusMapping__mdt mapping) {
-            this.label = mapping.MasterLabel;
-            this.status = mapping.Status__c;
-            this.state = mapping.State__c;
-            this.isDeleted = mapping.IsDeleted__c;
+        /**
+         * @description Sets state in the mapping
+         * @param state State mapping value
+         * @return Mapping This mapping record instance
+         */
+        public Mapping withState(String state) {
+            this.state = state;
+            return this;
         }
 
+        /**
+         * @description Populates configuration setting on the mapping record
+         * @param record Custom metadata type record containing mapping detail
+         * @return Mapping This mapping record instance
+         */
+        public Mapping withMappingRecord(RecurringDonationStatusMapping__mdt record) {
+            this.masterLabel = record.MasterLabel;
+            this.developerName = record.DeveloperName;
+            this.state = record.State__c;
+            this.isDeleted = record.IsDeleted__c;
+
+            return this;
+        }
+
+        /**
+         * @description Builds custom metadata type representation for the status to state mapping
+         * @return Metadata.CustomMetadata
+         */
         public Metadata.CustomMetadata getCustomMetadata() {
-            String sobjType = String.valueOf(RecurringDonationStatusMapping__mdt.getSObjectType());
+            String sObjectName = RecurringDonationStatusMapping__mdt.getSObjectType().getDescribe().getName();
 
-            Metadata.CustomMetadata cmd = new Metadata.CustomMetadata();
-            cmd.label = status;
-            cmd.fullName = sobjType + '.' + status;
-            cmd.protected_x = false;
+            Metadata.CustomMetadata cmt = new Metadata.CustomMetadata();
+            cmt.label = this.masterLabel;//what if it is a new mapping record?//TODO
+            cmt.fullName = sObjectName + '.' + this.status;
+            cmt.protected_x = false;
 
             Map<String, Object> fieldValues = new Map<String, Object>{
                 'IsDeleted__c' => isDeleted
@@ -117,9 +217,32 @@ public with sharing class RD2_StatusMapper {
                 fieldValues.put('Status__c', this.status);
                 fieldValues.put('State__c', this.state);
             }
-            cmd = CMT_MetadataAPI.addFieldsToMetadataObject(cmd, fieldValues);
+            cmt = CMT_MetadataAPI.addFieldsToMetadataObject(cmt, fieldValues);
 
-            return cmd;
+            return cmt;
+        }
+    }
+
+    /**
+     * @description Retrieves records from database
+     */
+    public class MappingGateway implements Gateway {
+
+        /**
+         * @description Retrieves status to state mapping configuration records from database
+         * @return List<RecurringDonationStatusMapping__mdt>
+         */
+        public List<RecurringDonationStatusMapping__mdt> getRecords() {        
+            return [
+                SELECT 
+                    MasterLabel,
+                    DeveloperName,
+                    Status__c,
+                    State__c,
+                    IsDeleted__c
+                FROM RecurringDonationStatusMapping__mdt
+                WHERE IsDeleted__c = false
+            ];
         }
     }
 
