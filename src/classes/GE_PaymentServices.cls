@@ -39,20 +39,29 @@ public with sharing class GE_PaymentServices {
 
     PurchaseCallBody purchaseCallBody;
 
+    // Names of Payment Service configuration sets
+    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
+    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
+
     // Properties used to configure headers in
     // HTTP Requests to Elevate payment services
-    @TestVisible static final String API_Key = 'apiKey';
+    @TestVisible static final String API_KEY = 'apiKey';
     @TestVisible static final String BASE_URL = 'baseURL';
     @TestVisible static final String JWT_TOKEN = 'jwttoken';
     @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids';
     @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayids';
     @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
     @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
-    @TestVisible protected final String PRODUCTID = 'productId';
+    @TestVisible static final String PRODUCTID = 'productId';
 
-    // Names of Payment Service configuration sets
-    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
-    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
+    @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String>{
+            ELEVATE_SDK,
+            PRODUCTID,
+            BASE_URL,
+            API_KEY,
+            SFDO_MERCHANTIDS,
+            SFDO_GATEWAYIDS
+    };
 
     @TestVisible Map<String, String> config;
 
@@ -116,7 +125,7 @@ public with sharing class GE_PaymentServices {
     }
 
     public String getJwt() {
-        JWTPayload jwtPayload = new JWTPayload(this);
+        JWTPayload jwtPayload = new JWTPayload(config.get(PRODUCTID));
         String jwt = UTIL_Jwt.getSignedJWTFromString(
                 jwtPayload.getAsString(),
                 config.get(API_KEY)
@@ -139,8 +148,8 @@ public with sharing class GE_PaymentServices {
     public with sharing class JWTPayload {
         String sfdoId;
 
-        public JWTPayload(GE_PaymentServices serviceInstance) {
-            sfdoId = serviceInstance.config.get(serviceInstance.PRODUCTID);
+        public JWTPayload(String sfdoId) {
+            this.sfdoId = sfdoId;
         }
 
         private Long getEpochTimestamp(DateTime dt) {
@@ -282,7 +291,7 @@ public with sharing class GE_PaymentServices {
                             )) {
                         if (configRecord.Service__c == PAYMENTS_SERVICE_NAME) {
                             keyValueMap.put(configRecord.Key__c, configRecord.Value__c);
-                        } else if (configRecord.Key__c == API_Key &&
+                        } else if (configRecord.Key__c == API_KEY &&
                                 configRecord.Service__c == MAKANA_SERVICE_NAME) {
                             makanaKey = configRecord.Value__c;
                         }
@@ -290,8 +299,8 @@ public with sharing class GE_PaymentServices {
 
                     // If the payments service config does not have an Api key
                     // and makana does, use the makana Api key
-                    if (makanaKey != null && keyValueMap.get(API_Key) == null) {
-                        keyValueMap.put(API_Key, makanaKey);
+                    if (makanaKey != null && keyValueMap.get(API_KEY) == null) {
+                        keyValueMap.put(API_KEY, makanaKey);
                     }
                 }
                 return keyValueMap;
@@ -306,6 +315,19 @@ public with sharing class GE_PaymentServices {
                     FROM Payment_Services_Configuration__c
                     WHERE Service__c IN :serviceNames
             ];
+        }
+    }
+
+    /**
+     * @description Checks whether an org is a customer of Elevate Payment Services.
+     *              After onboarding within Elevate, these configuration key-value
+     *              pairs should exist in the org.  If this required set of keys is not
+     *              in the org, NPSP cannot load the Elevate SDK or successfully make
+     *              callouts to Elevate services.
+    */
+    public static Boolean isElevateCustomer {
+        get {
+            return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
         }
     }
 

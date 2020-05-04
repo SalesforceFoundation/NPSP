@@ -96,6 +96,7 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
             Expects url format like: [a-zA-Z0-9]{15,18}
         """
         locator=npsp_lex_locators["link-text"].format(template)
+        self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.get_webelement(locator)
         e=element.get_attribute("href")
         print(f"url is {e}")
