@@ -4,7 +4,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { format } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 
@@ -49,7 +49,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleUserDisabledWidget() {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
-        // TODO: dispatch an event to form renderer to clear the token from the data import record
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isWidgetDisabled : this.hasUserDisabledWidget
+        });
     }
 
     /*******************************************************************************
@@ -59,6 +61,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.isLoading = true;
         this.toggleWidget(false);
         this.hasUserDisabledWidget = false;
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isWidgetDisabled : this.hasUserDisabledWidget
+        });
     }
 
     /*******************************************************************************
@@ -230,5 +235,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @api
     setNameOnCard(cardHolderName) {
         this.cardHolderName = cardHolderName;
+    }
+
+    dispatchApplicationEvent (eventName, payload) {
+        fireEvent(null, eventName, payload);
     }
 }

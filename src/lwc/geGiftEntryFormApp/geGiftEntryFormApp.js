@@ -76,6 +76,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     errorCallback;
     isFailedPurchase = false;
+    _isCreditCardWidgetInDoNotChargeState = false;
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -141,16 +142,16 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     singleGiftSubmit = async (event) => {
         let { inMemoryDataImport } = event.detail;
         this.hasUserSelectedDonation = event.detail.hasUserSelectedDonation;
-
+        this._isCreditCardWidgetInDoNotChargeState = event.detail.isWidgetInDoNotChargeState;
         try {
             await this.saveDataImport(inMemoryDataImport);
 
             const hasPaymentToProcess = this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
-            if (hasPaymentToProcess) {
+            if (isNotEmpty(hasPaymentToProcess)) {
                 await this.processPayment();
             }
 
-            if (!this.isFailedPurchase) {
+            if (!this.isFailedPurchase || this._isCreditCardWidgetInDoNotChargeState) {
                 await this.processDataImport();
             }
         } catch (error) {
@@ -193,10 +194,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     prepareInMemoryDataImportForUpdate(inMemoryDataImport) {
         inMemoryDataImport.Id = this.dataImportRecord.Id;
         inMemoryDataImport[PAYMENT_METHOD__C] = this.dataImportRecord[PAYMENT_METHOD__C];
-        inMemoryDataImport[PAYMENT_STATUS__C] = this.dataImportRecord[PAYMENT_STATUS__C];
+        inMemoryDataImport[PAYMENT_STATUS__C] =
+            this._isCreditCardWidgetInDoNotChargeState ? '' : this.dataImportRecord[PAYMENT_STATUS__C];
         inMemoryDataImport[PAYMENT_DECLINED_REASON__C] =
-            this.dataImportRecord[PAYMENT_DECLINED_REASON__C];
-
+            this._isCreditCardWidgetInDoNotChargeState ? '' : this.dataImportRecord[PAYMENT_DECLINED_REASON__C];
+        inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN__C] =
+            this._isCreditCardWidgetInDoNotChargeState ? '' : this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
         return inMemoryDataImport;
     }
 
