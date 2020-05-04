@@ -643,8 +643,16 @@ global with sharing class BDI_DataImportService {
         return dataImportsToProcess;
     }
 
+    /**
+     * @description Checks a collection of data imports and returns a filtered list of only those data import records
+     * that have been successfully charged by payment services or those with a blank payment status which were not
+     * sent to payment services because a credit card charge was not required.
+     *
+     * @param dataImport {DataImport__c} List of data import records to be filtered
+     * @return Boolean
+     */
     private Boolean isSuccessfulPayment(DataImport__c dataImport) {
-        String paymentStatus = dataimport.Payment_Status__c;
+        String paymentStatus = dataImport.Payment_Status__c;
 
         return String.isBlank(paymentStatus) ||
             dataImport.Payment_Status__c.equalsIgnoreCase(
