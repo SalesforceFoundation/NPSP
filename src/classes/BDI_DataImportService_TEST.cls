@@ -156,7 +156,7 @@ private with sharing class BDI_DataImportService_TEST {
         insert testDataImports;
 
         for (DataImport__c dataImport : testDataImports) {
-            dataImport.Payment_Status__c = BDI_DataImportService.PAYMENT_SERVICES_SUCCESSFUL_CHARGE;
+            dataImport.Payment_Status__c = GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name();
         }
 
         Test.startTest();
