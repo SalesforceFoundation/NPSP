@@ -166,7 +166,8 @@ private with sharing class BDI_DataImportService_TEST {
         for (DataImport__c dataImport : [SELECT Status__c FROM DataImport__c]) {
             System.assert(String.isNotBlank(dataImport.Status__c), 'The data import should have been' +
                 'processed by BDI.');
-            System.assertEquals('Imported', dataImport.Status__c, 'The data import was not successfully processed.');
+            System.assertEquals(BDI_DataImport_API.bdiImported, dataImport.Status__c,
+                'The data import was not successfully processed.');
         }
     }
 
