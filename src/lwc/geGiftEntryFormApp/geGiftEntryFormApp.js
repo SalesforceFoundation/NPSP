@@ -52,8 +52,6 @@ const PAYMENT_AUTHORIZED_AT = DI_PAYMENT_AUTHORIZED_AT.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
 
-const PAYMENT_TRANSACTION_STATUS_ENUM = {};
-
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
@@ -68,6 +66,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     errorCallback;
     isFailedPurchase = false;
+
+    PAYMENT_TRANSACTION_STATUS_ENUM;
 
     get isBatchMode() {
         return this.sObjectName &&
