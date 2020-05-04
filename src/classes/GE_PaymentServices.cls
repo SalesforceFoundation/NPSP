@@ -85,6 +85,16 @@ public with sharing class GE_PaymentServices {
         config = new Configuration().keyValueMap;
     }
 
+    @AuraEnabled(cacheable=true)
+    public static String getPaymentTransactionStatus() {
+        Map<String, String> paymentStatusNameByEnum = new Map<String, String>();
+
+        for (ElevateTransactionStatus status : ElevateTransactionStatus.values()) {
+            paymentStatusNameByEnum.put(status.name(), status.name());
+        }
+        return JSON.serialize(paymentStatusNameByEnum);
+    }
+
     public void setPurchaseCallBody(String jsonString) {
         Map<String, Object> requestBodyParameters =
                 (Map<String, Object>) JSON.deserializeUntyped(jsonString);
