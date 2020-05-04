@@ -155,9 +155,7 @@ public with sharing class RD2_NamingService {
 
     /***
     * @description Constructs recurring donation name
-    * Name formatting: 
-    *   If multi-currency, then "{!DonorName} {ISO Code} {!Amount} - Recurring".
-    *   Otherwise, "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
+    * Name formatting: "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
     *
     * @param rd Recurring Donation record
     * @param donorById Account/Contact donor record by Id
@@ -191,19 +189,16 @@ public with sharing class RD2_NamingService {
             formattedAmount = formattedAmount.removeEnd('.0');
         }
 
+        String currencySymbol = userDefaultCurrencySymbol;
         if (isMultiCurrencyEnabled) {
             String code = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(code);
+        }
 
-            if (String.isNotBlank(code)) {
-                formattedAmount = code + ' ' + formattedAmount;
-            }
+        if (String.isNotBlank(currencySymbol) && currencySymbol.length() > 1) {
+            formattedAmount = currencySymbol + ' ' + formattedAmount;            
         } else {
-            if (String.isNotBlank(userDefaultCurrencySymbol) && userDefaultCurrencySymbol.length() > 1) {
-                formattedAmount = userDefaultCurrencySymbol + ' ' + formattedAmount;
-                
-            } else {
-                formattedAmount = userDefaultCurrencySymbol + formattedAmount;
-            }
+            formattedAmount = currencySymbol + formattedAmount;
         }
 
         return formattedAmount;
