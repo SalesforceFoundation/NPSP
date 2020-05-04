@@ -95,7 +95,7 @@ public with sharing class GE_PaymentServices {
     }
 
     @AuraEnabled(cacheable=true)
-    public static String getPaymentTransactionStatus() {
+    public static String getPaymentTransactionStatusValues() {
         Map<String, String> paymentStatusNameByEnum = new Map<String, String>();
 
         for (ElevateTransactionStatus status : ElevateTransactionStatus.values()) {
