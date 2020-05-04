@@ -77,6 +77,27 @@ public with sharing class RD2_ValidationService {
         } set;
     }
 
+    /**
+    * @description Contacts on provided Recurring Donations
+    */
+    private Map<Id, Contact> contactById {
+        get {
+            if (contactById == null) {
+                Set<Id> contactIds = UTIL_SObject.extractId(
+                    rds, npe03__Recurring_Donation__c.npe03__Contact__c
+                );
+
+                contactById = new Map<Id, Contact>([
+                    SELECT Name, AccountId
+                    FROM Contact
+                    WHERE Id IN :contactIds
+                ]);
+            }
+            return contactById;
+        }
+        set;
+    }
+
     /***
     * @descripton Recurring Donations that do not have any Closed Won/Lost Opportunity assigned.
     * These records can have donor information modified
@@ -237,7 +258,7 @@ public with sharing class RD2_ValidationService {
 
         if (noClosedOppRDIds.contains(rd.Id)
             || isOrganizationChange(accountById.get(rd.npe03__Organization__c), accountById.get(oldRd.npe03__Organization__c))
-            || isAccountUpdatedToContactAccount(rd, oldRd)
+            || isAccountAutoPopulatedOnChange(rd, oldRd)
         ) {
             return true;
         }
@@ -282,19 +303,25 @@ public with sharing class RD2_ValidationService {
     }
 
     /***
-    * @description Return true when account is changed from null to contact's account and contact is not changed.
-    * @param new recurring donation record
-    * @param old recurring donation record
-    * @return Boolean True when account is updated to contact's account from null value
+    * @description Returns true when Account on RD is changed from null to the Contact's Account
+    * and the Contact on RD is not changed
+    * @param new Updated Recurring Donation record
+    * @param old Recurring Donation record containing old values
+    * @return Boolean
     */
-    private Boolean isAccountUpdatedToContactAccount(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        Map<Id,Id> rdWithAccIdFromContact = getAccountIdFromContactInRecurringDonations();
+    private Boolean isAccountAutoPopulatedOnChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
 
-        return
-            oldRd.npe03__Organization__c == null
-            && rd.npe03__Organization__c == rdWithAccIdFromContact.get(rd.id)
-            && rd.npe03__Contact__c == oldRd.npe03__Contact__c;
+        if (rd.npe03__Contact__c == null //The Contact is not specified
+            || rd.npe03__Contact__c != oldRd.npe03__Contact__c //The Contact is changed on update
+            || oldRd.npe03__Organization__c != null //The Account existed previously
+        ) {
+            return false;
+        }
 
+        Contact rdContact = contactById.get(rd.npe03__Contact__c);
+
+        return rdContact != null
+            && rd.npe03__Organization__c == rdContact.AccountId;
     }
 
     /***
@@ -410,21 +437,4 @@ public with sharing class RD2_ValidationService {
         return rdIds;
     }
 
-    /***
-    * @description Get a map of Recurring donations Id with contact's account Id
-    * @return Map<Id, Id>
-    */
-    private Map<Id,Id> getAccountIdFromContactInRecurringDonations() {
-        Map<Id, Id> rdWithAccountId = new Map<Id, Id>();
-
-        for (npe03__Recurring_Donation__c rd : [
-            SELECT Id, npe03__Contact__r.AccountId
-            FROM npe03__Recurring_Donation__c
-            WHERE Id IN :rds
-        ]) {
-                rdWithAccountId.put(rd.Id, rd.npe03__Contact__r.AccountId);
-
-           }
-        return rdWithAccountId;
-    }
 }
