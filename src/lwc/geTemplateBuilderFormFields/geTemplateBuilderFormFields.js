@@ -55,11 +55,13 @@ const FIELD_BUNDLES_SECTION_ID = 'fieldBundles';
 const FORM_FIELDS_SECTION_ID = 'formFields';
 const ADVANCED_FIELDS_SECTION_ID = 'advancedFormFields';
 
+// List of object mappings to exclude from Template Builder
 const EXCLUDED_OBJECT_MAPPINGS = [
     'Opportunity_Contact_Role_1',
     'Opportunity_Contact_Role_2'
 ];
 
+// List of field mappings to exclude from Template Builder
 const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
     CONTACT1_CONSENT_MESSAGE_FIELD.fieldApiName,
     CONTACT1_CONSENT_OPT_IN_FIELD.fieldApiName,
