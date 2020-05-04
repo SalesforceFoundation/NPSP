@@ -12,7 +12,7 @@ import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.sav
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
-import getPaymentTransactionStatus from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatus';
+import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 
 /*******************************************************************************
 * @description Schema imports
@@ -75,7 +75,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     connectedCallback() {
-        getPaymentTransactionStatus()
+        getPaymentTransactionStatusValues()
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
             });
