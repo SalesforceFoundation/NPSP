@@ -41,9 +41,6 @@ global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
 
-    @TestVisible
-    private static final String PAYMENT_SERVICES_SUCCESSFUL_CHARGE = 'captured';
-
     public BDI_MappingService mappingService;
 
     /*******************************************************************************************************
