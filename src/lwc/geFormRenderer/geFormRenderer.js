@@ -62,6 +62,7 @@ import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PARENT_OPPORTUNITY_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
 
+
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
@@ -107,6 +108,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     @track formTemplateId;
     _batchDefaults;
+    _isCreditCardWidgetInDoNotChargeState = false;
 
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
@@ -163,6 +165,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
         registerListener('paymentError', this.handleAsyncWidgetError, this);
+        registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -289,11 +292,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     handleSaveSingleGiftEntry = async (inMemoryDataImport, formControls) => {
         if (inMemoryDataImport) {
+            const isWidgetInDoNotChargeState = this._isCreditCardWidgetInDoNotChargeState;
             const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
             this.dispatchEvent(new CustomEvent('submit', {
                 detail: {
                     inMemoryDataImport,
                     hasUserSelectedDonation,
+                    isWidgetInDoNotChargeState,
                     errorCallback: (error) => {
                         formControls.enableSaveButton();
                         formControls.toggleSpinner();
@@ -525,7 +530,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             let inMemoryDataImport;
             try {
-                inMemoryDataImport = await this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
+                inMemoryDataImport = await this.buildDataImportFromSections(
+                    sectionsList, this.selectedDonationDataImportFieldValues
+                );
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
                 this.handleAsyncWidgetError(ex);
@@ -536,7 +543,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (this.batchId) {
                 this.handleSaveBatchGiftEntry(inMemoryDataImport, formControls);
             } else {
-                this.handleSaveSingleGiftEntry(inMemoryDataImport, formControls);
+                await this.handleSaveSingleGiftEntry(inMemoryDataImport, formControls);
             }
         }
     }
@@ -974,6 +981,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
+     * @description Set variable that informs the form renderer when the
+     *  credit card widget is in a 'do not charge' state
+     * @param event
+     */
+    handleDoNotChargeCardState (event) {
+        this._isCreditCardWidgetInDoNotChargeState = event.isWidgetDisabled;
+    }
+
+    /**
      * Track widget data so that our widgets can react to the overall state of the form
      * @param payload   An object to store in widgetData
      */
@@ -995,7 +1011,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
             dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
-
         if (this.dataImport && this.dataImport.Id) {
             dataImportRecord.Id = this.dataImport.Id;
         }
