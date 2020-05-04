@@ -4,6 +4,7 @@ import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
+import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
@@ -109,11 +110,10 @@ class GeTemplateBuilderService {
     * @param {object} objectMappingByDevName: Map of object mappings.
     */
     addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName, fieldMappingsByObjMappingDevName) => {
-
         GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
 
-        fieldMappingByDevName.geFormWidgetAllocation = GeWidgetService.definitions.geFormWidgetAllocation;
-        fieldMappingByDevName.geFormWidgetTokenizeCard = GeWidgetService.definitions.geFormWidgetTokenizeCard;
+        fieldMappingByDevName.geFormWidgetAllocation =
+            GeWidgetService.definitions.geFormWidgetAllocation;
 
         objectMappingByDevName.Widgets = {
             DeveloperName: 'Widgets',
@@ -121,9 +121,21 @@ class GeTemplateBuilderService {
         };
 
         fieldMappingsByObjMappingDevName.Widgets = [
-            fieldMappingByDevName.geFormWidgetAllocation,
-            fieldMappingByDevName.geFormWidgetTokenizeCard
-        ]
+            fieldMappingByDevName.geFormWidgetAllocation
+        ];
+
+        // If the org is an Elevate customer, add the Salesforce.org Elevate widget
+        isElevateCustomer()
+            .then(isElevateCustomer => {
+                if (isElevateCustomer) {
+                    fieldMappingByDevName.geFormWidgetTokenizeCard =
+                        GeWidgetService.definitions.geFormWidgetTokenizeCard;
+                    fieldMappingsByObjMappingDevName.Widgets.push(
+                        fieldMappingByDevName.geFormWidgetTokenizeCard
+                    );
+                }
+            })
+            .catch(error => handleError(error));
     }
 }
 
