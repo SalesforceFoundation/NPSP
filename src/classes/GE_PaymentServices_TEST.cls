@@ -64,7 +64,7 @@ public class GE_PaymentServices_TEST {
                                             'value' => 'Payments.Purchase'
                                     },
                                     new Map<String, String>{
-                                            'key' => GE_PaymentServices.API_Key,
+                                            'key' => GE_PaymentServices.API_KEY,
                                             'value' => testApiKey
                                     }
                             }
@@ -142,7 +142,7 @@ public class GE_PaymentServices_TEST {
         // the same as those of the inserted config records
         System.assertEquals(testMerchantId,
                 service.config.get(GE_PaymentServices.SFDO_MERCHANTIDS));
-        System.assertEquals(testApiKey, service.config.get(GE_PaymentServices.API_Key));
+        System.assertEquals(testApiKey, service.config.get(GE_PaymentServices.API_KEY));
     }
 
     /**
@@ -160,14 +160,14 @@ public class GE_PaymentServices_TEST {
                         GE_PaymentServices.PAYMENTS_SERVICE_NAME =>
                                 new List<Map<String, String>>{
                                         new Map<String, String>{
-                                                'key' => GE_PaymentServices.API_Key,
+                                                'key' => GE_PaymentServices.API_KEY,
                                                 'value' => null
                                         }
                                 },
                         GE_PaymentServices.MAKANA_SERVICE_NAME =>
                                 new List<Map<String, String>>{
                                         new Map<String, String>{
-                                                'key' => GE_PaymentServices.API_Key,
+                                                'key' => GE_PaymentServices.API_KEY,
                                                 'value' => testMakanaApiKey
                                         }
                                 }
@@ -180,8 +180,35 @@ public class GE_PaymentServices_TEST {
 
         // Verify apiKey matches makana, while the rest match payments
         System.assertEquals(testMakanaApiKey,
-                service.config.get(GE_PaymentServices.API_Key));
+                service.config.get(GE_PaymentServices.API_KEY));
         System.assertEquals(testMerchantId,
                 service.config.get(GE_PaymentServices.SFDO_MERCHANTIDS));
     }
+
+    @IsTest
+    private static void shouldRequireConfigurationKeysToBeAnElevateCustomer() {
+        List<Payment_Services_Configuration__c> requiredConfigs = new
+                List<Payment_Services_Configuration__c>();
+
+        for (Integer i = 0; i < GE_PaymentServices.REQUIRED_CONFIG_KEYS.size(); i++) {
+            requiredConfigs.add(new Payment_Services_Configuration__c(
+                    Service__c = GE_PaymentServices.PAYMENTS_SERVICE_NAME,
+                    Key__c = GE_PaymentServices.REQUIRED_CONFIG_KEYS.get(i),
+                    Value__c = String.valueOf(i)
+            ));
+        }
+        insert requiredConfigs;
+
+        System.assertEquals(true, GE_PaymentServices.isElevateCustomer,
+                'The org should be considered an Elevate customer when ' +
+                        'all required configuration keys are present.');
+
+        // Now delete a required configuration key and validate that
+        // GE_PaymentServices.isElevateCustomer is false
+        delete [SELECT Id FROM Payment_Services_Configuration__c LIMIT 1];
+        System.assertEquals(false, GE_PaymentServices.isElevateCustomer,
+                'The org should not be considered an Elevate customer without ' +
+                        'all required configuration keys present.');
+    }
+
 }
