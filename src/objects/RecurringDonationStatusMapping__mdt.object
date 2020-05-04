@@ -2,14 +2,6 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Recurring Donation Status to State Mapping</description>
     <fields>
-        <fullName>IsDeleted__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <fieldManageability>SubscriberControlled</fieldManageability>
-        <label>Deleted</label>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>State__c</fullName>
         <description>The state that the Recurring Donation Status will be mapped to.</description>
         <externalId>false</externalId>

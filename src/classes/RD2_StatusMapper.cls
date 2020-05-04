@@ -31,10 +31,10 @@
 * @author Salesforce.org
 * @date 2020
 * @group Recurring Donations
-* @description Used to store and retrieve Recurring Donation status to status type mapping
+* @description Retrieves Recurring Donation status to status type mapping
 */
 public with sharing class RD2_StatusMapper {
-    private static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
+    public static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
         RD2_Constants.STATUS_ACTIVE,
         RD2_Constants.STATUS_LAPSED,
         RD2_Constants.STATUS_CLOSED
@@ -158,7 +158,7 @@ public with sharing class RD2_StatusMapper {
         public String masterLabel;
         public String developerName;
         public String state;
-        public Boolean isDeleted = false;
+        public Boolean isReadOnly = false;
 
         /**
          * @description Constructor
@@ -171,6 +171,7 @@ public with sharing class RD2_StatusMapper {
 
             if (READ_ONLY_STATUS_VALUES.contains(status)) {
                 this.state = status;
+                this.isReadOnly = true;
             }
         }
 
@@ -193,33 +194,8 @@ public with sharing class RD2_StatusMapper {
             this.masterLabel = record.MasterLabel;
             this.developerName = record.DeveloperName;
             this.state = record.State__c;
-            this.isDeleted = record.IsDeleted__c;
 
             return this;
-        }
-
-        /**
-         * @description Builds custom metadata type representation for the status to state mapping
-         * @return Metadata.CustomMetadata
-         */
-        public Metadata.CustomMetadata getCustomMetadata() {
-            String sObjectName = RecurringDonationStatusMapping__mdt.getSObjectType().getDescribe().getName();
-
-            Metadata.CustomMetadata cmt = new Metadata.CustomMetadata();
-            cmt.label = this.masterLabel;//what if it is a new mapping record?//TODO
-            cmt.fullName = sObjectName + '.' + this.status;
-            cmt.protected_x = false;
-
-            Map<String, Object> fieldValues = new Map<String, Object>{
-                'IsDeleted__c' => isDeleted
-            };
-            if (isDeleted != true) {
-                fieldValues.put('Status__c', this.status);
-                fieldValues.put('State__c', this.state);
-            }
-            cmt = CMT_MetadataAPI.addFieldsToMetadataObject(cmt, fieldValues);
-
-            return cmt;
         }
     }
 
@@ -238,10 +214,8 @@ public with sharing class RD2_StatusMapper {
                     MasterLabel,
                     DeveloperName,
                     Status__c,
-                    State__c,
-                    IsDeleted__c
+                    State__c
                 FROM RecurringDonationStatusMapping__mdt
-                WHERE IsDeleted__c = false
             ];
         }
     }

@@ -13,7 +13,7 @@
     </div>
 
     <apex:form id="form">
-        <apex:actionFunction name="refreshPanels" action="{!refreshPanels}" reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
+        <apex:actionFunction name="refreshPanels" action="{!refreshPanels}" reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRD2StatusMapping, idPanelRDInstPd, idPanelRDFieldMap"
             status="statusLoad" />
     </apex:form>
 
