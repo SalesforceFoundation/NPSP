@@ -36,8 +36,10 @@
 */
 @isTest(IsParallel=true)
 public with sharing class RD2_NamingService_TEST {
-    private static final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+    private static final String CURRENCY_CAD = 'CAD';
+    private static final String CURRENCY_USD = 'USD';
 
+    private static final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
     private static Account acc = getAccountMock();
 
     /***
@@ -81,16 +83,17 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameUsingProvidedAccountAndAmount() {
+        String currencyCode = UserInfo.getDefaultCurrency();
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.25)
-            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+            .withCurrencyIsoCode(currencyCode)
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(acc);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(getExpectedName(acc, '100.25'), rd.Name, 'The name should match.');
+        System.assertEquals(getExpectedName(acc, '100.25', currencyCode), rd.Name, 'The name should match.');
     }
 
     /***
@@ -99,12 +102,14 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameUsingProvidedContactAndAmount() {
+        String currencyCode = UserInfo.getDefaultCurrency();
         Contact contact = getContactMock();
+
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withContact(contact.Id)
             .withAmount(100.25)
-            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+            .withCurrencyIsoCode(currencyCode)
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(
@@ -114,7 +119,7 @@ public with sharing class RD2_NamingService_TEST {
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(getExpectedName(contact, '100.25'), rd.Name, 'The name should match.');
+        System.assertEquals(getExpectedName(contact, '100.25', currencyCode), rd.Name, 'The name should match.');
     }
 
     /***
@@ -129,13 +134,13 @@ public with sharing class RD2_NamingService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.25)
-            .withCurrencyIsoCode('CAD')
+            .withCurrencyIsoCode(CURRENCY_CAD)
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(acc);        
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedName = acc.Name + ' CAD 100.25 - ' + System.Label.RecurringDonationNameSuffix;
+        String expectedName = acc.Name + ' $100.25 - ' + System.Label.RecurringDonationNameSuffix;
         System.assertEquals(expectedName, rd.Name, 'The amount format should match.');
     }
 
@@ -144,16 +149,17 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldReturnAmountWithoutTrailingZeros() {
+        String currencyCode = UserInfo.getDefaultCurrency();
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
-            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+            .withCurrencyIsoCode(currencyCode)
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(acc);        
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(getExpectedName(acc, '100'), rd.Name, 'The amount format should match.');
+        System.assertEquals(getExpectedName(acc, '100', currencyCode), rd.Name, 'The amount format should match.');
     }
 
     /***
@@ -162,6 +168,7 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldAbbreviateDonorNameIfLengthIsOverMax() {
+        String currencyCode = UserInfo.getDefaultCurrency();
         final Integer accountNameLength = 210;
         String padding = 'Company';
 
@@ -171,13 +178,13 @@ public with sharing class RD2_NamingService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
-            .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+            .withCurrencyIsoCode(currencyCode)
             .build();
         
         RD2_NamingService service = buildAutomaticNamingService(acc);        
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        String expectedSuffix = '... ' + getCurrencyCodeOrSymbol() + '100 - ' + System.Label.RecurringDonationNameSuffix;
+        String expectedSuffix = '... ' + getCurrencySymbol(currencyCode) + '100 - ' + System.Label.RecurringDonationNameSuffix;
         String expectedName = acc.Name.left(RD2_NamingService.MAX_NAME_LENGTH - expectedSuffix.length()) + expectedSuffix;
 
         System.assertEquals(expectedName, rd.Name, 'Recurring Donations Name should match.');
@@ -259,12 +266,12 @@ public with sharing class RD2_NamingService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
-            .withCurrencyIsoCode('USD')
+            .withCurrencyIsoCode(CURRENCY_USD)
             .build();
         npe03__Recurring_Donation__c oldRd = new TEST_RecurringDonationBuilder()
             .withAccount(acc.Id)
             .withAmount(100.00)
-            .withCurrencyIsoCode('CAD')
+            .withCurrencyIsoCode(CURRENCY_CAD)
             .build();
 
         RD2_NamingService service = new RD2_NamingService();
@@ -315,17 +322,13 @@ public with sharing class RD2_NamingService_TEST {
     */
     @isTest
     private static void shouldAutogenerateNameWhenNameConstructKeyFieldsAreChanged() {
+        String currencyCode = UserInfo.getDefaultCurrency();
+        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
+            .withAccount(acc.Id)
+            .withCurrencyIsoCode(currencyCode);
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
-            new TEST_RecurringDonationBuilder()
-                .withAccount(acc.Id)
-                .withAmount(100)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
-                .build(),
-            new TEST_RecurringDonationBuilder()
-                .withAccount(acc.Id)
-                .withAmount(200)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
-                .build()
+            rdBuilder.withAmount(100).build(),
+            rdBuilder.withAmount(200).build()
         };
         UTIL_UnitTestData_TEST.setMockIds(rds);
 
@@ -342,9 +345,11 @@ public with sharing class RD2_NamingService_TEST {
         RD2_NamingService service = buildAutomaticNamingService(acc);
         service.autogenerateNamesOnChange(rds, oldRds);
 
-        System.assertEquals(unchangedName, rds[0].Name, 'RD Name should not change when construct key fields are unchanged');
+        System.assertEquals(unchangedName, rds[0].Name, 
+            'RD Name should not change when construct key fields are unchanged');
 
-        System.assertEquals(getExpectedName(acc, '200'), rds[1].Name, 'RD Name should change when construct key fields are changed');
+        System.assertEquals(getExpectedName(acc, '200', currencyCode), rds[1].Name, 
+            'RD Name should change when construct key fields are changed');
     }
 
     /***
@@ -357,24 +362,27 @@ public with sharing class RD2_NamingService_TEST {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
+        String currencyCode = UserInfo.getDefaultCurrency();
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             new TEST_RecurringDonationBuilder()
                 .withAccount(acc.Id)
                 .withAmount(100)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .withCurrencyIsoCode(currencyCode)
                 .build(),
             new TEST_RecurringDonationBuilder()
                 .withContact(contact.Id)
                 .withAmount(200)
-                .withCurrencyIsoCode(UserInfo.getDefaultCurrency())
+                .withCurrencyIsoCode(currencyCode)
                 .build()
         };
 
         RD2_NamingService service = buildAutomaticNamingService();
         service.autogenerateNames(rds);
 
-        System.assertEquals(getExpectedName(acc, '100'), rds[0].Name, 'The Account name should be queried and incorporated into the name');
-        System.assertEquals(getExpectedName(contact, '200'), rds[1].Name, 'The Contact name should be queried and incorporated into the name');
+        System.assertEquals(getExpectedName(acc, '100', currencyCode), rds[0].Name, 
+            'The Account name should be queried and incorporated into the name');
+        System.assertEquals(getExpectedName(contact, '200', currencyCode), rds[1].Name, 
+            'The Contact name should be queried and incorporated into the name');
     }
 
 
@@ -386,38 +394,50 @@ public with sharing class RD2_NamingService_TEST {
     * @description Builds expected name
     * @param acc Recurring Donation Account
     * @param amount String representation of the expected Amount value in the name
+    * @param currencyCode Currency ISO code on the record
     * @return String Expected Recurring Donation name
     */
-    public static String getExpectedName(Account acc, String amount) {
-        return acc.Name + ' ' + getCurrencyCodeOrSymbol() + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+    public static String getExpectedName(Account acc, String amount, String currencyCode) {
+        return acc.Name + ' ' + getCurrencySymbol(currencyCode) + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
     }
 
     /***
     * @description Builds expected name
     * @param contact Recurring Donation Contact
     * @param amount String representation of the expected Amount value in the name
+    * @param currencyCode Currency ISO code on the record
     * @return String Expected Recurring Donation name
     */
-    public static String getExpectedName(Contact contact, String amount) {
+    public static String getExpectedName(Contact contact, String amount, String currencyCode) {
         String contactName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
 
-        return contactName + ' ' + getCurrencyCodeOrSymbol() + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+        return contactName + ' ' + getCurrencySymbol(currencyCode) + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
     }
 
     /***
     * @description Returns currency code or symbol followed by a space if it is longer than one character
-    * @return String 
+    * @return String Symbol for the provided currency ISO code
     */
-    public static String getCurrencyCodeOrSymbol() {
-        String currencyCodeOrSymbol = isMultiCurrencyEnabled
-            ? UserInfo.getDefaultCurrency()
-            : UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
+    private static String getCurrencySymbol() {
+        return getCurrencySymbol(UserInfo.getDefaultCurrency());
+    }
 
-        if (currencyCodeOrSymbol.length() > 1) {
-            currencyCodeOrSymbol += ' ';
+    /***
+    * @description Returns currency code or symbol followed by a space if it is longer than one character
+    * @param currencyCode Currency ISO code on the record
+    * @return String Symbol for the provided currency ISO code
+    */
+    private static String getCurrencySymbol(String currencyCode) {
+        if (String.isBlank(currencyCode)) {
+            currencyCode = UserInfo.getDefaultCurrency();
         }
 
-        return currencyCodeOrSymbol;
+        String currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(currencyCode);
+        if (currencySymbol.length() > 1) {
+            currencySymbol += ' ';
+        }
+
+        return currencySymbol;
     }
 
     /***
