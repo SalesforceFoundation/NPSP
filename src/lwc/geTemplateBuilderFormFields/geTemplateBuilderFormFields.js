@@ -8,12 +8,32 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 // Import schema for default form field element objects
 import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
 
-// Import schema info for default form field elements
-import ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
-import CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
-import CONTACT1_LASTNAME_INFO from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
-import ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
+// Import schema for DataImport__c fields
+import ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import ACCOUNT1_NAME_FIELD from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import CONTACT1_CONSENT_MESSAGE_FIELD from '@salesforce/schema/DataImport__c.Contact1_Consent_Message__c';
+import CONTACT1_CONSENT_OPT_IN_FIELD from '@salesforce/schema/DataImport__c.Contact1_Consent_Opt_In__c';
+import CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import CONTACT1_LASTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
+import DONATION_ELEVATE_RECURRING_ID_FIELD from '@salesforce/schema/DataImport__c.Donation_Elevate_Recurring_ID__c';
+import PAYMENT_AUTHORIZED_DATE_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorized_Date__c';
+import PAYMENT_AUTHORIZED_UTC_TIMESTAMP_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorized_UTC_Timestamp__c';
+import PAYMENT_CARD_EXPIRATION_MONTH_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
+import PAYMENT_CARD_EXPIRATION_YEAR_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
+import PAYMENT_CARD_LAST_4_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
+import PAYMENT_CARD_NETWORK_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
+import PAYMENT_ELEVATE_CREATED_DATE_FIELD from '@salesforce/schema/DataImport__c.Payment_Elevate_Created_Date__c';
+import PAYMENT_ELEVATE_CREATED_UTC_TIMESTAMP_FIELD from '@salesforce/schema/DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c';
+import PAYMENT_ELEVATE_ID_FIELD from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID_FIELD from '@salesforce/schema/DataImport__c.Payment_Elevate_Original_Payment_ID__c';
+import PAYMENT_GATEWAY_ID_FIELD from '@salesforce/schema/DataImport__c.Payment_Gateway_ID__c';
+import PAYMENT_GATEWAY_PAYMENT_IDFIELD from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
+import PAYMENT_ORIGIN_ID_FIELD from '@salesforce/schema/DataImport__c.Payment_Origin_ID__c';
+import PAYMENT_ORIGIN_NAME_FIELD from '@salesforce/schema/DataImport__c.Payment_Origin_Name__c';
+import PAYMENT_ORIGIN_TYPE_FIELD from '@salesforce/schema/DataImport__c.Payment_Origin_Type__c';
+import PAYMENT_TYPE_FIELD from '@salesforce/schema/DataImport__c.Payment_Type__c';
 
+const FIELD = 'field';
 const BOOLEAN_TYPE = 'BOOLEAN';
 const DONATION_DONOR_LABEL = 'Donation Donor';
 const COMMA_CHARACTER = ', ';
@@ -22,19 +42,43 @@ let REQUIRED_FORM_FIELDS_MESSAGE = '';
 
 // Required form fields for template save validation
 const REQUIRED_FORM_FIELDS = [
-    ACCOUNT1_IMPORTED_INFO.fieldApiName,
-    ACCOUNT1_NAME_INFO.fieldApiName,
-    CONTACT1_IMPORTED_INFO.fieldApiName,
-    CONTACT1_LASTNAME_INFO.fieldApiName
+    ACCOUNT1_IMPORTED_FIELD.fieldApiName,
+    ACCOUNT1_NAME_FIELD.fieldApiName,
+    CONTACT1_IMPORTED_FIELD.fieldApiName,
+    CONTACT1_LASTNAME_FIELD.fieldApiName
 ];
 
 const FIELD_BUNDLES_SECTION_ID = 'fieldBundles';
 const FORM_FIELDS_SECTION_ID = 'formFields';
 const ADVANCED_FIELDS_SECTION_ID = 'advancedFormFields';
 
+// List of object mappings to exclude from Template Builder
 const EXCLUDED_OBJECT_MAPPINGS = [
     'Opportunity_Contact_Role_1',
     'Opportunity_Contact_Role_2'
+];
+
+// List of field mappings to exclude from Template Builder
+const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
+    CONTACT1_CONSENT_MESSAGE_FIELD.fieldApiName,
+    CONTACT1_CONSENT_OPT_IN_FIELD.fieldApiName,
+    DONATION_ELEVATE_RECURRING_ID_FIELD.fieldApiName,
+    PAYMENT_AUTHORIZED_DATE_FIELD.fieldApiName,
+    PAYMENT_AUTHORIZED_UTC_TIMESTAMP_FIELD.fieldApiName,
+    PAYMENT_CARD_EXPIRATION_MONTH_FIELD.fieldApiName,
+    PAYMENT_CARD_EXPIRATION_YEAR_FIELD.fieldApiName,
+    PAYMENT_CARD_LAST_4_FIELD.fieldApiName,
+    PAYMENT_CARD_NETWORK_FIELD.fieldApiName,
+    PAYMENT_ELEVATE_CREATED_DATE_FIELD.fieldApiName,
+    PAYMENT_ELEVATE_CREATED_UTC_TIMESTAMP_FIELD.fieldApiName,
+    PAYMENT_ELEVATE_ID_FIELD.fieldApiName,
+    PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID_FIELD.fieldApiName,
+    PAYMENT_GATEWAY_ID_FIELD.fieldApiName,
+    PAYMENT_GATEWAY_PAYMENT_IDFIELD.fieldApiName,
+    PAYMENT_ORIGIN_ID_FIELD.fieldApiName,
+    PAYMENT_ORIGIN_NAME_FIELD.fieldApiName,
+    PAYMENT_ORIGIN_TYPE_FIELD.fieldApiName,
+    PAYMENT_TYPE_FIELD.fieldApiName,
 ];
 
 const FIELD_BUNDLE_MASTER_NAMES = [
@@ -216,38 +260,94 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         for (const objMappingDevName in fieldMappingsByObjMappingDevName) {
 
             if (Object.prototype.hasOwnProperty.call(fieldMappingsByObjMappingDevName, objMappingDevName)) {
-                const isExcluded = EXCLUDED_OBJECT_MAPPINGS.includes(
-                    objMappingDevName.substring(0, objMappingDevName.length - 10));
 
-                if (isExcluded) {
-                    continue;
+                const isAllowed = this.checkIfObjectMappingIsAllowed(objMappingDevName);
+                if (isAllowed) {
+                    this.objectMappingNames = [...this.objectMappingNames, objMappingDevName];
+
+                    let objectMapping = {
+                        ...TemplateBuilderService.objectMappingByDevName[objMappingDevName],
+                        Field_Mappings: this.getObjectMappingFieldMappings(objMappingDevName)
+                    };
+
+                    objectMappings.push(objectMapping)
                 }
-
-                this.objectMappingNames = [...this.objectMappingNames, objMappingDevName];
-
-                let fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName];
-                fieldMappings.forEach(fieldMapping => {
-                    if (fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL) {
-                        //Forcing the requiredness of the Donation Donor field mapping
-                        fieldMapping.Is_Required = true;
-                    }
-
-                    if(fieldMapping.Source_Field_Data_Type === BOOLEAN_TYPE) {
-                        // force checkboxes to not be required on the template builder
-                        fieldMapping.Is_Required = false;
-                    }
-                });
-                let objectMapping = {
-                    ...TemplateBuilderService.objectMappingByDevName[objMappingDevName],
-                    Field_Mappings: fieldMappings
-                };
-
-                objectMappings.push(objectMapping)
             }
         }
 
         return objectMappings;
     };
+
+    /*******************************************************************************
+    * @description Check if the provided object mapping developer name is allowed
+    * to be used in Template Builder.
+    *
+    * @param {string} objMappingDevName: Data_Import_Object_Mapping__mdt developer name
+    *
+    * @return {boolean}: True if the Object Mapping is allowed to be used in Template
+    * Builder
+    */
+    checkIfObjectMappingIsAllowed(objectMappingDeveloperName) {
+        return !EXCLUDED_OBJECT_MAPPINGS.includes(
+            objectMappingDeveloperName.substring(0, objectMappingDeveloperName.length - 10));
+    }
+
+    /*******************************************************************************
+    * @description Collects, sorts, and returns the provided Object Mapping's Field
+    * Mappings. Field Mappings that are in the EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME
+    * array are removed from the returned array.
+    *
+    * @param {string} objMappingDevName: Data_Import_Object_Mapping__mdt developer name
+    *
+    * @return {array}: An array of the Object Mapping's Field Mappings
+    */
+    getObjectMappingFieldMappings(objectMappingDeveloperName) {
+        let allowedFieldMappings = [];
+
+        const fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objectMappingDeveloperName];
+
+        fieldMappings.forEach(fieldMapping => {
+            const isAllowed = this.checkIfFieldMappingIsAllowed(fieldMapping);
+
+            if (isAllowed) {
+                this.setFieldMappingRequiredness(fieldMapping);
+                allowedFieldMappings.push(fieldMapping);
+            }
+        });
+
+        return allowedFieldMappings;
+    }
+
+    /*******************************************************************************
+    * @description Check if the provided field mapping is allowed to be used in the
+    * Template Builder.
+    *
+    * @param {object} fieldMapping: An instance of Data_Import_Field_Mapping__mdt
+    */
+    checkIfFieldMappingIsAllowed(fieldMapping) {
+        const formFieldName = fieldMapping.Element_Type === FIELD ?
+            fieldMapping.Source_Field_API_Name :
+            fieldMapping.DeveloperName;
+
+        return !EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME.includes(formFieldName);
+    }
+
+    /*******************************************************************************
+    * @description Set the form field requiredness based on various criterias.
+    *
+    * @param {object} fieldMapping: An instance of Data_Import_Field_Mapping__mdt
+    */
+    setFieldMappingRequiredness = (fieldMapping) => {
+        if (fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL) {
+            //Forcing the requiredness of the Donation Donor field mapping
+            fieldMapping.Is_Required = true;
+        }
+
+        if (fieldMapping.Source_Field_Data_Type === BOOLEAN_TYPE) {
+            // force checkboxes to not be required on the template builder
+            fieldMapping.Is_Required = false;
+        }
+    }
 
     /*******************************************************************************
     * @description Sorts the field mappings within their respective object mappings
