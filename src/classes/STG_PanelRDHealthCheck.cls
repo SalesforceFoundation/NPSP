@@ -141,7 +141,10 @@ public inherited sharing class STG_PanelRDHealthCheck {
 
         result.withRecurringDonationScope();
 
-        validateStatusMappingSetting();
+        validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
+        System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+
+        validateStatusMapping();
 
         validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
@@ -216,11 +219,11 @@ public inherited sharing class STG_PanelRDHealthCheck {
     * @return void
     */
     @TestVisible
-    private void validateStatusMappingSetting() {
+    private void validateStatusMapping() {
         List<SelectOption> picklistValues = 
             UTIL_Describe.getSelectOptions(RD_SOBJECT_NAME, String.valueOf(npe03__Recurring_Donation__c.Status__c));
 
-        for(SelectOption option : picklistValues) {
+        for (SelectOption option : picklistValues) {
             if (!option.getDisabled() && String.isBlank(statusMapper.getState(option.getValue()))) {
                 result.addError(
                     String.format(
