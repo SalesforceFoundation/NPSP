@@ -258,5 +258,14 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    @AuraEnabled
+    public static Boolean isElevateCustomer() {
+        try {
+            return GE_PaymentServices.isElevateCustomer;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
     private class BDIException extends Exception {}
 }
