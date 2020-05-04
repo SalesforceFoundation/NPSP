@@ -12,6 +12,7 @@ import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.sav
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
+import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 
 /*******************************************************************************
 * @description Schema imports
@@ -67,9 +68,18 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     isFailedPurchase = false;
     _isCreditCardWidgetInDoNotChargeState = false;
 
+    PAYMENT_TRANSACTION_STATUS_ENUM;
+
     get isBatchMode() {
         return this.sObjectName &&
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    }
+
+    connectedCallback() {
+        getPaymentTransactionStatusValues()
+            .then(response => {
+                this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
+            });
     }
 
     /*******************************************************************************
@@ -200,7 +210,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     processPayment = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
 
-        const isReadyToCharge = this.checkPaymentTransactionStatus(this.dataImportRecord[PAYMENT_STATUS__C]);
+        const isReadyToCharge = await this.checkPaymentTransactionStatus(this.dataImportRecord[PAYMENT_STATUS__C]);
         if (isReadyToCharge) {
 
             const purchaseResponse = await this.makePurchaseCall();
@@ -327,16 +337,17 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     *
     * @return {boolean}: True if card is in a 'chargeable' status
     */
-    checkPaymentTransactionStatus = (paymentStatus) => {
+    checkPaymentTransactionStatus = async (paymentStatus) => {
+
         switch (paymentStatus) {
-            case PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return false;
-            case PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
-            case PAYMENT_TRANSACTION_STATUS_ENUM.CANCELED: return false;
-            case PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED: return false;
-            case PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED: return true;
-            case PAYMENT_TRANSACTION_STATUS_ENUM.NONRETRYABLEERROR: return false;
-            case PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR: return true;
-            case PAYMENT_TRANSACTION_STATUS_ENUM.REFUNDISSUED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CANCELED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED: return true;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.NONRETRYABLEERROR: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR: return true;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.REFUNDISSUED: return false;
             default: return true;
         }
     }
@@ -477,7 +488,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * TODO: Update to check for the elevate transaction id in the future.
     */
     checkForCapturedPayment() {
-        return this.dataImportRecord[PAYMENT_STATUS__C] === PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
+        return this.dataImportRecord[PAYMENT_STATUS__C] === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED &&
             isNotEmpty(this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C]);
     }
 

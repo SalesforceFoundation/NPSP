@@ -67,6 +67,17 @@ public with sharing class GE_PaymentServices {
 
     public enum ElevateEndpoints { TOKENIZE, PURCHASE }
 
+    public enum ElevateTransactionStatus {
+        PENDING,
+        AUTHORIZED,
+        CANCELED,
+        CAPTURED,
+        DECLINED,
+        NONRETRYABLEERROR,
+        RETRYABLEERROR,
+        REFUNDISSUED
+    }
+
     public String getEndpoint(ElevateEndpoints endpoint) {
         if (endpoint === ElevateEndpoints.TOKENIZE) {
             return '/v1/payments/public/tokens';
@@ -81,6 +92,16 @@ public with sharing class GE_PaymentServices {
 
     public GE_PaymentServices() {
         config = new Configuration().keyValueMap;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static String getPaymentTransactionStatusValues() {
+        Map<String, String> paymentStatusNameByEnum = new Map<String, String>();
+
+        for (ElevateTransactionStatus status : ElevateTransactionStatus.values()) {
+            paymentStatusNameByEnum.put(status.name(), status.name());
+        }
+        return JSON.serialize(paymentStatusNameByEnum);
     }
 
     public void setPurchaseCallBody(String jsonString) {
