@@ -56,4 +56,7 @@ export default class utilExpandableSection extends LightningElement {
         this.isCollapsed = !this.isCollapsed;
     }
 
+    get qaLocatorToggleSection() {
+        return `button Toggle Section ${this.label}`;
+    }
 }

@@ -2,7 +2,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, isEmpty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
 const WIDGET = 'widget';
@@ -42,6 +42,13 @@ export default class utilInput extends LightningElement {
     @api widgetName;
 
     @track isRichTextValid = true;
+
+    connectedCallback() {
+        // if no data-qa-locator attribute set, populate and reflect to template
+        if(isEmpty(this.getAttribute('data-qa-locator'))) {
+            this.setAttribute('data-qa-locator', `${this.uiObjectApiName}.${this.fieldApiName}`);
+        }
+    }
 
     @api
     reportValue() {

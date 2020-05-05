@@ -228,4 +228,15 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     navigateToForm() {
         dispatch(this, 'changeview', { view: 'Single_Gift_Entry' });
     }
+
+
+
+    get qaLocatorBatches() {
+        return `tab link ${this.CUSTOM_LABELS.commonBatches}`;
+    }
+
+    get qaLocatorTemplates() {
+        return `tab link ${this.CUSTOM_LABELS.commonTemplates}`;
+    }
+
 }

@@ -258,7 +258,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
         this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
         this.formSections = this.selectedTemplate.layout.sections;
-
+        console.log(JSON.parse(JSON.stringify(this.formSections)));
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
         }
@@ -394,5 +394,25 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     resetValidations() {
         this.hasInvalidBatchFields = false;
         this.missingBatchHeaderFieldLabels = [];
+    }
+
+    get qaLocatorSelectTemplate() {
+        return 'combobox Select Template';
+    }
+
+    get qaLocatorSave() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonSave}`;
+    }
+
+    get qaLocatorNext() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonNext}`;
+    }
+
+    get qaLocatorCancel() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonCancel}`;
+    }
+
+    get qaLocatorBack() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonBack}`;
     }
 }
