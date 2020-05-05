@@ -958,10 +958,11 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     private static Boolean excludeSystemAndEinsteinInsightsFields(Schema.DescribeFieldResult dfr) {
         if (dfr.name.toLowerCase().contains('__system')
-                || dfr.name.toLowerCase().contains('topinsightid')
-                || dfr.name.toLowerCase().contains('activitymetric')
-                || dfr.name.toLowerCase().contains('opportunityscore')
-                || dfr.name.toLowerCase().contains('activitymetricrollup')) {
+            || dfr.name.toLowerCase().contains('topinsightid')
+            || dfr.name.toLowerCase().contains('activitymetric')
+            || dfr.name.toLowerCase().contains('opportunityscore')
+            || dfr.name.toLowerCase().contains('activitymetricrollup')
+        ) {
             return false;
 
         }
