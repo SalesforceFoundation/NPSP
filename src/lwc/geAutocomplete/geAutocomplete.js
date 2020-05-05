@@ -159,4 +159,7 @@ export default class GeAutocomplete extends LightningElement {
         this.displayValue = data.displayValue;
     }
 
+    get qaLocatorClearSelectedOption() {
+        return `button ${this.CUSTOM_LABELS.geAssistiveRemoveSelectedOption}`;
+    }
 }

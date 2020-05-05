@@ -127,6 +127,11 @@ export default class GeFormField extends LightningElement {
             this.value = defaultValue;
             this.handlePicklistChange();
         }
+        if(this.targetFieldName) {
+            this.setAttribute('data-qa-locator', this.targetFieldName);
+        } else {
+            this.setAttribute('data-qa-locator', `${this.element.objectApiName}.${this.element.fieldApiName}`);
+        }
     }
 
     getValueFromChangeEvent(event) {

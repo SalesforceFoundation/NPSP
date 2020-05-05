@@ -24,4 +24,8 @@ export default class GeAutocompleteOption extends LightningElement {
     get hasIcon() {
         return typeof this.iconName !== 'undefined' && this.iconName !== null;
     }
+
+    get qaLocatorSelectThisOption() {
+        return `div Select ${this.displayValue}`;
+    }
 }
