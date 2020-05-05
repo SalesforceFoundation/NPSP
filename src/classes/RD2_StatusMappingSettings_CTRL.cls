@@ -34,6 +34,10 @@
 * @description Stores and retrieves Recurring Donation status to status type mapping
 */
 public with sharing class RD2_StatusMappingSettings_CTRL {
+    /**
+    * @description Custom data migration exception
+    */
+    private class MappingException extends Exception { }
 
     /**
      * @description Contains status to state mapping configuration
@@ -121,7 +125,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         DeploymentHandler deploymentHandler = new DeploymentHandler();
 
         if (deploymentHandler.isDeploymentInProgress()) {
-            throw new AuraHandledException('Deployment is already in progress');//Use custom label//TODO
+            throw new MappingException('Deployment is already in progress');//Use custom label//TODO
         } 
 
         List<Metadata.CustomMetadata> records = new List<Metadata.CustomMetadata>();

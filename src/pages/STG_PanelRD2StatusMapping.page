@@ -20,7 +20,7 @@
 
         $Lightning.use(namespace + ":RD2_EnablementApp", function () {
             $Lightning.createComponent(
-                namespace + ':RD2_StatusMappingSettings',
+                namespace + ':rd2StatusMappingSettings',
                 {},
                 "statusMappingDiv",
                 function () { }
