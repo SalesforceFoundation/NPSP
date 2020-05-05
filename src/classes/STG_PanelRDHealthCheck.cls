@@ -144,10 +144,10 @@ public inherited sharing class STG_PanelRDHealthCheck {
         validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
         System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
+        validateRequiredPicklistValues(supported.status, String.valueOf(npe03__Recurring_Donation__c.Status__c),
+            System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
+        
         validateStatusMapping();
-
-        validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
-            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
         validateRequiredPicklistValues(supported.recurringTypes, String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);

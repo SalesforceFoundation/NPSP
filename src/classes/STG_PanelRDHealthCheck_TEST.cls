@@ -37,7 +37,6 @@
 private class STG_PanelRDHealthCheck_TEST {
 
     private static final String BAD_PICKLIST_VALUE = 'Non Existent Value';
-    private static final String ERROR_MESSAGE = 'Error Message {0} {1}';
     private static final String PLEDGED_STAGE = UTIL_UnitTestData_TEST.getOpenStage();
 
     /**
@@ -98,7 +97,6 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     @IsTest
     private static void shouldValidateEnhancedRecurringDonationsConfig() {
-        Boolean isRD2Enabled = isRD2MetadataDeployed();
         configureEnhancedRDSettings();
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
@@ -290,7 +288,7 @@ private class STG_PanelRDHealthCheck_TEST {
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
         Test.startTest();
-        healthCheck.validateStatusMappingSetting();
+        healthCheck.validateStatusMapping();
         Test.stopTest();
 
         String results = getValidationResults(ctrl);
@@ -317,7 +315,7 @@ private class STG_PanelRDHealthCheck_TEST {
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
         Test.startTest();
-        healthCheck.validateStatusMappingSetting();
+        healthCheck.validateStatusMapping();
         Test.stopTest();
 
         String results = getValidationResults(ctrl);
