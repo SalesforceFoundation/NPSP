@@ -340,7 +340,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     checkPaymentTransactionStatus = async (paymentStatus) => {
 
         switch (paymentStatus) {
-            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return false;
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING: return true;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED: return false;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.CANCELED: return false;
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED: return false;
