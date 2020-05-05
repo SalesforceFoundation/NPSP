@@ -113,6 +113,63 @@ private with sharing class BDI_DataImportService_TEST {
         }
     }
 
+    /*******************************************************************************************************************
+    * @description If any custom criteria is set that all data imports must satisfy, if that criteria is not met then
+     * BDI should not process those data import records.
+    */
+    @isTest
+    private static void shouldBypassDataImportsWithFailedCriteria() {
+        Data_Import_Settings__c diSettings = getDataImportSettings();
+
+        BDI_DataImportService service = new BDI_DataImportService(false,
+                BDI_MappingServiceAdvanced.getInstance());
+        service.injectDataImportSettings(diSettings);
+
+        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
+        insert testDataImports;
+
+        for (DataImport__c dataImport : testDataImports) {
+            dataImport.Payment_Status__c = 'Bad Request';
+        }
+
+        Test.startTest();
+            service.process(null, diSettings, testDataImports);
+        Test.stopTest();
+
+        for (DataImport__c dataImport : [SELECT Status__c FROM DataImport__c]) {
+            System.assertEquals(null, dataImport.Status__c, 'Data Import should not have been processed.');
+        }
+    }
+
+    /*******************************************************************************************************************
+    * @description Tests that BDI correctly processes all data import records that meet custom criteria.
+    */
+    @isTest
+    private static void shouldProcessDataImportsWithAllCriteriaMet() {
+        Data_Import_Settings__c diSettings = getDataImportSettings();
+
+        BDI_DataImportService service = new BDI_DataImportService(false,
+                BDI_MappingServiceAdvanced.getInstance());
+        service.injectDataImportSettings(diSettings);
+
+        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
+        insert testDataImports;
+
+        for (DataImport__c dataImport : testDataImports) {
+            dataImport.Payment_Status__c = GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name();
+        }
+
+        Test.startTest();
+            service.process(null, diSettings, testDataImports);
+        Test.stopTest();
+
+        for (DataImport__c dataImport : [SELECT Status__c FROM DataImport__c]) {
+            System.assert(String.isNotBlank(dataImport.Status__c), 'The data import should have been' +
+                'processed by BDI.');
+            System.assertEquals(BDI_DataImport_API.bdiImported, dataImport.Status__c,
+                'The data import was not successfully processed.');
+        }
+    }
 
     // Helpers
     ////////////

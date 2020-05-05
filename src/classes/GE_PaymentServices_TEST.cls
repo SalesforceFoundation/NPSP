@@ -91,6 +91,28 @@ public class GE_PaymentServices_TEST {
         System.assertEquals(actualValue, expectedValue);
     }
 
+    @isTest static void shouldReturnPaymentTransactionStatusValues() {
+        Set<String> paymentStatusValues = new Set<String>();
+
+        Map<String, Object> paymentStatusEnumByName =
+                ( Map<String, Object> ) JSON.deserializeUntyped(
+                    GE_PaymentServices.getPaymentTransactionStatusValues()
+                );
+
+        for (String enumName : paymentStatusEnumByName.keySet()) {
+
+            paymentStatusValues.add(enumName);
+        }
+
+        for(GE_PaymentServices.ElevateTransactionStatus value :
+                GE_PaymentServices.ElevateTransactionStatus.values()) {
+                    System.assert(paymentStatusValues.contains(value.name()), 'Every payment transaction status value' +
+                        'should be included in the enum returned by the method.');
+        }
+
+        System.assert(!paymentStatusValues.isEmpty(), 'List of payment transaction status values should not be empty.');
+    }
+
     @isTest static void shouldReturnFailedResponse() {
         PS_IntegrationService.setConfiguration(testConfig);
 
