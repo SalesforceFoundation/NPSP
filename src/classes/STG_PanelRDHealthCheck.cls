@@ -57,21 +57,6 @@ public inherited sharing class STG_PanelRDHealthCheck {
     /** @description Health Check Result reporting container */
     private HealthCheckResult result;
 
-
-    /**
-    * @description Contains the current Status to State map configuration
-    */
-    @TestVisible
-    private static RD2_StatusMapper statusMapper {
-        get {
-            if (statusMapper == null) {
-                statusMapper = new RD2_StatusMapper();
-            }
-            return statusMapper;
-        }
-        set;
-    }
-
     /**
      * @description Constructor
      * @param ctrl Health Check Panel Controller Class
@@ -224,7 +209,7 @@ public inherited sharing class STG_PanelRDHealthCheck {
             UTIL_Describe.getSelectOptions(RD_SOBJECT_NAME, String.valueOf(npe03__Recurring_Donation__c.Status__c));
 
         for (SelectOption option : picklistValues) {
-            if (!option.getDisabled() && String.isBlank(statusMapper.getState(option.getValue()))) {
+            if (!option.getDisabled() && String.isBlank(RD2_StatusMapper.getInstance().getState(option.getValue()))) {
                 result.addError(
                     String.format(
                         System.Label.RD2_StatusMustBeMapped,

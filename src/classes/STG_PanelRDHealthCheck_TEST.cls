@@ -279,7 +279,7 @@ private class STG_PanelRDHealthCheck_TEST {
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
             .withAllMapping()
             .withStatusMapping(RD2_Constants.STATUS_ACTIVE, null);
-        STG_PanelRDHealthCheck.statusMapper = (RD2_StatusMapper) Test.createStub(
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
@@ -367,7 +367,7 @@ private class STG_PanelRDHealthCheck_TEST {
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
             .withAllMapping();
-        STG_PanelRDHealthCheck.statusMapper = (RD2_StatusMapper) Test.createStub(
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
