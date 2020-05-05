@@ -160,10 +160,10 @@ private class STG_PanelRDHealthCheck_TEST {
         );
     }
 
-/**	
-     * @description Validates that an unsupported InstallmentPeriod picklist entry is identified by the	
-     * health check.
-     */	
+    /**
+    * @description Validates that an unsupported InstallmentPeriod picklist entry is identified by the 
+    * health check.
+    */
     @IsTest
     private static void shouldIdentifyInvalidLegacyPeriodPicklistEntry() {
         if (isRD2MetadataDeployed()) {
@@ -183,7 +183,7 @@ private class STG_PanelRDHealthCheck_TEST {
         String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
             'There should exactly one error in this picklist validation.\n' + results
-        );	
+        );
         System.assert(results.contains(BAD_PICKLIST_VALUE),
             'The error should reference the "' + BAD_PICKLIST_VALUE + '" picklist value.\n' + results
         );
