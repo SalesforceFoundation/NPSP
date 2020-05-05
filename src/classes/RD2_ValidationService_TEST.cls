@@ -834,12 +834,9 @@ private with sharing class RD2_ValidationService_TEST {
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        
-        String expectedMessage =  String.format(
-            System.Label.RD2_StatusMustBeMapped,
-            new String[]{rd.Status__c});
 
-        System.assert(errMessage.contains(expectedMessage),
+        System.assert(
+            errMessage.contains(formatStatusMappingError(rd.Status__c)),
             'RD should fail to inserted when the status is not mapped:' + errMessage
         );
     }
@@ -911,15 +908,8 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage = e.getMessage();
         }
 
-        String expectedMessage =  String.format(
-            String.join(
-                new List<String>{
-                    System.Label.RD2_StatusMustBeMapped,
-                    System.Label.RD2_StatusMustBeMappedSolution},
-                ' '),
-            new String[]{rd.Status__c});
-
-        System.assert(errMessage.contains(expectedMessage),
+        System.assert(
+            errMessage.contains(formatStatusMappingError(rd.Status__c)),
             'RD update should fail when Status is not mapped: ' + errMessage
         );
     }
@@ -978,5 +968,16 @@ private with sharing class RD2_ValidationService_TEST {
             .withRecurringDonation(rd.Id)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1);
+    }
+
+    /**
+    * @description Format the Status Mapping Validation Error
+    * @param status Status that will be included in the error message
+    */
+    private static String formatStatusMappingError(String status) {
+        return String.format(
+            System.Label.RD2_StatusMustBeMapped + ' ' + System.Label.RD2_StatusMustBeMappedSolution,
+            new List<String>{status}
+        );
     }
 }
