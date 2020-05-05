@@ -65,6 +65,17 @@ public without sharing class RD2_ScheduleService {
         } set;
     }
 
+    @TestVisible
+    private RD2_StatusMapper statusMapper {
+        get {
+            if (statusMapper == null) {
+                statusMapper = new RD2_StatusMapper();
+            }
+            return statusMapper;
+        }
+        set;
+    }
+
     /***
     * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
@@ -73,7 +84,7 @@ public without sharing class RD2_ScheduleService {
     public List<RecurringDonationSchedule__c> buildNewSchedules(npe03__Recurring_Donation__c rd) {
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+        if (statusMapper.getState(rd.Status__c) == RD2_Constants.STATUS_CLOSED) {
             return newSchedules;
         }
 
@@ -121,18 +132,19 @@ public without sharing class RD2_ScheduleService {
     public TDTM_Runnable.DMLWrapper getUpdatedSchedules(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> schedules) {
 
         Date newStartDate = rd.StartDate__c;
+        String state = statusMapper.getState(rd.Status__c);
         TDTM_Runnable.DMLWrapper scheduleChanges = new TDTM_Runnable.DMLWrapper();
 
         if (schedules != null) {
             for (RecurringDonationSchedule__c schedule : schedules) {
 
-                if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c <= currentDate) {
+                if (state != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c <= currentDate) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
 
-                } else if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c > currentDate) {
+                } else if (state != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c > currentDate) {
                     schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
 
-                } else if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+                } else if (state == RD2_Constants.STATUS_CLOSED) {
                     schedule.EndDate__c = currentDate.addDays(-1);
                 }
 
@@ -160,6 +172,9 @@ public without sharing class RD2_ScheduleService {
     private Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
         Boolean isNeeded = false;
 
+        String state = statusMapper.getState(newRd.Status__c);
+        String oldState = statusMapper.getState(oldRd.Status__c);
+
         // newRD should never be null.  This is a fail safe measure only.
         if (newRd == null) {
             isNeeded = false;
@@ -174,8 +189,8 @@ public without sharing class RD2_ScheduleService {
 
         // These two special conditions should never result in a schedule update.
         } else if
-                ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
-                (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
+                ((state == RD2_Constants.STATUS_LAPSED && oldState == RD2_Constants.STATUS_ACTIVE) ||
+                (state == RD2_Constants.STATUS_ACTIVE && oldState == RD2_Constants.STATUS_LAPSED))
         {
             isNeeded = false;
 
@@ -187,7 +202,7 @@ public without sharing class RD2_ScheduleService {
             newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
             newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
             newRd.PaymentMethod__c != oldRd.PaymentMethod__c ||
-            newRd.Status__c != oldRd.Status__c ||
+            state != oldState ||
             newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c)
         {
             isNeeded = true;
@@ -413,7 +428,8 @@ public without sharing class RD2_ScheduleService {
     * @return RD2_OpportunityMatcher.Record
     */
     public RD2_OpportunityMatcher.Record getNextDonationDateRecord(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
+            .reviseState(statusMapper);
 
         if (rdSchedules == null || rdSchedules.isEmpty() 
             || rdRecord.isClosed() 
@@ -767,7 +783,7 @@ public without sharing class RD2_ScheduleService {
             if (isScheduleUpdateNeeded(rd, oldRd)) {
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
                     rd.StartDate__c == null &&
-                    rd.Status__c != RD2_Constants.STATUS_CLOSED
+                    statusMapper.getState(rd.Status__c) != RD2_Constants.STATUS_CLOSED
                 ) {
                     rd.StartDate__c = currentDate;
                 }

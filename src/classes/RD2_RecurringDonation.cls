@@ -49,6 +49,11 @@ public inherited sharing class RD2_RecurringDonation {
     private Boolean isNew;
 
     /**
+    * @description Indicates the converted State of the Recurring Donation from Status To State Mapping 
+    */
+    private String state;
+
+    /**
     * @description A list of the fields that have been changed by one of the revise methods.
     */
     private Set<Schema.SObjectField> changedFields = new Set<Schema.SObjectField>();
@@ -188,6 +193,17 @@ public inherited sharing class RD2_RecurringDonation {
         return this;
     }
 
+        /**
+    * @description Revises and modifies the Recurring Donation Status but do not save.
+    * @param statusMapper RD Status Mapper
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation reviseState(RD2_StatusMapper statusMapper) {
+        state = statusMapper.getState(rd.Status__c);
+        
+        return this;
+    }
+
     /**
     * @description Indicates if the Recurring Donation is outdated and requiring an update
     * @return Boolean
@@ -221,7 +237,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isActive() {
-        return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
+        return getState() == RD2_Constants.STATUS_ACTIVE;
     }
 
     /**
@@ -229,7 +245,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isClosed() {
-        return rd.Status__c == RD2_Constants.STATUS_CLOSED;
+        return getState() == RD2_Constants.STATUS_CLOSED;
     }
 
     /**
@@ -274,6 +290,18 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.npe03__Total_Paid_Installments__c == null
             ? 0
             : rd.npe03__Total_Paid_Installments__c.intValue();
+    }
+
+    /**
+    * @description Return the state of the Recurring Donation.
+    * @return String 
+    */
+    public String getState() {
+        if (state == null) {
+            state = new RD2_StatusMapper().getState(rd.Status__c);
+        }
+        
+        return state;
     }
 
     /**
