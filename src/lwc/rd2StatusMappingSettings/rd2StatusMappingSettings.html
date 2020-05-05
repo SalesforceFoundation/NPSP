@@ -27,6 +27,11 @@
         </div>
     </template>
 
+    <div if:true={isViewMode} class="slds-align_absolute-center slds-p-vertical_small slds-m-top_small">
+        <lightning-button label={labels.editButtonLabel} onclick={handleClick} data-qa-locator="edit-mapping-button">
+        </lightning-button>
+    </div>
+
     <lightning-layout multiple-rows="true" vertical-align="start">
         <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="12">
             <lightning-formatted-rich-text value={labels.mappingIntro}></lightning-formatted-rich-text>
@@ -38,12 +43,23 @@
         </lightning-layout-item>
 
         <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="8">
-            <lightning-datatable key-field="status" data={records} columns={columns} hide-checkbox-column>
+            <lightning-datatable key-field="status" data={records} columns={columns} hide-checkbox-column
+                data-qa-locator="mapping-records">
             </lightning-datatable>
         </lightning-layout-item>
 
         <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="4">
         </lightning-layout-item>
     </lightning-layout>
+
+    <div if:false={isViewMode}
+        class="slds-align_absolute-center slds-p-vertical_small slds-m-top_large slds-p-bottom_xx-small">
+        <lightning-button label={labels.saveButtonLabel} onclick={handleClick} variant="brand"
+            data-qa-locator="save-mapping-button">
+        </lightning-button>
+        <lightning-button label={labels.cancelButtonLabel} onclick={handleClick} class="slds-m-left_x-small"
+            data-qa-locator="cancel-edit-mapping-button">
+        </lightning-button>
+    </div>
 
 </template>

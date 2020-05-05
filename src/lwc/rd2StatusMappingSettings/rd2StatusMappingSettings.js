@@ -3,6 +3,10 @@ import { isNull, isEmpty } from 'c/util';
 
 import loadMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.loadMapping';
 
+import editButtonLabel from '@salesforce/label/c.stgBtnEdit';
+import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
+import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
+
 import mappingIntro from '@salesforce/label/c.RD2_StatusMappingIntro';
 import mappingDescriptions from '@salesforce/label/c.RD2_StatusMappingDefinitions';
 import fieldStatusLabel from '@salesforce/label/c.RD2_StatusMappingColumnStatusLabel';
@@ -21,7 +25,10 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
     labels = {
         mappingIntro,
-        mappingDescriptions
+        mappingDescriptions,
+        editButtonLabel,
+        cancelButtonLabel,
+        saveButtonLabel
     }
 
     @track columns = columns;
@@ -29,6 +36,8 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
     @track hasMessage = false;
     @track message = {};
+
+    @track isViewMode = true;
 
 
     /***
@@ -50,6 +59,44 @@ export default class rd2StatusMappingSettings extends LightningElement {
             .catch((error) => {
                 this.handleError(error);
             });
+    }
+
+    /***
+    * @description Applies actions on a button click
+    */
+    handleClick(event) {
+        switch (event.target.label) {
+            case editButtonLabel:
+                this.editMapping();
+                break;
+            case cancelButtonLabel:
+                this.cancelEditMapping();
+                break;
+            case saveButtonLabel:
+                this.saveMapping();
+                break;
+        }
+    }
+
+    /***
+    * @description Displays page in the edit mode
+    */
+    editMapping() {
+        this.isViewMode = false;
+    }
+
+    /***
+    * @description Displays page in the view mode
+    */
+    cancelEditMapping() {
+        this.isViewMode = true;
+    }
+
+    /***
+    * @description Saves mapping records
+    */
+    saveMapping() {
+        this.isViewMode = true;
     }
 
     /**
