@@ -645,21 +645,21 @@ flows:
                 task: deploy_trial_config
                 ui_options:
                     name: "NPSP Trial Experience"
-            2:
-                task: update_dependencies
-                options:
-                    dependencies:
-                        - github: "https://github.com/SalesforceFoundation/pmm"
-            3:
-                task: deploy_pmm_trial_config
-                ui_options:
-                    name: "Configure Program Management Module"
-            4:
-                task: pmm:deploy_customer_profiles
-                options:
-                    unmanaged: False
-                ui_options:
-                    name: "Install Program Management Module Profile"
+            #2:
+            #    task: update_dependencies
+            #    options:
+            #        dependencies:
+            #            - github: "https://github.com/SalesforceFoundation/pmm"
+            #3:
+            #    task: deploy_pmm_trial_config
+            #    ui_options:
+            #        name: "Configure Program Management Module"
+            #4:
+            #    task: pmm:deploy_customer_profiles
+            #    options:
+            #        unmanaged: False
+            #    ui_options:
+            #        name: "Install Program Management Module Profile"
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
@@ -737,8 +737,8 @@ flows:
                 options:
                     deploy_trial_config:
                         unmanaged: False
-                    deploy_pmm_trial_config:
-                        unmanaged: False
+                    #deploy_pmm_trial_config:
+                    #    unmanaged: False
 
             4:
                 task: update_admin_profile
@@ -936,6 +936,10 @@ plans:
         slug: install
         title: Install NPSP
         tier: primary
+        checks:
+            - when: "'.my.' not in org_config.instance_url"
+              action: error
+              message: "Please enable My Domain in your org prior to installing."
         steps:
             1:
                 task: update_dependencies
@@ -958,16 +962,20 @@ plans:
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
-            6:
-                task: update_dependencies
-                options:
-                    dependencies:
-                        - github: "https://github.com/SalesforceFoundation/pmm"
+            #6:
+            #    task: update_dependencies
+            #    options:
+            #        dependencies:
+            #            - github: "https://github.com/SalesforceFoundation/pmm"
     new_org:
         slug: trailhead
         title: Install NPSP for Trailhead Playgrounds
         tier: additional
         is_listed: False
+        checks:
+            - when: "'.my.' not in org_config.instance_url"
+              action: error
+              message: "Please enable My Domain in your org prior to installing."
         steps:
             1:
                 task: update_dependencies
