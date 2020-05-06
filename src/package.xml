@@ -3532,6 +3532,8 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>customDatatable</members>
+        <members>customPicklistType</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>

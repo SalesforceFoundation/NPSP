@@ -3,7 +3,6 @@
     padding: var(--lwc-spacingMedium,1rem);
     width: 100%;
 }
-
 .slds-notify_container_extension {
     z-index: unset;
 }

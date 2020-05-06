@@ -12,12 +12,31 @@ import mappingDescriptions from '@salesforce/label/c.RD2_StatusMappingDefinition
 import fieldStatusLabel from '@salesforce/label/c.RD2_StatusMappingColumnStatusLabel';
 import fieldStatus from '@salesforce/label/c.RD2_StatusMappingColumnStatus';
 import fieldState from '@salesforce/label/c.RD2_StatusMappingColumnState';
+import unmappedStateLabel from '@salesforce/label/c.RD2_StatusMappingUnmappedState';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
-const columns = [
+const viewColumns = [
     { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
     { label: fieldStatus, fieldName: 'status', type: 'text' },
     { label: fieldState, fieldName: 'state', type: 'text' }
+];
+
+const editColumns = [
+    { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
+    { label: fieldStatus, fieldName: 'status', type: 'text' },
+    {
+        label: fieldState, fieldName: 'state', editable: true,
+        type: 'picklistType',
+        typeAttributes: {
+            placeholder: unmappedStateLabel,
+            options: [
+                { label: 'Active', value: 'Active' },
+                { label: 'Lapsed', value: 'Lapsed' },
+                { label: 'Closed', value: 'Closed' }
+            ],
+            context: { fieldName: 'status' }
+        }
+    }
 ];
 
 
@@ -31,7 +50,8 @@ export default class rd2StatusMappingSettings extends LightningElement {
         saveButtonLabel
     }
 
-    @track columns = columns;
+    @track viewColumns = viewColumns;
+    @track editColumns = editColumns;
     @track records;
 
     @track hasMessage = false;

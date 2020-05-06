@@ -42,13 +42,17 @@
             </lightning-formatted-rich-text>
         </lightning-layout-item>
 
-        <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="8">
-            <lightning-datatable key-field="status" data={records} columns={columns} hide-checkbox-column
-                data-qa-locator="mapping-records">
-            </lightning-datatable>
-        </lightning-layout-item>
+        <lightning-layout-item class="slds-p-left_large slds-p-top_medium slds-p-right_x-large" size="12">
+            <template if:true={isViewMode}>
+                <lightning-datatable key-field="status" data={records} columns={viewColumns} hide-checkbox-column>
+                </lightning-datatable>
+            </template>
 
-        <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="4">
+            <template if:false={isViewMode}>
+                <c-custom-datatable key-field="status" data={records} columns={editColumns} hide-checkbox-column
+                    class="datatable-container">
+                </c-custom-datatable>
+            </template>
         </lightning-layout-item>
     </lightning-layout>
 
