@@ -113,7 +113,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     .forEach(
                     element => {
                         const column = {
-                            label: element.label,
+                            label: element.customLabel,
                             fieldName: GeFormService.getFieldMappingWrapper(
                                 element.dataImportFieldMappingDevNames[0]
                             ).Source_Field_API_Name,
