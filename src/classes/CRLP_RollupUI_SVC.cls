@@ -39,6 +39,22 @@ public with sharing class CRLP_RollupUI_SVC {
 
     private static final String SUCCESS_RESPONSE = 'SUCCESS';
 
+    @TestVisible
+    private static final Set<String> fieldsToExclude = new Set<String> {
+        'topinsightid',
+        'activitymetricid',
+        'activitymetric',
+        'opportunityscoreid',
+        'activitymetricrollupid',
+        'activitymetricrollup',
+        'npo02__system_custom_naming__c',
+        'npe01__system_accounttype__c',
+        'npe01__systemisindividual__c',
+        'npe01__systemaccountprocessor__c',
+        'npo02__systemhouseholdprocessor__c',
+        'npo02__systemhouseholdcontactroleprocessor__c'
+    };
+
     /*******************************************************************************************************
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
@@ -455,7 +471,7 @@ public with sharing class CRLP_RollupUI_SVC {
         String objectLabel = UTIL_Describe.getObjectLabel(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            if (excludeSystemAndEinsteinInsightsFields(dfr)) {
+            if (!excludeField(dfr)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', objectName+' '+dfr.name);
                 fieldObject.put('label', objectLabel+': '+dfr.label);
@@ -956,17 +972,12 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param dfr the DescribeFieldResult of the field
     * @return Boolean
     */
-    private static Boolean excludeSystemAndEinsteinInsightsFields(Schema.DescribeFieldResult dfr) {
-        if (dfr.name.toLowerCase().contains('__system')
-            || dfr.name.toLowerCase().contains('topinsightid')
-            || dfr.name.toLowerCase().contains('activitymetric')
-            || dfr.name.toLowerCase().contains('opportunityscore')
-            || dfr.name.toLowerCase().contains('activitymetricrollup')
-        ) {
-            return false;
+    private static Boolean excludeField(Schema.DescribeFieldResult dfr) {
 
+        if (fieldsToExclude.contains(dfr.name.toLowerCase())) {
+            return true;
         }
-        return true;
+        return false;
     }
 
 

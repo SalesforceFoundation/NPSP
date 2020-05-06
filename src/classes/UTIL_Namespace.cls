@@ -53,7 +53,7 @@ public class UTIL_Namespace {
     * @description Constant value for the Einstein enabled namespace, for checking if the org has
     * einstein insights platform has been installed or not.
     */
-    public static final String EINSTEIN_ENABLED = 'OIQ';
+    private static final String EINSTEIN_INSIGHTS_NAMESPACE = 'OIQ';
 
     /*******************************************************************************************************
     * @description Finds the namespace for the current context.
@@ -262,9 +262,9 @@ public class UTIL_Namespace {
     /***
     * @description Returns true if the Einstein insights is currently installed in an org as a managed package
     */
-    public static Boolean isEinsteinEnabled() {
+    public static Boolean isEinsteinInsightsInstalled() {
         try {
-            return UserInfo.isCurrentUserLicensed(EINSTEIN_ENABLED);
+            return UserInfo.isCurrentUserLicensed(EINSTEIN_INSIGHTS_NAMESPACE);
         } catch (Exception ex) {}
         return false;
     }

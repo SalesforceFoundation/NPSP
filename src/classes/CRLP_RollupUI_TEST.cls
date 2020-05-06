@@ -120,7 +120,7 @@ public class CRLP_RollupUI_TEST {
         List<String> targetObjectNames = new List<String>{'Account','Contact'};
         List<String> detailObjectNames = new List<String>{'Opportunity'};
 
-        if (!UTIL_Namespace.isEinsteinEnabled()) {
+        if (!UTIL_Namespace.isEinsteinInsightsInstalled()) {
             return;
         }
 
