@@ -64,8 +64,6 @@ public with sharing class RD2_StatusMapper {
 
         } else if (status == RD2_Constants.STATUS_CLOSED) {
             return RD2_Constants.STATUS_CLOSED;
-        } else if (status == 'New') {
-            return RD2_Constants.STATUS_ACTIVE;
         }
 
         return null;
