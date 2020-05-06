@@ -298,7 +298,7 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public String getState() {
         if (state == null) {
-            state = new RD2_StatusMapper().getState(rd.Status__c);
+            state = RD2_StatusMapper.getInstance().getState(rd.Status__c);
         }
         
         return state;

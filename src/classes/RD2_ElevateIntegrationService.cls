@@ -108,7 +108,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             || rd.Status__c != oldRd.Status__c
             || rd.CommitmentId__c != oldRd.CommitmentId__c;
 
-        if (!isChanged && rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+        if (!isChanged && RD2_StatusMapper.getInstance().getState(rd.Status__c) != RD2_Constants.STATUS_CLOSED) {
             isChanged = rd.ClosedReason__c != oldRd.ClosedReason__c;
         }
 

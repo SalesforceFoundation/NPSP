@@ -69,7 +69,7 @@ public without sharing class RD2_ScheduleService {
     private RD2_StatusMapper statusMapper {
         get {
             if (statusMapper == null) {
-                statusMapper = new RD2_StatusMapper();
+                statusMapper = RD2_StatusMapper.getInstance();
             }
             return statusMapper;
         }
@@ -428,8 +428,7 @@ public without sharing class RD2_ScheduleService {
     * @return RD2_OpportunityMatcher.Record
     */
     public RD2_OpportunityMatcher.Record getNextDonationDateRecord(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
-            .reviseState(statusMapper);
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
         if (rdSchedules == null || rdSchedules.isEmpty() 
             || rdRecord.isClosed() 

@@ -34,6 +34,23 @@
 public with sharing class RD2_StatusMapper {
 
     /**
+    * @description Status To State Mapping instance
+    */
+    @TestVisible
+    private static RD2_StatusMapper statusMapper;
+
+    /**
+    * @description Returns Status To State Mapping instance
+    * @return RD2_StatusMapper Status To State Mapping
+    */
+    public static RD2_StatusMapper getInstance() {
+        if (statusMapper == null) {
+            statusMapper = new RD2_StatusMapper();
+        }
+        return statusMapper;
+    }
+
+    /**
     * @description Get the mapped State from the Status
     * @param status Recurring Donation Status
     * @return String 
@@ -47,6 +64,8 @@ public with sharing class RD2_StatusMapper {
 
         } else if (status == RD2_Constants.STATUS_CLOSED) {
             return RD2_Constants.STATUS_CLOSED;
+        } else if (status == 'New') {
+            return RD2_Constants.STATUS_ACTIVE;
         }
 
         return null;

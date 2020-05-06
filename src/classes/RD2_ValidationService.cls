@@ -54,11 +54,10 @@ public with sharing class RD2_ValidationService {
         set;
     }
 
-    @TestVisible
-    private static RD2_StatusMapper statusMapper {
+    private RD2_StatusMapper statusMapper {
         get {
             if (statusMapper == null) {
-                statusMapper = new RD2_StatusMapper();
+                statusMapper = RD2_StatusMapper.getInstance();
             }
             return statusMapper;
         }

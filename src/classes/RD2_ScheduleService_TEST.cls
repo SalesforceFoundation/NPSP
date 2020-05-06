@@ -1637,7 +1637,51 @@ private with sharing class RD2_ScheduleService_TEST {
         testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_YEARLY, startDate, null, nextDonationDateByIndex);
     }
 
+        /***
+    * @description Verifies schedule is not created when RD Status is mapped to Closed.
+    */
+    @isTest
+    private static void shouldNotCreateScheduleWhenRDStatusIsMappedToClosed() {
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStatus('End')
+            .build();
 
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withStatusMapping('End', RD2_Constants.STATUS_CLOSED);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
+
+        System.assertEquals(0, schedules.size(), 'No schedule should be returned for a Closed RD');
+    }
+
+    /***
+    * @description Verifies new schedule is created when new RD Status is mapped to Active
+    */
+    @isTest
+    private static void shouldCreateNewScheduleWhenNewRDStatusIsMappedToActive() {
+        Date startDate = Date.newInstance(2018, 3, 17);
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withStatus('New')
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withStatusMapping('New', RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        System.assertEquals(1, schedules.size(), '1 new schedule should be created.');
+        System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
+    }
 
     //// Helpers
     //////////////////////////

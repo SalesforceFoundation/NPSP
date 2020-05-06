@@ -1520,6 +1520,68 @@ private class RD2_OpportunityEvaluationService_TEST {
             'Next Year Value should match the expected planned installment and the future open Opp amounts');
     }
 
+    /**
+     * @description Verifies that inserting Recurring Donation with status mapped to Active will creates an Installment Opportunity
+     */
+    @IsTest
+    private static void shouldCreateAnInstallmentOppWhenRDStatusIsMappedToActive() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withStatus('New')
+            .withCalculateNextDonationDate()
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withStatusMapping('New', RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'The number of returned Opp should match');
+        System.assertEquals(rd.npe03__Amount__c, opps[0].Amount, 'The Opportunity Amount does not match the RD Amount');
+        System.assertEquals(rd.npe03__Contact__c, opps[0].Primary_Contact__c, 'The Opportunity Contact does not match the RD Contact');
+        System.assertEquals(rd.npe03__Next_Payment_Date__c, opps[0].CloseDate, 'The Opportunity CloseDate does not match the RD NextDonationDate');
+    }
+
+    /**
+     * @description Verifies that inserting a Recurring Donation with Status mapped to Closed does not create an Installment Opportunity
+     */
+    @IsTest
+    private static void shouldNotCreateAnInstallmentOppWhenRDStatusIsMappedToClose() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withStatus('End')
+            .withDayOfMonth('20')
+            .withCalculateNextDonationDate()
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withStatusMapping('End', RD2_Constants.STATUS_CLOSED);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(), 'There should not have been any Installment Opps created for this RD');
+    }
     // Helpers
     ///////////////////
 

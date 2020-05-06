@@ -405,6 +405,8 @@
         <members>RD2_ScheduleService_TEST</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
+        <members>RD2_StatusMapper</members>
+        <members>RD2_StatusMapper_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>
