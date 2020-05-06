@@ -225,4 +225,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         });
     }
 
+    get qaLocatorDeleteRow() {
+        return `button ${this.CUSTOM_LABELS.commonDelete} ${this.rowIndex}`;
+    }
 }

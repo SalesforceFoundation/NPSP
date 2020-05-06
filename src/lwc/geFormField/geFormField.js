@@ -127,11 +127,7 @@ export default class GeFormField extends LightningElement {
             this.value = defaultValue;
             this.handlePicklistChange();
         }
-        if(this.targetFieldName) {
-            this.setAttribute('data-qa-locator', this.targetFieldName);
-        } else {
-            this.setAttribute('data-qa-locator', `${this.element.objectApiName}.${this.element.fieldApiName}`);
-        }
+        this.configureQaLocators();
     }
 
     getValueFromChangeEvent(event) {
@@ -542,4 +538,13 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    configureQaLocators() {
+        const rowIndex = this.getAttribute('data-qa-row');
+        const fieldName = this.targetFieldName ? this.targetFieldName : `${this.element.objectApiName}.${this.element.fieldApiName}`;
+        if(rowIndex) {
+            this.setAttribute('data-qa-locator', `${fieldName} ${rowIndex}`);
+        } else {
+            this.setAttribute('data-qa-locator', fieldName);
+        }
+    }
 }
