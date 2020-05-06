@@ -194,9 +194,9 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
         /**
-    * @description Revises and modifies the Recurring Donation Status but do not save.
+    * @description Revises Recurring Donation Status to State based on the Status Mapper
     * @param statusMapper RD Status Mapper
-    * @return RD2_RecurringDonation This record instance
+    * @return RD2_RecurringDonation This record instance 
     */
     public RD2_RecurringDonation reviseState(RD2_StatusMapper statusMapper) {
         state = statusMapper.getState(rd.Status__c);
