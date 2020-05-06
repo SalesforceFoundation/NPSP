@@ -245,25 +245,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isFixedLength() {
-        if (!RD2_EnablementService.isRecurringDonations2EnabledOverride) {
-            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
-        }
-
-        if (UTIL_Describe.isValidPicklistOption(String.valueOf(
-            npe03__Recurring_Donation__c.SObjectType),
-            SObjectType.npe03__Recurring_Donation__c.fields.RecurringType__c.Name,
-            RD2_Constants.RECURRING_TYPE_FIXED)
-        ) {
-            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
-        }
-
-        if (rd.npe03__Open_Ended_Status__c != RD_Constants.OPEN_ENDED_STATUS_NONE
-            && rd.npe03__Open_Ended_Status__c != null
-        ) {
-            return false;
-        }
-
-        return true;
+        return RD2_EnablementService.isFixedLength(rd);
     }
 
     /**
