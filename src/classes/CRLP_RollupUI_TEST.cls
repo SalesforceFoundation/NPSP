@@ -105,6 +105,34 @@ public class CRLP_RollupUI_TEST {
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
     }
 
+    /***
+    * @description Verifies if there are no exception thrown in setting up the Rollups when Einstein
+    * insights platform is enabled in the org
+    */
+    @isTest
+    private static void shouldNotThrowExceptionInCRLPSetupWhenEinsteinIsEnabled() {
+        String errMessage = '';
+        String scriptError = 'Script-thrown exception';
+
+        mockRollupCMTValues();
+        Rollup__mdt rollup = CRLP_Rollup_SEL.cachedRollups[0];
+
+        List<String> targetObjectNames = new List<String>{'Account','Contact'};
+        List<String> detailObjectNames = new List<String>{'Opportunity'};
+
+        if (!UTIL_Namespace.isEinsteinEnabled()) {
+            return;
+        }
+
+        try {
+            String jsonModel = CRLP_RollupUI_SVC.setupRollupDetail(rollup.Id, targetObjectNames, detailObjectNames);
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(!errMessage.contains(scriptError));
+        System.assertEquals('', errMessage, 'No exception is returned when Einstein is enabled');
+    }
+
     /*********************************************************************************************************
     * @description Tests Saving a new Rollup With Summaries Disabled returns a job id for the deployment
     */
@@ -112,7 +140,7 @@ public class CRLP_RollupUI_TEST {
     private static void saveRollupReturnsDeploymentJob() {
         CRLP_RollupCMT.Rollup rollup = CRLP_RollupCMT_Test.generateRollup('test');
         String rollupString = JSON.serialize(rollup);
-       
+
         Test.startTest();
         String saveResult = CRLP_RollupUI_SVC.saveRollup(rollupString);
         Test.stopTest();
