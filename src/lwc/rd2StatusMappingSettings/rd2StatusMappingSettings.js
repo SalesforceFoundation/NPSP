@@ -34,7 +34,7 @@ const editColumns = [
                 { label: 'Lapsed', value: 'Lapsed' },
                 { label: 'Closed', value: 'Closed' }
             ],
-            context: { fieldName: 'status' }
+            keyField: { fieldName: 'status' }
         }
     }
 ];
@@ -82,9 +82,25 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /***
+    * @description Updates the matching record state value based on the propagated picklist value change
+    */
+    handleStateChange(event) {
+        event.stopPropagation();
+        let data = event.detail.data;
+
+        if (this.records) {
+            this.records
+                .filter(mapping => mapping.status === data.keyField)
+                .forEach(mapping => {
+                    mapping.state = data.value;
+                });
+        }
+    }
+
+    /***
     * @description Applies actions on a button click
     */
-    handleClick(event) {
+    handleButtonClick(event) {
         switch (event.target.label) {
             case editButtonLabel:
                 this.editMapping();
@@ -116,6 +132,9 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * @description Saves mapping records
     */
     saveMapping() {
+
+        console.log(JSON.stringify(this.records));
+
         this.isViewMode = true;
     }
 

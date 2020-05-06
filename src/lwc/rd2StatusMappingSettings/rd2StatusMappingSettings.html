@@ -28,7 +28,8 @@
     </template>
 
     <div if:true={isViewMode} class="slds-align_absolute-center slds-p-vertical_small slds-m-top_small">
-        <lightning-button label={labels.editButtonLabel} onclick={handleClick} data-qa-locator="edit-mapping-button">
+        <lightning-button label={labels.editButtonLabel} onclick={handleButtonClick}
+            data-qa-locator="edit-mapping-button">
         </lightning-button>
     </div>
 
@@ -50,7 +51,7 @@
 
             <template if:false={isViewMode}>
                 <c-custom-datatable key-field="status" data={records} columns={editColumns} hide-checkbox-column
-                    class="datatable-container">
+                    class="datatable-container" onpicklistchange={handleStateChange}>
                 </c-custom-datatable>
             </template>
         </lightning-layout-item>
@@ -58,10 +59,10 @@
 
     <div if:false={isViewMode}
         class="slds-align_absolute-center slds-p-vertical_small slds-m-top_large slds-p-bottom_xx-small">
-        <lightning-button label={labels.saveButtonLabel} onclick={handleClick} variant="brand"
+        <lightning-button label={labels.saveButtonLabel} onclick={handleButtonClick} variant="brand"
             data-qa-locator="save-mapping-button">
         </lightning-button>
-        <lightning-button label={labels.cancelButtonLabel} onclick={handleClick} class="slds-m-left_x-small"
+        <lightning-button label={labels.cancelButtonLabel} onclick={handleButtonClick} class="slds-m-left_x-small"
             data-qa-locator="cancel-edit-mapping-button">
         </lightning-button>
     </div>
