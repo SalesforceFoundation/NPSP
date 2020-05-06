@@ -1752,6 +1752,34 @@ private with sharing class STG_SettingsManager_TEST {
         system.assertEquals(true, panel.isRunningBatch);
     }
 
+    /***
+    * @description Verifies that when RD2 is not enabled, the legacy RD batch description should be displayed  
+    */
+    @isTest
+    private static void shouldDisplayLegacyRDPageDescriptionWhenRD2IsNotEnabled() {
+        STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
+
+        Test.startTest();
+        String batchDescription = controller.getPageDescription();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgHelpRDBatch, batchDescription, 'The Legacy RD batch description should be displayed');
+    }
+
+    /***
+    * @description Verifies that when RD2 is enabled, the RD2 batch description should be displayed  
+    */
+    @isTest
+    private static void shouldDisplayRD2PageDescriptionWhenRD2IsEnabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
+
+        Test.startTest();
+        String batchDescription = controller.getPageDescription();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgHelpEnhancedRDBatch, batchDescription, 'RD2 batch description should be displayed');
+    }
     //Helper Methods
     /**
      * @description Builds a read only user with readonly profile
