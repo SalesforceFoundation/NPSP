@@ -322,13 +322,15 @@ public with sharing class RD2_ValidationService {
      * @param rd The recurring donation to validate
      */
     private void validateFixedLength(npe03__Recurring_Donation__c rd) {
-        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        if (rdRecord.isOpenEnded()
             && rd.npe03__Installments__c > 1
         ) {
             rd.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
         }
 
-        if (rd.RecurringType__c != RD2_Constants.RECURRING_TYPE_FIXED) {
+        // Check for both 'Fixed' proxy and non-proxied RecurringType__c != 'Fixed'
+        if (!rdRecord.isFixedLength()) {
             return;
         }
 

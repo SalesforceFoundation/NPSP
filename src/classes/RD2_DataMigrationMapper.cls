@@ -110,6 +110,10 @@ public class RD2_DataMigrationMapper {
         setStatus(rd);
         setOtherFields(rd);
 
+        if (isDryRunMode) {
+            setFixedToOpenDuringDryRun(rd);
+        }
+
         return rd;
     }
 
@@ -315,6 +319,13 @@ public class RD2_DataMigrationMapper {
         if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN) {
             rd.npe03__Installments__c = null;
         }
+    }
+
+    private void setFixedToOpenDuringDryRun(npe03__Recurring_Donation__c rd) {
+        if (!new RD2_RecurringDonation(rd).isFixedLength()) {
+            return;
+        }
+        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
     }
 
     /**
