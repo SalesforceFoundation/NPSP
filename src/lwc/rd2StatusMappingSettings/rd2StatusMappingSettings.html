@@ -60,7 +60,7 @@
     <div if:false={isViewMode}
         class="slds-align_absolute-center slds-p-vertical_small slds-m-top_large slds-p-bottom_xx-small">
         <lightning-button label={labels.saveButtonLabel} onclick={handleButtonClick} variant="brand"
-            data-qa-locator="save-mapping-button">
+            disabled={isSaveDisabled} data-qa-locator="save-mapping-button">
         </lightning-button>
         <lightning-button label={labels.cancelButtonLabel} onclick={handleButtonClick} class="slds-m-left_x-small"
             data-qa-locator="cancel-edit-mapping-button">

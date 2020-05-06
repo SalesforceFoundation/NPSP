@@ -139,6 +139,21 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /**
+    * @description Indicates the save button should be disabled when at least one status is unmapped
+    */
+    get isSaveDisabled() {
+        let disabled = false;
+
+        if (this.records) {
+            disabled = this.records
+                .filter(mapping => mapping.state === unmappedStateLabel)
+                .length > 0;
+        }
+
+        return disabled;
+    }
+
+    /**
     * @description Creates and dispatches an error toast
     *
     * @param {object} error: Event holding error details
