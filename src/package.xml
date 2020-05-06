@@ -2075,6 +2075,7 @@
         <members>flsError</members>
         <members>flsReadAccessError</members>
         <members>gauAllocationErrorGeneral</members>
+        <members>geAddNewAllocation</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>
