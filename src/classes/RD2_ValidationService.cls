@@ -329,7 +329,6 @@ public with sharing class RD2_ValidationService {
             rd.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
         }
 
-        // Check for both 'Fixed' proxy and non-proxied RecurringType__c != 'Fixed'
         if (!rdRecord.isFixedLength()) {
             return;
         }
