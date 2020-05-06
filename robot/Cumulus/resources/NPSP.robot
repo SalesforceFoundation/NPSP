@@ -13,11 +13,17 @@ ${task2}     Make a Phone Call2
 *** Keywords ***
 
 Capture Screenshot and Delete Records and Close Browser
+    [Documentation]         This keyword will capture a screenshot before closing the browser and deleting records when test fails 
     Run Keyword If Any Tests Failed      Capture Page Screenshot
     Close Browser
     Delete Session Records
     
 API Create Contact
+    [Documentation]  If no arguments are passed, this keyword will create a contact with Firstname and Lastname 
+    ...              as random strings with no additional info. This keyword returns the contact dictonary when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | field api name=value   | Ex: MobilePhone=1234567098    |
     [Arguments]      &{fields}
     ${first_name} =  Generate Random String
     ${last_name} =   Generate Random String
@@ -29,6 +35,12 @@ API Create Contact
     [return]         &{contact}
 
 API Modify Contact
+    [Documentation]  This keyword is used to update an existing contact by passing contact id and apifieldname and value.
+    ...              This keyword returns the contact dictonary after the update, when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | contact_id   | id of the contact Ex: 000axb57689    |
+    ...              | field_api_name=value   | Ex: if old value is my@test.com and u wnat to update then pass Email=abc@test.com    |
     [Arguments]      ${contact_id}      &{fields}
     Salesforce Update       Contact     ${contact_id}
     ...                     &{fields}
@@ -39,6 +51,11 @@ API Modify Contact
     [return]         &{contact}
 
 API Create Campaign
+    [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name 
+    ...              as random strings and no additional info. This keyword returns the campaign dictonary when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | field_api_name=value   | Ex: MobilePhone=1234567098    |
     [Arguments]      &{fields}
     ${name} =   Generate Random String
     ${campaign_id} =  Salesforce Insert  Campaign
@@ -64,6 +81,11 @@ API Create Opportunity
     [return]         &{opportunity}  
  
 API Create Organization Account
+    [Documentation]  If no arguments are passed, this keyword will create an account of type organization with just Name 
+    ...              as random string and no additional info. This keyword returns the account dictonary when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | field_api_name=value   | Ex: MobilePhone=1234567098    |
     [Arguments]      &{fields}
     ${name} =        Generate Random String
     ${rt_id} =       Get Record Type Id  Account  Organization
@@ -100,14 +122,6 @@ API Create Relationship
     ...                  &{fields}  
     &{relation} =     Salesforce Get  npe4__Relationship__c  ${rel_id}
     [return]         &{relation}
-    
-     
-# API Create Engagement Plan
-    # [Arguments]      ${plan_name}     &{fields}    
-    # ${opp_id} =  Salesforce Insert    npsp__Engagement_Plan_Template__c
-    # ...               Name=${plan_name}
-    # ...               npsp__Description__c=This plan is created via Automation 
-    # ...               &{fields}
 
 API Create Recurring Donation
     [Arguments]        &{fields}
@@ -186,22 +200,6 @@ API Create DataImport
     ...                  &{fields}
     &{data_import} =     Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
     [return]         &{data_import} 
-
-New Contact for HouseHold
-    Click Related List Button  Contacts    New 
-    Wait Until Modal Is Open
-    ${first_name} =           Generate Random String
-    ${last_name} =            Generate Random String
-    Populate Form
-    ...                       First Name=${first_name}
-    ...                       Last Name=${last_name}
-    Click Modal Button        Save    
-    Wait Until Modal Is Closed
-    Go To Object Home         Contact
-    Click Link                link= ${first_name} ${last_name}
-    Current Page Should be    Details    Contact
-    ${contact_id} =           Save Current Record ID For Deletion      Contact
-    [return]                  ${contact_id}
 
 Validate Batch Process When CRLP Unchecked
     Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
