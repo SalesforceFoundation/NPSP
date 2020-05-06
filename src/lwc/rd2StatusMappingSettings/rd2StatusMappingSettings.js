@@ -93,6 +93,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
             this.records
                 .filter(mapping => mapping.status === data.keyField)
                 .forEach(mapping => {
+                    mapping.oldState = mapping.state;
                     mapping.state = data.value;
                 });
         }
@@ -126,6 +127,16 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * @description Displays page in the view mode
     */
     cancelEditMapping() {
+        //reset values to the before edit values
+        if (this.records) {
+            this.records
+                .filter(mapping => mapping.isReadOnly === false)
+                .forEach(mapping => {
+                    mapping.state = mapping.oldState;
+                    mapping.oldState = null;
+                });
+        }
+
         this.isViewMode = true;
     }
 
@@ -133,7 +144,6 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * @description Saves mapping records
     */
     saveMapping() {
-
         console.log(JSON.stringify(this.records));
 
         this.isViewMode = true;
