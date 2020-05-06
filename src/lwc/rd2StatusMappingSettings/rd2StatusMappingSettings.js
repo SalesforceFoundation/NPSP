@@ -34,7 +34,8 @@ const editColumns = [
                 { label: 'Lapsed', value: 'Lapsed' },
                 { label: 'Closed', value: 'Closed' }
             ],
-            keyField: { fieldName: 'status' }
+            keyField: { fieldName: 'status' },
+            disabled: { fieldName: 'isReadOnly' }
         }
     }
 ];

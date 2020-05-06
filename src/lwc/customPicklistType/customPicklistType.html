@@ -1,5 +1,10 @@
 <template>
-    <div class="picklist-container">
+    <template if:true={disabled}>
+        <lightning-formatted-text value={value}>
+        </lightning-formatted-text>
+    </template>
+    
+    <template if:false={disabled}>
         <lightning-combobox 
             name="picklist" 
             label={label} 
@@ -8,5 +13,5 @@
             options={options}
             onchange={handleChange}>
         </lightning-combobox>
-    </div>
+    </template>
 </template>

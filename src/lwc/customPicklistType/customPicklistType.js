@@ -6,6 +6,7 @@ export default class customPicklistType extends LightningElement {
     @api options;
     @api placeholder;
     @api keyField;
+    @api disabled;
 
     /***
     * @description Propagates the picklist value change to the custom datatable event handler
