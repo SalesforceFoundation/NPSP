@@ -9853,6 +9853,16 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>When selected, rolls up Closed/Won Opportunity totals to Contact records based on assigned Opportunity Contact Roles. Soft credit rollups only happen in nightly batches, but you can run them manually from the Rollup Donations Batch settings.</value>
     </labels>
     <labels>
+        <fullName>stgHelpEnhancedRDBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page description displayed when enhanced RD batch is to be run</shortDescription>
+        <value>This utility runs a batch process that creates the next scheduled installment Opportunities for Recurring Donations and updates the Recurring Donation Statistics fields.
+        &lt;br/&gt;&lt;br/&gt;
+        This process may take some time, but you can close this page and the process will continue in the background.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpErrorLog</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
