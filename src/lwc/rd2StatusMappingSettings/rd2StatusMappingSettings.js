@@ -132,7 +132,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
             this.records
                 .filter(mapping => mapping.isReadOnly === false)
                 .forEach(mapping => {
-                    mapping.state = mapping.oldState;
+                    mapping.state = isNull(mapping.oldState) ? unmappedStateLabel : mapping.oldState;
                     mapping.oldState = null;
                 });
         }
