@@ -36,7 +36,7 @@ import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Do
 /*******************************************************************************
 * @description Constants
 */
-import { LABEL_NEW_LINE, HTTP_CODES, PAYMENT_TRANSACTION_STATUS_ENUM } from 'c/geConstants';
+import { LABEL_NEW_LINE, HTTP_CODES } from 'c/geConstants';
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;

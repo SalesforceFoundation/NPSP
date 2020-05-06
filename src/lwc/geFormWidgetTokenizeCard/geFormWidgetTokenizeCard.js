@@ -2,12 +2,12 @@ import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
+import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { format } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
 import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
-import { PAYMENT_TRANSACTION_STATUS_ENUM } from 'c/geConstants';
 import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
@@ -26,12 +26,14 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
+    PAYMENT_TRANSACTION_STATUS_ENUM;
 
     get displayDoNotChargeCardButton() {
         return this.hasEventDisabledWidget || this.hasUserDisabledWidget ? false : true;
     }
 
     async connectedCallback() {
+        this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(await getPaymentTransactionStatusValues()));
         this.domain = await getOrgDomain();
         this.visualforceOrigin = this.buildVisualforceOriginUrl(this.domain);
     }
@@ -160,7 +162,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                     } else if (message.token) {
                         resolve({
                             [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: message.token,
-                            [DATA_IMPORT_PAYMENT_STATUS_FIELD.fieldApiName]: PAYMENT_TRANSACTION_STATUS_ENUM.PENDING
+                            [DATA_IMPORT_PAYMENT_STATUS_FIELD.fieldApiName]: this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING
                         });
                     }
                 };
