@@ -139,8 +139,6 @@ public class CRLP_RollupUI_TEST {
     */
     @isTest
     private static void shouldNotHaveSystemFieldsInResponseFromGetDetailsType() {
-        List<String> fieldNames = new List<String>();
-
         mockRollupCMTValues();
         Rollup__mdt rollup = CRLP_Rollup_SEL.cachedRollups[0];
 
@@ -149,9 +147,10 @@ public class CRLP_RollupUI_TEST {
         List<Map<String, String>> detailNameToFieldTypeObj = CRLP_RollupUI_SVC.getDetailFieldsWithType(detailObj);
 
         for(Map<String,String> apiFieldNames: detailNameToFieldTypeObj) {
-            fieldNames.add(apiFieldNames.get('name'));
+            System.assert(!apiFieldNames.get('name').containsIgnoreCase('npe01__SYSTEM_AccountType__c'),
+                'The returned collection of Field API Names should not include the "npe01__SYSTEM_AccountType__c" field');
         }
-        System.assertEquals(false, fieldNames.contains('npe01__SYSTEM_AccountType__c'), 'Validate that the names does not include the system field');
+
     }
 
     /*********************************************************************************************************
