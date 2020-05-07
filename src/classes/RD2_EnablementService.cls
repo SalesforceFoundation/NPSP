@@ -123,6 +123,13 @@ public with sharing class RD2_EnablementService {
         private set;
     }
 
+    /**
+     * @description Evaluates whether an open Recurring Donation is fixed length regardless of context.
+     * This method must be able to respond appropriately whether or not RecurringType__c picklist option 'Fixed'
+     * is available - it will not be in orgs which were created prior to Enhanced Recurring Donations.
+     * @param rd Recurring Donation
+     * @return Boolean
+     */
     public static Boolean isFixedLength(npe03__Recurring_Donation__c rd) {
         if (!isRecurringDonations2EnabledOverride) {
             return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
