@@ -56,6 +56,10 @@ export default class utilDualListbox extends LightningElement {
     }
 
 
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
     get qaLocatorCancel() {
         return 'button Listbox Cancel';
     }
@@ -63,4 +67,8 @@ export default class utilDualListbox extends LightningElement {
     get qaLocatorSave() {
         return 'button Listbox Save'
     }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
 }

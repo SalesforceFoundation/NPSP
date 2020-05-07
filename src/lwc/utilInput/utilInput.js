@@ -45,7 +45,7 @@ export default class utilInput extends LightningElement {
 
     connectedCallback() {
         // if no data-qa-locator attribute set, populate and reflect to template
-        if(isEmpty(this.getAttribute('data-qa-locator'))) {
+        if (isEmpty(this.getAttribute('data-qa-locator'))) {
             this.setAttribute('data-qa-locator', `${this.uiObjectApiName}.${this.fieldApiName}`);
         }
     }
