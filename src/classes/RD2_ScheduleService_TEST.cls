@@ -1683,6 +1683,31 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
     }
 
+    /***
+    * @description Verifies new schedule is created when new RD status is mapped lapsed
+    */
+    @isTest
+    private static void shouldCreateNewScheduleWhenNewRDStatusIsMappedToLapsed() {
+        Date startDate = Date.newInstance(2018, 3, 17);
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withStatus('Outdated')
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withStatusMapping('Outdated', RD2_Constants.STATUS_LAPSED);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        System.assertEquals(1, schedules.size(), '1 new schedule should be created when RD status is mapped to Lapsed.');
+        System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
+    }
+
     //// Helpers
     //////////////////////////
 

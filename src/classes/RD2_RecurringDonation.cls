@@ -193,17 +193,6 @@ public inherited sharing class RD2_RecurringDonation {
         return this;
     }
 
-        /**
-    * @description Revises Recurring Donation Status to State based on the Status Mapper
-    * @param statusMapper RD Status Mapper
-    * @return RD2_RecurringDonation This record instance 
-    */
-    public RD2_RecurringDonation reviseState(RD2_StatusMapper statusMapper) {
-        state = statusMapper.getState(rd.Status__c);
-        
-        return this;
-    }
-
     /**
     * @description Indicates if the Recurring Donation is outdated and requiring an update
     * @return Boolean
@@ -238,6 +227,14 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean isActive() {
         return getState() == RD2_Constants.STATUS_ACTIVE;
+    }
+
+    /**
+    * @description Indicates if the Recurring Donation is lapsed
+    * @return Boolean
+    */
+    public Boolean isLapsed() {
+        return getState() == RD2_Constants.STATUS_LAPSED;
     }
 
     /**

@@ -1527,30 +1527,29 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldCreateAnInstallmentOppWhenRDStatusIsMappedToActive() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
-            .withStatusClosed()
-            .withCalculateNextDonationDate()
-            .build();
-
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping(RD2_COnstants.STATUS_CLOSED, RD2_Constants.STATUS_ACTIVE);
+            .withStatusMapping('New', RD2_Constants.STATUS_ACTIVE);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withStatus('New')
+            .withCalculateNextDonationDate()
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), new RD2_ScheduleService().buildNewSchedules(rd));
+
         Test.startTest();
-        insert rd;
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        evalService.rds = new List<npe03__Recurring_Donation__c>{ rd};
         Test.stopTest();
 
-        rd = rdGateway.getRecord(rd.Id);
-        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(true, evalService.isNewOpportunityCandidate(rd),
+            'RD with status mapped to Active should be considered as new opportunity candidate');
 
-        System.assertEquals(1, opps.size(), 'The number of returned Opp should match');
-        System.assertEquals(rd.npe03__Amount__c, opps[0].Amount, 'The Opportunity Amount does not match the RD Amount');
-        System.assertEquals(rd.npe03__Contact__c, opps[0].Primary_Contact__c, 'The Opportunity Contact does not match the RD Contact');
-        System.assertEquals(rd.npe03__Next_Payment_Date__c, opps[0].CloseDate, 'The Opportunity CloseDate does not match the RD NextDonationDate');
     }
 
     /**
@@ -1560,27 +1559,28 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldNotCreateAnInstallmentOppWhenRDStatusIsMappedToClose() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withStatusActive()
-            .withDayOfMonth('20')
-            .withCalculateNextDonationDate()
-            .build();
-
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_CLOSED);
+            .withStatusMapping('End', RD2_Constants.STATUS_CLOSED);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withStatus('End')
+            .withDayOfMonth('20')
+            .withCalculateNextDonationDate()
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), new RD2_ScheduleService().buildNewSchedules(rd));
+
         Test.startTest();
-        insert rd;
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        evalService.rds = new List<npe03__Recurring_Donation__c>{ rd};
         Test.stopTest();
 
-        rd = rdGateway.getRecord(rd.Id);
-
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(0, opps.size(), 'There should not have been any Installment Opps created for this RD');
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd),
+            'RD with status mapped to Closed should be considered as new opportunity candidate');
     }
     // Helpers
     ///////////////////

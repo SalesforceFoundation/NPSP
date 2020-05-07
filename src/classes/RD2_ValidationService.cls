@@ -54,16 +54,6 @@ public with sharing class RD2_ValidationService {
         set;
     }
 
-    private RD2_StatusMapper statusMapper {
-        get {
-            if (statusMapper == null) {
-                statusMapper = RD2_StatusMapper.getInstance();
-            }
-            return statusMapper;
-        }
-        set;
-    }
-
     /**
     * @description New or updated Recurring Donation records
     */
@@ -176,7 +166,7 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
-        if (statusMapper.getState(rd.Status__c) == RD2_Constants.STATUS_CLOSED) {
+        if (new RD2_RecurringDonation(rd).isClosed()) {
             return;
         }
 
