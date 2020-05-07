@@ -431,6 +431,7 @@ private with sharing class RD2_ValidationService_TEST {
 
     /***
     * @description Verifies RD having no closed Opp can be updated to different contact
+    * and account is auto populated to the household account of the contact.
     */
     @isTest
     private static void shouldUpdateRdWithoutClosedOppWhenDonorContactChange() {
@@ -443,6 +444,7 @@ private with sharing class RD2_ValidationService_TEST {
         insert rd;
 
         Test.startTest();
+        rd.npe03__Organization__c = null;
         rd.npe03__Contact__c = householdContacts[1].Id;
         update rd;
         Test.stopTest();
@@ -451,6 +453,10 @@ private with sharing class RD2_ValidationService_TEST {
 
         System.assertEquals(householdContacts[1].Id, rd.npe03__Contact__c,
             'The RD should be successfully updated with new contact');
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+        System.assertEquals(householdContacts[1].AccountId, rd.npe03__Organization__c,
+            'The account on the recurring donations should match the account id on the contact');
     }
 
     /***
