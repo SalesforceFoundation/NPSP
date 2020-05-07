@@ -254,7 +254,7 @@ npsp_lex_locators={
         'new_button': '//button[text() = "{}"]',
         'select_locator': "//select[@name ='{}']",
         'success_toast': "//div[contains(@class,'slds-notify.slds-notify_toast,slds-theme_success')]",
-    },
+       },
     'gift_entry':{
         'button':'//*[@data-qa-locator="button {}"]/button',
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
