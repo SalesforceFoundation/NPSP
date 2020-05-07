@@ -613,7 +613,7 @@ public class UTIL_Describe {
     * @param objectName The name of the object.
     * @param fieldName The name of the field.
     * @param optionApiName The API name of the select option.
-    * @return Boolean True if select option available, otherwise False.
+    * @return Boolean true if select option available, otherwise False.
     */
     public static Boolean isValidPicklistOption(String objectName, String fieldName, String optionApiName) {
         Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
