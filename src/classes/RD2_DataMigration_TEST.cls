@@ -1856,6 +1856,59 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Verifies Account on RD is populated when it is not already specified
+     */
+    @IsTest
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecified() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+        insert rd;
+
+        Id jobId = runDataMigration();
+
+        rd = getRecords()[0];
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+             'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd);
+
+   }
+
+    /**
+     * @description Verifies Account on RD is populated when it is not already specified
+     * and there is a closed Opp on the RD
+    */
+    @IsTest
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecifiedAndRDHasClosedOpp() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+
+        insert rd;
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(TODAY)
+            .withClosedWonStage()
+            .build();
+
+        Id jobId = runDataMigration();
+
+        rd = getRecords()[0];
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd );
+    }
+
+    /**
  * @description Verifies that a Legacy Fixed Length RD is converted without metadata for Fixed type.
  */
     @IsTest
