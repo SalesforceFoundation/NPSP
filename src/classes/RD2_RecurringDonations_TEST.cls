@@ -129,6 +129,55 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assert(rd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
     }
 
+    /***
+    * @description Verifies Account on RD is auto-populated as the Contact's Account
+    * when the Account is organization
+    */
+    @isTest
+    private static void shouldAutoPopulateRDAccountWhenContactAccountIsOrganization() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        testAndAssertAccountIsAutoPopulated(contact);
+    }
+
+    /***
+    * @description Verifies Account on RD is auto-populated as the Contact's Account
+    * when the Account is household
+    */
+    @isTest
+    private static void shouldAutoPopulateHRDAccountWhenContactAccountIsHousehold() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
+
+        testAndAssertAccountIsAutoPopulated(contact);
+    }
+
+    /***
+    * @description Verifies Account on RD is auto-populated as the Contact's Account
+    * when RD Account is removed on the RD update
+    */
+    @isTest
+    private static void shouldAutoPopulateRDAccountWhenAccountIsRemovedOnRDUpdate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = testAndAssertAccountIsAutoPopulated(contact);
+
+        rd.npe03__Organization__c = null;
+        update rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account on RD should be populated: ' + rd);
+        System.assertEquals(contact.AccountId, rd.npe03__Organization__c,
+            'Account on RD should be populated with the Contact\'s Account: ' + rd);
+    }
 
     /****
     * @description Verifies integration dispatcher is called
@@ -678,6 +727,46 @@ private with sharing class RD2_RecurringDonations_TEST {
         return [
             SELECT FirstName, LastName, AccountId, Account.Name
             FROM Contact
+            LIMIT 1
+        ];
+    }
+
+    /****
+    * @description Verifies Account is populated after data migration is run
+    * @return Recurring Donation
+    */
+    private static npe03__Recurring_Donation__c testAndAssertAccountIsAutoPopulated(Contact contact) {
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.Id)
+            .withAmount(100)
+            .withDefaultValues()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        Contact con = getContact(contact.Id);
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account on RD should be populated: ' + rd);
+        System.assertEquals(con.AccountId, rd.npe03__Organization__c,
+            'Account on RD should be populated with the Contact\'s Account: ' + rd);
+
+        return rd;
+
+    }
+
+    /****
+    * @description Returns contact record for the specified contact Id
+    * @return Contact
+    */
+    private static Contact getContact(Id contactId) {
+        return [
+            SELECT FirstName, LastName, AccountId, Account.Name
+            FROM Contact
+            WHERE Id =:contactId
             LIMIT 1
         ];
     }

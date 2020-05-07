@@ -77,6 +77,27 @@ public with sharing class RD2_ValidationService {
         } set;
     }
 
+    /**
+    * @description Contacts on provided Recurring Donations
+    */
+    private Map<Id, Contact> contactById {
+        get {
+            if (contactById == null) {
+                Set<Id> contactIds = UTIL_SObject.extractId(
+                    rds, npe03__Recurring_Donation__c.npe03__Contact__c
+                );
+
+                contactById = new Map<Id, Contact>([
+                    SELECT Name, AccountId
+                    FROM Contact
+                    WHERE Id IN :contactIds
+                ]);
+            }
+            return contactById;
+        }
+        set;
+    }
+
     /***
     * @descripton Recurring Donations that do not have any Closed Won/Lost Opportunity assigned.
     * These records can have donor information modified
@@ -237,6 +258,7 @@ public with sharing class RD2_ValidationService {
 
         if (noClosedOppRDIds.contains(rd.Id)
             || isOrganizationChange(accountById.get(rd.npe03__Organization__c), accountById.get(oldRd.npe03__Organization__c))
+            || isAccountAutoPopulatedOnChange(rd, oldRd)
         ) {
             return true;
         }
@@ -278,6 +300,28 @@ public with sharing class RD2_ValidationService {
             && oldAcct != null
             && newAcct.npe01__SYSTEMIsIndividual__c == false
             && oldAcct.npe01__SYSTEMIsIndividual__c == false;
+    }
+
+    /***
+    * @description Returns true when Account on RD is changed from null to the Contact's Account
+    * and the Contact on RD is not changed
+    * @param new Updated Recurring Donation record
+    * @param old Recurring Donation record containing old values
+    * @return Boolean
+    */
+    private Boolean isAccountAutoPopulatedOnChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+
+        if (rd.npe03__Contact__c == null //The Contact is not specified
+            || rd.npe03__Contact__c != oldRd.npe03__Contact__c //The Contact is changed on update
+            || oldRd.npe03__Organization__c != null //The Account existed previously
+        ) {
+            return false;
+        }
+
+        Contact rdContact = contactById.get(rd.npe03__Contact__c);
+
+        return rdContact != null
+            && rd.npe03__Organization__c == rdContact.AccountId;
     }
 
     /***
@@ -392,4 +436,5 @@ public with sharing class RD2_ValidationService {
 
         return rdIds;
     }
+
 }
