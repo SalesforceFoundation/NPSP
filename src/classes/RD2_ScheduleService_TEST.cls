@@ -1642,12 +1642,14 @@ private with sharing class RD2_ScheduleService_TEST {
     */
     @isTest
     private static void shouldNotCreateScheduleWhenRDStatusIsMappedToClosed() {
+        String newStatus = 'Canceled';
+
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withStatus('End')
+            .withStatus(newStatus)
             .build();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping('End', RD2_Constants.STATUS_CLOSED);
+            .withStatusMapping(newStatus, RD2_Constants.STATUS_CLOSED);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -1664,13 +1666,15 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldCreateNewScheduleWhenNewRDStatusIsMappedToActive() {
         Date startDate = Date.newInstance(2018, 3, 17);
+        String newStatus = 'New';
+
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .withStartDate(startDate)
-            .withStatus('New')
+            .withStatus(newStatus)
             .build();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping('New', RD2_Constants.STATUS_ACTIVE);
+            .withStatusMapping(newStatus, RD2_Constants.STATUS_ACTIVE);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -1689,13 +1693,15 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldCreateNewScheduleWhenNewRDStatusIsMappedToLapsed() {
         Date startDate = Date.newInstance(2018, 3, 17);
+        String newStatus = 'Outdated';
+
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .withStartDate(startDate)
-            .withStatus('Outdated')
+            .withStatus(newStatus)
             .build();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping('Outdated', RD2_Constants.STATUS_LAPSED);
+            .withStatusMapping(newStatus, RD2_Constants.STATUS_LAPSED);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub

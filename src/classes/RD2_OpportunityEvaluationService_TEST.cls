@@ -1527,8 +1527,10 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldCreateAnInstallmentOppWhenRDStatusIsMappedToActive() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        String newStatus = 'New';
+
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping('New', RD2_Constants.STATUS_ACTIVE);
+            .withStatusMapping(newStatus, RD2_Constants.STATUS_ACTIVE);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -1536,7 +1538,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth('20')
-            .withStatus('New')
+            .withStatus(newStatus)
             .withCalculateNextDonationDate()
             .build();
 
@@ -1556,18 +1558,20 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @description Verifies that inserting a Recurring Donation with Status mapped to Closed does not create an Installment Opportunity
      */
     @IsTest
-    private static void shouldNotCreateAnInstallmentOppWhenRDStatusIsMappedToClose() {
+    private static void shouldNotCreateAnInstallmentOppWhenRDStatusIsMappedToClosed() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        String newStatus = 'Canceled';
+
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping('End', RD2_Constants.STATUS_CLOSED);
+            .withStatusMapping(newStatus, RD2_Constants.STATUS_CLOSED);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withStatus('End')
+            .withStatus(newStatus)
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
@@ -1580,7 +1584,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.stopTest();
 
         System.assertEquals(false, evalService.isNewOpportunityCandidate(rd),
-            'RD with status mapped to Closed should be considered as new opportunity candidate');
+            'RD with status mapped to Closed state should not have a new installment Opp created');
     }
     // Helpers
     ///////////////////
