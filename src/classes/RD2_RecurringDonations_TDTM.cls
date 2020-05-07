@@ -184,6 +184,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
+        autoPopulateAccounts(rds);
+
         for (npe03__Recurring_Donation__c rd : rds) {
 
             //map the Day of Month value of "31" to the Last_Day value
@@ -194,6 +196,42 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             //set the default installment frequency when value is not provided on the RD insert
             if (rd.InstallmentFrequency__c == null && triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
+            }
+        }
+    }
+
+    /***
+    * @description Auto-populates empty Account field on a Recurring Donation having Contact specified
+    * @param rds Recurring Donation records
+    * @return none
+    */
+    private void autoPopulateAccounts(List<npe03__Recurring_Donation__c> rds) {
+        if (rds == null || rds.isEmpty()) {
+            return;
+        }
+
+        Set<Id> contactIds = new Set<Id>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.npe03__Organization__c == null && rd.npe03__Contact__c != null) {
+                contactIds.add(rd.npe03__Contact__c);
+            }
+        }
+        if (contactIds.isEmpty()) {
+            return;
+        }
+
+        Map<Id, Contact> contactById = new Map<Id, Contact>([
+            SELECT Name, AccountId
+            FROM Contact
+            WHERE Id IN :contactIds
+        ]);
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.npe03__Organization__c == null
+                && rd.npe03__Contact__c != null
+                && contactById.containsKey(rd.npe03__Contact__c)
+            ) {
+                rd.npe03__Organization__c = contactById.get(rd.npe03__Contact__c).AccountId;
             }
         }
     }
@@ -356,4 +394,5 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             dmlActions.objectsToUpdate.addAll(revisedSchedules.objectsToUpdate);
         }
     }
+
 }

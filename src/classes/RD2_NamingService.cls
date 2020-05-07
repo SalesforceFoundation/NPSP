@@ -91,7 +91,7 @@ public with sharing class RD2_NamingService {
             return userDefaultCurrencySymbol;
         }
         set;
-    }    
+    }
 
     /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
@@ -151,7 +151,7 @@ public with sharing class RD2_NamingService {
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.Name = constructName(rd, donorById);
         }
-    }   
+    }
 
     /***
     * @description Constructs recurring donation name
@@ -168,15 +168,15 @@ public with sharing class RD2_NamingService {
 
         String nameSuffix = ' ' + formatAmount(rd) + ' - ' + System.Label.RecurringDonationNameSuffix;
 
-        String donorName = donor == null 
-            ? '' 
+        String donorName = donor == null
+            ? ''
             : donor.Name.abbreviate(MAX_NAME_LENGTH - nameSuffix.length());
 
         return donorName + nameSuffix;
     }
 
     /***
-    * @description Formats amount used to construct the name    
+    * @description Formats amount used to construct the name
     * @param rd Recurring Donation record
     * @return String Formatted amount
     */
@@ -196,7 +196,7 @@ public with sharing class RD2_NamingService {
         }
 
         if (String.isNotBlank(currencySymbol) && currencySymbol.length() > 1) {
-            formattedAmount = currencySymbol + ' ' + formattedAmount;            
+            formattedAmount = currencySymbol + ' ' + formattedAmount;
         } else {
             formattedAmount = currencySymbol + formattedAmount;
         }
