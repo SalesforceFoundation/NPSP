@@ -375,28 +375,23 @@ public inherited sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description Creates the corresponding Migrated Custom Field Mapping records
-    * @param defaultFieldMappingDeveloperNames - list of Default Field Mapping records to reference
-    */
+        * @description Creates the corresponding Migrated Custom Field Mapping records
+        * @param list of Default Field Mapping record developer names
+        */
     public void migrateNewDefaultToCustomMetadata(List<String> defaultFieldMappingDeveloperNames) {
 
         queuedMetadataTypesForDeploy.clear();
 
-        Map<String, String> dataImportObjectDeveloperNameByLabel =
-                helper.getDataImportObjectDeveloperNamesByLabel();
-        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
-                new Map<String, Data_Import_Field_Mapping__mdt>();
-
-        // gather current Default Field Mapping and migrated Custom Field Mapping records
         Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByFieldMappingKey =
                 helper.getFieldMappingStringsBySetDeveloperName(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
         Map<String, Data_Import_Field_Mapping__mdt> migratedFieldMappingsByFieldMappingKey =
                 helper.getFieldMappingStringsBySetDeveloperName(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
+                new Map<String, Data_Import_Field_Mapping__mdt>();
         List<String> referenceFieldMappingKeys = helper.getFieldMappingKeysByDeveloperName(
                 defaultFieldMappingDeveloperNames, DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
-        // identify records that need to be created
         for (String key : referenceFieldMappingKeys){
             if (migratedFieldMappingsByFieldMappingKey.containsKey(key)){
                 continue;
@@ -405,34 +400,22 @@ public inherited sharing class BDI_MigrationMappingUtility {
             }
         }
 
-        // create and enqueue records to be created
         if (referenceFieldMappingsByStrings.size()>0){
             for (Data_Import_Field_Mapping__mdt referenceFieldMapping : referenceFieldMappingsByStrings.values()) {
                 Data_Import_Field_Mapping__mdt clone = referenceFieldMapping.clone();
 
                 DataImportFieldMapping fieldMapping = new DataImportFieldMapping(
                         clone, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                fieldMapping.setObjectMapping(
+                        referenceFieldMapping.DeveloperName,
+                        fieldMapping.dataImportObjectName);
 
-                if (dataImportObjectDeveloperNameByLabel.size()>0){
-                    String existingObjectMappingDeveloperName =
-                            dataImportObjectDeveloperNameByLabel.get(fieldMapping.targetObjectMappingLabel);
-
-                    fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                    fieldMapping.setObjectMapping(
-                            existingObjectMappingDeveloperName,
-                            fieldMapping.targetObjectMappingLabel);
-                    fieldMapping.setRecordName(null, false);
-
-                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-                }
+                fieldMapping.setRecordName(null, false);
+                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
             }
         }
 
-        // deploy new metadata record types
-        if (queuedMetadataTypesForDeploy.size()>0){
- 	       CMT_MetadataAPI.deployMetadata(
-                   queuedMetadataTypesForDeploy, new BDI_MigrationMappingUtility.DeploymentCallback());
-        }
     }
 
     /*******************************************************************************************************
