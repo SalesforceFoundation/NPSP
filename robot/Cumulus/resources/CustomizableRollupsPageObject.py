@@ -1,5 +1,6 @@
 from cumulusci.robotframework.pageobjects import pageobject
 from cumulusci.robotframework.pageobjects import BasePage
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
@@ -17,6 +18,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		self.selenium.location_should_contain("/one/one.app",
 											  message="Current page is not a custom rollup setting view")
 	
+	@capture_screenshot_on_error
 	def create_new_rollup_setting(self, **kwargs):
 		""" Wait for the Iframe to be available and switch to the Frame.
 			Click on new and create a new rollup settings record
