@@ -233,11 +233,12 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Indicates if the Recurring Donation is open ended
+    * @description Indicates if the Recurring Donation is open ended.  Must evaluate the proxy
+    * behavior of isFixedLength() as well since RecurringType__c == 'Open' during dry run.
     * @return Boolean
     */
     public Boolean isOpenEnded() {
-        return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN;
+        return !isFixedLength() && rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN ;
     }
 
     /**
