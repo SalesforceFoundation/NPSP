@@ -133,6 +133,27 @@ public class CRLP_RollupUI_TEST {
         System.assertEquals('', errMessage, 'No exception is returned when Einstein is enabled');
     }
 
+    /***
+    * @description Validate that the response from getdetailsfieldswithtype does not include the
+    * System field for account object
+    */
+    @isTest
+    private static void shouldNotHaveSystemFieldsInResponseFromGetDetailsType() {
+        List<String> fieldNames = new List<String>();
+
+        mockRollupCMTValues();
+        Rollup__mdt rollup = CRLP_Rollup_SEL.cachedRollups[0];
+
+        String detailObj = 'Account';
+
+        List<Map<String, String>> detailNameToFieldTypeObj = CRLP_RollupUI_SVC.getDetailFieldsWithType(detailObj);
+
+        for(Map<String,String> apiFieldNames: detailNameToFieldTypeObj) {
+            fieldNames.add(apiFieldNames.get('name'));
+        }
+        System.assertEquals(false, fieldNames.contains('npe01__SYSTEM_AccountType__c'), 'Validate that the names does not include the system field');
+    }
+
     /*********************************************************************************************************
     * @description Tests Saving a new Rollup With Summaries Disabled returns a job id for the deployment
     */

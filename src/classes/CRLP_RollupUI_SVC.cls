@@ -42,9 +42,11 @@ public with sharing class CRLP_RollupUI_SVC {
     @TestVisible
     private static final Set<String> fieldsToExclude = new Set<String> {
         'topinsightid',
+        'topinsight',
         'activitymetricid',
         'activitymetric',
         'opportunityscoreid',
+        'opportunityscore',
         'activitymetricrollupid',
         'activitymetricrollup',
         'npo02__system_custom_naming__c',
@@ -462,6 +464,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param objectName the name of the object to look up
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
+    @TestVisible
     private static List<Map<String, String>> getDetailFieldsWithType(String objectName) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
@@ -471,20 +474,21 @@ public with sharing class CRLP_RollupUI_SVC {
         String objectLabel = UTIL_Describe.getObjectLabel(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            if (!excludeField(dfr)) {
-                Map<String, String> fieldObject = new Map<String, String>();
-                fieldObject.put('name', objectName+' '+dfr.name);
-                fieldObject.put('label', objectLabel+': '+dfr.label);
-                String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
-                fieldObject.put('type', fieldType);
-
-                if (fieldType == 'REFERENCE') {
-                    fieldObject.put('referenceTo', dfr.referenceTo[0].getDescribe().name);
-                } else if (fieldType == 'ID') {
-                    fieldObject.put('referenceTo', objectName);
-                }
-                fieldObjectList.add(fieldObject);
+            if (excludeField(dfr)) {
+                continue;
             }
+            Map<String, String> fieldObject = new Map<String, String>();
+            fieldObject.put('name', objectName+' '+dfr.name);
+            fieldObject.put('label', objectLabel+': '+dfr.label);
+            String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
+            fieldObject.put('type', fieldType);
+
+            if (fieldType == 'REFERENCE') {
+                fieldObject.put('referenceTo', dfr.referenceTo[0].getDescribe().name);
+            } else if (fieldType == 'ID') {
+                fieldObject.put('referenceTo', objectName);
+            }
+            fieldObjectList.add(fieldObject);
         }
 
         return fieldObjectList;
@@ -973,13 +977,8 @@ public with sharing class CRLP_RollupUI_SVC {
     * @return Boolean
     */
     private static Boolean excludeField(Schema.DescribeFieldResult dfr) {
-
-        if (fieldsToExclude.contains(dfr.name.toLowerCase())) {
-            return true;
-        }
-        return false;
+        return fieldsToExclude.contains(dfr.name.toLowerCase());
     }
-
 
     public class RollupException extends Exception {}
 
