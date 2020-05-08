@@ -177,7 +177,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
 
             const queryParameters = getQueryParameters();
             // If we have no template record id, check if there's a record id in the url

@@ -5,7 +5,6 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
-const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const GIFT_ENTRY = 'Gift_Entry';
 const TEMPLATE_BUILDER = 'Template_Builder';
@@ -35,7 +34,6 @@ export default class geHome extends LightningElement {
     async connectedCallback() {
         this.isAccessible = await getPageAccess();
         if (this.isAccessible) {
-            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.setGiftEntryTabName();
             this.setInitialView();
         }

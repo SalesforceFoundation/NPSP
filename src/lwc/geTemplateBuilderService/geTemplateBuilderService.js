@@ -10,7 +10,6 @@ class GeTemplateBuilderService {
     fieldMappingByDevName = null;
     fieldMappingsByObjMappingDevName = null;
     objectMappingByDevName = null;
-    namespaceWrapper = null;
 
     init = async (fieldMappingSetName, refresh) => {
         if (this.fieldMappingByDevName === null ||
