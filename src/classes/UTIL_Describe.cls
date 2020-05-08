@@ -609,6 +609,28 @@ public class UTIL_Describe {
     }
 
     /**
+    * @description Returns Boolean to indicate whether select option api name valid for object/field.
+    * @param objectName The name of the object.
+    * @param fieldName The name of the field.
+    * @param optionApiName The API name of the select option.
+    * @return Boolean true if select option available, otherwise False.
+    */
+    public static Boolean isValidPicklistOption(String objectName, String fieldName, String optionApiName) {
+        Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+
+        if (describeField.getType() == Schema.DisplayType.PICKLIST) {
+            for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
+                if (entry.isActive()
+                    && entry.getValue() == optionApiName
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
     * @description Retrieve the localized picklist labels for any given picklist api name. This returns
     * the translation for all picklist values, not just the active ones.
     * @param objectType SObjectType
