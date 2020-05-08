@@ -9,6 +9,8 @@ import EDIT_BATCH_INFO_LABEL from '@salesforce/label/c.geEditBatchInfo';
 import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import {handleError} from 'c/utilTemplateBuilder';
+import getNamespaceWrapper
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 
@@ -29,6 +31,8 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
     })
     batch;
 
+    @wire(getNamespaceWrapper) namespaceWrapper;
+
     get batchName() {
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
@@ -37,7 +41,10 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
         try {
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.bdiDataImportPageName =
-                TemplateBuilderService.alignSchemaNSWithEnvironment('BDI_DataImport');
+                TemplateBuilderService.alignSchemaNSWithEnvironment(
+                    'BDI_DataImport',
+                    this.namespaceWrapper.currentNamespace
+                );
         } catch (error) {
             handleError(error);
         }
