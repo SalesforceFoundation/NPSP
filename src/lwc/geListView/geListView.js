@@ -10,6 +10,8 @@ import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.up
 import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
 import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
 import userId from '@salesforce/user/Id';
+import getNamespaceWrapper
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 
 import USER_TIMEZONE_SID_KEY_FIELD from '@salesforce/schema/User.TimeZoneSidKey';
 
@@ -91,6 +93,8 @@ export default class geListView extends LightningElement {
 
     @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
     wiredUserRecord;
+
+    @wire(getNamespaceWrapper) namespaceWrapper;
 
     get recordsToDisplay() {
         if (this.actions && this.columns.length === 1) {
@@ -636,7 +640,11 @@ export default class geListView extends LightningElement {
         let url;
 
         if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
-            const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment('GE_Gift_Entry');
+            const giftEntryTabName =
+                TemplateBuilderService.alignSchemaNSWithEnvironment(
+                    'GE_Gift_Entry',
+                    this.namespaceWrapper.currentNamespace
+                );
             url = `/lightning/n/${giftEntryTabName}?c__view=Template_Builder&c__formTemplateRecordId={0}`;
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
