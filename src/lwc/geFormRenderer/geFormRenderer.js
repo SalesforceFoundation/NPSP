@@ -68,6 +68,9 @@ import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
 
+import getNamespaceWrapper
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
+
 const ADDITIONAL_OBJECT_JSON__C = DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
 
 const mode = {
@@ -129,6 +132,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     _donationDonor;
     _account1Imported;
     _contact1Imported;
+
+    @wire(getNamespaceWrapper) namespaceWrapper;
 
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
@@ -1087,7 +1092,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @description Navigates to Gift Entry landing page.
      */
     navigateToLandingPage() {
-        const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment(GIFT_ENTRY_TAB_NAME);
+        const giftEntryTabName =
+            TemplateBuilderService.alignSchemaNSWithEnvironment(
+                GIFT_ENTRY_TAB_NAME,
+                this.namespaceWrapper.currentNamespace
+            );
         let url = `/lightning/n/${giftEntryTabName}`;
 
         this[NavigationMixin.Navigate]({
