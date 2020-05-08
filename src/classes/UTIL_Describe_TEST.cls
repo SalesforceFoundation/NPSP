@@ -107,6 +107,33 @@ private with sharing class UTIL_Describe_TEST {
     }
 
     /**
+    * @description Validate that active picklist options are identified.
+    */
+    @IsTest
+    private static void shouldIdentifyValidPicklistOptions() {
+        final String objectName = 'Opportunity';
+        final String fieldName = 'StageName';
+        final String bogusValue = 'slfdkjlsdfj';
+
+        Schema.DescribeFieldResult describeField =
+            UTIL_Describe.getFieldDescribe('Opportunity', 'StageName');
+        String picklistValue;
+        for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
+            if (entry.isActive()) {
+                picklistValue = entry.getValue();
+                break;
+            }
+        }
+
+        System.assertEquals(true,
+            UTIL_Describe.isValidPicklistOption(objectName, fieldName, picklistValue),
+            'isValidPicklistOption() should return true for an active picklist value');
+        System.assertEquals(false,
+            UTIL_Describe.isValidPicklistOption(objectName, fieldName, bogusValue),
+            'isValidPicklistOption() should return false for a picklist value that does not exist');
+    }
+
+    /**
     * @description Validate that the translated Spanish Picklist value for "Open" is returned.
     * This npe03__Open_Ended_Status__c field is translated in the RD underlying package. Due to how
     * translations are working in unit tests, this can only work if Spanish language is enabled in

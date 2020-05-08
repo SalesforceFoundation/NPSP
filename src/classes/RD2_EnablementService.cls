@@ -104,4 +104,47 @@ public with sharing class RD2_EnablementService {
         return 
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true;
     }
+
+    /**
+     * @description Returns true if RecurringType__c 'Fixed' picklist option available
+     */
+    @TestVisible
+    public static Boolean fixedOptionAvailable {
+        get {
+            if (fixedOptionAvailable == null) {
+                fixedOptionAvailable =
+                    UTIL_Describe.isValidPicklistOption(String.valueOf(npe03__Recurring_Donation__c.SObjectType),
+                        SObjectType.npe03__Recurring_Donation__c.fields.RecurringType__c.Name,
+                        RD2_Constants.RECURRING_TYPE_FIXED
+                );
+            }
+            return fixedOptionAvailable;
+        }
+        private set;
+    }
+
+    /**
+     * @description Evaluates whether an open Recurring Donation is fixed length regardless of context.
+     * This method must be able to respond appropriately whether or not RecurringType__c picklist option 'Fixed'
+     * is available - it will not be in orgs which were created prior to Enhanced Recurring Donations.
+     * @param rd Recurring Donation
+     * @return Boolean
+     */
+    public static Boolean isFixedLength(npe03__Recurring_Donation__c rd) {
+        if (!isRecurringDonations2EnabledOverride) {
+            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
+        }
+
+        if (fixedOptionAvailable) {
+            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
+        }
+
+        if (rd.npe03__Open_Ended_Status__c != RD_Constants.OPEN_ENDED_STATUS_NONE
+            && rd.npe03__Open_Ended_Status__c != null
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 }
