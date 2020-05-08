@@ -581,7 +581,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private Map<Id, Integer> getPaidInstallmentsForFixedLength() {
         Map<Id, Integer> paidInstallmentsByRDId = new Map<Id, Integer>();
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
+            if (new RD2_RecurringDonation(rd).isFixedLength()) {
                 paidInstallmentsByRDId.put(rd.Id, 0);
             }
         }
