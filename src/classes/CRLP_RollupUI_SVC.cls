@@ -39,6 +39,24 @@ public with sharing class CRLP_RollupUI_SVC {
 
     private static final String SUCCESS_RESPONSE = 'SUCCESS';
 
+    @TestVisible
+    private static final Set<String> fieldsToExclude = new Set<String> {
+        'topinsightid',
+        'topinsight',
+        'activitymetricid',
+        'activitymetric',
+        'opportunityscoreid',
+        'opportunityscore',
+        'activitymetricrollupid',
+        'activitymetricrollup',
+        'npo02__system_custom_naming__c',
+        'npe01__system_accounttype__c',
+        'npe01__systemisindividual__c',
+        'npe01__systemaccountprocessor__c',
+        'npo02__systemhouseholdprocessor__c',
+        'npo02__systemhouseholdcontactroleprocessor__c'
+    };
+
     /*******************************************************************************************************
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
@@ -318,7 +336,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 };
                 List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, pscFieldsToReturn, false);
                 objNameToFieldTypeMap.put(obj, pscList);
-                
+
             } else {
                 List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
                 objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
@@ -446,6 +464,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param objectName the name of the object to look up
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
+    @TestVisible
     private static List<Map<String, String>> getDetailFieldsWithType(String objectName) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
@@ -455,20 +474,21 @@ public with sharing class CRLP_RollupUI_SVC {
         String objectLabel = UTIL_Describe.getObjectLabel(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            if (!dfr.name.toLowerCase().contains('__system')) {
-                Map<String, String> fieldObject = new Map<String, String>();
-                fieldObject.put('name', objectName+' '+dfr.name);
-                fieldObject.put('label', objectLabel+': '+dfr.label);
-                String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
-                fieldObject.put('type', fieldType);
-
-                if (fieldType == 'REFERENCE') {
-                    fieldObject.put('referenceTo', dfr.referenceTo[0].getDescribe().name);
-                } else if (fieldType == 'ID') {
-                    fieldObject.put('referenceTo', objectName);
-                }
-                fieldObjectList.add(fieldObject);
+            if (excludeField(dfr)) {
+                continue;
             }
+            Map<String, String> fieldObject = new Map<String, String>();
+            fieldObject.put('name', objectName+' '+dfr.name);
+            fieldObject.put('label', objectLabel+': '+dfr.label);
+            String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
+            fieldObject.put('type', fieldType);
+
+            if (fieldType == 'REFERENCE') {
+                fieldObject.put('referenceTo', dfr.referenceTo[0].getDescribe().name);
+            } else if (fieldType == 'ID') {
+                fieldObject.put('referenceTo', objectName);
+            }
+            fieldObjectList.add(fieldObject);
         }
 
         return fieldObjectList;
@@ -692,7 +712,7 @@ public with sharing class CRLP_RollupUI_SVC {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup cmtRollup = (CRLP_RollupCMT.Rollup) JSON.deserialize(jsonRollup, CRLP_RollupCMT.Rollup.class);
-            
+
             if (cmtRollup.isDuplicate()) {
                 throw new RollupException(Label.CRLP_DuplicateTargetField);
             }
@@ -741,7 +761,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
             String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
-            
+
             // Return the unique record DeveloperName value of the FilterGroup__mdt record
             return jobId + '-' + cmtFilterGroup.recordName;
         } catch (Exception ex) {
@@ -951,7 +971,14 @@ public with sharing class CRLP_RollupUI_SVC {
 
     }
 
-    
+    /***
+    * @description Checks if the given field name is not system and einstein insights fields
+    * @param dfr the DescribeFieldResult of the field
+    * @return Boolean
+    */
+    private static Boolean excludeField(Schema.DescribeFieldResult dfr) {
+        return fieldsToExclude.contains(dfr.name.toLowerCase());
+    }
 
     public class RollupException extends Exception {}
 
