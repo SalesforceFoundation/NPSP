@@ -110,6 +110,10 @@ public class RD2_DataMigrationMapper {
         setStatus(rd);
         setOtherFields(rd);
 
+        if (isDryRunMode) {
+            setFixedToOpenDuringDryRun(rd);
+        }
+
         return rd;
     }
 
@@ -314,6 +318,21 @@ public class RD2_DataMigrationMapper {
 
         if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN) {
             rd.npe03__Installments__c = null;
+        }
+    }
+
+    /**
+     * @description Sets RecurringType__c to 'Open' if 'Fixed' picklist option not available during dry run.
+     * @param rd Recurring Donation in the legacy format
+     * @return void
+     */
+    private void setFixedToOpenDuringDryRun(npe03__Recurring_Donation__c rd) {
+        if (!new RD2_RecurringDonation(rd).isFixedLength()) {
+            return;
+        }
+
+        if (!RD2_EnablementService.fixedOptionAvailable) {
+            rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
         }
     }
 
