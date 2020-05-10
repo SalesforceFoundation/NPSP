@@ -35,7 +35,7 @@
 */
 public with sharing class RD2_StatusMappingSettings_CTRL {
     /**
-    * @description Custom data migration exception
+    * @description Custom data mapping exception
     */
     private class MappingException extends Exception { }
 
@@ -96,17 +96,20 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
     /**
      * @description Saves status to state mapping records
-     * @param jsonMappings JSON representation of the admin defined mapping records
-     * @return void
+     * @param jsonMapping JSON representation of the admin defined mapping records
+     * @return String Deployment Id
      */
     @AuraEnabled
-    public static void saveMapping(String jsonMappings) {
+    public static String saveMapping(String jsonMapping) {
+        DeploymentHandler deploymentHandler = new DeploymentHandler();
+
         try {
-            List<Mapping> mappings = (List<Mapping>) JSON.deserialize(
-                jsonMappings, Mapping.class
-            );
-            
-            saveMapping(mappings);
+            if (deploymentHandler.isDeploymentInProgress()) {
+                throw new MappingException(System.Label.RD2_StatusMappingDeploymentAlreadyInProgress);
+            } 
+
+            List<Metadata.CustomMetadata> records = buildCustomMetadataRecords(jsonMapping);
+            deploymentHandler.save(records);
 
             //reset mapping record retrieval
             mapper = null;
@@ -114,26 +117,26 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+
+        return deploymentHandler.deploymentId;
     }
 
     /**
-     * @description Saves status to state mapping records
-     * @param List<Mapping> Admin defined mapping records
-     * @return void
+     * @description Builds custom metadata records from status to state mapping records
+     * @param jsonMapping JSON representation of mapping records
+     * @return List<Metadata.CustomMetadata>
      */
-    public static void saveMapping(List<Mapping> mappings) {
-        DeploymentHandler deploymentHandler = new DeploymentHandler();
-
-        if (deploymentHandler.isDeploymentInProgress()) {
-            throw new MappingException('Deployment is already in progress');//Use custom label//TODO
-        } 
+    private static List<Metadata.CustomMetadata> buildCustomMetadataRecords(String jsonMapping) { 
+        List<Mapping> mappings = (List<Mapping>) JSON.deserialize(
+            jsonMapping, List<Mapping>.class
+        );    
 
         List<Metadata.CustomMetadata> records = new List<Metadata.CustomMetadata>();
         for (Mapping mapping : mappings) {
             records.add(buildCustomMetadata(mapping));
-        }
+        }  
 
-        deploymentHandler.save(records);
+        return records;
     }
 
     /**
@@ -144,7 +147,9 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         String sObjectName = RecurringDonationStatusMapping__mdt.getSObjectType().getDescribe().getName();
 
         Metadata.CustomMetadata cmt = new Metadata.CustomMetadata();
-        cmt.label = mapping.masterLabel;//what if it is a new mapping?//TODO
+        cmt.label = String.isBlank(mapping.masterLabel) 
+            ? (mapping.status + '_' + datetime.now().getTime()) 
+            : mapping.masterLabel;
         cmt.fullName = sObjectName + '.' + mapping.status;
         cmt.protected_x = false;
 
@@ -157,6 +162,24 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         cmt = CMT_MetadataAPI.addFieldsToMetadataObject(cmt, fieldValues);
 
         return cmt;
+    }
+
+    /**
+     * @description Retrieves status to state mapping records
+     * @return List<Mapping>
+     */
+    @AuraEnabled
+    public static String getDeploymentResult(String deploymentId) {
+        DeploymentHandler deploymentHandler = new DeploymentHandler(deploymentId);
+        DeployResult response = new DeployResult();
+
+        response.deploymentId = deploymentHandler.deploymentId;
+        response.hasResult = deploymentHandler.hasDeploymentResult();
+        response.isInProgress = deploymentHandler.isDeploymentInProgress();
+        response.isSuccess = deploymentHandler.isDeploymentSuccess();
+        response.errorMessage = deploymentHandler.getDeploymentErrorMessage();
+
+        return JSON.serialize(response);
     }
 
     /***
@@ -193,6 +216,18 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     }
 
     /**
+     * @description Contains deployment result for the specified deployment Id
+     */
+    public class DeployResult {
+        @AuraEnabled public String deploymentId;
+        @AuraEnabled public Boolean hasResult = false;
+        @AuraEnabled public Boolean isInProgress = false;
+        @AuraEnabled public Boolean isSuccess = false;
+        @AuraEnabled public String errorMessage = '';
+    }
+
+
+    /**
      * @description Handles custom metadata type deployment operations
      */
     public inherited sharing class DeploymentHandler {
@@ -200,13 +235,19 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         /**
         * @description Contains latest deployment Id
         */
-        public String deploymentId {
-            get {
-                return STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c;
-            }
-            set {
-                STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c = value;
-            }
+        public String deploymentId { get; set; }
+
+        /**
+        * @description Constructor
+        */
+        public DeploymentHandler() {
+            this(STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c);
+        }
+
+        public DeploymentHandler(String deploymentId) {
+            this.deploymentId = String.isBlank(deploymentId)
+                ? STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c
+                : deploymentId;  
         }
 
         /**
@@ -225,72 +266,69 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         }
 
         /**
+         * @description Checks if deployment exists for the specified deployment Id
+         */
+        public Boolean hasDeploymentResult() {
+            return deploymentResult != null;
+        }
+
+        /**
          * @description Checks if deployment is in progress
          */
         public Boolean isDeploymentInProgress() {
-            if (deploymentResult == null) {
-                return false;
-            }
-
-            return deploymentResult.status == Metadata.DeployStatus.INPROGRESS
-                || deploymentResult.status == Metadata.DeployStatus.PENDING
-                || deploymentResult.status == Metadata.DeployStatus.CANCELING;
+            return hasDeploymentResult() 
+                && (
+                    deploymentResult.status == Metadata.DeployStatus.INPROGRESS
+                    || deploymentResult.status == Metadata.DeployStatus.PENDING
+                    || deploymentResult.status == Metadata.DeployStatus.CANCELING
+                );
         }
 
         /**
          * @description Checks if deployment succeeded
          */
         public Boolean isDeploymentSuccess() {          
-            return deploymentResult != null 
+            return hasDeploymentResult()
                 && deploymentResult.status == Metadata.DeployStatus.SUCCEEDED;
         }
 
         /**
-         * @description Checks if deployment failed
+         * @description Returns deployment error message
          */
-        public Boolean isDeploymentFailed() {            
-            return deploymentResult != null 
-                && deploymentResult.status == Metadata.DeployStatus.FAILED;
+        public String getDeploymentErrorMessage() {
+            if (!hasDeploymentResult()
+                || isDeploymentInProgress()
+                || isDeploymentSuccess()
+            ) {
+                return '';
+            }
+
+            String errMessage = '';
+            try {
+                for (Metadata.DeployMessage msg : deploymentResult.details.componentFailures) {
+                    errMessage += '\n* ' + msg.fullName + '> ' + msg.problem;
+                }
+            } catch (Exception e) {
+                errMessage += ' Unexpected exception: ' + e.getMessage();
+            }
+            return errMessage;
         }
 
         /**
-         * @description Deploys the custom metadata records 
+         * @description Deploys save action of the custom metadata records 
          * @param records A list of custom metadata that will be created/updated
          * @return void
          */
         public void save(List<Metadata.CustomMetadata> records) {
-            Id lastDeploymentId = deploymentId;
-
             Savepoint sp = Database.setSavepoint();
-            try {            
-                String deploymentId = deployMetadata(records);
-                saveDeploymentId(deploymentId);
+            try {          
+                deploymentId = CMT_MetadataAPI.deployMetadata(records, new DeploymentCallbackHandler());
 
             } catch (Exception e) {
                 Database.rollback(sp);
-
-                //rollback data values due to STG settings being static var
-                deploymentId = lastDeploymentId;
-
-            } finally {
-                //throw an error if deployment failed//TODO
+                
+                throw e;
             }
-        }
-
-        /**
-         * @description Deploys the custom metadata records 
-         * @param records A list of custom metadata that will be created/updated
-         * @return String Deployment job Id
-         */
-        public String deployMetadata(List<Metadata.CustomMetadata> records) {
-            String jobId = CMT_MetadataAPI.getUniqueJobId();
-            
-            CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
-            callback.callbackHandler = new DeploymentCallbackHandler();
-
-            CMT_MetadataAPI.deployMetadata(records, callback);
-
-            return jobId;
         }
 
         /**
@@ -298,32 +336,29 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
          * @param deploymentId Deployment Id
          * @return void
          */
-        public void saveDeploymentId(String deploymentId) {            
-            STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c = deploymentId;
+        public void saveDeploymentId(String deploymentId) {   
+            if (String.isBlank(deploymentId)) {
+                return;
+            } 
 
+            STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c = deploymentId;
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgRD;
             }
         }
     }
 
-
     /**
      * @description Metadata Call back handler class to execute actions when the metadata has successfully been deployed
      */
-    public inherited sharing class DeploymentCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+    public inherited sharing class DeploymentCallbackHandler implements Metadata.DeployCallback {
 
-        /**
-         * @description Actions to perform when custom metadata type deployment succeeds
-         */
-        public void performSuccessHandler(Map<String, Object> params, String status) {
+        public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
+            if (result == null) {
+                return;
+            }
+
+            new DeploymentHandler().saveDeploymentId(result.Id);
         }
-
-        /**
-         * @description Actions to perform when custom metadata type deployment fails
-         */
-        public void performErrorHandler(Map<String, Object> params, String status) {
-        }
-
     }
 }

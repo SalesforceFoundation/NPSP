@@ -28,9 +28,11 @@
     </template>
 
     <div if:true={isViewMode} class="slds-align_absolute-center slds-p-vertical_small slds-m-top_small">
-        <lightning-button label={labels.editButtonLabel} onclick={handleButtonClick}
-            data-qa-locator="edit-mapping-button">
-        </lightning-button>
+        <template if:false={isLoading}>
+            <lightning-button label={labels.editButtonLabel} onclick={handleButtonClick}
+                data-qa-locator="edit-mapping-button">
+            </lightning-button>
+        </template>
     </div>
 
     <lightning-layout multiple-rows="true" vertical-align="start">
@@ -44,27 +46,41 @@
         </lightning-layout-item>
 
         <lightning-layout-item class="slds-p-left_large slds-p-top_medium slds-p-right_x-large" size="12">
-            <template if:true={isViewMode}>
-                <lightning-datatable key-field="status" data={records} columns={viewColumns} hide-checkbox-column>
-                </lightning-datatable>
+            <template if:true={isLoading}>
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-is-relative slds-size_1-of-1">
+                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                        <c-util-stencil row-count="5" column-count="3"></c-util-stencil>
+                    </div>
+                </div>
             </template>
 
-            <template if:false={isViewMode}>
-                <c-custom-datatable key-field="status" data={records} columns={editColumns} hide-checkbox-column
-                    class="datatable-container" onpicklistchange={handleStateChange}>
-                </c-custom-datatable>
+            <template if:false={isLoading}>
+                <template if:true={isViewMode}>
+                    <lightning-datatable key-field="status" data={records} columns={viewColumns} hide-checkbox-column>
+                    </lightning-datatable>
+                </template>
+
+                <template if:false={isViewMode}>
+                    <c-custom-datatable key-field="status" data={records} columns={editColumns} hide-checkbox-column
+                        class="datatable-container" onpicklistchange={handleStateChange}>
+                    </c-custom-datatable>
+                </template>
             </template>
         </lightning-layout-item>
     </lightning-layout>
 
     <div if:false={isViewMode}
         class="slds-align_absolute-center slds-p-vertical_small slds-m-top_large slds-p-bottom_xx-small">
-        <lightning-button label={labels.saveButtonLabel} onclick={handleButtonClick} variant="brand"
-            disabled={isSaveDisabled} data-qa-locator="save-mapping-button">
-        </lightning-button>
-        <lightning-button label={labels.cancelButtonLabel} onclick={handleButtonClick} class="slds-m-left_x-small"
-            data-qa-locator="cancel-edit-mapping-button">
-        </lightning-button>
+
+        <template if:false={isLoading}>
+            <lightning-button label={labels.saveButtonLabel} onclick={handleButtonClick} variant="brand"
+                disabled={isSaveDisabled} data-qa-locator="save-mapping-button">
+            </lightning-button>
+            <lightning-button label={labels.cancelButtonLabel} onclick={handleButtonClick} class="slds-m-left_x-small"
+                data-qa-locator="cancel-edit-mapping-button">
+            </lightning-button>
+        </template>
     </div>
 
 </template>

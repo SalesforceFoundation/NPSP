@@ -1682,8 +1682,12 @@
         <members>RD2_StatusMappingColumnStatus</members>
         <members>RD2_StatusMappingColumnStatusLabel</members>
         <members>RD2_StatusMappingDefinitions</members>
+        <members>RD2_StatusMappingDeploymentAlreadyInProgress</members>
+        <members>RD2_StatusMappingInProgressMessage</members>
         <members>RD2_StatusMappingIntro</members>
+        <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMappingUnmappedState</members>
+        <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>

@@ -2,6 +2,8 @@ import { LightningElement, api, track } from 'lwc';
 import { isNull, isEmpty } from 'c/util';
 
 import loadMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.loadMapping';
+import saveMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.saveMapping';
+import getDeploymentResult from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.getDeploymentResult';
 
 import editButtonLabel from '@salesforce/label/c.stgBtnEdit';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -13,6 +15,8 @@ import fieldStatusLabel from '@salesforce/label/c.RD2_StatusMappingColumnStatusL
 import fieldStatus from '@salesforce/label/c.RD2_StatusMappingColumnStatus';
 import fieldState from '@salesforce/label/c.RD2_StatusMappingColumnState';
 import unmappedStateLabel from '@salesforce/label/c.RD2_StatusMappingUnmappedState';
+import deploymentInProgressMessage from '@salesforce/label/c.RD2_StatusMappingInProgressMessage';
+import deploymentSuccessMessage from '@salesforce/label/c.RD2_StatusMappingSuccessMessage';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
 const viewColumns = [
@@ -40,6 +44,13 @@ const editColumns = [
     }
 ];
 
+const toastVariant = {
+    INFO: 'info',
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    ERROR: 'error'
+}
+
 
 export default class rd2StatusMappingSettings extends LightningElement {
 
@@ -58,24 +69,27 @@ export default class rd2StatusMappingSettings extends LightningElement {
     @track hasMessage = false;
     @track message = {};
 
+    @track isLoading;
     @track isViewMode = true;
 
+    _deploymentIds = new Set();
+    deploymentTimer;
+    deploymentTimeout = 2000;
 
-    /***
-    * @description Initializes the component
-    */
+
     connectedCallback() {
-        this.handleLoadMapping();
+        this.isLoading = true;
+        this.handleDeploymentProgress();
     }
 
     /***
     * @description Loads status to state mapping records
     */
-    @api
     handleLoadMapping() {
         loadMapping({})
             .then((data) => {
                 this.records = data;
+                this.isLoading = false;
             })
             .catch((error) => {
                 this.handleError(error);
@@ -102,15 +116,17 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * @description Applies actions on a button click
     */
     handleButtonClick(event) {
+        this.clearMessage();
+
         switch (event.target.label) {
             case editButtonLabel:
-                this.editMapping();
+                this.handleEdit();
                 break;
             case cancelButtonLabel:
-                this.cancelEditMapping();
+                this.handleCancel();
                 break;
             case saveButtonLabel:
-                this.saveMapping();
+                this.handleSave();
                 break;
         }
     }
@@ -118,12 +134,14 @@ export default class rd2StatusMappingSettings extends LightningElement {
     /***
     * @description Displays page in the edit mode
     */
-    editMapping() {
-        this.records
-            .filter(mapping => mapping.isReadOnly === false)
-            .forEach(mapping => {
-                mapping.oldState = mapping.state;
-            });
+    handleEdit() {
+        if (this.records) {
+            this.records
+                .filter(mapping => mapping.isReadOnly === false)
+                .forEach(mapping => {
+                    mapping.oldState = mapping.state;
+                });
+        }
 
         this.isViewMode = false;
     }
@@ -131,7 +149,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
     /***
     * @description Displays page in the view mode
     */
-    cancelEditMapping() {
+    handleCancel() {
         //reset values to the before edit values
         if (this.records) {
             this.records
@@ -141,16 +159,6 @@ export default class rd2StatusMappingSettings extends LightningElement {
                     mapping.oldState = null;
                 });
         }
-
-        this.isViewMode = true;
-    }
-
-    /***
-    * @description Saves mapping records
-    */
-    saveMapping() {
-        console.log(JSON.stringify(this.records));
-
         this.isViewMode = true;
     }
 
@@ -169,19 +177,146 @@ export default class rd2StatusMappingSettings extends LightningElement {
         return disabled;
     }
 
+    /***
+    * @description Saves mapping records
+    */
+    handleSave() {
+        this.isLoading = true;
+        let self = this;
+
+        setTimeout(function () {
+            self.processSave();
+        }, 1, [self]);
+    }
+
+    /***
+    * @description Calls the controller method to upsert mapping records
+    */
+    processSave() {
+        try {
+            let jsonRecords = JSON.stringify(this.records);
+
+            saveMapping({ jsonMapping: jsonRecords })
+                .then((deploymentId) => {
+                    this.registerDeploymentId(deploymentId);
+                })
+                .catch((error) => {
+                    this.handleError(error);
+                });
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+    /***
+    * @description Registers deployment Id for the deployment monitoring and
+    * data and messages display based on its status
+    */
+    registerDeploymentId(deploymentId) {
+        this.showToast('Deployment status', deploymentInProgressMessage, toastVariant.INFO);
+
+        this._deploymentIds.add(deploymentId);
+
+        this.handleDeploymentProgress(deploymentId);
+    }
+
+    /***
+    * @description Starts polling for the deployment job progress details until the deployment completes
+    */
+    handleDeploymentProgress(deploymentId) {
+        var self = this;
+
+        this.deploymentTimer = setTimeout(function () {
+            self.handleDeploymentResult(deploymentId);
+
+        }, this.deploymentTimeout, self);
+    }
+
+    /***
+    * @description Retrieves deployment result for the specified deployment Id.
+    * When the deployment Id is not specified, the latest deployment result (if any) will be processed.
+    */
+    handleDeploymentResult(deploymentId) {
+        getDeploymentResult({ deploymentId: deploymentId })
+            .then((data) => {
+                const response = JSON.parse(data);
+                this.handleDeploymentResponse(response);
+
+                if (response.isInProgress) {
+                    this.handleDeploymentProgress(response.deploymentId);
+
+                } else if (response.isSuccess) {
+                    this.isViewMode = true;
+                }
+            })
+            .catch((error) => {
+                this.handleError(error);
+            });
+    }
+
+    /***
+    * @description Displays response message based on the deployment status.
+    * Refresh data if deployment has been completed.
+    */
+    handleDeploymentResponse(response) {
+
+        if (this.isMonitored(response.deploymentId)) {
+            let variant;
+            let message;
+
+            if (response.isInProgress) {
+                variant = toastVariant.INFO;
+                message = deploymentInProgressMessage;
+
+            } else if (response.isSuccess) {
+                variant = toastVariant.SUCCESS;
+                message = deploymentSuccessMessage;
+
+            } else if (response.hasResult) {
+                variant = toastVariant.ERROR
+                message = response.errorMessage;
+            }
+
+            if (!isNull(variant)) {
+                this.showToast('Deployment status', message, variant);
+            }
+        }
+
+        if (!isNull(response.deploymentId)) {
+            this._deploymentIds.add(response.deploymentId);
+        }
+
+        if (response.hasResult === false || response.isInProgress === false) {
+            //refresh mapping records
+            this.handleLoadMapping();
+        }
+    }
+
+    /***
+    * @description Checks if the specific deployment is monitored by this component
+    */
+    isMonitored(deploymentId) {
+        return this._deploymentIds
+            && this._deploymentIds.has(deploymentId);
+    }
+
     /**
     * @description Creates and dispatches an error toast
     *
     * @param {object} error: Event holding error details
     */
     handleError(error) {
+        const errorVariant = toastVariant.ERROR;
+
         if (error && error.status && error.body) {
-            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error');
+            this.showToast(`${error.status} ${error.statusText}`, error.body.message, errorVariant);
         } else if (error && error.name && error.message) {
-            this.showToast(`${error.name}`, error.message, 'error');
+            this.showToast(`${error.name}`, error.message, errorVariant);
         } else {
-            this.showToast(stgUnknownError, '', 'error');
+            this.showToast(stgUnknownError, '', errorVariant);
         }
+
+        this.isLoading = false;
     }
 
     /**
@@ -205,13 +340,13 @@ export default class rd2StatusMappingSettings extends LightningElement {
     get notificationClass() {
         let classNames = 'slds-notify slds-notify_extension slds-notify_toast ';
         switch (this.message.variant) {
-            case 'success':
+            case toastVariant.SUCCESS:
                 classNames += 'slds-theme_success';
                 break;
-            case 'warning':
+            case toastVariant.WARNING:
                 classNames += 'slds-theme_warning';
                 break;
-            case 'error':
+            case toastVariant.ERROR:
                 classNames += 'slds-theme_error';
                 break;
             default:
