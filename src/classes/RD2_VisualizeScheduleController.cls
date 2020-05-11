@@ -300,6 +300,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param recordId Recurring Donations Id
      * @return npe03__Recurring_Donation__c
      */
+    @TestVisible
     private static RD2_RecurringDonation cachedRd;
     private static RD2_RecurringDonation getRecurringDonation(Id recordId) {
         if (cachedRd == null) {
