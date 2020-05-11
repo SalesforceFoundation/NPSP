@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-      
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -90,14 +90,14 @@ public with sharing class RD2_StatusMapper {
 
     /**
      * @description Returns status to state mapping
-     * @return Map<String, Mapping> Mapping by the status 
+     * @return Map<String, Mapping> Mapping by the status
      */
     private Map<String, Mapping> getMappings() {
         Map<String, Mapping> mappingByStatus = new Map<String, Mapping>();
 
-        for (String status : statusLabelByValue.keySet()) {            
+        for (String status : statusLabelByValue.keySet()) {
             mappingByStatus.put(
-                status, 
+                status,
                 new Mapping(status, statusLabelByValue.get(status))
             );
         }
@@ -116,10 +116,10 @@ public with sharing class RD2_StatusMapper {
      * @description Returns Recurring Donation Status picklist field value and labels
      * @return Map<String, String> State value mapped by the status key
      */
-    private Map<String, String> getActiveStatusValues() { 
+    private Map<String, String> getActiveStatusValues() {
         Map<String, String> labelByValue = new Map<String, String>();
         List<Schema.PicklistEntry> statusEntries = npe03__Recurring_Donation__c.Status__c.getDescribe().getPicklistValues();
-        
+
         for (Schema.PicklistEntry entry : statusEntries) {
             if (entry.isActive()) {
                 labelByValue.put(entry.getValue(), entry.getLabel());
@@ -131,7 +131,7 @@ public with sharing class RD2_StatusMapper {
 
     /**
      * @description Returns all status to state mapping records
-     * @return Map<String, Mapping> Mapping by the status 
+     * @return Map<String, Mapping> Mapping by the status
      */
     public Map<String, Mapping> getAll() {
         return mappingByStatus;
@@ -152,7 +152,7 @@ public with sharing class RD2_StatusMapper {
     /**
      * @description Contains mapping configuration detail
      */
-    public class Mapping {
+    public inherited sharing class Mapping {
         public String status;
         public String label;
         public String masterLabel;
@@ -202,15 +202,15 @@ public with sharing class RD2_StatusMapper {
     /**
      * @description Retrieves records from database
      */
-    public class MappingGateway implements Gateway {
+    public inherited sharing class MappingGateway implements Gateway {
 
         /**
          * @description Retrieves status to state mapping configuration records from database
          * @return List<RecurringDonationStatusMapping__mdt>
          */
-        public List<RecurringDonationStatusMapping__mdt> getRecords() {        
+        public List<RecurringDonationStatusMapping__mdt> getRecords() {
             return [
-                SELECT 
+                SELECT
                     MasterLabel,
                     DeveloperName,
                     Status__c,

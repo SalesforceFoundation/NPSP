@@ -2171,7 +2171,31 @@
         <value>Status to state mapping records have been saved</value>
     </labels>
     <labels>
-        <fullName>RD2_StatusMappingUnmappedState</fullName>
+        <fullName>RD2_StatusMappingStateActive</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the Active state</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingStateClosed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the Closed state</shortDescription>
+        <value>Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingStateLapsed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the Lapsed state</shortDescription>
+        <value>Lapsed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingStateUnmapped</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>

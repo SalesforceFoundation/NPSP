@@ -3,7 +3,7 @@ import { isNull, isEmpty } from 'c/util';
 
 import loadMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.loadMapping';
 import saveMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.saveMapping';
-import getDeploymentResult from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.getDeploymentResult';
+import getDeployResult from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.getDeployResult';
 
 import editButtonLabel from '@salesforce/label/c.stgBtnEdit';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -14,7 +14,12 @@ import mappingDescriptions from '@salesforce/label/c.RD2_StatusMappingDefinition
 import fieldStatusLabel from '@salesforce/label/c.RD2_StatusMappingColumnStatusLabel';
 import fieldStatus from '@salesforce/label/c.RD2_StatusMappingColumnStatus';
 import fieldState from '@salesforce/label/c.RD2_StatusMappingColumnState';
-import unmappedStateLabel from '@salesforce/label/c.RD2_StatusMappingUnmappedState';
+
+import stateUnmappedLabel from '@salesforce/label/c.RD2_StatusMappingStateUnmapped';
+import stateActiveLabel from '@salesforce/label/c.RD2_StatusMappingStateActive';
+import stateLapsedLabel from '@salesforce/label/c.RD2_StatusMappingStateLapsed';
+import stateClosedLabel from '@salesforce/label/c.RD2_StatusMappingStateClosed';
+
 import deploymentInProgressMessage from '@salesforce/label/c.RD2_StatusMappingInProgressMessage';
 import deploymentSuccessMessage from '@salesforce/label/c.RD2_StatusMappingSuccessMessage';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
@@ -32,11 +37,11 @@ const editColumns = [
         label: fieldState, fieldName: 'state', editable: true,
         type: 'picklistType',
         typeAttributes: {
-            placeholder: unmappedStateLabel,
+            placeholder: stateUnmappedLabel,
             options: [
-                { label: 'Active', value: 'Active' },
-                { label: 'Lapsed', value: 'Lapsed' },
-                { label: 'Closed', value: 'Closed' }
+                { label: stateActiveLabel, value: 'Active' },
+                { label: stateLapsedLabel, value: 'Lapsed' },
+                { label: stateClosedLabel, value: 'Closed' }
             ],
             keyField: { fieldName: 'status' },
             disabled: { fieldName: 'isReadOnly' }
@@ -77,6 +82,12 @@ export default class rd2StatusMappingSettings extends LightningElement {
     deploymentTimeout = 2000;
 
 
+    /***
+    * @description Called when the component is first loaded.
+    * It checks if there is any status to state mapping deployment in progress.
+    * If deployment is not in progress, it displays mapping records.
+    * Otherwise, mapping records are displayed upon the deployment completion.
+    */
     connectedCallback() {
         this.isLoading = true;
         this.handleDeploymentProgress();
@@ -155,7 +166,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
             this.records
                 .filter(mapping => mapping.isReadOnly === false)
                 .forEach(mapping => {
-                    mapping.state = isNull(mapping.oldState) ? unmappedStateLabel : mapping.oldState;
+                    mapping.state = isNull(mapping.oldState) ? stateUnmappedLabel : mapping.oldState;
                     mapping.oldState = null;
                 });
         }
@@ -170,7 +181,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
         if (this.records) {
             disabled = this.records
-                .filter(mapping => mapping.state === unmappedStateLabel)
+                .filter(mapping => mapping.state === stateUnmappedLabel)
                 .length > 0;
         }
 
@@ -182,17 +193,6 @@ export default class rd2StatusMappingSettings extends LightningElement {
     */
     handleSave() {
         this.isLoading = true;
-        let self = this;
-
-        setTimeout(function () {
-            self.processSave();
-        }, 1, [self]);
-    }
-
-    /***
-    * @description Calls the controller method to upsert mapping records
-    */
-    processSave() {
         try {
             let jsonRecords = JSON.stringify(this.records);
 
@@ -213,7 +213,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * data and messages display based on its status
     */
     registerDeploymentId(deploymentId) {
-        this.showToast('Deployment status', deploymentInProgressMessage, toastVariant.INFO);
+        this.showToast(deploymentInProgressMessage, toastVariant.INFO);
 
         this._deploymentIds.add(deploymentId);
 
@@ -237,7 +237,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * When the deployment Id is not specified, the latest deployment result (if any) will be processed.
     */
     handleDeploymentResult(deploymentId) {
-        getDeploymentResult({ deploymentId: deploymentId })
+        getDeployResult({ deploymentId: deploymentId })
             .then((data) => {
                 const response = JSON.parse(data);
                 this.handleDeploymentResponse(response);
@@ -278,7 +278,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
             }
 
             if (!isNull(variant)) {
-                this.showToast('Deployment status', message, variant);
+                this.showToast(message, variant);
             }
         }
 
@@ -320,16 +320,13 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /**
-    * @description Displays message notification. ShowToastMessage does not work in Lightning Out
-    *
-    * @param {string} title: Title of the toast, displayed as a heading.
-    * @param {string} message: Message of the toast. It can contain placeholders in
-    * the form of {0} ... {N}. The placeholders are replaced with the links from
-    * messageData param
+    * @description Displays message notification. 
+    * ***ShowToastMessage does not work in Lightning Out
+    * @param {string} message: Message of the toast.
+    * @param {string} variant: Toast variant (info, success, warning, error)
     */
-    showToast(title, message, variant) {
+    showToast(message, variant) {
         this.hasMessage = true;
-        this.message.title = title;
         this.message.body = message;
         this.message.variant = variant;
     }

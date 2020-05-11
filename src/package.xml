@@ -408,6 +408,7 @@
         <members>RD2_StatusMapper</members>
         <members>RD2_StatusMapper_TEST</members>
         <members>RD2_StatusMappingSettings_CTRL</members>
+        <members>RD2_StatusMappingSettings_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>
@@ -1685,8 +1686,11 @@
         <members>RD2_StatusMappingDeploymentAlreadyInProgress</members>
         <members>RD2_StatusMappingInProgressMessage</members>
         <members>RD2_StatusMappingIntro</members>
+        <members>RD2_StatusMappingStateActive</members>
+        <members>RD2_StatusMappingStateClosed</members>
+        <members>RD2_StatusMappingStateLapsed</members>
+        <members>RD2_StatusMappingStateUnmapped</members>
         <members>RD2_StatusMappingSuccessMessage</members>
-        <members>RD2_StatusMappingUnmappedState</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
         <members>RD_ContactMustBelongToAccount</members>

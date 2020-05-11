@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-      
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -49,19 +49,19 @@ public with sharing class RD2_StatusMapper_TEST {
     private static void shouldReturnDefaultStatusMappingWhenNoMappingIsConfigured() {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
         Map<String, RD2_StatusMapper.Mapping> mappingByStatus = mapper.getAll();
-        
+
         for (RD2_StatusMapper.Mapping mapping : mappingByStatus.values()) {
             assertReadOnlyStatusMapping(mapping);
 
-            if (!READ_ONLY_STATUS_VALUES.contains(mapping.status)) {    
-                System.assertEquals(null, mapping.state, 
+            if (!READ_ONLY_STATUS_VALUES.contains(mapping.status)) {
+                System.assertEquals(null, mapping.state,
                     'State should be unmapped when mapping is not configured: ' + mapping
                 );
             }
         }
 
-        assertRequiredStatusValues(mappingByStatus.keySet());
-        assertAllActiveStatusValues(mappingByStatus.keySet());
+        assertDefaultStatusValues(mappingByStatus.keySet());
+        assertAllActivePicklistStatusValues(mappingByStatus.keySet());
     }
 
     /**
@@ -77,17 +77,17 @@ public with sharing class RD2_StatusMapper_TEST {
         mapper.statusLabelByValue.put(newStatus, newStatus);
         Map<String, RD2_StatusMapper.Mapping> mappingByStatus = mapper.getAll();
 
-        System.assertEquals(true, mappingByStatus.keySet().contains(newStatus), 
+        System.assertEquals(true, mappingByStatus.keySet().contains(newStatus),
             'New Status should be returned: ' + mappingByStatus.values()
-        );           
-        System.assertEquals(null, mappingByStatus.get(newStatus).state, 
+        );
+        System.assertEquals(null, mappingByStatus.get(newStatus).state,
             'State for the unmapped Status should be empty: ' + mappingByStatus.get(newStatus)
         );
-        
+
         for (RD2_StatusMapper.Mapping mapping : mappingByStatus.values()) {
             assertReadOnlyStatusMapping(mapping);
         }
-        assertRequiredStatusValues(mappingByStatus.keySet());
+        assertDefaultStatusValues(mappingByStatus.keySet());
     }
 
     /**
@@ -107,20 +107,20 @@ public with sharing class RD2_StatusMapper_TEST {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
         mapper.gateway = mappingGateway;
         mapper.statusLabelByValue = getDefaultStatusLabelByValue();
-        mapper.statusLabelByValue.put(newStatus, newStatus);        
+        mapper.statusLabelByValue.put(newStatus, newStatus);
         Map<String, RD2_StatusMapper.Mapping> mappingByStatus = mapper.getAll();
 
-        System.assertEquals(true, mappingByStatus.keySet().contains(newStatus), 
+        System.assertEquals(true, mappingByStatus.keySet().contains(newStatus),
             'New Status should be returned: ' + mappingByStatus.values()
-        );           
-        System.assertEquals(newStatusState, mappingByStatus.get(newStatus).state, 
+        );
+        System.assertEquals(newStatusState, mappingByStatus.get(newStatus).state,
             'State for the mapped Status should be returned: ' + mappingByStatus.get(newStatus)
         );
-        
+
         for (RD2_StatusMapper.Mapping mapping : mappingByStatus.values()) {
             assertReadOnlyStatusMapping(mapping);
         }
-        assertRequiredStatusValues(mappingByStatus.keySet());
+        assertDefaultStatusValues(mappingByStatus.keySet());
     }
 
     /**
@@ -140,17 +140,17 @@ public with sharing class RD2_StatusMapper_TEST {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
         mapper.gateway = mappingGateway;
         Map<String, RD2_StatusMapper.Mapping> mappingByStatus = mapper.getAll();
-           
-        System.assertEquals(false, mappingByStatus.keySet().contains(invalidStatus), 
+
+        System.assertEquals(false, mappingByStatus.keySet().contains(invalidStatus),
             'Status not existing on Status picklist field should not be returned: ' + mappingByStatus.values()
         );
-        
+
         for (RD2_StatusMapper.Mapping mapping : mappingByStatus.values()) {
             assertReadOnlyStatusMapping(mapping);
         }
 
-        assertRequiredStatusValues(mappingByStatus.keySet());
-        assertAllActiveStatusValues(mappingByStatus.keySet());
+        assertDefaultStatusValues(mappingByStatus.keySet());
+        assertAllActivePicklistStatusValues(mappingByStatus.keySet());
     }
 
     /**
@@ -161,7 +161,7 @@ public with sharing class RD2_StatusMapper_TEST {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
 
         for (String status : READ_ONLY_STATUS_VALUES) {
-            System.assertEquals(status, mapper.getState(status), 
+            System.assertEquals(status, mapper.getState(status),
                 'State should equal to the Status for required read-only value'
             );
         }
@@ -175,7 +175,7 @@ public with sharing class RD2_StatusMapper_TEST {
         final String invalidStatus = 'bar';
         RD2_StatusMapper mapper = new RD2_StatusMapper();
 
-        System.assertEquals(null, mapper.getState(invalidStatus), 
+        System.assertEquals(null, mapper.getState(invalidStatus),
             'State should be empty for an invalid Status value'
         );
     }
@@ -196,9 +196,9 @@ public with sharing class RD2_StatusMapper_TEST {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
         mapper.gateway = mappingGateway;
         mapper.statusLabelByValue = getDefaultStatusLabelByValue();
-        mapper.statusLabelByValue.put(newStatus, newStatus);        
+        mapper.statusLabelByValue.put(newStatus, newStatus);
 
-        System.assertEquals(newStatusState, mapper.getState(newStatus), 
+        System.assertEquals(newStatusState, mapper.getState(newStatus),
             'State should be returned for a mapped Status value'
         );
     }
@@ -214,27 +214,27 @@ public with sharing class RD2_StatusMapper_TEST {
     * @return void
     */
     private static void assertReadOnlyStatusMapping(RD2_StatusMapper.Mapping mapping) {
-        if (!READ_ONLY_STATUS_VALUES.contains(mapping.status)) {  
+        if (!READ_ONLY_STATUS_VALUES.contains(mapping.status)) {
             return;
         }
-                      
-        System.assertEquals(mapping.status, mapping.state, 
+
+        System.assertEquals(mapping.status, mapping.state,
             'State should equal to the Status for required read-only value: ' + mapping
         );
     }
 
     /***
-    * @description Verifies required Status picklist field values are returned by the mapper
+    * @description Verifies required default Status picklist field values are returned by the mapper
     * @param statusValues Actual Status values returned by the mapper
     * @return void
     */
-    private static void assertRequiredStatusValues(Set<String> statusValues) {
-        Boolean hasRequired = 
+    public static void assertDefaultStatusValues(Set<String> statusValues) {
+        Boolean hasRequired =
             statusValues.contains(RD2_Constants.STATUS_ACTIVE)
             && statusValues.contains(RD2_Constants.STATUS_LAPSED)
             && statusValues.contains(RD2_Constants.STATUS_CLOSED);
 
-        System.assertEquals(true, hasRequired, 
+        System.assertEquals(true, hasRequired,
             'Required Status values should be returned by the mapper: ' + statusValues
         );
     }
@@ -244,10 +244,10 @@ public with sharing class RD2_StatusMapper_TEST {
     * @param statusValues Actual Status values returned by the mapper
     * @return void
     */
-    private static void assertAllActiveStatusValues(Set<String> statusValues) {        
+    public static void assertAllActivePicklistStatusValues(Set<String> statusValues) {
         Map<String, String> labelByValue = getActiveStatusLabelByValue();
 
-        System.assertEquals(labelByValue.keySet(), statusValues, 
+        System.assertEquals(labelByValue.keySet(), statusValues,
             'All active Status values should be returned by the mapper: ' + statusValues
         );
     }
@@ -256,10 +256,10 @@ public with sharing class RD2_StatusMapper_TEST {
      * @description Returns Recurring Donation Status picklist field value and labels
      * @return Map<String, String> State value mapped by the status key
      */
-    private static Map<String, String> getActiveStatusLabelByValue() { 
+    private static Map<String, String> getActiveStatusLabelByValue() {
         Map<String, String> labelByValue = new Map<String, String>();
         List<Schema.PicklistEntry> statusEntries = npe03__Recurring_Donation__c.Status__c.getDescribe().getPicklistValues();
-        
+
         for (Schema.PicklistEntry entry : statusEntries) {
             if (entry.isActive()) {
                 labelByValue.put(entry.getValue(), entry.getLabel());
@@ -273,7 +273,7 @@ public with sharing class RD2_StatusMapper_TEST {
      * @description Returns default Recurring Donation Status picklist field value and labels
      * @return Map<String, String> State value mapped by the status key
      */
-    private static Map<String, String> getDefaultStatusLabelByValue() { 
+    private static Map<String, String> getDefaultStatusLabelByValue() {
         return new Map<String, String>{
             RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
             RD2_Constants.STATUS_LAPSED => RD2_Constants.STATUS_LAPSED,
@@ -304,7 +304,7 @@ public with sharing class RD2_StatusMapper_TEST {
     }
 
     /***
-    * @description Stub for the status to status type mapper 
+    * @description Stub for the status to status type mapper
     */
     public class Stub implements System.StubProvider {
         private Map<String, RD2_StatusMapper.Mapping> mappingByStatus = new Map<String, RD2_StatusMapper.Mapping>();
@@ -385,7 +385,7 @@ public with sharing class RD2_StatusMapper_TEST {
         */
         public TestMappingGateway withRecord(RecurringDonationStatusMapping__mdt record) {
             this.records.add(record);
-            return this;            
+            return this;
         }
 
         /**
@@ -400,7 +400,7 @@ public with sharing class RD2_StatusMapper_TEST {
                     RecurringDonationStatusMapping__mdt.class
                 )
             );
-            return this;            
+            return this;
         }
 
         /**
@@ -410,7 +410,7 @@ public with sharing class RD2_StatusMapper_TEST {
         */
         public TestMappingGateway withRecords(List<RecurringDonationStatusMapping__mdt> records) {
             this.records = records;
-            return this;            
+            return this;
         }
 
         /**
@@ -418,7 +418,7 @@ public with sharing class RD2_StatusMapper_TEST {
         * @return List<RecurringDonationStatusMapping__mdt>
         */
         public List<RecurringDonationStatusMapping__mdt> getRecords() {
-            return records;  
+            return records;
         }
     }
 }
