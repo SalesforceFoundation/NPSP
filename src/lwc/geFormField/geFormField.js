@@ -63,7 +63,7 @@ export default class GeFormField extends LightningElement {
             const detail = {
                 ...event.detail,
                 objectMappingDevName: objMappingDevName
-            }
+            };
 
             const selectRecordEvent = new CustomEvent(
                 'lookuprecordselect',
@@ -127,7 +127,6 @@ export default class GeFormField extends LightningElement {
             this.value = defaultValue;
             this.handlePicklistChange();
         }
-        this.configureQaLocators();
     }
 
     getValueFromChangeEvent(event) {
@@ -538,13 +537,25 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    configureQaLocators() {
+    get qaLocatorBase() {
         const rowIndex = this.getAttribute('data-qa-row');
-        const fieldName = this.targetFieldName ? this.targetFieldName : `${this.element.objectApiName}.${this.element.fieldApiName}`;
         if(rowIndex) {
-            this.setAttribute('data-qa-locator', `${fieldName} ${rowIndex}`);
+            return `${this.fieldLabel} ${rowIndex}`;
         } else {
-            this.setAttribute('data-qa-locator', fieldName);
+            return this.fieldLabel;
         }
     }
+
+    get qaLocatorInput() {
+        return `input ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorRichText() {
+        return `richtext ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorTextArea() {
+        return `textarea ${this.qaLocatorBase}`;
+    }
+
 }

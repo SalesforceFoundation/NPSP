@@ -21,6 +21,7 @@ export default class GeAutocomplete extends LightningElement {
     @api required;
     @api variant;
     @api disabled;
+    @api qaLocatorBase;
     @track errorMessage;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -164,7 +165,11 @@ export default class GeAutocomplete extends LightningElement {
      */
 
     get qaLocatorClearSelectedOption() {
-        return `button ${this.CUSTOM_LABELS.geAssistiveRemoveSelectedOption}`;
+        return `button ${this.CUSTOM_LABELS.geAssistiveRemoveSelectedOption} ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorAutocompleteInput() {
+        return `input autocomplete ${this.qaLocatorBase}`;
     }
 
     /*******************************************************************************

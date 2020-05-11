@@ -24,7 +24,8 @@
                                placeholder={CUSTOM_LABELS.geSearchPlaceholder}
                                value={displayValue}
                                disabled={disabled}
-                               onkeyup={handleChange}>
+                               onkeyup={handleChange}
+                               data-qa-locator={qaLocatorAutocompleteInput}>
                         <button
                                 class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
                                 title={CUSTOM_LABELS.geAssistiveRemoveSelectedOption}
