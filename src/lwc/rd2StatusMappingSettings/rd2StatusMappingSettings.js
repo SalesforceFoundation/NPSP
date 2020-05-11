@@ -27,7 +27,7 @@ import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 const viewColumns = [
     { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
     { label: fieldStatus, fieldName: 'status', type: 'text' },
-    { label: fieldState, fieldName: 'state', type: 'text' }
+    { label: fieldState, fieldName: 'stateLabel', type: 'text' }
 ];
 
 const editColumns = [

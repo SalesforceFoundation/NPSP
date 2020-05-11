@@ -53,6 +53,15 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     }
 
     /**
+     * @description Contains state value to label mapping
+     */
+    private static final Map<String, String> stateLabelByValue = new Map<String, String>{
+        RD2_Constants.STATUS_ACTIVE => System.Label.RD2_StatusMappingStateActive,
+        RD2_Constants.STATUS_LAPSED => System.Label.RD2_StatusMappingStateLapsed,
+        RD2_Constants.STATUS_CLOSED => System.Label.RD2_StatusMappingStateClosed
+    };
+
+    /**
      * @description Contains status to state mapping configuration
      */
     @TestVisible
@@ -237,15 +246,32 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         @AuraEnabled public String masterLabel;
         @AuraEnabled public String developerName;
         @AuraEnabled public String state;
+        @AuraEnabled public String stateLabel;
         @AuraEnabled public Boolean isReadOnly;
 
+        /**
+         * @description Constructor: Transforms mapping record into a record that can be displayed on a page
+         * @param mapping Status to state mapping record
+         */
         public Mapping(RD2_StatusMapper.Mapping mapping) {
             this.status = mapping.status;
             this.label = mapping.label;
             this.masterLabel = mapping.masterLabel;
             this.developerName = mapping.developerName;
             this.state = String.isBlank(mapping.state) ? System.Label.RD2_StatusMappingStateUnmapped : mapping.state;
+            this.stateLabel = getStateLabel(this.state);
             this.isReadOnly = mapping.isReadOnly;
+        }
+
+        /**
+         * @description Returns label for the specified state
+         * @param state State value
+         * @return String State label
+         */
+        private String getStateLabel(String state) {
+            String stateLabel = stateLabelByValue.get(state);
+
+            return String.isBlank(stateLabel) ? state : stateLabel;
         }
     }
 

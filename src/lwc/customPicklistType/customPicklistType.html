@@ -1,9 +1,8 @@
 <template>
     <template if:true={disabled}>
-        <lightning-formatted-text value={value}>
-        </lightning-formatted-text>
+        <lightning-formatted-text value={optionLabel}></lightning-formatted-text>
     </template>
-    
+
     <template if:false={disabled}>
         <lightning-combobox 
             name="picklist" 
