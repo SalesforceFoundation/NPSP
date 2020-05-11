@@ -32,7 +32,7 @@
     border: 1px solid var(--lwc-color-border, rgb(221, 219, 218));
     transition: border .15s linear;
     border-color: var(--lwc-color-border, rgb(221, 219, 218));
-    background-color: rgb(255, 255, 255);
+    background-color: var(--lwc-color-background-alt, rgb(255, 255, 255));
 }
 
 .slds-button_extension {
@@ -52,7 +52,7 @@
 }
 
 .slds-button:disabled {
-    background-color: rgb(255, 255, 255);
+    background-color: var(--lwc-color-background-alt, rgb(255, 255, 255));
     color:  rgb(221, 219, 218);
     cursor: default;
 }
