@@ -1657,7 +1657,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
 
-        System.assertEquals(0, schedules.size(), 'No schedule should be returned for a Closed RD');
+        System.assertEquals(0, schedules.size(), 'No schedule should be returned for a RD with status mapped to Closed');
     }
 
     /***
@@ -1683,7 +1683,7 @@ private with sharing class RD2_ScheduleService_TEST {
         RD2_ScheduleService service = new RD2_ScheduleService();
         List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
 
-        System.assertEquals(1, schedules.size(), '1 new schedule should be created.');
+        System.assertEquals(1, schedules.size(), '1 new schedule should be created when RD status is mapped to Active.');
         System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
     }
 
