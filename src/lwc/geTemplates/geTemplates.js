@@ -221,6 +221,14 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
      * Start getters for data-qa-locator attributes
      */
 
+    get qaLocatorButtonNewBatch() {
+        return `button Header ${this.CUSTOM_LABELS.geButtonNewBatch}`;
+    }
+
+    get qaLocatorButtonNewSingleGift() {
+        return `button Header ${this.CUSTOM_LABELS.geButtonNewSingleGift}`;
+    }
+
     get qaLocatorCreateTemplate() {
         return `button ${this.CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}`;
     }
