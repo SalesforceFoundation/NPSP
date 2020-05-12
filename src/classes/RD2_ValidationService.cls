@@ -126,20 +126,6 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description Contains the current Status to State map configuration
-    */
-    public static RD2_StatusMapper statusMapper {
-        get {
-            if (statusMapper == null) {
-                statusMapper = new RD2_StatusMapper();
-            }
-            return statusMapper;
-        }
-        set;
-    }
-
-
-    /**
     * @description Constructor for the RD2_ValidationService class
     * @param rds New rds that will be validated
     */
@@ -310,7 +296,7 @@ public with sharing class RD2_ValidationService {
     */
     @TestVisible
     private void validateStatus(npe03__Recurring_Donation__c rd) {
-        if (String.isBlank(statusMapper.getState(rd.Status__c))) {
+        if (String.isBlank((new RD2_RecurringDonation(rd)).getState())) {
             rd.addError(
                 String.format(
                     System.Label.RD2_StatusMustBeMapped + ' ' + System.Label.RD2_StatusMustBeMappedSolution,
