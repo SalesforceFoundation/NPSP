@@ -400,7 +400,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
      */
 
     get qaLocatorSelectTemplate() {
-        return 'combobox Select Template';
+        return `combobox Wizard ${this.CUSTOM_LABELS.commonTemplate}`;
     }
 
     get qaLocatorSave() {
