@@ -26,6 +26,7 @@ import {
     hasNestedProperty,
     arraysMatch,
     deepClone,
+    getNamespace,
     getSubsetObject,
     validateJSONString,
     getNamespace
