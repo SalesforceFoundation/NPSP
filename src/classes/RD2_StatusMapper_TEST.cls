@@ -48,6 +48,9 @@ public with sharing class RD2_StatusMapper_TEST {
     @IsTest
     private static void shouldReturnDefaultStatusMappingWhenNoMappingIsConfigured() {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
+        mapper.gateway = new TestMappingGateway();
+        mapper.statusLabelByValue = getDefaultStatusLabelByValue();
+
         Map<String, RD2_StatusMapper.Mapping> mappingByStatus = mapper.getAll();
 
         for (RD2_StatusMapper.Mapping mapping : mappingByStatus.values()) {
@@ -61,7 +64,6 @@ public with sharing class RD2_StatusMapper_TEST {
         }
 
         assertDefaultStatusValues(mappingByStatus.keySet());
-        assertAllActivePicklistStatusValues(mappingByStatus.keySet());
     }
 
     /**
@@ -310,6 +312,26 @@ public with sharing class RD2_StatusMapper_TEST {
         private Map<String, RD2_StatusMapper.Mapping> mappingByStatus = new Map<String, RD2_StatusMapper.Mapping>();
 
         /**
+        * @description Accepts the status to state mapping as specified by the input arguments
+        * @param status Status value
+        * @param mapping Status to state mapping record
+        * @description Put all Status value into Status Mapping Settings mock
+        * @return Stub
+        */
+        public Stub withAllMapping() {
+            List<SelectOption> picklistValues = 
+                UTIL_Describe.getSelectOptions(
+                    'npe03__Recurring_Donation__c',
+                    String.valueOf(npe03__Recurring_Donation__c.Status__c)
+                );
+            for (SelectOption option : picklistValues) {
+                withMapping(option.getValue(), option.getValue());
+            }
+
+            return this;
+        }
+
+        /**
         * @description Populates mapping with default status to state mapping
         * @return Stub
         */
@@ -333,9 +355,9 @@ public with sharing class RD2_StatusMapper_TEST {
         }
 
         /**
-        * @description Accepts the status to state mapping as specified by the input arguments
-        * @param status Status value
-        * @param mapping Status to state mapping record
+        * @description Add Status to State to the Statue Mapping Settings
+        * @param status The status to mapped from
+        * @param state The state to mapped to
         * @return Stub
         */
         public Stub withMapping(String status, RD2_StatusMapper.Mapping mapping) {

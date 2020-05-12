@@ -2207,7 +2207,7 @@
         <categories>Recurring-Donations, Error, Health Check</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message when Enhanced RD status is not mapped</shortDescription>
+        <shortDescription>Validation and health check error message when status is not mapped to a state.</shortDescription>
         <value>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</value>
     </labels>
     <labels>
@@ -2215,7 +2215,7 @@
         <categories>Recurring-Donations, Error, Health Check</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Solution when Enhanced RD status is not mapped</shortDescription>
+        <shortDescription>Validation and health check solution when status is not mapped to a state.</shortDescription>
         <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
     </labels>
     <labels>
