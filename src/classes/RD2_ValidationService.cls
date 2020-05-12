@@ -77,6 +77,27 @@ public with sharing class RD2_ValidationService {
         } set;
     }
 
+    /**
+    * @description Contacts on provided Recurring Donations
+    */
+    private Map<Id, Contact> contactById {
+        get {
+            if (contactById == null) {
+                Set<Id> contactIds = UTIL_SObject.extractId(
+                    rds, npe03__Recurring_Donation__c.npe03__Contact__c
+                );
+
+                contactById = new Map<Id, Contact>([
+                    SELECT Name, AccountId
+                    FROM Contact
+                    WHERE Id IN :contactIds
+                ]);
+            }
+            return contactById;
+        }
+        set;
+    }
+
     /***
     * @descripton Recurring Donations that do not have any Closed Won/Lost Opportunity assigned.
     * These records can have donor information modified
@@ -237,6 +258,7 @@ public with sharing class RD2_ValidationService {
 
         if (noClosedOppRDIds.contains(rd.Id)
             || isOrganizationChange(accountById.get(rd.npe03__Organization__c), accountById.get(oldRd.npe03__Organization__c))
+            || isAccountAutoPopulatedOnChange(rd, oldRd)
         ) {
             return true;
         }
@@ -281,6 +303,28 @@ public with sharing class RD2_ValidationService {
     }
 
     /***
+    * @description Returns true when Account on RD is changed from null to the Contact's Account
+    * and the Contact on RD is not changed
+    * @param new Updated Recurring Donation record
+    * @param old Recurring Donation record containing old values
+    * @return Boolean
+    */
+    private Boolean isAccountAutoPopulatedOnChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+
+        if (rd.npe03__Contact__c == null //The Contact is not specified
+            || rd.npe03__Contact__c != oldRd.npe03__Contact__c //The Contact is changed on update
+            || oldRd.npe03__Organization__c != null //The Account existed previously
+        ) {
+            return false;
+        }
+
+        Contact rdContact = contactById.get(rd.npe03__Contact__c);
+
+        return rdContact != null
+            && rd.npe03__Organization__c == rdContact.AccountId;
+    }
+
+    /***
     * @description Validates Day of Month on Recurring Donation
     * @param rd The Recurring Donation to validate
     * @return void
@@ -322,13 +366,14 @@ public with sharing class RD2_ValidationService {
      * @param rd The recurring donation to validate
      */
     private void validateFixedLength(npe03__Recurring_Donation__c rd) {
-        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        if (rdRecord.isOpenEnded()
             && rd.npe03__Installments__c > 1
         ) {
             rd.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
         }
 
-        if (rd.RecurringType__c != RD2_Constants.RECURRING_TYPE_FIXED) {
+        if (!rdRecord.isFixedLength()) {
             return;
         }
 
@@ -392,4 +437,5 @@ public with sharing class RD2_ValidationService {
 
         return rdIds;
     }
+
 }
