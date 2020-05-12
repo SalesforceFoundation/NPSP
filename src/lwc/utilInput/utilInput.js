@@ -43,13 +43,6 @@ export default class utilInput extends LightningElement {
 
     @track isRichTextValid = true;
 
-    connectedCallback() {
-        // if no data-qa-locator attribute set, populate and reflect to template
-        if (isEmpty(this.getAttribute('data-qa-locator'))) {
-            this.setAttribute('data-qa-locator', `${this.uiObjectApiName}.${this.fieldApiName}`);
-        }
-    }
-
     @api
     reportValue() {
         return {
@@ -295,4 +288,34 @@ export default class utilInput extends LightningElement {
     stopPropagation(event) {
         event.stopPropagation();
     }
+
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
+    get qaLocatorRichText() {
+        return `richtext ${this.uiLabel}`;
+    }
+
+    get qaLocatorTextArea() {
+        return `textarea ${this.uiLabel}`;
+    }
+
+    get qaLocatorCheckbox() {
+        return `checkbox ${this.uiLabel}`;
+    }
+
+    get qaLocatorDateTime() {
+        return `datetime ${this.uiLabel}`;
+    }
+
+    get qaLocatorBaseInput() {
+        return `input ${this.uiLabel}`;
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
+
+
 }
