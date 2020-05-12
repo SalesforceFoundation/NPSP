@@ -873,8 +873,7 @@ public inherited sharing class BDI_MigrationMappingUtility {
         private List<String> splitHelpText(String helpText) {
             String symbol;
             Boolean hasSpecialChar = helpText.containsAny('$&+,:;=?@#|\'<>.-^*()%!_');
-            Boolean hasDataImportNames =
-                helpText.containsAny('Account1Account2AddressContact1Contact2HouseholdOpportunityDonationPaymentGAURole');
+            Boolean hasLegacyDataImportObjectName = checkHelpTextForLegacyDataImportObjectNames(helpText);
 
             if (hasSpecialChar == true) {
                 String[] specialCharacters =
@@ -894,7 +893,7 @@ public inherited sharing class BDI_MigrationMappingUtility {
                 }
             }
 
-            if (hasDataImportNames == true) {
+            if (hasLegacyDataImportObjectName == true) {
                 Integer countWhitespaces = helpText.countMatches(' ');
 
                 if (countWhitespaces <= 4) {
@@ -903,6 +902,20 @@ public inherited sharing class BDI_MigrationMappingUtility {
             }
 
             return null;
+        }
+
+        private Boolean checkHelpTextForLegacyDataImportObjectNames(String helpText) {
+            Set<String> legacyDataImportObjectNames = new Set<String> {
+                'Account1', 'Account2', 'Address', 'Contact1', 'Contact2',
+                'Household','Opportunity','Donation','Payment','GAU','Role'};
+
+            for (String legacyName : legacyDataImportObjectNames) {
+                if (helpText.contains(legacyName)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void checkRequiredFields() {
