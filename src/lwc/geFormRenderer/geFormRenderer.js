@@ -27,7 +27,8 @@ import {
     arraysMatch,
     deepClone,
     getSubsetObject,
-    validateJSONString
+    validateJSONString,
+    getNestedProperty
 } from 'c/utilCommon';
 import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -39,7 +40,10 @@ import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_
 
 import getOpenDonations from '@salesforce/apex/GE_FormRendererService.getOpenDonations';
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DATA_IMPORT_ACCOUNT1_NAME_FIELD from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
+import DATA_IMPORT_CONTACT1_LASTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
 import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
@@ -343,8 +347,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         this.displayPageLevelErrorMessages([error]);
-
-        return;
     }
 
     catchCardChargedBDIFailedError(error) {
@@ -352,8 +354,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.toggleModalByComponentName('gePurchaseCallModalError');
         this.addPageLevelErrorMessage(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed, 0);
         this.handleCatchOnSave(error.apexException);
-
-        return;
     }
 
     /*******************************************************************************
@@ -842,7 +842,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     section.sourceFields));
         });
 
-        this.handleNameOnCardFieldChange();
+        this.setCardHolderName(dataImport);
     }
 
     /**
@@ -1424,7 +1424,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         } else if (data) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.load(dataImport, false);
-
             // If the record being loaded is an object-mapped lookup, then set the
             // recordTypeId on its sibling fields
             if (data.recordTypeId &&
@@ -1585,34 +1584,45 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+
     handleNameOnCardFieldChange() {
+        this.setCardHolderName();
+    }
+
+    setCardHolderName(dataImport) {
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        let fieldList = {};
         if (!isUndefined(sectionsList) && this.isSingleGiftEntry) {
-            fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
+            const fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
             this.selectedDonorType = fieldList[
                 DONATION_DONOR_FIELDS.donationDonorField
                 ].value === DONATION_DONOR.isContact1 ?
                 DONATION_DONOR_TYPE_ENUM.CONTACT1 : DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
+            this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList, dataImport);
 
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
-                    section.setCardHolderName(this.fabricateCardHolderName(fieldList));
-                    this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
+                    section.setCardHolderName(this.fabricatedCardholderNames);
                 }
             });
         }
     }
 
-
     /**
      * Function that fabricates the cardholder name for the credit card widget
      * @param fieldList (List of fields displayed on the form)
+     * @param dataImport
      * @returns {{firstName: string, lastName: string, accountName: string}} card holder name
      */
-    fabricateCardHolderName(fieldList){
+    fabricateCardHolderName(fieldList, dataImport) {
         let accountName, firstName, lastName;
         let index = 0;
+
+        if (isNotEmpty(dataImport)) {
+            // if a data import was passed in, grab default values from it
+            accountName = getNestedProperty(dataImport, DATA_IMPORT_ACCOUNT1_NAME_FIELD.fieldApiName, 'value');
+            firstName = getNestedProperty(dataImport, DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD.fieldApiName, 'value');
+            lastName = getNestedProperty(dataImport, DATA_IMPORT_CONTACT1_LASTNAME_FIELD.fieldApiName, 'value');
+        }
 
         for (let field in fieldList) {
             index++;
