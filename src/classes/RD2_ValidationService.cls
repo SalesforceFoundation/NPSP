@@ -310,7 +310,7 @@ public with sharing class RD2_ValidationService {
     */
     @TestVisible
     private void validateStatus(npe03__Recurring_Donation__c rd) {
-        if (String.isBlank(statusMapper.getState(rd.Status__c))) {
+        if (String.isBlank((new RD2_RecurringDonation(rd)).getState())) {
             rd.addError(
                 String.format(
                     System.Label.RD2_StatusMustBeMapped + ' ' + System.Label.RD2_StatusMustBeMappedSolution,
