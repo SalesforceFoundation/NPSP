@@ -60,7 +60,6 @@ import CONTACT_FIRST_NAME_INFO from '@salesforce/schema/Contact.FirstName';
 import CONTACT_LAST_NAME_INFO from '@salesforce/schema/Contact.LastName';
 import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name';
 
-
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
