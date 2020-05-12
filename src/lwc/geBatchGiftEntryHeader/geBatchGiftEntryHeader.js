@@ -76,16 +76,6 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
         );
     }
 
-    navigateToBatchEditPage() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: this.batchId,
-                actionName: 'edit'
-            }
-        });
-    }
-
     editBatch() {
         this.dispatchEvent(new CustomEvent(
             'edit', {detail: this.batchId}
