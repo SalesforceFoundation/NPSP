@@ -10,7 +10,7 @@ import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 
 import mappingIntro from '@salesforce/label/c.RD2_StatusMappingIntro';
-import mappingDescriptions from '@salesforce/label/c.RD2_StatusMappingDefinitions';
+import mappingDefinitions from '@salesforce/label/c.RD2_StatusMappingDefinitions';
 import fieldStatusLabel from '@salesforce/label/c.RD2_StatusMappingColumnStatusLabel';
 import fieldStatus from '@salesforce/label/c.RD2_StatusMappingColumnStatus';
 import fieldState from '@salesforce/label/c.RD2_StatusMappingColumnState';
@@ -30,25 +30,6 @@ const viewColumns = [
     { label: fieldState, fieldName: 'stateLabel', type: 'text' }
 ];
 
-const editColumns = [
-    { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
-    { label: fieldStatus, fieldName: 'status', type: 'text' },
-    {
-        label: fieldState, fieldName: 'state', editable: true,
-        type: 'picklistType',
-        typeAttributes: {
-            placeholder: stateUnmappedLabel,
-            options: [
-                { label: stateActiveLabel, value: 'Active' },
-                { label: stateLapsedLabel, value: 'Lapsed' },
-                { label: stateClosedLabel, value: 'Closed' }
-            ],
-            keyField: { fieldName: 'status' },
-            disabled: { fieldName: 'isReadOnly' }
-        }
-    }
-];
-
 const toastVariant = {
     INFO: 'info',
     SUCCESS: 'success',
@@ -61,14 +42,13 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
     labels = {
         mappingIntro,
-        mappingDescriptions,
+        mappingDefinitions,
         editButtonLabel,
         cancelButtonLabel,
         saveButtonLabel
     }
 
     @track viewColumns = viewColumns;
-    @track editColumns = editColumns;
     @track records;
 
     @track hasMessage = false;
@@ -81,6 +61,31 @@ export default class rd2StatusMappingSettings extends LightningElement {
     deploymentTimer;
     deploymentTimeout = 2000;
 
+    /**
+    * @description Contains column names and values when datatable is in the edit mode
+    * Since the custom label is used in the columns, "editColumns" cannot be a constant as "viewColumns" are. 
+    * Otherwise, labels keep the old value if they are changed in the custom labels (for example a translated org).
+    */
+    get editColumns() {
+        return [
+            { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
+            { label: fieldStatus, fieldName: 'status', type: 'text' },
+            {
+                label: fieldState, fieldName: 'state', editable: true,
+                type: 'picklistType',
+                typeAttributes: {
+                    placeholder: stateUnmappedLabel,
+                    options: [
+                        { label: stateActiveLabel, value: 'Active' },
+                        { label: stateLapsedLabel, value: 'Lapsed' },
+                        { label: stateClosedLabel, value: 'Closed' }
+                    ],
+                    keyField: { fieldName: 'status' },
+                    disabled: { fieldName: 'isReadOnly' }
+                }
+            }
+        ];
+    }
 
     /***
     * @description Called when the component is first loaded.
@@ -158,10 +163,10 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /***
-    * @description Displays page in the view mode
+    * @description Cancels the edit and displays the page in the view mode
     */
     handleCancel() {
-        //reset values to the before edit values
+        //reset values to the values as they were before the edit
         if (this.records) {
             this.records
                 .filter(mapping => mapping.isReadOnly === false)

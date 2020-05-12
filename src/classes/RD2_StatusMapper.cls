@@ -48,7 +48,9 @@ public with sharing class RD2_StatusMapper {
     }
 
     /**
-     * @description Retrieves status to state mapping configuration
+     * @description Retrieves status to state mapping configuration.
+     * The interface is used in order to create a test class implementing the same interface
+     * and to mock database record retrieval in tests.
      */
     @TestVisible
     private Gateway gateway {
@@ -81,7 +83,7 @@ public with sharing class RD2_StatusMapper {
     private Map<String, Mapping> mappingByStatus {
         get {
             if (mappingByStatus == null) {
-                mappingByStatus = getMappings();
+                mappingByStatus = getMapping();
             }
             return mappingByStatus;
         }
@@ -92,7 +94,7 @@ public with sharing class RD2_StatusMapper {
      * @description Returns status to state mapping
      * @return Map<String, Mapping> Mapping by the status
      */
-    private Map<String, Mapping> getMappings() {
+    private Map<String, Mapping> getMapping() {
         Map<String, Mapping> mappingByStatus = new Map<String, Mapping>();
 
         for (String status : statusLabelByValue.keySet()) {
