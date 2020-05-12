@@ -26,6 +26,7 @@ import {
     hasNestedProperty,
     arraysMatch,
     deepClone,
+    getNamespace,
     getSubsetObject,
     validateJSONString
 } from 'c/utilCommon';
@@ -67,9 +68,6 @@ import PARENT_OPPORTUNITY_FIELD from '@salesforce/schema/npe01__OppPayment__c.np
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
-
-import getNamespaceWrapper
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 
 const ADDITIONAL_OBJECT_JSON__C = DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
 
@@ -132,8 +130,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     _donationDonor;
     _account1Imported;
     _contact1Imported;
-
-    @wire(getNamespaceWrapper) namespaceWrapper;
 
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
@@ -1095,7 +1091,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const giftEntryTabName =
             TemplateBuilderService.alignSchemaNSWithEnvironment(
                 GIFT_ENTRY_TAB_NAME,
-                this.namespaceWrapper.currentNamespace
+                this.namespace
             );
         let url = `/lightning/n/${giftEntryTabName}`;
 
@@ -1719,4 +1715,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
     }
+
+    get namespace() {
+        return getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
+    }
+
 }

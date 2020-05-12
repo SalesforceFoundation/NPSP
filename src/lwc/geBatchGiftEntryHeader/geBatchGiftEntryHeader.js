@@ -3,14 +3,14 @@ import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
 import {NavigationMixin} from 'lightning/navigation';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
+import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
 import PROCESS_BATCH_LABEL from '@salesforce/label/c.bgeProcessBatch';
 import EDIT_BATCH_INFO_LABEL from '@salesforce/label/c.geEditBatchInfo';
 import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import {handleError} from 'c/utilTemplateBuilder';
-import getNamespaceWrapper
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
+import {getNamespace} from 'c/utilCommon';
 
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 
@@ -31,8 +31,6 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
     })
     batch;
 
-    @wire(getNamespaceWrapper) namespaceWrapper;
-
     get batchName() {
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
@@ -43,7 +41,7 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
             this.bdiDataImportPageName =
                 TemplateBuilderService.alignSchemaNSWithEnvironment(
                     'BDI_DataImport',
-                    this.namespaceWrapper.currentNamespace
+                    this.namespace
                 );
         } catch (error) {
             handleError(error);
@@ -93,4 +91,9 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
             'edit', {detail: this.batchId}
         ));
     }
+
+    get namespace() {
+        getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
+    }
+
 }
