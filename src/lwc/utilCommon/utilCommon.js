@@ -389,10 +389,26 @@ const getSubsetObject = (sourceObj, propertyNames) => {
     return subsetObject;
 }
 
+/**
+ * @description Parses the api name string of a custom
+ *              object or field and returns its namespace.
+ * @param apiName
+ * @returns {String} The namespace of the passed-in object or field.
+ *              Null if the object or field does not have a namespace.
+ */
+const getNamespace = (apiName) => {
+    if (!apiName) {
+        return null;
+    }
+    const apiNameParts = apiName.split('__');
+    return apiNameParts.length === 3 ? apiNameParts[0] : null;
+}
+
 export {
     debouncify,
     deepClone,
     findIndexByProperty,
+    getNamespace,
     getQueryParameters,
     getSubsetObject,
     isEmpty,
