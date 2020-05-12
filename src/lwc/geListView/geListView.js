@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
-import { format, deepClone, hasNestedProperty } from 'c/utilCommon';
+import { format, deepClone, hasNestedProperty, getNamespace } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -10,8 +10,6 @@ import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.up
 import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
 import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
 import userId from '@salesforce/user/Id';
-import getNamespaceWrapper
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 
 import USER_TIMEZONE_SID_KEY_FIELD from '@salesforce/schema/User.TimeZoneSidKey';
 
@@ -93,8 +91,6 @@ export default class geListView extends LightningElement {
 
     @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
     wiredUserRecord;
-
-    @wire(getNamespaceWrapper) namespaceWrapper;
 
     get recordsToDisplay() {
         if (this.actions && this.columns.length === 1) {
@@ -643,7 +639,7 @@ export default class geListView extends LightningElement {
             const giftEntryTabName =
                 TemplateBuilderService.alignSchemaNSWithEnvironment(
                     'GE_Gift_Entry',
-                    this.namespaceWrapper.currentNamespace
+                    this.namespace
                 );
             url = `/lightning/n/${giftEntryTabName}?c__view=Template_Builder&c__formTemplateRecordId={0}`;
         } else {
@@ -720,4 +716,9 @@ export default class geListView extends LightningElement {
 
         dispatch(this, EVENT_TOGGLE_MODAL, detail);
     }
+
+    get namespace() {
+        return getNamespace(FORM_TEMPLATE_INFO.objectApiName);
+    }
+
 }

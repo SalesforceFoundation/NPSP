@@ -1,8 +1,9 @@
 import { LightningElement, api, track } from 'lwc';
-import { getQueryParameters } from 'c/utilCommon';
+import { getQueryParameters, getNamespace } from 'c/utilCommon';
 import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import DataImport from '@salesforce/schema/DataImport__c';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -44,7 +45,9 @@ export default class geHome extends LightningElement {
     * @description Method sets the Gift Entry tab name with the proper namespace.
     */
     setGiftEntryTabName() {
-        this.giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment(GIFT_ENTRY_TAB_NAME);
+        this.giftEntryTabName =
+            TemplateBuilderService.alignSchemaNSWithEnvironment(
+                GIFT_ENTRY_TAB_NAME, this.namespace);
     }
 
     /*******************************************************************************
@@ -115,4 +118,9 @@ export default class geHome extends LightningElement {
     toggleModal(event) {
         dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
+
+    get namespace() {
+        return getNamespace(DataImport.objectApiName);
+    }
+
 }
