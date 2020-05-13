@@ -779,6 +779,7 @@
         <members>RD2_EnablementDelegate</members>
         <members>RD2_EnablementDelegateSimple</members>
         <members>RD2_EnhancementEnabledEvent</members>
+        <members>RD2_EntryForm</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -3557,6 +3558,7 @@
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>rdActiveSchedule</members>
+        <members>rdEntryForm</members>
         <members>rdScheduleVisualizer</members>
         <members>util</members>
         <members>utilCard</members>
