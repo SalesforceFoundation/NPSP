@@ -6,12 +6,13 @@
     <template if:false={disabled}>
         <div class="picklist-container">
             <lightning-combobox 
+                data-id="picklist"
                 name="picklist" 
                 variant="label-hidden"
-                class="slds-form_inline"
                 value={value} 
                 placeholder={placeholder} 
                 options={options}
+                onfocus={handleFocus}
                 onchange={handleChange}>
             </lightning-combobox>
         </div>

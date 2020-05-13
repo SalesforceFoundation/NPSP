@@ -10,7 +10,7 @@ export default class customPicklistType extends LightningElement {
     @api disabled;
 
     /**
-    * @description Determines the label for the specified value
+    * @description Determines the label when value is read-only
     */
     get optionLabel() {
         let optionLabel = this.value;
@@ -27,6 +27,17 @@ export default class customPicklistType extends LightningElement {
         }
 
         return optionLabel;
+    }
+
+    /***
+    * @description Sets focus on the datatable cell containing the picklist field
+    */
+    handleFocus(event) {
+        try {
+            const field = this.template.querySelector('[data-id="picklist"]');
+            field.parentElement.click();
+        } catch (error) {
+        }
     }
 
     /***

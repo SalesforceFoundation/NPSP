@@ -4,17 +4,25 @@
     <apex:includeLightning/>
 
     <style>
-        /* Overriding the .slds-truncate in the datatable column which sets overflow:hidden preventing picklist combobox display on edit */
+        /* Override the .slds-truncate in the datatable column which sets overflow:hidden preventing picklist combobox display on edit */
         .slds-scope .slds-truncate {
             overflow: visible;
         }
 
-        /* Setting overflow to visible for the datatable so the picklist combobox options are displayed in the table last rows on edit */
+        /* Set overflow to visible for the datatable so the picklist combobox options are displayed in the table last rows on edit */
         .slds-scope .slds-scrollable_y {
             overflow: visible;
         }
         .slds-scope .slds-scrollable_x {
             overflow: visible;
+        }
+
+        /* Remove box shadow when user clicks on the datatable cell */
+        th.slds-has-focus {
+            box-shadow: none !important;
+        }
+        td.slds-has-focus {
+            box-shadow: none !important;
         }
     </style>
 
