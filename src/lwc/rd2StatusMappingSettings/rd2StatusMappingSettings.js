@@ -139,6 +139,20 @@ export default class rd2StatusMappingSettings extends LightningElement {
         }
     }
 
+    /**
+    * @description Indicates the edit button should be disabled when Status 
+    * picklist field does not contain any client defined value
+    */
+    get isEditDisabled() {
+        let disabled = false;
+
+        if (this.records) {
+            disabled = this.records.length <= 3;
+        }
+
+        return disabled;
+    }
+
     /***
     * @description Displays page in the edit mode
     */

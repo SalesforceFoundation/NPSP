@@ -69,7 +69,7 @@
             <div class="slds-grid slds-grid_align-end slds-p-vertical_small">
                 <div if:true={isViewMode}>
                     <template if:false={isLoading}>
-                        <lightning-button label={labels.editButtonLabel} onclick={handleEdit}
+                        <lightning-button label={labels.editButtonLabel} onclick={handleEdit} disabled={isEditDisabled}
                             data-qa-locator="edit-button">
                         </lightning-button>
                     </template>
