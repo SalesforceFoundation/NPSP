@@ -41,6 +41,20 @@ private with sharing class RD2_StatusMappingSettings_TEST {
 
 
     /**
+     * @description Verifies state value (API name) and label select options are returned
+     */
+    @IsTest
+    private static void shouldReturnStateOptions() {
+        List<RD2_StatusMappingSettings_CTRL.Option> options = RD2_StatusMappingSettings_CTRL.loadStateOptions();
+
+        System.assertEquals(3, options.size(), 'Expected number of option records should be returned: ' + options);
+
+        assertStateOption(RD2_Constants.STATUS_ACTIVE, options[0]);
+        assertStateOption(RD2_Constants.STATUS_LAPSED, options[1]);
+        assertStateOption(RD2_Constants.STATUS_CLOSED, options[2]);
+    }
+
+    /**
      * @description Verifies default Status picklist field mapping records are returned
      */
     @IsTest
@@ -267,6 +281,25 @@ private with sharing class RD2_StatusMappingSettings_TEST {
 
     // Helpers
     //////////////////
+
+    /**
+     * @description Compares expected option value and label with the actual option
+     * @param value The expected option value
+     * @param option The actual option
+     * @return void
+     */
+    private static void assertStateOption(String value, RD2_StatusMappingSettings_CTRL.Option option) {
+        RD2_StatusMappingSettings_CTRL.Option expectedOption = new RD2_StatusMappingSettings_CTRL.Option()
+            .withValue(value)
+            .withLabel(
+                UTIL_Describe.getTranslatedPicklistLabel(
+                    npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, value
+                )
+            );
+
+        System.assertEquals(expectedOption.value, option.value, 'The option value should match');
+        System.assertEquals(expectedOption.label, option.label, 'The option label should match');
+    }
 
     /**
      * @description Deployment Handler implementing the deployment interface so the "save" method can be verified

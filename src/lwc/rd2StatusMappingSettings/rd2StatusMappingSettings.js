@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import { isNull, isEmpty } from 'c/util';
 
+import loadStateOptions from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.loadStateOptions';
 import loadMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.loadMapping';
 import saveMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.saveMapping';
 import getDeployResult from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.getDeployResult';
@@ -14,11 +15,7 @@ import mappingDefinitions from '@salesforce/label/c.RD2_StatusMappingDefinitions
 import fieldStatusLabel from '@salesforce/label/c.RD2_StatusMappingColumnStatusLabel';
 import fieldStatus from '@salesforce/label/c.RD2_StatusMappingColumnStatus';
 import fieldState from '@salesforce/label/c.RD2_StatusMappingColumnState';
-
 import stateUnmappedLabel from '@salesforce/label/c.RD2_StatusMappingStateUnmapped';
-import stateActiveLabel from '@salesforce/label/c.RD2_StatusMappingStateActive';
-import stateLapsedLabel from '@salesforce/label/c.RD2_StatusMappingStateLapsed';
-import stateClosedLabel from '@salesforce/label/c.RD2_StatusMappingStateClosed';
 
 import deploymentInProgressMessage from '@salesforce/label/c.RD2_StatusMappingInProgressMessage';
 import deploymentSuccessMessage from '@salesforce/label/c.RD2_StatusMappingSuccessMessage';
@@ -48,26 +45,54 @@ export default class rd2StatusMappingSettings extends LightningElement {
         saveButtonLabel
     }
 
-    @track viewColumns = viewColumns;
     @track records;
+
+    @track isLoading;
+    @track isViewMode = true;
+    @track viewColumns = viewColumns;
+    @track editColumns;
+    @track stateOptions = [];
 
     @track hasMessage = false;
     @track message = {};
 
-    @track isLoading;
-    @track isViewMode = true;
-
     _deploymentIds = new Set();
     deploymentTimer;
     deploymentTimeout = 2000;
+
+    /***
+    * @description Called when the component is first loaded.
+    * It checks if there is any status to state mapping deployment in progress.
+    * If the deployment is not in progress, it displays mapping records.
+    * Otherwise, it keeps checking for the deployment result and
+    * displays the mapping records the deployment completion.
+    */
+    connectedCallback() {
+        this.init();
+    }
+
+    /***
+    * @description Group various calls to Apex
+    */
+    init = async () => {
+        try {
+            this.isLoading = true;
+            this.stateOptions = await loadStateOptions();
+            this.handleEditColumns();
+            this.handleDeploymentProgress();
+
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
 
     /**
     * @description Contains column names and values when datatable is in the edit mode
     * Since the custom label is used in the columns, "editColumns" cannot be a constant as "viewColumns" are. 
     * Otherwise, labels keep the old value if they are changed in the custom labels (for example a translated org).
     */
-    get editColumns() {
-        return [
+    handleEditColumns() {
+        this.editColumns = [
             { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
             { label: fieldStatus, fieldName: 'status', type: 'text' },
             {
@@ -75,27 +100,12 @@ export default class rd2StatusMappingSettings extends LightningElement {
                 type: 'picklistType',
                 typeAttributes: {
                     placeholder: stateUnmappedLabel,
-                    options: [
-                        { label: stateActiveLabel, value: 'Active' },
-                        { label: stateLapsedLabel, value: 'Lapsed' },
-                        { label: stateClosedLabel, value: 'Closed' }
-                    ],
+                    options: this.stateOptions,
                     keyField: { fieldName: 'status' },
                     disabled: { fieldName: 'isReadOnly' }
                 }
             }
         ];
-    }
-
-    /***
-    * @description Called when the component is first loaded.
-    * It checks if there is any status to state mapping deployment in progress.
-    * If deployment is not in progress, it displays mapping records.
-    * Otherwise, mapping records are displayed upon the deployment completion.
-    */
-    connectedCallback() {
-        this.isLoading = true;
-        this.handleDeploymentProgress();
     }
 
     /***

@@ -52,14 +52,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         void saveDeploymentId();
     }
 
-    /**
-     * @description Contains state value to label mapping
-     */
-    private static final Map<String, String> stateLabelByValue = new Map<String, String>{
-        RD2_Constants.STATUS_ACTIVE => System.Label.RD2_StatusMappingStateActive,
-        RD2_Constants.STATUS_LAPSED => System.Label.RD2_StatusMappingStateLapsed,
-        RD2_Constants.STATUS_CLOSED => System.Label.RD2_StatusMappingStateClosed
-    };
 
     /**
      * @description Contains status to state mapping configuration
@@ -75,11 +67,61 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         set;
     }
 
+    /**
+     * @description Contains state value to label mapping
+     */
+    private static final Map<String, String> stateLabelByValue {
+        get {
+            if (stateLabelByValue == null) {
+                stateLabelByValue = mapStateLabelByValue();
+            }
+            return stateLabelByValue;
+        }
+        set;
+    }
+
+    /**
+     * @description Returns the state value and label select options
+     * @return List<Option>
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<Option> loadStateOptions() {
+        List<Option> options = new List<Option>();
+        for (String value : stateLabelByValue.keySet()) {
+            options.add(
+                new Option()
+                    .withValue(value)
+                    .withLabel(stateLabelByValue.get(value))
+            );
+        }
+
+        return options;
+    }
+
     /***
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    * @description Returns the state value (API name) and label mapping.
+    * The state values and labels are sourced from the RD Status field picklist field
+    * since state values are already contained in the Status field
+    * so there is no need to create new custom labels to hold the state labels.
     */
-    public String getNamespace() {
-        return UTIL_Namespace.getNamespace();
+    private static Map<String, String> mapStateLabelByValue() {
+        Map<String, String> stateLabelByValue = new Map<String, String>();
+        SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
+        SObjectField statusField = npe03__Recurring_Donation__c.Status__c;
+
+        for (String value : new Set<String>{
+            RD2_Constants.STATUS_ACTIVE,
+            RD2_Constants.STATUS_LAPSED,
+            RD2_Constants.STATUS_CLOSED
+        }) {
+            String label = UTIL_Describe.getTranslatedPicklistLabel(
+                rdSObjectType, statusField, value
+            );
+
+            stateLabelByValue.put(value, label);
+        }
+
+        return stateLabelByValue;
     }
 
     /**
@@ -225,6 +267,14 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         return JSON.serialize(response);
     }
 
+
+    /***
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        return UTIL_Namespace.getNamespace();
+    }
+
     /***
     * @description Throws AuraHandledException
     * @param errMessage
@@ -236,6 +286,33 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         throw e;
     }
 
+    /**
+     * @description Contains custom select option
+     */
+    public class Option {
+        @AuraEnabled public String value;
+        @AuraEnabled public String label;
+
+        /**
+         * @description Sets the option value
+         * @param value The option value
+         * @return Option This option instance
+         */
+        public Option withValue(String value) {
+            this.value = value;
+            return this;
+        }
+
+        /**
+         * @description Sets the option label
+         * @param label The option label
+         * @return Option This option instance
+         */
+        public Option withLabel(String label) {
+            this.label = label;
+            return this;
+        }
+    }
 
     /**
      * @description Contains mapping record details to be displayed and potentially updated if unmapped
