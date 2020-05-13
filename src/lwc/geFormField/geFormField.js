@@ -135,7 +135,9 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element !== null && this.element.required) {
-            return isNotEmpty(this.value) && fieldIsValid;
+            return ( isNotEmpty(this.value) ||
+                     this.value !== this.CUSTOM_LABELS.commonLabelNone)
+                && fieldIsValid;
         }
 
         return fieldIsValid;
