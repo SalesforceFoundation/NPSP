@@ -1,3 +1,13 @@
-<aura:component implements="force:appHostable">
+<aura:component implements="flexipage:availableForRecordHome,force:appHostable,lightning:actionOverride,force:hasRecordId">
+    <aura:dependency resource="c:rdEntryForm" />
+     <!-- modal attribute is a reference to the modal created by lightning:overlayLibrary -->
+     <aura:attribute name="modal" type="Object" />
+     <aura:attribute name="parentId" type="Id" />
 
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleShowModal}"/>
+
+    <c:utilDedicatedListener eventName="rdEntryFormEvent"
+                             onreceiveevent="{!c.handleModalEvent}" />
 </aura:component>
