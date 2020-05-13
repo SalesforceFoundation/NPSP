@@ -1,12 +1,12 @@
 ({
     handleCloseModal: function(component) {
-        let parentId = component.get('v.parentId');
-
+        const parentId = component.get('v.parentId');
+        const recordId = component.get('v.recordId');
         let navEvt;
-        if(parentId) {
+        if(parentId || recordId) {
             navEvt = $A.get("e.force:navigateToSObject");
             navEvt.setParams({
-            "recordId": parentId,
+            "recordId": (recordId) ? recordId : parentId,
             "slideDevName": "related"
             });
 

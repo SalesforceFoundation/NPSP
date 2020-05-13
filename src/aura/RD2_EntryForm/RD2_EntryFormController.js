@@ -20,7 +20,6 @@
                         helper.handleCloseModal(component);
                     }
                 })
-                component.set('v.modal', modalReference);
             } else {
                 console.error(errorMessage);
             }
