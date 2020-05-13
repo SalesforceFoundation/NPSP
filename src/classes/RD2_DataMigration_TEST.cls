@@ -273,6 +273,82 @@ private class RD2_DataMigration_TEST {
         assertBatchSummarySuccess(jobId, 1);
     }
 
+
+    /**
+     * @description Verifies that the data migration recalculates roll ups when disable rollups is not checked
+     */
+    @isTest
+    private static void shouldRecalcaluteRollupsOnRdWhenDisableRollupsIsNotSet() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withDateEstablished(TODAY)
+            .build();
+        insert rd;
+        //set two opportunities in the rd to closed won for rollup calculations
+        setFewOppsInRdToClosedWonForRollupTests(rd);
+
+        rd = getRecords()[0];
+        rd.npe03__Total_Paid_Installments__c = null;
+        rd.npe03__Paid_Amount__c = null;
+        update rd;
+
+        RD2_OpportunityEvaluation_TEST.configureForBatchJobWithRollupDisableTests(false);
+
+        Id jobId = runDataMigration();
+        assertEnhancedFormat(getRecords());
+
+        rd = getRecords()[0];
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
+        System.assertEquals(200, rd.npe03__Paid_Amount__c,
+            'The paid amount should be recalculated by CRLP to 200');
+        System.assertEquals(2, rd.npe03__Total_Paid_Installments__c,
+            'The total paid installments should be recalculated by CRLP to 2');
+
+    }
+
+    /**
+     * @description Verifies that the data migration do not recalculate roll ups when disable rollups is checked
+     */
+    @isTest
+    private static void shouldNotRecalcaluteRollupsOnRdWhenDisableRollupsIsSet() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withDateEstablished(TODAY)
+            .build();
+        insert rd;
+        //set two opportunities in the rd to closed won for rollup calculations
+        setFewOppsInRdToClosedWonForRollupTests(rd);
+
+        rd = getRecords()[0];
+        rd.npe03__Total_Paid_Installments__c = null;
+        rd.npe03__Paid_Amount__c = null;
+        update rd;
+
+        RD2_OpportunityEvaluation_TEST.configureForBatchJobWithRollupDisableTests(true);
+
+        Id jobId = runDataMigration();
+        assertEnhancedFormat(getRecords());
+
+        rd = getRecords()[0];
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
+        System.assertEquals(null, rd.npe03__Paid_Amount__c,
+            'The paid amount should not be recalculated by CRLP as disablerollups are set');
+        System.assertEquals(null, rd.npe03__Total_Paid_Installments__c,
+            'The total paid installments should not be recalculated by CRLP as disablerollups are set');
+
+    }
+
     /**
      * @description Verifies that a legacy RD is recognized correctly
      */
@@ -2357,7 +2433,7 @@ private class RD2_DataMigration_TEST {
     * @return Boolean
     */
     private static Boolean isDayOfMonthRestrictedPicklistError(List<Error__c> errors) {
-        return !errors.isEmpty() 
+        return !errors.isEmpty()
             && errors[0].Full_Message__c.contains(
                 Schema.npe03__Recurring_Donation__c.Day_of_Month__c.getDescribe().getLabel()
             );
@@ -2368,6 +2444,28 @@ private class RD2_DataMigration_TEST {
     */
     private static Database.SaveResult mockErrorDMLResult() {
         return Database.insert(new Opportunity(), false);
+    }
+
+    /***
+    * @description Update two opportunities in the recurring donation to closed won for calculating rollups
+    */
+    private static void setFewOppsInRdToClosedWonForRollupTests(npe03__Recurring_Donation__c rd) {
+        List<Opportunity> oppToUpdate = new List<Opportunity>();
+        List<Opportunity> oppList =  oppGateway.getRecords(rd);
+
+        oppList.sort();
+        Integer count = 0;
+
+        for (Opportunity opp: oppList) {
+            if (count < 2) {
+                opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+                opp.CloseDate = TODAY;
+            }
+            count++;
+            oppToUpdate.add(opp);
+        }
+
+        update oppToUpdate;
     }
 
 }
