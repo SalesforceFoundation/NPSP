@@ -32,10 +32,12 @@
 * @date 2020
 * @group Customizable Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Enablement Services for Customizable Rollups
+* @description Unit Tests for the CRLP Enablement Services
 */
 @IsTest
 private class CRLP_EnablementService_TEST {
+
+    private static Customizable_Rollup_Settings__c crlpSettings;
 
     /**
     * @description Verify that calling the Enable() method returns back a Job Id. The rest of the process
@@ -43,11 +45,7 @@ private class CRLP_EnablementService_TEST {
     */
     @IsTest
     private static void shouldEnableCustomizableRollupsWithoutSchedulingJobs() {
-        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-            new Customizable_Rollup_Settings__c()
-        );
-        upsert crlpSettings;
-
+        initCrlpSettings();
         CRLP_Rollup_SEL.cachedRollups.clear();
 
         CRLP_EnablementService.RollupMetadataHandler deploymentHandler = new CRLP_EnablementService.RollupMetadataHandler();
@@ -79,12 +77,7 @@ private class CRLP_EnablementService_TEST {
     */
     @IsTest
     private static void shouldDisableCustomizableRollups() {
-        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-            new Customizable_Rollup_Settings__c(
-                Customizable_Rollups_Enabled__c = true
-            )
-        );
-        upsert crlpSettings;
+        initCrlpSettings();
 
         Test.startTest();
         CRLP_EnablementService enablementService = new CRLP_EnablementService();
@@ -100,11 +93,7 @@ private class CRLP_EnablementService_TEST {
     */
     @IsTest
     private static void shouldResetCustomizableRollups() {
-        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-            new Customizable_Rollup_Settings__c()
-        );
-        upsert crlpSettings;
-
+        initCrlpSettings();
         CRLP_Rollup_SEL.cachedRollups.clear();
 
         CRLP_EnablementService.RollupMetadataHandler deploymentHandler = new CRLP_EnablementService.RollupMetadataHandler();
@@ -130,4 +119,80 @@ private class CRLP_EnablementService_TEST {
             LIMIT 1];
         System.assertEquals(1, scheduledJobCount, 'There should be scheduled jobs');
     }
+
+    /**
+    * @description Verify that a non-admin User is unable to enable crlp
+    */
+    @IsTest
+    private static void shouldBlockEnableForNonAdminUser() {
+        initCrlpSettings();
+        CRLP_Rollup_SEL.cachedRollups.clear();
+
+        User roUser = createReadOnlyUser();
+        System.runAs(roUser) {
+            CRLP_EnablementService.RollupMetadataHandler deploymentHandler = new CRLP_EnablementService.RollupMetadataHandler();
+
+            Test.startTest();
+            try {
+                CRLP_EnablementService enablementService = new CRLP_EnablementService();
+                String jobId = enablementService.enable(false);
+                System.assert(false, 'An Exception should have been thrown');
+            } catch (Exception ex) {
+                System.assert(ex.getMessage().contains(System.Label.stgCRLPNonAdminError),
+                    'The generated Exception should reference the "' + System.Label.stgCRLPNonAdminError + '" message');
+            }
+            Test.stopTest();
+
+        }
+    }
+
+    /**
+    * @description Verify that a non-admin User is not able to reset CRLP
+    */
+    @IsTest
+    private static void shouldBlockResetForNonAdminUser() {
+        initCrlpSettings();
+        CRLP_Rollup_SEL.cachedRollups.clear();
+
+        User roUser = createReadOnlyUser();
+        System.runAs(roUser) {
+            CRLP_EnablementService.RollupMetadataHandler deploymentHandler = new CRLP_EnablementService.RollupMetadataHandler();
+
+            Test.startTest();
+            try {
+                CRLP_EnablementService enablementService = new CRLP_EnablementService();
+                String jobId = enablementService.reset();
+                System.assert(false, 'An Exception should have been thrown');
+            } catch (Exception ex) {
+                System.assert(ex.getMessage().contains(System.Label.stgCRLPNonAdminError),
+                    'The generated Exception should reference the "' + System.Label.stgCRLPNonAdminError + '" message');
+            }
+            Test.stopTest();
+
+        }
+    }
+
+    //////////////////////////////////////////////////////////////
+    // Helper Methods
+    //////////////////////////////////////////////////////////////
+
+    /**
+    * @description Initialize the CRLP Custom Settings object, and insert so it can be updated by the
+    * post deployment handler.
+    */
+    private static void initCrlpSettings() {
+        crlpSettings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c()
+        );
+        upsert crlpSettings;
+    }
+
+    /**
+    * @description Builds a read only user with readonly profile
+    * @return User
+    */
+    private static User createReadOnlyUser() {
+        return UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+    }
+
 }

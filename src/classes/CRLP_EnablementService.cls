@@ -36,6 +36,16 @@
 */
 public inherited sharing class CRLP_EnablementService {
 
+    private Customizable_Rollup_Settings__c crlpSettings {
+        get {
+            if (crlpSettings == null) {
+                crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            }
+            return crlpSettings;
+        } private set;
+    }
+
+
     /*******************************************************************************************************
     * @description Fully enable Customizable Rollups by building the default configuration and deploying using
     * the Apex Metadata Api. If there are already defined rollups in the Rollup__mdt object, then just set the
@@ -43,7 +53,7 @@ public inherited sharing class CRLP_EnablementService {
     * @return DeploymentJobId
     */
     public String enable(Boolean rescheduleBatchJobs) {
-        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        verifyPermissions();
 
         // If there are existing Rollup__mdt records, just set the custom settings field to true, reschedule jobs, and return
         List<Rollup__mdt> existingRollups = CRLP_Rollup_SEL.cachedRollups;
@@ -73,6 +83,8 @@ public inherited sharing class CRLP_EnablementService {
     * @return DeploymentJobId
     */
     public String reset() {
+        verifyPermissions();
+
         // Execute the full Custom Metadata Type deployment process
         String jobId = new CRLP_DefaultConfigBuilder_SVC()
             .withScheduleNpspBatchJobs(true)
@@ -88,7 +100,7 @@ public inherited sharing class CRLP_EnablementService {
     * @description Action Method to disable Customizable Rollups and reschedule batch Jobs
     */
     public void disable() {
-        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        verifyPermissions();
 
         crlpSettings.Customizable_Rollups_Enabled__c = false;
         Database.upsert(crlpSettings);
@@ -97,6 +109,16 @@ public inherited sharing class CRLP_EnablementService {
         UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
 
         return;
+    }
+
+    /**
+    * @description Verify that the current user has the appropriate permissions to Enable, Reset or Disable
+    * Customizable Rollups. Throws an InsufficientPermissions exception if not.
+    */
+    private void verifyPermissions() {
+        if (!STG_Panel.runningUserIsAdmin()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.stgCRLPNonAdminError);
+        }
     }
 
     /**
