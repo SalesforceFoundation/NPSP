@@ -283,7 +283,7 @@ private class RD2_DataMigration_TEST {
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
-            .withDateEstablished(TODAY)
+            .withDateEstablished(DATE_ESTABLISHED.addMonths(1))
             .build();
         insert rd;
         //set two opportunities in the rd to closed won for rollup calculations
@@ -320,7 +320,7 @@ private class RD2_DataMigration_TEST {
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
-            .withDateEstablished(TODAY)
+            .withDateEstablished(DATE_ESTABLISHED.addMonths(1))
             .build();
         insert rd;
         //set two opportunities in the rd to closed won for rollup calculations
@@ -2459,7 +2459,7 @@ private class RD2_DataMigration_TEST {
         for (Opportunity opp: oppList) {
             if (count < 2) {
                 opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
-                opp.CloseDate = TODAY;
+                opp.CloseDate = DATE_ESTABLISHED.addMonths(1);
             }
             count++;
             oppToUpdate.add(opp);
