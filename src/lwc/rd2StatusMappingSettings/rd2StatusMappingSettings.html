@@ -69,7 +69,7 @@
             <div class="slds-grid slds-grid_align-end slds-p-vertical_small">
                 <div if:true={isViewMode}>
                     <template if:false={isLoading}>
-                        <lightning-button label={labels.editButtonLabel} onclick={handleButtonClick}
+                        <lightning-button label={labels.editButtonLabel} onclick={handleEdit}
                             data-qa-locator="edit-button">
                         </lightning-button>
                     </template>
@@ -77,10 +77,10 @@
 
                 <div if:false={isViewMode}>
                     <template if:false={isLoading}>
-                        <lightning-button label={labels.saveButtonLabel} onclick={handleButtonClick} variant="brand"
+                        <lightning-button label={labels.saveButtonLabel} onclick={handleSave} variant="brand"
                             disabled={isSaveDisabled} data-qa-locator="save-button">
                         </lightning-button>
-                        <lightning-button label={labels.cancelButtonLabel} onclick={handleButtonClick}
+                        <lightning-button label={labels.cancelButtonLabel} onclick={handleCancel}
                             class="slds-m-left_x-small" data-qa-locator="cancel-edit-button">
                         </lightning-button>
                     </template>

@@ -98,7 +98,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
      * @return List<Option>
      */
     @AuraEnabled(cacheable=true)
-    public static List<Option> loadStateOptions() {
+    public static List<Option> getStateOptions() {
         List<Option> options = new List<Option>();
         for (String value : stateLabelByValue.keySet()) {
             options.add(
@@ -135,6 +135,22 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         }
 
         return stateLabelByValue;
+    }
+
+    /***
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        return UTIL_Namespace.getNamespace();
+    }
+
+    /***
+    * @description Get the RD Status field label
+    * @return String The Status field label
+    */
+    @AuraEnabled(cacheable=true)
+    public static String getStatusFieldLabel() {
+        return SObjectType.npe03__Recurring_Donation__c.fields.Status__c.getLabel();
     }
 
     /**
@@ -280,14 +296,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         return JSON.serialize(response);
     }
 
-
-    /***
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    */
-    public String getNamespace() {
-        return UTIL_Namespace.getNamespace();
-    }
-
     /***
     * @description Throws AuraHandledException
     * @param errMessage
@@ -334,7 +342,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         @AuraEnabled public String status;
         @AuraEnabled public String label;
         @AuraEnabled public String masterLabel;
-        @AuraEnabled public String developerName;
         @AuraEnabled public String state;
         @AuraEnabled public String stateLabel;
         @AuraEnabled public Boolean isReadOnly;
@@ -347,7 +354,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
             this.status = mapping.status;
             this.label = mapping.label;
             this.masterLabel = mapping.masterLabel;
-            this.developerName = mapping.developerName;
             this.state = String.isBlank(mapping.state) ? System.Label.RD2_StatusMappingStateUnmapped : mapping.state;
             this.stateLabel = getStateLabel(this.state);
             this.isReadOnly = mapping.isReadOnly;

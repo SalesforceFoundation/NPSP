@@ -2112,20 +2112,12 @@
         <value>State</value>
     </labels>
     <labels>
-        <fullName>RD2_StatusMappingColumnStatus</fullName>
+        <fullName>RD2_StatusMappingColumnStatusAPIName</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Mapping datatable Status field API name</shortDescription>
+        <shortDescription>Mapping datatable Status field containing the API Name</shortDescription>
         <value>API Name</value>
-    </labels>
-    <labels>
-        <fullName>RD2_StatusMappingColumnStatusLabel</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Mapping datatable Status field label</shortDescription>
-        <value>Status</value>
     </labels>
     <labels>
         <fullName>RD2_StatusMappingDefinitions</fullName>

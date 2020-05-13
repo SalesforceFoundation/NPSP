@@ -45,9 +45,9 @@ private with sharing class RD2_StatusMappingSettings_TEST {
      */
     @IsTest
     private static void shouldReturnStateOptions() {
-        List<RD2_StatusMappingSettings_CTRL.Option> options = RD2_StatusMappingSettings_CTRL.loadStateOptions();
+        List<RD2_StatusMappingSettings_CTRL.Option> options = RD2_StatusMappingSettings_CTRL.getStateOptions();
 
-        System.assertEquals(3, options.size(), 'Expected number of option records should be returned: ' + options);
+        System.assertEquals(3, options.size(), 'Expected number of the state options should be returned: ' + options);
 
         assertStateOption(RD2_Constants.STATUS_ACTIVE, options[0]);
         assertStateOption(RD2_Constants.STATUS_LAPSED, options[1]);

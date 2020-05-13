@@ -1680,8 +1680,7 @@
         <members>RD2_ScheduleVisualizerMessageNoSchedule</members>
         <members>RD2_ScheduleVisualizerTitle</members>
         <members>RD2_StatusMappingColumnState</members>
-        <members>RD2_StatusMappingColumnStatus</members>
-        <members>RD2_StatusMappingColumnStatusLabel</members>
+        <members>RD2_StatusMappingColumnStatusAPIName</members>
         <members>RD2_StatusMappingDefinitions</members>
         <members>RD2_StatusMappingDeploymentAlreadyInProgress</members>
         <members>RD2_StatusMappingInProgressMessage</members>

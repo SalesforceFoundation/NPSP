@@ -1,7 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
 import { isNull, isEmpty } from 'c/util';
 
-import loadStateOptions from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.loadStateOptions';
+import getStatusFieldLabel from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.getStatusFieldLabel';
+import getStateOptions from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.getStateOptions';
 import loadMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.loadMapping';
 import saveMapping from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.saveMapping';
 import getDeployResult from '@salesforce/apex/RD2_StatusMappingSettings_CTRL.getDeployResult';
@@ -12,20 +13,13 @@ import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 
 import mappingIntro from '@salesforce/label/c.RD2_StatusMappingIntro';
 import mappingDefinitions from '@salesforce/label/c.RD2_StatusMappingDefinitions';
-import fieldStatusLabel from '@salesforce/label/c.RD2_StatusMappingColumnStatusLabel';
-import fieldStatus from '@salesforce/label/c.RD2_StatusMappingColumnStatus';
-import fieldState from '@salesforce/label/c.RD2_StatusMappingColumnState';
+import fieldLabelStatusApiName from '@salesforce/label/c.RD2_StatusMappingColumnStatusAPIName';
+import fieldLabelState from '@salesforce/label/c.RD2_StatusMappingColumnState';
 import stateUnmappedLabel from '@salesforce/label/c.RD2_StatusMappingStateUnmapped';
 
 import deploymentInProgressMessage from '@salesforce/label/c.RD2_StatusMappingInProgressMessage';
 import deploymentSuccessMessage from '@salesforce/label/c.RD2_StatusMappingSuccessMessage';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
-
-const viewColumns = [
-    { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
-    { label: fieldStatus, fieldName: 'status', type: 'text' },
-    { label: fieldState, fieldName: 'stateLabel', type: 'text' }
-];
 
 const toastVariant = {
     INFO: 'info',
@@ -33,7 +27,6 @@ const toastVariant = {
     WARNING: 'warning',
     ERROR: 'error'
 }
-
 
 export default class rd2StatusMappingSettings extends LightningElement {
 
@@ -49,9 +42,10 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
     @track isLoading;
     @track isViewMode = true;
-    @track viewColumns = viewColumns;
-    @track editColumns;
-    @track stateOptions = [];
+    @track viewColumns = [];
+    @track editColumns = [];
+    stateOptions = [];
+    fieldLabelStatus;
 
     @track hasMessage = false;
     @track message = {};
@@ -77,8 +71,9 @@ export default class rd2StatusMappingSettings extends LightningElement {
     init = async () => {
         try {
             this.isLoading = true;
-            this.stateOptions = await loadStateOptions();
-            this.handleEditColumns();
+            this.stateOptions = await getStateOptions();
+            this.fieldLabelStatus = await getStatusFieldLabel();
+            this.handleDatatableColumns();
             this.handleDeploymentProgress();
 
         } catch (error) {
@@ -87,16 +82,22 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /**
-    * @description Contains column names and values when datatable is in the edit mode.
-    * Since the custom label is used in the columns, "editColumns" cannot be a constant as "viewColumns" is. 
-    * This way labels are updated whenever they are changed (for example on a translated org).
+    * @description Contains datatable column names and field mapping for both view and edit modes.
+    * Columns cannot be constants since labels need to be updated whenever the label in the org
+    * is changed (for example on a translated org).
     */
-    handleEditColumns() {
+    handleDatatableColumns() {
+        this.viewColumns = [
+            { label: this.fieldLabelStatus, fieldName: 'label', type: 'text' },
+            { label: fieldLabelStatusApiName, fieldName: 'status', type: 'text' },
+            { label: fieldLabelState, fieldName: 'stateLabel', type: 'text' }
+        ];
+
         this.editColumns = [
-            { label: fieldStatusLabel, fieldName: 'label', type: 'text' },
-            { label: fieldStatus, fieldName: 'status', type: 'text' },
+            { label: this.fieldLabelStatus, fieldName: 'label', type: 'text' },
+            { label: fieldLabelStatusApiName, fieldName: 'status', type: 'text' },
             {
-                label: fieldState, fieldName: 'state', editable: true,
+                label: fieldLabelState, fieldName: 'state', editable: true,
                 type: 'picklistType',
                 typeAttributes: {
                     placeholder: stateUnmappedLabel,
@@ -139,28 +140,11 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /***
-    * @description Applies actions on a button click
-    */
-    handleButtonClick(event) {
-        this.clearMessage();
-
-        switch (event.target.label) {
-            case editButtonLabel:
-                this.handleEdit();
-                break;
-            case cancelButtonLabel:
-                this.handleCancel();
-                break;
-            case saveButtonLabel:
-                this.handleSave();
-                break;
-        }
-    }
-
-    /***
     * @description Displays page in the edit mode
     */
     handleEdit() {
+        this.clearMessage();
+
         if (this.records) {
             this.records
                 .filter(mapping => mapping.isReadOnly === false)
@@ -176,6 +160,8 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * @description Cancels the edit and displays the page in the view mode
     */
     handleCancel() {
+        this.clearMessage();
+
         //reset values to the values as they were before the edit
         if (this.records) {
             this.records
@@ -207,7 +193,9 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * @description Saves mapping records
     */
     handleSave() {
+        this.clearMessage();
         this.isLoading = true;
+
         try {
             let jsonRecords = JSON.stringify(this.records);
 
@@ -224,8 +212,8 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /***
-    * @description Registers deployment Id for the deployment monitoring and
-    * data and messages display based on its status
+    * @description Registers deployment Id for the deployment monitoring. 
+    * Display data and messages based on the deployment status.
     */
     registerDeploymentId(deploymentId) {
         this.showToast(deploymentInProgressMessage, toastVariant.INFO);
@@ -236,7 +224,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /***
-    * @description Starts polling for the deployment job progress details until the deployment completes
+    * @description Starts polling for the deployment job progress until the deployment completes
     */
     handleDeploymentProgress(deploymentId) {
         var self = this;
@@ -249,7 +237,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
     /***
     * @description Retrieves deployment result for the specified deployment Id.
-    * When the deployment Id is not specified, the latest deployment result (if any) will be processed.
+    * When the deployment Id is not specified, the latest deployment result (if any) will be retrieved and processed.
     */
     handleDeploymentResult(deploymentId) {
         getDeployResult({ deploymentId: deploymentId })
@@ -271,7 +259,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
     /***
     * @description Displays response message based on the deployment status.
-    * Refresh data if deployment has been completed.
+    * Refresh mapping records when the deployment has completed.
     */
     handleDeploymentResponse(response) {
 
