@@ -28,6 +28,9 @@ const RICH_TEXT_FORMATS = [
 const CURRENCY = 'currency';
 const PERCENT = 'percent';
 const DECIMAL = 'decimal';
+const DATE = 'date';
+const DATETIME = 'datetime-local';
+const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
     @track value;
@@ -546,8 +549,20 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    get qaLocatorInputPrefix() {
+        switch (this.inputType) {
+            case DATE:
+            case DATETIME:
+                return 'datetime';
+            case CHECKBOX:
+                return this.inputType;
+            default:
+                return 'input';
+        }
+    }
+
     get qaLocatorInput() {
-        return `input ${this.qaLocatorBase}`;
+        return `${this.qaLocatorInputPrefix} ${this.qaLocatorBase}`;
     }
 
     get qaLocatorRichText() {

@@ -90,7 +90,7 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
     /*******************************************************************************
      * Start getters for data-qa-locator attributes
      */
-    
+
     get qaLocatorBatchDryRun() {
         return `button ${this.batchDryRunLabel}`;
     }
