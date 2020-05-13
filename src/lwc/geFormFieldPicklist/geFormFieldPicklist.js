@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import GeLabelService from 'c/geLabelService';
+import { isEmpty } from 'c/utilCommon';
 
 export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
@@ -23,11 +24,11 @@ export default class GeFormFieldPicklist extends LightningElement {
         recordTypeId: '$_recordTypeId' })
     wiredPicklistValues({error, data}) {
         if(data) {
-            let values = [{
+            let valueNone = {
                 label: this.CUSTOM_LABELS.commonLabelNone,
                 value: this.CUSTOM_LABELS.commonLabelNone
-            }, ...data.values];
-            this.picklistValues = values;
+            }
+            this.picklistValues = [valueNone, ...data.values];;
         }
         if(error) {
             console.error(error);
@@ -100,6 +101,10 @@ export default class GeFormFieldPicklist extends LightningElement {
     connectedCallback() {
         if (!this.recordTypeId) {
             this.recordTypeId = this.defaultRecordTypeId;
+        }
+        if (isEmpty(this.value)) {
+            // Default picklist values to --None-- if no value is loaded
+            this.value = this.CUSTOM_LABELS.commonLabelNone;
         }
     }
 
