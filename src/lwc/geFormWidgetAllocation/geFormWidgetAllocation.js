@@ -14,6 +14,7 @@ const GENERAL_ACCOUNT_UNIT = GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName;
 
 import ALLOC_DEFAULT_FIELD from '@salesforce/schema/Allocations_Settings__c.Default__c';
 import ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD from '@salesforce/schema/Allocations_Settings__c.Default_Allocations_Enabled__c';
+import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
 const ALLOC_SETTINGS_DEFAULT = ALLOC_DEFAULT_FIELD.fieldApiName;
 const ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED = ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD.fieldApiName;
 
@@ -134,7 +135,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
                     let rowRecord = row.getValues();
                     // need attributes to be able to deserialize this later.
                     const rowWithAttributes = {
-                        attributes: { type: ALLOCATION_OBJECT.objectApiName},
+                        attributes: { type: ALLOCATION_OBJECT.objectApiName },
                         ...rowRecord
                     };
                     widgetRowValues.push(rowWithAttributes);
@@ -144,7 +145,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
         // use custom metadata record name as key
         widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
-        return widgetData;
+        return {
+            type: WIDGET_TYPE_DI_FIELD_VALUE,
+            payload: { [DI_ADDITIONAL_OBJECT.fieldApiName]: widgetData }
+        }
     }
 
     @api
@@ -165,7 +169,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if (!dataImportRow) {
             return;
         }
-        let rowList = new Array();
+        let rowList = [];
         let fieldMappings = GeFormService.fieldMappings;
         let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
             return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
@@ -406,12 +410,13 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     get alertClass() {
         if(isNotEmpty(this.alertBanner.level)) {
-            const warningClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning';
-            const errorClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error';
+            const errorClass = 'error';
+            const warningClass = 'warning';
+
             switch(this.alertBanner.level) {
-                case 'error':
+                case errorClass:
                     return errorClass;
-                case 'warning':
+                case warningClass:
                     return warningClass;
                 default:
                     return errorClass;
