@@ -39,6 +39,9 @@ public without sharing class CRLP_ApiService {
     private static final String ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE = 'dso.getRollupStateForRecords';
     private static final String ACTION_ARCHIVE_BRIDGE_SET_STALE_ROLLUPS = 'dso.setRollupStateAsStale';
 
+    /** @description The specific rollup types that were "changed" to send to an external api */
+    private Set<String> changedRollupTypes = new Set<String>();
+
     /** @description By default always reschedule NPSP jobs after enablement completes */
     private Boolean rescheduleAllJobs = true;
 
@@ -280,63 +283,52 @@ public without sharing class CRLP_ApiService {
     }
 
     /**
-    * @description handle changes to customizable rollups and send back a callback handler if
-    * there is processing that needs to be executed after deloyment
+    * @description store changes to customizable rollups for passing to the metadata deployment callback handler
     * @param rollups is a List of Rollups
-    * @return a MetadataHandler that can be used for deployment callbacks
+    * @return this
     */
-    public CRLP_EnablementService.RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups) {
-        Set<String> changedRollupTypes = buildChangedRollupTypes(rollups);
-
-       return getRollupHandler(changedRollupTypes);
+    public CRLP_ApiService sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups) {
+        changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
+        return this;
     }
 
     /**
-    * @description handle changes to customizable filter groups and send back a callback handler if
-    * there is processing that needs to be executed after deployment
-    * @param filterGroups is a list of filtergroups
-    * @return a MetadataHandler that can be used for deployment callbacks
+    * @description store changes to customizable rollup filters for passing to the metadata deployment callback handler
+    * @param filterGroups is a list of filter groups
+    * @return this
     */
-    public CRLP_EnablementService.RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.FilterGroup> filterGroups) {
-        Set<String> changedRollupTypes = buildChangedRollupTypes(filterGroups);
-
-        return getRollupHandler(changedRollupTypes);
+    public CRLP_ApiService sendChangeEvent(List<CRLP_RollupCMT.FilterGroup> filterGroups) {
+        changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
+        return this;
     }
 
     /**
-    * @description handle changes to both rollups and customizable filter groups and send back a callback handler if
-    * there is processing that needs to be executed after deployment
+    * @description store changes to customizable rollup and filters for passing to the metadata deployment callback handler
     * @param rollups is a list of Rollups
-    * @param filterGroups is a list of filtergroups
-    * @return a MetadataHandler that can be used for deployment callbacks
+    * @param filterGroups is a list of filter groups
+    * @return this
     */
-    public CRLP_EnablementService.RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups, List<CRLP_RollupCMT.FilterGroup> filterGroups) {
-        Set<String> changedRollupTypes = new Set<String>();
-
+    public CRLP_ApiService sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups, List<CRLP_RollupCMT.FilterGroup> filterGroups) {
         changedRollupTypes.addAll(buildChangedRollupTypes(rollups));
         changedRollupTypes.addAll(buildChangedRollupTypes(filterGroups));
-
-        return getRollupHandler(changedRollupTypes);
+        return this;
     }
 
     /**
-    * @description build a deployment handler based on the changed rollup types
-    * @param changedRollupTypes is a set of rollup Type strings
-    * @return a MetadataHandler that can be used for deployment callbacks
+    * @description Returns the fully configured Metadata Api Callback Handler to pass to the Apex Metadata Api.
+    * The callback handler instance includes any special parameters for post-deployment-processing.
+    * @return Configured instance of the RollupMetadataHandler class
     */
-    private CRLP_EnablementService.RollupMetadataHandler getRollupHandler(Set<String> changedRollupTypes) {
-        CRLP_EnablementService.RollupMetadataHandler callback = CRLP_EnablementService.rollupHandlerInstance;
+    public CRLP_EnablementService.RollupMetadataHandler getCallbackHandler() {
 
-        if (!changedRollupTypes.isEmpty()) {
-            callback.params = new Map<String, Object> {
-                CallableApiParameters.PARAM_ROLLUP_TYPES => changedRollupTypes,
-                CallableApiParameters.PARAM_SCHEDULE_JOBS => rescheduleAllJobs
-            };
-        }
+        CRLP_EnablementService.RollupMetadataHandler callback = CRLP_EnablementService.rollupHandlerInstance;
+        callback.params = new Map<String, Object>{
+            CallableApiParameters.PARAM_ROLLUP_TYPES => changedRollupTypes,
+            CallableApiParameters.PARAM_SCHEDULE_JOBS => rescheduleAllJobs
+        };
 
         return callback;
     }
-
 
     /*******************************************************************************************************
     * @description Utility class for a CMT rollup

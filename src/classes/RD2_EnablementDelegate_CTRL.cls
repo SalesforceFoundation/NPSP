@@ -559,7 +559,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             cmtRollup.description += '\nThis rollup was disabled automatically when Enhanced Recurring Donations was enabled.';
 
             List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{ cmtRollup };
-            CRLP_EnablementService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
+            CRLP_EnablementService.RollupMetadataHandler changeHandler = new CRLP_ApiService()
+                .sendChangeEvent(rollups)
+                .getCallbackHandler();
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
             CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);

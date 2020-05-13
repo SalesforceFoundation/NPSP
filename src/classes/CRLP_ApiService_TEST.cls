@@ -299,7 +299,9 @@ public class CRLP_ApiService_TEST {
         CRLP_RollupCMT.Rollup rollup1 = CRLP_RollupCMT_Test.generateRollup('1');
         rollup1.recordName = null;
         Test.startTest();
-        CRLP_EnablementService.RollupMetadataHandler callback = service.sendChangeEvent(new List<CRLP_RollupCMT.Rollup> { rollup1} );
+        CRLP_EnablementService.RollupMetadataHandler callback = service
+            .sendChangeEvent(new List<CRLP_RollupCMT.Rollup> { rollup1} )
+            .getCallbackHandler();
         Test.stopTest();
 
         System.assertNotEquals(null, callback, 'Should get a callback handler for new rollups');
@@ -324,8 +326,9 @@ public class CRLP_ApiService_TEST {
 
         Test.startTest();
         CRLP_EnablementService.RollupMetadataHandler callback = service.sendChangeEvent(
-            new List<CRLP_RollupCMT.FilterGroup> { newFilterGroup, existingFilterGroup }
-        );
+                new List<CRLP_RollupCMT.FilterGroup> { newFilterGroup, existingFilterGroup }
+            )
+            .getCallbackHandler();
         Test.stopTest();
 
         System.assertNotEquals(null, callback, 'Should get a Callback handler for unmodified filter groups');

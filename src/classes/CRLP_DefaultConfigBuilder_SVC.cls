@@ -85,7 +85,8 @@ public inherited sharing class CRLP_DefaultConfigBuilder_SVC {
         // send change event check
         CRLP_EnablementService.RollupMetadataHandler callbackHandler = new CRLP_ApiService()
             .withScheduleNpspBatchJobs(rescheduleAllJobs)
-            .sendChangeEvent(allChangedRollups, allChangedFilterGroups);
+            .sendChangeEvent(allChangedRollups, allChangedFilterGroups)
+            .getCallbackHandler();
 
         return CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(callbackHandler, callbackHandler.params);
     }
