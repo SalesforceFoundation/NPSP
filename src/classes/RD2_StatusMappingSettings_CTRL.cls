@@ -52,6 +52,19 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         void saveDeploymentId();
     }
 
+    /**
+     * @description Contains RD Status Mapping custom metadata type name
+     */
+    private static String cmtObjectName {
+        get {
+            if (cmtObjectName == null) {
+                cmtObjectName = RecurringDonationStatusMapping__mdt.getSObjectType().getDescribe().getName();
+            } 
+            return cmtObjectName;
+        }
+        set;
+    }
+
 
     /**
      * @description Contains status to state mapping configuration
@@ -218,14 +231,14 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
      * @return Metadata.CustomMetadata
      */
     private static Metadata.CustomMetadata buildCustomMetadata(Mapping mapping) {
-        String sObjectName = RecurringDonationStatusMapping__mdt.getSObjectType().getDescribe().getName();
-
         Metadata.CustomMetadata cmt = new Metadata.CustomMetadata();
-        cmt.label = String.isBlank(mapping.masterLabel)
-            ? (mapping.status + '_' + datetime.now().getTime())
-            : mapping.masterLabel;
-        cmt.fullName = sObjectName + '.' + mapping.status;
+        //unique value determines if the record will be inserted or updated
+        cmt.fullName = cmtObjectName + '.' + mapping.status;
         cmt.protected_x = false;
+
+        //update the label every time regardless if it is insert or update,
+        //since the mapped state can change for the status
+        cmt.label = mapping.status + ' -> ' + mapping.state;
 
         String state = mapping.state == System.Label.RD2_StatusMappingStateUnmapped ? null : mapping.state;
 
@@ -397,6 +410,10 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
             this(STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c);
         }
 
+        /**
+        * @description Constructor
+        * @param deploymentId Deployment Id. If null, the Id is retrieved from the RD settings.
+        */
         public DeploymentHandler(String deploymentId) {
             this.deploymentId = String.isBlank(deploymentId)
                 ? STG_Panel.stgService.stgRD.StatusMappingDeploymentId__c
@@ -490,7 +507,12 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     public inherited sharing class DeploymentCallbackHandler implements Metadata.DeployCallback {
 
         /**
-         * @description Applies actions after deployment completes
+         * @description Applies actions after deployment completes.
+         * Deployment Id is saved into the RD settings so Status to State mapping page 
+         * can check deployment status upon completion.
+         * Platform event publishing DeploymentEvent__e could have been used as well to notify 
+         * that deployment completed, however, platform events are not supported in Lightning Out
+         * (the Status to State mapping LWC that is called from a Visualforce page).
          * @param result Deploy result
          * @param context Deploy callback context
          * @return void

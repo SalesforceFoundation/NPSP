@@ -133,17 +133,18 @@ private with sharing class RD2_StatusMappingSettings_TEST {
         for (Integer i = 0; i < cmtRecords.size(); i++) {
             Metadata.CustomMetadata cmt = cmtRecords[i];
             String status = records[i].status;
+            String state = records[i].state;
 
             System.assertEquals(sObjectName + '.' + status, cmt.fullName, 'CMT Full Name should match');
-            System.assert(cmt.label.startsWith(status), 'CMT Label should start with the status value: ' + cmt.label);
+            System.assertEquals(status + ' -> ' + state, cmt.label, 'CMT Label should match');
 
             System.assertEquals(2, cmt.values.size(), 'CMT fields should be set: ' + cmt.values);
-
             for (Metadata.CustomMetadataValue field : cmt.values) {
+
                 if (field.field.endsWith('Status__c')) {
                     System.assertEquals(status, field.value, 'CMT Status should match');
                 } else {
-                    System.assertEquals(records[i].state, field.value, 'CMT State should match');
+                    System.assertEquals(state, field.value, 'CMT State should match');
                     if (status == STATUS_CANCELED) {
                         System.assertEquals(RD2_Constants.STATUS_LAPSED, field.value, 'State for the Canceled Status should match');
                     }

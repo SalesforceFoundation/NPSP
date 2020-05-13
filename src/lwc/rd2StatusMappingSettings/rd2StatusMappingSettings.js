@@ -87,9 +87,9 @@ export default class rd2StatusMappingSettings extends LightningElement {
     }
 
     /**
-    * @description Contains column names and values when datatable is in the edit mode
-    * Since the custom label is used in the columns, "editColumns" cannot be a constant as "viewColumns" are. 
-    * Otherwise, labels keep the old value if they are changed in the custom labels (for example a translated org).
+    * @description Contains column names and values when datatable is in the edit mode.
+    * Since the custom label is used in the columns, "editColumns" cannot be a constant as "viewColumns" is. 
+    * This way labels are updated whenever they are changed (for example on a translated org).
     */
     handleEditColumns() {
         this.editColumns = [
