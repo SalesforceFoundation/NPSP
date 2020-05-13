@@ -126,20 +126,6 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description Contains the current Status to State map configuration
-    */
-    public static RD2_StatusMapper statusMapper {
-        get {
-            if (statusMapper == null) {
-                statusMapper = new RD2_StatusMapper();
-            }
-            return statusMapper;
-        }
-        set;
-    }
-
-
-    /**
     * @description Constructor for the RD2_ValidationService class
     * @param rds New rds that will be validated
     */

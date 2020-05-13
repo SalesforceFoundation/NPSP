@@ -789,7 +789,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
             .withDefaultMapping();
-        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
@@ -822,7 +822,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
             .withMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
-        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
@@ -856,7 +856,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
             .withDefaultMapping();
-        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
@@ -892,7 +892,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
             .withMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
-        RD2_ValidationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
