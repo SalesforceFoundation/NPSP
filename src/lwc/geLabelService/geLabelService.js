@@ -2,6 +2,7 @@
 import { format } from 'c/utilCommon';
 
 // Import custom labels
+import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
 import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
@@ -9,19 +10,28 @@ import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
+import commonCreditNumber from '@salesforce/label/c.commonCreditNumber';
+import commonCriticalError from '@salesforce/label/c.commonCriticalError';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonGauAllocations from '@salesforce/label/c.commonGauAllocations';
+import commonGeneralAccountUnit from '@salesforce/label/c.commonGeneralAccountUnit';
+import commonMMYY from '@salesforce/label/c.commonMMYY';
 import commonMissingRequiredFields from '@salesforce/label/c.commonMissingRequiredFields';
 import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import commonPercent from '@salesforce/label/c.commonPercent';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
+import commonReviewForm from '@salesforce/label/c.commonReviewForm';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
 import commonTemplate from '@salesforce/label/c.commonTemplate';
@@ -54,8 +64,8 @@ import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRigh
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
 import geBodyFieldBundlesLeftCol from '@salesforce/label/c.geBodyFieldBundlesLeftCol';
-import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
 import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
+import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
@@ -65,8 +75,10 @@ import geBodyMatchingNoPayments from '@salesforce/label/c.geBodyMatchingNoPaymen
 import geBodyMatchingPendingDonation from '@salesforce/label/c.geBodyMatchingPendingDonation';
 import geBodyMatchingSelectRecord from '@salesforce/label/c.geBodyMatchingSelectRecord';
 import geBodyMatchingUpdatingDonation from '@salesforce/label/c.geBodyMatchingUpdatingDonation';
+import geBodyPaymentNotProcessingTransaction from '@salesforce/label/c.geBodyPaymentNotProcessingTransaction';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geBodyTemplatesTabDescription from '@salesforce/label/c.geBodyTemplatesTabDescription';
+import geBodyWidgetFields from '@salesforce/label/c.geBodyWidgetFields';
 import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
@@ -84,9 +96,12 @@ import geButtonMatchingUpdateOpportunity from '@salesforce/label/c.geButtonMatch
 import geButtonMatchingUpdatePayment from '@salesforce/label/c.geButtonMatchingUpdatePayment';
 import geButtonNewBatch from '@salesforce/label/c.geButtonNewBatch';
 import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
+import geButtonPaymentAlternate from '@salesforce/label/c.geButtonPaymentAlternate';
+import geButtonPaymentDoNotCharge from '@salesforce/label/c.geButtonPaymentDoNotCharge';
 import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
+import geErrorCardChargedBDIFailed from '@salesforce/label/c.geErrorCardChargedBDIFailed';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
@@ -104,7 +119,10 @@ import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
-import geGauAllocationsBundle from '@salesforce/label/c.geGauAllocationsBundle';
+import geErrorUncertainCardChargePart1 from '@salesforce/label/c.geErrorUncertainCardChargePart1';
+import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertainCardChargePart2';
+import geErrorUncertainCardChargePart3 from '@salesforce/label/c.geErrorUncertainCardChargePart3';
+import geErrorUncertainCardChargePart4 from '@salesforce/label/c.geErrorUncertainCardChargePart4';
 import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
@@ -129,6 +147,7 @@ import geHeaderMatchingReviewDonations from '@salesforce/label/c.geHeaderMatchin
 import geHeaderNewSection from '@salesforce/label/c.geHeaderNewSection';
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
+import geHeaderPaymentServices from '@salesforce/label/c.geHeaderPaymentServices';
 import geHeaderSingleGiftEntry from '@salesforce/label/c.geHeaderSingleGiftEntry';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
 import geHelpTextAccount1Mapping from '@salesforce/label/c.geHelpTextAccount1Mapping';
@@ -143,20 +162,29 @@ import geHelpTextContact2Mapping from '@salesforce/label/c.geHelpTextContact2Map
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
 import geHelpTextHouseholdMapping from '@salesforce/label/c.geHelpTextHouseholdMapping';
+import geHelpTextPaymentServices from '@salesforce/label/c.geHelpTextPaymentServices';
 import geLabelCustomTableSelectedFields from '@salesforce/label/c.geLabelCustomTableSelectedFields';
 import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTableSourceFields';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
+import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
+import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
+import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
+import geTextChargingCard from '@salesforce/label/c.geTextChargingCard';
 import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount';
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedAgo';
+import geTextNavigateToOpportunity from '@salesforce/label/c.geTextNavigateToOpportunity';
+import geTextProcessing from '@salesforce/label/c.geTextProcessing';
+import geTextSaving from '@salesforce/label/c.geTextSaving';
+import geTextUpdating from '@salesforce/label/c.geTextUpdating';
 import geToastListViewUpdated from '@salesforce/label/c.geToastListViewUpdated';
 import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
 import geToastSelectActiveSection from '@salesforce/label/c.geToastSelectActiveSection';
@@ -176,6 +204,7 @@ class GeLabelService {
     * utility method is provided.
     */
     CUSTOM_LABELS = Object.freeze({
+        commonAmount,
         commonAssistiveError,
         commonAssistiveInfo,
         commonAssistiveSuccess,
@@ -183,19 +212,28 @@ class GeLabelService {
         commonBack,
         commonBatches,
         commonCancel,
+        commonCardType,
         commonClone,
+        commonCreditNumber,
+        commonCriticalError,
         commonDefaultValue,
         commonDelete,
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonGauAllocations,
+        commonGeneralAccountUnit,
+        commonMMYY,
         commonMissingRequiredFields,
         commonNewGift,
         commonNext,
         commonNo,
         commonNoItems,
+        commonPaymentServices,
+        commonPercent,
         commonReadMore,
         commonRequired,
+        commonReviewForm,
         commonSave,
         commonSaveAndClose,
         commonTemplate,
@@ -239,8 +277,10 @@ class GeLabelService {
         geBodyMatchingPendingDonation,
         geBodyMatchingSelectRecord,
         geBodyMatchingUpdatingDonation,
+        geBodyPaymentNotProcessingTransaction,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
+        geBodyWidgetFields,
         geButtonBuilderNavBackFormFields,
         geButtonBuilderNavBackTemplateInfo,
         geButtonBuilderNavBatchHeader,
@@ -258,9 +298,12 @@ class GeLabelService {
         geButtonMatchingUpdatePayment,
         geButtonNewBatch,
         geButtonNewSingleGift,
+        geButtonPaymentAlternate,
+        geButtonPaymentDoNotCharge,
         geButtonSaveNewGift,
         geButtonTemplatesTabCreateTemplate,
         geErrorAmountDoesNotMatch,
+        geErrorCardChargedBDIFailed,
         geErrorCompleteThisField,
         geErrorDonorTypeInvalid,
         geErrorDonorTypeValidation,
@@ -278,7 +321,10 @@ class GeLabelService {
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
         geErrorRequiredField,
-        geGauAllocationsBundle,
+        geErrorUncertainCardChargePart1,
+        geErrorUncertainCardChargePart2,
+        geErrorUncertainCardChargePart3,
+        geErrorUncertainCardChargePart4,
         geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
         geHeaderBatchGiftEntry,
@@ -303,6 +349,7 @@ class GeLabelService {
         geHeaderNewSection,
         geHeaderNewTemplate,
         geHeaderPageLevelError,
+        geHeaderPaymentServices,
         geHeaderSingleGiftEntry,
         geHeaderTemplateInfoLeftCol,
         geHelpTextAccount1Mapping,
@@ -317,20 +364,29 @@ class GeLabelService {
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,
         geHelpTextHouseholdMapping,
+        geHelpTextPaymentServices,
         geLabelCustomTableSelectedFields,
         geLabelCustomTableSourceFields,
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
+        gePaymentProcessError,
+        gePaymentProcessingErrorBanner,
+        gePaymentRequestTimedOut,
         geSearchPlaceholder,
         geSelectPlaceholder,
         geTabBatchHeader,
         geTabFormFields,
         geTabTemplateInfo,
+        geTextChargingCard,
         geTextListViewItemCount,
         geTextListViewItemsCount,
         geTextListViewSortedBy,
         geTextListViewUpdatedAgo,
+        geTextNavigateToOpportunity,
+        geTextProcessing,
+        geTextSaving,
+        geTextUpdating,
         geToastListViewUpdated,
         geToastSaveFailed,
         geToastSelectActiveSection,
