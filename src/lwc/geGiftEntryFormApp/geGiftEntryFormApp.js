@@ -380,12 +380,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * request body in apex.
     */
     buildPurchaseRequestBodyParameters() {
-        const names = this.getCardholderNames();
-        const firstName = isNotEmpty(names.firstName) ? names.firstName : names.accountName;
-        const lastName = isNotEmpty(names.lastName) ? names.lastName : names.accountName;
+        const { firstName, lastName } = this.getCardholderNames();
         const metadata = {
             campaignCode: this.dataImportRecord[DONATION_CAMPAIGN_NAME__C]
-        }
+        };
 
         return JSON.stringify({
             amount: getCurrencyLowestCommonDenominator(this.dataImportRecord[DONATION_AMOUNT__C]),
@@ -394,7 +392,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             lastName: lastName,
             metadata: metadata,
             paymentMethodToken: this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C],
-        })
+        });
     }
 
     /*******************************************************************************
@@ -406,7 +404,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     */
     getCardholderNames() {
         const renderer = this.template.querySelector('c-ge-form-renderer');
-        return renderer.fabricatedCardholderNames;
+        return renderer.getCardholderNames();
     }
 
     /*******************************************************************************
