@@ -206,7 +206,8 @@ export default class GeFormField extends LightningElement {
                 this.objectDescribeInfo.recordTypeInfos[this.value].name;
         } else if (this.isPicklist){
             // If the displayed value of the picklist is '--None--' treat the value as blank.
-            fieldAndValue[this.formElementName] = (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
+            fieldAndValue[this.formElementName] =
+                (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
         } else {
             fieldAndValue[this.formElementName] = this.value;
         }
