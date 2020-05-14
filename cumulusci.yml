@@ -672,6 +672,17 @@ flows:
             2:
                 task: update_admin_profile
 
+    deploy_ps_testing:
+        description: 'Deploys class for testing the Payment Service using the Apex Anon testing script.'
+        group: NPSP
+        steps:
+            1:
+                task: deploy
+                options:
+                    path: unpackaged/config/ps_testing
+            2:
+                task: update_admin_profile
+
     deploy_rd2_testing:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
         group: NPSP

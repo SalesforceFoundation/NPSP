@@ -34,7 +34,7 @@
         }
     },
 
-    handleReviewDonationsModal: function (component, event, helper) {
+    handleToggleModal: function (component, event) {
         const payload = event.getParams('detail');
 
         $A.createComponents([[`c:${payload.modalProperties.componentName}`, payload.componentProperties]],
@@ -43,10 +43,10 @@
                     const modalBody = components[0];
 
                     let modalReference = component.find('giftEntryFormOverlayLib').showCustomModal({
-                        header: payload.modalProperties.header || '',
-                        showCloseButton: payload.modalProperties.showCloseButton || true,
+                        header: payload.modalProperties.header || null,
+                        showCloseButton: payload.modalProperties.showCloseButton,
                         cssClass: component.getName() + ' custom-modal ' + payload.modalProperties.cssClass,
-                        closeCallback: payload.modalProperties.closeCallback,
+                        closeCallback: payload.modalProperties.closeCallback || null,
                         body: modalBody,
                     });
 
