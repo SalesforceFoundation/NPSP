@@ -1,20 +1,135 @@
 <template>
-    rd Id : {recordId}
-    parent :{parentId}
+        <lightning-record-edit-form record-id={recordId}
+                                    object-api-name="npe03__Recurring_Donation__c"
+                                    onsuccess={handleSuccess}>
+        <lightning-messages>
+        </lightning-messages>
+    
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Donor Information</span>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content">
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
+                    <lightning-layout-item padding="horizontal-small" size="6">
+                        <lightning-input-field field-name={FIELDS.contact} value={parentId}>
+                        </lightning-input-field>
+                    </lightning-layout-item>
 
-    <footer class="slds-modal__footer slds-clearfix">
-        <div class="slds-float_right">
-            <lightning-button label={CUSTOM_LABELS.commonCancel}
-                                title={CUSTOM_LABELS.commonCancel}
-                                variant="neutral"
-                                class="slds-m-right_small"
-                                onclick={handleCancel}>
-            </lightning-button>
-            <lightning-button label={CUSTOM_LABELS.commonSave}
-                                title={CUSTOM_LABELS.commonSave}
-                                variant="brand"
-                                onclick={handleSave}>
-            </lightning-button>
+                    <lightning-layout-item padding="horizontal-small" size="6">
+                        <lightning-input-field field-name={FIELDS.account} value={parentId}>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="6">
+                        <lightning-input-field field-name={FIELDS.dateEstablished} required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
         </div>
-    </footer>
+
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Donation Information</span>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content">
+
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
+                    <lightning-layout-item padding="horizontal-small" size="6">
+                        <lightning-input-field field-name={FIELDS.recurringType}>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="6">
+                        <lightning-input-field field-name={FIELDS.installment}>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="6">
+                        <lightning-input-field field-name={FIELDS.amount} required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small" size="6"></lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small" size="6">
+                        <lightning-input-field field-name={FIELDS.installmentFrequency} required>
+                        </lightning-input-field> 
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small" size="6"></lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="3">
+                        <lightning-input-field field-name={FIELDS.period} required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="3">
+                        <lightning-input-field field-name={FIELDS.dayOfMonth} required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="3">
+                        <lightning-input-field field-name={FIELDS.startDate} required>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="3"></lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-small" size="6">
+                        <lightning-input-field field-name={FIELDS.paymentMethod}>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </div>
+
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Other Information</span>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content">
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
+                    <template if:true={isAutoNamingDisabled}>
+                        <lightning-layout-item padding="horizontal-small" size="12">
+                            <lightning-input-field class="name-field-class" field-name={FIELDS.name} required>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                    <lightning-layout-item padding="horizontal-small" size="12">
+                        <lightning-input-field field-name={FIELDS.campaign}>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+
+                    <template if:true={isMultiCurrencyEnabled}>
+                        <lightning-layout-item padding="horizontal-small" size="12">
+                            <lightning-input-field class="currency-field-class" field-name={FIELDS.CurrencyIsoCode}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                    
+                </lightning-layout>
+            </div>
+        </div>
+
+        <footer class="slds-modal__footer slds-clearfix">
+            <div class="slds-float_right">
+                <lightning-button label={CUSTOM_LABELS.cancel}
+                                    title={CUSTOM_LABELS.cancel}
+                                    variant="neutral"
+                                    class="slds-m-right_small"
+                                    onclick={handleCancel}>
+                </lightning-button>
+                <lightning-button label={CUSTOM_LABELS.save}
+                                    title={CUSTOM_LABELS.save}
+                                    variant="brand"
+                                    type="submit">
+                </lightning-button>
+            </div>
+        </footer>
+
+    </lightning-record-edit-form>
 </template>

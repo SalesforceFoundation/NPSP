@@ -385,6 +385,8 @@
         <members>RD2_EnablementDelegate_TEST</members>
         <members>RD2_EnablementService</members>
         <members>RD2_EnablementService_TEST</members>
+        <members>RD2_EntryFormController</members>
+        <members>RD2_EntryFormController_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>

@@ -1,8 +1,20 @@
 ({
     handleCloseModal: function(component) {
-        const parentId = component.get('v.parentId');
-        const recordId = component.get('v.recordId');
+        let navEvt = this.constructNavigationEvent(
+            component.get('v.parentId'),
+            component.get('v.recordId')
+        );
+
+        component.get('v.modal').then(modal => {
+            modal.close();
+        });
+
+        navEvt.fire();
+    },
+
+    constructNavigationEvent: function(parentId, recordId) {
         let navEvt;
+
         if(parentId || recordId) {
             navEvt = $A.get("e.force:navigateToSObject");
             navEvt.setParams({
@@ -17,7 +29,7 @@
             });
         }
 
-        navEvt.fire();
+        return navEvt;
     },
 
     getParentId: function() {

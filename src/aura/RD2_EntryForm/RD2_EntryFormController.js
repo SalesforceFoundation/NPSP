@@ -10,16 +10,18 @@
         $A.createComponent("c:rdEntryForm", {parentId, recordId},
         function(content, status, errorMessage) {
             if (status === "SUCCESS") {
-                const modalReference = content;
-                component.find('overlayLib').showCustomModal({
+                const modalBody = content;
+
+                let modalReference = component.find('overlayLib').showCustomModal({
                     header: "New Recurring Donation",
-                    body: modalReference,
-                    cssClass: component.getName() + ' custom-modal',
+                    body: modalBody,
+                    cssClass: component.getName() + ' slds-modal_medium custom-modal',
                     showCloseButton: true,
                     closeCallback: function() {
                         helper.handleCloseModal(component);
                     }
-                })
+                });
+                component.set('v.modal', modalReference);
             } else {
                 console.error(errorMessage);
             }
@@ -28,6 +30,11 @@
 
     handleModalEvent: function(component, event, helper) {
         const details = event.getParams('detail');
+
+        if (details.action === 'success') {
+            component.set('v.recordId', details.recordId);
+        }
+
         helper.handleCloseModal(component);
     }
 })
