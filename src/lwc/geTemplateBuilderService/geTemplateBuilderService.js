@@ -4,7 +4,7 @@ import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
-import geGauAllocationsBundle from '@salesforce/label/c.geGauAllocationsBundle';
+import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
@@ -110,20 +110,10 @@ class GeTemplateBuilderService {
     * @param {object} objectMappingByDevName: Map of object mappings.
     */
     addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName, fieldMappingsByObjMappingDevName) => {
-
         GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
-        const allocationWidgetDefinition = GeWidgetService.definitions.geFormWidgetAllocation;
 
-        fieldMappingByDevName.geFormWidgetAllocation = {
-            DeveloperName: 'geFormWidgetAllocation',
-            MasterLabel: 'Allocations',
-            Target_Object_Mapping_Dev_Name: 'Widgets',
-            Target_Field_Label: geGauAllocationsBundle,
-            Required: 'No',
-            Element_Type: 'widget',
-            Widget_Object_Mapping_Developer_Name: allocationWidgetDefinition.objectMappingDeveloperName,
-            Widget_Field_Mapping_Developer_Names: allocationWidgetDefinition.fieldMappingDeveloperNames
-        };
+        fieldMappingByDevName.geFormWidgetAllocation =
+            GeWidgetService.definitions.geFormWidgetAllocation;
 
         objectMappingByDevName.Widgets = {
             DeveloperName: 'Widgets',
@@ -132,7 +122,20 @@ class GeTemplateBuilderService {
 
         fieldMappingsByObjMappingDevName.Widgets = [
             fieldMappingByDevName.geFormWidgetAllocation
-        ]
+        ];
+
+        // If the org is an Elevate customer, add the Salesforce.org Elevate widget
+        isElevateCustomer()
+            .then(isElevateCustomer => {
+                if (isElevateCustomer) {
+                    fieldMappingByDevName.geFormWidgetTokenizeCard =
+                        GeWidgetService.definitions.geFormWidgetTokenizeCard;
+                    fieldMappingsByObjMappingDevName.Widgets.push(
+                        fieldMappingByDevName.geFormWidgetTokenizeCard
+                    );
+                }
+            })
+            .catch(error => handleError(error));
     }
 }
 

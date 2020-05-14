@@ -1,17 +1,9 @@
 import { getLikeMatchByKey } from 'c/utilCommon';
-
-/*******************************************************************************
-* @description Stubs of object and field mapping developer names. Used to collect
-* the org specific mapping developer names for the widget geFormWidgetAllocation.
-*/
-const ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS = {
-    objectMappingDeveloperNameStubs: 'GAU_Allocation_1_',
-    fieldMappingDeveloperNameStubs: [
-        'GAU_Allocation_1_GAU_',
-        'GAU_Allocation_1_Amount_',
-        'GAU_Allocation_1_Percent_'
-    ]
-}
+import {
+    ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS,
+    TOKENIZE_CARD_WIDGET_NAME_STUBS
+} from './widgetStubs';
+import GeLabelService from 'c/geLabelService';
 
 class GeWidgetService {
     objectMappingByDevName = null;
@@ -32,9 +24,28 @@ class GeWidgetService {
     */
     get definitions() {
         return {
-            geFormWidgetAllocation: this.getMappingDeveloperNames(
-                ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS.objectMappingDeveloperNameStubs,
-                ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS.fieldMappingDeveloperNameStubs),
+            geFormWidgetAllocation: {
+                DeveloperName: 'geFormWidgetAllocation',
+                MasterLabel: GeLabelService.CUSTOM_LABELS.commonGauAllocations,
+                Target_Object_Mapping_Dev_Name: 'Widgets',
+                Target_Field_Label: GeLabelService.CUSTOM_LABELS.commonGauAllocations,
+                Required: 'No',
+                Element_Type: 'widget',
+                ...this.getMappingDeveloperNames(
+                    ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS.objectMappingDeveloperNameStubs,
+                    ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS.fieldMappingDeveloperNameStubs)
+            },
+            geFormWidgetTokenizeCard: {
+                DeveloperName: 'geFormWidgetTokenizeCard',
+                MasterLabel: GeLabelService.CUSTOM_LABELS.commonPaymentServices,
+                Target_Object_Mapping_Dev_Name: 'Widgets',
+                Target_Field_Label: GeLabelService.CUSTOM_LABELS.commonPaymentServices,
+                Required: 'No',
+                Element_Type: 'widget',
+                ...this.getMappingDeveloperNames(
+                    TOKENIZE_CARD_WIDGET_NAME_STUBS.objectMappingDeveloperNameStubs,
+                    TOKENIZE_CARD_WIDGET_NAME_STUBS.fieldMappingDeveloperNameStubs)
+            }
             //geFormWidgetSomethingElse: this.getMappingDeveloperNames...
         }
     }
