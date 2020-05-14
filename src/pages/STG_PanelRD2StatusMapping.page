@@ -3,6 +3,16 @@
     <apex:slds/>
     <apex:includeLightning/>
 
+    <style>
+        /* Remove box shadow when user clicks on the datatable cell in both view and edit modes */	
+        th.slds-has-focus {	
+            box-shadow: none !important;	
+        }	
+        td.slds-has-focus {	
+            box-shadow: none !important;	
+        }
+    </style>
+
     <div class="slds-scope">
         <div class="slds-m-around_large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2StatusMapping}" />
