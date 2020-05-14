@@ -2447,13 +2447,12 @@ private class RD2_DataMigration_TEST {
     }
 
     /***
-    * @description Update two opportunities in the recurring donation to closed won for calculating rollups
+    * @description Updates first two opportunities in the recurring donation to closed won for calculating rollups
     */
     private static void setFewOppsInRdToClosedWonForRollupTests(npe03__Recurring_Donation__c rd) {
         List<Opportunity> oppToUpdate = new List<Opportunity>();
-        List<Opportunity> oppList =  oppGateway.getRecords(rd);
+        List<Opportunity> oppList =  oppGateway.getRecordsByCloseDate(rd);
 
-        oppList.sort();
         Integer count = 0;
 
         for (Opportunity opp: oppList) {
