@@ -4,28 +4,34 @@ import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
     handleError,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
-    checkPermissionErrors
+    checkPermissionErrors,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO
 } from 'c/utilTemplateBuilder';
-import { registerListener } from 'c/pubsubNoPageRef';
+import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
     getQueryParameters,
     isEmpty,
+    isObject,
     isNotEmpty,
     format,
     isUndefined,
-    checkNestedProperty,
+    hasNestedProperty,
     arraysMatch,
     deepClone,
-    getSubsetObject
+    getSubsetObject,
+    validateJSONString
 } from 'c/utilCommon';
+import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
@@ -38,12 +44,15 @@ import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__
 import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
+import DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
+import { WIDGET_TYPE_DI_FIELD_VALUE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME, HTTP_CODES } from 'c/geConstants';
+
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
@@ -51,24 +60,33 @@ import CONTACT_OBJECT from '@salesforce/schema/Contact';
 import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
-import PARENT_OPPORTUNITY_FIELD
-    from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
+import PARENT_OPPORTUNITY_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
+
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
 
+const ADDITIONAL_OBJECT_JSON__C = DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
+
 const mode = {
     CREATE: 'create',
     UPDATE: 'update'
 };
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
+const DONATION_DONOR_TYPE_ENUM = Object.freeze({
+    ACCOUNT1: 'Account1',
+    CONTACT1: 'Contact1'
+});
+const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorRecordId;
     @api donorApiName;
     @api donorRecord;
+    @api fabricatedCardholderNames;
+    @api loadingText;
 
     fieldNames = [ ACCOUNT_NAME_FIELD, CONTACT_NAME_FIELD ];
     @api sections = [];
@@ -90,11 +108,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     @track formTemplateId;
     _batchDefaults;
+    _isCreditCardWidgetInDoNotChargeState = false;
 
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
 
-    @track dataImport; // Row being updated when in update mode
+    @track dataImport = {}; // Row being updated when in update mode
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
 
@@ -105,10 +124,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track selectedDonationDataImportFieldValues = {};
     @track hasPreviouslySelectedDonation = false;
 
-    donationDonorEnum = {
-        account1: 'Account1',
-        contact1: 'Contact1'
-    }
+    @track hasPurchaseCallTimedout = false;
 
     _donationDonor;
     _account1Imported;
@@ -119,7 +135,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get title() {
-        return checkNestedProperty(this.donorRecord, 'fields', 'Name', 'value') ?
+        return hasNestedProperty(this.donorRecord, 'fields', 'Name', 'value') ?
             GeLabelService.format(
                 this.CUSTOM_LABELS.geHeaderMatchingGiftBy,
                 [this.donorRecord.fields.Name.value]) :
@@ -148,6 +164,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
+        registerListener('paymentError', this.handleAsyncWidgetError, this);
+        registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -161,8 +179,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
             this.donorApiName = getQueryParameters().c__apiName;
             this.selectedDonorType =
-                this.donorApiName === 'Account' ? this.donationDonorEnum.account1 :
-                    this.donorApiName === 'Contact' ? this.donationDonorEnum.contact1 : null;
+                this.donorApiName === 'Account' ? DONATION_DONOR_TYPE_ENUM.ACCOUNT1 :
+                    this.donorApiName === 'Contact' ? DONATION_DONOR_TYPE_ENUM.CONTACT1 : null;
 
             // read the template header info
             if (response !== null && typeof response !== 'undefined') {
@@ -207,8 +225,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.sections = formTemplate.layout.sections;
             }
 
-            if (this.batchId) {
-                this.sections = this.setBatchDefaults(formTemplate.layout.sections);
+            if (!this.isSingleGiftEntry) {
+                this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
         }
@@ -264,68 +282,136 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleSaveSingleGiftEntry(sectionsList,enableSave,toggle) {
+    /*******************************************************************************
+    * @description Dispatches a 'submit' event for Single Gift Entry mode.
+    *
+    * @param {object} inMemoryDataImport: DataImport__c object built from the form
+    * fields.
+    * @param {object} formControls: An object holding methods that control
+    * the form save button enablement and lightning spinner toggler.
+    */
+    handleSaveSingleGiftEntry = async (inMemoryDataImport, formControls) => {
+        if (inMemoryDataImport) {
+            const isWidgetInDoNotChargeState = this._isCreditCardWidgetInDoNotChargeState;
+            const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
+            this.dispatchEvent(new CustomEvent('submit', {
+                detail: {
+                    inMemoryDataImport,
+                    hasUserSelectedDonation,
+                    isWidgetInDoNotChargeState,
+                    errorCallback: (error) => {
+                        formControls.enableSaveButton();
+                        formControls.toggleSpinner();
+                        this.handleSingleGiftErrors(error);
+                    }
+                }
+            }));
+        }
+    };
 
-        // handle error on callback from promise
-        const handleCatchError = (err) => this.handleCatchOnSave(err);
+    /*******************************************************************************
+    * @description Handles errors for the Single Gift Entry save flow.
+    *
+    * @param {object} error: Object containing errors
+    */
+    handleSingleGiftErrors(error) {
+        this.loadingText = null;
 
-        GeFormService.handleSave(
-            sectionsList,
-            this.donorRecord,
-            this.selectedDonationDataImportFieldValues)
-            .then(opportunityId => {
-                this.navigateToRecordPage(opportunityId);
-            })
-            .catch(error => {
-                enableSave();
-                toggle();
-                handleCatchError(error);
-            });
+        const hasHttpRequestError = error instanceof HttpRequestError;
+        if (hasHttpRequestError) {
+            return this.catchHttpRequestError(error);
+        }
 
+        const cardHasBeenChargedErrorButBDIFailed = error instanceof CardChargedBDIError;
+        if (cardHasBeenChargedErrorButBDIFailed) {
+            return this.catchCardChargedBDIFailedError(error);
+        }
+
+        const hasAuraErrors = error.body && error.body.message;
+        if (hasAuraErrors) {
+            return this.handleCatchOnSave(error);
+        }
+
+        // Handle any other error
+        handleError(error);
     }
 
-    handleSaveBatchGiftEntry(sectionsList,enableSave,toggle) {
+    catchHttpRequestError(error) {
+        this.hasPurchaseCallTimedout = error.statusCode === HTTP_CODES.Request_Timeout;
+        if (this.hasPurchaseCallTimedout) {
+            this.formatTimeoutCustomLabels(error.dataImportRecord);
+        }
 
+        this.displayPageLevelErrorMessages([error]);
+
+        return;
+    }
+
+    catchCardChargedBDIFailedError(error) {
+        this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
+        this.toggleModalByComponentName('gePurchaseCallModalError');
+        this.addPageLevelErrorMessage(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed, 0);
+        this.handleCatchOnSave(error.apexException);
+
+        return;
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event to the geFormWidgetTokenizeCard component
+    * to disable itself and display the provided message.
+    *
+    * @param {string} message: Message to display in the UI
+    */
+    dispatchdDisablePaymentServicesWidgetEvent(message) {
+        fireEvent(this, DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
+            { detail: { message: message } });
+    }
+
+    /*******************************************************************************
+    * @description Dispatches an event and notifies the parent component to display
+    * an aura overlay library modal with a lightning web component in its body.
+    *
+    * @param {string} modalBodyComponentName: Name of the LWC to render in the
+    * overlay library modal's body.
+    */
+    toggleModalByComponentName(modalBodyComponentName) {
+        const detail = {
+            modalProperties: {
+                componentName: modalBodyComponentName,
+                showCloseButton: false
+            }
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+    }
+
+    handleSaveBatchGiftEntry(dataImportRecord, formControls) {
         // reset function for callback
         const reset = () => this.reset();
         // handle error on callback from promise
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
-        // di data for save
-        let { diRecord, widgetValues } = this.getData(sectionsList);
-        // Apply any selected donation fields that are not on the form
-        // to the data import record
-        for (const [key, value] of Object.entries(
-            this.selectedDonationDataImportFieldValues)) {
-            if (!diRecord.hasOwnProperty(key)) {
-                diRecord[key] = value === null ? null : value.value || value;
-            }
-        }
-
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
-                data: { diRecord, widgetValues },
+                dataImportRecord,
                 success: () => {
-                    enableSave();
-                    toggle();
+                    formControls.enableSaveButton();
+                    formControls.toggleSpinner();
                     reset();
                 },
                 error: (error) => {
-                    enableSave();
-                    toggle();
+                    formControls.enableSaveButton();
+                    formControls.toggleSpinner();
                     handleCatchError(error);
                 }
             }
         }));
-
     }
 
     @api
     handleCatchOnSave( error ) {
-
         // var inits
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        const exceptionWrapper = JSON.parse(error.body.message);
+        const exceptionWrapper = new ExceptionDataError(error);
         const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
         this.hasPageLevelError = true;
 
@@ -337,19 +423,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 // validation rules on Target Objects shows up here
                 // unfortunately currently it doesnt bring field info yet
-                if ( isNotEmpty(exceptionWrapper.errorMessage) &&
-                        isNotEmpty(JSON.parse(exceptionWrapper.errorMessage).errorMessage) ) {
-                    this.pageLevelErrorMessageList = [{
-                        index: 0,
-                        errorMessage: JSON.parse(exceptionWrapper.errorMessage).errorMessage
-                    }];
+                if (isNotEmpty(exceptionWrapper.errorMessage)) {
+                    let errorMessage = exceptionWrapper.errorMessage;
+
+                    const errorMessageObject = validateJSONString(exceptionWrapper.errorMessage);
+                    if (errorMessageObject) {
+                        errorMessage = errorMessageObject.errorMessage;
+                    }
+
+                    this.addPageLevelErrorMessage(errorMessage, this.pageLevelErrorMessageList.length);
                 }
 
                 // If there are no specific fields the error has to go to,
                 // put it on the page level error message.
                 for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
-                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                        {index: dmlIndex+1, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                    const errorMessage = exceptionWrapper.DMLErrorMessageMapping[dmlIndex];
+                    const index = dmlIndex + 1;
+                    this.addPageLevelErrorMessage(errorMessage, index);
                 }
 
             } else {
@@ -383,49 +473,115 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     // With the fields noted.
                     if (hiddenFieldList.length > 0) {
                         let combinedFields = hiddenFieldList.join(', ');
-                        this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                                                            { index: key, errorMessage: errorMessage + ' [' + combinedFields + ']' }];
+                        this.addPageLevelErrorMessage(`${errorMessage} [${combinedFields}]`, key);
                     }
                 }
             }
         } else {
-            this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                                                { index: 0, errorMessage: exceptionWrapper.errorMessage }];
+            this.addPageLevelErrorMessage(exceptionWrapper.errorMessage, 0);
         }
 
         // focus either the page level or field level error messsage somehow
         window.scrollTo(0, 0);
     }
 
-    handleSave(event) {
+    /*******************************************************************************
+    * @description Add a list of error messages to the page level error message
+    * array.
+    *
+    * @param {array} errors: List of error mesages
+    */
+    displayPageLevelErrorMessages(errors) {
+        errors.forEach((error, index) => {
+            this.addPageLevelErrorMessage(error.message, index);
+        });
+        this.hasPageLevelError = true;
+    }
 
+    /*******************************************************************************
+    * @description Add an error message to the overall page level error messages
+    * array.
+    *
+    * @param {string} errorMessage: Error message to be displayed
+    * @param {integer} index: Position of the corresponding row in a DML exception
+    */
+    addPageLevelErrorMessage(errorMessage, index = 0) {
+        this.pageLevelErrorMessageList = [
+            ...this.pageLevelErrorMessageList,
+            { index: index, errorMessage: errorMessage }
+        ];
+    }
+
+    /*******************************************************************************
+    * @description Handles the form save action. Builds a data import record and
+    * calls handlers for Batch Gift and Single Gift depending on the form's mode.
+    *
+    * @param {object} event: Onclick event from the form save button
+    */
+    async handleSave(event) {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        const isFormReadyToSave = this.prepareFormForSave(sectionsList);
+
+        if (isFormReadyToSave) {
+            // Disable save button
+            event.target.disable = true;
+            const formControls = this.getFormControls(event);
+            formControls.toggleSpinner();
+
+            let inMemoryDataImport;
+            try {
+                inMemoryDataImport = await this.buildDataImportFromSections(
+                    sectionsList, this.selectedDonationDataImportFieldValues
+                );
+            } catch(ex) {
+                // exceptions that we expect here are all async widget-related
+                this.handleAsyncWidgetError(ex);
+                return;
+            }
+
+            // handle save depending mode
+            if (this.batchId) {
+                this.handleSaveBatchGiftEntry(inMemoryDataImport, formControls);
+            } else {
+                await this.handleSaveSingleGiftEntry(inMemoryDataImport, formControls);
+            }
+        }
+    }
+
+    /*******************************************************************************
+    * @description Clears existing errors from the form and re-validates all form
+    * sections.
+    *
+    * @param {list} sectionsList: List of all the form sections
+    *
+    * @return {boolean}: True if the form is ready for a save attempt.
+    */
+    prepareFormForSave(sectionsList) {
         // clean errors present on form
         this.clearErrors();
-        // get sections on form
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-
         // apply custom and standard field validation
         if (!this.isFormValid(sectionsList)) {
-            return;
+            return false;
         }
+        return true;
+    }
 
-        // show the spinner
-        this.toggleSpinner();
-        // callback used to toggle spinner after Save promise
+    /*******************************************************************************
+    * @description Collects form controls for toggling the spinner and enabling
+    * the form save button in one object.
+    *
+    * @param {object} event: Onclick event from the form save button
+    *
+    * @return {object}: An object with methods that toggle the form lightning
+    * spinner and enables the form save button.
+    */
+    getFormControls(event) {
         const toggleSpinner = () => this.toggleSpinner();
-        // disable the Save button and set callback to use after Save promise
-        event.target.disabled = true;
         const enableSaveButton = function () {
             this.disabled = false;
         }.bind(event.target);
 
-        // handle save depending mode
-        if (this.batchId) {
-            this.handleSaveBatchGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
-        } else {
-            this.handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
-        }
-
+        return { toggleSpinner, enableSaveButton };
     }
 
     isFormValid(sectionsList) {
@@ -685,6 +841,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     dataImport,
                     section.sourceFields));
         });
+
+        this.handleNameOnCardFieldChange();
     }
 
     /**
@@ -778,7 +936,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get mode() {
-        return this.dataImport ? mode.UPDATE : mode.CREATE;
+        return this.dataImport && this.dataImport.Id ? mode.UPDATE : mode.CREATE;
     }
 
     @api
@@ -796,6 +954,42 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
+     * Handle payment errors at the form level
+     * @param event The paymentError event object
+     */
+    handleAsyncWidgetError(event) {
+        let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
+        let errorObjects = [];
+        if(event.error.isObject) {
+            // Represents the error response returned from payment services
+            let errorObject = JSON.parse(errorResponse);
+            errorObject.forEach((message, index) => {
+                errorObjects.push({
+                    message: message,
+                    index: index
+                });
+            });
+        }
+
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: event.error.message[0],
+            multilineMessages: isNotEmpty(errorObjects) ? errorObjects : errorResponse
+        }];
+        this.showSpinner = false;
+        this.hasPageLevelError = true;
+    }
+
+    /**
+     * @description Set variable that informs the form renderer when the
+     *  credit card widget is in a 'do not charge' state
+     * @param event
+     */
+    handleDoNotChargeCardState (event) {
+        this._isCreditCardWidgetInDoNotChargeState = event.isWidgetDisabled;
+    }
+
+    /**
      * Track widget data so that our widgets can react to the overall state of the form
      * @param payload   An object to store in widgetData
      */
@@ -803,19 +997,90 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.widgetData = {...this.widgetData, ...payload};
     }
 
-    getData(sections) {
-        let { diRecord, widgetValues } =
-            GeFormService.getDataImportRecord(sections);
+    /*******************************************************************************
+    * @description Builds a full DataImport__c record from the provided form sections
+    * and potential donor data selected from the review donations modal.
+    *
+    * @param {list} sections: List of all form sections
+    * @param {object} dataImportWithDonorData: Object holding data import values from
+    * the 'Review Donations' modal.
+    */
+    async buildDataImportFromSections(sections, dataImportWithDonorData) {
+        let dataImportRecord = await this.buildDataImportRecord(sections, dataImportWithDonorData);
 
-        if (!diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
-            diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        }
+        if (this.dataImport && this.dataImport.Id) {
+            dataImportRecord.Id = this.dataImport.Id;
         }
 
-        if (this.dataImport) {
-            diRecord.Id = this.dataImport.Id;
+        return dataImportRecord;
+    }
+
+    /**
+     * Grab the data from the form fields and widgets, convert to a data import record.
+     * @param sectionList   List of ge-form-sections on the form
+     * @param dataImportWithDonorData        Existing account or contact record to attach to the data import record
+     * @return {{widgetValues: {}, diRecord: {}}}
+     */
+    async buildDataImportRecord(sectionList, dataImportWithDonorData) {
+        let fieldData = {};
+        let widgetValues = [];
+
+        sectionList.forEach(section => {
+            fieldData = {...fieldData, ...(section.values)};
+            widgetValues = widgetValues.concat(section.widgetValues);
+        });
+
+        // Build the DI Record
+        let diRecord = {};
+
+        for (let [key, value] of Object.entries(fieldData)) {
+            let fieldWrapper = GeFormService.getFieldMappingWrapper(key);
+            diRecord[fieldWrapper.Source_Field_API_Name] = value;
         }
 
-        return {diRecord, widgetValues};
+        // Include any fields from a user selected donation, if
+        // those fields are not already on the diRecord
+        if (dataImportWithDonorData) {
+            for (const [key, value] of Object.entries(dataImportWithDonorData)) {
+                if (!diRecord.hasOwnProperty(key)) {
+                    diRecord[key] = value === null || value.value === null ?
+                        null : value.value || value;
+                }
+            }
+        }
+
+        // resolve widget data to wherever it needs to go, a field on the di object or elsewhere.
+        if (widgetValues) {
+            let diFieldPayloads = [];
+
+            widgetValues.forEach(widgetValue => {
+                if(widgetValue.type === WIDGET_TYPE_DI_FIELD_VALUE && !isUndefined(widgetValue.payload)) {
+                    diFieldPayloads.push(widgetValue.payload);
+                }
+            });
+
+            // diFieldValues is an array of objects where the key is the field name
+            // and the value is the value to be stored
+            const diFieldValuesArray = await Promise.all(diFieldPayloads);
+            let additionalObjectValues = {};
+
+            diFieldValuesArray.forEach(fieldValues => {
+                Object.entries(fieldValues).forEach(([key, value]) => {
+                    if(key === ADDITIONAL_OBJECT_JSON__C) {
+                        // need to accumulate these values so we can serialize them
+                        // before placing them into the data import object
+                        Object.assign(additionalObjectValues, value);
+                    } else {
+                        diRecord[key] = value;
+                    }
+                })
+            });
+            diRecord[ADDITIONAL_OBJECT_JSON__C] = JSON.stringify(additionalObjectValues);
+        }
+        return diRecord;
     }
 
     /*******************************************************************************
@@ -918,7 +1183,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // Reset all fields related to this lookup field's object mapping
             this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
         }
-
         const account1Imported = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact1Imported = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
@@ -931,9 +1195,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     setReviewDonationsDonorProperties(recordId) {
         if (recordId && this._donationDonor) {
-            if ((this._donationDonor === this.donationDonorEnum.account1 &&
+            if ((this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1 &&
                 recordId.startsWith(this.accountKeyPrefix)) ||
-                (this._donationDonor === this.donationDonorEnum.contact1 &&
+                (this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1 &&
                     recordId.startsWith(this.contactKeyPrefix))) {
                 this.selectedDonorId = recordId;
                 this.selectedDonorType = this._donationDonor;
@@ -1057,19 +1321,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * @description Function that sets batch defaults on the BGE Form
+     * @description Function that prepares (sets batch defaults, remove credit card widget)
+     * the gift entry form in Batch Mode
      * @param templateSections
      * @returns {sections}
      */
-    setBatchDefaults(templateSections) {
+    prepareFormForBatchMode (templateSections) {
         let sections = deepClone(templateSections);
         if (isNotEmpty(this._batchDefaults)) {
             let batchDefaultsObject;
             try {
                 batchDefaultsObject = JSON.parse(this._batchDefaults);
                 sections.forEach(section => {
-                    const elements = section.elements;
-                    elements.forEach(element => {
+                    section.elements = section.elements.filter(element =>
+                        element.componentName !== CREDIT_CARD_WIDGET_NAME);
+                    section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
                             if (batchDefaultsObject.hasOwnProperty(key)) {
                                 const batchDefault = batchDefaultsObject[key];
@@ -1242,9 +1508,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     get donorId() {
         switch (this._donationDonor) {
-            case this.donationDonorEnum.account1:
+            case DONATION_DONOR_TYPE_ENUM.ACCOUNT1:
                 return this._account1Imported;
-            case this.donationDonorEnum.contact1:
+            case DONATION_DONOR_TYPE_ENUM.CONTACT1:
                 return this._contact1Imported;
             default:
                 return null;
@@ -1253,7 +1519,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorAccountChange(selectedRecordId) {
         this._account1Imported = selectedRecordId;
-        if (this._donationDonor === this.donationDonorEnum.account1) {
+        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             this.setReviewDonationsDonorProperties(this._account1Imported);
         } else if (this._donationDonor === null) {
             // TODO: Maybe auto-set to 'Account1'?
@@ -1262,7 +1528,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorContactChange(selectedRecordId) {
         this._contact1Imported = selectedRecordId;
-        if (this._donationDonor === this.donationDonorEnum.contact1) {
+        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
             this.setReviewDonationsDonorProperties(this._contact1Imported);
         } else if (this._donationDonor === null) {
             // TODO: Maybe auto-set to 'Contact1'?
@@ -1319,4 +1585,129 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    handleNameOnCardFieldChange() {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        let fieldList = {};
+        if (!isUndefined(sectionsList) && this.isSingleGiftEntry) {
+            fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
+            this.selectedDonorType = fieldList[
+                DONATION_DONOR_FIELDS.donationDonorField
+                ].value === DONATION_DONOR.isContact1 ?
+                DONATION_DONOR_TYPE_ENUM.CONTACT1 : DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
+
+            sectionsList.forEach(section => {
+                if (section.isCreditCardWidgetAvailable) {
+                    section.setCardHolderName(this.fabricateCardHolderName(fieldList));
+                    this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
+                }
+            });
+        }
+    }
+
+
+    /**
+     * Function that fabricates the cardholder name for the credit card widget
+     * @param fieldList (List of fields displayed on the form)
+     * @returns {{firstName: string, lastName: string, accountName: string}} card holder name
+     */
+    fabricateCardHolderName(fieldList){
+        let accountName, firstName, lastName;
+        let index = 0;
+
+        for (let field in fieldList) {
+            index++;
+            if (fieldList.hasOwnProperty(field)) {
+                let value = fieldList[field].value ? fieldList[field].value : '';
+                let fieldApiName = fieldList[field].apiName;
+
+                switch (fieldApiName) {
+                    case CONTACT_FIRST_NAME_INFO.fieldApiName :
+                        firstName = value;
+                        break;
+                    case CONTACT_LAST_NAME_INFO.fieldApiName :
+                        lastName = value;
+                        break;
+                    case ACCOUNT_NAME_FIELD.fieldApiName :
+                        accountName = value;
+                        break;
+                }
+
+                if (index === Object.keys(fieldList).length) {
+                    if (this.selectedDonorType === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
+                        return {
+                            firstName: firstName,
+                            lastName: lastName,
+                            accountName: ''
+                        };
+                    } else {
+                        return {
+                            firstName: '',
+                            lastName: '',
+                            accountName: accountName
+                        };
+                    }
+                }
+            }
+        }
+    }
+
+    getDisplayedFieldsMappedByFieldAPIName(sectionsList) {
+        let allFields = {};
+        sectionsList.forEach(section => {
+            const fields = section.getAllFieldsByFieldAPIName();
+            allFields = Object.assign(allFields, fields);
+        });
+        return allFields;
+    }
+
+    /*******************************************************************************
+    * @description Method formats custom labels for the purchase call timeout error
+    * scenario.
+    *
+    * @param {object} dataImportRecord: Data Import record related to the error
+    * received from geGiftEntryFormApp.
+    */
+    formatTimeoutCustomLabels(dataImportRecord) {
+        const donorName = this.getDonorName();
+        const donationAmountFormField = this.getFormFieldBySourceName(DONATION_AMOUNT.fieldApiName);
+        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
+
+        this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorUncertainCardChargePart1,
+            [formattedDonationAmount, donorName, this.CUSTOM_LABELS.commonPaymentServices]);
+
+        this.CUSTOM_LABELS.geErrorUncertainCardChargePart3 = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorUncertainCardChargePart3,
+            [this.CUSTOM_LABELS.commonPaymentServices]);
+
+        this.CUSTOM_LABELS.geErrorUncertainCardChargePart4 = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorUncertainCardChargePart4,
+            [this.CUSTOM_LABELS.commonPaymentServices]);
+    }
+
+    getDonorName() {
+        const names = this.fabricatedCardholderNames;
+        if (names.firstName && names.lastName) {
+            return `${names.firstName} ${names.lastName}`;
+        } else {
+            return names.accountName;
+        }
+    }
+
+    /*******************************************************************************
+    * @description Get a form field's value and label properties by the source
+    * field api name.
+    *
+    * @param {string} sourceFieldApiName: A field api name from the DataImport__c
+    * custom object.
+    */
+    getFormFieldBySourceName(sourceFieldApiName) {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        for (let i = 0; i < sectionsList.length; i++) {
+            const matchingFormField = sectionsList[i].getFieldValueAndLabel([sourceFieldApiName]);
+            if (isObject(matchingFormField) && matchingFormField.hasOwnProperty(sourceFieldApiName)) {
+                return matchingFormField[sourceFieldApiName];
+            }
+        }
+    }
 }
