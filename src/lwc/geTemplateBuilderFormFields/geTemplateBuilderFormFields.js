@@ -16,12 +16,14 @@ import CONTACT1_CONSENT_OPT_IN_FIELD from '@salesforce/schema/DataImport__c.Cont
 import CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import CONTACT1_LASTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import DONATION_ELEVATE_RECURRING_ID_FIELD from '@salesforce/schema/DataImport__c.Donation_Elevate_Recurring_ID__c';
+import PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_AUTHORIZED_DATE_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorized_Date__c';
 import PAYMENT_AUTHORIZED_UTC_TIMESTAMP_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorized_UTC_Timestamp__c';
 import PAYMENT_CARD_EXPIRATION_MONTH_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
 import PAYMENT_CARD_EXPIRATION_YEAR_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_CARD_LAST_4_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
 import PAYMENT_CARD_NETWORK_FIELD from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
+import PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import PAYMENT_ELEVATE_CREATED_DATE_FIELD from '@salesforce/schema/DataImport__c.Payment_Elevate_Created_Date__c';
 import PAYMENT_ELEVATE_CREATED_UTC_TIMESTAMP_FIELD from '@salesforce/schema/DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c';
 import PAYMENT_ELEVATE_ID_FIELD from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
@@ -31,6 +33,7 @@ import PAYMENT_GATEWAY_PAYMENT_IDFIELD from '@salesforce/schema/DataImport__c.Pa
 import PAYMENT_ORIGIN_ID_FIELD from '@salesforce/schema/DataImport__c.Payment_Origin_ID__c';
 import PAYMENT_ORIGIN_NAME_FIELD from '@salesforce/schema/DataImport__c.Payment_Origin_Name__c';
 import PAYMENT_ORIGIN_TYPE_FIELD from '@salesforce/schema/DataImport__c.Payment_Origin_Type__c';
+import PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_TYPE_FIELD from '@salesforce/schema/DataImport__c.Payment_Type__c';
 
 const FIELD = 'field';
@@ -63,12 +66,14 @@ const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
     CONTACT1_CONSENT_MESSAGE_FIELD.fieldApiName,
     CONTACT1_CONSENT_OPT_IN_FIELD.fieldApiName,
     DONATION_ELEVATE_RECURRING_ID_FIELD.fieldApiName,
+    PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName,
     PAYMENT_AUTHORIZED_DATE_FIELD.fieldApiName,
     PAYMENT_AUTHORIZED_UTC_TIMESTAMP_FIELD.fieldApiName,
     PAYMENT_CARD_EXPIRATION_MONTH_FIELD.fieldApiName,
     PAYMENT_CARD_EXPIRATION_YEAR_FIELD.fieldApiName,
     PAYMENT_CARD_LAST_4_FIELD.fieldApiName,
     PAYMENT_CARD_NETWORK_FIELD.fieldApiName,
+    PAYMENT_DECLINED_REASON_FIELD.fieldApiName,
     PAYMENT_ELEVATE_CREATED_DATE_FIELD.fieldApiName,
     PAYMENT_ELEVATE_CREATED_UTC_TIMESTAMP_FIELD.fieldApiName,
     PAYMENT_ELEVATE_ID_FIELD.fieldApiName,
@@ -78,6 +83,7 @@ const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
     PAYMENT_ORIGIN_ID_FIELD.fieldApiName,
     PAYMENT_ORIGIN_NAME_FIELD.fieldApiName,
     PAYMENT_ORIGIN_TYPE_FIELD.fieldApiName,
+    PAYMENT_STATUS_FIELD.fieldApiName,
     PAYMENT_TYPE_FIELD.fieldApiName,
 ];
 

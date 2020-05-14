@@ -1297,6 +1297,18 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Payment_Authorization_Token__c</fullName>
+        <description>Authorization token for a transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Authorization token for a transaction.</inlineHelpText>
+        <label>Payment Authorization Token</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>       
+    <fields>     
         <fullName>Payment_Authorized_Date__c</fullName>
         <description>The date and time the transaction was authorized.</description>
         <externalId>false</externalId>
@@ -1378,6 +1390,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Declined_Reason__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Provides detail about why a transaction was declined.</inlineHelpText>
+        <label>Payment Declined Reason</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>  
+    <fields>      
         <fullName>Payment_Elevate_Created_Date__c</fullName>
         <description>The date and time the transaction was created.</description>
         <externalId>false</externalId>
@@ -1507,6 +1530,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Status__c</fullName>
+        <externalId>false</externalId>
+        <description>The API status of the transaction from Elevate.</description>
+        <inlineHelpText>The API status of the transaction from Elevate.</inlineHelpText>
+        <label>Payment Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>      
         <fullName>Payment_Type__c</fullName>
         <description>Indicates the type of transaction.</description>
         <externalId>false</externalId>
