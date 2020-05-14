@@ -27,7 +27,8 @@ import {
     arraysMatch,
     deepClone,
     getSubsetObject,
-    validateJSONString
+    validateJSONString,
+    isEmptyObject
 } from 'c/utilCommon';
 import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -109,6 +110,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track formTemplateId;
     _batchDefaults;
     _isCreditCardWidgetInDoNotChargeState = false;
+    _hasCreditCardWidget = false;
 
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
@@ -129,6 +131,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     _donationDonor;
     _account1Imported;
     _contact1Imported;
+
+    /** Determines when we show payment related text above the cancel and save buttons */
+    get showPaymentSaveNotice() {
+        return this._hasCreditCardWidget && this._isCreditCardWidgetInDoNotChargeState === false;
+    }
 
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
@@ -1597,6 +1604,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
+                    this._hasCreditCardWidget = true;
                     section.setCardHolderName(this.fabricateCardHolderName(fieldList));
                     this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
                 }
