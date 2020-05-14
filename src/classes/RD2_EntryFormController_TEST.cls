@@ -36,5 +36,9 @@
 */
 @isTest(IsParallel=true)
 public with sharing class RD2_EntryFormController_TEST {
+    @isTest
+    public static void shouldReturnRDSettingForEntryForm() {
+        
+    }
 
 }
