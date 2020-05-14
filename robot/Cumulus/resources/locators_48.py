@@ -250,7 +250,7 @@ npsp_lex_locators={
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
         },
-    'crollups':{
+    'crlps':{
         'new_button': '//button[text() = "{}"]',
         'select_locator': "//select[@name ='{}']",
         'success_toast': "//div[contains(@class,'slds-notify.slds-notify_toast,slds-theme_success')]",

@@ -8,7 +8,7 @@ from NPSP import npsp_lex_locators
 @pageobject("Custom", "CustomRollupSettings")
 class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 	
-	def _go_to_page(self, filter_name=None):
+	def loadcrlpsettings(self, filter_name=None):
 		""" Click on the Navigate CRLP Button and wait for the page to load
 		"""
 		locator = npsp_lex_locators['id'].format("navigateCRLPs")
@@ -25,9 +25,9 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		"""
 		self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 		self.npsp.choose_frame('vfFrameId')
-		locator = npsp_lex_locators['crollups']['new_button'].format("New Rollup")
-		select_locator = npsp_lex_locators['crollups']['select_locator'].format("Target Object")
-		success_toast = npsp_lex_locators['crollups']['success_toast']
+		locator = npsp_lex_locators['crlps']['new_button'].format("New Rollup")
+		select_locator = npsp_lex_locators['crlps']['select_locator'].format("Target Object")
+		success_toast = npsp_lex_locators['crlps']['success_toast']
 		self.selenium.wait_until_page_contains_element(locator)
 		new_button = self.selenium.get_webelement(locator)
 		self.selenium.click_element(new_button)
