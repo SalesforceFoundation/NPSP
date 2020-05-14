@@ -5,13 +5,13 @@
     padding: 0;
     background: transparent;
     background-clip: border-box;
-    border: var(--lwc-borderWidthThin,1px) solid transparent;
-    border-radius: var(--lwc-button-border-radius,.25rem);
-    line-height: var(--lwc-lineHeightButton,1.875rem);
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    line-height: 1.875rem;
     text-decoration: none;
-    color: var(--lwc-brand-accessible,rgb(0, 112, 210));
-    -webkit-appearance: none;
+    color: var(--lwc-brand-accessible, rgb(0, 112, 210));
     white-space: normal;
+    -webkit-appearance: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -19,20 +19,20 @@
 }
 
 .slds-button:hover {
-    background-color: var(--lwc-colorBackgroundButtonDefaultHover,rgb(244, 246, 249));
-    color: var(--lwc-brand-accessible-active,rgb(0, 95, 178));
+    background-color: rgb(244, 246, 249);
+    color: var(--lwc-brand-accessible-active, rgb(0, 95, 178));
 }
 
 .slds-button_neutral {
-    padding-left: var(--lwc-spacingMedium,1rem);
-    padding-right: var(--lwc-spacingMedium,1rem);
+    padding-left: var(--lwc-spacing-medium, 1rem);
+    padding-right: var(--lwc-spacing-medium, 1rem);
     text-align: center;
     vertical-align: middle;
     justify-content: center;
-    border: var(--lwc-borderWidthThin,1px) solid var(--lwc-color-border-primary,rgb(221, 219, 218));
+    border: 1px solid var(--lwc-color-border, rgb(221, 219, 218));
     transition: border .15s linear;
-    border-color: var(--lwc-button-color-border-primary,rgb(221, 219, 218));
-    background-color: var(--lwc-button-color-background-primary,rgb(255, 255, 255));
+    border-color: var(--lwc-color-border, rgb(221, 219, 218));
+    background-color: var(--lwc-color-background-alt, rgb(255, 255, 255));
 }
 
 .slds-button_extension {
@@ -47,6 +47,6 @@
 }
 
 .slds-border_extension-bottom {
-    border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));
+    border-bottom: 1px solid var(--lwc-color-border, rgb(221, 219, 218));
     border-radius: 0;
 }
