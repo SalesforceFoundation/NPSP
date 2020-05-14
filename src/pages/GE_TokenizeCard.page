@@ -1,0 +1,101 @@
+<apex:page controller="GE_PaymentServices" showHeader="false" applyHtmlTag="true"
+           applyBodyTag="false">
+
+    <head>
+        <apex:slds />
+    </head>
+
+    <article class='slds-scope'>
+        <form onsubmit="handleForm(event)">
+            <div id="payments"></div>
+        </form>
+    </article>
+
+    <script src="{!elevateSDKURL}"></script>
+    <script>
+        const hostname = window.location.hostname;
+        const arr = hostname.split(".");
+        let domain = arr[0].replace('--npsp', '');
+        domain = domain.replace('--c', '');
+        const lightningOrigin = `https://${domain}.lightning.force.com`;
+
+        const sfdo = new sfdoPaymentsJsSdk();
+        sfdo.mount({
+            id: 'payments',
+            // TODO: Replace clientId value below with the productId provided by onboarding
+            // Currently hardcoded to a specific value as needed by payment services.
+            clientId: '{!productId}',
+            designSystem: 'Lightning',
+            styles: '' +
+                '.logo {' +
+                    'left: 8px !important;' +
+                '}' +
+                '.fieldset.cc-number {' +
+                    'padding-left: 0;' +
+                    'padding-right: 1rem;' +
+                '}' +
+                '.fieldset.exp {' +
+                    'padding-left: 0;' +
+                    'padding-right: 1rem;' +
+                '}' +
+                '.fieldset.cvc {' +
+                    'padding: 0;' +
+                '}'
+        })
+        .then(() => {
+            isLoaded();
+
+            setTimeout(function() {
+                isLoaded();
+            }, 3000);
+        });
+
+        function isLoaded() {
+            const message = JSON.stringify({ isLoaded: true });
+            postMessage(message);
+        }
+
+        /*******************************************************************************
+        * @description Method listens for messages from geFormWidgetTokenizeCard
+        */
+        window.onmessage = function (event) {
+            if (event && event.origin !== lightningOrigin) {
+                // Reject any messages from an unexpected origin
+                return;
+            } else if (event.data && event.data.action === 'createToken') {
+                handleTokenCreation();
+            }
+        }
+
+        /*******************************************************************************
+        * @description Creates a token and posts the response to geFormWidgetTokenizeCard
+        */
+        function handleTokenCreation() {
+            sfdo
+                .createToken({
+                    nameOnCard: 'test name'
+                })
+                .then(function response(resp) {
+                    // Send token to lwc
+                    const token = resp.token
+                    const successString = JSON.stringify({ token: token });
+                    postMessage(successString);
+                })
+                .catch(function handleError(err) {
+                    // Send error to lwc
+                    const errorString = JSON.stringify(err);
+                    postMessage(errorString);
+                });
+        }
+
+        /*******************************************************************************
+        * @description Posts messages to geFormWidgetTokenizeCard
+        *
+        * @param {string} message: String to pass to geFormWidgetTokenizeCard
+        */
+        function postMessage(message) {
+            window.top.postMessage(message, lightningOrigin);
+        }
+    </script>
+
+</apex:page>
