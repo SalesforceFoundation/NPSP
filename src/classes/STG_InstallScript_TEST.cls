@@ -745,6 +745,8 @@ public with sharing class STG_InstallScript_TEST {
 
         private String account1ObjectMappingId =
                 getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType);
+        private String account1MigratedObjectMappingId =
+                getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType);
         private String account2ObjectMappingId =
                 getFakeId(Schema.Data_Import_Object_Mapping__mdt.SObjectType);
         private String gauObjectMappingId =
@@ -943,6 +945,45 @@ public with sharing class STG_InstallScript_TEST {
                             'Account.Account1.BillingCountry.npsp__Account1_Country__c' => fieldMapping2
                     };
                 }
+            }
+            if (stubbedMethodName == 'getDataImportObjectDeveloperNamesByLabel') {
+                // create object mapping sets
+                Data_Import_Object_Mapping_Set__mdt migratedObjectMappingSet =
+                        new Data_Import_Object_Mapping_Set__mdt(
+                                Label='Migrated Custom Object Mapping Set',
+                                DeveloperName='Migrated_Custom_Object_Mapping_Set');
+                Data_Import_Object_Mapping_Set__mdt defaultObjectMappingSet =
+                        new Data_Import_Object_Mapping_Set__mdt(
+                                Label='Default Object Mapping Set',
+                                DeveloperName='Default_Object_Mapping_Set');
+                // create object mappings
+                Data_Import_Object_Mapping__mdt account1ReferenceObjectMapping =
+                        new Data_Import_Object_Mapping__mdt(
+                                Id=account1ObjectMappingId,
+                                Data_Import_Object_Mapping_Set__c = defaultObjectMappingSet.Id,
+                                DeveloperName='Account1',
+                                MasterLabel='Account 1',
+                                Label='Account 1',
+                                Object_API_Name__c='Account',
+                                Imported_Record_Field_Name__c='npsp__Account1Imported__c',
+                                Legacy_Data_Import_Object_Name__c = 'Account1',
+                                Imported_Record_Status_Field_Name__c='npsp__Account1ImportStatus__c');
+                Data_Import_Object_Mapping__mdt account1MigratedObjectMapping =
+                        new Data_Import_Object_Mapping__mdt(
+                                Id=account1MigratedObjectMappingId,
+                                Data_Import_Object_Mapping_Set__c = migratedObjectMappingSet.Id,
+                                DeveloperName='Account1_7aad87e8d',
+                                MasterLabel='Account 1',
+                                Label='Account 1',
+                                Object_API_Name__c='Account',
+                                Imported_Record_Field_Name__c='npsp__Account1Imported__c',
+                                Legacy_Data_Import_Object_Name__c = 'Account1',
+                                Imported_Record_Status_Field_Name__c='npsp__Account1ImportStatus__c');
+
+                Map<String, String> legacyDataImportObjectNameByDeveloperName = new Map<String, String>();
+                legacyDataImportObjectNameByDeveloperName.put(account1MigratedObjectMapping.DeveloperName,
+                        account1MigratedObjectMapping.MasterLabel);
+                return legacyDataImportObjectNameByDeveloperName;
             }
             return null;
         }
