@@ -287,7 +287,7 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
         //set two opportunities in the rd to closed won for rollup calculations
-        setFewOppsInRdToClosedWonForRollupTests(rd);
+        setRdOppsToClosedWonForRollupTests(rd, 2);
 
         rd = getRecords()[0];
         rd.npe03__Total_Paid_Installments__c = null;
@@ -324,7 +324,7 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
         //set two opportunities in the rd to closed won for rollup calculations
-        setFewOppsInRdToClosedWonForRollupTests(rd);
+        setRdOppsToClosedWonForRollupTests(rd, 2);
 
         rd = getRecords()[0];
         rd.npe03__Total_Paid_Installments__c = null;
@@ -2449,14 +2449,14 @@ private class RD2_DataMigration_TEST {
     /***
     * @description Updates first two opportunities in the recurring donation to closed won for calculating rollups
     */
-    private static void setFewOppsInRdToClosedWonForRollupTests(npe03__Recurring_Donation__c rd) {
+    private static void setRdOppsToClosedWonForRollupTests(npe03__Recurring_Donation__c rd, Integer numOpps) {
         List<Opportunity> oppToUpdate = new List<Opportunity>();
         List<Opportunity> oppList =  oppGateway.getRecordsByCloseDate(rd);
 
         Integer count = 0;
 
         for (Opportunity opp: oppList) {
-            if (count < 2) {
+            if (count < numOpps) {
                 opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
                 opp.CloseDate = DATE_ESTABLISHED.addMonths(1);
             }
