@@ -164,6 +164,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             'NPSP_Data_Import_Batch__c',
             'PaymentImported__c',
             'PaymentImportStatus__c',
+            'Payment_Status__c',
             'Status__c'
         };
 
@@ -429,5 +430,4 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         }
         return options;
     }
-
 }
