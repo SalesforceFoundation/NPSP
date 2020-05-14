@@ -2,26 +2,22 @@
 
     <template if:true={hasMessage}>
         <div class="slds-p-left_large slds-p-right_large" tabindex="-1">
-            <div class="desktop forcePageError" aria-live="assertive">
-                <div
-                    class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small">
-                    <div class={notificationClass} role="alert">
-                        <span class="slds-icon_container slds-m-right_small slds-no-flex slds-align-top">
-                            <lightning-icon icon-name={iconName} class="slds-p-right_small" variant="inverse"
-                                size="small">
-                            </lightning-icon>
-                        </span>
+            <div class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small">
+                <div class={notificationClass} role="alert">
+                    <span class="slds-icon_container slds-m-right_small slds-no-flex slds-align-top">
+                        <lightning-icon icon-name={iconName} class="slds-p-right_small" variant="inverse" size="small">
+                        </lightning-icon>
+                    </span>
 
-                        <div class="slds-notify__content">
-                            <h2 class="slds-text-heading_small">
-                                <lightning-formatted-rich-text value={message.body}></lightning-formatted-rich-text>
-                            </h2>
-                        </div>
-
-                        <lightning-button-icon icon-name="utility:close" variant="bare-inverse"
-                            class="slds-notify__close" size="large" onclick={handleCloseNotification}>
-                        </lightning-button-icon>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">
+                            <lightning-formatted-rich-text value={message.body}></lightning-formatted-rich-text>
+                        </h2>
                     </div>
+
+                    <lightning-button-icon icon-name="utility:close" variant="bare-inverse" class="slds-notify__close"
+                        size="large" onclick={handleCloseNotification}>
+                    </lightning-button-icon>
                 </div>
             </div>
         </div>

@@ -3,10 +3,10 @@
     <description>Recurring Donation Status to State Mapping</description>
     <fields>
         <fullName>State__c</fullName>
-        <description>The state that the Recurring Donation Status will be mapped to.</description>
+        <description>The State that the Recurring Donation Status is mapped to.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>Valid entries are “Active”, “Lapsed”, and “Closed”.</inlineHelpText>
+        <inlineHelpText>Valid entries are Active, Lapsed, and Closed.</inlineHelpText>
         <label>Recurring Donation State</label>
         <required>false</required>
         <type>Picklist</type>
@@ -34,10 +34,10 @@
     </fields>
     <fields>
         <fullName>Status__c</fullName>
-        <description>API name of the Recurring Donation Status that will be mapped to the state.</description>
+        <description>API name of the Recurring Donation Status that is mapped to a State.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>API name of the Recurring Donation Status that will be mapped to the state.</inlineHelpText>
+        <inlineHelpText>API name of the Recurring Donation Status that is mapped to a State.</inlineHelpText>
         <label>Recurring Donation Status</label>
         <length>255</length>
         <required>false</required>
