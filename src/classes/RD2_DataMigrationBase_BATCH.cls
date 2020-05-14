@@ -101,10 +101,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
     */
     private Boolean disableRollups {
         get {
-            disableRollups = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DisableRollupsWhenCreatingInstallments__c;
-            if (disableRollups == null) {
-                disableRollups = false;
-            }
+            disableRollups = (rdSettings.DisableRollupsWhenCreatingInstallments__c == true);
             return disableRollups;
         } private set;
     }
