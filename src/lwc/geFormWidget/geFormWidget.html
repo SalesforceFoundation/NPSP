@@ -2,9 +2,15 @@
     <template if:true={widgetNotFound}>
         <p>{element.componentName} component was not found</p>
     </template>
+    <template if:true={isElevateTokenizeCard}>
+        <c-ge-form-widget-tokenize-card data-id='widgetComponent'>
+        </c-ge-form-widget-tokenize-card>
+    </template>
     <template if:true={isPaymentScheduler}>
         <!-- TODO: Add Payment Widget here -->
-        <c-ge-form-field data-id='widgetComponent' element={element}></c-ge-form-field>
+        <c-ge-form-field data-id='widgetComponent'
+                         element={element}>
+        </c-ge-form-field>
     </template>
     <template if:true={isAllocation}>
         <c-ge-form-widget-allocation data-id='widgetComponent'
