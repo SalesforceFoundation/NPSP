@@ -108,7 +108,7 @@ const isUndefined = (value) => {
 };
 
 /**
- * Check if a value is undefined, null or blank string.
+ * Check if a primitive is undefined, null or blank string.
  * @param value         Value to check.
  * @returns {boolean}   TRUE when the given value is undefined, null or blank string.
  */
@@ -159,7 +159,7 @@ const shiftToIndex = (array, oldIndex, newIndex) => {
  * Replaces placeholders in Custom Labels ({0}, {1}, etc) with provided values.
  *
  * @param {string} string: Custom Label to be formatted.
- * @param {list} replacements: List of string to use as replacements.
+ * @param {array} replacements: List of string to use as replacements.
  * @return {string} formattedString: Formatted custom label
  */
 const format = (string, replacements) => {
@@ -291,12 +291,12 @@ const sort = (objects, attribute, direction = "desc", isNullsLast) => {
 * @param {string} property: Name of the property to check.
 * @return {list} remainingProperties: Destructure all other arguments so we can
 * check N levels deep of the object.
-* e.g. checkNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+* e.g. hasNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
 */
-const checkNestedProperty = (object, property, ...remainingProperties) => {
+const hasNestedProperty = (object, property, ...remainingProperties) => {
     if (object === undefined) return false
     if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
-    return checkNestedProperty(object[property], ...remainingProperties)
+    return hasNestedProperty(object[property], ...remainingProperties)
 }
 
 /*******************************************************************************
@@ -389,6 +389,20 @@ const getSubsetObject = (sourceObj, propertyNames) => {
     return subsetObject;
 }
 
+/*******************************************************************************
+* @description Checks to see if provided string is parsable. If true, returns
+* parsed string otherwise returns false.
+*
+* @param {string} str: String to parse
+*/
+const validateJSONString = (str) => {
+    try {
+        return JSON.parse(str);
+    } catch (error) {
+        return false;
+    }
+}
+
 export {
     debouncify,
     deepClone,
@@ -408,9 +422,10 @@ export {
     shiftToIndex,
     removeByProperty,
     format,
-    checkNestedProperty,
+    hasNestedProperty,
     getNestedProperty,
     getLikeMatchByKey,
     arraysMatch,
-    getValueFromDotNotationString
+    getValueFromDotNotationString,
+    validateJSONString
 };
