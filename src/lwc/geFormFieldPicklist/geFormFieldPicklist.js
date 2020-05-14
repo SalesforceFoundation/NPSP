@@ -28,7 +28,7 @@ export default class GeFormFieldPicklist extends LightningElement {
                 label: this.CUSTOM_LABELS.commonLabelNone,
                 value: this.CUSTOM_LABELS.commonLabelNone
             }
-            this.picklistValues = [valueNone, ...data.values];;
+            this.picklistValues = [valueNone, ...data.values];
         }
         if(error) {
             console.error(error);
