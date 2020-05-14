@@ -1,15 +1,12 @@
 <template>
-    <lightning-layout if:true={hasAlert}>
-        <lightning-layout-item size="12">
-            <div class={alertClass} role="alert">
-                <span class="slds-assistive-text">Allocation error</span>
-                <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small">
-                    <lightning-icon icon-name={alertIcon} variant="inverse" size="x-small"></lightning-icon>
-                </span>
-                <h2>{alertBanner.message}</h2>
-            </div>
-        </lightning-layout-item>
-    </lightning-layout>
+    <c-util-alert-banner if:true={hasAlert}
+            theme={alertClass}
+            assist-text="Allocation Error"
+            icon= {alertIcon}
+            variant="inverse"
+            size="x-small"
+            message={alertBanner.message}>
+    </c-util-alert-banner>
     <template for:each={rowList} for:item='row' for:index='index'>
         <c-ge-form-widget-row-allocation
                 data-defaultgau={row.isDefaultGAU}

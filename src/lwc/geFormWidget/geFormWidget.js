@@ -1,9 +1,10 @@
 import { LightningElement, api } from 'lwc';
-import { checkNestedProperty } from 'c/utilCommon';
+import {hasNestedProperty, isUndefined} from 'c/utilCommon';
 
-const PAYMENT_WIDGET = 'geFormWidgetPayment';
+const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
-const WIDGET_LIST = [PAYMENT_WIDGET, ALLOCATION_WIDGET];
+const TOKENIZE_CARD_WIDGET = 'geFormWidgetTokenizeCard';
+const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, TOKENIZE_CARD_WIDGET];
 
 export default class GeFormWidget extends LightningElement {
     @api element;
@@ -24,7 +25,8 @@ export default class GeFormWidget extends LightningElement {
         let widgetAndValues = {};
         const thisWidget = this.widgetComponent;
         // Need to make sure all widget components support returnValue()
-        if(this.isValid && typeof thisWidget.returnValues === 'function'){
+        if(this.isValid && typeof thisWidget.returnValues === 'function') {
+            // thisWidget.returnValues() can return promises
             widgetAndValues = thisWidget.returnValues();
         }
         return widgetAndValues;
@@ -36,17 +38,25 @@ export default class GeFormWidget extends LightningElement {
         if(thisWidget !== null && typeof thisWidget !== 'undefined'
             && typeof thisWidget.isValid === 'function') {
                 isValid = thisWidget.isValid();
+        } else if(isUndefined(thisWidget.isValid)) {
+            // if no validation function defined, assume widget is valid
+            return true;
         }
         return isValid;
     }
 
-    get widgetComponent(){
+    get widgetComponent() {
         return this.template.querySelector('[data-id="widgetComponent"]');
     }
 
     get isPaymentScheduler() {
-        return this.element.componentName === PAYMENT_WIDGET;
+        return this.element.componentName === PAYMENT_SCHEDULER_WIDGET;
     }
+
+    @api
+    get isElevateTokenizeCard() {
+        return this.element.componentName === TOKENIZE_CARD_WIDGET;
+    }    
 
     get isAllocation() {
         return this.element.componentName === ALLOCATION_WIDGET;
@@ -57,7 +67,7 @@ export default class GeFormWidget extends LightningElement {
     }
 
     get totalAmount() {
-        return checkNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
+        return hasNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
     }
 
     /**
@@ -73,6 +83,12 @@ export default class GeFormWidget extends LightningElement {
         } else {
             return null;
         }
+    }
+
+    @api
+    setCardHolderName(value) {
+        let creditCardWidget = this.template.querySelector('c-ge-form-widget-tokenize-card');
+        creditCardWidget.setNameOnCard(value);
     }
 
 }
