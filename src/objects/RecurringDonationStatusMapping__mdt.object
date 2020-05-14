@@ -36,7 +36,7 @@
         <fullName>Status__c</fullName>
         <description>API name of the Recurring Donation Status that will be mapped to the state.</description>
         <externalId>false</externalId>
-        <fieldManageability>SubscriberControlled</fieldManageability>
+        <fieldManageability>DeveloperControlled</fieldManageability>
         <inlineHelpText>API name of the Recurring Donation Status that will be mapped to the state.</inlineHelpText>
         <label>Recurring Donation Status</label>
         <length>255</length>

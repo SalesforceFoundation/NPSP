@@ -338,7 +338,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
 
     /**
     * @description Displays message notification. 
-    * ***ShowToastMessage does not work in Lightning Out
+    * ***ShowToastEvent does not work in Lightning Out
     * @param {string} message: Message of the toast.
     * @param {string} variant: Toast variant (info, success, warning, error)
     */
