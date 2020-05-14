@@ -29,14 +29,38 @@ private with sharing class GE_GiftEntryController_TEST {
     }
 
     /*******************************************************************************************************
-     * @description Confirm that the DataImport process used in Gift Entry works
+     * @description Confirm that the Data Import upsert method inserts and updates correctly.
      */
     @isTest
-    private static void createAndProcessDataImportRecord() {
-        DataImport__c di = BDI_DataImport_TEST.newDI('First', 'Last', 100);
-        // TODO: Update this test to take a Additional Object string, and also process that
-        Id oppId = GE_GiftEntryController.saveAndProcessDataImport(di, null, false);
-        System.assert(oppId != null);
+    private static void shouldUpsertDataImportRecord() {
+        DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', 100);
+        DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
+        System.assert(dataImportRecord.Id != null);
+
+        dataImportRecord.Payment_Authorization_Token__c = 'TEST_TOKEN';
+        DataImport__c updatedDataImportRecord = GE_GiftEntryController.upsertDataImport(dataImportRecord);
+        System.assertEquals(dataImportRecord.Id, updatedDataImportRecord.Id);
+        System.assertEquals('TEST_TOKEN', updatedDataImportRecord.Payment_Authorization_Token__c);
+    }
+
+    /*******************************************************************************************************
+     * @description Confirm that the Data Import processes correctly and returns an Opportunity id.
+     */
+    @isTest
+    private static void shouldProcessDataImportRecord() {
+        DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', null);
+        inMemoryDataImport.Donation_Amount__c = 10;
+        DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
+
+        System.assert(dataImportRecord.Id != null);
+        System.assert(dataImportRecord.Donation_Amount__c == 10);
+
+        Test.StartTest();
+        Boolean matchToExistingDonation = false;
+        String opportunityId = GE_GiftEntryController.submitDataImportToBDI(dataImportRecord, matchToExistingDonation);
+        Test.stopTest();
+
+        System.assert(opportunityId != null);
     }
 
     /*******************************************************************************************************
@@ -57,7 +81,7 @@ private with sharing class GE_GiftEntryController_TEST {
         DataImport__c di = newDI( firstName, lastName, batchId );
 
         Test.startTest();
-        GE_GiftEntryController.saveAndDryRunDataImport(batchId,di,'');
+        GE_GiftEntryController.saveAndDryRunDataImport(batchId,di);
         Test.stopTest();
 
         List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];
