@@ -1,9 +1,9 @@
 <template>
     <template if:true={isWidget}>
-        <div class="slds-card">
-            <p class="slds-text_title">{uiLabel}</p>
-            <p class="slds-text-body_regular">{CUSTOM_LABELS.geBodyBatchFieldBundleInfo}</p>
-        </div>
+        <c-ge-template-builder-widget title={uiLabel}
+                                      body={CUSTOM_LABELS.geBodyBatchFieldBundleInfo}
+                                      developer-name={widgetName}>
+        </c-ge-template-builder-widget>
     </template>
 
     <template if:false={isWidget}>

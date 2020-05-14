@@ -32,10 +32,78 @@
 * @date 2020
 * @group HGE
 * @group-content
-* @description Controller for the Gift Entry lightning web components and procesing
+* @description Controller for the Gift Entry lightning web components and processing
 * form save.
 */
 public with sharing class GE_GiftEntryController {
+
+    public static final Integer TIMEOUT_STATUS_CODE = 408;
+    public static final String TIMED_OUT = 'timed out';
+    public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
+
+    @AuraEnabled(cacheable=true)
+    public static String getOrgDomain() {
+        String url = System.Url.getOrgDomainUrl().getHost();
+        String[] urlParts = url.split('\\.');
+
+        return urlParts[0];
+    }
+
+    /*******************************************************************************************************
+    * @description Creates and posts an elevate purchase request
+    *
+    * @param requestBodyParameters: JSON containing parameters for the purchase call request body
+    * @param dataImportRecordId: Record ID of the related Data Import
+    *
+    * @return String: http response wrapper
+    */
+    @AuraEnabled
+    public static String sendPurchaseRequest(String requestBodyParameters, String dataImportRecordId) {
+        try {
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            paymentServices.setPurchaseCallBody(requestBodyParameters);
+            GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
+
+            return JSON.serialize(response);
+        } catch (Exception ex) {
+            Boolean isCalloutException = ex instanceof System.CalloutException;
+            Boolean hasTimedout = isCalloutException && ex.getMessage().contains(TIMED_OUT);
+
+            if (hasTimedout) {
+                return getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
+            } else {
+                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+                throw returnDmlException(JSONExceptionData);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an http request wrapper for a timeout
+    *
+    * @param ex: A timeout System.CalloutException
+    * @param dataImportRecordId: Record ID of the related Data Import to include in our error logs
+    *
+    * @return String: http response wrapper
+    */
+    private static String getPurchaseCallTimeoutResponse(Exception ex, String dataImportRecordId) {
+        GE_PaymentServices.ResponseWrapper response = new GE_PaymentServices.ResponseWrapper();
+        response.statusCode = TIMEOUT_STATUS_CODE;
+        response.status = ex.getMessage();
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => PURCHASE_CALL_TIMEOUT_MESSAGE });
+
+        // Log NPSP Error record
+        String objectAndRecordId = String.format(
+            System.Label.stgErrorInvalidNameFormat,
+            new String[] {
+                Schema.SObjectType.DataImport__c.getLabel(),
+                dataImportRecordId
+            });
+        ex.setMessage(PURCHASE_CALL_TIMEOUT_MESSAGE + ' ' + objectAndRecordId);
+        ERR_Handler.processError(ex, ERR_Handler_API.Context.GE);
+
+        return JSON.serialize(response);
+    }
 
     /*******************************************************************************************************
     * @description Creates an AuraHandledException with the specified error message
@@ -71,12 +139,12 @@ public with sharing class GE_GiftEntryController {
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport, String widgetData) {
+    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
-            String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
-            dataImport.Additional_Object_JSON__c = additionalObjectJSON;
-            saveDataImport(dataImport);
+            dataImport.Additional_Object_JSON__c =
+                GE_FormRendererService.convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
+            upsertDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 
         } catch (Exception ex) {
@@ -88,25 +156,23 @@ public with sharing class GE_GiftEntryController {
     }
 
     /*******************************************************************************************************
-    * @description Takes a Data Import record from the Gift Entry form and saves it to the database.
-    * @param diRecord - The DataImport__c record, as filled in by the user.
-    * @return The Id of the new Opportunity record, created from the Data Import
+    * @description Saves the data import record, dry runs the record, and returns updated
+    * totals with the new row.
+    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @param updateGift: If true, BDI will attempt to match to an existing opportunity/payment
+    * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static Id saveAndProcessDataImport(DataImport__c diRecord, String widgetData, Boolean updateGift) {
-
+    public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
         // Check for widget data and convert it to the correct format for processing
-        String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
-        diRecord.Additional_Object_JSON__c = additionalObjectJSON;
-
-        // Save the Data Import record to the Database
-        diRecord = saveDataImport(diRecord);
+        dataImport.Additional_Object_JSON__c =
+            GE_FormRendererService.convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
 
         // Run the BDI process on this new Data Import
-        processDataImport(diRecord, false, updateGift);
+        processDataImport(dataImport, false, updateGift);
 
         // Get the ID of the created Opportunity so we can return it
-        Id oppId = getOpportunityIdFromImport(diRecord.Id);
+        Id oppId = getOpportunityIdFromImport(dataImport.Id);
 
         return oppId;
     }
@@ -130,16 +196,14 @@ public with sharing class GE_GiftEntryController {
     * @param dataImport - The DataImport__c record, as filled in by the user.
     * @return The DataImport__c record that was saved
     */
-    private static DataImport__c saveDataImport(DataImport__c dataImport) {
+    @AuraEnabled
+    public static DataImport__c upsertDataImport(DataImport__c dataImport) {
         try {
-            if (String.isNotBlank(dataImport.Id)) {
-                Database.update(dataImport);
-            } else {
-                Database.insert(dataImport);
-            }
+
+            upsert dataImport Id;
 
             return dataImport;
-        } catch(Exception e) {
+        } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw returnDmlException(JSONExceptionData);
@@ -148,48 +212,60 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Run the DataImport process on a single gift
-    * @param @param diRecord DataImport record to be processed
+    * @param dataImport DataImport record to be processed
     * @param isDryRun Boolean to set if the process should only return import results and not process
     * @param updateGift Boolean to determine our matching criteria.
     *                   true = "single match or create" and means we are updating
     *                   false = "do not match"
-    * @return void
     */
-    private static void processDataImport(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
-        Id diRecordId = diRecord.Id;
+    private static void processDataImport(DataImport__c dataImport, Boolean isDryRun, Boolean updateGift) {
+        try {
 
-        Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
+            Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
 
-        List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
+            List<DataImport__c> listDI = new List<DataImport__c>{dataImport};
 
-        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
+            BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
+        } catch (Exception e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+
+            throw returnDmlException(JSONExceptionData);
+        }
     } 
 
     /*******************************************************************************************************
     * @description Return the imported Opportunity (Donation) from a DataImport process
-    * @param diObjId Id of DataImport object that created or matching this Opportunity
+    * @param dataImportId Id of DataImport object that created or matching this Opportunity
     * @return Id of the Opportunity
     */
-    private static String getOpportunityIdFromImport(Id diRecordId) {
+    private static String getOpportunityIdFromImport(Id dataImportId) {
         try {
             DataImport__c di = [
                     SELECT DonationImported__c,
                             FailureInformation__c
                     FROM DataImport__c
-                    WHERE Id = :diRecordId
+                    WHERE Id = :dataImportId
             ];
             if(di.FailureInformation__c != null) {
-                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(di.FailureInformation__c);
-
-                throw returnAuraException(JSONExceptionData);
+                throw new BDIException(di.FailureInformation__c);
             }
             return di.DonationImported__c;
         } catch(Exception e) {
+
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw returnAuraException(JSONExceptionData);
         }
     }
 
+    @AuraEnabled
+    public static Boolean isElevateCustomer() {
+        try {
+            return GE_PaymentServices.isElevateCustomer;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
 
+    private class BDIException extends Exception {}
 }
