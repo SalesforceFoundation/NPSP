@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Methods to handle converting data import help text mappings to custom metadata records
 */
-public inherited sharing class BDI_MigrationMappingUtility {
+public without sharing class BDI_MigrationMappingUtility {
     /*******************************************************************************************************
     * @description Metadata queued up for deployment
     */
@@ -375,47 +375,66 @@ public inherited sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-        * @description Creates the corresponding Migrated Custom Field Mapping records
-        * @param list of Default Field Mapping record developer names
-        */
+    * @description Creates the corresponding Migrated Custom Field Mapping records
+    * @param defaultFieldMappingDeveloperNames - list of Default Field Mapping records to reference
+    */
     public void migrateNewDefaultToCustomMetadata(List<String> defaultFieldMappingDeveloperNames) {
-
         queuedMetadataTypesForDeploy.clear();
 
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
+                new Map<String, Data_Import_Field_Mapping__mdt>();
+
+        // Collect Migrated Custom Object Mapping developer names
+        Map<String, String> dataImportObjectDeveloperNameByLabel =
+                helper.getDataImportObjectDeveloperNamesByLabel();
+
+        // Collect current Default Field Mapping and Migrated Custom Field Mapping records
         Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByFieldMappingKey =
                 helper.getFieldMappingStringsBySetDeveloperName(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
         Map<String, Data_Import_Field_Mapping__mdt> migratedFieldMappingsByFieldMappingKey =
                 helper.getFieldMappingStringsBySetDeveloperName(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
 
-        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
-                new Map<String, Data_Import_Field_Mapping__mdt>();
+        // Collect Default Field Mapping records of interest based on values passed in
         List<String> referenceFieldMappingKeys = helper.getFieldMappingKeysByDeveloperName(
                 defaultFieldMappingDeveloperNames, DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
 
-        for (String key : referenceFieldMappingKeys){
-            if (migratedFieldMappingsByFieldMappingKey.containsKey(key)){
+        for (String key : referenceFieldMappingKeys) {
+            // If there is a match with the Migrated Field Mapping, do nothing
+            if (migratedFieldMappingsByFieldMappingKey.containsKey(key)) {
                 continue;
+                // If no match is found, prepare to create the Migrated Field Mapping records
             } else {
                 referenceFieldMappingsByStrings.put(key, referenceFieldMappingsByFieldMappingKey.get(key));
             }
         }
 
-        if (referenceFieldMappingsByStrings.size()>0){
+        // Create and enqueue Migrated Field Mapping records
+        if (referenceFieldMappingsByStrings.size()>0) {
             for (Data_Import_Field_Mapping__mdt referenceFieldMapping : referenceFieldMappingsByStrings.values()) {
                 Data_Import_Field_Mapping__mdt clone = referenceFieldMapping.clone();
 
                 DataImportFieldMapping fieldMapping = new DataImportFieldMapping(
                         clone, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
-                fieldMapping.setObjectMapping(
-                        referenceFieldMapping.DeveloperName,
-                        fieldMapping.dataImportObjectName);
 
-                fieldMapping.setRecordName(null, false);
-                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                if (dataImportObjectDeveloperNameByLabel.size()>0) {
+                    // Set Target Object Mapping name
+                    String existingObjectMappingDeveloperName =
+                            dataImportObjectDeveloperNameByLabel.get(fieldMapping.targetObjectMappingLabel);
+                    fieldMapping.setObjectMapping(
+                            existingObjectMappingDeveloperName, fieldMapping.targetObjectMappingLabel);
+                    // Set unique record name
+                    fieldMapping.setRecordName(null, true);
+                    // Set all other values and add to queue
+                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                }
             }
         }
 
+        // Deploy new metadata record types
+        if (queuedMetadataTypesForDeploy.size()>0) {
+ 	       CMT_MetadataAPI.deployMetadata(
+                   queuedMetadataTypesForDeploy, new BDI_MigrationMappingUtility.DeploymentCallback());
+        }
     }
 
     /*******************************************************************************************************
