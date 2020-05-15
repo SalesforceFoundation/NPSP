@@ -272,8 +272,9 @@ Validate Batch Process When CRLP Checked
     Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
 
 Run Donations Batch Process
-    [Documentation]               
-    Open NPSP Settings            Donations                     Customizable Rollups
+    [Documentation]              Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked 
+    ...                          else runs Validate Batch Process When CRLP UnChecked
+    Open NPSP Settings           Donations                     Customizable Rollups
     ${crlp_enabled} =            Check Crlp Not Enabled By Default
 
     #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
@@ -282,17 +283,34 @@ Run Donations Batch Process
         ...     ELSE    Validate Batch Process When CRLP Checked
      
 Scroll Page To Location
-    [Arguments]    ${x_location}    ${y_location}
-    Execute JavaScript    window.scrollTo(${x_location},${y_location}) 
+    [Documentation]     Scrolls window by pixels using javascript
+    ...                 Required parameters are:
+    ...
+    ...                 |   x_location   | pixels to scroll by, along the x-axis(horizontal) |
+    ...                 |   y_location   | pixels to scroll by, along the y-axis(vertical) |
+    [Arguments]         ${x_location}    ${y_location}
+    Execute JavaScript  window.scrollTo(${x_location},${y_location}) 
 
 Open NPSP Settings
-    [Arguments]    ${topmenu}    ${submenu}
+    [Documentation]           Goes to NPSP settings page and opens the sublist under the toplist
+    ...                       Required parameters are:
+    ...
+    ...                       |   topmenu   | parent list Ex:Bulk Data Processes |
+    ...                       |   submenu   | child list Ex:Rollup Donations Batch |
+    [Arguments]               ${topmenu}     ${submenu}
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            ${topmenu}
     Open Sub Link             ${submenu}
     Sleep  1
     
 Click Data Import Button
+    [Documentation]   Switches to the frame and clicks the button identified by path
+    ...               Ex: Click Data Import Button  NPSP Data Import  button  Begin Data Import Process
+    ...               Required parameters are:
+    ...
+    ...               |   frame_name   | name of the frame on the page |
+    ...               |   ele_path   | button path specified in locator file |
+    ...               |   others    |   parameters to identify button   |
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
        
