@@ -1,10 +1,31 @@
 <template>
-        <lightning-record-edit-form record-id={recordId}
-                                    object-api-name="npe03__Recurring_Donation__c"
-                                    onsuccess={handleSuccess}>
-        <lightning-messages>
-        </lightning-messages>
-    
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+
+    <lightning-record-edit-form record-id={recordId}
+                                object-api-name="npe03__Recurring_Donation__c"
+                                onload={handleLoad}
+                                onsubmit={handleSubmit}
+                                onerror={handleError}
+                                onsuccess={handleSuccess}>
+        <template if:true={hasError}>
+            <div class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small">
+                <div class="slds-notify slds-notify_extension slds-notify_toast slds-theme_error slds-m-horizontal_none" role="alert" style="width: 99%">
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">
+                            {errorMessage.message}
+                        </h2>
+                    </div>
+                </div>
+                <div class="slds-text-color_destructive slds-p-horizontal_small slds-text-align_left">{errorMessage.detail}</div>
+            </div>
+            
+        </template>
+
         <div class="slds-section slds-is-open">
             <h3 class="slds-section__title slds-theme_shade">
                 <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Donor Information</span>

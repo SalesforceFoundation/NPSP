@@ -1,4 +1,7 @@
 ({
+    /**
+     * @description: Create the modal when initializing the component
+     */
     handleShowModal: function (component, event, helper) {
         let recordId = component.get('v.recordId');
         let parentId;
@@ -28,6 +31,9 @@
         });
     },
 
+    /**
+     * @description: Listen to event sent from the modal and close the modal accordingly
+     */
     handleModalEvent: function(component, event, helper) {
         const details = event.getParams('detail');
 

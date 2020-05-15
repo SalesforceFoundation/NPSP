@@ -23,6 +23,7 @@ import save from '@salesforce/label/c.stgBtnSave';
 import configureEntryForm from '@salesforce/apex/RD2_entryFormController.configureEntryForm';
 
 export default class rdEntryForm extends LightningElement {
+
     CUSTOM_LABELS = Object.freeze({
         cancel,
         save
@@ -49,30 +50,61 @@ export default class rdEntryForm extends LightningElement {
     @api parentId;
     @api recordId;
 
+    @track isLoading = true;
     @track isAutoNamingDisabled;
     @track isMultiCurrencyEnabled;
 
+    @track hasError = false;
+    @track errorMessage = {};
+
     listenerEvent = 'rdEntryFormEvent';
 
-   connectedCallback() {
-    configureEntryForm().then(response => {
-       this.isAutoNamingDisabled = response.isAutoNamingDisabled;
-       this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
-    })
-    .catch(error => {
-       
-    });
+    connectedCallback() {
+        configureEntryForm().then(response => {
+            this.isAutoNamingDisabled = response.isAutoNamingDisabled;
+            this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
+        });
     }
 
     /*******************************************************************************
-    * @description Fires an event to utilDedicatedListener with the cancel action if
-    * a dedicated listener event name is provided otherwise dispatches a CustomEvent.
+    * @description When record is loaded, clear the spinner
     */
-   handleCancel() {
-        fireEvent(this.pageRef, 'rdEntryFormEvent', { action: 'cancel' });
+    handleLoad() {
+        this.isLoading = false;
+    }
+    /*******************************************************************************
+    * @description Override the default submit. Add any fields before the submittion
+    */
+    handleSubmit(event){
+        this.isLoading = true;
+        event.preventDefault();
+        const fields = event.detail.fields;
+        this.template.querySelector('lightning-record-edit-form').submit(fields);
     }
 
+    /*******************************************************************************
+    * @description Override standard error handling with custom error display
+    */
+    handleError(event) {
+        this.isLoading = false;
+        this.hasError = true;
+        this.errorMessage = event.detail;
+
+    }
+
+    /*******************************************************************************
+    * @description Fires an event to utilDedicatedListener with the cancel action
+    */
+    handleCancel() {
+        this.isLoading = false;
+        fireEvent(this.pageRef, this.listenerEvent, { action: 'cancel' });
+    }
+
+    /*******************************************************************************
+    * @description Fires an event to utilDedicatedListener with the success action
+    */
     handleSuccess(event) {
-        fireEvent(this.pageRef, 'rdEntryFormEvent', { action: 'success', recordId: event.detail.id});
+        this.isLoading = false;
+        fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id});
     }
 }

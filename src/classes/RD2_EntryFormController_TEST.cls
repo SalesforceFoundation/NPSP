@@ -36,9 +36,17 @@
 */
 @isTest(IsParallel=true)
 public with sharing class RD2_EntryFormController_TEST {
+
     @isTest
     public static void shouldReturnRDSettingForEntryForm() {
-        
+        Test.startTest();
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.configureEntryForm();
+        Test.stopTest();
+
+        System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, ! ((Boolean) orgSettingsByKey.get('isAutoNamingDisabled')),
+            'Recurring Donation Auto Naming setting should be returned accordingly');
+        System.assertEquals(UserInfo.isMultiCurrencyOrganization(), (Boolean) orgSettingsByKey.get('isMultiCurrencyEnabled'),
+            'Multi Currency Org should be detect in the configuration.');
     }
 
 }

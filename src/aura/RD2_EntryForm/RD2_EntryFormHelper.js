@@ -1,4 +1,7 @@
 ({
+    /**
+     * @description: Close and redirect the modal
+     */
     handleCloseModal: function(component) {
         let navEvt = this.constructNavigationEvent(
             component.get('v.parentId'),
@@ -12,6 +15,9 @@
         navEvt.fire();
     },
 
+    /**
+     * @description: Determine where the page should be redirect and construct the event
+     */
     constructNavigationEvent: function(parentId, recordId) {
         let navEvt;
 
@@ -32,20 +38,24 @@
         return navEvt;
     },
 
+    /**
+    * @description: Decode the Base64 component fragment and get the parent Id from the url.
+    * If the target fragment is not found, return a blank string or null
+    */
     getParentId: function() {
         let syntax = 'inContextOfRef';
         syntax = syntax.replace(/[\[\]]/g, "\\$&");
         var url = window.location.href;
         var regex = new RegExp("[?&]" + syntax + "(=1\.([^&#]*)|&|#|$)");
-        var results = regex.exec(url);
+        var encodedFramgents = regex.exec(url);
 
-        if (!results) {
+        if (!encodedFramgents) {
             return null;
-        } else if (!results[2]) {
+        } else if (!encodedFramgents[2]) {
             return '';
         }
         
-        const decodedUrlId = decodeURIComponent(results[2].replace(/\+/g, " "));
-        return JSON.parse(window.atob(decodedUrlId)).attributes.recordId;
+        const decodedFragment = decodeURIComponent(encodedFramgents[2].replace(/\+/g, " "));
+        return JSON.parse(window.atob(decodedFragment)).attributes.recordId;
     }
 })
