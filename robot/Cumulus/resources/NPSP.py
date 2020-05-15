@@ -958,7 +958,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clears the data in input field and enters the value specified """
         locator=npsp_lex_locators['bge']['edit_field'].format(title)
         field=self.salesforce._populate_field(locator, value)
-        
+
+    @capture_screenshot_on_error    
     def verify_row_count(self,value):
         """verifies if actual row count matches with expected value"""
         locator=npsp_lex_locators['bge']['count']
