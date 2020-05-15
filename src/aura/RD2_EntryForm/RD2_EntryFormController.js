@@ -16,7 +16,7 @@
                 const modalBody = content;
 
                 let modalReference = component.find('overlayLib').showCustomModal({
-                    header: "New Recurring Donation",
+                    header:  $A.get('$Label.c.RD2_EntryFormHeader'),
                     body: modalBody,
                     cssClass: component.getName() + ' slds-modal_medium custom-modal',
                     showCloseButton: true,

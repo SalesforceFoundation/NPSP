@@ -19,6 +19,10 @@ import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe0
 
 import cancel from '@salesforce/label/c.stgBtnCancel';
 import save from '@salesforce/label/c.stgBtnSave';
+import donationSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
+import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHeader';
+import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHeader';
+
 
 import configureEntryForm from '@salesforce/apex/RD2_entryFormController.configureEntryForm';
 
@@ -26,7 +30,10 @@ export default class rdEntryForm extends LightningElement {
 
     CUSTOM_LABELS = Object.freeze({
         cancel,
-        save
+        save,
+        donationSectionHeader,
+        donorSectionHeader,
+        otherSectionHeader
     });
 
     FIELDS = Object.freeze({
@@ -50,13 +57,13 @@ export default class rdEntryForm extends LightningElement {
     @api parentId;
     @api recordId;
 
-    @track isLoading = true;
     @track isAutoNamingDisabled;
     @track isMultiCurrencyEnabled;
 
     @track hasError = false;
     @track errorMessage = {};
 
+    isConfigurationLoading = true;
     listenerEvent = 'rdEntryFormEvent';
 
     connectedCallback() {
@@ -67,16 +74,9 @@ export default class rdEntryForm extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description When record is loaded, clear the spinner
-    */
-    handleLoad() {
-        this.isLoading = false;
-    }
-    /*******************************************************************************
     * @description Override the default submit. Add any fields before the submittion
     */
     handleSubmit(event){
-        this.isLoading = true;
         event.preventDefault();
         const fields = event.detail.fields;
         this.template.querySelector('lightning-record-edit-form').submit(fields);
@@ -86,7 +86,6 @@ export default class rdEntryForm extends LightningElement {
     * @description Override standard error handling with custom error display
     */
     handleError(event) {
-        this.isLoading = false;
         this.hasError = true;
         this.errorMessage = event.detail;
 
@@ -96,7 +95,6 @@ export default class rdEntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the cancel action
     */
     handleCancel() {
-        this.isLoading = false;
         fireEvent(this.pageRef, this.listenerEvent, { action: 'cancel' });
     }
 
@@ -104,7 +102,6 @@ export default class rdEntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the success action
     */
     handleSuccess(event) {
-        this.isLoading = false;
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id});
     }
 }

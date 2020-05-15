@@ -1,14 +1,6 @@
 <template>
-    <div class="spinner">
-        <template if:true={isLoading}>
-             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
-             </lightning-spinner>
-        </template>
-    </div>
-
     <lightning-record-edit-form record-id={recordId}
                                 object-api-name="npe03__Recurring_Donation__c"
-                                onload={handleLoad}
                                 onsubmit={handleSubmit}
                                 onerror={handleError}
                                 onsuccess={handleSuccess}>
@@ -28,7 +20,7 @@
 
         <div class="slds-section slds-is-open">
             <h3 class="slds-section__title slds-theme_shade">
-                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Donor Information</span>
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{CUSTOM_LABELS.donorSectionHeader}</span>
             </h3>
             <div aria-hidden="false" class="slds-section__content">
                 <lightning-layout horizontal-align="spread" multiple-rows="true">
@@ -52,7 +44,7 @@
 
         <div class="slds-section slds-is-open">
             <h3 class="slds-section__title slds-theme_shade">
-                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Donation Information</span>
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{CUSTOM_LABELS.donationSectionHeader}</span>
             </h3>
             <div aria-hidden="false" class="slds-section__content">
 
@@ -108,7 +100,7 @@
 
         <div class="slds-section slds-is-open">
             <h3 class="slds-section__title slds-theme_shade">
-                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Other Information</span>
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{CUSTOM_LABELS.otherSectionHeader}</span>
             </h3>
             <div aria-hidden="false" class="slds-section__content">
                 <lightning-layout horizontal-align="spread" multiple-rows="true">
@@ -126,7 +118,7 @@
 
                     <template if:true={isMultiCurrencyEnabled}>
                         <lightning-layout-item padding="horizontal-small" size="12">
-                            <lightning-input-field class="currency-field-class" field-name={FIELDS.CurrencyIsoCode}>
+                            <lightning-input-field class="currency-field-class" field-name={FIELDS.CurrencyIsoCode} requried>
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>

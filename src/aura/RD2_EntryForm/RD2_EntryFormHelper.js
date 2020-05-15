@@ -24,7 +24,7 @@
         if(parentId || recordId) {
             navEvt = $A.get("e.force:navigateToSObject");
             navEvt.setParams({
-            "recordId": (recordId) ? recordId : parentId,
+            "recordId": parentId || recordId,
             "slideDevName": "related"
             });
 
