@@ -17,7 +17,7 @@ npsp_lex_locators={
         "header_text_spl": "//h1//lightning-formatted-text",
     },
     "record": {
-        'button':"//div[contains(@class,'form-footer')]//button[@title='{}']",
+        'button':"//lightning-button/button[@title='{}']",
         'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
@@ -139,7 +139,7 @@ npsp_lex_locators={
     'object':{
         'record':'//tbody//a[text()= "{}"]',
         "field": "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//*[self::input or self::textarea]",
-        'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
+        'button': "//div[contains(@class,'windowViewMode')]//ul[contains(@class,'forceActionsContainer')][contains(@class,'oneActionsRibbon')]//a[@title='{}']",
         'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
         'field-value':'//tbody/tr[./th//a[text()="{}"]]/td[.//span[text()="{}"]]',
     },
@@ -206,7 +206,7 @@ npsp_lex_locators={
         'field-text':'//label[text()="{}"]/following-sibling::div/textarea',
         'button':'//div[contains(@class,"active")]/descendant::button[text()="{}"]',
         'month':"//div[@class='slds-align-middle']//button[@title='{}']",
-        'date':"//div[contains(@class,'slds-datepicker')]/table[@class='slds-datepicker__month']//span[text()='{}']",
+        'date':"//div[contains(@class,'slds-datepicker')]//table[@class='slds-datepicker__month']//span[text()='{}']",
         'card-header':'//article[./div[@class="slds-card__body"]//lightning-formatted-text[text()="{}"]]/header',
         'edit_button':'//td[@data-label="{}"]//button',
         'edit_field':'//lightning-primitive-datatable-iedit-panel//input',
