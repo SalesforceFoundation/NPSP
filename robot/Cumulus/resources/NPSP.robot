@@ -262,3 +262,10 @@ Process Data Import Batch
     Click                                              Start Data Import
     Begin Data Import Process And Verify Status        BDI_DataImport_BATCH    ${status}
     Click Close Button    
+
+Enable Advanced Mapping
+    [Documentation]    This keyword enables advanced mapping if not already enabled.  
+    Go To Page                              Custom          NPSP_Settings
+    Open Main Menu                          System Tools
+    Click Link With Text                    Advanced Mapping for Data Import & Gift Entry   
+    Enable Advanced Mapping If Not Enabled 
