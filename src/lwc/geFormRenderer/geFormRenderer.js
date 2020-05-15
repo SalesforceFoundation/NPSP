@@ -28,8 +28,7 @@ import {
     deepClone,
     getNamespace,
     getSubsetObject,
-    validateJSONString,
-    getNamespace
+    validateJSONString
 } from 'c/utilCommon';
 import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
