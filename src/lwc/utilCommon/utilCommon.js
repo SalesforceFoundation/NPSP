@@ -404,10 +404,9 @@ const getNamespace = (apiName) => {
 }
 
 /**
- * @description Method checks if running in non-namespaced or non-npsp namespaced
- *               environment, this method will strip off the NPSP prefix of a field or object
- *               name and replace it with the current namespace of the UTIL_Namespace if
- *               appropriate.
+ * @description Method checks if the passed in string is namespaced and
+ *              will attempt to strip off the namespace prefix and replace
+ *              it with the provided namespace.
  *
  * @param {string} string: Text to be namespaced
  * @param {string} namespace: Namespace string to be used
