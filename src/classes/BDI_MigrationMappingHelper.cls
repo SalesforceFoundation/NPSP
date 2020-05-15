@@ -307,4 +307,40 @@ public class BDI_MigrationMappingHelper {
 
         return fieldMappingsBySourceFieldName;
     }
+
+    /*******************************************************************************************************
+    * @description For Migrated Custom Objects, creates a map of Developer Names by Label
+    * @return Collection of Strings of Developer Names by Label
+    */
+    
+    public Map<String, String> getDataImportObjectDeveloperNamesByLabel() {
+
+        Map<String, String> dataImportObjectDeveloperNameByLabel = new Map<String, String>();
+
+        // Gather Migrated Custom Object Mapping records by legacy name
+        Map<String, Data_Import_Object_Mapping__mdt> existingMigratedObjectMappings =
+            getObjectMappingsBySetDeveloperName(
+                    BDI_MigrationMappingUtility.MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
+        Map<String, Data_Import_Object_Mapping__mdt> referenceObjectMappingsByDeveloperName =
+            getObjectMappingsBySetDeveloperName(
+                    BDI_MigrationMappingUtility.DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
+
+        // If Migrated Custom Object Mappings exist
+        if (existingMigratedObjectMappings.size()>0) {
+            // Create a map of Developer Names using Reference Object Mappings as lookup
+            for (String name : referenceObjectMappingsByDeveloperName.keySet()) {
+                String label;
+                String developerName;
+                Data_Import_Object_Mapping__mdt existingMigratedObjectMapping =
+                        existingMigratedObjectMappings.get(name);
+                if (existingMigratedObjectMapping != null){
+                    label = existingMigratedObjectMapping.Label;
+                    developerName = existingMigratedObjectMapping.DeveloperName;
+                }
+
+                dataImportObjectDeveloperNameByLabel.put(label, developerName);
+            }
+        }
+        return dataImportObjectDeveloperNameByLabel;
+    }
 }

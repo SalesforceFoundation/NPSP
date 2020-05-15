@@ -190,7 +190,7 @@
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
         <valueSet>
-            <restricted>true</restricted>
+            <restricted>false</restricted>
             <valueSetDefinition>
                 <sorted>false</sorted>
                 <value>
@@ -337,11 +337,13 @@
                     <fullName>29</fullName>
                     <default>false</default>
                     <label>29</label>
+                    <isActive>true</isActive>
                 </value>
                 <value>
                     <fullName>30</fullName>
                     <default>false</default>
                     <label>30</label>
+                    <isActive>true</isActive>
                 </value>
                 <value>
                     <fullName>Last_Day</fullName>

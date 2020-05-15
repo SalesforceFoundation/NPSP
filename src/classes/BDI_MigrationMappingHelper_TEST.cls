@@ -139,6 +139,29 @@ private class BDI_MigrationMappingHelper_TEST {
                 helper.getFieldMappingKeysByDeveloperName(newDefaultMappingStrings, DEFAULT_FIELD_MAPPING_SET);
 
         System.assert(fieldMappings.size() > 0,
-                'We\'re able to retrieve a map of the packaged data import field mappings');
+                'We\'re able to retrieve a list of the packaged data import field mappings');
+    }
+
+    /*******************************************************************************************************
+   * @description Test that we can retrieve values from Custom Metadata Type Object Mapping
+   */
+    @isTest
+    static void shouldGetObjectDeveloperNameByLabel() {
+        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+
+        Map<String, Data_Import_Object_Mapping__mdt> existingMigratedObjectMappings =
+                helper.getObjectMappingsBySetDeveloperName(
+                        BDI_MigrationMappingUtility.MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
+
+        Map <String, String> objectFieldMappingStrings =
+                helper.getDataImportObjectDeveloperNamesByLabel();
+
+        if (existingMigratedObjectMappings.size() > 0) {
+            System.assert(objectFieldMappingStrings.size() > 0,
+                    'Migrated Custom Object Mapping exists and we\'re able to retrieve them');
+        } else {
+            System.assert(objectFieldMappingStrings.size() == 0,
+                    'Migrated Custom Object Mapping does not exists so we\'re unable to retrieve them');
+        }
     }
 }

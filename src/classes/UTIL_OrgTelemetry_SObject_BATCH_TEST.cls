@@ -39,6 +39,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
     private static Integer NUM_OPPS_WITH_MULTIPLE_PAYMENTS = 10;
     private static Integer NUM_OPPS_WITH_SINGLE_PAYMENT = 5;
+    private static Integer NUM_DATA_IMPORT_RECORDS = 100;
 
     /**
     * @description Create test data needed for the unit tests in this class
@@ -74,6 +75,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         createOpps(12, rds[1].Id);
 
         setupOppsWithPayments();
+
+        createQualifiedDIRecords(NUM_DATA_IMPORT_RECORDS);
     }
 
     /**
@@ -92,6 +95,10 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         insert payments;
     }
 
+    private static void createQualifiedDIRecords (Integer numOfRecords) {
+       insert UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(numOfRecords);
+    }
+
 
     /**
     * @description Provide coverage test for the executed batch job. There's no way to verify that the
@@ -101,16 +108,27 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @IsTest
     private static void testSObjectBatchJob() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
-        oppBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+            new UTIL_OrgTelemetry_SObject_BATCH(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
+        oppBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
 
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
-        rdBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+            new UTIL_OrgTelemetry_SObject_BATCH(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
+        rdBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
+
+        UTIL_OrgTelemetry_SObject_BATCH geBatch =
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                        UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS);
+        geBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
 
         Test.startTest();
         Database.executeBatch(oppBatch);
         Database.executeBatch(rdBatch);
+        Database.executeBatch(geBatch);
         Test.stopTest();
     }
 
@@ -152,6 +170,26 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
+* @description Confirms RECURRING_DONATIONS job mode queries for the correct SObject type with the correct limit
+*/
+    @IsTest
+    private static void dataImportsJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
+        UTIL_OrgTelemetry_SObject_BATCH geBatch =
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                        UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS);
+        geBatch.chunkSize = NUM_DATA_IMPORT_RECORDS;
+
+        String geBatchQuery = geBatch.start(null).getQuery();
+        System.assert(geBatchQuery.endsWith('LIMIT 100'), 'The query should be limited with the specified chunk size');
+
+        List<SObject> actualRecords = Database.query(geBatchQuery);
+        System.assert(Database.query(geBatchQuery) instanceof List<DataImport__c>,
+                'DATA IMPORTS job mode should query Data Imports');
+
+        assertOnOrderedSObjects(queryDataImportsInIdOrder(), actualRecords);
+    }
+
+    /**
     * @description Confirms OPPORTUNITIES job modes query for the correct SObject type with the correct Id offset
     */
     @IsTest
@@ -189,6 +227,27 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         String rdBatchQuery = rdBatch.start(null).getQuery();
 
         List<SObject> actualRecords = Database.query(rdBatchQuery);
+
+        assertOnOrderedSObjects(expectedRecords, actualRecords);
+    }
+
+    /**
+    * @description Confirms DATA_IMPORTS job modes query for the correct SObject type with the correct Id offset
+    */
+    @IsTest
+    private static void dataImportsJobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
+        List<SObject> expectedRecords = queryDataImportsInIdOrder();
+
+        UTIL_OrgTelemetry_SObject_BATCH geBatch =
+                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS);
+
+        //offset the first Id
+        geBatch.lastProcessedId = expectedRecords[0].Id;
+        expectedRecords.remove(0);
+
+        String geBatchQuery = geBatch.start(null).getQuery();
+
+        List<SObject> actualRecords = Database.query(geBatchQuery);
 
         assertOnOrderedSObjects(expectedRecords, actualRecords);
     }
@@ -276,6 +335,32 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
+    * @description Confirms Data Import records created in the last 30 days are calculated correctly
+    */
+    @IsTest
+    private static void shouldCalculateDataImportMetrics() {
+        UTIL_OrgTelemetry_SObject_BATCH geBatch =
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                        UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS
+                );
+
+        String geBatchQuery = geBatch.start(null).getQuery();
+        List<DataImport__c> dataImports = Database.query(geBatchQuery);
+
+        Test.startTest();
+        geBatch.execute(null, dataImports);
+        Test.stopTest();
+
+        System.assertEquals(dataImports[dataImports.size() - 1 ].Id, geBatch.lastProcessedId,
+                'The lastProcessedId should be cached correctly'
+        );
+
+        System.assertEquals(NUM_DATA_IMPORT_RECORDS, geBatch.geBatchDataImportCount,
+                'The number of data imports in the last 30 days should be tracked correctly');
+
+    }
+
+    /**
     * @description Confirms Recurring Donation Opportunity metrics are captured in FeatureManagement
     * at the end of the batch
     */
@@ -355,6 +440,26 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature DataCount_ONETIME_Use and set correctly'
         );
+    }
+
+    /**
+    * @description Confirms Data Import metrics are captured in FeatureManagement at the end of the batch
+    */
+    @IsTest
+    private static void shouldCaptureDataImportMetricsInFeatureManagement() {
+        UTIL_OrgTelemetry_SObject_BATCH geBatch =
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                        UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.GE_BATCH_DATA_IMPORTS);
+        geBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(
+                UTIL_FeatureManagement.class, featureManagementMock);
+        geBatch.geBatchDataImportCount = NUM_DATA_IMPORT_RECORDS;
+        Test.startTest();
+        Database.executeBatch(geBatch);
+        geBatch.finish(null);
+        Test.stopTest();
+
+        System.assertEquals(NUM_DATA_IMPORT_RECORDS, featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name()));
     }
 
     /*
@@ -577,6 +682,14 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     */
     private static List<npe03__Recurring_Donation__c> queryRecurringDonationsInIdOrder() {
         return [SELECT Id FROM npe03__Recurring_Donation__c ORDER BY Id];
+    }
+
+    /**
+    * @description Queries recurring donations in order of Id
+    * @return List of npe03__Recurring_Donation__c ordered by Id
+    */
+    private static List<DataImport__c> queryDataImportsInIdOrder() {
+        return [SELECT Id FROM DataImport__c ORDER BY Id];
     }
 
     /**
