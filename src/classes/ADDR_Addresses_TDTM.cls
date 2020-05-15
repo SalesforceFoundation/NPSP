@@ -565,7 +565,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         String prefix = (isContact ? 'Mailing' : 'Billing');
 
         Boolean isDifferent = (
-            !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
+            !equalsStreetAddress((String) sObj.get(prefix + 'Street'), addr) ||
             !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
             !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
             !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
@@ -1042,24 +1042,51 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return;
         }
     }
-    
+
     /*******************************************************************************************************
-    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @description utility to compare standard Account or Contact mailing street to street from Address__c
+    * @param street mailing street from either Account or Contact
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public static Boolean equalsStreetAddress(String street, Address__c addr) {
+        if (isOneLineAddress(addr)) {
+            return equalsCaseSensitive(street, addr.MailingStreet__c);
+        }
+        if (street != null) {
+            street = street.replaceFirst('(\\r\\n)', '');
+        }
+        return equalsCaseSensitive(street, addr.MailingStreet__c + addr.MailingStreet2__c);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to determine whether address record represents 1 or 2 line address
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public static Boolean isOneLineAddress(Address__c addr) {
+        if (addr.MailingStreet2__c == null || addr.MailingStreet2__c.length() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to combine mailing street fields into a single string with embedded CR LF
     * @param addr the Address to look at
     * @return boolean
     */
     public static String getMultilineStreet(Address__c addr) {
-        String str = addr.MailingStreet__c;
-        if (addr.MailingStreet2__c != null && addr.MailingStreet2__c.length() > 0) {
-            str += '\r\n' + addr.MailingStreet2__c;
+        if (isOneLineAddress(addr)) {
+            return addr.MailingStreet__c;
         }
-        return str;
+        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
     }
-    
+
     /*******************************************************************************************************
-    * @description Utility to copy Address fields between to Address objects.
+    * @description Utility to copy Address fields between two Address objects.
     * @param addrSrc the source Address
-    * @param addrSrc the destination Address
+    * @param addrDst the destination Address
     * @return void
     */
     public static void copyAddressObj(Address__c addrSrc, Address__c addrDst) {

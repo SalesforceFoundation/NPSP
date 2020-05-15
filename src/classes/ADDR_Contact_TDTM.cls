@@ -60,6 +60,14 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         Map<Id,Account> mapAccountIdAccount = null;
         boolean acctHasAddress = false;
         boolean acctChanged = false;
+        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
+
+        if (isBefore) {
+            // normalize line breaks unconditionally
+            for (SObject so : listNew) {
+                UTIL_Address.normalizeLineBreak((Contact)so);
+            }
+        }
 
 		// bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
@@ -71,8 +79,7 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         // moving an existing contact to a new household or different household without an address - make their address
         //     a new default address, unless they say it is an override
         
-        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
-        if (isBefore) { 
+        if (isBefore) {
             // need to query account fields we need to look at
             Set<Id> setAccountId = new Set<Id>();
             for (SObject so : listNew) {

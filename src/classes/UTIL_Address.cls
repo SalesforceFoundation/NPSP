@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group Utility
+* @group Utilities
 * @description Address utility methods
 *
 */

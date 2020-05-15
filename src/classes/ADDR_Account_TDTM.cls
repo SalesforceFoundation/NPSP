@@ -47,6 +47,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
         DmlWrapper dmlWrapper = new DmlWrapper();
         list<Account> listAccCreateAddr = new list<Account>();      
        
@@ -54,6 +55,11 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         for (SObject so : listNew) {
             Account acc = (Account)so;
             i++;
+
+            // BEFORE INSERT & BEFORE UPDATE
+            if (isBefore) {
+                UTIL_Address.normalizeLineBreak(acc);
+            }
 
             // BEFORE INSERT
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
@@ -172,5 +178,4 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // since coming from an account address, there is no Address Type, so exclude it from the match testing.
         ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
-
 }
