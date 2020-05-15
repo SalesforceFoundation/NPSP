@@ -1955,7 +1955,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a data import with specified key,value pairs and return the data import record when keyword is called. Required parameters are:</p>
+<table border="1">
+<tr>
+<td>field name and value</td>
+<td>Ex:Contact1_Firstname__c=John</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create DataImportBatch">
@@ -1967,7 +1973,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a batch gift entry batch with specified key,value pairs and return the batch record when keyword is called. Required parameters are:</p>
+<table border="1">
+<tr>
+<td>field name and value</td>
+<td>Ex:Batch_Description__c=Created via API</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create GAU">
@@ -1979,7 +1991,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>If no arguments are passed, this keyword will create a GAU with Name as random strings with no additional info. This keyword returns the GAU dictonary when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>field api name=value</td>
+<td>Ex: Description=New GAU</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create GAU Allocation">
@@ -1995,8 +2013,7 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"><p>Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation</p>
-<p>Required parameters are:</p>
+                <td class="kwdoc"><p>Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation Required parameters are:</p>
 <table border="1">
 <tr>
 <td>gau_id</td>
@@ -2026,7 +2043,21 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates opportunity of specified type for specified account. Opportunity details can be passed as key, value pairs Sets defaults of StageName=Closed Won,CloseDate=current date,Amount=100, do not create payments as true if no values are passed. This keyword returns the opportunity dictonary when called Required parameters are:</p>
+<table border="1">
+<tr>
+<td>account_id</td>
+<td>id of account opportunity should be associated with</td>
+</tr>
+<tr>
+<td>opp_type</td>
+<td>avaialble options: Donation, Grant, Matching Gift, In-Kind Gift, Major Gift, Membership</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>Ex:StageName=Closed Won</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Organization Account">
@@ -2060,7 +2091,21 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a primary affiliation for a contact with specified account Required parameters are:</p>
+<table border="1">
+<tr>
+<td>account_id</td>
+<td>id of account</td>
+</tr>
+<tr>
+<td>contact_id</td>
+<td>id of contact</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>any field u want to populate with value on npe5__Affiliation__c object</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Recurring Donation">
@@ -2072,7 +2117,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a recurring donation with specified fields.This keyword returns the recurring donation dictonary when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: npe03__Installment_Period__c=Monthly</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Relationship">
@@ -2090,7 +2141,25 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a specified relationship between two contacts and sets default status as current if no value passed. This keyword returns the relationship record as dictonary when called Required parameters are:</p>
+<table border="1">
+<tr>
+<td>contact_id</td>
+<td>id of primary contact</td>
+</tr>
+<tr>
+<td>relcontact_id</td>
+<td>id of related contact</td>
+</tr>
+<tr>
+<td>relation</td>
+<td>possible relation between contacts</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: npe4__Status__c=Current</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Secondary Affiliation">
@@ -2106,7 +2175,20 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a secondary affiliation for a contact with specified account Required parameters are:</p>
+<table border="1">
+<tr>
+<td>account_id</td>
+<td>id of account</td>
+</tr>
+<tr>
+<td>contact_id</td>
+<td>id of contact</td>
+</tr>
+</table>
+<pre>
+field_api_name=value | any field u want to populate with value on npe5__Affiliation__c object
+</pre></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Modify Allocations Setting">
@@ -2118,8 +2200,7 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"><p>Can be used to modify either Default Allocations or Payment Allocations.</p>
-<p>Required parameters are:</p>
+                <td class="kwdoc"><p>Can be used to modify either Default Allocations or Payment Allocations. Required parameters are:</p>
 <table border="1">
 <tr>
 <td>field name and value</td>
@@ -2165,7 +2246,21 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Queries for record on opportunity object using recurring donation id, installment and other specified fields This keyword returns the record found when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>id</td>
+<td>recurring donation id</td>
+</tr>
+<tr>
+<td>installment</td>
+<td>installment name</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: npe03__Installment_Period__c=Monthly</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Capture Screenshot and Delete Records and Close Browser">
@@ -2191,7 +2286,21 @@ pre {
                   <i>*others</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Switches to the frame and clicks the button identified by path Ex: Click Data Import Button NPSP Data Import button Begin Data Import Process Required parameters are:</p>
+<table border="1">
+<tr>
+<td>frame_name</td>
+<td>name of the frame on the page</td>
+</tr>
+<tr>
+<td>ele_path</td>
+<td>button path specified in locator file</td>
+</tr>
+<tr>
+<td>others</td>
+<td>parameters to identify button</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Open NPSP Settings">
@@ -2205,7 +2314,17 @@ pre {
                   <i>submenu</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Goes to NPSP settings page and opens the sublist under the toplist Required parameters are:</p>
+<table border="1">
+<tr>
+<td>topmenu</td>
+<td>parent list Ex:Bulk Data Processes</td>
+</tr>
+<tr>
+<td>submenu</td>
+<td>child list Ex:Rollup Donations Batch</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Process Data Import Batch">
@@ -2233,7 +2352,7 @@ pre {
                 <td class="kwargs">
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked else runs Validate Batch Process When CRLP UnChecked</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Scroll Page To Location">
@@ -2247,7 +2366,17 @@ pre {
                   <i>y_location</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Scrolls window by pixels using javascript Required parameters are:</p>
+<table border="1">
+<tr>
+<td>x_location</td>
+<td>pixels to scroll by, along the x-axis(horizontal)</td>
+</tr>
+<tr>
+<td>y_location</td>
+<td>pixels to scroll by, along the y-axis(vertical)</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Validate Batch Process When CRLP Checked">
@@ -2257,7 +2386,7 @@ pre {
                 <td class="kwargs">
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is enabled</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Validate Batch Process When CRLP Unchecked">
@@ -2267,7 +2396,7 @@ pre {
                 <td class="kwargs">
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled</p></td>
               </tr>
               
             </tbody>
@@ -4711,7 +4840,7 @@ pre {
       
     </div>
     <div class="footer">
-      Generated on Wednesday May 06, 04:35 PM - cumulusci v3.12.1
+      Generated on Thursday May 14, 06:39 PM - cumulusci v3.12.2
     </div>
   </body>
 </html>
