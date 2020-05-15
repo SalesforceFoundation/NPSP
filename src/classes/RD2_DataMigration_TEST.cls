@@ -2451,14 +2451,13 @@ private class RD2_DataMigration_TEST {
     */
     private static void setRdOppsToClosedWonForRollupTests(npe03__Recurring_Donation__c rd, Integer numOpps) {
         List<Opportunity> oppToUpdate = new List<Opportunity>();
-        List<Opportunity> oppList =  oppGateway.getRecordsByCloseDate(rd);
+        List<Opportunity> rdOpps =  oppGateway.getRecordsByCloseDate(rd);
 
         Integer count = 0;
 
-        for (Opportunity opp: oppList) {
+        for (Opportunity opp: rdOpps) {
             if (count < numOpps) {
                 opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
-                opp.CloseDate = DATE_ESTABLISHED.addMonths(1);
             }
             count++;
             oppToUpdate.add(opp);
