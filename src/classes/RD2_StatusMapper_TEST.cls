@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Tests to store and retrieve Recurring Donation status to status type mapping
 */
-@IsTest
+@IsTest(IsParallel=true)
 public with sharing class RD2_StatusMapper_TEST {
     private static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
         RD2_Constants.STATUS_ACTIVE,

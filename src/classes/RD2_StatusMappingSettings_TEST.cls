@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Tests to save and retrieve Recurring Donation status to status type mapping
 */
-@IsTest
+@IsTest(IsParallel=true)
 private with sharing class RD2_StatusMappingSettings_TEST {
     private static final String STATUS_NEW = 'New';
     private static final String STATUS_CANCELED = 'Canceled';
