@@ -245,7 +245,7 @@ npsp_lex_locators={
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
         'button':"//button[text()='Create New Field Mapping']",
-        'field-label':'//lightning-formatted-text[text()="{}"]',
+        'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
         },
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
