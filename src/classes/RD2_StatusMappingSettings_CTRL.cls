@@ -119,8 +119,8 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     */
     private static Map<String, String> mapStateLabelByValue() {
         Map<String, String> stateLabelByValue = new Map<String, String>();
-        SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
-        SObjectField statusField = npe03__Recurring_Donation__c.Status__c;
+        SObjectType mappingSObjectType = RecurringDonationStatusMapping__mdt.SObjectType;
+        SObjectField stateField = RecurringDonationStatusMapping__mdt.State__c;
 
         for (String value : new Set<String>{
             RD2_Constants.STATUS_ACTIVE,
@@ -128,7 +128,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
             RD2_Constants.STATUS_CLOSED
         }) {
             String label = UTIL_Describe.getTranslatedPicklistLabel(
-                rdSObjectType, statusField, value
+                mappingSObjectType, stateField, value
             );
 
             stateLabelByValue.put(value, label);
