@@ -123,7 +123,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 raise Exception("Advanced Mapping is already enabled. Org should not have this enabled by default") 
             
             
-    def Enable_advanced_mapping_if_not_enabled(self):
+    def enable_advanced_mapping_if_not_enabled(self):
         """Checks if advanced mapping is Enabled and enables if not enabled"""
         locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
         if self.npsp.check_if_element_exists(locator):
@@ -151,7 +151,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 self.builtin.log("As expected Gift Entry is Disabled")
 
-    def Check_Crlp_Not_Enabled_By_Default(self):
+    def check_crlp_not_enabled_by_default(self):
         """Verifies that customizable rollups settings is not enabled by default
            By checking 'Configure Customizable Rollups' is not visible on the page"""
         locator=npsp_lex_locators['id'].format("navigateCRLPs")
