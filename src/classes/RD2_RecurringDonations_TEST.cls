@@ -316,7 +316,6 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
         System.assertEquals(Date.today(), rd2.npe03__Next_Payment_Date__c, 'Next Donation date should equal today');
-
     }
 
     /***
@@ -346,7 +345,6 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
         System.assertEquals(rd2.npe03__Next_Payment_Date__c.day(), 20, 'Next Donation day should equal 20');
-
     }
 
     /***
@@ -379,7 +377,6 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(1, rdSchedules.size(), 'Should be 1 schedule');
-
     }
 
     /***
@@ -661,6 +658,45 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(1, rd.InstallmentFrequency__c,
             'Installment Frequency should default to 1 when not specified on RD insert');
     }
+
+
+    /***
+    * @description Verifies Day of Month = 31 is mapped to Last_Day value
+    * when installment period is monthly
+    */
+    @isTest
+    private static void shouldTransformDayOfMonthWhenValueIs31ForMonthlyInstallments() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        String day = '31';
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDayOfMonth(day)
+            .build();
+
+        String errMessage = '';
+        try {
+            //simulate trigger execution before insert
+            //since the RD cannot be inserted since metadata deploy has not be run 
+            //to deploy Last_Day value for the restricted Day of Month picklist field
+            RD2_RecurringDonations_TDTM tdtm = new RD2_RecurringDonations_TDTM();
+            TDTM_Runnable.Action triggerAction = TDTM_Runnable.Action.BeforeInsert;
+            List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
+            List<npe03__Recurring_Donation__c> oldRds = null;
+
+            tdtm.transformDataBeforeValidation(rds, triggerAction);
+            tdtm.validate(rds, oldRds, triggerAction);
+            tdtm.transformDataInBeforeContext(rds, oldRds, triggerAction);
+
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage), 'No error should be generated: ' + errMessage);
+        System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, rd.Day_of_Month__c, 
+            'Day of Month field should be set to the Last_Day value');
+    }
+
+
 
     // Helpers
     ///////////////////
