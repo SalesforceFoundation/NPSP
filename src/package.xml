@@ -3401,6 +3401,13 @@
         <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
+        <members>RecurringDonationStatusMapping__mdt-de</members>
+        <members>RecurringDonationStatusMapping__mdt-en_US</members>
+        <members>RecurringDonationStatusMapping__mdt-es</members>
+        <members>RecurringDonationStatusMapping__mdt-fr</members>
+        <members>RecurringDonationStatusMapping__mdt-iw</members>
+        <members>RecurringDonationStatusMapping__mdt-ja</members>
+        <members>RecurringDonationStatusMapping__mdt-nl_NL</members>
         <members>Rollup__mdt-de</members>
         <members>Rollup__mdt-en_US</members>
         <members>Rollup__mdt-es</members>
