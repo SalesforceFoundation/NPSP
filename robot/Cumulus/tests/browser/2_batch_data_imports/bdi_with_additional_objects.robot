@@ -3,10 +3,12 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/DataImportPageObject.py
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
+...             Enable Advanced Mapping
 ...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
