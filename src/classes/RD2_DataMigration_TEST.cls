@@ -2453,14 +2453,9 @@ private class RD2_DataMigration_TEST {
         List<Opportunity> oppToUpdate = new List<Opportunity>();
         List<Opportunity> rdOpps =  oppGateway.getRecordsByCloseDate(rd);
 
-        Integer count = 0;
-
-        for (Opportunity opp: rdOpps) {
-            if (count < numOpps) {
-                opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
-            }
-            count++;
-            oppToUpdate.add(opp);
+         for (Integer i = 0; i < numOpps; i++) {
+            rdOpps[i].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+            oppToUpdate.add(rdOpps[i]);
         }
 
         update oppToUpdate;
