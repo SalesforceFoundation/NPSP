@@ -389,6 +389,45 @@ const getSubsetObject = (sourceObj, propertyNames) => {
     return subsetObject;
 }
 
+/**
+ * @description Parses the api name string of a custom
+ *              object or field and returns its namespace.
+ * @param apiName
+ * @returns {String} The namespace of the passed-in object or field.
+ *              Null if the object or field does not have a namespace.
+ */
+const getNamespace = (apiName) => {
+    if (!apiName) return null;
+
+    const apiNameParts = apiName.split('__');
+    return apiNameParts.length === 3 ? apiNameParts[0] : null;
+}
+
+/**
+ * @description Method checks if running in non-namespaced or non-npsp namespaced
+ *               environment, this method will strip off the NPSP prefix of a field or object
+ *               name and replace it with the current namespace of the UTIL_Namespace if
+ *               appropriate.
+ *
+ * @param {string} string: Text to be namespaced
+ * @param {string} namespace: Namespace string to be used
+ *
+ * @returns {String} The namespace of the passed-in object or field.
+ *              Null if the object or field does not have a namespace.
+ */
+const setNamespace = (string, namespace) => {
+    if (!namespace || string.startsWith(namespace)) return string;
+
+    const namespacePrefix = `${namespace}__`;
+    const previousNamespacePrefix = getNamespace(string);
+
+    if (previousNamespacePrefix) {
+        return string.replace(`${previousNamespacePrefix}__`, namespacePrefix);
+    }
+
+    return `${namespacePrefix}${string}`;
+}
+
 /*******************************************************************************
 * @description Checks to see if provided string is parsable. If true, returns
 * parsed string otherwise returns false.
@@ -407,6 +446,8 @@ export {
     debouncify,
     deepClone,
     findIndexByProperty,
+    getNamespace,
+    setNamespace,
     getQueryParameters,
     getSubsetObject,
     isEmpty,
