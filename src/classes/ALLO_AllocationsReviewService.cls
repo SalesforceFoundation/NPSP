@@ -136,18 +136,20 @@ public inherited sharing class ALLO_AllocationsReviewService {
      */
     @testVisible private Boolean isRequiresReview(SObject sObj, List<Allocation__c> allocations, List<Allocation__c> parentAllocations) {
         Decimal amount = null;
+        Boolean isPaymentAllocations = false;
 
         if (sObj instanceOf Opportunity) {
             amount = (Decimal) sObj.get('Amount');
         } else if (sObj instanceOf npe01__OppPayment__c) {
             amount = (Decimal) sObj.get('npe01__Payment_Amount__c');
+            isPaymentAllocations = true;
         } else { // invalid object passed to method
             return false;
         }
 
         // As soon as a positive reason is found, it is not necessary to look further.
         if (amount == null) {
-            if (!allocations.isEmpty()) {
+            if (!allocations.isEmpty() || (isPaymentAllocations && allocations.isEmpty())) {
                 return true;
             }
         } else if (amount == 0) {
