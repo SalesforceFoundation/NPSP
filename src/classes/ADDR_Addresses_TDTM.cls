@@ -565,7 +565,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         String prefix = (isContact ? 'Mailing' : 'Billing');
 
         Boolean isDifferent = (
-            !equalsStreetAddress((String) sObj.get(prefix + 'Street'), addr) ||
+            !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
             !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
             !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
             !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
@@ -1041,22 +1041,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
             return;
         }
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare standard Account or Contact mailing street to street from Address__c
-    * @param street mailing street from either Account or Contact
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    public static Boolean equalsStreetAddress(String street, Address__c addr) {
-        if (isOneLineAddress(addr)) {
-            return equalsCaseSensitive(street, addr.MailingStreet__c);
-        }
-        if (street != null) {
-            street = street.replaceFirst('(\\r\\n)', '');
-        }
-        return equalsCaseSensitive(street, addr.MailingStreet__c + addr.MailingStreet2__c);
     }
 
     /*******************************************************************************************************
