@@ -54,4 +54,21 @@ export default class utilDualListbox extends LightningElement {
             this.dispatchEvent(new CustomEvent('cancel', { detail: {} }));
         }
     }
+
+
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
+    get qaLocatorCancel() {
+        return 'button Listbox Cancel';
+    }
+
+    get qaLocatorSave() {
+        return 'button Listbox Save'
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
 }
