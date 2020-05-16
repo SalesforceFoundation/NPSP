@@ -226,6 +226,14 @@ tasks:
             database_url: 'sqlite:///datasets/100k/test_data.db'
             mapping: 'datasets/100k/mapping.yml'
 
+    generate_and_load_test_data:
+        class_path: cumulusci.tasks.bulkdata.generate_and_load_data_from_yaml.GenerateAndLoadDataFromYaml
+        options:
+            generator_yaml: datasets/big_report_recipe.yml
+            num_records: 10
+            num_records_tablename: Account
+            mapping: datasets/big_report_mapping.yml
+
     test_data_delete:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
         class_path: cumulusci.tasks.bulkdata.DeleteData
@@ -605,6 +613,17 @@ flows:
                         upsert rdSettings;
             4:
                 task: deploy_rd2_config
+
+    load_big_report_dataset:
+        steps:
+            5: 
+                flow: dev_org_namespaced
+            10:
+                task: disable_tdtm_trigger_handlers
+                options:
+                    namespace: npsp
+            15:
+                task: generate_and_load_big_report_test_data
 
     config_managed:
         steps:

@@ -1,0 +1,56 @@
+Insert Account:
+  sf_object: Account
+  table: Account
+  fields:
+    name: name
+Insert Campaign:
+  sf_object: Campaign
+  table: Campaign
+  fields:
+    name: name
+Insert Opportunity:
+  sf_object: Opportunity
+  table: Opportunity
+  fields:
+    CloseDate: CloseDate
+    name: name
+    AccountId: AccountId
+    CampaignId: CampaignId
+    StageName: StageName
+    RecordType: RecordType
+  filters:
+  - RecordType is NULL
+Insert Donation:
+  sf_object: Opportunity
+  table: Opportunity
+  fields:
+    name: name
+    AccountId: AccountId
+    CampaignId: CampaignId
+    CloseDate: CloseDate
+    StageName: StageName
+    RecordType: RecordType
+  record_type: Donation
+  filters:
+  - RecordType = 'Donation'
+Insert Recurring_Donation__c:
+  sf_object: npe03__Recurring_Donation__c
+  table: npe03__Recurring_Donation__c
+  fields:
+    npe03__Date_Established__c: npe03__Date_Established__c
+  lookups:
+    npe03__Organization__c:
+      table: Account
+Insert Other:
+  sf_object: Opportunity
+  table: Opportunity
+  fields:
+    name: name
+    AccountId: AccountId
+    CampaignId: CampaignId
+    CloseDate: CloseDate
+    StageName: StageName
+    RecordType: RecordType
+  record_type: Grant
+  filters:
+  - RecordType = 'Grant'

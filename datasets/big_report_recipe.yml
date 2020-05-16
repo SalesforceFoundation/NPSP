@@ -1,0 +1,201 @@
+- option: multiple
+  default: 0.00001
+
+- object: Account
+  count: <<7_328_874 * multiple>>
+  fields:
+    name: Account << id >>
+
+- object: Campaign
+  count: <<116_392  * multiple>>
+  fields:
+    name: YK<<id>>
+        
+- object: Campaign
+  count: <<48_837  * multiple>>
+  fields:
+    name: JK<<id>>
+
+- object: Campaign
+  count: <<4_240  * multiple>>
+  fields:
+    name: EK<<id>>
+
+- object: Campaign
+  count: <<5_409  * multiple>>
+  fields:
+    name: YL<<id>>
+
+- object: Campaign
+  count: <<25_626  * multiple>>
+  fields:
+    name: JL<<id>>
+
+- object: Campaign
+  count: <<(7_386_276 - (116_392 + 48_837 + 4_240 + 5_409 + 25_626)) * multiple>>
+  fields:
+    name: EK<<id>>
+
+- macro: OpportunityStuff
+  fields:
+    name: Opportunity <<count>>
+    AccountId: <<count % Account.id>>
+
+    CampaignId:
+      random_choice:
+        - choice:
+            probability: 49_543_074
+            pick:
+              random_number:
+                min: 0
+                max: << int((116_392 + 48_837 + 4_240 + 5_409 + 25_626) * multiple) >>
+        - choice:
+            probability: << 76_754_221 - 49_543_074 >>
+            pick:
+              random_number:
+                min: << int((116_392 + 48_837 + 4_240 + 5_409 + 25_626) * multiple) >>
+                max: << Campaign.id >>
+
+    CloseDate:
+      random_choice:
+        - choice:
+            probability: <<550000 * multiple>>
+            pick:
+              date_between:
+                start_date: 2019-01-01
+                end_date: 2019-01-31
+        - choice:
+            probability: <<550_000* multiple>>
+            pick:
+              date_between:
+                start_date: 2019-02-01
+                end_date: 2019-02-28
+        - choice:
+            probability: <<550_000* multiple>>
+            pick:
+              date_between:
+                start_date: 2019-03-01
+                end_date: 2019-03-31
+        - choice:
+            probability: <<550_000* multiple>>
+            pick:
+              date_between:
+                start_date: 2019-04-01
+                end_date: 2019-04-30
+        - choice:
+            probability: <<550_000* multiple>>
+            pick:
+              date_between:
+                start_date: 2019-05-01
+                end_date: 2019-05-31
+        - choice:
+            probability: <<550_000* multiple>>
+            pick:
+              date_between:
+                start_date: 2019-06-01
+                end_date: 2019-06-30
+        - choice:
+            probability: <<550_000 * multiple>>
+            pick:
+              date_between:
+                start_date: 2019-07-01
+                end_date: 2019-07-31
+        - choice:
+            probability: <<550_000 * multiple>>
+            pick:
+              date_between:
+                start_date: 2019-08-01
+                end_date: 2019-08-31
+        - choice:
+            probability: <<550_000 * multiple>>
+            pick:
+              date_between:
+                start_date: 2019-09-01
+                end_date: 2019-09-30
+        - choice:
+            probability: <<550_000 * multiple>>
+            pick:
+              date_between:
+                start_date: 2019-10-01
+                end_date: 2019-10-31
+        - choice:
+            probability: <<550_000 * multiple>>
+            pick:
+              date_between:
+                start_date: 2019-11-01
+                end_date: 2019-11-30
+        - choice:
+            probability: <<7_635_060 * multiple>>
+            pick:
+              date_between:
+                start_date: 2019-12-01
+                end_date: 2019-12-31
+
+        - choice:
+            probability: <<13_685_060 * multiple>>
+            pick:
+              date_between:
+                start_date: 2018-01-01
+                end_date: 2018-12-31
+
+        - choice:
+            probability: <<13_685_060 * multiple>>
+            pick:
+              date_between:
+                start_date: 2017-01-01
+                end_date: 2017-12-31
+
+        - choice:
+            probability: <<13_685_060 * multiple>>
+            pick:
+              date_between:
+                start_date: 2016-01-01
+                end_date: 2016-12-31
+
+        - choice:
+            probability: <<13_685_060 * multiple>>
+            pick:
+              date_between:
+                start_date: 2015-01-01
+                end_date: 2015-12-31
+
+        - choice:
+            probability: <<7_000_000 * multiple>>
+            pick:
+              date_between:
+                start_date: 2014-01-01
+                end_date: 2014-12-31
+
+    StageName:
+      random_choice:
+        - choice:
+            probability: <<44_777_229 * multiple>>
+            pick: Completed
+      random_choice:
+        - choice:
+            probability: <<(74_314_612 - 44_777_229) * multiple>>
+            pick: Open
+
+- object: npe03__Recurring_Donation__c
+  count: << 2_500_000 * multiple >>
+  fields:
+    npe03__Date_Established__c:
+      date_between:
+        start_date: 2014-08-01
+        end_date: 2020-01-01
+    npe03__Organization__c: <<count % Account.id>>
+
+  friends:
+    - object: Opportunity
+      count: << (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 >>
+      fields:
+        CloseDate: << date(npe03__Recurring_Donation__c.npe03__Date_Established__c) + relativedelta(months=child_count) >>
+        RecordType:
+          random_choice:
+            - choice:
+                probability: <<44_777_229 * multiple>>
+                pick: Completed
+          random_choice:
+            - choice:
+                probability: <<(74_314_612 - 44_777_229) * multiple>>
+                pick: Open
