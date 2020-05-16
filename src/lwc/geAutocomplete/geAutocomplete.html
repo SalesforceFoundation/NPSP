@@ -24,12 +24,14 @@
                                placeholder={CUSTOM_LABELS.geSearchPlaceholder}
                                value={displayValue}
                                disabled={disabled}
-                               onkeyup={handleChange}>
+                               onkeyup={handleChange}
+                               data-qa-locator={qaLocatorAutocompleteInput}>
                         <button
                                 class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
                                 title={CUSTOM_LABELS.geAssistiveRemoveSelectedOption}
                                 onclick={handleClear}
                                 disabled={disabled}
+                                data-qa-locator={qaLocatorClearSelectedOption}
                                 if:true={hasOptionSelected}>
                             <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
                             <span class="slds-assistive-text">{CUSTOM_LABELS.geAssistiveRemoveSelectedOption}</span>

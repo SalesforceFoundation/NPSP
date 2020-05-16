@@ -30,7 +30,7 @@
     </fields>
     <gender><!-- Feminine --></gender>
     <layouts>
-        <layout>Payment Cofiguration Layout</layout>
+        <layout>Payment Configuration Layout</layout>
         <sections>
             <label><!-- Custom Links --></label>
             <section>Custom Links</section>
