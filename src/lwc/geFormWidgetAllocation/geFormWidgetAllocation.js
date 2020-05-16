@@ -441,4 +441,17 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return [DI_ADDITIONAL_OBJECT.fieldApiName];
     }
 
+
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
+    get qaLocatorAddNewAllocation() {
+        return `button ${this.CUSTOM_LABELS.geAddNewAllocation}`;
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
+
 }
