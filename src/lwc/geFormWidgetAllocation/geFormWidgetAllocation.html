@@ -23,7 +23,7 @@
     </template>
     <lightning-layout class={footerClass}>
         <lightning-layout-item size='3'>
-            <lightning-button label="Add New Allocation" onclick={handleAddRow}></lightning-button>
+            <lightning-button label={CUSTOM_LABELS.geAddNewAllocation} data-qa-locator={qaLocatorAddNewAllocation} onclick={handleAddRow}></lightning-button>
         </lightning-layout-item>
         <lightning-layout-item size='3' if:true={showRemainingAmount}>
             <lightning-formatted-number value={remainingAmount} format-style='currency'></lightning-formatted-number>
