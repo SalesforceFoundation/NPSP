@@ -8,7 +8,8 @@
             required={required}
             onchange={handleValueChange} 
             label={fieldLabel}
-            disabled={disabled}>
+            disabled={disabled}
+            data-qa-locator={qaLocatorInput}>
         </lightning-input>
     </template>
     <template if:true={isLookup}>
@@ -21,7 +22,8 @@
                                 id={element.id}
                                 object-describe-info={objectDescribeInfo}
                                 label={fieldLabel}
-                                disabled={disabled}>
+                                disabled={disabled}
+                                qa-locator-base={qaLocatorBase}>
         </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
@@ -36,7 +38,7 @@
             label={fieldLabel}
             valid={richTextValid}
             message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
-        >
+            data-qa-locator={qaLocatorRichText}>
         </lightning-input-rich-text>
     </template>
     <template if:true={isPicklist}>
@@ -48,7 +50,8 @@
             onchange={handleValueChange}
             label={fieldLabel}
             object-describe-info={objectDescribeInfo}
-            record-type-id={recordTypeId}>
+            record-type-id={recordTypeId}
+            qa-locator-base={qaLocatorBase}>
         </c-ge-form-field-picklist>
     </template>
     <template if:true={isTextArea}>
@@ -56,7 +59,8 @@
             value={value}
             required={required}
             onchange={handleValueChange}
-            label={fieldLabel}>
+            label={fieldLabel}
+            data-qa-locator={qaLocatorTextArea}>
         </lightning-textarea>
     </template>
 </template>
