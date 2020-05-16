@@ -21,11 +21,13 @@
                 <lightning-button label={CUSTOM_LABELS.commonCancel}
                                   variant="neutral"
                                   class="slds-m-right_small"
+                                  data-qa-locator={qaLocatorCancel}
                                   onclick={handleCancel}>
                 </lightning-button>
                 <lightning-button label={CUSTOM_LABELS.commonSave}
                                   title={CUSTOM_LABELS.commonSave}
                                   variant="brand"
+                                  data-qa-locator={qaLocatorSave}
                                   onclick={handleSave}>
                 </lightning-button>
             </div>
