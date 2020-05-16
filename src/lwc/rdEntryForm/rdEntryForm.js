@@ -59,14 +59,17 @@ export default class rdEntryForm extends LightningElement {
 
     @track isAutoNamingDisabled;
     @track isMultiCurrencyEnabled;
+    @track contactId;
+    @track accountId;
 
+    @track isLoading = true;
     @track hasError = false;
     @track errorMessage = {};
 
-    isConfigurationLoading = true;
     listenerEvent = 'rdEntryFormEvent';
 
     connectedCallback() {
+        this.handleParentIdType();
         configureEntryForm().then(response => {
             this.isAutoNamingDisabled = response.isAutoNamingDisabled;
             this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
@@ -74,9 +77,27 @@ export default class rdEntryForm extends LightningElement {
     }
 
     /*******************************************************************************
+    * @description Determine the parentId Sobject Type
+    */
+    handleParentIdType() {
+        if (this.parentId) {
+            if (this.parentId.startsWith('001')) {
+                this.accoountId = this.parentId;
+            } else if (this.parentId.startsWith('003')) {
+                this.contactId = this.parentId;
+            }
+        }
+    }
+
+    handleLoad(event) {
+        this.toggleLoading(false);
+    }
+    /*******************************************************************************
     * @description Override the default submit. Add any fields before the submittion
     */
     handleSubmit(event){
+        this.toggleLoading(true);
+
         event.preventDefault();
         const fields = event.detail.fields;
         this.template.querySelector('lightning-record-edit-form').submit(fields);
@@ -103,5 +124,15 @@ export default class rdEntryForm extends LightningElement {
     */
     handleSuccess(event) {
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id});
+    }
+
+    toggleLoading(isLoading) {
+        this.isLoading = isLoading;
+
+        if (isLoading) {
+            this.template.querySelector('[data-id="editFields"]').classList.add('slds-hide');
+        } else {
+            this.template.querySelector('[data-id="editFields"]').classList.remove('slds-hide');
+        } 
     }
 }
