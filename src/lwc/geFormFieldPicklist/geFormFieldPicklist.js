@@ -11,6 +11,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api required;
     @api value;
     @api className;
+    @api qaLocatorBase;
 
     @track _objectDescribeInfo;
     @track picklistValues;
@@ -108,4 +109,7 @@ export default class GeFormFieldPicklist extends LightningElement {
         }
     }
 
+    get qaLocatorPicklist() {
+        return `combobox ${this.qaLocatorBase}`;
+    }
 }

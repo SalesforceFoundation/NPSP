@@ -5167,6 +5167,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geAddNewAllocation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>GAU Widget: Add New Allocation</shortDescription>
+        <value>Add New Allocation</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveActiveSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
