@@ -20,7 +20,8 @@
                                        onclick={stopPropagation}
                                        tab-index={tabIndex}
                                        valid={isRichTextValid}
-                                       value={fieldValue}>
+                                       value={fieldValue}
+                                       data-qa-locator={qaLocatorRichText}>
             </lightning-input-rich-text>
         </template>
 
@@ -35,7 +36,8 @@
                                 onclick={stopPropagation}
                                 value={fieldValue}
                                 variant={variant}
-                                tab-index={tabIndex}>
+                                tab-index={tabIndex}
+                                data-qa-locator={qaLocatorTextArea}>
             </lightning-textarea>
         </template>
 
@@ -50,7 +52,8 @@
                                       onchange={handleChangeCombobox}
                                       value={fieldValue}
                                       variant={variant}
-                                      tab-index={tabIndex}>
+                                      tab-index={tabIndex}
+                                      qa-locator-base={uiLabel}>
             </c-ge-form-field-picklist>
         </template>
 
@@ -65,7 +68,8 @@
                              onchange={handleValueChange}
                              onclick={stopPropagation}
                              variant={variant}
-                             type="checkbox">
+                             type="checkbox"
+                             data-qa-locator={qaLocatorCheckbox}>
             </lightning-input>
         </template>
 
@@ -79,7 +83,8 @@
                                     required={isRequired}
                                     object-describe-info={objectInfo}
                                     label={uiLabel}
-                                    variant={variant}>
+                                    variant={variant}
+                                    qa-locator-base={uiLabel}>
             </c-ge-form-field-lookup>
         </template>
 
@@ -95,7 +100,8 @@
                              type={lightningInputType}
                              value={fieldValue}
                              variant={variant}
-                             tab-index={tabIndex}>
+                             tab-index={tabIndex}
+                             data-qa-locator={qaLocatorDateTime}>
             </lightning-input>
         </template>
 
@@ -113,7 +119,8 @@
                              step={granularity}
                              value={fieldValue}
                              variant={variant}
-                             tab-index={tabIndex}>
+                             tab-index={tabIndex}
+                             data-qa-locator={qaLocatorBaseInput}>
             </lightning-input>
         </template>
     </template>
