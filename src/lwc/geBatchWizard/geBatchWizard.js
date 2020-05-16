@@ -258,7 +258,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
         this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
         this.formSections = this.selectedTemplate.layout.sections;
-
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
         }
@@ -395,4 +394,32 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         this.hasInvalidBatchFields = false;
         this.missingBatchHeaderFieldLabels = [];
     }
+
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
+    get qaLocatorSelectTemplate() {
+        return `combobox Wizard ${this.CUSTOM_LABELS.commonTemplate}`;
+    }
+
+    get qaLocatorSave() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonSave}`;
+    }
+
+    get qaLocatorNext() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonNext}`;
+    }
+
+    get qaLocatorCancel() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonCancel}`;
+    }
+
+    get qaLocatorBack() {
+        return `button Wizard ${this.CUSTOM_LABELS.commonBack}`;
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator-attributes
+     */
 }
