@@ -37,6 +37,9 @@
 @isTest(IsParallel=true)
 public with sharing class RD2_EntryFormController_TEST {
 
+    /***
+    * @description Verifies that Entry Form Controller gathers the correct org setting 
+    */
     @isTest
     public static void shouldReturnRDSettingForEntryForm() {
         Test.startTest();

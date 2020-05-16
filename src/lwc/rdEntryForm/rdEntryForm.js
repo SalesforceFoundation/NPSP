@@ -89,11 +89,14 @@ export default class rdEntryForm extends LightningElement {
         }
     }
 
+    /*******************************************************************************
+    * @description Override standard on load event.
+    */
     handleLoad(event) {
         this.toggleLoading(false);
     }
     /*******************************************************************************
-    * @description Override the default submit. Add any fields before the submittion
+    * @description Override the standard submit. Add any fields before the submittion
     */
     handleSubmit(event){
         this.toggleLoading(true);
@@ -126,6 +129,10 @@ export default class rdEntryForm extends LightningElement {
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id});
     }
 
+    /*******************************************************************************
+    * @description Toggle isLoading Boolean and add/remove slds-hide css accordingly
+    * @param isLoading Boolean to determine if the LWC is in loading state
+    */
     toggleLoading(isLoading) {
         this.isLoading = isLoading;
 

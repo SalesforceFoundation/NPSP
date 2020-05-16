@@ -35,6 +35,11 @@
 *
 */
 public with sharing class RD2_EntryFormController {
+
+    /**
+    * @description  Gather the org setting for Recurring Donation Entry Form
+    * @return Map<String, Object>
+    */
     @AuraEnabled
     public static Map<String, Object> configureEntryForm() {
         return new Map<String, Object> {
