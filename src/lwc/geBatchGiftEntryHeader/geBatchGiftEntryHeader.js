@@ -82,6 +82,24 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
         ));
     }
 
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
+    get qaLocatorBatchDryRun() {
+        return `button ${this.batchDryRunLabel}`;
+    }
+    get qaLocatorProcessBatch() {
+        return `button ${this.processBatchLabel}`;
+    }
+    get qaLocatorEditBatchInfo() {
+        return `button ${this.editButtonLabel}`;
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
+
     get namespace() {
         getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
     }
