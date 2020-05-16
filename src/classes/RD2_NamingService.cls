@@ -91,7 +91,7 @@ public with sharing class RD2_NamingService {
             return userDefaultCurrencySymbol;
         }
         set;
-    }    
+    }
 
     /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
@@ -151,13 +151,11 @@ public with sharing class RD2_NamingService {
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.Name = constructName(rd, donorById);
         }
-    }   
+    }
 
     /***
     * @description Constructs recurring donation name
-    * Name formatting: 
-    *   If multi-currency, then "{!DonorName} {ISO Code} {!Amount} - Recurring".
-    *   Otherwise, "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
+    * Name formatting: "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
     *
     * @param rd Recurring Donation record
     * @param donorById Account/Contact donor record by Id
@@ -170,15 +168,15 @@ public with sharing class RD2_NamingService {
 
         String nameSuffix = ' ' + formatAmount(rd) + ' - ' + System.Label.RecurringDonationNameSuffix;
 
-        String donorName = donor == null 
-            ? '' 
+        String donorName = donor == null
+            ? ''
             : donor.Name.abbreviate(MAX_NAME_LENGTH - nameSuffix.length());
 
         return donorName + nameSuffix;
     }
 
     /***
-    * @description Formats amount used to construct the name    
+    * @description Formats amount used to construct the name
     * @param rd Recurring Donation record
     * @return String Formatted amount
     */
@@ -191,19 +189,16 @@ public with sharing class RD2_NamingService {
             formattedAmount = formattedAmount.removeEnd('.0');
         }
 
+        String currencySymbol = userDefaultCurrencySymbol;
         if (isMultiCurrencyEnabled) {
             String code = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(code);
+        }
 
-            if (String.isNotBlank(code)) {
-                formattedAmount = code + ' ' + formattedAmount;
-            }
+        if (String.isNotBlank(currencySymbol) && currencySymbol.length() > 1) {
+            formattedAmount = currencySymbol + ' ' + formattedAmount;
         } else {
-            if (String.isNotBlank(userDefaultCurrencySymbol) && userDefaultCurrencySymbol.length() > 1) {
-                formattedAmount = userDefaultCurrencySymbol + ' ' + formattedAmount;
-                
-            } else {
-                formattedAmount = userDefaultCurrencySymbol + formattedAmount;
-            }
+            formattedAmount = currencySymbol + formattedAmount;
         }
 
         return formattedAmount;

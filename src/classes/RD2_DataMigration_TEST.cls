@@ -1855,6 +1855,89 @@ private class RD2_DataMigration_TEST {
             'Number of Planned Installments should be set to null');
     }
 
+    /**
+     * @description Verifies Account on RD is populated when it is not already specified
+     */
+    @IsTest
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecified() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+        insert rd;
+
+        Id jobId = runDataMigration();
+
+        rd = getRecords()[0];
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+             'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd);
+
+   }
+
+    /**
+     * @description Verifies Account on RD is populated when it is not already specified
+     * and there is a closed Opp on the RD
+    */
+    @IsTest
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecifiedAndRDHasClosedOpp() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+
+        insert rd;
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(TODAY)
+            .withClosedWonStage()
+            .build();
+
+        Id jobId = runDataMigration();
+
+        rd = getRecords()[0];
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd );
+    }
+
+    /**
+ * @description Verifies that a Legacy Fixed Length RD is converted without metadata for Fixed type.
+ */
+    @IsTest
+    private static void shouldConvertFixedLengthRDWithoutFixedPicklistOption() {
+        final Integer installments = 12;
+
+        List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{
+            getLegacyRecurringDonationBuilder()
+                .withOpenEndedStatusNone()
+                .withPlannedInstallments(installments)
+                .withDateEstablished(DATE_ESTABLISHED)
+                .build()
+        };
+        rdList.add(rdList[0].clone());
+        rdList[1].npe03__Open_Ended_Status__c = null;
+
+        RD2_EnablementService.fixedOptionAvailable = false;
+        RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
+        for (npe03__Recurring_Donation__c rd : rdList) {
+            npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd, true)
+                .convertToEnhancedRD();
+            System.assertEquals(true, RD2_EnablementService.isFixedLength(convertedRD),
+                'The converted donation should be identified as fixed');
+            System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, convertedRD.RecurringType__c,
+                'The RecurringType should be open');
+        }
+    }
+
+
 
     // HELPER METHODS
     //////////////////////
