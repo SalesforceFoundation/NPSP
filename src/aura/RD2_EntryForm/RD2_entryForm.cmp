@@ -1,4 +1,4 @@
-<aura:component implements="flexipage:availableForRecordHome,force:appHostable,lightning:actionOverride,force:hasRecordId">
+<aura:component implements="lightning:actionOverride,force:hasRecordId">
     <aura:dependency resource="c:rdEntryForm" />
 
     <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if open from related list"/>
