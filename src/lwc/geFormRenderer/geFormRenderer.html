@@ -119,12 +119,14 @@
                              class='slds-align_absolute-center slds-p-vertical_small'>
                         <lightning-button label={cancelButtonText}
                                           title={cancelButtonText}
+                                          data-qa-locator={qaLocatorCancelButton}
                                           onclick={handleCancel}
                                           class='slds-m-left_x-small'>
                         </lightning-button>
                         <lightning-button variant='brand'
                                           label={saveActionLabel}
                                           title={saveActionLabel}
+                                          data-qa-locator={qaLocatorSaveButton}
                                           onclick={handleSave}
                                           class='slds-m-left_x-small'
                                           disabled={isUpdateActionDisabled}>
