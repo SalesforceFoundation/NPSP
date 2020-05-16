@@ -28,6 +28,9 @@ const RICH_TEXT_FORMATS = [
 const CURRENCY = 'currency';
 const PERCENT = 'percent';
 const DECIMAL = 'decimal';
+const DATE = 'date';
+const DATETIME = 'datetime-local';
+const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
     @track value;
@@ -63,7 +66,7 @@ export default class GeFormField extends LightningElement {
             const detail = {
                 ...event.detail,
                 objectMappingDevName: objMappingDevName
-            }
+            };
 
             const selectRecordEvent = new CustomEvent(
                 'lookuprecordselect',
@@ -535,6 +538,39 @@ export default class GeFormField extends LightningElement {
             // and set recordTypeId on sibling fields.
             this.fireLookupRecordSelectEvent();
         }
+    }
+
+    get qaLocatorBase() {
+        const rowIndex = this.getAttribute('data-qa-row');
+        if(rowIndex) {
+            return `${this.fieldLabel} ${rowIndex}`;
+        } else {
+            return this.fieldLabel;
+        }
+    }
+
+    get qaLocatorInputPrefix() {
+        switch (this.inputType) {
+            case DATE:
+            case DATETIME:
+                return 'datetime';
+            case CHECKBOX:
+                return this.inputType;
+            default:
+                return 'input';
+        }
+    }
+
+    get qaLocatorInput() {
+        return `${this.qaLocatorInputPrefix} ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorRichText() {
+        return `richtext ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorTextArea() {
+        return `textarea ${this.qaLocatorBase}`;
     }
 
 }
