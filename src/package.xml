@@ -2075,6 +2075,7 @@
         <members>flsError</members>
         <members>flsReadAccessError</members>
         <members>gauAllocationErrorGeneral</members>
+        <members>geAddNewAllocation</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>
@@ -3555,7 +3556,7 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
-        <members>Payment_Services_Configuration__c-Payment Cofiguration Layout</members>
+        <members>Payment_Services_Configuration__c-Payment Configuration Layout</members>
         <members>RecurringDonationSchedule__c-Recurring Schedule Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
