@@ -2,7 +2,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, isEmpty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
 const WIDGET = 'widget';
@@ -288,4 +288,34 @@ export default class utilInput extends LightningElement {
     stopPropagation(event) {
         event.stopPropagation();
     }
+
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
+    get qaLocatorRichText() {
+        return `richtext ${this.uiLabel}`;
+    }
+
+    get qaLocatorTextArea() {
+        return `textarea ${this.uiLabel}`;
+    }
+
+    get qaLocatorCheckbox() {
+        return `checkbox ${this.uiLabel}`;
+    }
+
+    get qaLocatorDateTime() {
+        return `datetime ${this.uiLabel}`;
+    }
+
+    get qaLocatorBaseInput() {
+        return `input ${this.uiLabel}`;
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
+
+
 }
