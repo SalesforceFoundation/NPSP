@@ -1048,7 +1048,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address to look at
     * @return boolean
     */
-    public static Boolean isOneLineAddress(Address__c addr) {
+    public static Boolean isOneLineStreetAddress(Address__c addr) {
         if (addr.MailingStreet2__c == null || addr.MailingStreet2__c.length() == 0) {
             return true;
         }
@@ -1061,7 +1061,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @return boolean
     */
     public static String getMultilineStreet(Address__c addr) {
-        if (isOneLineAddress(addr)) {
+        if (isOneLineStreetAddress(addr)) {
             return addr.MailingStreet__c;
         }
         return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
