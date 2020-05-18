@@ -6,6 +6,7 @@ npsp_lex_locators={
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
     'button-title':"//button[@title='{}']",
+    'button-text':"//button[text()='{}']",
     'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
@@ -244,12 +245,15 @@ npsp_lex_locators={
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
-        'button':"//button[text()='Create New Field Mapping']",
         'field-label':'//lightning-formatted-text[text()="{}"]',
         },
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
         },
+    'crlps':{
+        'select_locator': "//select[@name ='{}']",
+        'success_toast': "//div[contains(@class,'slds-notify.slds-notify_toast,slds-theme_success')]",
+       },    
     'gift_entry':{
         'button':'//*[@data-qa-locator="button {}"]/button',
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
