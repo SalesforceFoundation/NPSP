@@ -63,13 +63,24 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
 
         if (isBefore) {
-            // normalize line breaks unconditionally
-            for (SObject so : listNew) {
-                UTIL_Address.normalizeLineBreak((Contact)so);
+            // normalize line breaks whether or not address management is turned on
+            for (Integer i = 0; i < listNew.size(); i++) {
+                Contact newRecord = (Contact) listNew[i];
+                Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
+
+                // BEFORE INSERT
+                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
+
+                // BEFORE UPDATE
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isContactAddressChanged(newRecord, oldRecord)) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
             }
         }
 
-		// bail out if address mgmt turned off.
+        // bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
 
