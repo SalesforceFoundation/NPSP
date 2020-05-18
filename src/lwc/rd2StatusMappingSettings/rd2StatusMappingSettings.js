@@ -303,9 +303,17 @@ export default class rd2StatusMappingSettings extends LightningElement {
             this._deploymentIds.add(response.deploymentId);
         }
 
-        if (response.hasResult === false || response.isInProgress === false) {
-            //refresh mapping records
+        var hasErrorMessage = !isNull(this.message)
+            && this.message.variant === toastVariant.ERROR;
+
+        var shouldRefreshRecords = !hasErrorMessage
+            && (response.hasResult === false || response.isInProgress === false);
+
+        if (shouldRefreshRecords) {
             this.handleLoadMapping();
+
+        } else if (hasErrorMessage) {
+            this.isLoading = false;
         }
     }
 

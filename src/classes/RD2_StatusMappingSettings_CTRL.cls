@@ -249,7 +249,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     private static Metadata.CustomMetadata buildCustomMetadata(Mapping mapping) {
         Metadata.CustomMetadata cmt = new Metadata.CustomMetadata();
         //unique value determines if the record will be inserted or updated
-        cmt.fullName = cmtObjectName + '.' + mapping.status;
+        cmt.fullName = cmtObjectName + '.' + mapping.status.replaceAll(' ', '');
         cmt.protected_x = false;
 
         //update the label every time regardless if it is insert or update,
