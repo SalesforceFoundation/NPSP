@@ -40,7 +40,7 @@ global class PS_IntegrationService {
     private static final String INVALID_CONFIG_PARAMS = System.Label.gePS_IntegrationTestInvalidConfigParams;
     private static final String ELEVATE_ONBOARDING_ERROR = System.Label.commonElevateFailedOnboarding;
     public static final String SERVICE_CONST = 'service';
-    public static final String IS_SECRET_CONST = 'issecret';
+    public static final String IS_SECRET_CONST = 'isSecret';
     public static final String KEY_CONST = 'key';
     public static final String VALUE_CONST = 'value';
     public static final String TRUE_CONST = 'true';
@@ -110,7 +110,7 @@ global class PS_IntegrationService {
     private static Payment_Services_Configuration__c setValue(
             Payment_Services_Configuration__c configuration, String key, Object value) {
 
-        if (key == IS_SECRET_CONST) {
+        if (key.equalsIgnoreCase(IS_SECRET_CONST)) {
             if (((String)value) != TRUE_CONST && ((String)value) != FALSE_CONST) {
                 throw new JSONException();
             }
