@@ -12,7 +12,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Validate And Create Required CustomField
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # creates test data a contact and an opportunity for the contact
