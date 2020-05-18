@@ -64,6 +64,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
            Click on the desired option passed as a parameter
         """
         loc=npsp_lex_locators['contacts_actions_dropdown_menu']
+        self.npsp.click_more_actions_button()
         self.selenium.wait_until_element_is_visible(loc)
         self.selenium.click_link(option)
 
