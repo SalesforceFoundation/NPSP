@@ -403,30 +403,6 @@ const getNamespace = (apiName) => {
     return apiNameParts.length === 3 ? apiNameParts[0] : null;
 }
 
-/**
- * @description Method checks if the passed in string is namespaced and
- *              will attempt to strip off the namespace prefix and replace
- *              it with the provided namespace.
- *
- * @param {string} namespace: Namespace string to be used
- * @param {string} string: Text to be namespaced
- *
- * @returns {String} The namespace of the passed-in object or field.
- *              Null if the object or field does not have a namespace.
- */
-const applyNamespace = (namespace, string) => {
-    if (!namespace || string.startsWith(`${namespace}__`)) return string;
-
-    const namespacePrefix = `${namespace}__`;
-    const previousNamespacePrefix = getNamespace(string);
-
-    if (previousNamespacePrefix) {
-        return string.replace(`${previousNamespacePrefix}__`, namespacePrefix);
-    }
-
-    return `${namespacePrefix}${string}`;
-}
-
 /*******************************************************************************
 * @description Checks to see if provided string is parsable. If true, returns
 * parsed string otherwise returns false.
@@ -446,7 +422,6 @@ export {
     deepClone,
     findIndexByProperty,
     getNamespace,
-    applyNamespace,
     getQueryParameters,
     getSubsetObject,
     isEmpty,

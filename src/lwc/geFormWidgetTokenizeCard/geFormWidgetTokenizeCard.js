@@ -3,7 +3,7 @@ import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import { format, getNamespace, applyNamespace } from 'c/utilCommon';
+import { format, getNamespace } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
 import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
@@ -35,7 +35,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get tokenizeCardPageUrl() {
         const namespace = getNamespace(DATA_IMPORT_OBJECT.objectApiName);
-        const tokenizeCardPageName = applyNamespace(namespace, TOKENIZE_CARD_PAGE_NAME,);
+        if (namespace) return `/apex/${namespace}__${TOKENIZE_CARD_PAGE_NAME}`;
 
         return `/apex/${tokenizeCardPageName}`;
     }
