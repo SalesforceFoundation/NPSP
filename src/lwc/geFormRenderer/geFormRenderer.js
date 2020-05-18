@@ -979,7 +979,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const firstName = isNotEmpty(names.firstName) ? names.firstName : this._contact1FirstName;
         const lastName = isNotEmpty(names.lastName) ? names.lastName : this._contact1LastName;
         const accountName = isNotEmpty(names.accountName) ? names.accountName : this._account1Name;
-        if(this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
+        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             return {
                 firstName: accountName,
                 lastName: accountName
@@ -1556,7 +1556,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorAccountChange(selectedRecordId) {
         this._account1Imported = selectedRecordId;
-        if(selectedRecordId == null) {
+        if (selectedRecordId == null) {
             this._account1Name = null;
         }
         if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
@@ -1568,7 +1568,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorContactChange(selectedRecordId) {
         this._contact1Imported = selectedRecordId;
-        if(selectedRecordId == null) {
+        if (selectedRecordId == null) {
             this._contact1LastName = null;
             this._contact1FirstName = null;
         }
