@@ -12,7 +12,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Validate And Create Required CustomField
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # creates test data a contact and an opportunity for the contact
@@ -36,7 +36,7 @@ Validate And Create Required CustomField
 
 *** Test Cases ***
 
-Add Existing Contact to Existing Household
+Create Crlp For Automated Soft Credit
     [Documentation]
 
     [tags]                                               W-037650                         feature:Contacts and Accounts
@@ -69,19 +69,19 @@ Add Existing Contact to Existing Household
     ...                                                   Soft Credit
     ...                                                   Primary=unchecked
 
-    # Navigate to opportunity page and run recalculate rollups option
-    Go To Page                                            Details
-    ...                                                   Opportunity
-    ...                                                   object_id=${data}[contact_opportunity][Id]
-
+    # Navigate to Contact page and run recalculate rollups option
     Go To Page                                            Details
     ...                                                   Contact
     ...                                                   object_id=${data}[contact][Id]
     Waitfor Actions Dropdown And Click Option             Recalculate Rollups
     Wait Until Loading Is Complete
+
+    Go To Page                                            Listing                               Contact
+    Page Should Contain Link                              ${data}[contact]{first_name} ${data}[contact]{last_name}
     Go To Page                                            Details
     ...                                                   Contact
     ...                                                   object_id=${data}[contact][Id]
+    Wait Until Loading Is Complete
     Reload Page
 
     Wait Until Keyword Succeeds                           1 minute
