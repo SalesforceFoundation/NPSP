@@ -18,6 +18,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @api id; // unique identifier for this field, used mainly for accessibility
     @api variant;
     @api disabled;
+    @api qaLocatorBase;
 
 
     @track options = [];
