@@ -76,8 +76,9 @@ Create Crlp For Automated Soft Credit
     Waitfor Actions Dropdown And Click Option             Recalculate Rollups
     Wait Until Loading Is Complete
 
+    # There is time lag after the rollup is done for it to appear on UI, adding this workaround instead of sleep
     Go To Page                                            Listing                               Contact
-    Page Should Contain Link                              ${data}[contact]{first_name} ${data}[contact]{last_name}
+    Wait Until Loading Is Complete
     Go To Page                                            Details
     ...                                                   Contact
     ...                                                   object_id=${data}[contact][Id]
