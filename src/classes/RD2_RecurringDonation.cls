@@ -48,7 +48,15 @@ public inherited sharing class RD2_RecurringDonation {
     /**
     * @description Indicates the converted State of the Recurring Donation from Status To State Mapping 
     */
-    private String state;
+    private String state {
+        get {
+            if (state == null) {
+                state = RD2_StatusMapper.getInstance().getState(rd.Status__c);
+            }
+            return state;
+        }
+        set;
+    }
 
     /**
     * @description A list of the fields that have been changed by one of the revise methods.
@@ -223,7 +231,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isActive() {
-        return getState() == RD2_Constants.STATUS_ACTIVE;
+        return state == RD2_Constants.STATUS_ACTIVE;
     }
 
     /**
@@ -231,7 +239,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isLapsed() {
-        return getState() == RD2_Constants.STATUS_LAPSED;
+        return state == RD2_Constants.STATUS_LAPSED;
     }
 
     /**
@@ -239,7 +247,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isClosed() {
-        return getState() == RD2_Constants.STATUS_CLOSED;
+        return state == RD2_Constants.STATUS_CLOSED;
     }
 
     /**
@@ -292,10 +300,6 @@ public inherited sharing class RD2_RecurringDonation {
     * @return String 
     */
     public String getState() {
-        if (state == null) {
-            state = RD2_StatusMapper.getInstance().getState(rd.Status__c);
-        }
-        
         return state;
     }
 

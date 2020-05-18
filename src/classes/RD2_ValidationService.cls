@@ -188,7 +188,7 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+        if (new RD2_RecurringDonation(rd).isClosed()) {
             return;
         }
 
