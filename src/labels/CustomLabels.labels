@@ -1913,7 +1913,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error displayed when user does not have System Admin permissions</shortDescription>
-        <value>Only System Administrators can apply enhanced Recurring Donation enablement actions.</value>
+        <value>Only System Administrators can perform Enhanced Recurring Donations upgrade actions.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepIntro</fullName>

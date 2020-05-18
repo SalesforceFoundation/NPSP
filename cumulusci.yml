@@ -388,6 +388,16 @@ tasks:
                 %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
                 upsert errSettings;
+    
+    execute_rd2_data_migration:
+        description: Executes enhanced Recurring Donation data migration
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: NPSP
+        options:
+            apex: >
+                Map<String, Object> params = new Map<String, Object>();
+                Callable apiClass = new %%%NAMESPACE%%%Callable_Api();
+                apiClass.call('RD2.ExecuteDataMigration', params);
 
     run_tests:
         options:
@@ -716,12 +726,8 @@ flows:
                     field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
                     value: true
             5:
-                task: execute_anon
+                task: execute_rd2_data_migration
                 # Execute the data migration job in case there is any RD test data in the org
-                options:
-                    apex: >
-                        %%%NAMESPACE%%%RD2_DataMigration_BATCH rdMigrationBatch = new %%%NAMESPACE%%%RD2_DataMigration_BATCH();
-                        Database.executeBatch(rdMigrationBatch, rdMigrationBatch.batchSize);
             6:
                 task: batch_apex_wait
                 # Wait until after the data migration job has completed
@@ -734,6 +740,14 @@ flows:
                     apex: >
                         %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH();
                         Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
+            8:
+                task: execute_anon
+                # Update enhanced Recurring Donation enablement page state
+                options:
+                    apex: >                        
+                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+                        rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
+                        upsert rdSettings;                       
 
     config_managed:
         steps:
