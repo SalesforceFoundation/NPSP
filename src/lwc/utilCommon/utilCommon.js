@@ -408,14 +408,14 @@ const getNamespace = (apiName) => {
  *              will attempt to strip off the namespace prefix and replace
  *              it with the provided namespace.
  *
- * @param {string} string: Text to be namespaced
  * @param {string} namespace: Namespace string to be used
+ * @param {string} string: Text to be namespaced
  *
  * @returns {String} The namespace of the passed-in object or field.
  *              Null if the object or field does not have a namespace.
  */
-const setNamespace = (string, namespace) => {
-    if (!namespace || string.startsWith(namespace)) return string;
+const applyNamespace = (namespace, string) => {
+    if (!namespace || string.startsWith(`${namespace}__`)) return string;
 
     const namespacePrefix = `${namespace}__`;
     const previousNamespacePrefix = getNamespace(string);
@@ -446,7 +446,7 @@ export {
     deepClone,
     findIndexByProperty,
     getNamespace,
-    setNamespace,
+    applyNamespace,
     getQueryParameters,
     getSubsetObject,
     isEmpty,
