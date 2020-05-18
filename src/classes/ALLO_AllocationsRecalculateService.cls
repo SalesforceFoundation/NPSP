@@ -440,7 +440,7 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
                     errorsFound = true;
                 }
                 totalOfPercentages += (allocation.Percent__c != null) ? allocation.Percent__c : 0;
-                if ((allocation.Amount__c != null) && (allocation.Amount__c != 0)) {
+                if (allocation.Amount__c != 0) {
                     allocation.Amount__c = 0;
                     proposedAllocations.add (allocation);
                 }
