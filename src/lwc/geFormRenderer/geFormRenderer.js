@@ -1754,4 +1754,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
     }
+
+    get qaLocatorCancelButton() {
+        return `button ${this.cancelButtonText}`;
+    }
+
+    get qaLocatorSaveButton() {
+        return `button ${this.saveActionLabel}`;
+    }
 }
