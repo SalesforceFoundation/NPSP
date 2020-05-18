@@ -341,7 +341,7 @@ tasks:
             apex: initializeNPSPSettings();
 
     enable_crlp:
-        description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only). Include '-o param1 fakse' to NOT schedule NPSP jobs after enabling.
+        description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only). Include '-o param1 false' to NOT schedule NPSP jobs after enabling.
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         group: NPSP
         options:
@@ -388,7 +388,7 @@ tasks:
                     - NPSP_General_Accounting_Unit
 
     enable_pilot_in_scratch_org:
-        description: (Not Currently In Use) Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
+        description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         group: NPSP
         options:

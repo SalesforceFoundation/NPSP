@@ -42,7 +42,7 @@ public inherited sharing class CRLP_DefaultConfigBuilder_SVC {
     private final Map<Id, RecordTypeInfo> oppRecordTypesById = Opportunity.SObjectType.getDescribe().getRecordTypeInfosById();
 
     /** @description By default always reschedule NPSP jobs after enablement completes */
-    private Boolean rescheduleAllJobs = true;
+    private Boolean shouldRescheduleNpspBatchJobs = true;
 
     /*************************************************************************************************************
      * @description Call each of the methods in this class to build the default Filter Groups and each of the four
@@ -84,7 +84,7 @@ public inherited sharing class CRLP_DefaultConfigBuilder_SVC {
 
         // send change event check
         CRLP_EnablementService.RollupMetadataHandler callbackHandler = new CRLP_ApiService()
-            .withScheduleNpspBatchJobs(rescheduleAllJobs)
+            .withScheduleNpspBatchJobs(shouldRescheduleNpspBatchJobs)
             .sendChangeEvent(allChangedRollups, allChangedFilterGroups)
             .getCallbackHandler();
 
@@ -95,8 +95,8 @@ public inherited sharing class CRLP_DefaultConfigBuilder_SVC {
     * @description Tell the process to not reschedule NPSP jobs after the process completes
      * @returns This
     */
-    public CRLP_DefaultConfigBuilder_SVC withScheduleNpspBatchJobs(Boolean rescheduleAllJobs) {
-        this.rescheduleAllJobs = rescheduleAllJobs;
+    public CRLP_DefaultConfigBuilder_SVC withScheduleNpspBatchJobs(Boolean rescheduleBatchJobs) {
+        this.shouldRescheduleNpspBatchJobs = rescheduleBatchJobs;
         return this;
     }
 

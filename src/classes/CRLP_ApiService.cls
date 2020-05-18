@@ -43,7 +43,7 @@ public without sharing class CRLP_ApiService {
     private Set<String> changedRollupTypes = new Set<String>();
 
     /** @description By default always reschedule NPSP jobs after enablement completes */
-    private Boolean rescheduleAllJobs = true;
+    private Boolean shouldRescheduleNpspBatchJobs = true;
 
     @TestVisible
     private UTIL_IntegrationConfig archiveBridgeConfig {
@@ -60,8 +60,8 @@ public without sharing class CRLP_ApiService {
     * @description Tell the deployment to not reschedule NPSP jobs after the process completes
     * @returns This
     */
-    public CRLP_ApiService withScheduleNpspBatchJobs(Boolean rescheduleJobs) {
-        this.rescheduleAllJobs = rescheduleJobs;
+    public CRLP_ApiService withScheduleNpspBatchJobs(Boolean rescheduleBatchJobs) {
+        this.shouldRescheduleNpspBatchJobs = rescheduleBatchJobs;
         return this;
     }
 
@@ -324,7 +324,7 @@ public without sharing class CRLP_ApiService {
         CRLP_EnablementService.RollupMetadataHandler callback = CRLP_EnablementService.rollupHandlerInstance;
         callback.params = new Map<String, Object>{
             CallableApiParameters.PARAM_ROLLUP_TYPES => changedRollupTypes,
-            CallableApiParameters.PARAM_SCHEDULE_JOBS => rescheduleAllJobs
+            CallableApiParameters.PARAM_SCHEDULE_JOBS => shouldRescheduleNpspBatchJobs
         };
 
         return callback;
