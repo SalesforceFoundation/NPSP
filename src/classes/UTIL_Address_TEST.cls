@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2020, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 * @description Tests specific to Address utility methods.
 */
 
-@isTest
+@isTest(IsParallel=true)
 public with sharing class UTIL_Address_TEST {
 
     /***
