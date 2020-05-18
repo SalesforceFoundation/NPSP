@@ -79,8 +79,9 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                 Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
 
                 // need to query account fields we need to look at
-                if (newRecord.AccountId != null)
+                if (newRecord.AccountId != null) {
                     setAccountId.add(newRecord.AccountId);
+                }
 
                 // BEFORE INSERT
                 if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
