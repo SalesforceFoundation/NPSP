@@ -1044,24 +1044,13 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description utility to determine whether address record represents 1 or 2 line address
-    * @param addr the Address to look at
-    * @return boolean
-    */
-    public static Boolean isOneLineStreetAddress(Address__c addr) {
-        if (addr.MailingStreet2__c == null || addr.MailingStreet2__c.length() == 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /*******************************************************************************************************
     * @description utility to combine mailing street fields into a single string with embedded CR LF
     * @param addr the Address to look at
     * @return boolean
     */
     public static String getMultilineStreet(Address__c addr) {
-        if (isOneLineStreetAddress(addr)) {
+        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
+        if (isOneLineStreetAddress) {
             return addr.MailingStreet__c;
         }
         return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;

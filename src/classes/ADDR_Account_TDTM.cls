@@ -47,7 +47,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
+        boolean isBeforeContext = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
         DmlWrapper dmlWrapper = new DmlWrapper();
         list<Account> listAccCreateAddr = new list<Account>();      
        
@@ -57,18 +57,10 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             i++;
 
             // BEFORE INSERT & BEFORE UPDATE
-            if (isBefore) {
+            if (isBeforeContext) {
                 UTIL_Address.normalizeLineBreak(acc);
             }
 
-            // BEFORE INSERT
-            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            }
-            
-            // BEFORE UPDATE
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            }
-            
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 // for new accounts that are using address management, create the address object.

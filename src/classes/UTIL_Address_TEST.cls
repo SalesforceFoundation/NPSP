@@ -42,32 +42,34 @@ public with sharing class UTIL_Address_TEST {
     */
     @isTest
     private static void shouldEqualInputAddress() {
-        List<Account> accountList = new List<Account>();
-        List<Contact> contactList = new List<Contact>();
+        List<Account> accounts = new List<Account>();
+        List<Contact> contacts = new List<Contact>();
 
-        accountList.add(new Account());
-        accountList.add(new Account(BillingStreet = '\r\n'));
-        accountList.add(new Account(BillingStreet = 'one line'));
-        accountList.add(new Account(BillingStreet = '\n\r'));
+        accounts.add(new Account());
+        accounts.add(new Account(BillingStreet = '\r\n'));
+        accounts.add(new Account(BillingStreet = '\r\ntext\n'));
+        accounts.add(new Account(BillingStreet = 'one line'));
+        accounts.add(new Account(BillingStreet = '\n\r'));
 
-        contactList.add(new Contact());
-        contactList.add(new Contact(MailingStreet = '\r\n'));
-        contactList.add(new Contact(MailingStreet = 'one line'));
-        contactList.add(new Contact(MailingStreet = '\n\r'));
+        contacts.add(new Contact());
+        contacts.add(new Contact(MailingStreet = '\r\n'));
+        contacts.add(new Contact(MailingStreet = '\r\ntext\n'));
+        contacts.add(new Contact(MailingStreet = 'one line'));
+        contacts.add(new Contact(MailingStreet = '\n\r'));
 
-        List<Account> accountListNew = accountList.deepClone();
-        List<Contact> contactListNew = contactList.deepClone();
+        List<Account> clonedAccounts = accounts.deepClone();
+        List<Contact> clonedContacts = contacts.deepClone();
 
-        for (Account acc : accountListNew) {
+        for (Account acc : clonedAccounts) {
             UTIL_Address.normalizeLineBreak(acc);
         }
-        for (Contact con : contactListNew) {
+        for (Contact con : clonedContacts) {
             UTIL_Address.normalizeLineBreak(con);
         }
 
         for (Integer i; i < 4; i++) {
-            System.assertEquals(accountList[i].BillingStreet, accountListNew[i].BillingStreet, 'Normalized street address should be equal to input');
-            System.assertEquals(contactList[i].MailingStreet, contactListNew[i].MailingStreet, 'Normalized street address should be equal to input');
+            System.assertEquals(accounts[i].BillingStreet, clonedAccounts[i].BillingStreet, 'Normalized street address should be equal to input');
+            System.assertEquals(contacts[i].MailingStreet, clonedContacts[i].MailingStreet, 'Normalized street address should be equal to input');
         }
     }
 
@@ -75,7 +77,7 @@ public with sharing class UTIL_Address_TEST {
     * @description Verifies that addresses which should be altered are.
     */
     @isTest
-    private static void shouldNotEqualInputAddress() {
+    private static void shouldReplaceLineBreakWithCRLF() {
         final Account originalAccount = new Account(BillingStreet = '\n');
         final Contact originalContact = new Contact(MailingStreet = '\n');
 
