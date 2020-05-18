@@ -94,6 +94,9 @@ global with sharing class Callable_API implements System.Callable {
                 // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
                 // parameter service depending on which action was invoked
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
+                
+            } when 'rd2.executedatamigration' {
+                return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
 
             } when else {
                 throw new MalformedMethodInvocationException(
