@@ -62,24 +62,6 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         boolean acctChanged = false;
         boolean isBefore = (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.BeforeInsert);
 
-        if (isBefore) {
-            // normalize line breaks whether or not address management is turned on
-            for (Integer i = 0; i < listNew.size(); i++) {
-                Contact newRecord = (Contact) listNew[i];
-                Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
-
-                // BEFORE INSERT
-                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                    UTIL_Address.normalizeLineBreak(newRecord);
-                }
-
-                // BEFORE UPDATE
-                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isContactAddressChanged(newRecord, oldRecord)) {
-                    UTIL_Address.normalizeLineBreak(newRecord);
-                }
-            }
-        }
-
         // bail out if address mgmt turned off.
         if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
         	return dmlWrapper;
@@ -91,15 +73,27 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
         //     a new default address, unless they say it is an override
         
         if (isBefore) {
-            // need to query account fields we need to look at
             Set<Id> setAccountId = new Set<Id>();
-            for (SObject so : listNew) {
-                Contact con = (Contact)so;
-                if (con.AccountId != null)
-                    setAccountId.add(con.AccountId);
+            for (Integer i = 0; i < listNew.size(); i++) {
+                Contact newRecord = (Contact) listNew[i];
+                Contact oldRecord = (listOld != null ? (Contact) listOld[i] : null);
+
+                // need to query account fields we need to look at
+                if (newRecord.AccountId != null)
+                    setAccountId.add(newRecord.AccountId);
+
+                // BEFORE INSERT
+                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
+
+                // BEFORE UPDATE
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && isContactAddressChanged(newRecord, oldRecord)) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
             }
-            mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__SYSTEM_AccountType__c,
-                (select Id from Addresses__r) from Account where Id IN :setAccountId]);
+            mapAccountIdAccount = new Map<Id,Account>([SELECT Id, npe01__SYSTEM_AccountType__c,
+                (SELECT Id FROM Addresses__r) FROM Account WHERE Id IN :setAccountId]);
         }
        
         integer i = -1;        
