@@ -42,6 +42,7 @@ import commonViewAll from '@salesforce/label/c.commonViewAll';
 import commonViewMore from '@salesforce/label/c.commonViewMore';
 import commonWarning from '@salesforce/label/c.commonWarning';
 import commonYes from '@salesforce/label/c.commonYes';
+import geAddNewAllocation from '@salesforce/label/c.geAddNewAllocation';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
@@ -244,6 +245,7 @@ class GeLabelService {
         commonViewMore,
         commonWarning,
         commonYes,
+        geAddNewAllocation,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
         geAssistiveFieldDown,
