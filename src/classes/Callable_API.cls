@@ -95,6 +95,10 @@ global with sharing class Callable_API implements System.Callable {
                 // parameter service depending on which action was invoked
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
 
+            } when 'settings.enableenhancedrecurringdonations' {
+                Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
+                return  RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(scheduleJobsWhenComplete);
+
             } when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })

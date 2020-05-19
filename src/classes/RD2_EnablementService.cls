@@ -62,7 +62,7 @@ public with sharing class RD2_EnablementService {
         }
         private set;
     }
-    
+
     /**
      * @description Returns true if enhanced Recurring Donations are enabled regardless of configuration
      */
@@ -81,17 +81,27 @@ public with sharing class RD2_EnablementService {
         }
         set;
     }
-    
+
     /***
     * @description Returns true if enhanced Recurring Donations can be enabled
     * @return Boolean
     */
     public Boolean isRecurringDonations2Ready() {
-        return 
+        return
             STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c == true
             && isUserRunningLightning;
     }
-    
+
+    /***
+    * @description Returns true if Customizable rollups are enabled
+    * @return Boolean
+    */
+    public Boolean isCRLPEnabled() {
+        return
+            STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c == true;
+
+    }
+
     /***
     * @description Returns true if enhanced Recurring Donations are enabled
     * @return Boolean
@@ -101,7 +111,7 @@ public with sharing class RD2_EnablementService {
             return true;
         }
 
-        return 
+        return
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true;
     }
 
