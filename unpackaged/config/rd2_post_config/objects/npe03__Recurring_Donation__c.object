@@ -46,10 +46,10 @@
     </fields>
     <fields>
         <fullName>%%%NAMESPACE%%%ClosedReason__c</fullName>
-        <description>The reason this Recurring Donation was closed.</description>
+        <description>The reason this Recurring Donation has its current Status value.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The reason this Recurring Donation was closed.</inlineHelpText>
-        <label>Closed Reason</label>
+        <inlineHelpText>The reason this Recurring Donation has its current Status value.</inlineHelpText>
+        <label>Status Reason</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>

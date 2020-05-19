@@ -30,6 +30,7 @@
                                             placeholder={CUSTOM_LABELS.geSelectPlaceholder}
                                             options={templateOptions}
                                             onchange={handleTemplateChange}
+                                            data-qa-locator={qaLocatorSelectTemplate}
                                             required>
                         </lightning-combobox>
                     </div>
@@ -67,10 +68,9 @@
                                                        size="12">
                                     <c-util-expandable-section id={section.id}
                                                                label={section.label}>
-
                                         <template iterator:it={section.elements}>
 
-                                            <div key={it.value.apiName}
+                                            <div key={it.value.id}
                                                  class="slds-grid slds-wrap slds-p-top_x-small">
                                                 <template if:true={it.first}>
                                                     <div class="slds-small-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3 default-value">
@@ -81,8 +81,7 @@
                                                     <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3"></div>
                                                 </template>
                                                 <div class="slds-small-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3">
-                                                    <c-util-input key={it.value.apiName}
-                                                                  type={it.value.dataType}
+                                                    <c-util-input type={it.value.dataType}
                                                                   form-field-type={it.value.elementType}
                                                                   field-api-name={it.value.fieldApiName}
                                                                   object-api-name={it.value.objectApiName}
@@ -112,6 +111,7 @@
                             <lightning-button label={CUSTOM_LABELS.commonBack}
                                               title={CUSTOM_LABELS.commonBack}
                                               variant="neutral"
+                                              data-qa-locator={qaLocatorBack}
                                               onclick={handleBack}>
                             </lightning-button>
                         </div>
@@ -143,6 +143,7 @@
                                       title={CUSTOM_LABELS.commonCancel}
                                       variant="neutral"
                                       class="slds-m-right_small"
+                                      data-qa-locator={qaLocatorCancel}
                                       onclick={handleCancel}>
                     </lightning-button>
                     <template if:false={showSaveButton}>
@@ -150,6 +151,7 @@
                                           title={CUSTOM_LABELS.commonNext}
                                           variant="brand"
                                           disabled={isNextButtonDisabled}
+                                          data-qa-locator={qaLocatorNext}
                                           onclick={handleNext}>
                         </lightning-button>
                     </template>
@@ -157,6 +159,7 @@
                         <lightning-button label={CUSTOM_LABELS.commonSave}
                                           title={CUSTOM_LABELS.commonSave}
                                           variant="brand"
+                                          data-qa-locator={qaLocatorSave}
                                           onclick={handleSave}>
                         </lightning-button>
                     </template>
