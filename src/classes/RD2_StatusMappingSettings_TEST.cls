@@ -127,13 +127,15 @@ private with sharing class RD2_StatusMappingSettings_TEST {
 
         String jsonMapping = JSON.serialize(records);
         List<Metadata.CustomMetadata> cmtRecords = RD2_StatusMappingSettings_CTRL.buildCustomMetadataRecords(jsonMapping);
-        System.assertEquals(5, cmtRecords.size(), 'All CMT records should be returned: ' + records);
+        System.assertEquals(2, cmtRecords.size(), 
+            'CMT records should be returned for admin specified Status values only: ' + records);
 
         String sObjectName = RecurringDonationStatusMapping__mdt.getSObjectType().getDescribe().getName();
         for (Integer i = 0; i < cmtRecords.size(); i++) {
             Metadata.CustomMetadata cmt = cmtRecords[i];
-            String status = records[i].status;
-            String state = records[i].state;
+            Integer recordIndex = i + 3;//skip read-only status mapping
+            String status = records[recordIndex].status;
+            String state = records[recordIndex].state;
 
             System.assertEquals(sObjectName + '.' + status, cmt.fullName, 'CMT Full Name should match');
             System.assertEquals(status + ' -> ' + state, cmt.label, 'CMT Label should match');
@@ -154,13 +156,17 @@ private with sharing class RD2_StatusMappingSettings_TEST {
     }
 
     /**
-     * @description Verifies deployment handler save method is called with expected CMT records
+     * @description Verifies save action does not save read-only status picklist values.
+     * Only admin specified Status to State mapping records are saved.
      */
     @IsTest
-    private static void shouldSaveMappingRecords() {
+    private static void shouldNotSaveReadOnlyStatusMappingRecords() {
         RD2_StatusMappingSettings_CTRL.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
-            new RD2_StatusMapper_TEST.Stub().withDefaultMapping()
+            new RD2_StatusMapper_TEST.Stub()
+                .withDefaultMapping()
+                .withMapping(STATUS_NEW, RD2_Constants.STATUS_ACTIVE)
+                .withMapping(STATUS_CANCELED, RD2_Constants.STATUS_CLOSED)
         );
         String jsonMapping = JSON.serialize(RD2_StatusMappingSettings_CTRL.loadMapping());
 
@@ -170,7 +176,8 @@ private with sharing class RD2_StatusMappingSettings_TEST {
         String deploymentId = RD2_StatusMappingSettings_CTRL.saveMapping(jsonMapping, deploymentHandler);
 
         System.assertEquals(true, deploymentHandler.isSaveCalled, 'The method to save records should be called');
-        System.assertEquals(3, deploymentHandler.records.size(), 'CMT records should be passed to the save method');
+        System.assertEquals(2, deploymentHandler.records.size(), 
+            'Only admin specified status value CMT records should be passed to the save method');
         System.assertEquals(MOCK_DEPLOYMENT_ID, deploymentId, 'Deployment Id should match');
     }
 
