@@ -151,7 +151,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             //do not use the enablement values from the settings but refresh them based on the configuration
             state.isReady = service.isRecurringDonations2Ready();
             state.isEnabled = service.isRecurringDonations2Enabled();
-            state.isCRLPEnabled = service.isCRLPEnabled();
 
             if (String.isBlank(jsonState)) {
                 state.isConfirmed = false;
@@ -181,6 +180,15 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         return (isSimpleVersion)
             ? false
             : batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
+    }
+
+     /**
+    * @description indicates of CRLP is enabled
+    * @return Boolean
+    */
+    @TestVisible
+    private static Boolean isCrlpEnabled() {
+        return STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
     }
 
     /***
@@ -238,13 +246,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
 
         try {
-            STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
-
-            if (!Test.isRunningTest()) {
-                upsert STG_Panel.stgService.stgRD;
-                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
-            }
-
+            saveRD2Enablement();
             System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
 
         } catch (Exception e) {
@@ -266,26 +268,21 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
         EnablementState state = getEnablementState();
 
-        if (!state.isCRLPEnabled) {
-            throw new ApiException(System.Label.CRLP_DisabledMessage);
+        if (!isCrlpEnabled()) {
+            throw new EnablementException(System.Label.CRLP_DisabledMessage);
         }
-
         if (state.isEnabled) {
-            throw new ApiException('You already enabled recurring donations');
+            throw new EnablementException(System.Label.RD2_HaveAlreadyBeenEnabled);
         }
 
-        STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
-
-        Database.upsert(STG_Panel.stgService.stgRD, false);
-
-        UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+        saveRD2Enablement();
 
         if (rescheduleBatchJobs) {
            jobId = System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
         }
         return jobId;
-
     }
+
     /***
     * @description Returns metadata deploy link
     * @return String MetaDeploy URL
@@ -461,6 +458,18 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description save the enablement of recurring donations
+    */
+    private static void saveRD2Enablement() {
+        STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
+
+        if (!Test.isRunningTest()) {
+            upsert STG_Panel.stgService.stgRD;
+            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+        }
+    }
+
+    /***
     * @description Stops the archive batch process
     */
     @AuraEnabled
@@ -516,7 +525,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         public Boolean isDryRun2 = false;
         public Boolean isMigrationEnabled = false;
         public Integer dryRunLimit = DRY_RUN_VALID_DAYS;
-        public Boolean isCRLPEnabled = false;
     }
 
     /**
@@ -603,9 +611,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /**
-    * @description Exception class
+    * @description Custom enablement exception
     */
-    private class ApiException extends Exception {}
+    private class EnablementException extends Exception { }
 
 
 }

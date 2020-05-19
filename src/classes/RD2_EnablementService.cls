@@ -93,16 +93,6 @@ public with sharing class RD2_EnablementService {
     }
 
     /***
-    * @description Returns true if Customizable rollups are enabled
-    * @return Boolean
-    */
-    public Boolean isCRLPEnabled() {
-        return
-            STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c == true;
-
-    }
-
-    /***
     * @description Returns true if enhanced Recurring Donations are enabled
     * @return Boolean
     */
