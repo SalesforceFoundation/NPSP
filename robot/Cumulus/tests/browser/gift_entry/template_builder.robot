@@ -19,6 +19,7 @@ Create Clone and Delete Template
     [tags]                                    feature:GE                    W-039556   
     #Create Template                             
     Go To Page                                Custom                        GE_Gift_Entry
+    Click Link                                Templates
     Click Gift Entry Button                   Create Template
     Wait Until Page Contains                  Gift Entry Template Information
     Enter Value In Field
