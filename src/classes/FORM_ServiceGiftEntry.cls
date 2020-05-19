@@ -99,6 +99,7 @@ public with sharing class FORM_ServiceGiftEntry {
             .withSelectFields(selectFields)
             .withFrom(sObjectApiName)
             .withWhere(whereClauses)
+            .withSecurityEnforced()
             .withOrderBy(orderByClause)
             .build();
         return getColumnHeaderDataWithPermissions(Database.query(queryString), listName);
@@ -120,10 +121,13 @@ public with sharing class FORM_ServiceGiftEntry {
             headerIdsToKeep.add(columnHeader.Id);
         }
 
-        Custom_Column_Header__c[] headersToDelete = [SELECT Id
+        Custom_Column_Header__c[] headersToDelete = [
+            SELECT Id
             FROM Custom_Column_Header__c
             WHERE Id NOT IN :headerIdsToKeep
-                AND List_Name__c = :listName];
+            AND List_Name__c = :listName
+            WITH SECURITY_ENFORCED
+        ];
         delete headersToDelete;
 
         return getColumnHeaderDataWithPermissions(columnHeaders, listName);
@@ -135,13 +139,16 @@ public with sharing class FORM_ServiceGiftEntry {
     @AuraEnabled
     public static FORM_Template[] getAllFormTemplates() {
         FORM_Template[] formTemplates = new FORM_Template[]{};
-        Form_Template__c[] allTemplates = [SELECT Id,
+        Form_Template__c[] allTemplates = [
+            SELECT Id,
                 Name,
                 Template_JSON__c,
                 Description__c,
                 Format_Version__c
             FROM Form_Template__c
-            ORDER BY Name ASC];
+            WITH SECURITY_ENFORCED
+            ORDER BY Name ASC
+        ];
 
         for (Form_Template__c formTemplate : allTemplates) {
             FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
@@ -170,7 +177,8 @@ public with sharing class FORM_ServiceGiftEntry {
                 SELECT Id, Name
                 FROM Form_Template__c
                 WHERE Id IN :ids
-        ];
+                WITH SECURITY_ENFORCED
+            ];
         try {
             delete templates;
             for (Form_Template__c template : templates) {
@@ -190,10 +198,13 @@ public with sharing class FORM_ServiceGiftEntry {
     public static FORM_Template retrieveFormTemplateById(Id templateId) {
         FORM_Template template;
 
-        Form_Template__c templateObj = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
+        Form_Template__c templateObj = [
+                                SELECT Id, Name, Format_Version__c, Template_JSON__c
                                 FROM Form_Template__c 
                                 WHERE Id =: templateId
-                                LIMIT 1];
+                                WITH SECURITY_ENFORCED
+                                LIMIT 1
+                            ];
         
         template = deserializeFormTemplateFromObj(templateObj);
         
@@ -212,9 +223,12 @@ public with sharing class FORM_ServiceGiftEntry {
     public static FORM_Template retrieveDefaultSGEFormTemplate() {
         Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
         FORM_Template template;
-        List<Form_Template__c> templateObjList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
+        List<Form_Template__c> templateObjList = [
+                                SELECT Id, Name, Format_Version__c, Template_JSON__c
                                 FROM Form_Template__c 
-                                WHERE Id =: giftEntrySettings.Default_Gift_Entry_Template__c];
+                                WHERE Id =: giftEntrySettings.Default_Gift_Entry_Template__c
+                                WITH SECURITY_ENFORCED
+                            ];
          
          if (!templateObjList.isEmpty()) {
             template = deserializeFormTemplateFromObj(templateObjList[0]);
@@ -275,7 +289,12 @@ public with sharing class FORM_ServiceGiftEntry {
     */
     @AuraEnabled
     public static Boolean checkNameUniqueness(String name, String id) {
-        Form_Template__c[] formTemplates = [SELECT Id FROM Form_Template__c WHERE Name = :name];
+        Form_Template__c[] formTemplates = [
+                            SELECT Id
+                            FROM Form_Template__c
+                            WHERE Name = :name
+                            WITH SECURITY_ENFORCED
+                        ];
         Boolean isNameValid = formTemplates.size() > 0 ? false : true;
 
         if (id != null) {
