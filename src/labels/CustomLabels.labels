@@ -4611,7 +4611,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Common label for credit card number</shortDescription>
-        <value>Credit Number</value>
+        <value>Card Number</value>
     </labels>
     <labels>
         <fullName>commonCriticalError</fullName>
@@ -4699,7 +4699,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Common label for expiration date (MM/YY)</shortDescription>
-        <value>MM/YY</value>
+        <value>Exp. Date</value>
     </labels>
     <labels>        
         <fullName>commonMissingRequiredFields</fullName>
@@ -4754,7 +4754,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Common label for Payment Services</shortDescription>
+        <shortDescription>Common label for Elevate Payment Services</shortDescription>
         <value>Salesforce.org Elevate</value>
     </labels>
     <labels>
@@ -6289,7 +6289,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Banner failure message for tokenization or purchase errors</shortDescription>
+        <shortDescription>Field Bundle banner failure message for tokenization or purchase errors</shortDescription>
         <value>There was an error processing the transaction.</value>
     </labels>
     <labels>
