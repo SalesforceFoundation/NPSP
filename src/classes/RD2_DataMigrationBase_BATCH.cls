@@ -42,7 +42,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
     public static final String LOG_EXCEPTION_ERROR_TYPE = 'Data Migration Exception';
 
     /**
-     * @description A flag to mark Closed Lost Opps that are voided by the data migration. 
+     * @description A flag to mark Closed Lost Opps that are voided by the data migration.
      * The flag is used to exclude (ignore) such Opps by the Opp service
      * when determining if the next Opp with the same Close Date can be created.
      */
@@ -94,6 +94,16 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             return logContext;
         }
         set;
+    }
+
+    /**
+    * @description Should Rollups be disabled or not before running data migration or validation
+    */
+    private Boolean disableRollups {
+        get {
+            disableRollups = (rdSettings.DisableRollupsWhenCreatingInstallments__c == true);
+            return disableRollups;
+        } private set;
     }
 
     /***
@@ -149,6 +159,11 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             throw new MigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
         }
 
+       if (disableRollups) {
+            TDTM_Config_API.disableAllRollupTriggers();
+        }
+
+
         //do not evaluate Opportunities from the RD trigger during migration
         //migration batch itself will take care of outstanding Opps
         RD2_OpportunityEvaluationService.skipEvaluationService = true;
@@ -197,7 +212,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             .withTotalRecords(totalRecords)
             .withTotalRecordsProcessed(totalRecords - totalRecordsFailed)
             .withTotalRecordsFailed(totalRecordsFailed);
-        
+
         new RD2_DataMigrationEnablement.BatchJob().saveSummary(summary, isDryRunMode);
     }
 
@@ -324,7 +339,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             for (Opportunity opp : opps) {
                 opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
 
-                //Overwrite the Opp Installment Number so this Opp can be recognized and excluded 
+                //Overwrite the Opp Installment Number so this Opp can be recognized and excluded
                 //by RD2 Opp processing services when determining the next Opp with the same Close Date on the Recurring Donation
                 opp.Recurring_Donation_Installment_Number__c = MIGRATION_INSTALLMENT_NUMBER_FLAG;
                 //Indicate the Opp was set as Closed Lost due to switching to the new enhanced (RD2) processing
