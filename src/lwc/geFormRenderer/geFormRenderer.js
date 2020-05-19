@@ -357,8 +357,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     catchCardChargedBDIFailedError(error) {
         this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');
-        this.addPageLevelErrorMessage(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed, 0);
-        this.handleCatchOnSave(error.apexException);
+
+        const apexException = new ExceptionDataError(error.apexException);
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
+            multilineMessages: [{
+                message: apexException.errorMessage || this.CUSTOM_LABELS.commonUnknownError,
+                index: 0
+            }]
+        }];
+        this.hasPageLevelError = true;
 
         return;
     }
