@@ -499,7 +499,7 @@ tasks:
             apex: >
                 %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
-                upsert errSettings;                
+                upsert errSettings;
 
     run_tests:
         options:
