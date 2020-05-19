@@ -3633,8 +3633,8 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2EntryForm</members>
         <members>rdActiveSchedule</members>
-        <members>rdEntryForm</members>
         <members>rdScheduleVisualizer</members>
         <members>util</members>
         <members>utilAlertBanner</members>

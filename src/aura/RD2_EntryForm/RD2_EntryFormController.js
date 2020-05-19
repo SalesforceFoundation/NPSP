@@ -10,7 +10,7 @@
             component.set('v.parentId', parentId);
         }
         
-        $A.createComponent("c:rdEntryForm", {parentId, recordId},
+        $A.createComponent("c:rd2EntryForm", {parentId, recordId},
         function(content, status, errorMessage) {
             if (status === "SUCCESS") {
                 const modalBody = content;
