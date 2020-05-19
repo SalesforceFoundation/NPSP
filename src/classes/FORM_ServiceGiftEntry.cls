@@ -302,6 +302,13 @@ public with sharing class FORM_ServiceGiftEntry {
         return template;
     }
 
+    /******************************************************************************************************
+     * @description Private method for checking FLS & CRUD permissions for custom column headers for the
+     * the GE List View headers
+     * @param columnHeaders Custom Column Headers
+     * @param listName List View Name
+     * @return Instance of the ColumnHeaderData object
+    */
     private static ColumnHeaderData getColumnHeaderDataWithPermissions(Custom_Column_Header__c[] columnHeaders,
             String listName) {
         String listNameDevName = listName == TEMPLATES ?
@@ -383,6 +390,9 @@ public with sharing class FORM_ServiceGiftEntry {
         return defaultFields;
     }
 
+    /**
+     * Inner class representation of the Custom Column Headers with permission data
+    */
     public with sharing class ColumnHeaderData {
         @AuraEnabled
         public Custom_Column_Header__c[] columnHeaders;
