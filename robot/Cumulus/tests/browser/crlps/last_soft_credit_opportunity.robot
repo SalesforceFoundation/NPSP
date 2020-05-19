@@ -12,6 +12,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Validate And Create Required CustomField
+...             Enable Customizable Rollups
 Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
@@ -30,6 +31,12 @@ Validate And Create Required CustomField
     ...                                                  Last Soft Credit Opportunity
     ...                                                  Opportunity
 
+Validate Async Apex Jobs
+    Load page object                                     Custom                           ObjectManager
+    Load Apex Jobs
+    Validate Apex Job Status                             CRLP_RollupQueueable             Completed
+    Validate Apex Job Status                             CRLP_Contact_SoftCredit_BATCH    Completed
+
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
 &{opportunity_fields}    Type=Donation   Name=Customizable rollup test $100 Donation   Amount=100  StageName=Closed Won  npe01__Do_Not_Automatically_Create_Payment__c=false
@@ -39,17 +46,11 @@ Validate And Create Required CustomField
 Create Crlp For Automated Soft Credit
     [Documentation]
 
-    [tags]                                               W-037650                         feature:Contacts and Accounts
-
-    # Enable Crlp from the settings page if the crlp setting is not on
-    Go To Page                                           Custom                           NPSP_Settings
-    Open Main Menu                                       Donations
-    Click Link With Text                                 Customizable Rollups
-    Enable customizable rollups if not enabled
+    [tags]                                                W-037650                         feature:
 
     # Create a crlp settings record for the field last soft credit opportuntiy
     Load Page Object                                      Custom                          CustomRollupSettings
-    Loadcrlpsettings
+    Navigate To Crlpsettings
     Create New Rollup Setting
     ...                                                   Target Object=Contact
     ...                                                   Target Field=Last Soft Credit Opportunity
@@ -60,7 +61,6 @@ Create Crlp For Automated Soft Credit
     ...                                                   Field to Roll Up=Opportunity: Opportunity ID
 
     # Navigate to the opportunity details page and make the contact associated not primary and set the role to soft credit
-
     Go To Page                                            Details
     ...                                                   Opportunity
     ...                                                   object_id=${data}[contact_opportunity][Id]
@@ -76,16 +76,12 @@ Create Crlp For Automated Soft Credit
     Waitfor Actions Dropdown And Click Option             Recalculate Rollups
     Wait Until Loading Is Complete
 
-    # There is time lag after the rollup is done for it to appear on UI, adding this workaround instead of sleep
-    Go To Page                                            Listing                               Contact
-    Wait Until Loading Is Complete
+    # Wait for the Relevant Apex Jobs to get Completed
+    Validate Async Apex Jobs
+
+    # Navigate to the contact page and asset that the rollup for the last soft credit opportunity occured
     Go To Page                                            Details
     ...                                                   Contact
     ...                                                   object_id=${data}[contact][Id]
     Wait Until Loading Is Complete
-    Reload Page
-
-    Wait Until Keyword Succeeds                           1 minute
-        ...                                               5 seconds
-        ...                                               Navigate To And Validate Field Value
-        ...                                               Last Soft Credit Opportunity                contains         Customizable rollup test $100 Donation
+    Navigate To And Validate Field Value                  Last Soft Credit Opportunity                contains         Customizable rollup test $100 Donation

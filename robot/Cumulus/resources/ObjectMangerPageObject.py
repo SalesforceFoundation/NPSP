@@ -11,6 +11,18 @@ from logging import exception
 @pageobject("Custom", "ObjectManager")
 class ObjectManagerPage(BaseNPSPPage, BasePage):
 	
+	def load_apex_jobs(self):
+		"""To go to object manager page for a specific object"""
+		url_template = "{root}/lightning/setup/AsyncApexJobs/home"
+		url = url_template.format(root=self.cumulusci.org.lightning_base_url)
+		self.selenium.go_to(url)
+		self.salesforce.wait_until_loading_is_complete()
+		self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
+		self.npsp.choose_frame('vfFrameId')
+	
+	def validate_apex_job_status(self, jobname, status):
+		self.npsp.wait_for_apexjob_to_process(jobname, status)
+	
 	def open_fields_and_relationships(self, object_name):
 		"""To go to object manager page for a specific object"""
 		url_template = "{root}/lightning/setup/ObjectManager/{object}/FieldsAndRelationships/view"
@@ -21,7 +33,6 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.wait_until_page_contains_element(search_button)
 
 	def is_custom_field_present(self, field_name):
-		"""Verifies if the custom field is present already for the object specified and returns true or false"""
 		search_button = npsp_lex_locators['object_manager']['global_search']
 		self.selenium.wait_until_page_contains_element(search_button,60)
 		self.selenium.get_webelement(search_button).send_keys(field_name)
@@ -35,9 +46,9 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 			return False
 		else:
 			return True
-		
+	
+	
 	def create_custom_field(self, type, field_name, related_to):
-		# After confirming that the custom field is not present for the specified object, creates the custom field of the specified type
 		value = self.is_custom_field_present(field_name)
 		self.builtin.log_to_console(value)
 		if value == True:
@@ -64,7 +75,6 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 				self.selenium.click_element(next_button)
 				field_label_input = self.selenium.find_element(field_label)
 				self.salesforce.populate_field('Field Label', field_name)
-				
 				self.salesforce.populate_field('Description', "This is a custion field generated during automation")
 				self.selenium.click_element(next_button)
 				self.selenium.click_element(next_button)

@@ -867,9 +867,31 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     break
                 except Exception:
                     sec= sec+30
-                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))                 
+                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
 
-    def get_npsp_settings_value(self,field_name): 
+    @capture_screenshot_on_error
+    def wait_for_apexjob_to_process(self, jobname,status):
+        """Checks every 30 secs for upto 5mins for batch with given status
+        """
+        i = 0
+        sec=0
+        expected = npsp_lex_locators['crlps']['apex_job'].format(jobname,status)
+        buttons = self.selenium.driver.find_elements_by_xpath(expected)
+        while True:
+            i += 1
+            if i > 10:
+                self.selenium.capture_page_screenshot()
+                raise AssertionError("Timed out waiting for batch {} with status {} to load.".format(jobname,status))
+            
+            else:
+                try:
+                    self.selenium.wait_until_element_is_visible(buttons[0])
+                    break
+                except Exception:
+                    sec= sec+30
+                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
+
+    def get_npsp_settings_value(self,field_name):
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
         loc = self.selenium.get_webelement(locator).text  
         return loc 
@@ -1217,7 +1239,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
-        self.selenium.click_link(value) 
+        self.npsp.click_link_with_text(value)
         
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects
