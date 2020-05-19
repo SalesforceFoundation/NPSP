@@ -41,10 +41,20 @@ public with sharing class RD2_EntryFormController {
     * @return Map<String, Object>
     */
     @AuraEnabled
-    public static Map<String, Object> configureEntryForm() {
+    public static Map<String, Object> getSetting(Id recordId, Id parentId) {
+        String header = (recordId == null)
+            ? System.Label.RD2_EntryFormHeader
+            : System.Label.commonEdit + ' ' + [SELECT Name FROM npe03__Recurring_Donation__c WHERE Id =: recordId LIMIT 1].Name;
+
+        String parentSObjectType = (parentId == null)
+            ? null
+            : parentId.getSObjectType().getDescribe().getName();
+
         return new Map<String, Object> {
-            'isAutoNamingDisabled' => !UTIL_CustomSettingsFacade.getRecurringDonationsSettings().EnableAutomaticNaming__c,
-            'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization()
+            'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
+            'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
+            'header' => header,
+            'parentSObjectType' => parentSObjectType
         };
     }
 }

@@ -1,159 +1,161 @@
 <template>
+    <header class="slds-modal__header slds-clearfix">
+        <h2 class="slds-text-heading_medium slds-hyphenate header-string">
+            {header}
+        </h2>
+    </header>
    
     <lightning-record-edit-form record-id={recordId}
                                 object-api-name="npe03__Recurring_Donation__c"
-                                onload={handleLoad}
                                 onsubmit={handleSubmit}
                                 onerror={handleError}
                                 onsuccess={handleSuccess}>
-        <template if:true={isLoading}>
-            <div class="slds-grid slds-grid_align-center">
-                <div class="slds-is-relative slds-size_1-of-1">
-                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
-                    <c-util-stencil row-count="20" column-count="2"></c-util-stencil>
-                </div>
-            </div>
-        </template>
 
-        <div data-id="editFields" class="slds-hide">
-
-            <template if:true={hasError}>
-                <div class="slds-notify_container slds-notify_container_extension slds-is-relative slds-m-bottom_xx-small">
-                    <div class="slds-notify slds-notify_extension slds-notify_toast slds-theme_error slds-m-horizontal_none error-container">
-                        <div class="slds-notify__content">
-                            <h2 class="slds-text-heading_small">
-                                {errorMessage.message}
-                            </h2>
-                        </div>
+        <div class="slds-modal__content slds-p-around_medium">
+            <template if:true={isLoading}>
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-is-relative slds-size_1-of-1">
+                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                        <c-util-stencil row-count="20" column-count="2"></c-util-stencil>
                     </div>
-                    <div class="slds-text-color_destructive slds-p-horizontal_small slds-text-align_left">{errorMessage.detail}</div>
                 </div>
             </template>
-        
-            <div class="slds-section slds-is-open">
-                <h3 class="slds-section__title slds-theme_shade">
-                    <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{CUSTOM_LABELS.donorSectionHeader}</span>
-                </h3>
-                <div aria-hidden="false" class="slds-section__content">
-                    <lightning-layout horizontal-align="spread" multiple-rows="true">
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input-field field-name={FIELDS.contact} value={contactId}>
-                            </lightning-input-field>
-                        </lightning-layout-item>
+            <template if:true={isInitialize}>
+                <div class={cssEditForm}>
 
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input-field field-name={FIELDS.account} value={accountId}>
-                            </lightning-input-field>
-                        </lightning-layout-item>
+                    <template if:true={hasError}> 
+                        <c-util-page-level-message title={errorMessage.message}
+                                                subtitle={errorMessage.detail}
+                                                variant='error'>
+                        </c-util-page-level-message>
+                    </template>
+                
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{customLabels.donorSectionHeader}</span>
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content">
+                            <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                                    <lightning-input-field field-name={fields.contact.apiName} value={contactId}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
 
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input-field field-name={FIELDS.dateEstablished} required>
-                            </lightning-input-field>
-                        </lightning-layout-item>
-                    </lightning-layout>
-                </div>
-            </div>
+                                <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">
+                                    <lightning-input-field field-name={fields.account.apiName} value={accountId}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
 
-            <div class="slds-section slds-is-open">
-                <h3 class="slds-section__title slds-theme_shade">
-                    <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{CUSTOM_LABELS.donationSectionHeader}</span>
-                </h3>
-                <div aria-hidden="false" class="slds-section__content">
+                                <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">
+                                    <lightning-input-field field-name={fields.dateEstablished.apiName} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </div>
+                    </div>
 
-                    <lightning-layout horizontal-align="spread" multiple-rows="true">
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input-field field-name={FIELDS.recurringType}>
-                            </lightning-input-field>
-                        </lightning-layout-item>
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{customLabels.donationSectionHeader}</span>
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content">
 
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input-field field-name={FIELDS.installment}>
-                            </lightning-input-field>
-                        </lightning-layout-item>
+                            <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">
+                                    <lightning-input-field field-name={fields.recurringType.apiName}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
 
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input-field field-name={FIELDS.amount} required>
-                            </lightning-input-field>
-                        </lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" class="slds-m-bottom_x-small" size="12"  small-device-size="6">
+                                    <lightning-input-field field-name={fields.installment.apiName}>
+                                    </lightning-input-field>
+                                    <!-- <lightning-input data-lpignore="true" autocomplete="off" type="number" name={fields.installment.label} label={fields.installment.label} class="hide-last-pass" style="background-position: 150% 50% !important;
+                                    background-image: none !important;">
+                                    </lightning-input> -->
+                                
+                                </lightning-layout-item>
 
-                        <lightning-layout-item padding="around-small" size="6"></lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">
+                                    <lightning-input-field field-name={fields.amount.apiName} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
 
-                        <lightning-layout-item padding="around-small" size="6">
-                            <lightning-input-field field-name={FIELDS.installmentFrequency} required>
-                            </lightning-input-field> 
-                        </lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">
+                                    <template if:true={isMultiCurrencyEnabled}>
+                                        <label for="currencyField" class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                        <lightning-input-field id="currencyField" field-name={fields.currency.apiName} variant="label-hidden" requried>
+                                        </lightning-input-field>
+                                    </template>
+                                </lightning-layout-item>
 
-                        <lightning-layout-item padding="around-small" size="6"></lightning-layout-item>
-
-                        <lightning-layout-item padding="horizontal-small" size="3">
-                            <lightning-input-field field-name={FIELDS.period} required>
-                            </lightning-input-field>
-                        </lightning-layout-item>
-
-                        <lightning-layout-item padding="horizontal-small" size="3">
-                            <lightning-input-field field-name={FIELDS.dayOfMonth} required>
-                            </lightning-input-field>
-                        </lightning-layout-item>
-
-                        <lightning-layout-item padding="horizontal-small" size="3">
-                            <lightning-input-field field-name={FIELDS.startDate} required>
-                            </lightning-input-field>
-                        </lightning-layout-item>
-
-                        <lightning-layout-item padding="horizontal-small" size="3"></lightning-layout-item>
-
-                        <lightning-layout-item padding="horizontal-small" size="6">
-                            <lightning-input-field field-name={FIELDS.paymentMethod}>
-                            </lightning-input-field>
-                        </lightning-layout-item>
-                    </lightning-layout>
-                </div>
-            </div>
-
-            <div class="slds-section slds-is-open">
-                <h3 class="slds-section__title slds-theme_shade">
-                    <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{CUSTOM_LABELS.otherSectionHeader}</span>
-                </h3>
-                <div aria-hidden="false" class="slds-section__content">
-                    <lightning-layout horizontal-align="spread" multiple-rows="true">
-                        <template if:true={isAutoNamingDisabled}>
-                            <lightning-layout-item padding="horizontal-small" size="12">
-                                <lightning-input-field class="name-field-class" field-name={FIELDS.name} required>
+                                <lightning-layout-item padding="horizontal-small" size="12"  large-device-size="3" small-device-size="6">
+                                    <lightning-input-field field-name={fields.installmentFrequency.apiName} required>
                                 </lightning-input-field>
-                            </lightning-layout-item>
-                        </template>
 
-                        <lightning-layout-item padding="horizontal-small" size="12">
-                            <lightning-input-field field-name={FIELDS.campaign}>
-                            </lightning-input-field>
-                        </lightning-layout-item>
+                                </lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" size="12"  large-device-size="3" small-device-size="6">
+                                    <lightning-input-field field-name={fields.period.apiName} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
 
-                        <template if:true={isMultiCurrencyEnabled}>
-                            <lightning-layout-item padding="horizontal-small" size="12">
-                                <lightning-input-field class="currency-field-class" field-name={FIELDS.CurrencyIsoCode} requried>
-                                </lightning-input-field>
-                            </lightning-layout-item>
-                        </template>
-                    </lightning-layout>
+                                <lightning-layout-item padding="horizontal-small" size="12"  large-device-size="3" small-device-size="6">
+                                    <lightning-input-field field-name={fields.dayOfMonth.apiName}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item padding="horizontal-small" size="12"  large-device-size="3" small-device-size="6">
+                                    <lightning-input-field field-name={fields.startDate.apiName} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">
+                                    <lightning-input-field field-name={fields.paymentMethod.apiName}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </div>
+                    </div>
+
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{customLabels.otherSectionHeader}</span>
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content">
+                            <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                <template if:false={isAutoNamingEnabled}>
+                                    <lightning-layout-item padding="horizontal-small" size="12">
+                                        <lightning-input-field class="name-field-class" field-name={fields.name.apiName} required>
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
+                                </template>
+
+                                <lightning-layout-item padding="horizontal-small" size="12" >
+                                    <lightning-input-field field-name={fields.campaign.apiName}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </template>
         </div>
-
         <footer class="slds-modal__footer slds-clearfix">
             <div class="slds-float_right">
-                <lightning-button label={CUSTOM_LABELS.cancel}
-                                    title={CUSTOM_LABELS.cancel}
+                <lightning-button label={customLabels.cancelButtonLabel}
+                                    title={customLabels.cancelButtonLabel}
                                     variant="neutral"
                                     class="slds-m-right_small"
                                     onclick={handleCancel}>
                 </lightning-button>
-                <lightning-button label={CUSTOM_LABELS.save}
-                                    title={CUSTOM_LABELS.save}
+                <lightning-button label={customLabels.saveButtonLabel}
+                                    title={customLabels.saveButtonLabel}
                                     variant="brand"
-                                    type="submit">
+                                    type="submit"
+                                    data-id="submitButton">
                 </lightning-button>
             </div>
         </footer>
 
     </lightning-record-edit-form>
+    
 </template>

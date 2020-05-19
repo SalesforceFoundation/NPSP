@@ -1948,7 +1948,7 @@
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form Donation Information Section Header</shortDescription>
+        <shortDescription>Recurring Donation Entry Form Donation Information section header</shortDescription>
         <value>Donation Information</value>
     </labels>
     <labels>
@@ -1956,23 +1956,52 @@
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form Donor Information Section Header</shortDescription>
+        <shortDescription>Recurring Donation Entry Form Donor Information section header</shortDescription>
         <value>Donor Information</value>
     </labels>
+
+    <labels>
+        <fullName>RD2_EntryFormFieldLabelCurreny</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form currency field label</shortDescription>
+        <value>Currency</value>
+    </labels>
+
     <labels>
         <fullName>RD2_EntryFormHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form Header</shortDescription>
+        <shortDescription>Recurring Donation Entry Form header</shortDescription>
         <value>New Recurring Donation</value>
     </labels>
+
+    <labels>
+        <fullName>RD2_EntryFormInsertSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is inserted</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was created.</value>
+    </labels>
+
+    <labels>
+        <fullName>RD2_EntryFormUpdateSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is updated</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was saved.</value>
+    </labels>
+
     <labels>
         <fullName>RD2_EntryFormOtherSectionHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form Other Information Section Header</shortDescription>
+        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
         <value>Other Information</value>
     </labels>
     <labels>
