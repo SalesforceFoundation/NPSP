@@ -185,20 +185,6 @@ pre {
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
-              <tr class="kwrow" id="NPSP.py.Add Gau Allocation">
-                <td class="kwname">
-                  Add Gau Allocation
-                </td>
-                <td class="kwargs">
-                  
-                  <i>field</i>, 
-                  
-                  <i>value</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Change Month">
                 <td class="kwname">
                   Change Month
@@ -274,7 +260,7 @@ pre {
                   <i>value</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Verifies that the given value is displayed under the related list identified by title on a record view page</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Check Related List Values">
@@ -329,6 +315,18 @@ pre {
                 <td class="kwdoc"><p>Returns the first displayed iframe on the page with the given name or title</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Click Actions Link">
+                <td class="kwname">
+                  Click Actions Link
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks on the link in the actions container on top right corner of the page using Javascript</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Click Bge Button">
                 <td class="kwname">
                   Click Bge Button
@@ -351,6 +349,18 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>clicks the button in the table by using name mentioned in data-label</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Click Button With Title">
+                <td class="kwname">
+                  Click Button With Title
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks button identified by title using Javascript</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Click Button With Value">
@@ -395,29 +405,15 @@ pre {
                 <td class="kwdoc"><p>Pass the locator and its values for the element you want to click</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Click Eng Plan Dropdown">
-                <td class="kwname">
-                  Click Eng Plan Dropdown
-                </td>
-                <td class="kwargs">
-                  
-                  <i>title</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Click First Matching Related Item Popup Link">
                 <td class="kwname">
                   Click First Matching Related Item Popup Link
                 </td>
                 <td class="kwargs">
                   
-                  <i>heading</i>, 
+                  <i>*args</i>, 
                   
-                  <i>rel_status</i>, 
-                  
-                  <i>link</i>
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Clicks a link in the popup menu for first matching related list item. heading specifies the name of the list, rel_status specifies the status or other field vaule to identify a particular item, and link specifies the name of the link</p></td>
@@ -429,10 +425,12 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>title</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"><p>Click the lightning dropdown to open it</p></td>
+                <td class="kwdoc"><p>Click the lightning dropdown to open it and select value</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Click Id">
@@ -483,6 +481,26 @@ pre {
                 <td class="kwdoc"></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Click More Actions Button">
+                <td class="kwname">
+                  Click More Actions Button
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>clicks on the more actions dropdown button in the actions container on record page</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Click More Activity Button">
+                <td class="kwname">
+                  Click More Activity Button
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks on View More button on Activity tab of the record</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Click Object Manager Button">
                 <td class="kwname">
                   Click Object Manager Button
@@ -505,18 +523,6 @@ pre {
                 <td class="kwdoc"><p>selects first record of the page</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Click Panel Sub Link">
-                <td class="kwname">
-                  Click Panel Sub Link
-                </td>
-                <td class="kwargs">
-                  
-                  <i>title</i>
-                  
-                </td>
-                <td class="kwdoc"><p>clicks on the button on the payments page</p></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Click Record Button">
                 <td class="kwname">
                   Click Record Button
@@ -535,14 +541,26 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>heading</i>, 
+                  <i>*args</i>, 
                   
-                  <i>dd_title</i>, 
-                  
-                  <i>button_title</i>
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>To Click on a related list dropdown button. Pass the list name, dd name and button name</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Click Related Table Item Link">
+                <td class="kwname">
+                  Click Related Table Item Link
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks a table header field link in the related list identified with the specified heading. This keyword will automatically call `Wait until loading is complete`</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Click Save">
@@ -557,18 +575,16 @@ pre {
                 <td class="kwdoc"></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Click Settings Button">
+              <tr class="kwrow" id="NPSP.py.Click Show More Actions Button">
                 <td class="kwname">
-                  Click Settings Button
+                  Click Show More Actions Button
                 </td>
                 <td class="kwargs">
                   
-                  <i>panel_id</i>, 
-                  
-                  <i>btn_value</i>
+                  <i>title</i>
                   
                 </td>
-                <td class="kwdoc"><p>clicks on the buttons on npsp settings object using panel id and button value</p></td>
+                <td class="kwdoc"><p>Clicks on more actions dropdown and click the given title</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Click Span Button">
@@ -595,6 +611,23 @@ pre {
                 <td class="kwdoc"><p>Clicks a button in an object's actions but doesn't wait for a model to open</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Click Special Related Item Popup Link">
+                <td class="kwname">
+                  Click Special Related Item Popup Link
+                </td>
+                <td class="kwargs">
+                  
+                  <i>heading</i>, 
+                  
+                  <i>title</i>, 
+                  
+                  <i>link</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks a link in the popup menu for a related list item.</p>
+<p>heading specifies the name of the list, title specifies the name of the item, and link specifies the name of the link</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Click Special Related List Button">
                 <td class="kwname">
                   Click Special Related List Button
@@ -607,20 +640,6 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>To Click on a related list button which would open up a new lightning page rather than a modal. Pass the list name and button name</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Click Task Button">
-                <td class="kwname">
-                  Click Task Button
-                </td>
-                <td class="kwargs">
-                  
-                  <i>task_id</i>, 
-                  
-                  <i>name</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Click Task button based on Task id and button label</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Click Viewall Related List">
@@ -647,22 +666,6 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Clicks a button in the heading of a related list when the related list is enclosed in wrapper. Waits for a modal to open after clicking the button.</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Confirm Field Value">
-                <td class="kwname">
-                  Confirm Field Value
-                </td>
-                <td class="kwargs">
-                  
-                  <i>field</i>, 
-                  
-                  <i>status</i>, 
-                  
-                  <i>value</i>
-                  
-                </td>
-                <td class="kwdoc"><p>If status is 'contains' then the specified value should be present in the field 'does not contain' then the specified value should not be present in the field</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Delete Record">
@@ -715,6 +718,20 @@ pre {
                 <td class="kwdoc"><p>Scrolls just a little below the field Clicks on Edit icon next to field checks if status is 'checked' unchecks if status in 'unchecked'</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Edit Record Dropdown Value">
+                <td class="kwname">
+                  Edit Record Dropdown Value
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Scrolls just a little below the field Clicks on Edit icon next to field and enters a value into the field</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Edit Record Field Value">
                 <td class="kwname">
                   Edit Record Field Value
@@ -729,20 +746,6 @@ pre {
                 <td class="kwdoc"><p>Scrolls just a little below the field Clicks on Edit icon next to field and enters a value into the field</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Enter Eng Plan Values">
-                <td class="kwname">
-                  Enter Eng Plan Values
-                </td>
-                <td class="kwargs">
-                  
-                  <i>name</i>, 
-                  
-                  <i>value</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Enter values into corresponding fields in Engagement Plan Templet page</p></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Enter Gau">
                 <td class="kwname">
                   Enter Gau
@@ -755,32 +758,6 @@ pre {
                 <td class="kwdoc"></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Enter Level Dd Values">
-                <td class="kwname">
-                  Enter Level Dd Values
-                </td>
-                <td class="kwargs">
-                  
-                  <i>name</i>, 
-                  
-                  <i>value</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Enter values into corresponding fields in Levels page</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Enter Level Values">
-                <td class="kwname">
-                  Enter Level Values
-                </td>
-                <td class="kwargs">
-                  
-                  <i>**kwargs</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Enter values into corresponding fields in Levels page</p></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Enter Payment Schedule">
                 <td class="kwname">
                   Enter Payment Schedule
@@ -791,20 +768,6 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Enter values into corresponding fields in Levels page</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Enter Task Id And Subject">
-                <td class="kwname">
-                  Enter Task Id And Subject
-                </td>
-                <td class="kwargs">
-                  
-                  <i>id</i>, 
-                  
-                  <i>value</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Enter values into corresponding task subject fields based on last 2 digits of id</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Fill Address Form">
@@ -935,6 +898,18 @@ pre {
                 <td class="kwdoc"></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Get Url Formatted Object Name">
+                <td class="kwname">
+                  Get Url Formatted Object Name
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Returns a map with BaseURl and the namespace formatted object name</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Go To Setup Page">
                 <td class="kwname">
                   Go To Setup Page
@@ -971,6 +946,20 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Scrolls down until the specified locator is found.</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Navigate To And Validate Field Value">
+                <td class="kwname">
+                  Navigate To And Validate Field Value
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>If status is 'contains' then the specified value should be present in the field 'does not contain' then the specified value should not be present in the field</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Open Date Picker">
@@ -1095,6 +1084,18 @@ pre {
                 <td class="kwdoc"><p>Populates modal form with the field-value pairs supported keys are any input, textarea, lookup, checkbox, date and dropdown fields</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Random String">
+                <td class="kwname">
+                  Random String
+                </td>
+                <td class="kwargs">
+                  
+                  <i>stringLength=10</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Generate a random string of fixed length</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Return List">
                 <td class="kwname">
                   Return List
@@ -1149,6 +1150,20 @@ pre {
                 <td class="kwdoc"><p>Saves record by clicking on footer button 'Save'</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Scroll Button Into View And Click Using Js">
+                <td class="kwname">
+                  Scroll Button Into View And Click Using Js
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Scrolls the button element into view and clicksthe button using JS</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Search Field By Value">
                 <td class="kwname">
                   Search Field By Value
@@ -1199,13 +1214,15 @@ pre {
                 <td class="kwdoc"><p>To select a row on object page based on name and open the dropdown</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Select Eng Plan Checkbox">
+              <tr class="kwrow" id="NPSP.py.Select Date From Datepicker">
                 <td class="kwname">
-                  Select Eng Plan Checkbox
+                  Select Date From Datepicker
                 </td>
                 <td class="kwargs">
                   
-                  <i>title</i>
+                  <i>field</i>, 
+                  
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"></td>
@@ -1217,16 +1234,12 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>iframe</i>, 
-                  
-                  <i>path</i>, 
-                  
                   <i>*args</i>, 
                   
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"><p>Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks</p></td>
+                <td class="kwdoc"><p>Waits for the iframe and Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Select Multiple Values From Duellist">
@@ -1379,26 +1392,12 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>dropdown</i>, 
+                  <i>*args</i>, 
                   
-                  <i>value</i>
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Select given value in the dropdown field</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Select Value From List">
-                <td class="kwname">
-                  Select Value From List
-                </td>
-                <td class="kwargs">
-                  
-                  <i>list_name</i>, 
-                  
-                  <i>value</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Selenium Execute With Retry">
@@ -1432,9 +1431,35 @@ pre {
                 <td class="kwdoc"><p>If status is 'checked' then checks the box if its not already checked. Prints a warning msg if already checked 'unchecked' then unchecks the box if its not already checked. Prints a warning msg if already unchecked</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Validate Checkbox">
+              <tr class="kwrow" id="NPSP.py.Setupdata">
                 <td class="kwname">
-                  Validate Checkbox
+                  Setupdata
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>, 
+                  
+                  <i>contact_data=None</i>, 
+                  
+                  <i>opportunity_data=None</i>, 
+                  
+                  <i>account_data=None</i>, 
+                  
+                  <i>payment_data=None</i>, 
+                  
+                  <i>engagement_data=None</i>, 
+                  
+                  <i>recurringdonation_data=None</i>, 
+                  
+                  <i>gau_data=None</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates an Account if account setup data is passed Creates a contact if contact_data is passed Creates an opportunity for the contact if opportunit_data is provided Creates a contact and sets an opportunity simultaneously if both the contact_data and opportunity_data is specified Creates a contact and sets up an engagement plan with both contact and engagement plan information is provided</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Validate Checkboxes">
+                <td class="kwname">
+                  Validate Checkboxes
                 </td>
                 <td class="kwargs">
                   
@@ -1444,6 +1469,36 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Validate Related Record Count">
+                <td class="kwname">
+                  Validate Related Record Count
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Verify Address Details">
+                <td class="kwname">
+                  Verify Address Details
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>value</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Validates if the details page address field has specified value Field is the The address type field we are trying to match to the Expected address Map that is sent through Kwargs</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Verify Allocations">
@@ -1502,38 +1557,6 @@ pre {
                 <td class="kwdoc"><p>To verify no. of records with given same column values key is value in a table column, value is expected count of rows with that value</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Verify Details Address">
-                <td class="kwname">
-                  Verify Details Address
-                </td>
-                <td class="kwargs">
-                  
-                  <i>field</i>, 
-                  
-                  <i>npsp_street</i>, 
-                  
-                  <i>npsp_city</i>, 
-                  
-                  <i>npsp_country</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Validates if the details page address field has specified value</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Verify Eng Plan Exists">
-                <td class="kwname">
-                  Verify Eng Plan Exists
-                </td>
-                <td class="kwargs">
-                  
-                  <i>name</i>, 
-                  
-                  <i>delete=None</i>
-                  
-                </td>
-                <td class="kwdoc"><p>verifies that the Engagement Plans related list has a plan stored under it and clicks on dropdown if True is passed as 2nd argument</p></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Verify Expected Batch Values">
                 <td class="kwname">
                   Verify Expected Batch Values
@@ -1590,9 +1613,9 @@ pre {
                 <td class="kwdoc"><p>Validates header value</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Verify Occurrence">
+              <tr class="kwrow" id="NPSP.py.Verify Occurence">
                 <td class="kwname">
-                  Verify Occurrence
+                  Verify Occurence
                 </td>
                 <td class="kwargs">
                   
@@ -1634,8 +1657,10 @@ pre {
                 </td>
                 <td class="kwargs">
                   
+                  <i>numpayments</i>
+                  
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Gets the payment details from the UI and compares with the expected number of payments</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Verify Payment Split">
@@ -1658,7 +1683,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>name</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Checks for the record in the object page and returns true if found else returns false</p></td>
@@ -1699,6 +1726,8 @@ pre {
                   Verify Related List Field Values
                 </td>
                 <td class="kwargs">
+                  
+                  <i>listname=None</i>, 
                   
                   <i>**kwargs</i>
                   
@@ -1808,12 +1837,28 @@ pre {
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"><p>Checks every 30 secs for upto 7mins for batch with given status</p></td>
+                <td class="kwdoc"><p>Checks every 30 secs for upto 9mins for batch with given status</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Wait For Locator">
                 <td class="kwname">
                   Wait For Locator
+                </td>
+                <td class="kwargs">
+                  
+                  <i>path</i>, 
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Waits for 60 sec for the specified locator</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Wait For Locator Is Not Visible">
+                <td class="kwname">
+                  Wait For Locator Is Not Visible
                 </td>
                 <td class="kwargs">
                   
@@ -1874,7 +1919,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>If no arguments are passed, this keyword will create a new campaign with just Name as random strings and no additional info. This keyword returns the campaign dictonary when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: MobilePhone=1234567098</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Contact">
@@ -1886,7 +1937,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>If no arguments are passed, this keyword will create a contact with Firstname and Lastname as random strings with no additional info. This keyword returns the contact dictonary when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>field api name=value</td>
+<td>Ex: MobilePhone=1234567098</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create DataImport">
@@ -1898,7 +1955,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a data import with specified key,value pairs and return the data import record when keyword is called. Required parameters are:</p>
+<table border="1">
+<tr>
+<td>field name and value</td>
+<td>Ex:Contact1_Firstname__c=John</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create DataImportBatch">
@@ -1910,7 +1973,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a batch gift entry batch with specified key,value pairs and return the batch record when keyword is called. Required parameters are:</p>
+<table border="1">
+<tr>
+<td>field name and value</td>
+<td>Ex:Batch_Description__c=Created via API</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create GAU">
@@ -1922,7 +1991,43 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>If no arguments are passed, this keyword will create a GAU with Name as random strings with no additional info. This keyword returns the GAU dictonary when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>field api name=value</td>
+<td>Ex: Description=New GAU</td>
+</tr>
+</table></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.API Create GAU Allocation">
+                <td class="kwname">
+                  API Create GAU Allocation
+                </td>
+                <td class="kwargs">
+                  
+                  <i>gau_id</i>, 
+                  
+                  <i>opp_id</i>, 
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation Required parameters are:</p>
+<table border="1">
+<tr>
+<td>gau_id</td>
+<td>id of the gau that should be allocated</td>
+</tr>
+<tr>
+<td>opp_id</td>
+<td>opportunity id</td>
+</tr>
+<tr>
+<td>Amount__c or Percent__c</td>
+<td>this should be either allocation amount or percent Ex:Amount__c=50.0 or Percent__c=10.0</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Opportunity">
@@ -1938,7 +2043,21 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates opportunity of specified type for specified account. Opportunity details can be passed as key, value pairs Sets defaults of StageName=Closed Won,CloseDate=current date,Amount=100, do not create payments as true if no values are passed. This keyword returns the opportunity dictonary when called Required parameters are:</p>
+<table border="1">
+<tr>
+<td>account_id</td>
+<td>id of account opportunity should be associated with</td>
+</tr>
+<tr>
+<td>opp_type</td>
+<td>avaialble options: Donation, Grant, Matching Gift, In-Kind Gift, Major Gift, Membership</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>Ex:StageName=Closed Won</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Organization Account">
@@ -1950,7 +2069,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>If no arguments are passed, this keyword will create an account of type organization with just Name as random string and no additional info. This keyword returns the account dictonary when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: MobilePhone=1234567098</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Primary Affiliation">
@@ -1966,7 +2091,21 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a primary affiliation for a contact with specified account Required parameters are:</p>
+<table border="1">
+<tr>
+<td>account_id</td>
+<td>id of account</td>
+</tr>
+<tr>
+<td>contact_id</td>
+<td>id of contact</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>any field u want to populate with value on npe5__Affiliation__c object</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Recurring Donation">
@@ -1978,7 +2117,13 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a recurring donation with specified fields.This keyword returns the recurring donation dictonary when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: npe03__Installment_Period__c=Monthly</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Relationship">
@@ -1996,7 +2141,25 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a specified relationship between two contacts and sets default status as current if no value passed. This keyword returns the relationship record as dictonary when called Required parameters are:</p>
+<table border="1">
+<tr>
+<td>contact_id</td>
+<td>id of primary contact</td>
+</tr>
+<tr>
+<td>relcontact_id</td>
+<td>id of related contact</td>
+</tr>
+<tr>
+<td>relation</td>
+<td>possible relation between contacts</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: npe4__Status__c=Current</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Secondary Affiliation">
@@ -2012,7 +2175,38 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Creates a secondary affiliation for a contact with specified account Required parameters are:</p>
+<table border="1">
+<tr>
+<td>account_id</td>
+<td>id of account</td>
+</tr>
+<tr>
+<td>contact_id</td>
+<td>id of contact</td>
+</tr>
+</table>
+<pre>
+field_api_name=value | any field u want to populate with value on npe5__Affiliation__c object
+</pre></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.API Modify Allocations Setting">
+                <td class="kwname">
+                  API Modify Allocations Setting
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Can be used to modify either Default Allocations or Payment Allocations. Required parameters are:</p>
+<table border="1">
+<tr>
+<td>field name and value</td>
+<td>this would be key value pairs, Ex: Default_Allocations_Enabled__c=true</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Modify Contact">
@@ -2026,7 +2220,17 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>This keyword is used to update an existing contact by passing contact id and apifieldname and value. This keyword returns the contact dictonary after the update, when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>contact_id</td>
+<td>id of the contact Ex: 000axb57689</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: if old value is my@test.com and u wnat to update then pass Email=abc@test.com</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Query Installment">
@@ -2042,7 +2246,21 @@ pre {
                   <i>**fields</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Queries for record on opportunity object using recurring donation id, installment and other specified fields This keyword returns the record found when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>id</td>
+<td>recurring donation id</td>
+</tr>
+<tr>
+<td>installment</td>
+<td>installment name</td>
+</tr>
+<tr>
+<td>field_api_name=value</td>
+<td>Ex: npe03__Installment_Period__c=Monthly</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Capture Screenshot and Delete Records and Close Browser">
@@ -2052,7 +2270,7 @@ pre {
                 <td class="kwargs">
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>This keyword will capture a screenshot before closing the browser and deleting records when test fails</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Click Data Import Button">
@@ -2068,77 +2286,21 @@ pre {
                   <i>*others</i>
                   
                 </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.robot.Click Field And Select Date">
-                <td class="kwname">
-                  Click Field And Select Date
-                </td>
-                <td class="kwargs">
-                  
-                  <i>field</i>, 
-                  
-                  <i>date</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.robot.Create Engagement Plan">
-                <td class="kwname">
-                  Create Engagement Plan
-                </td>
-                <td class="kwargs">
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.robot.Create GAU">
-                <td class="kwname">
-                  Create GAU
-                </td>
-                <td class="kwargs">
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.robot.Create Level">
-                <td class="kwname">
-                  Create Level
-                </td>
-                <td class="kwargs">
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.robot.Create Opportunities">
-                <td class="kwname">
-                  Create Opportunities
-                </td>
-                <td class="kwargs">
-                  
-                  <i>opp_name</i>, 
-                  
-                  <i>hh_name</i>, 
-                  
-                  <i>stage</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.robot.New Contact for HouseHold">
-                <td class="kwname">
-                  New Contact for HouseHold
-                </td>
-                <td class="kwargs">
-                  
-                </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Switches to the frame and clicks the button identified by path Ex: Click Data Import Button NPSP Data Import button Begin Data Import Process Required parameters are:</p>
+<table border="1">
+<tr>
+<td>frame_name</td>
+<td>name of the frame on the page</td>
+</tr>
+<tr>
+<td>ele_path</td>
+<td>button path specified in locator file</td>
+</tr>
+<tr>
+<td>others</td>
+<td>parameters to identify button</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Open NPSP Settings">
@@ -2152,7 +2314,17 @@ pre {
                   <i>submenu</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Goes to NPSP settings page and opens the sublist under the toplist Required parameters are:</p>
+<table border="1">
+<tr>
+<td>topmenu</td>
+<td>parent list Ex:Bulk Data Processes</td>
+</tr>
+<tr>
+<td>submenu</td>
+<td>child list Ex:Rollup Donations Batch</td>
+</tr>
+</table></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Process Data Import Batch">
@@ -2180,7 +2352,7 @@ pre {
                 <td class="kwargs">
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked else runs Validate Batch Process When CRLP UnChecked</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Scroll Page To Location">
@@ -2194,21 +2366,37 @@ pre {
                   <i>y_location</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Scrolls window by pixels using javascript Required parameters are:</p>
+<table border="1">
+<tr>
+<td>x_location</td>
+<td>pixels to scroll by, along the x-axis(horizontal)</td>
+</tr>
+<tr>
+<td>y_location</td>
+<td>pixels to scroll by, along the y-axis(vertical)</td>
+</tr>
+</table></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.robot.Verify Engagement Plan">
+              <tr class="kwrow" id="NPSP.robot.Validate Batch Process When CRLP Checked">
                 <td class="kwname">
-                  Verify Engagement Plan
+                  Validate Batch Process When CRLP Checked
                 </td>
                 <td class="kwargs">
                   
-                  <i>plan_name</i>, 
-                  
-                  <i>*others</i>
+                </td>
+                <td class="kwdoc"><p>Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is enabled</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Validate Batch Process When CRLP Unchecked">
+                <td class="kwname">
+                  Validate Batch Process When CRLP Unchecked
+                </td>
+                <td class="kwargs">
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled</p></td>
               </tr>
               
             </tbody>
@@ -2438,7 +2626,7 @@ pre {
         
 
         
-        <div class="section" pageobject="Details-Affiliation">
+        <div class="section" pageobject="Details-npe5__Affiliation__c">
 
           
           <div class='pageobject-header'>
@@ -2447,7 +2635,7 @@ pre {
               <tbody>
 	        <tr class='data'>
 	          <td title='Page Type'>Details</td>
-	          <td title='Object Name'>Affiliation</td>
+	          <td title='Object Name'>npe5__Affiliation__c</td>
 	        </tr>
 	        <tr class='labels'>
 	          <td>Page Type</td>
@@ -2474,11 +2662,21 @@ pre {
 <p>The current page object is also returned as an object</p></td>
               </tr>
               
+              <tr class="kwrow" id="AffiliationPageObject.py.Save Affiliation Record">
+                <td class="kwname">
+                  Save Affiliation Record
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Saves the affiliation record and waits until save mode is exited</p></td>
+              </tr>
+              
             </tbody>
           </table>
         </div> 
         
-        <div class="section" pageobject="Listing-Affiliation">
+        <div class="section" pageobject="Listing-npe5__Affiliation__c">
 
           
           <div class='pageobject-header'>
@@ -2487,7 +2685,7 @@ pre {
               <tbody>
 	        <tr class='data'>
 	          <td title='Page Type'>Listing</td>
-	          <td title='Object Name'>Affiliation</td>
+	          <td title='Object Name'>npe5__Affiliation__c</td>
 	        </tr>
 	        <tr class='labels'>
 	          <td>Page Type</td>
@@ -2504,6 +2702,97 @@ pre {
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
               <tr class="kwrow" id="AffiliationPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/BatchGiftEntryPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/BatchGiftEntryPageObject.py'>BatchGiftEntryPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/BatchGiftEntryPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Details-DataImportBatch__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>DataImportBatch__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>BatchGiftEntryPageObject.BatchGiftEntryDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="BatchGiftEntryPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-Batch_Gift_Entry">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>Batch_Gift_Entry</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>BatchGiftEntryPageObject.BatchGiftEntryListPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="BatchGiftEntryPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
                 </td>
@@ -2554,6 +2843,18 @@ pre {
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="ContactPageObject.py.Go To Related Engagement Actionplans Page">
+                <td class="kwname">
+                  Go To Related Engagement Actionplans Page
+                </td>
+                <td class="kwargs">
+                  
+                  <i>customerid</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Navigates to the related engagement plans listing page</p></td>
+              </tr>
+              
               <tr class="kwrow" id="ContactPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -2563,6 +2864,18 @@ pre {
                 </td>
                 <td class="kwdoc"><p>Logs the name of the current page object</p>
 <p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ContactPageObject.py.Perform Action On Related Item">
+                <td class="kwname">
+                  Perform Action On Related Item
+                </td>
+                <td class="kwargs">
+                  
+                  <i>action</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Identifies the value and performs the specified action requested Currently added logic for Delete. In the future can be extended for Edit</p></td>
               </tr>
               
               <tr class="kwrow" id="ContactPageObject.py.Update Field Value">
@@ -2665,6 +2978,83 @@ pre {
         
       </div>
       
+      <div class="file" id="file-robot/Cumulus/resources/CustomSettingsPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/CustomSettingsPageObject.py'>CustomSettingsPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/CustomSettingsPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-CustomSettings">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>CustomSettings</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>CustomSettingsPageObject.CustomSettingsPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="CustomSettingsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomSettingsPageObject.py.Select Settings Option">
+                <td class="kwname">
+                  Select Settings Option
+                </td>
+                <td class="kwargs">
+                  
+                  <i>setting_name</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>selects frame with setting_name and clicks on the option identified by value for the given setting and unselects frame</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomSettingsPageObject.py.Verify Page And Select Frame">
+                <td class="kwname">
+                  Verify Page And Select Frame
+                </td>
+                <td class="kwargs">
+                  
+                  <i>page_name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verify page contains page_name and select frame identified with page_name</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
       <div class="file" id="file-robot/Cumulus/resources/DataImportPageObject.py">
         <div class='file-header'>
           <h2 title='robot/Cumulus/resources/DataImportPageObject.py'>DataImportPageObject.py</h2>
@@ -2705,6 +3095,10 @@ pre {
                 </td>
                 <td class="kwargs">
                   
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
                 </td>
                 <td class="kwdoc"><p>From the actions dropdown select edit action and wait for modal to open</p></td>
               </tr>
@@ -2728,6 +3122,20 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>clicks the save button on the modal and waits till modal is closed</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="DataImportPageObject.py.Verify Failure Message">
+                <td class="kwname">
+                  Verify Failure Message
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>If status is 'contains' then the specified value should be present in the field 'does not contain' then the specified value should not be present in the field</p></td>
               </tr>
               
             </tbody>
@@ -2824,6 +3232,872 @@ pre {
         
       </div>
       
+      <div class="file" id="file-robot/Cumulus/resources/EngagementPlanTemplatesPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/EngagementPlanTemplatesPageObject.py'>EngagementPlanTemplatesPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/EngagementPlanTemplatesPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Details-Engagement_Plan_Template__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>Engagement_Plan_Template__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>EngagementPlanTemplatesPageObject.EngagementPlanDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Home-Engagement_Plan_Template__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Home</td>
+	          <td title='Object Name'>Engagement_Plan_Template__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>EngagementPlanTemplatesPageObject.EngagementPlanHomePage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Click And Wait For Task">
+                <td class="kwname">
+                  Click And Wait For Task
+                </td>
+                <td class="kwargs">
+                  
+                  <i>taskname</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Click Eng Plan Dropdown">
+                <td class="kwname">
+                  Click Eng Plan Dropdown
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Click Task Button">
+                <td class="kwname">
+                  Click Task Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>, 
+                  
+                  <i>task_id=None</i>, 
+                  
+                  <i>type=None</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Click Task button based on Task id and button label</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Enter Eng Plan Values">
+                <td class="kwname">
+                  Enter Eng Plan Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Enter values into corresponding fields in Engagement Plan Templet page</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Enter Task Id And Subject">
+                <td class="kwname">
+                  Enter Task Id And Subject
+                </td>
+                <td class="kwargs">
+                  
+                  <i>id</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Enter values into corresponding task subject fields based on last 2 digits of id</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Save Engagement Plan Template">
+                <td class="kwname">
+                  Save Engagement Plan Template
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Select Eng Plan Checkbox">
+                <td class="kwname">
+                  Select Eng Plan Checkbox
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-Engagement_Plan_Template__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>Engagement_Plan_Template__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>EngagementPlanTemplatesPageObject.EngagementPlanListPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Go To Engagement Plan Page">
+                <td class="kwname">
+                  Go To Engagement Plan Page
+                </td>
+                <td class="kwargs">
+                  
+                  <i>action</i>, 
+                  
+                  <i>engagementid=None</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Navigates to the specified mode of engagement plant template page</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="EngagementPlanTemplatesPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/GAUPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/GAUPageObject.py'>GAUPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/GAUPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-ManageAllocations">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>ManageAllocations</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>GAUPageObject.GauAllocationPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="GAUPageObject.py.Add Gau Allocation">
+                <td class="kwname">
+                  Add Gau Allocation
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Enter an allocation of sepecified 'value' in the given 'field'</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GAUPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GAUPageObject.py.Set Gau Allocation">
+                <td class="kwname">
+                  Set Gau Allocation
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Allocates the values for the GAU names as specified by the values passed in kwargs</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-General_Accounting_Unit__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>General_Accounting_Unit__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>GAUPageObject.GAUListPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="GAUPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/GiftEntryPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/GiftEntryPageObject.py'>GiftEntryPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/GiftEntryPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-GE_Gift_Entry">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>GE_Gift_Entry</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>GiftEntryPageObject.GiftEntryPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Click Gift Entry Button">
+                <td class="kwname">
+                  Click Gift Entry Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"><p>clicks on Gift Entry button identified with title</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Enter Value In Field">
+                <td class="kwname">
+                  Enter Value In Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Enter value in specified field</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Get Template Record Id">
+                <td class="kwname">
+                  Get Template Record Id
+                </td>
+                <td class="kwargs">
+                  
+                  <i>template</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Parses the current url to get the object id of the current record. Expects url format like: [a-zA-Z0-9]{15,18}</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Select Object Group Field">
+                <td class="kwname">
+                  Select Object Group Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>object_group</i>, 
+                  
+                  <i>field</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Select the specified field under specified object group to add the field to gift entry form and verify field is added</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Select Template Action">
+                <td class="kwname">
+                  Select Template Action
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>, 
+                  
+                  <i>action</i>
+                  
+                </td>
+                <td class="kwdoc"><p>From the template table, select template with name and select an action from the dropdown</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Store Template Record Id">
+                <td class="kwname">
+                  Store Template Record Id
+                </td>
+                <td class="kwargs">
+                  
+                  <i>template</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Parses the template href to get the object id of the current record. Expects url format like: [a-zA-Z0-9]{15,18}</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Template Is Not Available">
+                <td class="kwname">
+                  Verify Template Is Not Available
+                </td>
+                <td class="kwargs">
+                  
+                  <i>template</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verify that a gift template is not available for selection while creating a new batch</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/LeadsPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/LeadsPageObject.py'>LeadsPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/LeadsPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-Lead">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>Lead</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>LeadsPageObject.CovertLeadPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="LeadsPageObject.py.Click Lead Convert Button">
+                <td class="kwname">
+                  Click Lead Convert Button
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="LeadsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Details-Lead">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>Lead</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>LeadsPageObject.LeadDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="LeadsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-Lead">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>Lead</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>LeadsPageObject.LeadListingPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="LeadsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/LevelsPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/LevelsPageObject.py'>LevelsPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/LevelsPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Details-Level__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>Level__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>LevelsPageObject.LevelDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="LevelsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-Level__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>Level__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>LevelsPageObject.LevelListPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="LevelsPageObject.py.Enter Level Dd Values">
+                <td class="kwname">
+                  Enter Level Dd Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Enter values into corresponding fields in Levels page</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="LevelsPageObject.py.Enter Level Values">
+                <td class="kwname">
+                  Enter Level Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Enter values into corresponding fields in Levels page</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="LevelsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="LevelsPageObject.py.Navigate To Level Page">
+                <td class="kwname">
+                  Navigate To Level Page
+                </td>
+                <td class="kwargs">
+                  
+                  <i>mode</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Navigate to create level or edit level mode from the list page based on the mode specified Then wait for the iframe to load.</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/ManageHouseHoldPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/ManageHouseHoldPageObject.py'>ManageHouseHoldPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/ManageHouseHoldPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-ManageHousehold">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>ManageHousehold</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>ManageHouseHoldPageObject.ManageHouseholdPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="ManageHouseHoldPageObject.py.Add Contact">
+                <td class="kwname">
+                  Add Contact
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Performs a lookup of the contact provided as parameter and adds the contact to the hold based on the option Supported options are (New/Existing)</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ManageHouseHoldPageObject.py.Change Address Using">
+                <td class="kwname">
+                  Change Address Using
+                </td>
+                <td class="kwargs">
+                  
+                  <i>option</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Changes address setting based on the type of options chosen Supported option is (Enter A new Address)</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ManageHouseHoldPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ManageHouseHoldPageObject.py.Save Changes Made For Manage Household">
+                <td class="kwname">
+                  Save Changes Made For Manage Household
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="ManageHouseHoldPageObject.py.Validate And Select Checkbox">
+                <td class="kwname">
+                  Validate And Select Checkbox
+                </td>
+                <td class="kwargs">
+                  
+                  <i>contact</i>, 
+                  
+                  <i>option</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Select the option for name display settings for each of the contact in the household provided options (Household Name/ Formal Greeting/Informal Greeting)</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
       <div class="file" id="file-robot/Cumulus/resources/NPSPSettingsPageObject.py">
         <div class='file-header'>
           <h2 title='robot/Cumulus/resources/NPSPSettingsPageObject.py'>NPSPSettingsPageObject.py</h2>
@@ -2858,6 +4132,16 @@ pre {
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Check Crlp Not Enabled By Default">
+                <td class="kwname">
+                  Check Crlp Not Enabled By Default
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies that customizable rollups settings is not enabled by default By checking 'Configure Customizable Rollups' is not visible on the page</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Click Configure Advanced Mapping">
                 <td class="kwname">
                   Click Configure Advanced Mapping
@@ -2868,16 +4152,56 @@ pre {
                 <td class="kwdoc"><p>clicks on Configure Advanced Mapping and waits for Manage Advanced Mapping page to load and loads the page object for that page</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Click Settings Button">
+                <td class="kwname">
+                  Click Settings Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>clicks on the buttons on npsp settings object using panel id and button value</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Click Toggle Button">
                 <td class="kwname">
                   Click Toggle Button
                 </td>
                 <td class="kwargs">
                   
-                  <i>page_name</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>specify the partial id of submenu under which the checkbox exists</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Edit Selection">
+                <td class="kwname">
+                  Edit Selection
+                </td>
+                <td class="kwargs">
+                  
+                  <i>list_name</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>waits for edit mode and selects value from the list</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Enable Advanced Mapping If Not Enabled">
+                <td class="kwname">
+                  Enable Advanced Mapping If Not Enabled
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Checks if advanced mapping is Enabled and enables if not enabled</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Log Current Page Object">
@@ -2903,6 +4227,32 @@ pre {
                 <td class="kwdoc"><p>Waits for the menu item to load and clicks to expand menu</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Open Sub Link">
+                <td class="kwname">
+                  Open Sub Link
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Waits for the link to load and clicks to make a part of page active</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Select Value From List">
+                <td class="kwname">
+                  Select Value From List
+                </td>
+                <td class="kwargs">
+                  
+                  <i>list_name</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Selects value from list identified by list_name. uses selenium select from list by label keyword</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Advanced Mapping Is Not Enabled">
                 <td class="kwname">
                   Verify Advanced Mapping Is Not Enabled
@@ -2913,14 +4263,93 @@ pre {
                 <td class="kwdoc"><p>Verifies that advanced mapping is not enabled by default By checking 'Configure Advanced Mapping' is not visible on the page</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSPSettingsPageObject.py.Wait Until Advanced Mapping Is Enabled">
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Gift Entry Is Not Enabled">
                 <td class="kwname">
-                  Wait Until Advanced Mapping Is Enabled
+                  Verify Gift Entry Is Not Enabled
                 </td>
                 <td class="kwargs">
                   
                 </td>
-                <td class="kwdoc"><p>Waits for the text 'Advanced Mapping is enabled' to be displayed on the page for 1 min</p></td>
+                <td class="kwdoc"><p>Verifies that gift entry is not enabled by default If already enabled, disables it</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Selection">
+                <td class="kwname">
+                  Verify Selection
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>waits to exit edit mode and verifies list contains specified value</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Wait For Message">
+                <td class="kwname">
+                  Wait For Message
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Waits for the text passed in message to be displayed on the page for 6 min</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/OpportunityContactRolePageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/OpportunityContactRolePageObject.py'>OpportunityContactRolePageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/OpportunityContactRolePageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-OpportunityContactRole">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>OpportunityContactRole</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>OpportunityContactRolePageObject.OCRRelatedPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="OpportunityContactRolePageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
               </tr>
               
             </tbody>
@@ -2938,7 +4367,7 @@ pre {
         
 
         
-        <div class="section" pageobject="Detail-Opportunity">
+        <div class="section" pageobject="Details-Opportunity">
 
           
           <div class='pageobject-header'>
@@ -2946,7 +4375,7 @@ pre {
             <table class='pageobject-header'>
               <tbody>
 	        <tr class='data'>
-	          <td title='Page Type'>Detail</td>
+	          <td title='Page Type'>Details</td>
 	          <td title='Object Name'>Opportunity</td>
 	        </tr>
 	        <tr class='labels'>
@@ -2963,6 +4392,20 @@ pre {
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="OpportunityPageObject.py.Ensure Opportunity Details Are Loaded">
+                <td class="kwname">
+                  Ensure Opportunity Details Are Loaded
+                </td>
+                <td class="kwargs">
+                  
+                  <i>objectID</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Navigate to the page with objectid mentioned Wait for the page to load and confirm atleast the opportunity name exists</p></td>
+              </tr>
+              
               <tr class="kwrow" id="OpportunityPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -2972,6 +4415,80 @@ pre {
                 </td>
                 <td class="kwdoc"><p>Logs the name of the current page object</p>
 <p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="OpportunityPageObject.py.Navigate To Matching Gifts Page">
+                <td class="kwname">
+                  Navigate To Matching Gifts Page
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="OpportunityPageObject.py.Navigate To Writeoff Payments Page">
+                <td class="kwname">
+                  Navigate To Writeoff Payments Page
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-Opportunity">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>Opportunity</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>OpportunityPageObject.OpportunityListingPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="OpportunityPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="OpportunityPageObject.py.Perform Delete Menu Operation On">
+                <td class="kwname">
+                  Perform Delete Menu Operation On
+                </td>
+                <td class="kwargs">
+                  
+                  <i>value</i>, 
+                  
+                  <i>action</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Identifies the value to delete from the List and chooses delete option from the menu. Confirms the delete action from the confirmation modal</p></td>
               </tr>
               
             </tbody>
@@ -2989,7 +4506,7 @@ pre {
         
 
         
-        <div class="section" pageobject="Detail-npe01__OppPayment__c">
+        <div class="section" pageobject="Details-npe01__OppPayment__c">
 
           
           <div class='pageobject-header'>
@@ -2997,7 +4514,7 @@ pre {
             <table class='pageobject-header'>
               <tbody>
 	        <tr class='data'>
-	          <td title='Page Type'>Detail</td>
+	          <td title='Page Type'>Details</td>
 	          <td title='Object Name'>npe01__OppPayment__c</td>
 	        </tr>
 	        <tr class='labels'>
@@ -3043,6 +4560,119 @@ pre {
         
       </div>
       
+      <div class="file" id="file-robot/Cumulus/resources/RecurringDonationsPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/RecurringDonationsPageObject.py'>RecurringDonationsPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/RecurringDonationsPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Details-npe03__Recurring_Donation__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>npe03__Recurring_Donation__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>RecurringDonationsPageObject.RDDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Click Actions Button">
+                <td class="kwname">
+                  Click Actions Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>button_name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks on action button based on API version</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Refresh Opportunities">
+                <td class="kwname">
+                  Refresh Opportunities
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Clicks on more actions dropdown and click the given title</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-npe03__Recurring_Donation__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>npe03__Recurring_Donation__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>RecurringDonationsPageObject.RDListingPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
       <div class="file" id="file-robot/Cumulus/resources/RelationshipPageObject.py">
         <div class='file-header'>
           <h2 title='robot/Cumulus/resources/RelationshipPageObject.py'>RelationshipPageObject.py</h2>
@@ -3052,7 +4682,7 @@ pre {
         
 
         
-        <div class="section" pageobject="Details-Relationship">
+        <div class="section" pageobject="Details-npe4__Relationship__c">
 
           
           <div class='pageobject-header'>
@@ -3061,7 +4691,7 @@ pre {
               <tbody>
 	        <tr class='data'>
 	          <td title='Page Type'>Details</td>
-	          <td title='Object Name'>Relationship</td>
+	          <td title='Object Name'>npe4__Relationship__c</td>
 	        </tr>
 	        <tr class='labels'>
 	          <td>Page Type</td>
@@ -3094,9 +4724,123 @@ pre {
         
       </div>
       
+      <div class="file" id="file-robot/Cumulus/resources/SchedulePaymentPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/SchedulePaymentPageObject.py'>SchedulePaymentPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/SchedulePaymentPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-SchedulePayment">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>SchedulePayment</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>SchedulePaymentPageObject.SchedulePaymentPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="SchedulePaymentPageObject.py.Enter Textfield Value">
+                <td class="kwname">
+                  Enter Textfield Value
+                </td>
+                <td class="kwargs">
+                  
+                  <i>inputvalue</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="SchedulePaymentPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/TriggerHandlerPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/TriggerHandlerPageObject.py'>TriggerHandlerPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/TriggerHandlerPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Details-Trigger_Handler__c">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>Trigger_Handler__c</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>TriggerHandlerPageObject.DataImportDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="TriggerHandlerPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
     </div>
     <div class="footer">
-      Generated on Thursday January 02, 02:11 PM - cumulusci v3.3.0
+      Generated on Thursday May 14, 06:39 PM - cumulusci v3.12.2
     </div>
   </body>
 </html>
