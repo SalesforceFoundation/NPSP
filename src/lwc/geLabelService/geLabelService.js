@@ -196,6 +196,7 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
+import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 
 class GeLabelService {
 
@@ -225,6 +226,7 @@ class GeLabelService {
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonLabelNone,
         commonGauAllocations,
         commonGeneralAccountUnit,
         commonMMYY,
