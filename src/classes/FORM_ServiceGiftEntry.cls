@@ -67,10 +67,10 @@ public with sharing class FORM_ServiceGiftEntry {
             .withSelectFields(selectFields)
             .withFrom(sObjectApiName)
             .withWhere(whereClauses)
+            .withSecurityEnforced()
             .withOrderBy(orderByClause)
             .withLimit(limitClause)
             .build();
-
         return Database.query(queryString);
     }
 
