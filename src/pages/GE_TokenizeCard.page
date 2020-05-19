@@ -40,6 +40,9 @@
                 '}' +
                 '.fieldset.cvc {' +
                     'padding: 0;' +
+                '}' +
+                '.error-wrapper.fieldset.exp {' +
+                    'max-width: 7rem;' +
                 '}'
         })
         .then(() => {
