@@ -35,7 +35,7 @@
 *
 */
 @IsTest(IsParallel=false)
-private class RD2_OpportunityEvaluation_TEST {
+public with sharing class RD2_OpportunityEvaluation_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway scheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
@@ -1074,7 +1074,7 @@ private class RD2_OpportunityEvaluation_TEST {
     * disables the internal setting that would normally prevent a null field from being updated to a zero
     * value during rollups. This is used to tell that rollups did or did not run in the batch job.
     */
-    private static void configureForBatchJobWithRollupDisableTests(Boolean isDisableRollups) {
+    public static void configureForBatchJobWithRollupDisableTests(Boolean isDisableRollups) {
 
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
             Customizable_Rollups_Enabled__c = true
