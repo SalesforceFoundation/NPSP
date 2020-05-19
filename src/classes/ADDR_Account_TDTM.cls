@@ -48,7 +48,17 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         DmlWrapper dmlWrapper = new DmlWrapper();
-        list<Account> listAccCreateAddr = new list<Account>();      
+
+        // note that we detect whether the address change is coming from the address trigger,
+        // in which case we don't want to create a new address.
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate
+            && TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)
+        ) {
+            UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Account_TDTM');
+            return dmlWrapper;
+        }
+
+        list<Account> listAccCreateAddr = new list<Account>();
        
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
