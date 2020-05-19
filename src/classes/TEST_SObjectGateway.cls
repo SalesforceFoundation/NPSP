@@ -228,6 +228,31 @@ public class TEST_SObjectGateway {
         }
 
         /***
+        * @description Retrieves Opportunities sorted by Closedate for the related Recurring Donation
+        * @param rd Recurring donation
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecordsByCloseDate(npe03__Recurring_Donation__c rd) {
+            return getRecordsByCloseDate(new List<npe03__Recurring_Donation__c>{ rd });
+        }
+
+        /***
+        * @description Retrieves Opportunities sorted by CloseDate for related Recurring Donations
+        * @param rds Recurring donations
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecordsByCloseDate(List<npe03__Recurring_Donation__c> rds) {
+            String soql = new UTIL_Query()
+                .withFrom(Opportunity.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe03__Recurring_Donation__c IN :rds')
+                .withOrderBy('CloseDate ASC')
+                .build();
+
+            return (List<Opportunity>) Database.query(soql);
+        }
+
+        /***
         * @description Retrieves Opportunity for specified Opportunity Id
         * @param oppId An Opportunity Id
         * @return Opportunity
