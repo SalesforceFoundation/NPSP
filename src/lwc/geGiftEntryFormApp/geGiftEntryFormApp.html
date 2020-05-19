@@ -21,6 +21,11 @@
     <template if:false={isPermissionError}>
         <template if:true={isBatchMode}>
             <c-ge-batch-gift-entry-table
+                    title={giftsTableTitle}
+                    count={count}
+                    expected-count={expectedCountOfGifts}
+                    total={total}
+                    expected-total={expectedTotalBatchAmount}
                     batch-id={recordId}
                     onloaddata={handleLoadData}>
             </c-ge-batch-gift-entry-table>

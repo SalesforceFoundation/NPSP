@@ -5293,6 +5293,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBatchGiftsCount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Count of Gifts</shortDescription>
+        <value>Count of Gifts</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsTotal</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Total Batch Amount</shortDescription>
+        <value>Total Batch Amount</value>
+    </labels>
+    <labels>
         <fullName>geBodyAdvancedFieldMapping</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5307,6 +5323,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Text block about inability to set default values for Field Bundles</shortDescription>
         <value>You can't set default values for fields included in this section.</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for number of gifts entered in batch</shortDescription>
+        <value>Gifts Entered for {0}</value>
     </labels>
     <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
