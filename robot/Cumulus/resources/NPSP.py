@@ -1532,6 +1532,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["button-title"].format(title)
         self.salesforce._jsclick(locator)
 
+    @capture_screenshot_on_error
     def click_show_more_actions_button(self,title):
         """Clicks on more actions dropdown and click the given title"""   
         locator=npsp_lex_locators['link-contains'].format("more actions")
