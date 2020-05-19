@@ -1,0 +1,680 @@
+Insert npsp__Fund__c:
+  sf_object: npsp__Fund__c
+  table: npsp__Fund__c
+  fields:
+    Id: sf_id
+    Name: Name
+Insert npsp__Schedulable__c:
+  sf_object: npsp__Schedulable__c
+  table: npsp__Schedulable__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npsp__Active__c: npsp__Active__c
+    npsp__Class_Name__c: npsp__Class_Name__c
+    npsp__Frequency__c: npsp__Frequency__c
+    npsp__Last_Time_Run__c: npsp__Last_Time_Run__c
+Insert npsp__Batch__c:
+  sf_object: npsp__Batch__c
+  table: npsp__Batch__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npsp__Batch_Status__c: npsp__Batch_Status__c
+    npsp__Description__c: npsp__Description__c
+    npsp__Number_of_Items__c: npsp__Number_of_Items__c
+    npsp__Object_Name__c: npsp__Object_Name__c
+Insert npsp__General_Accounting_Unit__c:
+  sf_object: npsp__General_Accounting_Unit__c
+  table: npsp__General_Accounting_Unit__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npsp__Active__c: npsp__Active__c
+    npsp__Average_Allocation__c: npsp__Average_Allocation__c
+    npsp__Description__c: npsp__Description__c
+    npsp__First_Allocation_Date__c: npsp__First_Allocation_Date__c
+    npsp__Largest_Allocation__c: npsp__Largest_Allocation__c
+    npsp__Last_Allocation_Date__c: npsp__Last_Allocation_Date__c
+    npsp__Number_of_Allocations_Last_N_Days__c: npsp__Number_of_Allocations_Last_N_Days__c
+    npsp__Number_of_Allocations_Last_Year__c: npsp__Number_of_Allocations_Last_Year__c
+    npsp__Number_of_Allocations_This_Year__c: npsp__Number_of_Allocations_This_Year__c
+    npsp__Number_of_Allocations_Two_Years_Ago__c: npsp__Number_of_Allocations_Two_Years_Ago__c
+    npsp__Smallest_Allocation__c: npsp__Smallest_Allocation__c
+    npsp__Total_Allocations_Last_N_Days__c: npsp__Total_Allocations_Last_N_Days__c
+    npsp__Total_Allocations_Last_Year__c: npsp__Total_Allocations_Last_Year__c
+    npsp__Total_Allocations_This_Year__c: npsp__Total_Allocations_This_Year__c
+    npsp__Total_Allocations_Two_Years_Ago__c: npsp__Total_Allocations_Two_Years_Ago__c
+    npsp__Total_Allocations__c: npsp__Total_Allocations__c
+    npsp__Total_Number_of_Allocations__c: npsp__Total_Number_of_Allocations__c
+Insert npsp__Engagement_Plan_Template__c:
+  sf_object: npsp__Engagement_Plan_Template__c
+  table: npsp__Engagement_Plan_Template__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npsp__Automatically_Update_Child_Task_Due_Date__c: npsp__Automatically_Update_Child_Task_Due_Date__c
+    npsp__Default_Assignee__c: npsp__Default_Assignee__c
+    npsp__Description__c: npsp__Description__c
+    npsp__Reschedule_To__c: npsp__Reschedule_To__c
+    npsp__Skip_Weekends__c: npsp__Skip_Weekends__c
+Insert npo02__Household__c:
+  sf_object: npo02__Household__c
+  table: npo02__Household__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npo02__Addressee__c: npo02__Addressee__c
+    npo02__Always_Anonymous__c: npo02__Always_Anonymous__c
+    npo02__AverageAmount__c: npo02__AverageAmount__c
+    npo02__Best_Gift_Year_Total__c: npo02__Best_Gift_Year_Total__c
+    npo02__Best_Gift_Year__c: npo02__Best_Gift_Year__c
+    npo02__FirstCloseDate__c: npo02__FirstCloseDate__c
+    npo02__Formal_Greeting__c: npo02__Formal_Greeting__c
+    npo02__HouseholdEmail__c: npo02__HouseholdEmail__c
+    npo02__HouseholdPhone__c: npo02__HouseholdPhone__c
+    npo02__Household_ID__c: npo02__Household_ID__c
+    npo02__Informal_Greeting__c: npo02__Informal_Greeting__c
+    npo02__LargestAmount__c: npo02__LargestAmount__c
+    npo02__LastCloseDate__c: npo02__LastCloseDate__c
+    npo02__LastMembershipAmount__c: npo02__LastMembershipAmount__c
+    npo02__LastMembershipDate__c: npo02__LastMembershipDate__c
+    npo02__LastMembershipLevel__c: npo02__LastMembershipLevel__c
+    npo02__LastMembershipOrigin__c: npo02__LastMembershipOrigin__c
+    npo02__LastOppAmount__c: npo02__LastOppAmount__c
+    npo02__MailingCity__c: npo02__MailingCity__c
+    npo02__MailingCountry__c: npo02__MailingCountry__c
+    npo02__MailingPostalCode__c: npo02__MailingPostalCode__c
+    npo02__MailingState__c: npo02__MailingState__c
+    npo02__MailingStreet__c: npo02__MailingStreet__c
+    npo02__MembershipEndDate__c: npo02__MembershipEndDate__c
+    npo02__MembershipJoinDate__c: npo02__MembershipJoinDate__c
+    npo02__NumberOfClosedOpps__c: npo02__NumberOfClosedOpps__c
+    npo02__NumberOfMembershipOpps__c: npo02__NumberOfMembershipOpps__c
+    npo02__OppAmount2YearsAgo__c: npo02__OppAmount2YearsAgo__c
+    npo02__OppAmountLastNDays__c: npo02__OppAmountLastNDays__c
+    npo02__OppAmountLastYear__c: npo02__OppAmountLastYear__c
+    npo02__OppAmountThisYear__c: npo02__OppAmountThisYear__c
+    npo02__OppsClosed2YearsAgo__c: npo02__OppsClosed2YearsAgo__c
+    npo02__OppsClosedLastNDays__c: npo02__OppsClosedLastNDays__c
+    npo02__OppsClosedLastYear__c: npo02__OppsClosedLastYear__c
+    npo02__OppsClosedThisYear__c: npo02__OppsClosedThisYear__c
+    npo02__SYSTEM_CUSTOM_NAMING__c: npo02__SYSTEM_CUSTOM_NAMING__c
+    npo02__SmallestAmount__c: npo02__SmallestAmount__c
+    npo02__TotalMembershipOppAmount__c: npo02__TotalMembershipOppAmount__c
+    npo02__TotalOppAmount__c: npo02__TotalOppAmount__c
+    npsp__Number_of_Household_Members__c: npsp__Number_of_Household_Members__c
+Insert Lead:
+  sf_object: Lead
+  table: Lead
+  fields:
+    Id: sf_id
+    FirstName: FirstName
+    LastName: LastName
+    Company: Company
+    DoNotCall: DoNotCall
+    HasOptedOutOfEmail: HasOptedOutOfEmail
+    HasOptedOutOfFax: HasOptedOutOfFax
+    IsConverted: IsConverted
+    IsUnreadByOwner: IsUnreadByOwner
+    Status: Status
+    LeadSource: LeadSource
+    npe01__Preferred_Email__c: npe01__Preferred_Email__c
+    npe01__Preferred_Phone__c: npe01__Preferred_Phone__c
+    npsp__CompanyCity__c: npsp__CompanyCity__c
+    npsp__CompanyCountry__c: npsp__CompanyCountry__c
+    npsp__CompanyPostalCode__c: npsp__CompanyPostalCode__c
+    npsp__CompanyState__c: npsp__CompanyState__c
+    npsp__CompanyStreet__c: npsp__CompanyStreet__c
+  lookups:
+    npsp__Batch__c:
+      table: npsp__Batch__c
+Insert npsp__Engagement_Plan_Task__c:
+  sf_object: npsp__Engagement_Plan_Task__c
+  table: npsp__Engagement_Plan_Task__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npsp__Comments__c: npsp__Comments__c
+    npsp__Days_After__c: npsp__Days_After__c
+    npsp__Priority__c: npsp__Priority__c
+    npsp__Reminder_Time__c: npsp__Reminder_Time__c
+    npsp__Reminder__c: npsp__Reminder__c
+    npsp__Send_Email__c: npsp__Send_Email__c
+    npsp__Status__c: npsp__Status__c
+    npsp__Type__c: npsp__Type__c
+  lookups:
+    npsp__Engagement_Plan_Template__c:
+      table: npsp__Engagement_Plan_Template__c
+    npsp__Parent_Task__c:
+      table: npsp__Engagement_Plan_Task__c
+      after: Insert npsp__Engagement_Plan_Task__c
+Insert npsp__Level__c:
+  sf_object: npsp__Level__c
+  table: npsp__Level__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npsp__Active__c: npsp__Active__c
+    npsp__Description__c: npsp__Description__c
+    npsp__Level_Field__c: npsp__Level_Field__c
+    npsp__Maximum_Amount__c: npsp__Maximum_Amount__c
+    npsp__Minimum_Amount__c: npsp__Minimum_Amount__c
+    npsp__Previous_Level_Field__c: npsp__Previous_Level_Field__c
+    npsp__Source_Field__c: npsp__Source_Field__c
+    npsp__Target__c: npsp__Target__c
+  lookups:
+    npsp__Engagement_Plan_Template__c:
+      table: npsp__Engagement_Plan_Template__c
+Insert Account:
+  sf_object: Account
+  table: Account
+  fields:
+    Id: sf_id
+    Name: Name
+    RecordTypeId: RecordTypeId
+    BillingStreet: BillingStreet
+    BillingCity: BillingCity
+    BillingState: BillingState
+    BillingCountry: BillingCountry
+    BillingPostalCode: BillingPostalCode
+    npe01__SYSTEMIsIndividual__c: npe01__SYSTEMIsIndividual__c
+    npe01__SYSTEM_AccountType__c: npe01__SYSTEM_AccountType__c
+    npo02__AverageAmount__c: npo02__AverageAmount__c
+    npo02__Best_Gift_Year_Total__c: npo02__Best_Gift_Year_Total__c
+    npo02__Best_Gift_Year__c: npo02__Best_Gift_Year__c
+    npo02__FirstCloseDate__c: npo02__FirstCloseDate__c
+    npo02__Formal_Greeting__c: npo02__Formal_Greeting__c
+    npo02__HouseholdPhone__c: npo02__HouseholdPhone__c
+    npo02__Informal_Greeting__c: npo02__Informal_Greeting__c
+    npo02__LargestAmount__c: npo02__LargestAmount__c
+    npo02__LastCloseDate__c: npo02__LastCloseDate__c
+    npo02__LastMembershipAmount__c: npo02__LastMembershipAmount__c
+    npo02__LastMembershipDate__c: npo02__LastMembershipDate__c
+    npo02__LastMembershipLevel__c: npo02__LastMembershipLevel__c
+    npo02__LastMembershipOrigin__c: npo02__LastMembershipOrigin__c
+    npo02__LastOppAmount__c: npo02__LastOppAmount__c
+    npo02__MembershipEndDate__c: npo02__MembershipEndDate__c
+    npo02__MembershipJoinDate__c: npo02__MembershipJoinDate__c
+    npo02__NumberOfClosedOpps__c: npo02__NumberOfClosedOpps__c
+    npo02__NumberOfMembershipOpps__c: npo02__NumberOfMembershipOpps__c
+    npo02__OppAmount2YearsAgo__c: npo02__OppAmount2YearsAgo__c
+    npo02__OppAmountLastNDays__c: npo02__OppAmountLastNDays__c
+    npo02__OppAmountLastYear__c: npo02__OppAmountLastYear__c
+    npo02__OppAmountThisYear__c: npo02__OppAmountThisYear__c
+    npo02__OppsClosed2YearsAgo__c: npo02__OppsClosed2YearsAgo__c
+    npo02__OppsClosedLastNDays__c: npo02__OppsClosedLastNDays__c
+    npo02__OppsClosedLastYear__c: npo02__OppsClosedLastYear__c
+    npo02__OppsClosedThisYear__c: npo02__OppsClosedThisYear__c
+    npo02__SYSTEM_CUSTOM_NAMING__c: npo02__SYSTEM_CUSTOM_NAMING__c
+    npo02__SmallestAmount__c: npo02__SmallestAmount__c
+    npo02__TotalMembershipOppAmount__c: npo02__TotalMembershipOppAmount__c
+    npo02__TotalOppAmount__c: npo02__TotalOppAmount__c
+    npsp__Funding_Focus__c: npsp__Funding_Focus__c
+    npsp__Grantmaker__c: npsp__Grantmaker__c
+    npsp__Matching_Gift_Administrator_Name__c: npsp__Matching_Gift_Administrator_Name__c
+    npsp__Matching_Gift_Amount_Max__c: npsp__Matching_Gift_Amount_Max__c
+    npsp__Matching_Gift_Amount_Min__c: npsp__Matching_Gift_Amount_Min__c
+    npsp__Matching_Gift_Annual_Employee_Max__c: npsp__Matching_Gift_Annual_Employee_Max__c
+    npsp__Matching_Gift_Comments__c: npsp__Matching_Gift_Comments__c
+    npsp__Matching_Gift_Company__c: npsp__Matching_Gift_Company__c
+    npsp__Matching_Gift_Email__c: npsp__Matching_Gift_Email__c
+    npsp__Matching_Gift_Info_Updated__c: npsp__Matching_Gift_Info_Updated__c
+    npsp__Matching_Gift_Percent__c: npsp__Matching_Gift_Percent__c
+    npsp__Matching_Gift_Phone__c: npsp__Matching_Gift_Phone__c
+    npsp__Matching_Gift_Request_Deadline__c: npsp__Matching_Gift_Request_Deadline__c
+    npsp__Number_of_Household_Members__c: npsp__Number_of_Household_Members__c
+  lookups:
+    Level__c:
+      table: npsp__Level__c
+    ParentId:
+      table: Account
+      after: Insert Account
+    Previous_Level__c:
+      table: npsp__Level__c
+    npe01__One2OneContact__c:
+      table: Contact
+      after: Insert Contact
+    npsp__Batch__c:
+      table: npsp__Batch__c
+Insert npsp__Address__c:
+  sf_object: npsp__Address__c
+  table: npsp__Address__c
+  fields:
+    Id: sf_id
+    npsp__API_Response__c: npsp__API_Response__c
+    npsp__Address_Type__c: npsp__Address_Type__c
+    npsp__Administrative_Area__c: npsp__Administrative_Area__c
+    npsp__Ambiguous__c: npsp__Ambiguous__c
+    npsp__Congressional_District__c: npsp__Congressional_District__c
+    npsp__County_Name__c: npsp__County_Name__c
+    npsp__Default_Address__c: npsp__Default_Address__c
+    npsp__Latest_End_Date__c: npsp__Latest_End_Date__c
+    npsp__Latest_Start_Date__c: npsp__Latest_Start_Date__c
+    npsp__MailingCity__c: npsp__MailingCity__c
+    npsp__MailingCountry__c: npsp__MailingCountry__c
+    npsp__MailingPostalCode__c: npsp__MailingPostalCode__c
+    npsp__MailingState__c: npsp__MailingState__c
+    npsp__MailingStreet2__c: npsp__MailingStreet2__c
+    npsp__MailingStreet__c: npsp__MailingStreet__c
+    npsp__Pre_Verification_Address__c: npsp__Pre_Verification_Address__c
+    npsp__Seasonal_End_Day__c: npsp__Seasonal_End_Day__c
+    npsp__Seasonal_End_Month__c: npsp__Seasonal_End_Month__c
+    npsp__Seasonal_Start_Day__c: npsp__Seasonal_Start_Day__c
+    npsp__Seasonal_Start_Month__c: npsp__Seasonal_Start_Month__c
+    npsp__State_Lower_District__c: npsp__State_Lower_District__c
+    npsp__State_Upper_District__c: npsp__State_Upper_District__c
+    npsp__Verification_Status__c: npsp__Verification_Status__c
+    npsp__Verified__c: npsp__Verified__c
+  lookups:
+    npsp__Household_Account__c:
+      table: Account
+Insert Contact:
+  sf_object: Contact
+  table: Contact
+  fields:
+    Id: sf_id
+    FirstName: FirstName
+    LastName: LastName
+    DoNotCall: DoNotCall
+    Gender__c: Gender__c
+    MailingStreet: MailingStreet
+    MailingCity: MailingCity
+    MailingState: MailingState
+    MailingCountry: MailingCountry
+    MailingPostalCode: MailingPostalCode
+    HasOptedOutOfEmail: HasOptedOutOfEmail
+    HasOptedOutOfFax: HasOptedOutOfFax
+    npe01__AlternateEmail__c: npe01__AlternateEmail__c
+    npe01__HomeEmail__c: npe01__HomeEmail__c
+    npe01__PreferredPhone__c: npe01__PreferredPhone__c
+    npe01__Preferred_Email__c: npe01__Preferred_Email__c
+    npe01__Primary_Address_Type__c: npe01__Primary_Address_Type__c
+    npe01__Private__c: npe01__Private__c
+    npe01__Secondary_Address_Type__c: npe01__Secondary_Address_Type__c
+    npe01__SystemAccountProcessor__c: npe01__SystemAccountProcessor__c
+    npe01__WorkEmail__c: npe01__WorkEmail__c
+    npe01__WorkPhone__c: npe01__WorkPhone__c
+    npo02__AverageAmount__c: npo02__AverageAmount__c
+    npo02__Best_Gift_Year_Total__c: npo02__Best_Gift_Year_Total__c
+    npo02__Best_Gift_Year__c: npo02__Best_Gift_Year__c
+    npo02__FirstCloseDate__c: npo02__FirstCloseDate__c
+    npo02__Household_Naming_Order__c: npo02__Household_Naming_Order__c
+    npo02__LargestAmount__c: npo02__LargestAmount__c
+    npo02__LastCloseDate__c: npo02__LastCloseDate__c
+    npo02__LastMembershipAmount__c: npo02__LastMembershipAmount__c
+    npo02__LastMembershipDate__c: npo02__LastMembershipDate__c
+    npo02__LastMembershipLevel__c: npo02__LastMembershipLevel__c
+    npo02__LastMembershipOrigin__c: npo02__LastMembershipOrigin__c
+    npo02__LastOppAmount__c: npo02__LastOppAmount__c
+    npo02__MembershipEndDate__c: npo02__MembershipEndDate__c
+    npo02__MembershipJoinDate__c: npo02__MembershipJoinDate__c
+    npo02__Naming_Exclusions__c: npo02__Naming_Exclusions__c
+    npo02__NumberOfClosedOpps__c: npo02__NumberOfClosedOpps__c
+    npo02__NumberOfMembershipOpps__c: npo02__NumberOfMembershipOpps__c
+    npo02__OppAmount2YearsAgo__c: npo02__OppAmount2YearsAgo__c
+    npo02__OppAmountLastNDays__c: npo02__OppAmountLastNDays__c
+    npo02__OppAmountLastYear__c: npo02__OppAmountLastYear__c
+    npo02__OppAmountThisYear__c: npo02__OppAmountThisYear__c
+    npo02__OppsClosed2YearsAgo__c: npo02__OppsClosed2YearsAgo__c
+    npo02__OppsClosedLastNDays__c: npo02__OppsClosedLastNDays__c
+    npo02__OppsClosedLastYear__c: npo02__OppsClosedLastYear__c
+    npo02__OppsClosedThisYear__c: npo02__OppsClosedThisYear__c
+    npo02__SmallestAmount__c: npo02__SmallestAmount__c
+    npo02__Soft_Credit_Last_Year__c: npo02__Soft_Credit_Last_Year__c
+    npo02__Soft_Credit_This_Year__c: npo02__Soft_Credit_This_Year__c
+    npo02__Soft_Credit_Total__c: npo02__Soft_Credit_Total__c
+    npo02__Soft_Credit_Two_Years_Ago__c: npo02__Soft_Credit_Two_Years_Ago__c
+    npo02__SystemHouseholdProcessor__c: npo02__SystemHouseholdProcessor__c
+    npo02__TotalMembershipOppAmount__c: npo02__TotalMembershipOppAmount__c
+    npo02__TotalOppAmount__c: npo02__TotalOppAmount__c
+    npsp__Deceased__c: npsp__Deceased__c
+    npsp__Do_Not_Contact__c: npsp__Do_Not_Contact__c
+    npsp__Exclude_from_Household_Formal_Greeting__c: npsp__Exclude_from_Household_Formal_Greeting__c
+    npsp__Exclude_from_Household_Informal_Greeting__c: npsp__Exclude_from_Household_Informal_Greeting__c
+    npsp__Exclude_from_Household_Name__c: npsp__Exclude_from_Household_Name__c
+    npsp__First_Soft_Credit_Amount__c: npsp__First_Soft_Credit_Amount__c
+    npsp__First_Soft_Credit_Date__c: npsp__First_Soft_Credit_Date__c
+    npsp__Largest_Soft_Credit_Amount__c: npsp__Largest_Soft_Credit_Amount__c
+    npsp__Largest_Soft_Credit_Date__c: npsp__Largest_Soft_Credit_Date__c
+    npsp__Last_Soft_Credit_Amount__c: npsp__Last_Soft_Credit_Amount__c
+    npsp__Last_Soft_Credit_Date__c: npsp__Last_Soft_Credit_Date__c
+    npsp__Number_of_Soft_Credits_Last_N_Days__c: npsp__Number_of_Soft_Credits_Last_N_Days__c
+    npsp__Number_of_Soft_Credits_Last_Year__c: npsp__Number_of_Soft_Credits_Last_Year__c
+    npsp__Number_of_Soft_Credits_This_Year__c: npsp__Number_of_Soft_Credits_This_Year__c
+    npsp__Number_of_Soft_Credits_Two_Years_Ago__c: npsp__Number_of_Soft_Credits_Two_Years_Ago__c
+    npsp__Number_of_Soft_Credits__c: npsp__Number_of_Soft_Credits__c
+    npsp__Soft_Credit_Last_N_Days__c: npsp__Soft_Credit_Last_N_Days__c
+    npsp__is_Address_Override__c: npsp__is_Address_Override__c
+  lookups:
+    AccountId:
+      table: Account
+    Giving_Level__c:
+      table: npsp__Level__c
+    Previous_Giving_Level__c:
+      table: npsp__Level__c
+    ReportsToId:
+      table: Contact
+      after: Insert Contact
+    npo02__Household__c:
+      table: npo02__Household__c
+    npsp__Batch__c:
+      table: npsp__Batch__c
+    npsp__Current_Address__c:
+      table: npsp__Address__c
+    npsp__Primary_Affiliation__c:
+      table: Account
+Insert npe5__Affiliation__c:
+  sf_object: npe5__Affiliation__c
+  table: npe5__Affiliation__c
+  fields:
+    Id: sf_id
+    npe5__Description__c: npe5__Description__c
+    npe5__EndDate__c: npe5__EndDate__c
+    npe5__Primary__c: npe5__Primary__c
+    npe5__Role__c: npe5__Role__c
+    npe5__StartDate__c: npe5__StartDate__c
+    npe5__Status__c: npe5__Status__c
+    npsp__Related_Opportunity_Contact_Role__c: npsp__Related_Opportunity_Contact_Role__c
+  lookups:
+    npe5__Contact__c:
+      table: Contact
+    npe5__Organization__c:
+      table: Account
+Insert npe4__Relationship__c:
+  sf_object: npe4__Relationship__c
+  table: npe4__Relationship__c
+  fields:
+    Id: sf_id
+    npe4__Description__c: npe4__Description__c
+    npe4__SYSTEM_SystemCreated__c: npe4__SYSTEM_SystemCreated__c
+    npe4__Status__c: npe4__Status__c
+    npe4__Type__c: npe4__Type__c
+    npsp__Related_Opportunity_Contact_Role__c: npsp__Related_Opportunity_Contact_Role__c
+  lookups:
+    npe4__Contact__c:
+      table: Contact
+    npe4__ReciprocalRelationship__c:
+      table: npe4__Relationship__c
+      after: Insert npe4__Relationship__c
+    npe4__RelatedContact__c:
+      table: Contact
+Insert Case:
+  sf_object: Case
+  table: Case
+  fields:
+    Id: sf_id
+    IsEscalated: IsEscalated
+    Subject: Subject
+    Status: Status
+    Origin: Origin
+    Type: Type
+    Priority: Priority
+    Description: Description
+  lookups:
+    AccountId:
+      table: Account
+    ContactId:
+      table: Contact
+    ParentId:
+      table: Case
+      after: Insert Case
+Insert Campaign:
+  sf_object: Campaign
+  table: Campaign
+  fields:
+    Id: sf_id
+    Name: Name
+    IsActive: IsActive
+    StartDate: StartDate
+    EndDate: EndDate
+    Status: Status
+    Type: Type
+  lookups:
+    Location__c:
+      table: Account
+    On_Site_Contact__c:
+      table: Contact
+    ParentId:
+      table: Campaign
+      after: Insert Campaign
+Insert CampaignMemberStatus:
+  sf_object: CampaignMemberStatus
+  table: CampaignMemberStatus
+  filters: 
+    - "Label != 'Sent' AND Label != 'Responded'"
+  fields:
+    Id: sf_id
+    HasResponded: HasResponded
+    IsDefault: IsDefault
+    Label: Label
+  lookups:
+    CampaignId:
+      table: Campaign
+Insert CampaignMember:
+  sf_object: CampaignMember
+  table: CampaignMember
+  fields:
+    Id: sf_id
+    Status: Status
+  lookups:
+    CampaignId:
+      table: Campaign
+    ContactId:
+      table: Contact
+Insert npe03__Recurring_Donation__c:
+  sf_object: npe03__Recurring_Donation__c
+  table: npe03__Recurring_Donation__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npe03__Amount__c: npe03__Amount__c
+    npe03__Date_Established__c: npe03__Date_Established__c
+    npe03__Installment_Period__c: npe03__Installment_Period__c
+    npe03__Installments__c: npe03__Installments__c
+    npe03__Last_Payment_Date__c: npe03__Last_Payment_Date__c
+    npe03__Next_Payment_Date__c: npe03__Next_Payment_Date__c
+    npe03__Open_Ended_Status__c: npe03__Open_Ended_Status__c
+    npe03__Paid_Amount__c: npe03__Paid_Amount__c
+    npe03__Schedule_Type__c: npe03__Schedule_Type__c
+    npe03__Total_Paid_Installments__c: npe03__Total_Paid_Installments__c
+    npsp__Always_Use_Last_Day_Of_Month__c: npsp__Always_Use_Last_Day_Of_Month__c
+    npsp__Day_of_Month__c: npsp__Day_of_Month__c
+  lookups:
+    npe03__Contact__c:
+      table: Contact
+    npe03__Organization__c:
+      table: Account
+    npe03__Recurring_Donation_Campaign__c:
+      table: Campaign
+Insert Opportunity:
+  sf_object: Opportunity
+  table: Opportunity
+  fields:
+    Id: sf_id
+    Name: Name
+    CloseDate: CloseDate
+    IsPrivate: IsPrivate
+    RecordTypeId: RecordTypeId
+    StageName: StageName
+    Type: Type
+    Amount: Amount
+    npe01__Contact_Id_for_Role__c: npe01__Contact_Id_for_Role__c
+    npe01__Do_Not_Automatically_Create_Payment__c: npe01__Do_Not_Automatically_Create_Payment__c
+    npe01__Member_Level__c: npe01__Member_Level__c
+    npe01__Membership_End_Date__c: npe01__Membership_End_Date__c
+    npe01__Membership_Origin__c: npe01__Membership_Origin__c
+    npe01__Membership_Start_Date__c: npe01__Membership_Start_Date__c
+    npo02__systemHouseholdContactRoleProcessor__c: npo02__systemHouseholdContactRoleProcessor__c
+    npsp__Acknowledgment_Date__c: npsp__Acknowledgment_Date__c
+    npsp__Acknowledgment_Status__c: npsp__Acknowledgment_Status__c
+    npsp__Ask_Date__c: npsp__Ask_Date__c
+    npsp__Closed_Lost_Reason__c: npsp__Closed_Lost_Reason__c
+    npsp__DisableContactRoleAutomation__c: npsp__DisableContactRoleAutomation__c
+    npsp__Fair_Market_Value__c: npsp__Fair_Market_Value__c
+    npsp__Gift_Strategy__c: npsp__Gift_Strategy__c
+    npsp__Grant_Contract_Date__c: npsp__Grant_Contract_Date__c
+    npsp__Grant_Contract_Number__c: npsp__Grant_Contract_Number__c
+    npsp__Grant_Period_End_Date__c: npsp__Grant_Period_End_Date__c
+    npsp__Grant_Period_Start_Date__c: npsp__Grant_Period_Start_Date__c
+    npsp__Grant_Program_Area_s__c: npsp__Grant_Program_Area_s__c
+    npsp__Grant_Requirements_Website__c: npsp__Grant_Requirements_Website__c
+    npsp__Honoree_Name__c: npsp__Honoree_Name__c
+    npsp__In_Kind_Description__c: npsp__In_Kind_Description__c
+    npsp__In_Kind_Donor_Declared_Value__c: npsp__In_Kind_Donor_Declared_Value__c
+    npsp__In_Kind_Type__c: npsp__In_Kind_Type__c
+    npsp__Is_Grant_Renewal__c: npsp__Is_Grant_Renewal__c
+    npsp__Matching_Gift_Employer__c: npsp__Matching_Gift_Employer__c
+    npsp__Matching_Gift_Status__c: npsp__Matching_Gift_Status__c
+    npsp__Notification_Message__c: npsp__Notification_Message__c
+    npsp__Notification_Preference__c: npsp__Notification_Preference__c
+    npsp__Notification_Recipient_Information__c: npsp__Notification_Recipient_Information__c
+    npsp__Notification_Recipient_Name__c: npsp__Notification_Recipient_Name__c
+    npsp__Primary_Contact_Campaign_Member_Status__c: npsp__Primary_Contact_Campaign_Member_Status__c
+    npsp__Recurring_Donation_Installment_Number__c: npsp__Recurring_Donation_Installment_Number__c
+    npsp__Requested_Amount__c: npsp__Requested_Amount__c
+    npsp__Tribute_Type__c: npsp__Tribute_Type__c
+  lookups:
+    AccountId:
+      table: Account
+    CampaignId:
+      table: Campaign
+    npe03__Recurring_Donation__c:
+      table: npe03__Recurring_Donation__c
+    npsp__Batch__c:
+      table: npsp__Batch__c
+    npsp__Honoree_Contact__c:
+      table: Contact
+    npsp__Matching_Gift_Account__c:
+      table: Account
+    npsp__Matching_Gift__c:
+      table: Opportunity
+      after: Insert Opportunity
+    npsp__Notification_Recipient_Contact__c:
+      table: Contact
+    npsp__Previous_Grant_Opportunity__c:
+      table: Opportunity
+      after: Insert Opportunity
+    npsp__Primary_Contact__c:
+      table: Contact
+Insert OpportunityContactRole:
+  sf_object: OpportunityContactRole
+  table: OpportunityContactRole
+  fields:
+    Id: sf_id
+    Role: Role
+    IsPrimary: IsPrimary
+  lookups:
+    ContactId:
+      table: Contact
+    OpportunityId:
+      table: Opportunity
+Insert npsp__Grant_Deadline__c:
+  sf_object: npsp__Grant_Deadline__c
+  table: npsp__Grant_Deadline__c
+  fields:
+    Id: sf_id
+    Name: Name
+    npsp__Grant_Deadline_Due_Date__c: npsp__Grant_Deadline_Due_Date__c
+    npsp__Grant_Deliverable_Close_Date__c: npsp__Grant_Deliverable_Close_Date__c
+    npsp__Grant_Deliverable_Requirements__c: npsp__Grant_Deliverable_Requirements__c
+    npsp__Type__c: npsp__Type__c
+  lookups:
+    npsp__Opportunity__c:
+      table: Opportunity
+Insert npsp__Engagement_Plan__c:
+  sf_object: npsp__Engagement_Plan__c
+  table: npsp__Engagement_Plan__c
+  fields:
+    Id: sf_id
+    npsp__Completed_Tasks__c: npsp__Completed_Tasks__c
+    npsp__Total_Tasks__c: npsp__Total_Tasks__c
+  lookups:
+    npsp__Account__c:
+      table: Account
+    npsp__Campaign__c:
+      table: Campaign
+    npsp__Case__c:
+      table: Case
+    npsp__Contact__c:
+      table: Contact
+    npsp__Engagement_Plan_Template__c:
+      table: npsp__Engagement_Plan_Template__c
+    npsp__Opportunity__c:
+      table: Opportunity
+    npsp__Recurring_Donation__c:
+      table: npe03__Recurring_Donation__c
+Insert npe01__OppPayment__c:
+  sf_object: npe01__OppPayment__c
+  table: npe01__OppPayment__c
+  fields:
+    Id: sf_id
+    npe01__Check_Reference_Number__c: npe01__Check_Reference_Number__c
+    npe01__Custom_Payment_Field__c: npe01__Custom_Payment_Field__c
+    npe01__Paid__c: npe01__Paid__c
+    npe01__Payment_Amount__c: npe01__Payment_Amount__c
+    npe01__Payment_Date__c: npe01__Payment_Date__c
+    npe01__Payment_Method__c: npe01__Payment_Method__c
+    npe01__Scheduled_Date__c: npe01__Scheduled_Date__c
+    npe01__Written_Off__c: npe01__Written_Off__c
+    npsp__Payment_Acknowledged_Date__c: npsp__Payment_Acknowledged_Date__c
+    npsp__Payment_Acknowledgment_Status__c: npsp__Payment_Acknowledgment_Status__c
+  lookups:
+    npe01__Opportunity__c:
+      table: Opportunity
+Insert npsp__Partial_Soft_Credit__c:
+  sf_object: npsp__Partial_Soft_Credit__c
+  table: npsp__Partial_Soft_Credit__c
+  fields:
+    Id: sf_id
+    npsp__Amount__c: npsp__Amount__c
+    npsp__Role_Name__c: npsp__Role_Name__c
+  lookups:
+    npsp__Contact__c:
+      table: Contact
+    npsp__Opportunity__c:
+      table: Opportunity
+Insert npsp__Account_Soft_Credit__c:
+  sf_object: npsp__Account_Soft_Credit__c
+  table: npsp__Account_Soft_Credit__c
+  fields:
+    Id: sf_id
+    npsp__Amount__c: npsp__Amount__c
+    npsp__Role__c: npsp__Role__c
+  lookups:
+    npsp__Account__c:
+      table: Account
+    npsp__Opportunity__c:
+      table: Opportunity
+Insert npsp__Allocation__c:
+  sf_object: npsp__Allocation__c
+  table: npsp__Allocation__c
+  fields:
+    Id: sf_id
+    npsp__Amount__c: npsp__Amount__c
+    npsp__Percent__c: npsp__Percent__c
+  lookups:
+    npsp__Campaign__c:
+      table: Campaign
+    npsp__General_Accounting_Unit__c:
+      table: npsp__General_Accounting_Unit__c
+    npsp__Opportunity__c:
+      table: Opportunity
+    npsp__Recurring_Donation__c:
+      table: npe03__Recurring_Donation__c
+Event:
+  sf_object: Event
+  table: Event
+  fields:
+    Id: sf_id
+    ActivityDate: ActivityDate
+    Description: Description
+    StartDateTime: StartDateTime
+    EndDateTime: EndDateTime
+    Subject: Subject
+    Location: Location
+  lookups:
+    WhoId:
+      table: Contact
+      key_field: WhoId
+
