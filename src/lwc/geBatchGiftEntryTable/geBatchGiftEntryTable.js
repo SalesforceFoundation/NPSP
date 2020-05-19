@@ -13,6 +13,8 @@ import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBa
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
+import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
+import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 import commonOpen from '@salesforce/label/c.commonOpen';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
@@ -48,8 +50,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     };
 
-    _totalCountOfGifts;
-    _totalAmountOfGifts;
+
+    @api title;
+    @api total;
+    @api expectedTotal;
+    @api count;
+    @api expectedCount;
     @track isLoaded = true;
 
     connectedCallback() {
@@ -67,8 +73,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
-                    this._totalCountOfGifts = dataImportModel.totalCountOfRows;
-                    this._totalAmountOfGifts = dataImportModel.totalRowAmount;
+                    this.count = dataImportModel.totalCountOfRows;
+                    this.total = dataImportModel.totalRowAmount;
                     dataImportModel.dataImportRows.forEach(row => {
                             this.data.push(
                                 Object.assign(row, row.record));
@@ -152,16 +158,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     }
 
-    @api
-    setTotalCount(value) {
-        this._totalCountOfGifts = value;
-    }
-
-    @api
-    setTotalAmount(value) {
-        this._totalAmountOfGifts = value;
-    }
-
     handleRowActions(event) {
         switch (event.detail.action.name) {
             case 'open':
@@ -204,7 +200,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 );
                 this.data = [...this.data];
-                if (this.data.length >= this._totalCountOfGifts) {
+                if (this.data.length >= this.count) {
                     disableInfiniteLoading();
                 }
                 disableIsLoading();
@@ -222,8 +218,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         })
             .then(result => {
                 const dataImportModel = JSON.parse(result);
-                this.setTotalCount(dataImportModel.totalCountOfRows);
-                this.setTotalCount(dataImportModel.totalRowAmount);
+                this.count = dataImportModel.totalCountOfRows;
+                this.total = dataImportModel.totalRowAmount;
                 dataImportModel.dataImportRows.forEach((row, idx) => {
                     this.upsertData(
                         Object.assign(row, row.record), 'Id');
@@ -235,6 +231,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .finally(() => {
                 callback();
             });
+    }
+
+    get geBatchGiftsCountLabel() {
+        return geBatchGiftsCount;
+    }
+
+    get geBatchGiftsTotalLabel() {
+        return geBatchGiftsTotal;
     }
 
     loadRow(row) {
