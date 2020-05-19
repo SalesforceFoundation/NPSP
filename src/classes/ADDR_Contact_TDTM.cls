@@ -93,11 +93,11 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
             }
-    mapAccountIdAccount = new Map<Id,Account>([
-        SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r) 
-        FROM Account
-        WHERE Id IN :setAccountId
-    ]);
+            mapAccountIdAccount = new Map<Id,Account>([
+                SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
+                FROM Account
+                WHERE Id IN :setAccountId
+            ]);
         }
        
         integer i = -1;        
