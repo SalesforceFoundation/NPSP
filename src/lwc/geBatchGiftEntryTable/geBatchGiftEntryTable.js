@@ -7,6 +7,7 @@ import GeFormService from 'c/geFormService';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD
     from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import {deleteRecord} from 'lightning/uiRecordApi';
 import {handleError} from 'c/utilTemplateBuilder';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
@@ -73,8 +74,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
-                    this.count = dataImportModel.totalCountOfRows;
-                    this.total = dataImportModel.totalRowAmount;
+                    this._count = dataImportModel.totalCountOfRows;
+                    this._total = dataImportModel.totalRowAmount;
                     dataImportModel.dataImportRows.forEach(row => {
                             this.data.push(
                                 Object.assign(row, row.record));
@@ -179,6 +180,11 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         const index = this.data.findIndex(isRowToDelete);
         this.data.splice(index, 1);
         this.data = [...this.data];
+        this.dispatchEvent(new CustomEvent('delete', {
+            detail: {
+                amount: rowToDelete[DONATION_AMOUNT.fieldApiName]
+            }
+        }));
     }
 
     loadMoreData(event) {
@@ -218,8 +224,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         })
             .then(result => {
                 const dataImportModel = JSON.parse(result);
-                this.count = dataImportModel.totalCountOfRows;
-                this.total = dataImportModel.totalRowAmount;
+                this._count = dataImportModel.totalCountOfRows;
+                this._total = dataImportModel.totalRowAmount;
                 dataImportModel.dataImportRows.forEach((row, idx) => {
                     this.upsertData(
                         Object.assign(row, row.record), 'Id');
@@ -246,4 +252,26 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             detail: row
         }));
     }
+
+    /**
+     * @description Internal setters used to communicate the current count and total
+     *              up to the App, which needs them to keep track of whether the batch's
+     *              expected totals match.
+     */
+    set _count(count) {
+        this.dispatchEvent(new CustomEvent('countchanged', {
+            detail: {
+                value: count
+            }
+        }));
+    }
+
+    set _total(total) {
+        this.dispatchEvent(new CustomEvent('totalchanged', {
+            detail: {
+                value: total
+            }
+        }));
+    }
+
 }
