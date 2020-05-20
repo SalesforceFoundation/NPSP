@@ -2089,9 +2089,9 @@
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
-        <members>geBatchGiftsExpectedTotalsMessage</members>
         <members>geAssistiveSpinner</members>
         <members>geBatchGiftsCount</members>
+        <members>geBatchGiftsExpectedTotalsMessage</members>
         <members>geBatchGiftsHeader</members>
         <members>geBatchGiftsTotal</members>
         <members>geBodyAdvancedFieldMapping</members>

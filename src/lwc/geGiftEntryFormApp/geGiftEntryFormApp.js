@@ -137,14 +137,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     batchGiftSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         this.dataImportRecord = event.detail.dataImportRecord;
-        saveAndDryRunDataImport({ batchId: this.recordId, dataImport: this.dataImportRecord })
+        saveAndDryRunDataImport({batchId: this.recordId, dataImport: this.dataImportRecord})
             .then((result) => {
                 let dataImportModel = JSON.parse(result);
                 Object.assign(dataImportModel.dataImportRows[0],
                     dataImportModel.dataImportRows[0].record);
                 table.upsertData(dataImportModel.dataImportRows[0], 'Id');
-                    this.count = dataImportModel.totalCountOfRows;
-                    this.total = dataImportModel.totalRowAmount;
+                this.count = dataImportModel.totalCountOfRows;
+                this.total = dataImportModel.totalRowAmount;
                 event.detail.success(); //Re-enable the Save button
             })
             .catch(error => {
