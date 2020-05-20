@@ -13,4 +13,5 @@ Create Gift
     Go To Page      Landing     GE_Gift_Entry
     Click Button With Title     New Single Gift
     Fill Ge Form	Donor Type      Account
+    Fill Ge Form	Amount     100
     
