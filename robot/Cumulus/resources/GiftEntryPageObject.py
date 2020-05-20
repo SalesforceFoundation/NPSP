@@ -28,7 +28,8 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
         """
         self.selenium.wait_until_location_contains("GE_Gift_Entry", timeout=60, 
                                                    message="Current page is not Gift Entry landing page")
-        self.selenium.wait_until_page_contains("Default Gift Entry Template")                                               
+        locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")                                           
+        self.selenium.wait_until_page_contains_element(locator)                                               
 
     def click_gift_entry_button(self,title):
         """clicks on Gift Entry button identified with title"""
