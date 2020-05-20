@@ -11,6 +11,7 @@ from logging import exception
 @pageobject("Custom", "ObjectManager")
 class ObjectManagerPage(BaseNPSPPage, BasePage):
 	
+	@capture_screenshot_on_error
 	def load_apex_jobs(self):
 		"""To go to object manager page for a specific object"""
 		url_template = "{root}/lightning/setup/AsyncApexJobs/home"
@@ -20,9 +21,11 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 		self.npsp.choose_frame('vfFrameId')
 	
+	@capture_screenshot_on_error
 	def validate_apex_job_status(self, jobname, status):
 		self.npsp.wait_for_apexjob_to_process(jobname, status)
 	
+	@capture_screenshot_on_error
 	def open_fields_and_relationships(self, object_name):
 		"""To go to object manager page for a specific object"""
 		url_template = "{root}/lightning/setup/ObjectManager/{object}/FieldsAndRelationships/view"
@@ -31,7 +34,8 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		search_button = npsp_lex_locators['object_manager']['global_search']
 		self.salesforce.wait_until_loading_is_complete()
 		self.selenium.wait_until_page_contains_element(search_button)
-
+	
+	@capture_screenshot_on_error
 	def is_custom_field_present(self, field_name):
 		search_button = npsp_lex_locators['object_manager']['global_search']
 		self.selenium.wait_until_page_contains_element(search_button,60)
@@ -47,7 +51,7 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		else:
 			return True
 	
-	
+	@capture_screenshot_on_error
 	def create_custom_field(self, type, field_name, related_to):
 		value = self.is_custom_field_present(field_name)
 		self.builtin.log_to_console(value)

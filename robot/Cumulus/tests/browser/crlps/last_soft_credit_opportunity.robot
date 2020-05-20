@@ -84,4 +84,9 @@ Create Crlp For Automated Soft Credit
     ...                                                   Contact
     ...                                                   object_id=${data}[contact][Id]
     Wait Until Loading Is Complete
-    Navigate To And Validate Field Value                  Last Soft Credit Opportunity                contains         Customizable rollup test $100 Donation
+    Reload Page
+    Reload Page
+    Wait Until Keyword Succeeds                           1 minute
+        ...                                               5 seconds
+        ...                                               Navigate To And Validate Field Value
+        ...                                               Last Soft Credit Opportunity                contains         Customizable rollup test $100 Donation
