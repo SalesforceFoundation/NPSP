@@ -2091,6 +2091,7 @@
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
         <members>geBatchGiftsCount</members>
+        <members>geBatchGiftsExpectedCountOrTotalMessage</members>
         <members>geBatchGiftsExpectedTotalsMessage</members>
         <members>geBatchGiftsHeader</members>
         <members>geBatchGiftsTotal</members>

@@ -13,6 +13,8 @@ import GeLabelService from 'c/geLabelService';
 import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
 import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
+import geBatchGiftsExpectedCountOrTotalMessage
+    from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
@@ -586,7 +588,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         if (this.isProcessable) {
             this.navigateToDataImportProcessingPage();
         } else {
-            handleError(geBatchGiftsExpectedTotalsMessage);
+            if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+                handleError(geBatchGiftsExpectedTotalsMessage);
+            } else {
+                handleError(geBatchGiftsExpectedCountOrTotalMessage);
+            }
         }
     }
 
