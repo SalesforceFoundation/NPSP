@@ -20,6 +20,7 @@ import stateUnmappedLabel from '@salesforce/label/c.RD2_StatusMappingStateUnmapp
 import deploymentInProgressMessage from '@salesforce/label/c.RD2_StatusMappingInProgressMessage';
 import deploymentSuccessMessage from '@salesforce/label/c.RD2_StatusMappingSuccessMessage';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
+import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 
 const toastVariant = {
     INFO: 'info',
@@ -35,7 +36,8 @@ export default class rd2StatusMappingSettings extends LightningElement {
         mappingDefinitions,
         editButtonLabel,
         cancelButtonLabel,
-        saveButtonLabel
+        saveButtonLabel,
+        loadingMessage
     }
 
     @track records;

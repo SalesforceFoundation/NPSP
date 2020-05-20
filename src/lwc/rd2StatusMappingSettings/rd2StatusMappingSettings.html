@@ -37,7 +37,7 @@
             <template if:true={isLoading}>
                 <div class="slds-grid slds-grid_align-center">
                     <div class="slds-is-relative slds-size_1-of-1">
-                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                        <lightning-spinner alternative-text={labels.loadingMessage}></lightning-spinner>
                         <c-util-stencil row-count="5" column-count="3"></c-util-stencil>
                     </div>
                 </div>
