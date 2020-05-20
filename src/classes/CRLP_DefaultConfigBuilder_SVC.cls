@@ -36,16 +36,20 @@
 * the legacy rollup settings in the NPSP Custom Settings objects. This is effectively executed only one time
 * in any given customer org.
 */
-public class CRLP_DefaultConfigBuilder_SVC {
+public inherited sharing class CRLP_DefaultConfigBuilder_SVC {
 
     /** @description Use this Map of Opp RecordTypes by Id to convert the legacy settings into a DeveloperName for the Filter Rule */
-    private static final Map<Id, RecordTypeInfo> oppRecordTypesById = Opportunity.SObjectType.getDescribe().getRecordTypeInfosById();
+    private final Map<Id, RecordTypeInfo> oppRecordTypesById = Opportunity.SObjectType.getDescribe().getRecordTypeInfosById();
+
+    /** @description By default always reschedule NPSP jobs after enablement completes */
+    private Boolean shouldRescheduleNpspBatchJobs = true;
 
     /*************************************************************************************************************
      * @description Call each of the methods in this class to build the default Filter Groups and each of the four
      * Rollup Types (Account Hard Credit/Membership, Contact Hard Credit/Membership, Contact Soft Credit, and GAU)
+     * @return String with the JobId
      */
-    public static String convertLegacyRollupsIntoCustomizableRollups() {
+    public String convertLegacyRollupsIntoCustomizableRollups() {
 
         List<CRLP_RollupCMT.Rollup> allChangedRollups = new List<CRLP_RollupCMT.Rollup>();
         List<CRLP_RollupCMT.FilterGroup> allChangedFilterGroups = new List<CRLP_RollupCMT.FilterGroup>();
@@ -79,9 +83,21 @@ public class CRLP_DefaultConfigBuilder_SVC {
         allChangedRollups.addAll(rollups);
 
         // send change event check
-        CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(allChangedRollups, allChangedFilterGroups);
+        CRLP_EnablementService.RollupMetadataHandler callbackHandler = new CRLP_ApiService()
+            .withScheduleNpspBatchJobs(shouldRescheduleNpspBatchJobs)
+            .sendChangeEvent(allChangedRollups, allChangedFilterGroups)
+            .getCallbackHandler();
 
-        return CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
+        return CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(callbackHandler, callbackHandler.params);
+    }
+
+    /**
+    * @description Tell the process to not reschedule NPSP jobs after the process completes
+     * @returns This
+    */
+    public CRLP_DefaultConfigBuilder_SVC withScheduleNpspBatchJobs(Boolean rescheduleBatchJobs) {
+        this.shouldRescheduleNpspBatchJobs = rescheduleBatchJobs;
+        return this;
     }
 
     /*************************************************************************************************************
@@ -91,7 +107,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * filter group will be split into 2 different groups - one for Account and one for Contact.
      * @return List<FilterGroup> defined Filter Group wrapper classes; each containing a List<FilterRule>
      */
-    private static List<CRLP_RollupCMT.FilterGroup> buildDefaultFilterGroups() {
+    private List<CRLP_RollupCMT.FilterGroup> buildDefaultFilterGroups() {
         // Use these to differentiate Account from Contact filters if that is needed
         String acctOpp = 'Opps';
         String contOpp = 'Opps';
@@ -662,7 +678,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * @param List<FilterGroup> the default Filter Groups (wrapper classes) with their lists of default Filter Rules
      * @return List<FilterRule> defined Filter Rule wrapper classes
      */
-    private static List<CRLP_RollupCMT.FilterRule> softDeleteExtraFilterRulesInNPSPFilterGroups(List<CRLP_RollupCMT.FilterGroup> groups) {
+    private List<CRLP_RollupCMT.FilterRule> softDeleteExtraFilterRulesInNPSPFilterGroups(List<CRLP_RollupCMT.FilterGroup> groups) {
 
         List<CRLP_RollupCMT.FilterRule> rulesToSoftDelete = new List<CRLP_RollupCMT.FilterRule>();
         List<Filter_Rule__mdt> allExistingRules = CMT_FilterRule_SEL.getFilterRules();
@@ -696,7 +712,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
     * @param List<FilterGroup> the default Filter Groups (wrapper classes)
     * @return List<FilterGroup> defined Filter Group wrapper classes with their Filter Rules
     */
-    private static List<CRLP_RollupCMT.FilterGroup> softDeleteExtraFilterGroupsAndRules(List<CRLP_RollupCMT.FilterGroup> groups) {
+    private List<CRLP_RollupCMT.FilterGroup> softDeleteExtraFilterGroupsAndRules(List<CRLP_RollupCMT.FilterGroup> groups) {
 
         List<CRLP_RollupCMT.FilterGroup> groupsToSoftDelete = new List<CRLP_RollupCMT.FilterGroup>();
         List<Filter_Group__mdt> allExistingGroups = CMT_FilterRule_SEL.getFilterGroups();
@@ -729,7 +745,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * @param List<Rollup> the default Rollups (wrapper classes)
      * @return List<Rollup> defined Rollup wrapper classes
      */
-    private static List<CRLP_RollupCMT.Rollup> softDeleteExtraRollups(List<CRLP_RollupCMT.Rollup> rollups) {
+    private List<CRLP_RollupCMT.Rollup> softDeleteExtraRollups(List<CRLP_RollupCMT.Rollup> rollups) {
 
         List<CRLP_RollupCMT.Rollup> rollupsToSoftDelete = new List<CRLP_RollupCMT.Rollup>();
 
@@ -761,7 +777,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * maps defined in the CRLP_DefaultConfigBuilder class.
      * @return List<Rollup> defined Rollup wrapper classes
      */
-    private static List<CRLP_RollupCMT.Rollup> buildDefaultRollups() {
+    private List<CRLP_RollupCMT.Rollup> buildDefaultRollups() {
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
 
         String gauObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')).getName();
@@ -853,7 +869,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * @description Convert any existing NPSP User Defined Rollups to the new CMT format
      * @return List<Rollup> defined Rollup wrapper classes
      */
-    private static List<CRLP_RollupCMT.Rollup> buildUserDefinedRollups() {
+    private List<CRLP_RollupCMT.Rollup> buildUserDefinedRollups() {
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
 
         Map<String, String> convertUDROperationMap = new Map<String, String>{
@@ -922,7 +938,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * @param rtIds semi-colon separatedlist of Record Type Id's
      * @return Semi-colon separated list of Record Type Developer Names
      */
-    private static String convertRecordTypeIdsToDevNames(String rtIds) {
+    private String convertRecordTypeIdsToDevNames(String rtIds) {
         Set<String> rtDevNames = new Set<String>();
         if (rtIds != null) {
             for (String rtId : rtIds.split(';')) {
@@ -941,7 +957,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * @param objFieldData Object.Field (or just Object).
      * @return Object.Field with applied npsp namespace where necessary
      */
-    private static String applyNameSpaceToObjectField(String objFieldData) {
+    private String applyNameSpaceToObjectField(String objFieldData) {
         if (objFieldData == null) {
             return null;
         } else if (objFieldData.contains('.')) {
@@ -956,35 +972,35 @@ public class CRLP_DefaultConfigBuilder_SVC {
     /**
      * @description Builds semi-colon delimited string of membership record type names from household custom settings
      */
-    private static String buildMembershipRecordTypeDeveloperNames() {
+    private String buildMembershipRecordTypeDeveloperNames() {
         return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c);
     }
 
     /**
      * @description Builds semi-colon delimited string of record type names excluded from accounts from household custom settings
      */
-    private static String buildAccountExcludedRecordTypesDeveloperNames() {
+    private String buildAccountExcludedRecordTypesDeveloperNames() {
         return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
     }
 
     /**
      * @description Builds semi-colon delimited string of record type names excluded from contacts from household custom settings
      */
-    private static String buildContactExcludedRecordTypesDeveloperNames() {
+    private String buildContactExcludedRecordTypesDeveloperNames() {
         return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
     }
 
     /**
      * @description Builds semi-colon delimited string of record type names excluded from allocations
      */
-    private static String buildAllocationsExcludedRecordTypesDeveloperNames() {
+    private String buildAllocationsExcludedRecordTypesDeveloperNames() {
         return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c);
     }
 
     /**
      * @description Builds semi-colon delimited string of record type developer names from semi-colon delimited Ids
      */
-    private static String buildRecordTypeNames(String recordTypeIds){
+    private String buildRecordTypeNames(String recordTypeIds){
         return String.isEmpty(recordTypeIds) ? null : convertRecordTypeIdsToDevNames(recordTypeIds);
     }
 }
