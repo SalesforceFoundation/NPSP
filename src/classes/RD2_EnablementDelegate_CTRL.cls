@@ -228,8 +228,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the enhanced Recurring Donation enablement user action. Automatically set Enable confirmation
-    * when no legacy RD exists since the confirmation is not applicable on a simple enablement page version.
+    * @description Tracks the enhanced Recurring Donation enablement user action.
+    * When the org does not have any RD record, a simple enablement page version is displayed,
+    * and enablement will automatically set Enable Confirmation checkbox required
+    * for the next metadata deploy step.
     * @return void
     */
     @AuraEnabled
@@ -246,8 +248,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
 
         try {
-            saveRD2Enablement();
-            System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
+            Boolean shouldRescheduleJobs = true;
+            enableEnhancement(shouldRescheduleJobs);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
@@ -256,31 +258,44 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
 
     /***
-    * @description enable enhanced recurring donation based on the callable Api request
-    * @return Id Batch Job Id
+    * @description Enables enhanced Recurring Donation feature from the callable API
+    * @return void
     */
-    public static String callableApiEnableEnhancement(Boolean rescheduleBatchJobs) {
-
-        String jobId;
-
+    public static void callableApiEnableEnhancement(Boolean rescheduleBatchJobs) {
         if (!STG_Panel.runningUserIsAdmin()) {
             throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_EnablementPermissionRequired);
         }
-        EnablementState state = getEnablementState();
 
-        if (!isCrlpEnabled()) {
+        Boolean isCrlpEnabled = new CRLP_ApiService().isCrlpEnabled();
+        if (!isCrlpEnabled) {
             throw new EnablementException(System.Label.CRLP_DisabledMessage);
         }
-        if (state.isEnabled) {
-            throw new EnablementException(System.Label.RD2_HaveAlreadyBeenEnabled);
+
+        if (service.isRecurringDonations2Enabled()) {
+            throw new EnablementException(System.Label.RD2_EnabledErrorMessage);
         }
 
-        saveRD2Enablement();
+        enableEnhancement(rescheduleBatchJobs);
+    }
 
-        if (rescheduleBatchJobs) {
-           jobId = System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
+    /***
+    * @description Enables enhanced Recurring Donations feature.
+    * Processes the NPSP Settings telemetry type asynchronously.
+    * Reschedules scheduled jobs if they should be rescheduled.
+    * @param shouldRescheduleJobs Indicates if scheduled jobs should be rescheduled
+    * @return void
+    */
+    private static void enableEnhancement(Boolean shouldRescheduleJobs) {
+        STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
+
+        if (!Test.isRunningTest()) {
+            upsert STG_Panel.stgService.stgRD;
+            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
         }
-        return jobId;
+
+        if (shouldRescheduleJobs) {
+            System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
+        }
     }
 
     /***
@@ -454,18 +469,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
-        }
-    }
-
-    /***
-    * @description save the enablement of recurring donations
-    */
-    private static void saveRD2Enablement() {
-        STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
-
-        if (!Test.isRunningTest()) {
-            upsert STG_Panel.stgService.stgRD;
-            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
         }
     }
 

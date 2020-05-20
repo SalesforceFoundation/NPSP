@@ -556,15 +556,14 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /**
-     * @description Verifies Enhanced Recurring Donations is enabled when crlp is enabled and
-     * when enhancement is done via "callableApiEnableEnhancement()"
+     * @description Verifies RD2 can be enabled via the Callable API request
      */
     @IsTest
     private static void callableApiShouldEnableRD2WhenCrlpIsEnabled() {
         RD2_EnablementService_Test.setCustomizableRollups(true);
 
         Test.startTest();
-        String jobId = RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
+        RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
         Test.stopTest();
 
         System.assertEquals(true,  STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c,
@@ -581,7 +580,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Exception actualException;
         try {
             Test.startTest();
-            String jobId = RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
+            RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
             Test.stopTest();
 
         } catch (Exception e) {
@@ -609,7 +608,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.runAs(readOnlyUser) {
             try {
                 Test.startTest();
-                Id jobId = RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
+                RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
                 Test.stopTest();
 
             } catch (Exception e) {
