@@ -19,6 +19,7 @@ Create Clone and Delete Template
     [tags]                                    feature:GE                    W-039556   
     #Create Template                             
     Go To Page                                Custom                        GE_Gift_Entry
+    Click Link                                Templates
     Click Gift Entry Button                   Create Template
     Wait Until Page Contains                  Gift Entry Template Information
     Enter Value In Field
@@ -28,7 +29,8 @@ Create Clone and Delete Template
     Click Gift Entry Button                   Next: Batch Header
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Custom                        GE_Gift_Entry
-    Page Should Contain                       ${template}
+    Click Link                                Templates
+    Wait Until Page Contains                  ${template}
     Store Template Record Id                  ${template}
     
     #Clone Template
@@ -38,7 +40,8 @@ Create Clone and Delete Template
     Enter Value In Field                      Template Name=${new_template}
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Custom                        GE_Gift_Entry
-    Page Should Contain                       ${new_template}
+    Click Link                                Templates
+    Wait Until Page Contains                  ${new_template}
     
     #Delete Template
     Select Template Action                    ${new_template}               Delete
