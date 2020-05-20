@@ -231,15 +231,13 @@ export default class rdEntryForm extends LightningElement {
     */
     handleSubmit(event){
         this.isLoading = true;
+        this.template.querySelector("[data-id='submitButton']").disabled = true;
+
         event.preventDefault();
         const fields = event.detail.fields;
         this.template.querySelector('lightning-record-edit-form').submit(fields);
-        this.template.querySelector("[data-id='submitButton']").disabled = true;
     }
 
-    handleLoad(event) {
-        this.isLoading = false;
-    }
     /*******************************************************************************
     * @description Handle error
     */
