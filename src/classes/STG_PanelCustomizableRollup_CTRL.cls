@@ -85,35 +85,27 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public String jobId { get; private set; }
 
     /*******************************************************************************************************
-    * @description Overridden Action Method to put the current page into Edit mode and cache the existing setting
+    * @description Enable Customizable Rollups by starting the custom metadata deployment
     * @return null
     */
     public PageReference enableCRLPs() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+
         Savepoint sp = Database.setSavepoint();
         try {
-            // check for existing Rollup__mdts
-            List<Rollup__mdt> existingRollups = CRLP_Rollup_SEL.cachedRollups;
-            if (existingRollups.size() == 0) {
-                // only do the deployment here if they've never deployed before
-                isPolling = true;
-                jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
-                if (Test.isRunningTest()) {
-                    jobId = '123';
-                }
-            } else {
-                // there are existing rollups. just save the setting and reschedule jobs, don't deploy.
-                STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
-                stgService.saveAll();
-                UTIL_MasterSchedulableHelper.setScheduledJobs();
-                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
-            }
+            this.isPolling = true;
+            this.jobId = new CRLP_EnablementService().enable(true);
+            STG_Panel.stgService.reset(STG_Panel.stgService.stgCRLP);
+
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            isPolling = false;
         }
+        if (this.jobId == null) {
+            this.isPolling = false;
+        }
+
         return null;
     }
 
@@ -123,19 +115,21 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     */
 
     public PageReference resetRollupsToDefaultConfig() {
-        isPolling = true;
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+
         Savepoint sp = Database.setSavepoint();
         try {
-            jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
-            if (Test.isRunningTest()) {
-                jobId = '123';
-            }
+            this.isPolling = true;
+            this.jobId = new CRLP_EnablementService().reset();
+            STG_Panel.stgService.reset(STG_Panel.stgService.stgCRLP);
+
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            isPolling = false;
+        }
+        if (this.jobId == null) {
+            this.isPolling = false;
         }
         return null;
     }
@@ -146,21 +140,19 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     * @return void
     */
     public PageReference disableCRLPs() {
+        isPolling = false;
 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         Savepoint sp = Database.setSavepoint();
         try {
-            STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = false;
-            stgService.saveAll();
-            // reset to legacy jobs
-            UTIL_MasterSchedulableHelper.setScheduledJobs();
-            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+            new CRLP_EnablementService().disable();
+            STG_Panel.stgService.reset(STG_Panel.stgService.stgCRLP);
+
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            isPolling = false;
             Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
         }
@@ -171,7 +163,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     * @description Action Method to navigate to separate VF page that contains custom CMDT UI in Lightning Components
     * @return void
     */
-    public PageReference navigate(){
+    public PageReference navigate() {
         PageReference rollupGrid = new PageReference('/apex/CRLP_RollupSetup');
         rollupGrid.setRedirect(true);
         return rollupGrid;
@@ -184,20 +176,19 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public PageReference checkDeploymentStatus() {
         Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         String newStatus = crlpSettings.CMT_API_Status__c;
+
         // Make sure we have a response and it's the new response.
-        if(!String.isEmpty(newStatus) && newStatus.contains(jobId)){
-            isPolling = false;
-            if (newStatus.contains('Succeeded')) {
-                // reset to CRLP jobs
-                UTIL_MasterSchedulableHelper.setScheduledJobs();
-                return null;
-            } else {
-                crlpSettings.Customizable_Rollups_Enabled__c = false;
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
-                return null;
-            }
-        } else {
+        if (String.isEmpty(newStatus) || !newStatus.contains(jobId)) {
             return null;
         }
+
+        isPolling = false;
+
+        // The deployment job did not succeed
+        if (!newStatus.contains(CMT_MetadataAPI.DEPLOYMENT_SUCCESS_TEXT)) {
+            crlpSettings.Customizable_Rollups_Enabled__c = false;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
+        }
+        return null;
     }
 }
