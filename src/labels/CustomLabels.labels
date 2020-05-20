@@ -11145,7 +11145,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgLabelNone</shortDescription>
+        <shortDescription>--None-- picklist value</shortDescription>
         <value>--None--</value>
     </labels>
     <labels>
