@@ -1610,14 +1610,6 @@
         <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
     <labels>
-        <fullName>RD2_EnabledErrorMessage</fullName>
-        <categories>Recurring-Donations, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>You already have RD2 enabled</shortDescription>
-        <value>You already have Enhanced Recurring Donations Enabled.</value>
-    </labels>
-    <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

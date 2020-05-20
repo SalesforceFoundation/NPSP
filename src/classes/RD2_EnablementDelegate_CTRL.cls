@@ -262,10 +262,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             throw new EnablementException(System.Label.CRLP_DisabledMessage);
         }
 
-        if (service.isRecurringDonations2Enabled()) {
-            throw new EnablementException(System.Label.RD2_EnabledErrorMessage);
-        }
-
         enableEnhancement(rescheduleBatchJobs);
     }
 

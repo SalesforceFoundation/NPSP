@@ -842,7 +842,7 @@ flows:
                             params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
                         }
                         Callable apiClass = new %%%NAMESPACE%%%Callable_Api();
-                        apiClass.call('settings.enableenhancedrecurringdonations', params);
+                        apiClass.call('Settings.EnableEnhancedRecurringDonations', params);
             2:
                 task: enable_crlp
                 # Enable customizable rollups after enabling RD2
