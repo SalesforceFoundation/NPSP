@@ -39,7 +39,7 @@ private with sharing class Callable_API_TEST {
 
     private static final String TDTM_TRIGGER_ACTION = 'TDTM.DisableAllTriggers';
     private static final String CRLP_IS_ENABLED_ACTION = 'CRLP.iscrlpenabled';
-    private static final String RD2_ENABLE_ACTION = 'settings.enableenhancedrecurringdonations';
+    private static final String RD2_ENABLE_ACTION = 'Settings.EnableEnhancedRecurringDonations';
 
     /*******************************************************************************************************
     * @description verify the TDTM Callable action returns an Object
