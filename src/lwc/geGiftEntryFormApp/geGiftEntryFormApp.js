@@ -647,4 +647,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.total = this.total - event.detail.amount;
     }
 
+    handleCountChanged(event) {
+        this.count = event.detail.value;
+    }
+
+    handleTotalChanged(event) {
+        this.total = event.detail.value;
+    }
+
 }

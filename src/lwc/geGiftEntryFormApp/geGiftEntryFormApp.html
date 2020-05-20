@@ -28,7 +28,9 @@
                     total={total}
                     expected-total={expectedTotalBatchAmount}
                     batch-id={recordId}
-                    onloaddata={handleLoadData}>
+                    onloaddata={handleLoadData}
+                    oncountchanged={handleCountChanged}
+                    ontotalchanged={handleTotalChanged}>
             </c-ge-batch-gift-entry-table>
         </template>
     </template>
