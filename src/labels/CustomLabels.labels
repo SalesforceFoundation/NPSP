@@ -5297,7 +5297,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Count of Gifts</shortDescription>
+        <shortDescription>Label for displaying the number of gifts in the batch</shortDescription>
         <value>Count of Gifts</value>
     </labels>
     <labels>
@@ -5313,7 +5313,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Total Batch Amount</shortDescription>
+        <shortDescription>Label for displaying the total value of the gifts in the batch</shortDescription>
         <value>Total Batch Amount</value>
     </labels>
     <labels>
