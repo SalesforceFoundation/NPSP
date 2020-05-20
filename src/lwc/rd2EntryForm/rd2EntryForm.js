@@ -120,6 +120,7 @@ export default class rdEntryForm extends LightningElement {
         }
 
         if (response.error) {
+            this.isRecordReady = true;
             handleError(response.error);
         }
     }
@@ -184,6 +185,7 @@ export default class rdEntryForm extends LightningElement {
         }
 
         if (response.error) {
+            this.isRecordReady = true;
             handleError(response.error);
         }
     }
@@ -204,6 +206,7 @@ export default class rdEntryForm extends LightningElement {
             this.isSettingReady = true;
         })
         .catch((error) => {
+            this.isSettingReady = true;
             this.handleError(error);
         });
     }
@@ -277,7 +280,7 @@ export default class rdEntryForm extends LightningElement {
         }
 
         this.errorMessage.detail = message;
-        this.isLoading = false
+        this.isLoading = false;
         this.hasError = true;
         this.template.querySelector("[data-id='submitButton']").disabled = false;
     }
