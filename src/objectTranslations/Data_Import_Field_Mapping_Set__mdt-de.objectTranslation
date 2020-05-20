@@ -41,10 +41,10 @@
         <value><!-- Data Import Field Mapping Set --></value>
     </caseValues>
     <fields>
-        <help><!-- The Data Import Object Group that contains this Field Mapping Set. --></help>
-        <label><!-- Data Import Object Mapping Set --></label>
+        <help>Die Datenimport-Objektgruppe, die diesen Feldzuordnungssatz enthält.</help>
+        <label>Datenimport-Objektzuordnungssatz</label>
         <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel><!-- Data Import Field Mapping Sets --></relationshipLabel>
+        <relationshipLabel>Datenimport-Feldzuordnungssätze</relationshipLabel>
     </fields>
     <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>

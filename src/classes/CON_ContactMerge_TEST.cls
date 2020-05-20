@@ -69,6 +69,7 @@ public class CON_ContactMerge_TEST {
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        controller.showContactSearchPage();
         controller.searchText = 'test';
 
         Test.startTest();
@@ -106,7 +107,7 @@ public class CON_ContactMerge_TEST {
         controller.search();
         controller.searchResults[0].selected = true;
         controller.searchResults[1].selected = true; // Select second contact
-        String record1Id = controller.searchResults[1].con.id;
+        String record1Id = controller.searchResults[1].contactRecord.id;
 
         controller.nextStep();
 
@@ -164,6 +165,7 @@ public class CON_ContactMerge_TEST {
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        controller.showContactSearchPage();
         controller.searchText = 'test';
 
         Id[] fixedSearchResults=new Id[2];
@@ -220,7 +222,7 @@ public class CON_ContactMerge_TEST {
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
+        controller.showContactSearchPage();
         controller.searchText = 'test';
 
         Id[] fixedSearchResults=new Id[2];
@@ -271,6 +273,7 @@ public class CON_ContactMerge_TEST {
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[1];
@@ -317,6 +320,7 @@ public class CON_ContactMerge_TEST {
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        controller.showContactSearchPage();
         controller.searchText = 'test';
 
         Id[] fixedSearchResults=new Id[4];
@@ -398,6 +402,7 @@ public class CON_ContactMerge_TEST {
             Test.setCurrentPage(Page.CON_ContactMerge);
             Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
 
+            ctlr.showContactSearchPage();
             ctlr.searchText = 'test';
             //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
             List<Id> fixedSearchResults = new List<Id>{ con.Id, con2.Id };
@@ -469,8 +474,8 @@ public class CON_ContactMerge_TEST {
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
 
-		Contact con2 = UTIL_UnitTestData_TEST.getContact();
-		con2.LastName = '2Contact_forTests_Merge';
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
 
         insert new Contact[] {con, con2};
 
@@ -484,6 +489,7 @@ public class CON_ContactMerge_TEST {
         con = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con.id];
         con2 = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con2.id];
       
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2];
@@ -550,6 +556,7 @@ public class CON_ContactMerge_TEST {
 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
 
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2];
@@ -584,7 +591,7 @@ public class CON_ContactMerge_TEST {
         system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
             system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-	        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
         } else {
             system.assertEquals(0,[select count() from Account where id=:con.accountId]);
             system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
@@ -632,6 +639,7 @@ public class CON_ContactMerge_TEST {
 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
 
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2];
@@ -696,6 +704,7 @@ public class CON_ContactMerge_TEST {
 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
 
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2];
@@ -755,6 +764,7 @@ public class CON_ContactMerge_TEST {
 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
 
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2];
@@ -925,6 +935,7 @@ public class CON_ContactMerge_TEST {
 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
 
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2];
@@ -949,12 +960,239 @@ public class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(1,[select count() from Contact where id=:con.id]);
 
-	    //second contact's account should be deleted
-	    system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+        //second contact's account should be deleted
+        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
 
         system.assertEquals(1,[select count() from Account where id=:con.accountId]);
         //First contact's account id should not have changed
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
 
+    static testMethod void testShowDuplicateRecordSets() {
+        //Create 15 DRS records
+        getDuplicateSetOfRecords(15);
+        CON_ContactMerge_CTRL controller 
+            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        controller.showDuplicateRecordSets();
+        Test.startTest();
+        System.assertEquals(controller.hasDSRObjectReadPermission(), true);
+        
+        Boolean hasNextvalue = controller.hasNext;
+        Boolean hasPreviousValue = controller.hasPrevious;
+        Integer pageNumberValue = controller.pageNumber;
+
+        System.assertEquals(pageNumberValue, 1);
+        System.assertEquals(hasPreviousValue, false);
+        System.assertEquals(hasNextvalue, true);
+        
+        // Test pagination methods
+        controller.lastPage();
+        controller.firstPage();
+        controller.previouspage();
+        controller.nextpage();
+
+        //Asserts to check the results are correct.
+        System.assertEquals(controller.showDRS, true);
+        System.assertEquals(controller.totalPages, 2);
+        System.assertEquals(controller.hasContactObjectDeletePermission(), true, 'Do not have delete permission on DRS');
+        System.assertNotEquals(controller.listDuplicateRecordSets.size(), 0, 'List is empty');
+        
+        Test.stopTest();
+
+    }
+
+    static testMethod void testSelectDRSrecord() {
+        
+        Test.startTest();
+        getDuplicateSetOfRecords(15);  
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller 
+            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        controller.showDuplicateRecordSets();
+        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
+        controller.search(); 
+        System.assertEquals(controller.step, 2);
+        System.assertNotEquals(controller.searchResults.size(), 0 ,'Contact Not found');
+        Test.stopTest();
+    }
+
+    static testMethod void testMergeContact() {
+
+        getDuplicateSetOfRecords(15);        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller 
+            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        Test.startTest();
+        controller.showDuplicateRecordSets();
+        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
+        controller.search(); 
+        // now select  2 contacts from the contactwrapper to proceed for merge
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        Id contactId = controller.searchResults[0].contactRecord.Id; 
+        controller.nextStep();
+        System.assertEquals(controller.selectedRecordsCount, 2);
+        
+        Apexpages.currentPage().getParameters().put('recordId', contactId);
+        controller.selectDefaultRecord();
+        PageReference mergedContact = controller.mergeContacts();
+        PageReference expectedMergedContactPage  = new PageReference('/'+contactId);
+        System.assertEquals(expectedMergedContactPage.getUrl(), mergedContact.getUrl());
+
+        Test.stopTest();
+    }
+    
+    //When one contact is selected on the page
+    static testMethod void testOneContactSelectedToMerge() {
+        
+        getDuplicateSetOfRecords(15);        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller 
+            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        Test.startTest();
+        controller.showDuplicateRecordSets();
+        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
+        controller.search(); 
+        // now select  2 contacts from the contactwrapper to proceed for merge
+        controller.searchResults[0].selected = true;
+        Id contactId = controller.searchResults[0].contactRecord.Id; 
+        controller.nextStep();
+        
+        apexPages.Message[] pageMessages = ApexPages.getMessages();
+        System.assertNotEquals(0, pageMessages.size());
+        Boolean messageFound = false;
+        for (ApexPages.Message message : pageMessages) {
+            if ( message.getSeverity() == ApexPages.Severity.Error
+              && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Few_Contacts) {
+                messageFound = true;
+            }
+        }
+        System.assert(messageFound);
+        //Exception is thrown hence the selectedRecordsCount is not populated.
+        System.assertEquals(controller.selectedRecordsCount, 0 );
+
+        Test.stopTest();
+    }
+
+    //Test if more than 3 contacts are selected for merge
+    static testMethod void testFourContactSelectedToMerge() {
+        
+        DuplicateRule dR = [
+                            SELECT 
+                                Id
+                            FROM 
+                                DuplicateRule
+                            Where
+                                SobjectType = 'Contact'
+                            LIMIT 1
+                            ];
+        Test.startTest();
+        
+        //Create Original Contacts
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        Contact con3 = UTIL_UnitTestData_TEST.getContact();
+        Contact con4 = UTIL_UnitTestData_TEST.getContact();
+        
+        insert new Contact[]{con, con2, con3, con4};
+        
+        //Create Duplicate Record Set
+        List<DuplicateRecordSet> dupRSList = getDuplicateRecordSets(dR.Id , 1);
+        insert dupRSList;
+        
+        //Create Duplicate Record Items
+        List<DuplicateRecordItem> duplicateRecordItems = new List<DuplicateRecordItem>();
+        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con.Id));
+        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con2.Id));
+        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con3.Id));
+        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con4.Id));
+        insert duplicateRecordItems;
+
+        CON_ContactMerge_CTRL controller 
+            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        controller.showDuplicateRecordSets();
+        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
+        controller.search(); 
+        // now select 4 contacts from the contactwrapper to proceed for merge
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        controller.searchResults[2].selected = true;
+        controller.searchResults[3].selected = true;
+        Id contactId = controller.searchResults[0].contactRecord.Id; 
+
+        controller.nextStep();
+        apexPages.Message[] pageMessages = ApexPages.getMessages();
+        System.assertNotEquals(0, pageMessages.size());
+        Boolean messageFound = false;
+        for (ApexPages.Message message : pageMessages) {
+            if ( message.getSeverity() == ApexPages.Severity.Error
+              && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Many_Contacts) {
+                messageFound = true;
+            }
+        }
+        System.assert(messageFound);
+        //Exception is thrown hence the selectedRecordsCount is not populated.
+        System.assertEquals(controller.selectedRecordsCount, 0 );
+
+        Test.stopTest();
+    }
+    
+    //Create the duplicate data for contact
+    public static void getDuplicateSetOfRecords(Integer duplicateRecordSize) {
+        DuplicateRule dR = [
+                            SELECT 
+                                Id
+                            FROM 
+                                DuplicateRule
+                            Where
+                                SobjectType = 'Contact'
+                            LIMIT 1
+                            ];
+        //Create Original Contacts
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(duplicateRecordSize);
+        insert contacts;
+        
+        //Create Duplicate Record Set
+        List<DuplicateRecordSet> dupRSList = getDuplicateRecordSets(dR.Id , duplicateRecordSize);
+        insert dupRSList;
+        
+        //Create Duplicate Contact Records
+        List<Contact> duplicatecontacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(duplicateRecordSize);
+        
+        //Create Duplicate Record Items
+        List<DuplicateRecordItem> duplicateRecordItems = new List<DuplicateRecordItem>();
+
+        Database.DMLOptions insertDML = new Database.DMLOptions(); 
+        insertDML.DuplicateRuleHeader.AllowSave = true; 
+        List<Database.SaveResult> srList  = Database.insert(duplicatecontacts, insertDML);
+        Integer index = 0 ;
+        for (Database.SaveResult sr : srList) {
+            if (sr.isSuccess()) {
+                duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[index].Id , sr.getId()));
+                duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[index].Id , contacts[index].Id));
+            }
+            index = index + 1;
+        }
+        insert duplicateRecordItems;
+    }
+   
+    //Create Duplicate Record Sets
+    public static List<DuplicateRecordSet> getDuplicateRecordSets(Id duplicateRuleId, Integer count) {
+        List<DuplicateRecordSet> drsList = new List<DuplicateRecordSet>();
+        for (Integer i = 0; i < count; i++) {
+            drsList.add(
+                new DuplicateRecordSet(DuplicateRuleId = duplicateRuleId)
+            );
+        }
+        return drsList;
+    }
+
+    //Create Duplicate Record Items
+    public static DuplicateRecordItem getDuplicateRecordItem(Id drsId, Id recordId) {
+        return new DuplicateRecordItem(
+            DuplicateRecordSetId = drsId,
+            RecordId = recordId
+        );
+    }
 }

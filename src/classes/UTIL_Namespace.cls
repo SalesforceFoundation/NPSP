@@ -49,6 +49,12 @@ public class UTIL_Namespace {
     *******************************************************************************************************/
     public static final String HARDCODED_NPSP_NAMESPACE = 'npsp';
 
+    /***
+    * @description Constant value for the Einstein enabled namespace, for checking if the org has
+    * einstein insights platform has been installed or not.
+    */
+    private static final String EINSTEIN_INSIGHTS_NAMESPACE = 'OIQ';
+
     /*******************************************************************************************************
     * @description Finds the namespace for the current context.
     * @return string The current namespace as a string, or a blank string if we're not in a namespaced context.
@@ -249,6 +255,16 @@ public class UTIL_Namespace {
     public static Boolean isCustomerOrg() {
         try {
             return UserInfo.isCurrentUserLicensed(HARDCODED_NPSP_NAMESPACE);
+        } catch (Exception ex) {}
+        return false;
+    }
+
+    /***
+    * @description Returns true if the Einstein insights is currently installed in an org as a managed package
+    */
+    public static Boolean isEinsteinInsightsInstalled() {
+        try {
+            return UserInfo.isCurrentUserLicensed(EINSTEIN_INSIGHTS_NAMESPACE);
         } catch (Exception ex) {}
         return false;
     }

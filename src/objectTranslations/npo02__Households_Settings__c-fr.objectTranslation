@@ -6,8 +6,8 @@
         <name>Matched_Donor_Role__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when setting seasonal address as the mailing address. --></help>
-        <label><!-- Seasonal Address Batch Size --></label>
+        <help>Nombre d’enregistrements par lots à traiter lors de la configuration d&apos;adresse saisonnière en tant qu&apos;adresse postale.</help>
+        <label>Taille du lot d&apos;adresses saisonnières</label>
         <name>Seasonal_Addresses_Batch_Size__c</name>
     </fields>
     <fields>

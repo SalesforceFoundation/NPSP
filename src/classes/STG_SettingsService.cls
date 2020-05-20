@@ -255,6 +255,19 @@ public with sharing class STG_SettingsService {
     }
 
     /*********************************************************************************************************
+    * @description The Data Import Settings object
+    */
+    public Gift_Entry_Settings__c stgGiftEntry {
+        get {
+            if (stgGiftEntry == null) {
+                stgGiftEntry = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+            }
+            return stgGiftEntry;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
     * @description Saves all settings objects to the database
     * @return void
     */

@@ -91,6 +91,11 @@
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
     <fields>
+        <help><!-- This field allows a dynamic number of records for a dynamic number of objects to be created from a single Data Import record. Additional object information is stored here in JSON format. --></help>
+        <label><!-- Additional Object JSON --></label>
+        <name>Additional_Object_JSON__c</name>
+    </fields>
+    <fields>
         <help><!-- The ApexJobID of the Batch Job that processed the record. --></help>
         <label><!-- ApexJobId --></label>
         <name>ApexJobId__c</name>
@@ -301,7 +306,7 @@
     <fields>
         <label><!-- Donation Imported --></label>
         <name>DonationImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel><!-- NPSP Data Imports (Opportunity1 Imported) --></relationshipLabel>
     </fields>
     <fields>
         <label><!-- Donation Amount --></label>
@@ -460,7 +465,7 @@
     <fields>
         <label><!-- Household Account Imported --></label>
         <name>HouseholdAccountImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Household Account Imported) --></relationshipLabel>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
         <label><!-- Household Phone --></label>

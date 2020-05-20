@@ -68,7 +68,7 @@ Schedulable {
     */
     public RD_RecurringDonations_BATCH() {
         query = RD_RecurringDonations.strQueryRDNoWhere();
-        query += ' where npe03__Open_Ended_Status__c = \'' + system.Label.npe03.RecurringDonationOpenStatus + '\'';
+        query += ' where npe03__Open_Ended_Status__c = \'' + RD_Constants.OPEN_ENDED_STATUS_OPEN + '\'';
         RD_RecurringDonations_BATCH.isBatchButton = true;
     }
 

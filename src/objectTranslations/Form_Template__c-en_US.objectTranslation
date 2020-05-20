@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Form Template</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Form Templates</value>
+    </caseValues>
+    <fields>
+        <help><!-- The short description users can enter for a template. --></help>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <help><!-- The version of Gift Entry used to create this template. --></help>
+        <label><!-- Format Version --></label>
+        <name>Format_Version__c</name>
+    </fields>
+    <fields>
+        <help><!-- The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly. --></help>
+        <label><!-- Template JSON --></label>
+        <name>Template_JSON__c</name>
+    </fields>
+    <layouts>
+        <layout>Form Template Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2012,2013,2014 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,72 +13,72 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
 * @date 2013
 * @group Recurring Donations
-* @description Trigger Handler on Opportunity for managing Recurring Donations 
+* @description Trigger Handler on Opportunity for managing Recurring Donations
 */
 public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
-    
+
     /*******************************************************************************************************
     * @description Trigger Handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
     * Needs to see if the Opp is changing to closed, and if it has open RD's, update them.
-    * @param newlist the list of Opportunities from trigger new. 
-    * @param oldlist the list of Opportunities from trigger old. 
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
-    * @param objResult the describe for Opportunity 
-    * @return dmlWrapper. 
+    * @param newlist the list of Opportunities from trigger new.
+    * @param oldlist the list of Opportunities from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @param objResult the describe for Opportunity
+    * @return dmlWrapper.
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
         }
-            
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         DmlWrapper dmlWrapper = new DmlWrapper();
-        
-        set<id> rdIDs = new set<id>();        
+
+        set<id> rdIDs = new set<id>();
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             integer i = 0;
             for (SObject sobj : newlist) {
                 Opportunity o = (Opportunity)sobj;
-                
+
                 // Has the Opportunity's closed state, amount, or recurring donation changed?
                 Opportunity oppOld = (Opportunity)oldlist[i];
-                if (o.isClosed != oppOld.isClosed 
+                if (o.isClosed != oppOld.isClosed
                     || o.Amount != oppOld.Amount
                     || o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c) {
-                    
-                    // If the Recurring Donation has changed, also update the Recurring Donation 
+
+                    // If the Recurring Donation has changed, also update the Recurring Donation
                     // associated with the old (previous) version of the Opportunity
                     if (oppOld.npe03__Recurring_Donation__c != null
                         && o.npe03__Recurring_Donation__c != oppOld.npe03__Recurring_Donation__c) {
                         rdIds.add(oppOld.npe03__Recurring_Donation__c);
                     }
-                
+
                     if (o.npe03__Recurring_Donation__c != null) {
-                        rdIds.add(o.npe03__Recurring_Donation__c);  
+                        rdIds.add(o.npe03__Recurring_Donation__c);
                     }
                 }
                 i++;
-            }                        
+            }
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
@@ -91,23 +91,23 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                     rdIds.add(o.npe03__Recurring_Donation__c);
                 }
                 i++;
-            }                  
-        }           
-        
+            }
+        }
+
         //Get the open label for opps
-        string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
+        string closedLabel = RD_Constants.OPEN_ENDED_STATUS_CLOSED;
         Integer rdcount = 0;
         if (RDids.size() > 0) {
             rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids];
         }
-                                                                                          
-        //recurring donations that need to be updated      
+
+        //recurring donations that need to be updated
         if (rdcount > 0) {
             if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_RecurringDonations_BATCH.isBatchButton) {
-                RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper); 
+                RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper);
             }
             else {
-                RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(rdIds);                                        
+                RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(rdIds);
             }
         }
 

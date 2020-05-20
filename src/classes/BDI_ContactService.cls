@@ -523,13 +523,14 @@ public with sharing class BDI_ContactService {
             String strAnd = '';
 
             if (finderByName.isSoql()) {
-                strAnd = soqlConnector;
 
                 if (isFirstnameInContactMatchRules) {
+                    strAnd = soqlConnector;
                     strSoql += strAnd + 'Firstname IN :setFName ';
                     strAnd = ' AND ';
                 }
                 if (isLastnameInContactMatchRules) {
+                    strAnd = String.isBlank(strAnd) ? soqlConnector : strAnd;
                     strSoql += strAnd + 'Lastname IN :setLName ';
                     strAnd = ' AND ';
                 }

@@ -13,7 +13,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -104,6 +103,23 @@ public with sharing class RD2_Settings {
     public Boolean isCloseActionNoAction() {
         return settings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name();
     }
+    
+    /***
+    * @description Installment Opp Auto Creation Option,
+    * If random string is input, the setting will be default to Always Create Next installment
+    */
+    public String installmentCreateOption {
+        get {
+            if (installmentCreateOption == null) {
+                installmentCreateOption = String.isNotBlank(settings.installmentOppAutoCreateOption__c)
+                    ? settings.installmentOppAutoCreateOption__c
+                    : RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
+            }
+
+            return installmentCreateOption;
+        }
+        private set;
+    }
 
     /***
     * @description Indicates if the first installment can be created on a Recurring Donation
@@ -111,7 +127,9 @@ public with sharing class RD2_Settings {
     public Boolean isFirstInstallmentEnabled {
         get {
             if (isFirstInstallmentEnabled == null) {
-                isFirstInstallmentEnabled = true; //Disable First Installment ? false : true;
+                isFirstInstallmentEnabled =
+                    installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()
+                    && installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
             return isFirstInstallmentEnabled;
         } 
@@ -124,8 +142,10 @@ public with sharing class RD2_Settings {
     public Boolean isNextInstallmentEnabled {
         get {
             if (isNextInstallmentEnabled == null) {
-                isNextInstallmentEnabled = true; //Disable All Installments ? false : true;
+                isNextInstallmentEnabled =
+                    installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
+            
             return isNextInstallmentEnabled;
         } 
         private set;
@@ -137,9 +157,42 @@ public with sharing class RD2_Settings {
     public Boolean isDisableAllInstallments {
         get {
             if (isDisableAllInstallments == null) {
-                isDisableAllInstallments = false; //Disable All Installments ? true : false;
+                isDisableAllInstallments =
+                    installmentCreateOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
             return isDisableAllInstallments;
+        } 
+        private set;
+    }
+
+    /***
+    * @description Specifies number of days before and after the installment Close Date
+    * so it can be matched with an existing Opportunity
+    */
+    public Integer nextDonationDateMatchDays {
+        get {
+            if (nextDonationDateMatchDays == null) {
+                Decimal value = settings.NextDonationDateMatchRangeDays__c;
+
+                nextDonationDateMatchDays = value == null || value < 0
+                    ? RD2_Constants.DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS
+                    : Integer.valueOf(value);
+            }
+            return nextDonationDateMatchDays;
+        }
+        private set;
+    }
+
+    /***
+    * @description Retrieves configuration determining if the fiscal year should be used
+    * for the current/next year value calculations
+    */
+    public Boolean useFiscalYear {
+        get {
+            if (useFiscalYear == null) {
+                useFiscalYear = settings.UseFiscalYearForRecurringDonationValue__c == true;
+            }
+            return useFiscalYear;
         } 
         private set;
     }
@@ -158,5 +211,4 @@ public with sharing class RD2_Settings {
             upsert settings;
         }
     }
-
 }

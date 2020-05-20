@@ -9,15 +9,15 @@
         <value><!-- Deployment Event --></value>
     </caseValues>
     <fields>
-        <label><!-- Completed Date --></label>
+        <label>Datum voltooid</label>
         <name>CompletedDate__c</name>
     </fields>
     <fields>
-        <label><!-- Deployment ID --></label>
+        <label>Implementatie-ID</label>
         <name>DeploymentId__c</name>
     </fields>
     <fields>
-        <label><!-- Status --></label>
+        <label>Status</label>
         <name>Status__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

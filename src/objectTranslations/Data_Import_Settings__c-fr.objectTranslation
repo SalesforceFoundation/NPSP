@@ -24,14 +24,14 @@
         <name>Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
-        <label><!-- CMT API Deployment Result --></label>
+        <help>JSON pour le résultat de déploiement CMT
+{ &quot;jobId&quot; : &quot;response&quot; }</help>
+        <label>Résultat de déploiement de l’API CMT</label>
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help><!-- ID of Custom Metadata deployment --></help>
-        <label><!-- CMT Deployment ID --></label>
+        <help>ID de déploiement des métadonnées personnalisées</help>
+        <label>ID de déploiement CMT</label>
         <name>CMT_Deployment_ID__c</name>
     </fields>
     <fields>
@@ -45,8 +45,8 @@
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The custom metadata api name of the Data Import Field Mapping Set record that should be used by default. --></help>
-        <label><!-- Default Data Import Field Mapping Set --></label>
+        <help>Le nom d&apos;API des métadonnées personnalisées de l&apos;enregistrement Ensemble de mappages de champs d&apos;importation de données qui doit être utilisé par défaut.</help>
+        <label>Ensemble map. champs Imp. données défaut</label>
         <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
@@ -70,8 +70,8 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping. --></help>
-        <label><!-- Field Mapping Method --></label>
+        <help>Définit la méthode de mappage des champs de l&apos;enregistrement Importation de données NPSP avec d&apos;autres objets dans Salesforce. Les options sont Texte d&apos;aide ou Mappage de champs d&apos;importation de données.</help>
+        <label>Méthode de mappage de champs</label>
         <name>Field_Mapping_Method__c</name>
     </fields>
     <fields>

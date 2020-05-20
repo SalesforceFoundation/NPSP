@@ -24,14 +24,14 @@
         <name>Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
-        <label><!-- CMT API Deployment Result --></label>
+        <help>JSON voor het resultaat van CMT-implementatie 
+{ &quot;jobId&quot;: &quot;response&quot; }</help>
+        <label>Resultaat van CMT API-implementatie</label>
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help><!-- ID of Custom Metadata deployment --></help>
-        <label><!-- CMT Deployment ID --></label>
+        <help>Implementatie van ID van aangepaste metagegevens</help>
+        <label>ID van CMT-implementatie</label>
         <name>CMT_Deployment_ID__c</name>
     </fields>
     <fields>
@@ -45,8 +45,8 @@
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The custom metadata api name of the Data Import Field Mapping Set record that should be used by default. --></help>
-        <label><!-- Default Data Import Field Mapping Set --></label>
+        <help>De aangepaste naam van de API voor metagegevens van de record Veldtoewijzingsset voor gegevensimport, die standaard moet worden gebruikt.</help>
+        <label>Standaard veldtoewijzingsset voor gegevensimport</label>
         <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
@@ -70,8 +70,8 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping. --></help>
-        <label><!-- Field Mapping Method --></label>
+        <help>Definieer de manier waarop velden op de record NPSP-gegevensimport worden toegewezen aan andere objecten in Salesforce. De opties zijn Help-tekst of Veldtoewijzing voor gegevensimport.</help>
+        <label>Veldtoewijzingsmethode</label>
         <name>Field_Mapping_Method__c</name>
     </fields>
     <fields>

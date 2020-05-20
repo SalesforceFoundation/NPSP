@@ -34,8 +34,7 @@
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Methods to handle converting data import help text mappings to custom metadata records
 */
-public with sharing class BDI_MigrationMappingUtility {
-
+public without sharing class BDI_MigrationMappingUtility {
     /*******************************************************************************************************
     * @description Metadata queued up for deployment
     */
@@ -90,43 +89,13 @@ public with sharing class BDI_MigrationMappingUtility {
     public static final String HELP_TEXT = 'Help Text';
 
     /*******************************************************************************************************
-    * @description These fields are used to hold information, import status and lookup id, on the newly
-    * created/imported records. The default and migrated field mapping set created by the migration utility
-    * don't need Data Import Field Mappings for these fields because they're now stored in their corresponding
-    * Data Import Object Mapping Custom Metadata Type.
-    */
-    private final Set<String> DATA_IMPORT_IMPORT_FIELDS = new Set<String>{
-        'account1imported__c',
-        'account2imported__c',
-        'account1importstatus__c',
-        'account2importstatus__c',
-        'contact1imported__c',
-        'contact1importstatus__c',
-        'contact2imported__c',
-        'contact2importstatus__c',
-        'donationcampaignimported__c',
-        'donationcampaignimportstatus__c',
-        'donationimported__c',
-        'donationimportstatus__c',
-        'gau_allocation_1_import_status__c',
-        'gau_allocation_1_imported__c',
-        'gau_allocation_2_import_status__c',
-        'gau_allocation_2_imported__c',
-        'homeaddressimported__c',
-        'homeaddressimportstatus__c',
-        'householdaccountimported__c',
-        'opportunity_contact_role_1_imported__c',
-        'opportunity_contact_role_2_imported__c',
-        'paymentimported__c',
-        'paymentimportstatus__c'
-    };
-
-    /*******************************************************************************************************
     * @description These are known standard Help Text mappings that could be picked up by the migration
     * utility as bad help text mappings and need to be skipped
     */
     private final Set<String> HELP_TEXT_EXCEPTIONS = new Set<String>{
-        'The role that the Opportunity Contact Role should be created with.  For example enter \'Soft Credit\' to create a soft credit opportunity contact role.'
+        'The role that the Opportunity Contact Role should be created with.  For example enter \'Soft Credit\' '+
+                'to create a soft credit opportunity contact role.',
+            'Indicates the type of transaction.'
     };
 
     /*******************************************************************************************************
@@ -165,7 +134,7 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description List of BDI_FieldMappingHelpText.DataImportFieldMappings built from good help text mappings
+    * @description List of BDI_MappingServiceHelpText.DataImportFieldMappings built from good help text mappings
     */
     public List<DataImportFieldMapping> dataImportFieldMappings = new List<DataImportFieldMapping>();
 
@@ -383,14 +352,13 @@ public with sharing class BDI_MigrationMappingUtility {
 
             String unnamespacedDIFieldName =
                 UTIL_Namespace.alignSchemaNSWithEnvironment(helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
-            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(unnamespacedDIFieldName);
 
             Boolean isException = false;
             if (helpTextFieldMapping.helpText != null) {
                 isException = HELP_TEXT_EXCEPTIONS.contains(helpTextFieldMapping.helpText);
             }
 
-            if (isSkippable || isException) {
+            if (isException) {
                 continue;
             }
 
@@ -403,6 +371,69 @@ public with sharing class BDI_MigrationMappingUtility {
             } else if (helpTextFieldMapping.isPotentialMapping()) {
                 badHelpTextMappings.add(helpTextFieldMapping);
             }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates the corresponding Migrated Custom Field Mapping records
+    * @param defaultFieldMappingDeveloperNames - list of Default Field Mapping records to reference
+    */
+    public void migrateNewDefaultToCustomMetadata(List<String> defaultFieldMappingDeveloperNames) {
+        queuedMetadataTypesForDeploy.clear();
+
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
+                new Map<String, Data_Import_Field_Mapping__mdt>();
+
+        // Collect Migrated Custom Object Mapping developer names
+        Map<String, String> dataImportObjectDeveloperNameByLabel =
+                helper.getDataImportObjectDeveloperNamesByLabel();
+
+        // Collect current Default Field Mapping and Migrated Custom Field Mapping records
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByFieldMappingKey =
+                helper.getFieldMappingStringsBySetDeveloperName(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+        Map<String, Data_Import_Field_Mapping__mdt> migratedFieldMappingsByFieldMappingKey =
+                helper.getFieldMappingStringsBySetDeveloperName(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+        // Collect Default Field Mapping records of interest based on values passed in
+        List<String> referenceFieldMappingKeys = helper.getFieldMappingKeysByDeveloperName(
+                defaultFieldMappingDeveloperNames, DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+
+        for (String key : referenceFieldMappingKeys) {
+            // If there is a match with the Migrated Field Mapping, do nothing
+            if (migratedFieldMappingsByFieldMappingKey.containsKey(key)) {
+                continue;
+                // If no match is found, prepare to create the Migrated Field Mapping records
+            } else {
+                referenceFieldMappingsByStrings.put(key, referenceFieldMappingsByFieldMappingKey.get(key));
+            }
+        }
+
+        // Create and enqueue Migrated Field Mapping records
+        if (referenceFieldMappingsByStrings.size()>0) {
+            for (Data_Import_Field_Mapping__mdt referenceFieldMapping : referenceFieldMappingsByStrings.values()) {
+                Data_Import_Field_Mapping__mdt clone = referenceFieldMapping.clone();
+
+                DataImportFieldMapping fieldMapping = new DataImportFieldMapping(
+                        clone, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+                if (dataImportObjectDeveloperNameByLabel.size()>0) {
+                    // Set Target Object Mapping name
+                    String existingObjectMappingDeveloperName =
+                            dataImportObjectDeveloperNameByLabel.get(fieldMapping.targetObjectMappingLabel);
+                    fieldMapping.setObjectMapping(
+                            existingObjectMappingDeveloperName, fieldMapping.targetObjectMappingLabel);
+                    // Set unique record name
+                    fieldMapping.setRecordName(null, true);
+                    // Set all other values and add to queue
+                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                }
+            }
+        }
+
+        // Deploy new metadata record types
+        if (queuedMetadataTypesForDeploy.size()>0) {
+ 	       CMT_MetadataAPI.deployMetadata(
+                   queuedMetadataTypesForDeploy, new BDI_MigrationMappingUtility.DeploymentCallback());
         }
     }
 

@@ -57,58 +57,58 @@
         <name>Grantmaker__c</name>
     </fields>
     <fields>
-        <help>Der Name des Verwalters von zugewiesenen Spenden des Unternehmens</help>
-        <label>Name d. Verwalters von zugew. Spenden</label>
+        <help>Der Name des Verwalters von übereinstimmenden Schenkungen des Unternehmens</help>
+        <label>Name d. Verwalters v. übereinst. Schenkungen</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
-        <help>Der maximale Betrag, den das Unternehmen jedem einzelnen Geschenk zuweist.</help>
-        <label>Zugewiesener Spendenbetrag maximal</label>
+        <help>Der maximale Betrag, den das Unternehmen mit jeder Schenkung abgleicht.</help>
+        <label>Übereinstimmender Schenkungsbetrag maximal</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
-        <help>Der kleinste Betrag, den das Unternehmen in einer einzelnen Spende zuweist.</help>
-        <label>Zugewiesener Spendenbetrag minimal</label>
+        <help>Der kleinste Betrag, den das Unternehmen mit einer einzelnen Spende abgleicht.</help>
+        <label>Übereinstimmender Mindest-Schenkungsbetrag</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
     <fields>
-        <help>Der maximale Betrag, den das Unternehmen pro Jahr einem Mitarbeiter zuweist</help>
-        <label>Zugew. Jahresspende f. Mitarb. max.</label>
+        <help>Der maximale Betrag, den das Unternehmen pro Jahr mit einem Mitarbeiter abgleicht</help>
+        <label>Übereinst. Schenkung/Jahr f. Mitar. max.</label>
         <name>Matching_Gift_Annual_Employee_Max__c</name>
     </fields>
     <fields>
-        <help>Weitere Hinweise zum Verwalter von zugewiesenen Geschenken im Unternehmen</help>
-        <label>Kommentare zu zugewiesenen Spenden</label>
+        <help>Weitere Hinweise zum Verwalter von übereinstimmenden Schenkungen im Unternehmen</help>
+        <label>Kommentare zu übereinstimmenden Schenkungen</label>
         <name>Matching_Gift_Comments__c</name>
     </fields>
     <fields>
-        <help>Gibt an, dass dies ein Unternehmen ist, das zugewiesene Geschenke anbietet.</help>
-        <label>Unternehmen mit zugewiesenen Geschenken</label>
+        <help>Gibt an, dass dies ein Unternehmen ist, das übereinstimmende Schenkungen anbietet.</help>
+        <label>Unternehmen mit übereinstimmenden Schenkungen</label>
         <name>Matching_Gift_Company__c</name>
     </fields>
     <fields>
-        <help>Die E-Mail-Adresse des Verwalters von zugewiesenen Geschenken im Unternehmen</help>
-        <label>E-Mail zu zugewiesenen Spenden</label>
+        <help>Die E-Mail-Adresse des Verwalters von übereinstimmenden Schenkungen im Unternehmen</help>
+        <label>E-Mail zu übereinstimmenden Schenkungen</label>
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>
-        <help>Das Datum, an dem die Informationen über zugewiesene Geschenke zuletzt aktualisiert wurden</help>
-        <label>Aktualis. Info über zugewies. Geschenke.</label>
+        <help>Das Datum, an dem die Informationen über übereinstimmenden Schenkungen zuletzt aktualisiert wurden</help>
+        <label>Aktualis. Info über übereinst. Schenkungen</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
-        <help>Der Anteil eines Geschenks, den das Unternehmen zuweist</help>
-        <label>Prozentsatz von zugewiesenen Geschenken</label>
+        <help>Der Anteil einer Schenkung, den das Unternehmen abgleicht</help>
+        <label>Prozentsatz von übereinstimmenden Schenkungen</label>
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
-        <help>Die Telefonnummer des Büros des Verwalters von zugewiesenen Geschenken</help>
-        <label>Telefonnummer der zugewiesenen Spende.</label>
+        <help>Die Telefonnummer des Büros des Verwalters von übereinstimmenden Schenkungen</help>
+        <label>Telefonnr. übereinstimmende Schenkung</label>
         <name>Matching_Gift_Phone__c</name>
     </fields>
     <fields>
-        <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für die Zuweisung von Geschenken zu vermerken.</help>
-        <label>Letzter Termin f. Anfr. n. zugew. Spende</label>
+        <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für den Abgleich von Schenkungen zu vermerken.</help>
+        <label>Letzter Termin f. Anfr. n. übereinst. Schenkung</label>
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
@@ -188,11 +188,11 @@
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label>Kommentare zu zugewiesenem Geschenk</label>
+            <label>Kommentare zu übereinstimmender Schenkung</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label>Zugewiesenes Geschenk Details</label>
+            <label>Informationen zu übereinstimmender Schenkung</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -219,6 +219,10 @@
     <webLinks>
         <label>Haushalt verwalten</label>
         <name>Manage_Household</name>
+    </webLinks>
+    <webLinks>
+        <label>Neue Schenkung</label>
+        <name>New_Gift</name>
     </webLinks>
     <webLinks>
         <label>Rollups neu berechnen</label>

@@ -1,0 +1,7 @@
+.THIS.custom-modal .modal-body {
+    padding: 0;
+}
+
+.THIS.custom-modal .slds-progress {
+    max-width: 100%;
+}

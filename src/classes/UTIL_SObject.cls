@@ -60,4 +60,66 @@ public with sharing class UTIL_SObject {
 
         return extractIds(new List<SObject>(records));
     }
+
+    /***
+    * @description Extracts Id type field value for every record in the SObject list
+    * @param records SObject records
+    * @param field SObject field to extract the value for
+    * @return Set<Id>
+    */
+    public static Set<Id> extractId(List<SObject> records, Schema.SObjectField field) {
+        Set<Id> values = new Set<Id>((List<Id>) extractField(List<Id>.Class, records, field.getDescribe().getName()));
+        values.remove(null);
+        return values;
+    }
+
+    /***
+    * @description Extracts String type field value for every record in the SObject list
+    * @param records SObject records
+    * @param field SObject field to extract the value for
+    * @return Set<String>
+    */
+    public static Set<String> extractString(List<SObject> records, Schema.SObjectField field) {
+        return new Set<String>((List<String>) extractField(List<String>.Class, records, field.getDescribe().getName()));
+    }
+
+    /***
+    * @description Extracts Datetime type field value for every record in the SObject list
+    * @param records SObject records
+    * @param field SObject field to extract the value for
+    * @return Set<Datetime>
+    */
+    public static Set<Datetime> extractDatetime(List<SObject> records, Schema.SObjectField field) {
+        return new Set<Datetime>((List<Datetime>) extractField(List<Datetime>.Class, records, field.getDescribe().getName()));
+    }
+
+    /***
+    * @description Extracts Decimal type field value for every record in the SObject list
+    * @param records SObject records
+    * @param field SObject field to extract the value for
+    * @return Set<Decimal>
+    */
+    public static Set<Decimal> extractDecimal(List<SObject> records, Schema.SObjectField field) {
+        return new Set<Decimal>((List<Decimal>) extractField(List<Decimal>.Class, records, field.getDescribe().getName()));
+    }
+
+    /***
+    * @description Extract any type field from a list of same SObjects
+    * @param listType The type of the list field being return
+    * @param records List of SObject record to be extract
+    * @param field String SObject to be extract
+    * @return Object[] an Object of extracted list to be converted to any type of list/set
+    */
+    private static Object[] extractField(Type listType, List<SObject> records, String field) {
+        Object[] pluck  = (Object[]) listType.newInstance();
+        if (records == null || records.isEmpty()) {
+            return pluck;
+        }
+
+        for (SObject record : records) {
+            pluck.add(record.get(field));
+        }
+
+        return pluck;
+    }
 }

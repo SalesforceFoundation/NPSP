@@ -36,29 +36,29 @@
 */
 
 @isTest
-public with sharing class CONV_Account_Conversion_CTRL_TEST {
+private with sharing class CONV_Account_Conversion_CTRL_TEST {
 
-    /*******************************************************************************************************
+    /***
     * @description Envokes a successful run of the controller
     */
-    public static testmethod void testConversionCtrl() {
-
+    @isTest
+    private static void testConversionCtrl() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-        
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test');
         insert c;
-        system.assertEquals(1, [select count() from Account where npe01__One2OneContact__c = :c.id]);
-        String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
-        system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
+        System.assertEquals(1, [select count() from Account where npe01__One2OneContact__c = :c.id]);
+        String HHName = 'Contact ' + System.label.npo02.DefaultHouseholdName;
+        System.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
 
         //add an oppty to the Contact as well
-        Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), Primary_Contact__c = c.Id);
+        Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = System.today(), Primary_Contact__c = c.Id);
         insert o;
-        system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
+        System.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
 
         Test.startTest();
 
@@ -69,7 +69,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         // instantiate the controller
         CONV_Account_Conversion_CTRL controller = new CONV_Account_Conversion_CTRL();
         AsyncApexJob aaj = controller.apexjob;
-        system.assertEquals(null, aaj);
+        System.assertEquals(null, aaj);
         List<SelectOption> testList = controller.getTargetAccountFields();
 
         // convert up everyone
@@ -79,19 +79,21 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         Test.stopTest();
 
         aaj = controller.apexjob;
-        system.assertNotEquals(null, aaj.Id);
-        system.assertEquals('Completed', aaj.Status);
+        System.assertNotEquals(null, aaj.Id);
+        System.assertEquals('Completed', aaj.Status);
         Boolean testBool;
         testBool = CONV_Account_Conversion_CTRL.verifyFieldTypeForIds('garbagefield');
-        system.assertEquals(false, testBool);
+        System.assertEquals(false, testBool);
 
         testBool = CONV_Account_Conversion_CTRL.verifyFieldTypeForIds('Name');
-        system.assert(testBool);
+        System.assert(testBool);
     }
-    /*******************************************************************************************************
+
+    /***
     * @description Envokes the controller and triggers an error state
     */
-    public static testMethod void testConversionCTRLErrorState(){
+    @isTest
+    private static void testConversionCTRLErrorState(){
 
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
@@ -110,14 +112,14 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         Task t = new Task(WhatId = a.Id, OwnerId = u.Id, Status = 'Completed', Subject = 'Other');
         insert t;
 
-        system.assertEquals(u.Id, [select OwnerId from Account where Id = :a.Id].OwnerId);
-        system.assertEquals(u.Id, [select OwnerId from Contact where Id = :c.Id].OwnerId);
-        system.assertEquals(u.Id, [select OwnerId from Task where Id = :t.Id].OwnerId);
+        System.assertEquals(u.Id, [select OwnerId from Account where Id = :a.Id].OwnerId);
+        System.assertEquals(u.Id, [select OwnerId from Contact where Id = :c.Id].OwnerId);
+        System.assertEquals(u.Id, [select OwnerId from Task where Id = :t.Id].OwnerId);
 
         //add an oppty to the Contact as well
-        Opportunity o = new Opportunity(OwnerId = u.Id, Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), Primary_Contact__c = c.Id);
+        Opportunity o = new Opportunity(OwnerId = u.Id, Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = System.today(), Primary_Contact__c = c.Id);
         insert o;
-        system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
+        System.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
 
         User thisUser = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId()];
 
@@ -140,7 +142,45 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
             Test.stopTest();
 
             //assert the warning exists
-            system.assertEquals(true, controller.runCheckErrorState);        
+            System.assertEquals(true, controller.runCheckErrorState);
+        }
+    }
+
+    /***
+    * @description Verifies the check run detects the user is not admin and displays an error message
+    */
+    @isTest
+    private static void shouldDetectUserIsNotAdminWhenValidatingData() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        System.runAs(UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER)) {
+            PageReference pageRef = Page.CONV_Account_Conversion;
+            Test.setCurrentPage(pageRef);
+            CONV_Account_Conversion_CTRL controller = new CONV_Account_Conversion_CTRL();
+
+            controller.runCheck();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.CONV_ConversionAccessDenied);
+        }
+    }
+
+    /***
+    * @description Verifies conversion cannot be started if the user is not admin
+    */
+    @isTest
+    private static void shouldPreventConversionWhenUserIsNotAdmin() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        System.runAs(UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER)) {
+            PageReference pageRef = Page.CONV_Account_Conversion;
+            Test.setCurrentPage(pageRef);
+            CONV_Account_Conversion_CTRL controller = new CONV_Account_Conversion_CTRL();
+
+            controller.convert();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.CONV_ConversionAccessDenied);
         }
     }
 }

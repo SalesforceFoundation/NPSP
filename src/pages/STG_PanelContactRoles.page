@@ -18,7 +18,7 @@
                 <!-- Individual Default OCR -->
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                <apex:outputText value="{!selectedOptionDefaultContactRole}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOCRDR" html-aria-describedby="{!$Component.slOCRDRHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOContactRoles}"/>
                     </apex:selectList>
@@ -32,7 +32,7 @@
                 <!-- Organizational Default OCR -->
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Contact_Role_for_Organizational_Opps__c.Label}" for="slOrgOCRDR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgCon.Contact_Role_for_Organizational_Opps__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputText value="{!selectedOptionOrgDefaultContactRole}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgCon.Contact_Role_for_Organizational_Opps__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOrgOCRDR" html-aria-describedby="{!$Component.slOrgOCRDRHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOContactRoles}"/>
                     </apex:selectList>
@@ -57,7 +57,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="slMDR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgHH.Matched_Donor_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputText value="{!selectedOptionMatchedDonorRole}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgHH.Matched_Donor_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMDR" html-aria-describedby="{!$Component.slMDRHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOContactRoles}"/>
                     </apex:selectList>
@@ -110,7 +110,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}" for="slHMCR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputText value="{!selectedOptionHHMemberContactRole}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMCR" html-aria-describedby="{!$Component.slHMCRHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOOppContactRoles}"/>
                     </apex:selectList>
@@ -138,7 +138,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.Label}" for="slHonoreeRole" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputText value="{!selectedOptionHonoreeContactRole}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgCon.Honoree_Opportunity_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHonoreeRole" html-aria-describedby="{!$Component.slHonoreeRoleHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOOppContactRoles}"/>
                     </apex:selectList>
@@ -150,7 +150,7 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Notification_Recipient_Opp_Contact_Role__c.Label}" for="slNotificationRecipientRole" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputText value="{!selectedOptionNotficationRecipientRole}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slNotificationRecipientRole" html-aria-describedby="{!$Component.slNotificationRecipientRoleHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!listSOOppContactRoles}"/>
                     </apex:selectList>

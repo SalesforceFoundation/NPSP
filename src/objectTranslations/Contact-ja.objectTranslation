@@ -191,6 +191,10 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
+        <label>新規支援</label>
+        <name>New_Gift</name>
+    </webLinks>
+    <webLinks>
         <label>積み上げ集計の再計算</label>
         <name>Recalculate_Rollups</name>
     </webLinks>

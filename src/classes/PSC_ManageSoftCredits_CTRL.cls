@@ -60,6 +60,21 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description temporary Opp to hold the current Total Soft Credit Amount and currency
     */
     public Opportunity oppTotalSoftCredit {
@@ -208,13 +223,30 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Verifies the user has Create/Edit/Delete permissions for Partial Soft Credits.
+    * @description Verifies the user has Create/Edit/Delete permissions for Partial Soft Credits object
+    * and both view and edit permission on all relevant fields.
     * @return true when the user has the appropriate access
     */
     private Boolean getCurrentUserHasAccess() {
-        return Schema.SObjectType.Partial_Soft_Credit__c.isCreateable()
-            && Schema.SObjectType.Partial_Soft_Credit__c.isUpdateable()
-            && Schema.SObjectType.Partial_Soft_Credit__c.isDeletable();
+        Boolean accessResult = false;
+
+        SObjectType psc = Partial_Soft_Credit__c.getSObjectType();
+        if (perms.canCreate(psc) && UTIL_Permissions.canDelete(Schema.SObjectType.Partial_Soft_Credit__c.getName(), false)) {
+            Set<SObjectField> sObjectFieldsRead = new Set<SObjectField>{
+                Partial_Soft_Credit__c.fields.Amount__c,
+                Partial_Soft_Credit__c.fields.Contact_Name__c,
+                Partial_Soft_Credit__c.fields.Contact_Role_ID__c,
+                Partial_Soft_Credit__c.fields.Role_Name__c
+            };
+            Set<SObjectField> sObjectFieldsModify = sObjectFieldsRead.clone();
+            sObjectFieldsModify.remove(Partial_Soft_Credit__c.fields.Contact_Name__c);
+            if (!(perms.canRead(psc, sObjectFieldsRead) && perms.canUpdate(psc, sObjectFieldsModify))) {
+                return accessResult;
+            }
+            accessResult = true;
+        }
+
+        return accessResult;
     }
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/

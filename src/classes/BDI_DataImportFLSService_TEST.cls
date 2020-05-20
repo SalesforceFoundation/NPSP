@@ -54,7 +54,7 @@ private class BDI_DataImportFLSService_TEST {
                 new List<DataImport__c>{
                         dataImport
                 },
-                BDI_FieldMappingCustomMetadata.getInstance(),
+                BDI_MappingServiceAdvanced.getInstance(),
                 accessLevels
         );
 
@@ -77,13 +77,13 @@ private class BDI_DataImportFLSService_TEST {
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE
         };
 
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Read Only');
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
         System.runAs(readOnlyUser) {
             BDI_DataImportFLSService service = new BDI_DataImportFLSService(
                     new List<DataImport__c>{
                             dataImport
                     },
-                    BDI_FieldMappingCustomMetadata.getInstance(),
+                    BDI_MappingServiceAdvanced.getInstance(),
                     accessLevels
             );
 
@@ -125,7 +125,7 @@ private class BDI_DataImportFLSService_TEST {
         //Process the Data Import record
         BDI_DataImportService dataImportService = new BDI_DataImportService(
                 false,
-                BDI_DataImportService.getDefaultFieldMapping());
+                BDI_DataImportService.getDefaultMappingService());
         dataImportService.process(
                 null,
                 BDI_DataImportService.loadSettings(null),
@@ -145,7 +145,7 @@ private class BDI_DataImportFLSService_TEST {
         System.assertEquals(dataImportService.statusDIFailed(),
                 processedDataImports[0].Status__c);
         System.assert(processedDataImports[0].FailureInformation__c.contains(
-                'You do not have permissions to modify Contact.LastName.'
+                System.Label.flsError.replace('{0}', 'Contact.LastName')
         ), 'The utilPermissionsMockInstance should have reported ' +
                 'the Contact.LastName field as not updateable.');
 
@@ -203,9 +203,9 @@ private class BDI_DataImportFLSService_TEST {
                 CampaignMember.CampaignId);
         mock.mapField(DataImport__c.Campaign_Member_Status__c, CampaignMember.SObjectType,
                 CampaignMember.Status);
-        BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
-                BDI_FieldMappingCustomMetadata.class, mock);
-        BDI_FieldMappingCustomMetadata.setInstance(stub);
+        BDI_MappingServiceAdvanced stub = (BDI_MappingServiceAdvanced) Test.createStub(
+                BDI_MappingServiceAdvanced.class, mock);
+        BDI_MappingServiceAdvanced.setInstance(stub);
 
         Campaign campaign = new Campaign(Name = 'Test Campaign');
         insert campaign;
@@ -219,7 +219,7 @@ private class BDI_DataImportFLSService_TEST {
                 new List<DataImport__c> {
                         dataImport
                 },
-                BDI_DataImportService.getDefaultFieldMapping(),
+                BDI_DataImportService.getDefaultMappingService(),
                 accessLevels
         );
 

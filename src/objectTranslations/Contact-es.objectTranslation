@@ -91,7 +91,7 @@
     </fields>
     <fields>
         <help>El número de créditos blandos atribuidos a este contacto que se cerraron en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
-        <label>Número créditos blandos en últimos N días</label>
+        <label>Número créd. blandos en últimos N días</label>
         <name>Number_of_Soft_Credits_Last_N_Days__c</name>
     </fields>
     <fields>
@@ -189,6 +189,10 @@
     <webLinks>
         <label>Combinar contactos</label>
         <name>Merge_Contacts</name>
+    </webLinks>
+    <webLinks>
+        <label>Nuevo regalo</label>
+        <name>New_Gift</name>
     </webLinks>
     <webLinks>
         <label>Volver a calcular totales</label>

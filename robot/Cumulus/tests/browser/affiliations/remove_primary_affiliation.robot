@@ -47,7 +47,7 @@ Remove Primary Affiliation for Contact2
     ...                               Edit Primary Affiliation field and delete affiliation to organization account.     
     ...                               Verifies that affiliation to account shows under organization affiliation as former
     ...                               Verifies that on account page contact shows under affiliated contacts as former
-    [tags]                            W-037651                     feature:Affiliations
+    [tags]                            W-037651                     feature:Affiliations    unstable
     Go To Page                        Details                      Contact                 object_id=&{contact2}[Id]
     Select Tab                        Details
     Delete Record Field Value         Primary Affiliation          &{account2}[Name]

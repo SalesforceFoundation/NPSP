@@ -65,7 +65,7 @@
     </fields>
     <fields>
         <help>Kategorisiert den Typ des Aufrufs für diese Opportunity, wie z. B. &quot;Neuer Spender&quot;.</help>
-        <label>Spendenstrategie</label>
+        <label>Schenkungsstrategie</label>
         <name>Gift_Strategy__c</name>
         <picklistValues>
             <masterLabel>New Donor</masterLabel>
@@ -81,31 +81,31 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Das Datum des Unterstützungsbeginns gemäß dem Dokument oder Vertrag, das die unterstützende Organisation gesendet hat</help>
-        <label>Unterstützungsvertragsdatum</label>
+        <help>Das Datum des Beginns der Fördergeldzahlung gemäß dem Dokument oder Vertrag, das die Organisation gesendet hat, die die Fördergelder zahlt</help>
+        <label>Fördergeldvertragsdatum</label>
         <name>Grant_Contract_Date__c</name>
     </fields>
     <fields>
         <help>Verfolgt eindeutige Zahlen, die manchmal von unterstützenden Organisationen zugewiesen werden.</help>
-        <label>Unterstützungsvertragsnummer</label>
+        <label>Fördergeldvertragsnummer</label>
         <name>Grant_Contract_Number__c</name>
     </fields>
     <fields>
-        <label>Enddatum des Unterstützungszeitraums</label>
+        <label>Enddatum des Fördergeldzahlungsszeitraums</label>
         <name>Grant_Period_End_Date__c</name>
     </fields>
     <fields>
-        <label>Startdatum des Unterstützungszeitraums</label>
+        <label>Startdatum des Fördergeldzahlungsszeitraums</label>
         <name>Grant_Period_Start_Date__c</name>
     </fields>
     <fields>
-        <help>Beschreibt die Finanzierungsbereiche der Unterstützung oder Spende. Sie können hier z. B. die Namen des Programms eingeben, auf den sich die Unterstützung oder Spende bezieht.</help>
+        <help>Beschreibt die Finanzierungsbereiche des Fördergelds oder der Spende. Sie können hier z. B. die Namen des Programms eingeben, auf den sich das Fördergeld oder die Spende bezieht.</help>
         <label>Programmbereiche</label>
         <name>Grant_Program_Area_s__c</name>
     </fields>
     <fields>
-        <help>Ein URL, der auf die Unterstützungsanforderungen auf der Website des Geldgebers verweist.</help>
-        <label>Website mit Unterstützungsanforderungen</label>
+        <help>Ein URL, der auf die Fördergeldanforderungen auf der Website des Geldgebers verweist.</help>
+        <label>Website für Fördergeldanforderungen</label>
         <name>Grant_Requirements_Website__c</name>
     </fields>
     <fields>
@@ -126,12 +126,12 @@
     </fields>
     <fields>
         <help>Gibt an, ob der Spender den üblichen Marktpreis für diese Sachspende angegeben hat.</help>
-        <label>Vom Spender angeg. Wert f. d. Sachgesch.</label>
+        <label>Vom Spender angeg. Wert f. d. Sachspende</label>
         <name>In_Kind_Donor_Declared_Value__c</name>
     </fields>
     <fields>
         <help>Der Typ der Sachspende</help>
-        <label>Typ des Sachgeschenks</label>
+        <label>Typ der Sachspende</label>
         <name>In_Kind_Type__c</name>
         <picklistValues>
             <masterLabel>Goods</masterLabel>
@@ -143,24 +143,24 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Gibt an, ob die Unterstützung eine Verlängerung einer früheren Unterstützung ist.</help>
-        <label>Unterstützungserneuerung</label>
+        <help>Gibt an, ob mit dem Fördergeld ein zuvor gezahltes Fördergeld verlängert wird.</help>
+        <label>Fördergeldverlängerung</label>
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
         <help>Nachschlagen im Account-Datensatz des Unternehmens, mit dem diese Spende übereinstimmt.</help>
-        <label>Zugewiesener Spendenaccount</label>
+        <label>Account für übereinstimmende Schenkung</label>
         <name>Matching_Gift_Account__c</name>
-        <relationshipLabel>Zugewiesene Spenden</relationshipLabel>
+        <relationshipLabel>Übereinstimmende Schenkungen</relationshipLabel>
     </fields>
     <fields>
         <help>Der Name des Unternehmens, der diese Spende entspricht.</help>
-        <label>Zugewiesene Spende Arbeitgeber</label>
+        <label>Arbeitgeber der übereinstimmenden Schenkung</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help>Der Status des zugewiesenen Geschenks für diese Spende, wie z. B. &quot;Übermittelt&quot; oder &quot;Empfangen&quot;.</help>
-        <label>Zugewiesener Spendenstatus</label>
+        <help>Der Status der übereinstimmenden Schenkung für diese Spende, wie z. B. &quot;Übermittelt&quot; oder &quot;Empfangen&quot;.</help>
+        <label>Status der übereinstimmenden Schenkung</label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
             <masterLabel>Potential</masterLabel>
@@ -176,10 +176,10 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Nachschlagen im Opportunity-Datensatz für das dieser Spende zugewiesene Geschenk</help>
-        <label>Zugewiesenes Spende</label>
+        <help>Nachschlagen im Opportunity-Datensatz für die mit dieser Spende übereinstimmenden Schenkung</help>
+        <label>Zugewiesene Schenkung</label>
         <name>Matching_Gift__c</name>
-        <relationshipLabel>Zugewiesene Spenden</relationshipLabel>
+        <relationshipLabel>Übereinstimmende Schenkungen</relationshipLabel>
     </fields>
     <fields>
         <help>Das Fälligkeitsdatum der nächsten Lieferung dieser Opportunity (schreibgeschützt).</help>
@@ -224,15 +224,15 @@
         <name>Notification_Recipient_Information__c</name>
     </fields>
     <fields>
-        <help>Der (vom Spender angegebene) Name d. Person, d. über dieses Geschenk benachrichtigt werden soll. Wenn dieses Feld leer bleibt und d. Feld f. d. Kontakt des Benachrichtigungsempfängers einen Wert enthält, wird dieser automatisch von NPSP übertragen.</help>
+        <help>Der (vom Spender angegebene) Name d. Person, d. über diese Schenkung benachrichtigt werden soll. Wenn dieses Feld leer bleibt und d. Feld f. d. Kontakt des Benachrichtigungsempfängers einen Wert enthält, wird dieser automatisch von NPSP übertragen.</help>
         <label>Name des Benachrichtigungsempfängers</label>
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
-        <help>Wenn diese Unterstützung eine Verlängerung einer früheren Unterstützung ist, verwenden Sie dieses Feld, um diesen Datensatz mit der vorherigen Unterstützung zu verknüpfen.</help>
-        <label>Frühere Unterstützungs-/Spenden-Opp.</label>
+        <help>Wenn mit diesem Fördergeld ein zuvor gezahltes Fördergeld verlängert wird, verwenden Sie dieses Feld, um diesen Datensatz mit dem vorherigen Fördergeld zu verknüpfen.</help>
+        <label>Frühere Fördergeld-/Schenkungs-Opp.</label>
         <name>Previous_Grant_Opportunity__c</name>
-        <relationshipLabel>Zugehörige Unterstützungen/Spenden</relationshipLabel>
+        <relationshipLabel>Zugehörige Fördergelder/Schenkungen</relationshipLabel>
     </fields>
     <fields>
         <help>Status, den NPSP beim Erst. e-s Kamp‘mitgl. für den Hauptansprechp. dieser Opp. u. d. prim. Kampagnenqu. verwendet. Leer lassen, wenn die Stand‘einst. a. d. Status &quot;Geantwortet&quot; f. geschl./gew. Opp. u. &quot;Nicht geantwortet&quot; f. sonst. Opp. ges. werden soll.</help>
@@ -285,7 +285,7 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Informationen zum zugewiesenen Geschenk</label>
+            <label>Informationen zur übereinstimmenden Schenkung</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -304,7 +304,7 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Unterstützungsinformationen</label>
+            <label>Fördergeldinformationen</label>
             <section>Grant Information</section>
         </sections>
         <sections>
@@ -334,11 +334,11 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Informationen zum Hauptgeschenk</label>
+            <label>Informationen zur Großspende</label>
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label>Informationen zum zugewiesenen Geschenk</label>
+            <label>Informationen zur übereinstimmenden Schenkung</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -401,7 +401,7 @@
         <name>Email_Acknowledgments</name>
     </webLinks>
     <webLinks>
-        <label>Zugewiesene Geschenke suchen</label>
+        <label>Übereinstimmende Schenkungen suchen</label>
         <name>Find_Matched_Gifts</name>
     </webLinks>
     <webLinks>

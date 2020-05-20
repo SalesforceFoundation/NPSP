@@ -55,15 +55,17 @@ public without sharing class UTIL_FeatureEnablement {
     }
 
     /**
-     * @description public implementation to determine if the RecurringDonations 2.0 (RD2) Pilot
-     * has been enabled in the License Management Org (Wilma) for the current org (by OrgId)
-     * @return Is PilotEnabled FeatureParameter set to true or has been overridden for Scratch Org testing
+     * @description public implementation to determine if the PilotEnabled has been enabled 
+     * in the License Management Org (Wilma) for the current org (by OrgId)
+     * @return Boolean The PilotEnabled FeatureParameter value or its override on the scratch org (if any)
      */
-    public static Boolean isRecurringDonations2PilotEnabled() {
-        Boolean isPilotEnabled = UTIL_FeatureEnablement.getInstance().isEnabled( FeatureName.PilotEnabled.name() );
+    public static Boolean isPilotEnabled() {
+        Boolean isPilotEnabled = UTIL_FeatureEnablement.getInstance().isEnabled(FeatureName.PilotEnabled.name());
+
         if (!isPilotEnabled && UTIL_FeatureEnablement.getInstance().isOverridePilotEnabled()) {
             isPilotEnabled = true;
         }
+
         return isPilotEnabled;
     }
 
@@ -84,10 +86,12 @@ public without sharing class UTIL_FeatureEnablement {
      */
     private Boolean isOverridePilotEnabled() {
         Boolean isPilotOverride = false;
+
         if (UTIL_Namespace.isScratchOrg()) {
             Error_Settings__c errSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
             isPilotOverride = (errSettings.OverrideFeature_PilotEnabled__c == true);
         }
+
         return isPilotOverride;
     }
 }

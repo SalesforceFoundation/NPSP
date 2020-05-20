@@ -236,7 +236,7 @@ private class TDTM_DMLgt200_TEST {
 
         // Create 200+ Opportunity Records
         Date closeDate = Date.Today().addMonths(1);
-        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();        
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
 
         for (Integer n = 0; n < insertCnt; n++) {
@@ -301,7 +301,7 @@ private class TDTM_DMLgt200_TEST {
 
         // Insert the RecurringDonation records
         List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withContact(c.Id)
             .withAmount(100)
             .withInstallmentPeriodMonthly()

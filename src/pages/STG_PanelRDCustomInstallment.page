@@ -72,7 +72,7 @@
                     <apex:repeat var="ci" value="{!stgService.listRDCustomInstallment}" >
                         <tr>
                             <td>
-                                <apex:commandLink id="deleteRDInstallmentPeriod" action="{!deleteCi}" title="{!$Label.stgLinkDelete} {!ci.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deleteRDInstallmentPeriod" action="{!deleteCi}" title="{!$Label.stgLinkDelete} {!ci.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!JSENCODE($Label.stgLabelAreYouSure)}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!ciIdDelete}" name="idDeleteCi" value="{!ci.Id}" />
                                 </apex:commandLink>
                             </td>

@@ -52,22 +52,22 @@
     </fields>
     <fields>
         <help>Die Anzahl der NPSP-Datenimportdatensätze, die bei jedem Batch verarbeitet werden sollen.</help>
-        <label>Batchprozessgröße</label>
+        <label>Batch-Prozessgröße</label>
         <name>Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
-        <label><!-- CMT API Deployment Result --></label>
+        <help>JSON für das CMT-Bereitstellungsergebnis
+{ &quot;jobId&quot;: &quot;response&quot; }</help>
+        <label>CMT-Ergebnis API-Bereitstellung</label>
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help><!-- ID of Custom Metadata deployment --></help>
-        <label><!-- CMT Deployment ID --></label>
+        <help>ID der Bereitstellung benutzerdefinierter Metadaten</help>
+        <label>CMT-Bereitstellungs-ID</label>
         <name>CMT_Deployment_ID__c</name>
     </fields>
     <fields>
-        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Kontakt-Abgleich</help>
+        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Kontaktabgleich</help>
         <label>Benutzerdef. eindeutige Kontakt-Kennung</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
@@ -77,8 +77,8 @@
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The custom metadata api name of the Data Import Field Mapping Set record that should be used by default. --></help>
-        <label><!-- Default Data Import Field Mapping Set --></label>
+        <help>Der Name der API für benutzerdefinierte Felddaten des Datenimport-Feldzuordnungssatzes, die standardmäßig verwendet werden soll.</help>
+        <label>Standard-Datenimport-Feldzuordnungssatz</label>
         <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
@@ -87,7 +87,7 @@
         <name>Donation_Date_Range__c</name>
     </fields>
     <fields>
-        <help>Definiert, wie das Datenimportprogramm, die übereinstimmenden Spende handhaben soll. Sie müssen einen Wert auswählen.</help>
+        <help>Definiert, wie das Datenimportprogramm die Spendenverdopplung handhaben soll. Sie müssen einen Wert auswählen.</help>
         <label>Spendenabgleichsverhalten</label>
         <name>Donation_Matching_Behavior__c</name>
     </fields>
@@ -102,8 +102,8 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping. --></help>
-        <label><!-- Field Mapping Method --></label>
+        <help>Definiert die Weise, in der Felder des NPSP-Datenimport-Datensatzes anderen Objekten in Salesforce zugeordnet werden. Die Optionen sind &quot;Hilfetext&quot; oder &quot;Datenimport-Feldzuordnung&quot;.</help>
+        <label>Methode der Feldzuordnung</label>
         <name>Field_Mapping_Method__c</name>
     </fields>
     <fields>

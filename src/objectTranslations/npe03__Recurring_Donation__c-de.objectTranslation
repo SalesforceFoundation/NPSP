@@ -6,29 +6,38 @@
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <fields>
-        <help><!-- The reason this Recurring Donation was closed. --></help>
-        <label><!-- Closed Reason --></label>
+        <help>Der Grund für die Schließung dieser wiederkehrenden Spende.</help>
+        <label>Grund für Schließung</label>
         <name>ClosedReason__c</name>
         <picklistValues>
             <masterLabel>Card Expired</masterLabel>
-            <translation><!-- Card Expired --></translation>
+            <translation>Karte abgelaufen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Commitment Completed</masterLabel>
+            <translation>Engagement abgeschlossen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Deceased Donor</masterLabel>
-            <translation><!-- Deceased Donor --></translation>
+            <translation>Spender verstorben</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Financial Difficulty</masterLabel>
-            <translation><!-- Financial Difficulty --></translation>
+            <translation>Finanzielle Schwierigkeiten</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Longer Interested</masterLabel>
-            <translation><!-- No Longer Interested --></translation>
+            <translation>Kein Interesse mehr</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Unknown</masterLabel>
-            <translation><!-- Unknown --></translation>
+            <translation>Unbekannt</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>Der Gesamtbetrag der wiederkehrenden Spende für das laufende Kalender- oder Geschäftsjahr (schreibgeschützt). Beinhaltet geschlossene gewonnene Opportunities und zukünftige Ratenzahlungen für den Rest des Jahres.</help>
+        <label>Wert für aktuelles Jahr</label>
+        <name>CurrentYearValue__c</name>
     </fields>
     <fields>
         <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum a. d. ausgew. Tag des Monats. HINWEIS: Wenn &quot;Immer letzten Tag des Monats verwenden&quot; aktiviert ist, ersetzt dies den Wert &quot;Tag des Monats&quot;.</help>
@@ -160,58 +169,71 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
-        <label><!-- Installment Frequency --></label>
+        <help>Die Häufigkeit der Ratenzahlung definiert zusammen mit der Ratenlaufzeit den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
+        <label>Häufigkeit der Ratenzahlung</label>
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
-        <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
-        <label><!-- Payment Method --></label>
+        <help>Der voraussichtliche Gesamtbetrag dieser wiederkehrenden Spende für das nächste Kalender- oder Geschäftsjahr (schreibgeschützt).</help>
+        <label>Wert für nächstes Jahr</label>
+        <name>NextYearValue__c</name>
+    </fields>
+    <fields>
+        <help>Die Zahlungsform für diese wiederkehrende Spende. NPSP kopiert den ausgewählten Wert automatisch in jeden ausgewählten Zahlungsdatensatz.</help>
+        <label>Zahlungsmethode</label>
         <name>PaymentMethod__c</name>
         <picklistValues>
             <masterLabel>ACH/EFT</masterLabel>
-            <translation><!-- ACH/EFT --></translation>
+            <translation>ACH/EFT</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>
-            <translation><!-- Check --></translation>
+            <translation>Scheck</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Credit Card</masterLabel>
-            <translation><!-- Credit Card --></translation>
+            <translation>Kreditkarte</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Default value is Open, meaning a recurring donation with no end date. --></help>
-        <label><!-- Recurring Type --></label>
+        <help>Der Standardwert ist &quot;Offen&quot;, das bedeutet eine wiederkehrende Spende ohne Enddatum.</help>
+        <label>Wiederholungstyp</label>
         <name>RecurringType__c</name>
         <picklistValues>
+            <masterLabel>Fixed</masterLabel>
+            <translation>Festgelegt</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Open</masterLabel>
-            <translation><!-- Open --></translation>
+            <translation>Offen</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date. --></help>
-        <label><!-- Start Date --></label>
+        <help>Das Datum, zu dem die neuen oder aktualisierten Zeitplaninformationen (Betrag, Tag des Monats usw.) für diese wiederkehrende Spende in Kraft treten. Der Standardwert ist das aktuelle Datum.</help>
+        <label>Inkrafttreten</label>
         <name>StartDate__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed. --></help>
-        <label><!-- Status --></label>
+        <help>Zeigt an, ob diese wiederkehrende Spende zurzeit aktiv, vorübergehend ausgesetzt oder geschlossen ist.</help>
+        <label>Status</label>
         <name>Status__c</name>
         <picklistValues>
             <masterLabel>Active</masterLabel>
-            <translation><!-- Active --></translation>
+            <translation>Aktiv</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Closed</masterLabel>
-            <translation><!-- Closed --></translation>
+            <translation>Geschlossen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
-            <translation><!-- Lapsed --></translation>
+            <translation>Erloschen</translation>
         </picklistValues>
     </fields>
+    <quickActions>
+        <label>Wiederkehrende Spende schließen</label>
+        <name>Close_Recurring_Donation</name>
+    </quickActions>
     <quickActions>
         <label>Neue Opportunity</label>
         <name>New_Opportunity</name>

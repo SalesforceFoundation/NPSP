@@ -59,6 +59,11 @@
         <name>Default_Address__c</name>
     </fields>
     <fields>
+        <help><!-- If selected, this address won&apos;t be included in address updates from the NCOA or address verification vendor. --></help>
+        <label><!-- Exclude from Updates --></label>
+        <name>Exclude_from_Updates__c</name>
+    </fields>
+    <fields>
         <label>Postadres</label>
         <name>Formula_MailingAddress__c</name>
     </fields>
@@ -110,6 +115,16 @@
     <fields>
         <label>Straat</label>
         <name>MailingStreet__c</name>
+    </fields>
+    <fields>
+        <help><!-- The most recent date and time the address was evaluated by the NCOA vendor. --></help>
+        <label><!-- NCOA Evaluation Date --></label>
+        <name>NCOA_Evaluation_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The result code form the NCOA vendor. --></help>
+        <label><!-- NCOA Result Code --></label>
+        <name>NCOA_Result_Code__c</name>
     </fields>
     <fields>
         <help>Bewaart het Adres zoals het was vóór de verificatie door een externe dienst, voor het geval er informatie verloren gaat tijdens het verificatieproces.</help>
@@ -496,6 +511,11 @@
         <name>Verification_Status__c</name>
     </fields>
     <fields>
+        <help><!-- The most recent date and time the address was verified. --></help>
+        <label><!-- Verified Date --></label>
+        <name>Verified_Date__c</name>
+    </fields>
+    <fields>
         <help>Geeft aan of het Adres is geverifieerd door een externe dienst voor adresverificatie.</help>
         <label>Geverifieerd</label>
         <name>Verified__c</name>
@@ -503,6 +523,10 @@
     <gender>Neuter</gender>
     <layouts>
         <layout>Address Layout</layout>
+        <sections>
+            <label><!-- Address Verification --></label>
+            <section>Address Verification</section>
+        </sections>
         <sections>
             <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>

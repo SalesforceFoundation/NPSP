@@ -27,7 +27,6 @@ Create Organization Foundation
     ${loc}                                 Get NPSP Locator                      object.field                                Description
     Press Keys                             ${loc}                                Account created with Robot Automation 
     Click Modal Button                     Save
-    Verify Toast Message                   Account "${account_name}" was created.
     Wait Until Modal Is Closed
     Current Page Should Be                 Details                               Account
     ${account_id}                          Save Current Record ID For Deletion   Account
@@ -47,4 +46,4 @@ Create Organization Foundation
     Search Field By Value                  Search this list                      ${account_name}
     Verify Record   	                   ${account_name}
     Change View To                         Household Accounts
-    Page Should Not Contain                ${account_name}
+    Wait Until Page Does Not Contain       ${account_name}

@@ -85,7 +85,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
 
         //blank out the HH
@@ -103,7 +103,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
     }
 
@@ -229,7 +229,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
 
         //blank out the HH
         con.npo02__household__c = null;
@@ -243,7 +243,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
     }
 
     /*********************************************************************************************************
@@ -284,7 +284,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
 
         //blank out the HH
         con.npo02__household__c = null;
@@ -298,7 +298,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
     }
 
     /*********************************************************************************************************
@@ -384,7 +384,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         system.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
 
         //blank out the HH
@@ -402,7 +402,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         system.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
     }
 
@@ -684,7 +684,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(lastname + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
         Test.startTest();
         //blank out the HH
         for(Contact thisContact : createdContacts){
@@ -700,7 +700,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(lastname + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(lastname + CAO_Constants.HH_NAME_SUFFIX,createdContacts[0].npo02__household__r.Name);
     }
 
     /*********************************************************************************************************

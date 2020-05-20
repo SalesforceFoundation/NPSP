@@ -192,4 +192,155 @@ public class BDI_MigrationMappingHelper {
 
         return fieldMappingsBySourceFieldName;
     }
+    /*******************************************************************************************************
+    * @description Queries for Field Mappings to build a collection of strings composed of field values
+    * @param defaultFieldMappingNames = developer names of Default Field Mapping records
+    *        developerName = Field Mapping Set's developer name
+    * @return Collection of Strings composed of Target and Source names
+    */
+    public List<String> getFieldMappingKeysByDeveloperName (
+            List<String> defaultFieldMappingNames, String developerName){
+
+        List<String> fieldMappingKeys = new List<String>();
+
+        Data_Import_Field_Mapping_Set__mdt[] fieldMappingSets = [SELECT
+                Id
+        FROM Data_Import_Field_Mapping_Set__mdt
+        WHERE DeveloperName = :developerName];
+
+        List<Data_Import_Field_Mapping__mdt> referenceFieldMappings = [SELECT
+                Id,
+                DeveloperName,
+                Source_Field_API_Name__c,
+                Target_Field_API_Name__c,
+                Data_Import_Field_Mapping_Set__c,
+                Target_Object_Mapping__r.Object_API_Name__c,
+                Target_OBject_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                Is_Deleted__c
+        FROM Data_Import_Field_Mapping__mdt
+        WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSets[0].Id
+        AND DeveloperName = :defaultFieldMappingNames
+        AND Is_Deleted__c = false];
+
+        for (Data_Import_Field_Mapping__mdt reference : referenceFieldMappings) {
+            if (UTIL_Namespace.shouldAlignNamespace) {
+                reference.Target_Object_Mapping__r.Object_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        reference.Target_Object_Mapping__r.Object_API_Name__c);
+                reference.Target_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        reference.Target_Field_API_Name__c);
+                reference.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        reference.Source_Field_API_Name__c);
+            }
+            fieldMappingKeys.add(
+                    reference.Target_Object_Mapping__r.Object_API_Name__c
+                            + '.'
+                            + reference.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c
+                            + '.'
+                            + reference.Target_Field_API_Name__c
+                            + '.'
+                            + reference.Source_Field_API_Name__c);
+        }
+        return fieldMappingKeys;
+    }
+    /*******************************************************************************************************
+    * @description Queries for default Field Mappings and builds a map of DeveloperName to Field Mapping record
+    * @param  developerName = Field Mapping Set's developer name
+    * @return Collection of Field Mapping by Target and Source names
+    */
+
+    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingStringsBySetDeveloperName(
+            String developerName) {
+
+        Data_Import_Field_Mapping_Set__mdt[] fieldMappingSets = [SELECT Id
+        FROM Data_Import_Field_Mapping_Set__mdt
+        WHERE DeveloperName = :developerName];
+
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappingsBySourceFieldName =
+                new Map<String, Data_Import_Field_Mapping__mdt>();
+
+        if (fieldMappingSets == null || fieldMappingSets.size() == 0) {
+            return fieldMappingsBySourceFieldName;
+        }
+
+        List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT
+                Id,
+                Label,
+                MasterLabel,
+                DeveloperName,
+                Data_Import_Field_Mapping_Set__c,
+                Data_Import_Field_Mapping_Set__r.Label,
+                Data_Import_Field_Mapping_Set__r.DeveloperName,
+                Required__c,
+                Source_Field_API_Name__c,
+                Target_Field_API_Name__c,
+                Target_Object_Mapping__c,
+                Target_Object_Mapping__r.Object_API_Name__c,
+                Target_Object_Mapping__r.DeveloperName,
+                Target_OBject_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                Target_Object_Mapping__r.MasterLabel,
+                Is_Deleted__c
+        FROM Data_Import_Field_Mapping__mdt
+        WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSets[0].Id
+        AND Is_Deleted__c = false];
+
+        String namespace = UTIL_Namespace.getNamespace();
+
+        for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
+            if (UTIL_Namespace.shouldAlignNamespace) {
+                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
+                fieldMapping.Target_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        fieldMapping.Target_Field_API_Name__c);
+                fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        fieldMapping.Source_Field_API_Name__c);
+            }
+            fieldMappingsBySourceFieldName.put(
+                    fieldMapping.Target_Object_Mapping__r.Object_API_Name__c
+                            + '.'
+                            + fieldMapping.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c
+                            + '.'
+                            + fieldMapping.Target_Field_API_Name__c
+                            + '.'
+                            + fieldMapping.Source_Field_API_Name__c,
+                    fieldMapping);
+        }
+
+        return fieldMappingsBySourceFieldName;
+    }
+
+    /*******************************************************************************************************
+    * @description For Migrated Custom Objects, creates a map of Developer Names by Label
+    * @return Collection of Strings of Developer Names by Label
+    */
+    
+    public Map<String, String> getDataImportObjectDeveloperNamesByLabel() {
+
+        Map<String, String> dataImportObjectDeveloperNameByLabel = new Map<String, String>();
+
+        // Gather Migrated Custom Object Mapping records by legacy name
+        Map<String, Data_Import_Object_Mapping__mdt> existingMigratedObjectMappings =
+            getObjectMappingsBySetDeveloperName(
+                    BDI_MigrationMappingUtility.MIGRATED_CUSTOM_OBJECT_MAPPING_SET_RECORD_NAME);
+        Map<String, Data_Import_Object_Mapping__mdt> referenceObjectMappingsByDeveloperName =
+            getObjectMappingsBySetDeveloperName(
+                    BDI_MigrationMappingUtility.DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
+
+        // If Migrated Custom Object Mappings exist
+        if (existingMigratedObjectMappings.size()>0) {
+            // Create a map of Developer Names using Reference Object Mappings as lookup
+            for (String name : referenceObjectMappingsByDeveloperName.keySet()) {
+                String label;
+                String developerName;
+                Data_Import_Object_Mapping__mdt existingMigratedObjectMapping =
+                        existingMigratedObjectMappings.get(name);
+                if (existingMigratedObjectMapping != null){
+                    label = existingMigratedObjectMapping.Label;
+                    developerName = existingMigratedObjectMapping.DeveloperName;
+                }
+
+                dataImportObjectDeveloperNameByLabel.put(label, developerName);
+            }
+        }
+        return dataImportObjectDeveloperNameByLabel;
+    }
 }

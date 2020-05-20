@@ -39,7 +39,6 @@
     */
     confirmEnable: function (component) {
         //disable the current active step so the next step is enabled only on current step success
-        component.set('v.state.hideDryRun', true);
         component.set('v.state.isConfirmed', false);
         this.showSpinner(component, 'enableConfirmSpinner');
         this.clearError(component);
@@ -53,6 +52,7 @@
             const state = response.getState();
 
             if (state === 'SUCCESS') {
+                component.set('v.state.hideDryRun', true);
                 component.set('v.state.isConfirmed', true);
 
             } else if (state === 'ERROR') {
@@ -66,7 +66,7 @@
         $A.enqueueAction(action);
     },
     /****
-    * @description Enables enhanced Recurring Donations 
+    * @description Enables enhanced Recurring Donations
     */
     completeEnable: function (component) {
         //disable the current active step so the next step is enabled only on current step success
@@ -116,7 +116,7 @@
                 component.set('v.metaDeployURL', metaDeployURL);
 
             } else if (state === "ERROR") {
-                component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot');
+                component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/enhanced-recurring-donations');
             }
         });
 
@@ -207,6 +207,7 @@
                 }
 
                 const element = !enablementState.isConfirmed ? 'dryRunJob' : 'dryRun2Job';
+                this.displayElement(component, element);
                 component.find(element).handleLoadBatchJob();
 
             } else if (state === 'ERROR') {
@@ -427,27 +428,36 @@
             return;
         }
 
-        component.set('v.state.hideDryRun', state.isConfirmed);
-
+        let isOutdated = false;
+        let hideDryRun = state.isEnabled || state.isConfirmed;
         let isInProgress = false;
-        let isCompleted = false;
+        let isCompleted = hideDryRun;
         let isCompleted2 = false;
 
-        if (state.isConfirmed) {
-            isCompleted = true;
-        }
         if (state.isMigrationEnabled) {
             component.set('v.migrationProgress', 'runMigrationStep');
+            isCompleted = true;
             isCompleted2 = true;
         }
 
         const batch = component.get("v.dryRunBatch");
         if (batch !== undefined && batch !== null) {
+            const isBatchCompleted = batch.status === 'Completed' && batch.isSuccess;
+
+            isOutdated = batch.completedDaysBetween > state.dryRunLimit;
+            if (isOutdated) {
+                state.isConfirmed = state.isEnabled ? true : false;
+                component.set('v.state.isConfirmed', state.isConfirmed);
+            }
+
+            hideDryRun = state.isEnabled ? true : (state.isConfirmed ? !isOutdated : false);
             isInProgress = batch.isInProgress;
-            isCompleted = state.isConfirmed ? true : batch.status === 'Completed' && batch.isSuccess;
-            isCompleted2 = state.isDryRun2 ? batch.status === 'Completed' && batch.isSuccess : false;
+            isCompleted = state.isEnabled ? true : (isOutdated ? false : isBatchCompleted);
+            isCompleted2 = state.isDryRun2 ? isBatchCompleted : false;
         }
 
+        component.set('v.state.isDryRunOutdated', isOutdated);
+        component.set('v.state.hideDryRun', hideDryRun);
         component.set('v.state.isDryRunInProgress', isInProgress);
         component.set('v.state.isDryRunCompleted', isCompleted);
         component.set('v.state.isDryRun2Completed', isCompleted2);
@@ -577,14 +587,14 @@
         component.set('v.errorMessage', message);
     },
     /**
-     * @description: shows specific spinner 
+     * @description: shows specific spinner
      */
     showSpinner: function (component, element) {
         var spinner = component.find(element);
         $A.util.removeClass(spinner, 'slds-hide');
     },
     /**
-     * @description: hides specific spinner 
+     * @description: hides specific spinner
      */
     hideSpinner: function (component, element) {
         var spinner = component.find(element);

@@ -54,6 +54,7 @@ public class CRLP_Rollup {
     public String detailObject;
     public String amountObject;
     public String amountFieldName;
+    public Schema.DisplayType amountFieldType;
     public String dateObject;
     public String dateFieldName;
     public SoapType dateFieldType;
@@ -135,6 +136,8 @@ public class CRLP_Rollup {
 
         // Don't get the amount field if the operation is a Count
         if (this.amountFieldName == null && rlp.Amount_Field__c != null && rlp.Operation__c != CRLP_Operation.RollupType.Count.name()) {
+            DescribeFieldResult amountField = CRLP_Rollup_SVC.getSObjectFieldDescribe(amountObject, rlp.Amount_Field__r.QualifiedApiName);
+            this.amountFieldType = amountField.getType();
             this.amountFieldName = rlp.Amount_Field__r.QualifiedApiName;
         }
 

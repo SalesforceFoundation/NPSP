@@ -115,7 +115,8 @@ export default class BatchProgress extends LightningElement {
                 className: this.className,
                 status: this.batchJob.status,
                 isInProgress: this.batchJob.isInProgress,
-                isSuccess: isSuccess
+                isSuccess: isSuccess,
+                completedDaysBetween: this.batchJob.completedDaysBetween
             };
 
             const statusChangeEvent = new CustomEvent('statuschange', {

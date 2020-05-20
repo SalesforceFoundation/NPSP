@@ -209,8 +209,8 @@
         <relationshipLabel><!-- Recurring Donation Schedules --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The starting date for this schedule record. --></help>
-        <label><!-- Start Date --></label>
+        <help><!-- The effective date for this schedule record. --></help>
+        <label><!-- Effective Date --></label>
         <name>StartDate__c</name>
     </fields>
     <layouts>

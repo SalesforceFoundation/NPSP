@@ -58,6 +58,21 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private String currencySymbol;
 
     /*******************************************************************************************************
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description Class that stored numbered payment
     */
     public class Payment {
@@ -539,12 +554,30 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Returns true if the user has permissions to access, create and delete npe01__oppPayment__c
+    * and all relevant fields are both readable and modifiable
     * @return Boolean
     */
     private Boolean hasPaymentAccess() {
-        Schema.DescribeSObjectResult paymentDescribe = npe01__oppPayment__c.sObjectType.getDescribe();
+        Boolean accessResult = false;
 
-        return paymentDescribe.isCreateable() && paymentDescribe.isDeletable() && paymentDescribe.isAccessible();
+        SObjectType pmt = npe01__OppPayment__c.getSObjectType();
+        if (perms.canCreate(pmt) && UTIL_Permissions.canDelete(Schema.SObjectType.npe01__oppPayment__c.getName(), false)) {
+            Set<SObjectField> sObjectFields = new Set<SObjectField>{
+                npe01__oppPayment__c.fields.npe01__check_reference_number__c,
+                npe01__oppPayment__c.fields.npe01__paid__c,
+                npe01__oppPayment__c.fields.npe01__payment_amount__c,
+                npe01__oppPayment__c.fields.npe01__payment_date__c,
+                npe01__oppPayment__c.fields.npe01__payment_method__c,
+                npe01__oppPayment__c.fields.npe01__scheduled_date__c,
+                npe01__oppPayment__c.fields.npe01__written_off__c
+            };
+            if (!(perms.canRead(pmt, sObjectFields) && perms.canUpdate(pmt, sObjectFields))) {
+                return accessResult;
+            }
+            accessResult = true;
+        }
+
+        return accessResult;
     }
 
     /*******************************************************************************************************

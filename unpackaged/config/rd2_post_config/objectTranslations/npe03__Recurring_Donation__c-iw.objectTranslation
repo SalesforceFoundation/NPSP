@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>מספר התשלומים.  משמש רק עבור תרומות חוזרות ללא סיום פתוח.</help>
-        <label>Deprecated-תשלומים</label>
-        <name>npe03__Installments__c</name>
-    </fields>
-    <fields>
         <help><!-- Choose Open for an Open-Ended Recurring Donation.  Choose None for a Fixed Length Recurring Donation.  Choose Closed to close a Recurring Donation. --></help>
         <label>Deprecated-מצב סיום פתוח</label>
         <name>npe03__Open_Ended_Status__c</name>

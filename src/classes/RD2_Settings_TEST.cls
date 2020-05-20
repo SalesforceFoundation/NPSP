@@ -13,7 +13,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -176,6 +175,159 @@ public with sharing class RD2_Settings_TEST {
         System.assertEquals(true, settings.isCloseActionClosedLost(), 'Action should be Closed Lost');
     }
 
+     /**
+     * @description Verifies first and next installment creation are enabled
+     * when installment auto-create option is Always Create Next Installment
+     */
+    @IsTest
+    private static void shouldEnableFirstAndNextInstallmentWhenOptionIsAlwaysCreate() {
+        RD2_Settings settings = new RD2_Settings();
+
+        setUpConfiguration(new Map<String, Object>{
+            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()
+        });
+        
+        System.assertEquals(true, settings.isFirstInstallmentEnabled, 'First installment should be enabled');
+        System.assertEquals(true, settings.isNextInstallmentEnabled, 'Next installment should be enabled');
+        System.assertEquals(false, settings.isDisableAllInstallments, 'All installments should not be disabled');
+    }
+
+    /**
+     * @description Verifies first installment creation is disabled but the next is enabled
+     * when installment auto-create option is Disable First Installment on Create
+     */
+    @IsTest
+    private static void shouldDisableFirstButEnableNextInstallmentWhenOptionIsDisableFirst() {
+        RD2_Settings settings = new RD2_Settings();
+
+        setUpConfiguration(new Map<String, Object>{
+            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()
+        });
+
+        System.assertEquals(false, settings.isFirstInstallmentEnabled, 'First installment should not be enabled');
+        System.assertEquals(true, settings.isNextInstallmentEnabled, 'Next installment should be enabled');
+        System.assertEquals(false, settings.isDisableAllInstallments, 'All installments should not be disabled');
+    }
+
+    /**
+     * @description Verifies both first and next installment creation are disabled
+     * when installment auto-create option is Disable All Installments
+     */
+    @IsTest
+    private static void shouldDisableFirstAndNextInstallmentWhenOptionIsDisableAll() {
+        RD2_Settings settings = new RD2_Settings();
+
+        setUpConfiguration(new Map<String, Object>{
+            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()
+        });
+
+        System.assertEquals(false, settings.isFirstInstallmentEnabled, 'First installment should not be enabled');
+        System.assertEquals(false, settings.isNextInstallmentEnabled, 'Next installment should not be enabled');
+        System.assertEquals(true, settings.isDisableAllInstallments, 'All installments should be disabled');
+    }
+
+    /**
+     * @description Verifies both first and next installment creation are enabled
+     * when installment auto-create option is unexpected text
+     */
+    @isTest
+    private static void shouldEnableFirstAndNextInstallmentWhenOptionIsRandomString() {
+        RD2_Settings settings = new RD2_Settings();
+        String randomString = 'ABC';
+
+        setUpConfiguration(new Map<String, Object>{
+            'InstallmentOppAutoCreateOption__c' => randomString
+        });
+        
+        System.assertEquals(true, settings.isFirstInstallmentEnabled, 'First installment should be enabled');
+        System.assertEquals(true, settings.isNextInstallmentEnabled, 'Next installment should be enabled');
+        System.assertEquals(false, settings.isDisableAllInstallments, 'All installments should not be disabled');
+    }
+
+    /**
+     * @description Verifies configured installment Next Donation Date match day range is returned
+     */
+    @IsTest
+    private static void shouldReturnConfiguredNextDonationDateMatchRangeDays() {
+        final Integer nextDonationDateMatchDays = 5;
+
+        setUpConfiguration(
+            new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => nextDonationDateMatchDays }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(nextDonationDateMatchDays, settings.nextDonationDateMatchDays, 
+            'Installment Next Donation Date Match Range Days should match');
+    }
+
+    /**
+     * @description Verifies default installment Next Donation Date match day range is returned
+     * when the field value is not specified
+     */
+    @IsTest
+    private static void shouldReturnDefaultNextDonationDateMatchRangeDaysWhenNull() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => null }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(3, settings.nextDonationDateMatchDays, 
+            'Installment Next Donation Date Match Range Days default should be returned');
+    }
+
+    /**
+     * @description Verifies default installment Next Donation Date match day range is returned
+     * when the field value is not valid
+     */
+    @IsTest
+    private static void shouldReturnDefaultNextDonationDateMatchRangeDaysWhenInvalid() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => -1 }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(3, settings.nextDonationDateMatchDays, 
+            'Installment Next Donation Date Match Range Days default should be returned');
+    }
+
+    /**
+     * @description Verifies configured fiscal year usage is returned
+     */
+    @IsTest
+    private static void shouldReturnTrueWhenConfiguredUseFiscalYearIsChecked() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => true }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(true, settings.useFiscalYear, 
+            'Should use Fiscal Year (if configured) for the current/next year value calculations');
+    }
+
+    /**
+     * @description Verifies configured fiscal year usage is returned
+     */
+    @IsTest
+    private static void shouldReturnFalseWhenConfiguredUseFiscalYearIsUnchecked() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => false }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(false, settings.useFiscalYear, 
+            'Should use Calendar Year for the current/next year value calculations');
+    }
+
+    /**
+     * @description Verifies fiscal year is not used when it is not configured
+     */
+    @IsTest
+    private static void shouldReturnFalseWhenUseFiscalYearIsNotConfigured() {
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(false, settings.useFiscalYear, 
+            'Should use Calendar Year for the current/next year value calculations');
+    }
+
 
 
     // Helpers
@@ -202,5 +354,4 @@ public with sharing class RD2_Settings_TEST {
         UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
     }
-
 }

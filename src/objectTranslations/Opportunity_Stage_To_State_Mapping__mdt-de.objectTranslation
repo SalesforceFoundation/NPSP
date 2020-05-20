@@ -41,21 +41,21 @@
         <value><!-- Opportunity Stage To State Mapping --></value>
     </caseValues>
     <fields>
-        <help><!-- API name of the Opportunity Stage that will be mapped to the state. --></help>
-        <label><!-- Opportunity Stage --></label>
+        <help>API-Name der Opportunity-Phase, die dem Status zugeordnet werden soll.</help>
+        <label>Opportunity-Phase</label>
         <name>Opportunity_Stage__c</name>
     </fields>
     <fields>
-        <help><!-- Valid entries are “Uncommitted”, “Committed”, or “Finalized”. --></help>
-        <label><!-- Opportunity State --></label>
+        <help>Die gültigen Werte sind “Nicht verpflichtet”, “Verpflichtet” oder “Abgeschlossen”.</help>
+        <label>Opportunity-Status</label>
         <name>Opportunity_State__c</name>
         <picklistValues>
             <masterLabel>Committed</masterLabel>
-            <translation><!-- Committed --></translation>
+            <translation>Verpflichtet</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Finalized</masterLabel>
-            <translation><!-- Finalized --></translation>
+            <translation>Abgeschlossen</translation>
         </picklistValues>
     </fields>
     <gender><!-- Neuter --></gender>

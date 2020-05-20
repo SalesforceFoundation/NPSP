@@ -227,12 +227,11 @@ public class CRLP_RollupCMT {
             String valueLabel;
             List<String> rtLabels = new List<String>();
             if (fieldName == 'RecordTypeId') {
-                List<RecordType> rts = [SELECT Id, Name, DeveloperName FROM RecordType WHERE SobjectType = :objectName AND IsActive = true];
-                // TODO: refactor to use this after summer18:
-                // Map<String,Schema.RecordTypeInfo> rtMapByName = d.getRecordTypeInfoByDeveloperName();
+                SObjectType objType = UTIL_Describe.getSObjectType(objectName);
+                Map<String,Schema.RecordTypeInfo> rtMapByDevName = objType.getDescribe().getRecordTypeInfosByDeveloperName();
                 Map<String, String> rtDeveloperNameToName = new Map<String,String>();
-                for (RecordType rt : rts) {
-                    rtDeveloperNameToName.put(rt.DeveloperName, rt.Name);
+                for (String devName : rtMapByDevName.keySet()) {
+                    rtDeveloperNameToName.put(devName, rtMapByDevName.get(devName).getName());
                 }
                 for (String val : value.split(';')) {
                     //val is the RT dev name

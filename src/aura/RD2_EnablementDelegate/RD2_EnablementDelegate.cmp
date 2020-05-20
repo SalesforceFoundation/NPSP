@@ -111,7 +111,7 @@
                     <aura:if isTrue="{! !v.state.hideDryRun }">
                         <lightning:layout horizontalAlign="spread" multipleRows="true">
                             <lightning:layoutItem size="12" flexibility="auto">
-                                <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-end">
+                                <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-end slds-wrap">
                                     <div class="slds-size_3-of-4 slds-p-right_small">
                                         <lightning:formattedRichText value="{!$Label.c.RD2_EnablementDryRunIntro}" />
                                     </div>
@@ -145,13 +145,26 @@
                                             </span>
                                         </div>
                                     </div>
+
+                                    <div class="slds-size_3-of-4 slds-p-right_small">
+                                        <div
+                                            class="{! if(and(v.state.isDryRunOutdated, not(v.state.isDryRunInProgress)), 'slds-p-top_medium', 'slds-hide') }">
+                                            <c:pageNotification severity="info" size="x-small"
+                                                message="{!$Label.c.RD2_EnablementDryRunOutdatedInfo}" />
+                                        </div>
+                                    </div>
                                 </div>
                             </lightning:layoutItem>
 
                             <lightning:layoutItem size="12" padding="horizontal-medium" class="slds-p-top_medium">
-                                <c:batchProgress aura:id="dryRunJob" title="{!$Label.c.RD2_EnablementDryRunBatchTitle}"
-                                    className="RD2_DataMigrationDryRun_BATCH"
-                                    onstatuschange="{!c.handleDryRunStatusChange}" onerror="{!c.handleDryRunError}" />
+                                <div
+                                    class="{! if(and(v.state.isDryRunOutdated, not(v.state.isDryRunInProgress)), 'slds-hide', '') }">
+                                    <c:batchProgress aura:id="dryRunJob"
+                                        title="{!$Label.c.RD2_EnablementDryRunBatchTitle}"
+                                        className="RD2_DataMigrationDryRun_BATCH"
+                                        onstatuschange="{!c.handleDryRunStatusChange}"
+                                        onerror="{!c.handleDryRunError}" />
+                                </div>
                             </lightning:layoutItem>
                         </lightning:layout>
                     </aura:if>

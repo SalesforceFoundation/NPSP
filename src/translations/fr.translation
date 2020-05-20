@@ -149,56 +149,116 @@
         <name>Address_Verification_Limit</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextActive --></label>
+        <label>Actif</label>
         <name>AssistiveTextActive</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextComplete --></label>
+        <label>Terminé</label>
         <name>AssistiveTextComplete</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextError --></label>
+        <label>Expiré</label>
         <name>AssistiveTextError</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextNewWindow --></label>
+        <label>Informations</label>
+        <name>AssistiveTextInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Le lien s&apos;ouvre dans une nouvelle fenêtre</label>
         <name>AssistiveTextNewWindow</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextWarning --></label>
+        <label>Icône Enregistrement</label>
+        <name>AssistiveTextRecordIcon</name>
+    </customLabels>
+    <customLabels>
+        <label>Avertissement</label>
         <name>AssistiveTextWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressCompletedDate --></label>
+        <label>Effectué :</label>
         <name>BatchProgressCompletedDate</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressExtendedStatus --></label>
+        <label>Statut étendu :</label>
         <name>BatchProgressExtendedStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressJobItemsProcessed --></label>
+        <label>Lots traités :</label>
         <name>BatchProgressJobItemsProcessed</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressStatus --></label>
+        <label>Statut :</label>
         <name>BatchProgressStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTimeElapsed --></label>
+        <label>Terminé</label>
+        <name>BatchProgressStatusComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>Effectué avec des erreurs</label>
+        <name>BatchProgressStatusCompleteErrors</name>
+    </customLabels>
+    <customLabels>
+        <label>Erreur</label>
+        <name>BatchProgressStatusError</name>
+    </customLabels>
+    <customLabels>
+        <label>Échoué</label>
+        <name>BatchProgressStatusFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>En attente</label>
+        <name>BatchProgressStatusHolding</name>
+    </customLabels>
+    <customLabels>
+        <label>Préparation en cours</label>
+        <name>BatchProgressStatusPreparing</name>
+    </customLabels>
+    <customLabels>
+        <label>Traitement en cours</label>
+        <name>BatchProgressStatusProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>Mis en file d&apos;attente</label>
+        <name>BatchProgressStatusQueued</name>
+    </customLabels>
+    <customLabels>
+        <label>Arrêté</label>
+        <name>BatchProgressStatusStopped</name>
+    </customLabels>
+    <customLabels>
+        <label>Réussi</label>
+        <name>BatchProgressStatusSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Temps écoulé :</label>
         <name>BatchProgressTimeElapsed</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTimeElapsedDays --></label>
+        <label>jour(s)</label>
         <name>BatchProgressTimeElapsedDays</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTitleRD2DataMigration --></label>
+        <label>Exécution de la migration des données</label>
         <name>BatchProgressTitleRD2DataMigration</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTotalJobItems --></label>
+        <label>Nombre total de lots :</label>
         <name>BatchProgressTotalJobItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Nombre total d&apos;enregistrements :</label>
+        <name>BatchProgressTotalRecords</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrements échoués :</label>
+        <name>BatchProgressTotalRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrements traités :</label>
+        <name>BatchProgressTotalRecordsProcessed</name>
     </customLabels>
     <customLabels>
         <label>Voulez-vous vraiment supprimer ce {0} ?</label>
@@ -740,140 +800,300 @@ Si vous n’êtes pas sûr de savoir comment résoudre ces erreurs, publiez un m
         <name>PageMessagesWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- ProgressMarkerAssistiveTextProgress --></label>
+        <label>Progression :</label>
         <name>ProgressMarkerAssistiveTextProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if value on the amount is valid or not --></label>
+        <label>Saisissez un montant valide. Le montant ne peut pas être égal à zéro, négatif ou vide.</label>
         <name>RD2_AmountMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Installment Period cannot be converted to enhanced Recurring Donation format --></label>
+        <label>Vous ne pouvez pas changer le Compte de foyer ou Contact d&apos;un Don récurrent qui contient des opportunités fermées.</label>
+        <name>RD2_ContactChangeIsRestricted</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous ne pouvez pas définir la devise de l&apos;opportunité sur une devise différente de celle du Don récurrent.</label>
+        <name>RD2_CurrencyChangeIsRestrictedOnOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous ne pouvez pas changer la devise du Don récurrent lorsqu&apos;une opportunité fermée associée existe.</label>
+        <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
+    </customLabels>
+    <customLabels>
+        <label>Planification actuelle</label>
+        <name>RD2_CurrentScheduleTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Dans Paramètres NPSP | Don récurrents, sélectionnez une valeur différente de « No_Action » pour Comp. opp. ouv. sur clôture de don rég. Une fois les données migrées, vous pouvez rétablir la valeur antérieure de ce paramètre.</label>
+        <name>RD2_DataMigrationInvalidCloseAction</name>
+    </customLabels>
+    <customLabels>
+        <label>La Période de versement de don récurrent personnalisée « {0} » ne peut pas être convertie au format Dons récurrents avancés. Assurez-vous que la Période de versement est définie dans Paramètres NPSP -&gt; Dons récurrents -&gt; Périodes de versement de don récurrent personnalisées.</label>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- Open Ended Status cannot be converted to enhanced Recurring Donation format --></label>
+        <label>Le statut de don récurrent sans date de fin « {0} » ne peut pas être converti au format Dons récurrents avancés. Vous devez utiliser l&apos;une des valeurs suivantes : Ouvert, Fermé ou Aucun.</label>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate RD data if day of month is blank when installment is monthly --></label>
+        <label>Vous devez saisir une valeur de Jour du mois lorsque la Période de versement est définie sur Mensuelle.</label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if it is valid day of month --></label>
+        <label>La valeur {0} n&apos;est pas prise en charge pour Jour du mois. Sélectionnez une valeur de 1 à 30 ou Dernier jour du mois.</label>
         <name>RD2_DayOfMonthMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledHeader --></label>
+        <label>&lt;b&gt;AVERTISSEMENT : Vous avez activé les Dons récurrents avancés. Si vous désactivez les Cumuls personnalisables, les cumuls ne fonctionneront plus pour les Dons récurrents.&lt;/b&gt;</label>
+        <name>RD2_DisableCustomizableRollupWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez bientôt terminé ! Il reste quelques éléments à vérifier...</label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledMessage --></label>
+        <label>(1) Si vous n&apos;utilisez pas encore Lightning Experience, cliquez sur Basculer vers Lightning Experience en haut de votre écran.&lt;br/&gt;(2) Activez les Cumuls personnalisables en accédant à Paramètres NPSP | Dons | Cumuls personnalisables.&lt;br/&gt;&lt;br/&gt;Revenez ici pour accéder à la page Mettre à niveau vers les dons récurrents avancés.</label>
         <name>RD2_EnablementDisabledMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableConfirm --></label>
+        <label>Valider la migration</label>
+        <name>RD2_EnablementDryRunBatchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Valider la migration</label>
+        <name>RD2_EnablementDryRunButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Validation effectuée avec succès.</label>
+        <name>RD2_EnablementDryRunComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP simule la migration de vos données existantes vers le modèle Dons récurrents avancés et recherche la présence d&apos;erreurs. Si des erreurs sont détectées, accédez à Paramètres NPSP | Outils système | Journal des erreurs. Après avoir corrigé les erreurs, revenez ici et validez de nouveau la migration. Lorsque la validation ne renvoie aucune erreur, vous pouvez passer à l&apos;étape suivante.&lt;br/&gt;&lt;br/&gt;Le processus de validation peut être long. Vous pouvez quitter cette page et revenir plus tard pour suivre la progression.</label>
+        <name>RD2_EnablementDryRunIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>Prêt à migrer</label>
+        <name>RD2_EnablementDryRunNextButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez procédé à une validation de la migration il y a plus de sept jours. Pour vous assurer que vos données vont être migrées sans erreur, actualisez la page, puis cliquez sur Valider la migration.</label>
+        <name>RD2_EnablementDryRunOutdatedError</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez procédé à une validation de la migration il y a plus de sept jours. Pour vous assurer que vos données vont être migrées sans erreur, cliquez sur Valider la migration.</label>
+        <name>RD2_EnablementDryRunOutdatedInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Passer la validation</label>
+        <name>RD2_EnablementDryRunSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Arrêter la validation</label>
+        <name>RD2_EnablementDryRunStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Valider la migration</label>
+        <name>RD2_EnablementDryRunTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Je confirme que j&apos;ai effectué les tâches de préparation et de validation ci-dessus et que je suis prêt(e) à activer les Dons récurrents avancés.</label>
         <name>RD2_EnablementEnableConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableIntro --></label>
+        <label>Cette étape remplace la logique du processus de Dons récurrents par la logique de Dons récurrents avancés.</label>
         <name>RD2_EnablementEnableIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableMessage --></label>
+        <label>Activer la fonctionnalité Dons récurrents avancés.</label>
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableTitle --></label>
+        <label>Activer les Dons récurrents avancés</label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableWarning --></label>
+        <label>&lt;b&gt;AVERTISSEMENT : NPSP ne permet pas de restaurer la fonctionnalité héritée Dons récurrents.&lt;/b&gt;</label>
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementIntro --></label>
+        <label>Bienvenue ! Les Dons récurrents avancés améliorent la fonctionnalité Dons récurrents de NPSP (Nonprofit Success Pack). Un grand merci aux membres de notre communauté qui ont contribué aux Dons récurrents avancés par leurs avis et conseils éclairés.
+        &lt;br/&gt;&lt;br/&gt;Comme NPSP contient déjà une fonctionnalité Dons récurrents, vous devez exécuter plusieurs tâches de mise à niveau et déplacer vos données existantes vers le modèle Dons récurrents avancés. Nous présentons ci-dessous la procédure à suivre.
+        &lt;br/&gt;&lt;br/&gt;Pour vous aider à préparer chaque étape et répondre à toutes vos questions, nous mettons à votre disposition une &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation sur les Dons récurrents avancés&lt;/a&gt; que vous pouvez suivre pendant tout le processus de mise à niveau.</label>
         <name>RD2_EnablementIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirm --></label>
+        <label>Confirmez que vous avez installé les métadonnées Dons récurrents avancés.</label>
         <name>RD2_EnablementMetaDeployConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirmError --></label>
+        <label>Vous n&apos;avez pas encore installé les métadonnées Dons récurrents avancés. Cliquez sur Lancer MetaDeploy et suivez les instructions.</label>
         <name>RD2_EnablementMetaDeployConfirmError</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployIntro --></label>
+        <label>Utilisez MetaDeploy pour installer de nouvelles métadonnées (valeurs de liste de sélection, texte d’aide, etc.) pour les Dons récurrents avancés. Après avoir installé les métadonnées, revenez à cette page pour continuer la mise à niveau vers les Dons récurrents avancés.</label>
         <name>RD2_EnablementMetaDeployIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunch --></label>
+        <label>Installez les métadonnées des Dons récurrents avancés en utilisant le service MetaDeploy.</label>
         <name>RD2_EnablementMetaDeployLaunch</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunchLinkLabel --></label>
+        <label>Lancer MetaDeploy</label>
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployTitle --></label>
+        <label>Installer les métadonnées Dons récurrents avancés</label>
         <name>RD2_EnablementMetaDeployTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationButton --></label>
+        <label>Exécuter la migration</label>
         <name>RD2_EnablementMigrationButton</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationCompleteMessage --></label>
+        <label>&lt;b&gt;Le processus de mise à niveau est terminé !&lt;/b&gt;&lt;br/&gt;
+        &lt;br/&gt;Avant que votre organisation commence à utiliser les Dons récurrents avancés, procédez comme suit :&lt;br/&gt;
+        &lt;ul&gt;&lt;li&gt;Activez les workflows, processus, règles de validation et déclencheurs que vous avez désactivés avant la mise à niveau.&lt;/li&gt;
+        &lt;li&gt;Attribuez la présentation de page Dons récurrents avancés à tous les profils utilisateur et retirez l&apos;ancienne présentation de page Dons récurrents.&lt;/li&gt;
+        &lt;li&gt;Définissez la page d&apos;enregistrement NPSP Recurring Donation Lightning en tant que page par défaut de l&apos;organisation.&lt;/li&gt;   
+        &lt;li&gt;Attribuez la classe Apex RD2_VisualizeScheduleController à vos profils personnalisés.&lt;/li&gt;    
+        &lt;li&gt;Ajustez la sécurité au niveau des champs Dons récurrents en fonction de vos profils et ensembles d&apos;autorisations.&lt;/li&gt;
+        &lt;li&gt;Adaptez les rapports sur les Dons récurrents à la fonctionnalité Dons récurrents avancés.&lt;/li&gt;
+        &lt;li&gt;Formez vos équipes à la fonctionnalité Dons récurrents avancés.&lt;/li&gt;</label>
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationIntro --></label>
+        <label>L&apos;exécution de votre migration a généré des erreurs qui doivent être corrigées pour réussir la migration. Vous pouvez consulter les erreurs dans Paramètres NPSP &gt; Outils système &gt; Journal des erreurs. Pour obtenir une aide, consultez la &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;. Corrigez les erreurs, puis revenez et réessayez.</label>
+        <name>RD2_EnablementMigrationErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Migrez les données de vos Dons récurrents vers le modèle de données Dons récurrents avancés. Ce processus peut être long. Vous pouvez quitter cette page et revenir plus tard pour suivre la progression.</label>
         <name>RD2_EnablementMigrationIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationTitle --></label>
+        <label>Revenir à la validation</label>
+        <name>RD2_EnablementMigrationSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous pouvez valider de nouveau la migration des données en cliquant sur Valider la migration.</label>
+        <name>RD2_EnablementMigrationStepDryRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Cliquez sur Exécuter la migration pour lancer le processus de migration des données.</label>
+        <name>RD2_EnablementMigrationStepFinal</name>
+    </customLabels>
+    <customLabels>
+        <label>Arrêter la migration</label>
+        <name>RD2_EnablementMigrationStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Exécuter la migration des données</label>
         <name>RD2_EnablementMigrationTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationWarning --></label>
+        <label>&lt;b&gt;AVERTISSEMENT : L&apos;exécution de la migration modifie les données existantes des Dons récurrents pour les adapter au modèle Dons récurrents avancés. Faites une sauvegarde de votre base de données si ce n&apos;est déjà fait.&lt;/b&gt;</label>
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepIntro --></label>
+        <label>Pour éviter tout risque et protéger vos données, avant de lancer la mise à niveau vers les Dons récurrents avancés, exécutez les tâches de préparation suivantes :</label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTasks --></label>
+        <label>&lt;ul&gt;&lt;li&gt;Désactivez les workflows, processus, règles de validation et déclencheurs dans les objets Dons récurrents, Opportunité et Paiement.&lt;/li&gt;
+&lt;li&gt;Sauvegardez votre base de données, notamment tous les Dons récurrents et leurs enregistrements associés.&lt;/li&gt;
+&lt;li&gt;Lisez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; sur les Dons récurrents avancés.&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_EnablementPrepTasks</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTitle --></label>
+        <label>Tâches de préparation</label>
         <name>RD2_EnablementPrepTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- The job can only be executed when Enhanced RD is enabled in the org --></label>
+        <label>Vous devez activer les Dons récurrents avancés avant d&apos;exécuter la tâche de Migration des données des dons récurrents avancés.</label>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- The RD2 Batch job can only be executed when Enhanced RD is enabled --></label>
+        <label>Vous devez activer les Dons récurrents avancés avant d&apos;exécuter la tâche par lots des Dons récurrents avancés.</label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if it is valid install period --></label>
+        <label>La Fréquence de versement est requise. Saisissez une valeur de 1 à 20.</label>
+        <name>RD2_InstallmentFrequencyMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} n&apos;est pas une valeur prise en charge pour la Période de versement. Sélectionnez Quotidienne, Hebdomadaire, 1er et 15e jour du mois, Mensuelle ou Annuelle.</label>
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if contact is not found with HH Account --></label>
+        <label>Le Nombre de versements prévus ne peut pas être inférieur au Nombre de versements payés.</label>
+        <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
+    </customLabels>
+    <customLabels>
+        <label>Le Nombre de versements prévus se rapporte uniquement aux Dons récurrents fixes. Retirez la valeur de Nombre de versements prévus ou définissez le Type de récurrence sur Fixe.</label>
+        <name>RD2_NumberInstallmentsNotAllowedWhenOpen</name>
+    </customLabels>
+    <customLabels>
+        <label>Le Nombre de versements prévus est requis lorsque le Type de récurrence est Fixe.</label>
+        <name>RD2_NumberInstallmentsRequiredWhenFixed</name>
+    </customLabels>
+    <customLabels>
+        <label>Page non disponible</label>
+        <name>RD2_PageNotAvailableHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Cette page n&apos;est pas disponible dans les Dons récurrents avancés. Actualisez votre navigateur et revenez aux Paramètres NPSP.</label>
+        <name>RD2_PageNotAvailableMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Date de fin</label>
+        <name>RD2_ScheduleLWCEndDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Calendrier futur</label>
+        <name>RD2_ScheduleLWCFutureSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>Calendriers actifs</label>
+        <name>RD2_ScheduleLWCTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Date</label>
+        <name>RD2_ScheduleVisualizerColumnDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Ce composant doit être utilisé dans une page d&apos;enregistrement Dons récurrents.</label>
+        <name>RD2_ScheduleVisualizerErrorEnhancedRDNot</name>
+    </customLabels>
+    <customLabels>
+        <label>Pour pouvoir utiliser ce composant, vous devez activer les Dons récurrents avancés.</label>
+        <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucun calendrier actif n&apos;existe pour ce Don récurrent.</label>
+        <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucune opportunité de versement n&apos;est prévue.</label>
+        <name>RD2_ScheduleVisualizerMessageNoSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>Prochains versements</label>
+        <name>RD2_ScheduleVisualizerTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous devez sélectionner un Contact associé à ce Compte de foyer.</label>
         <name>RD_ContactMustBelongToAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if contact and account are missing --></label>
+        <label>Vous devez sélectionner un Compte ou un Contact.</label>
         <name>RD_DonorIsRequired</name>
     </customLabels>
     <customLabels>
         <label>Rafraîchir les opportunités</label>
         <name>RD_ErrorAddDonationHeaderText</name>
+    </customLabels>
+    <customLabels>
+        <label>Le bouton Actualiser les opportunités n&apos;a aucune fonction dans les Dons récurrents avancés. Demandez à votre administrateur de retirer ce bouton des présentations de page Dons récurrents.</label>
+        <name>RD_ErrorAddDonationLimitedToLegacyMode</name>
     </customLabels>
     <customLabels>
         <label>ID de don récurrent manquant. Sélectionnez un enregistrement de don régulier valide.</label>
@@ -884,7 +1104,7 @@ Si vous n’êtes pas sûr de savoir comment résoudre ces erreurs, publiez un m
         <name>RD_ErrorAddDonationPermissionDenied</name>
     </customLabels>
     <customLabels>
-        <label><!-- The legacy RD Batch job cannot be executed when Enhanced RD is enabled --></label>
+        <label>La tâche par lots héritée Dons récurrents ne peut pas être exécutée, car les Dons récurrents avancés sont activés dans cette organisation.</label>
         <name>RD_ErrorLegacyBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
@@ -894,6 +1114,10 @@ Si vous n’êtes pas sûr de savoir comment résoudre ces erreurs, publiez un m
     <customLabels>
         <label>Le montant combiné de toutes les opportunités Clôturées/Gagnées et Promises associées doit correspondre au montant d&apos;un don régulier de longueur fixe.</label>
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Confirmation message displayed to user before the process runs --></label>
+        <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
         <label>Créer une nouvelle relation</label>
@@ -1016,7 +1240,7 @@ Si vous n’êtes pas sûr de savoir comment résoudre ces erreurs, publiez un m
         <name>RecurringDonationAccountAndContactError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Recurring Donation Name Suffix --></label>
+        <label>Récurrent</label>
         <name>RecurringDonationNameSuffix</name>
     </customLabels>
     <customLabels>
@@ -1230,19 +1454,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiAccountCustomIdError</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjChildNotUpdated --></label>
+        <label>Impossible de mettre à jour le champ de référence de cet enregistrement enfant avec l&apos;ID de l&apos;enregistrement parent. L&apos;enregistrement n&apos;a pas pu être mis à jour en raison de cette erreur système :</label>
         <name>bdiAdditionalObjChildNotUpdated</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjPredNotFound --></label>
+        <label>Erreur : enregistrement non créé. Cet enregistrement dépend de {0} qui est introuvable.</label>
         <name>bdiAdditionalObjPredNotFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjRequiredFieldsNull --></label>
+        <label>Erreur : enregistrement non créé, les champs requis suivants sont manquants :</label>
         <name>bdiAdditionalObjRequiredFieldsNull</name>
     </customLabels>
     <customLabels>
-        <label><!-- Data Import Advanced Mapping Summary --></label>
+        <label>Mappage avancé pour Importation de données et Saisie de dons</label>
         <name>bdiAdvancedMapping</name>
     </customLabels>
     <customLabels>
@@ -1326,11 +1550,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiDataImporterDescription</name>
     </customLabels>
     <customLabels>
-        <label>Chaque enregistrement d’importation peut contenir jusqu’à 2 contacts, jusqu’à 2 organisations, une adresse de domicile optionnelle, et un don optionnel.</label>
+        <label>Si vous utilisez le Mappage avancé, vous pouvez mapper n&apos;importe quel objet et champ Salesforce, standard ou personnalisé, directement associé à des Contacts, des Comptes et des Opportunités. Avec le mappage Texte d&apos;aide, chaque enregistrement d&apos;importation peut contenir jusqu&apos;à 2 contacts, 2 organisations, une Adresse de domicile facultative et un Don facultatif.</label>
         <name>bdiDataImporterInfoLine1</name>
     </customLabels>
     <customLabels>
-        <label>Salesforce essaiera de trouver les contacts et organisations existants correspondants et mettre à jour leurs informations, au lieu de créer des enregistrements en doublon.</label>
+        <label>Salesforce essaie de trouver les contacts et organisations existants correspondants et met à jour leurs informations, au lieu de créer des enregistrements en double.</label>
         <name>bdiDataImporterInfoLine2</name>
     </customLabels>
     <customLabels>
@@ -1358,7 +1582,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiDataImporterTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDeploymentInProgress --></label>
+        <label>Les mappages Texte d&apos;aide sont actuellement convertis vers le Mappage avancé.</label>
         <name>bdiDeploymentInProgress</name>
     </customLabels>
     <customLabels>
@@ -1406,15 +1630,15 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiErrorBatchNameRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when updating data import custom settings --></label>
+        <label>Une erreur s&apos;est produite en tentant de mettre à jour les Paramètres personnalisés nommés Paramètres d&apos;importation de données.</label>
         <name>bdiErrorDataImportCustomSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- error deploying metadata during migration from help text to metadata mapping --></label>
+        <label>Une erreur s&apos;est produite en tentant de convertir le mappage Texte d&apos;aide et d&apos;activer le Mappage avancé.</label>
         <name>bdiErrorDeploymentFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- link to the deployment status page --></label>
+        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;Vous pouvez afficher le statut de déploiement ici.&lt;/a&gt;</label>
         <name>bdiErrorDeploymentFailedLink</name>
     </customLabels>
     <customLabels>
@@ -1470,111 +1694,113 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIBackToMapGroup --></label>
+        <label>Revenir au Groupe d&apos;objets</label>
         <name>bdiFMUIBackToMapGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDataType --></label>
+        <label>Type de données</label>
         <name>bdiFMUIDataType</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDatatableMapsTo --></label>
+        <label>Mappé avec</label>
         <name>bdiFMUIDatatableMapsTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDescription1 --></label>
+        <label>Connectez le champ que vous avez créé dans l&apos;objet Importation de données NPSP avec le champ de votre objet cible dans la
+            grille ci-dessous. Vous pouvez rechercher les champs par Étiquette du champ et Nom d&apos;API du champ.</label>
         <name>bdiFMUIDescription1</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDescription2 --></label>
+        <label>Les champs de l&apos;objet Importation de données NPSP doivent être mappés avec des types de champ compatibles dans votre objet cible.
+            Lorsque vous sélectionnez un champ d&apos;importation de données NPSP, seuls les champs cibles compatibles sont disponibles.</label>
         <name>bdiFMUIDescription2</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIFieldAPIName --></label>
+        <label>Nom d&apos;API du champ</label>
         <name>bdiFMUIFieldAPIName</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIFieldLabel --></label>
+        <label>Étiquette du champ</label>
         <name>bdiFMUIFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeployment --></label>
+        <label>La modification de ce mappage de champs est plus longue que prévu.</label>
         <name>bdiFMUILongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeploymentLink --></label>
+        <label>Consultez le statut de déploiement ici.</label>
         <name>bdiFMUILongDeploymentLink</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeploymentMessage --></label>
+        <label>Le traitement continue en arrière-plan. Veuillez patienter.</label>
         <name>bdiFMUILongDeploymentMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUINewFieldMapping --></label>
+        <label>Créer un mappage de champs personnalisé</label>
         <name>bdiFMUINewFieldMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUINoFieldMappings --></label>
+        <label>Aucun mappage de champs n&apos;est défini pour ce groupe de mappages.</label>
         <name>bdiFMUINoFieldMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISearchSourceInputLabel --></label>
+        <label>Recherchez le champ de l&apos;objet Importation de données NPSP par étiquette ou nom d&apos;API.</label>
         <name>bdiFMUISearchSourceInputLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISearchTargetInputLabel --></label>
+        <label>Recherchez le champ cible par étiquette ou nom d&apos;API.</label>
         <name>bdiFMUISearchTargetInputLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceFieldDataTypeHelp --></label>
+        <label>Le type de données du champ que vous avez choisi dans l&apos;objet Importation de données NPSP.</label>
         <name>bdiFMUISourceFieldDataTypeHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceFieldLabelHelp --></label>
+        <label>Le champ d&apos;importation de données NPSP que vous souhaitez mapper. Recherchez par Étiquette de champ ou Nom d&apos;API. Si le champ est introuvable, vérifiez si vous l&apos;avez créé dans l&apos;objet Importation de données NPSP.</label>
         <name>bdiFMUISourceFieldLabelHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceObject --></label>
+        <label>Source (objet Importation de données NPSP)</label>
         <name>bdiFMUISourceObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISuccessful --></label>
+        <label>réussi</label>
         <name>bdiFMUISuccessful</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITarget --></label>
+        <label>Cible</label>
         <name>bdiFMUITarget</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITargetFieldDataTypeHelp --></label>
+        <label>Le type de données du champ que vous avez choisi dans l&apos;objet cible.</label>
         <name>bdiFMUITargetFieldDataTypeHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITargetFieldLabelHelp --></label>
+        <label>Le champ cible que vous souhaitez connecter au champ d&apos;importation de données NPSP. Recherchez par Étiquette de champ ou Nom d&apos;API. La recherche est filtrée et affiche uniquement les champs de votre objet cible qui sont compatibles avec le champ choisi dans l&apos;objet Importation de données NPSP.</label>
         <name>bdiFMUITargetFieldLabelHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITryAgain --></label>
+        <label>Veuillez réessayer.</label>
         <name>bdiFMUITryAgain</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIUnsuccessful --></label>
+        <label>échoué</label>
         <name>bdiFMUIUnsuccessful</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIUpdate --></label>
+        <label>mettre à jour</label>
         <name>bdiFMUIUpdate</name>
     </customLabels>
     <customLabels>
-        <label>Échec</label>
+        <label>Échoué</label>
         <name>bdiFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFieldMapping --></label>
+        <label>Mappage de champ</label>
         <name>bdiFieldMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFieldMappings --></label>
+        <label>Mappages de champ</label>
         <name>bdiFieldMappings</name>
     </customLabels>
     <customLabels>
@@ -1636,127 +1862,132 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiMatchedNone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error message for long deployment --></label>
+        <label>La conversion des mappages Texte d&apos;aide en Mappage avancé est plus longue que prévu.</label>
         <name>bdiMigrationLongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Is Child/Parent Help Text --></label>
+        <label>Association de l&apos;objet cible avec l&apos;autre Groupe d&apos;objets. Par exemple, une Allocation UCG est un enfant d&apos;une opportunité ou un Don récurrent est un parent d&apos;une opportunité.</label>
         <name>bdiOMUIChildParentHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Is Child/Parent Field Label/Column Name --></label>
+        <label>Est enfant/parent</label>
         <name>bdiOMUIChildParentLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Create Object Group modal. --></label>
+        <label>Créer un groupe d&apos;objets</label>
         <name>bdiOMUICreateModalTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Create New Object Group button --></label>
+        <label>Créer un autre groupe d&apos;objets</label>
         <name>bdiOMUICreateNewObjectGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Edit Object Group modal. --></label>
+        <label>Modifier le groupe d&apos;objets</label>
         <name>bdiOMUIEditModalTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when Group name is duplicate --></label>
+        <label>Erreur : Ce nom est déjà utilisé. Choisissez un autre nom.</label>
         <name>bdiOMUIErrorDupeName</name>
     </customLabels>
     <customLabels>
-        <label><!-- Basic error which any modal field is missing or invalid. --></label>
+        <label>Un ou plusieurs champs contiennent des valeurs vides ou non valides.</label>
         <name>bdiOMUIErrorInvalidValues</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when Group Name is too long. --></label>
+        <label>Erreur : Le nom du groupe est trop long, limitez sa longueur à 40 caractères.</label>
         <name>bdiOMUIErrorLabelNameTooLong</name>
     </customLabels>
     <customLabels>
-        <label><!-- First part of error displayed when there are no unmapped fields. --></label>
+        <label>Erreur : Aucun champ n&apos;est mappé avec l&apos;objet Importation de données NPSP à utiliser pour l&apos;option.</label>
         <name>bdiOMUIErrorNoUnmappedFieldsPt1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Second part of error displayed when there are no unmapped fields. --></label>
+        <label>Si nécessaire, créez d&apos;autres champs dans l&apos;objet Importation de données NPSP.</label>
         <name>bdiOMUIErrorNoUnmappedFieldsPt2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when there are no valid options for &quot;Through This Field&quot; --></label>
+        <label>Erreur : Aucun champ valide n&apos;existe basé sur votre sélection dans « Nom de l&apos;objet », « Est enfant/parent » et « De ce groupe de mappages ».</label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Group Name Help Text --></label>
+        <label>Le nom de ce Groupe d&apos;objets. Une convention de nommage courante est Groupe [nom de l&apos;objet].</label>
         <name>bdiOMUIGroupNameHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Group Name Label/Column Name --></label>
+        <label>Nom du groupe</label>
         <name>bdiOMUIGroupNameLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Import Details section of the modal --></label>
+        <label>Détails d&apos;importation</label>
         <name>bdiOMUIImportDetailsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Import Status Helptext --></label>
+        <label>Pendant une importation test ou lors de l&apos;exécution de l&apos;importation, le statut d&apos;importation du Groupe d&apos;objets est affiché dans ce champ.</label>
         <name>bdiOMUIImportStatusHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Import Status Field Label/Column Name --></label>
+        <label>Statut d’importation</label>
         <name>bdiOMUIImportStatusLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to Record Helptext --></label>
+        <label>Lors de l&apos;exécution de l&apos;importation, ce champ affiche un lien vers l&apos;enregistrement de ce Groupe d&apos;objets ou l&apos;ID Salesforce de l&apos;enregistrement.</label>
         <name>bdiOMUILinkToRecordHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to Record Label/Column Name --></label>
+        <label>Lier à l&apos;enregistrement.</label>
         <name>bdiOMUILinkToRecordLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error message for long deployment --></label>
+        <label>La modification de ce groupe d&apos;objets est plus longue que prévu.</label>
         <name>bdiOMUILongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Groups Title --></label>
+        <label>Groupes d&apos;objets</label>
         <name>bdiOMUIObjectGroupsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Name Helptext --></label>
+        <label>L&apos;objet cible dans lequel ces enregistrements d&apos;importation de données vont être créés. La liste des objets est filtrée. Pour obtenir la liste complète des objets disponibles, consultez la documentation.</label>
         <name>bdiOMUIObjectNameHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Name Label/Column Name --></label>
+        <label>Nom de l’objet</label>
         <name>bdiOMUIObjectNameLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Of This Object Group Helptext --></label>
+        <label>Les enregistrements de votre objet cible sont associés à un autre groupe d&apos;objets. Choisissez ici le groupe d&apos;objets associé.</label>
         <name>bdiOMUIOfGroupHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Of This Object Group Label/Column --></label>
+        <label>De ce groupe d&apos;objets</label>
         <name>bdiOMUIOfGroupLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 1 --></label>
+        <label>Chaque ligne de ce tableau affiche vos groupes d&apos;objets. Vous configurez les mappages de champs individuels en cliquant sur l&apos;icône de la liste déroulante d&apos;un groupe d&apos;objets, puis sur Afficher les mappages de champs.</label>
         <name>bdiOMUIPageDescriptionPt1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 2 --></label>
+        <label>Les groupes d&apos;objets sont des collections de mappages de champs qui indiquent à l&apos;outil Importation de données NPSP les types d&apos;enregistrement à créer ou à mettre à jour (par exemple Contacts, Opportunités, Paiements, etc.). Le regroupement des mappages de champs dans des groupes d&apos;objets permet à NPSP de lier les enregistrements associés d&apos;une ligne de votre importation à un autre enregistrement.</label>
         <name>bdiOMUIPageDescriptionPt2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 3 --></label>
+        <label>Examinons deux exemples de groupes d&apos;objets, Allocation UCG 1 et Allocation UCG 2. Ces groupes sont directement liés à l&apos;objet Opportunité.
+            Vous pouvez attribuer deux allocations UCG à une seule Opportunité. Pour cela, saisissez les informations sur l&apos;opportunité dans les colonnes Dons de votre fichier d&apos;importation.
+            Insérez ensuite la première allocation UCG dans les colonnes Allocations UCG 1 et la deuxième dans les colonnes Allocations UCG 2. En raison du mappage des objets Allocations UCG 1 et
+            Allocations UCG 2, lors de l&apos;importation, les allocations UCG sont toutes les deux attribuées à l&apos;opportunité.</label>
         <name>bdiOMUIPageDescriptionPt3</name>
     </customLabels>
     <customLabels>
-        <label><!-- Through This Field Helptext --></label>
+        <label>La Relation de référence ou le champ Principal - Détails qui connecte votre objet cible au Groupe d&apos;objets associé.
+            Si l&apos;objet cible est un enfant de l&apos;objet associé, ce champ est dans l&apos;objet cible. Alternativement,
+            si l&apos;objet cible est le parent de l&apos;objet associé, ce champ est dans l&apos;objet associé.</label>
         <name>bdiOMUIThroughFieldHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Through this field Label/Column Name --></label>
+        <label>À ce champ</label>
         <name>bdiOMUIThroughFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- View Field Mappings action --></label>
+        <label>Afficher les mappages de champs</label>
         <name>bdiOMUIViewFieldMappingsLabel</name>
     </customLabels>
     <customLabels>
@@ -1808,7 +2039,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiUpdated --></label>
+        <label>Mis à jour</label>
         <name>bdiUpdated</name>
     </customLabels>
     <customLabels>
@@ -2053,19 +2284,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bgeTabHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <label>Mappage de champs modifié</label>
         <name>bgeUnmappedFieldsNoticeHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping enabled. --></label>
+        <label>Les champs suivants sont inclus dans ce lot, mais leurs mappages ont été supprimés : {0}. Pour les corriger, accédez à Mappage avancé dans Paramètres de NPSP, puis mappez de nouveau les champs.</label>
         <name>bgeUnmappedFieldsNoticeMessageAdvancedMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping disabled. --></label>
+        <label>Les champs suivants sont inclus dans ce lot, mais leurs mappages ont été supprimés : {0}. Pour les corriger, accédez à l&apos;objet Importation de données NPSP, puis mappez de nouveau les champs en utilisant Texte d&apos;aide.</label>
         <name>bgeUnmappedFieldsNoticeMessageHelpTextMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <label>Champs non mappés inclus dans ce lot</label>
         <name>bgeUnmappedFieldsNoticeTitle</name>
     </customLabels>
     <customLabels>
@@ -2097,6 +2328,126 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>erreur</label>
+        <name>commonAssistiveError</name>
+    </customLabels>
+    <customLabels>
+        <label>informations</label>
+        <name>commonAssistiveInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>réussi</label>
+        <name>commonAssistiveSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>avertissement</label>
+        <name>commonAssistiveWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Retour</label>
+        <name>commonBack</name>
+    </customLabels>
+    <customLabels>
+        <label>Lots</label>
+        <name>commonBatches</name>
+    </customLabels>
+    <customLabels>
+        <label>Annuler</label>
+        <name>commonCancel</name>
+    </customLabels>
+    <customLabels>
+        <label>Cloner</label>
+        <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label>Valeur par défaut</label>
+        <name>commonDefaultValue</name>
+    </customLabels>
+    <customLabels>
+        <label>Supprimer</label>
+        <name>commonDelete</name>
+    </customLabels>
+    <customLabels>
+        <label>Modifier</label>
+        <name>commonEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Erreur</label>
+        <name>commonError</name>
+    </customLabels>
+    <customLabels>
+        <label>Étiquette du champ</label>
+        <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nouveau don</label>
+        <name>commonNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivant</label>
+        <name>commonNext</name>
+    </customLabels>
+    <customLabels>
+        <label>Non</label>
+        <name>commonNo</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucun élément à afficher.</label>
+        <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Ouvert</label>
+        <name>commonOpen</name>
+    </customLabels>
+    <customLabels>
+        <label>Lire plus</label>
+        <name>commonReadMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Obligatoire</label>
+        <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrer</label>
+        <name>commonSave</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrer &amp; Fermer</label>
+        <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>Modèle</label>
+        <name>commonTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Modèles</label>
+        <name>commonTemplates</name>
+    </customLabels>
+    <customLabels>
+        <label>Erreur inconnue</label>
+        <name>commonUnknownError</name>
+    </customLabels>
+    <customLabels>
+        <label>Mettre à jour</label>
+        <name>commonUpdate</name>
+    </customLabels>
+    <customLabels>
+        <label>Afficher tout</label>
+        <name>commonViewAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Afficher plus</label>
+        <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Avertissement</label>
+        <name>commonWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Oui</label>
+        <name>commonYes</name>
+    </customLabels>
+    <customLabels>
         <label>Échec de la création de compte pour le contact {0} {1}. {2}</label>
         <name>conFailedAccountCreate</name>
     </customLabels>
@@ -2109,11 +2460,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>conMergeErrNoPersonAccounts</name>
     </customLabels>
     <customLabels>
-        <label><!-- Delete permission on the Contact object is required to for merging --></label>
+        <label>Pour pouvoir fusionner les contacts, vous devez disposer de l&apos;autorisation Supprimer sur les Contacts.</label>
         <name>conMergeErrorNoDeleteObjPermission</name>
     </customLabels>
     <customLabels>
-        <label><!-- Record sharing permission on the Contact object is required to for merging --></label>
+        <label>Vous ne disposez pas des autorisations de partage d&apos;enregistrements pour fusionner ces contacts. Sélectionnez d&apos;autres enregistrements de contact ou demandez à votre administrateur système d&apos;ajuster les autorisations de partage.</label>
         <name>conMergeErrorNoDeleteRecAccess</name>
     </customLabels>
     <customLabels>
@@ -2173,23 +2524,23 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorNoContext --></label>
+        <label>Aucun contexte de traitement fourni au constructeur</label>
         <name>errErrorNoContext</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeOther --></label>
+        <label>Autre</label>
         <name>errErrorTypeOther</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeRequiredFieldMissing --></label>
+        <label>Champ obligatoire manquant</label>
         <name>errErrorTypeRequiredFieldMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeValidationFailed --></label>
+        <label>Échec de la règle de validation personnalisée</label>
         <name>errErrorTypeValidationFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorUnsupportedDMLType --></label>
+        <label>Opération non prise en charge : impossible de consigner une erreur pour ce type d&apos;opération DML.</label>
         <name>errErrorUnsupportedDMLType</name>
     </customLabels>
     <customLabels>
@@ -2209,8 +2560,581 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>flsError</name>
     </customLabels>
     <customLabels>
-        <label><!-- flsReadAccessError --></label>
+        <label>Vous n’êtes pas autorisé(e) à accéder à {0}.</label>
         <name>flsReadAccessError</name>
+    </customLabels>
+    <customLabels>
+        <label>Section active.</label>
+        <name>geAssistiveActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Retirez le champ {0} de l&apos;en-tête du lot.</label>
+        <name>geAssistiveBatchHeaderRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label>Déplacez le champ {0} vers le bas.</label>
+        <name>geAssistiveFieldDown</name>
+    </customLabels>
+    <customLabels>
+        <label>Déplacez le champ {0} vers le haut.</label>
+        <name>geAssistiveFieldUp</name>
+    </customLabels>
+    <customLabels>
+        <label>Réduisez tous les Groupes d&apos;objets et les Composants de modèle.</label>
+        <name>geAssistiveFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Agrandissez tous les Groupes d&apos;objets et les Composants de modèle.</label>
+        <name>geAssistiveFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Retirez le champ {0} du modèle.</label>
+        <name>geAssistiveFormFieldsRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label>Modifiez les paramètres de la section {0}.</label>
+        <name>geAssistiveFormFieldsSectionEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Annulez et ignorez les modifications apportées aux paramètres de la section.</label>
+        <name>geAssistiveModalCancelAndDiscard</name>
+    </customLabels>
+    <customLabels>
+        <label>Retirez l&apos;option sélectionnée</label>
+        <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>Déplacez la section {0} vers le bas.</label>
+        <name>geAssistiveSectionDown</name>
+    </customLabels>
+    <customLabels>
+        <label>Déplacez la section {0} vers le haut.</label>
+        <name>geAssistiveSectionUp</name>
+    </customLabels>
+    <customLabels>
+        <label>Affichez le menu.</label>
+        <name>geAssistiveShowMenu</name>
+    </customLabels>
+    <customLabels>
+        <label>Le chargement du contenu est en cours.</label>
+        <name>geAssistiveSpinner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Advanced Form Fields header --></label>
+        <name>geBodyAdvancedFieldMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Définissez des valeurs par défaut pour ce lot. Vous pouvez remplacer les valeurs par défaut lors de la saisie de dons.</label>
+        <name>geBodyBatchDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous ne pouvez pas définir de valeur par défaut pour les champs inclus dans cette section.</label>
+        <name>geBodyBatchFieldBundleInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Choisissez les champs à inclure dans l&apos;en-tête de votre lot. Cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si vous souhaitez ajouter des champs personnalisés supplémentaires dans l&apos;en-tête du lot, ajoutez-les dans l&apos;objet Lot d’importation de données NPSP.</label>
+        <name>geBodyBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous pouvez modifier l&apos;étiquette de chaque champ, le marquer comme obligatoire ou lui attribuer une valeur par défaut. Les valeurs par défaut peuvent être remplacées par la personne qui a créé le lot.</label>
+        <name>geBodyBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Ces champs obligatoires ont été automatiquement ajoutés à l&apos;en-tête du lot :</label>
+        <name>geBodyBatchHeaderWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionnez les champs à ajouter à cette section.</label>
+        <name>geBodyEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Field Bundles header --></label>
+        <name>geBodyFieldBundlesLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Form Fields header --></label>
+        <name>geBodyFormFieldsDescLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Choisissez les champs à inclure dans votre formulaire. Avant d&apos;ajouter des champs, cliquez sur la section de l&apos;écran principal à laquelle les champs sont destinés. Dans le menu latéral, cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si l&apos;objet ou le champ que vous souhaitez utiliser n&apos;est pas répertorié, assurez-vous qu&apos;il est configuré dans Mappage avancé.</label>
+        <name>geBodyFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Configurez un champ en procédant comme suit :
+        &lt;/br&gt;
+        &lt;/br&gt;
+        &lt;ol&gt;
+            &lt;li&gt; Créez le champ dans l&apos;objet cible. &lt;/li&gt;
+            &lt;li&gt; Créez le champ dans l&apos;objet Importation de données NPSP. &lt;/li&gt;
+            &lt;li&gt; Avec un nouveau Groupe d&apos;objets, créez des champs supplémentaires pour le nouveau groupe d&apos;objets, puis créez le Groupe d&apos;objets dans Paramètres de NPSP. &lt;/li&gt;
+            &lt;li&gt; Ajoutez le Mappage de champs dans Paramètres de NPSP pour connecter le champ d&apos;importation de données NPSP au champ cible. &lt;/li&gt;
+        &lt;/ol&gt;
+        Pour plus d&apos;informations sur le Mappage avancé, consultez la documentation NPSP.</label>
+        <name>geBodyFormFieldsLeftColAdditional</name>
+    </customLabels>
+    <customLabels>
+        <label>La suppression de cette section entraîne la suppression des champs qu&apos;elle contient.</label>
+        <name>geBodyFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Cliquez sur une section, puis sélectionnez un champ dans le menu latéral pour l&apos;ajouter à la section dans l&apos;écran principal. Vous pouvez modifier l&apos;étiquette de chaque champ, le marquer comme obligatoire, lui attribuer une valeur par défaut ou le retirer de la section. Ajustez la présentation du formulaire de saisie de dons en créant des sections et en réorganisant les sections ou les champs.</label>
+        <name>geBodyFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Avant d&apos;activer la Saisie de dons, vous devez activer le Mappage avancé.
+&lt;br/&gt;&lt;br/&gt;
+Utilisez les modèles de Saisie de dons pour saisir des dons uniques ou des lots de dons. Les dons saisis avec l&apos;ancien outil Saisie de dons par lots ne sont pas affichés dans la Saisie de dons, et inversement.
+&lt;br/&gt;&lt;br/&gt;
+Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la place de l&apos;ancien outil Saisie de dons par lots (ou Saisie de don unique, si vous utilisez GEM).</label>
+        <name>geBodyGiftEntryHelp</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous ajoutez actuellement un nouveau paiement à l&apos;opportunité :</label>
+        <name>geBodyMatchingApplyNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous créez actuellement une autre opportunité.</label>
+        <name>geBodyMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Cette opportunité n&apos;a aucun paiement non réglé.</label>
+        <name>geBodyMatchingNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>Ce donateur a des dons en attente.</label>
+        <name>geBodyMatchingPendingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionnez l’enregistrement que vous souhaitez mettre à jour.</label>
+        <name>geBodyMatchingSelectRecord</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous mettez actuellement à jour :</label>
+        <name>geBodyMatchingUpdatingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisissez les détails de ce modèle de saisie de dons.</label>
+        <name>geBodyTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Un modèle est une présentation réutilisable de champs de saisie de données. Modifiez un modèle en cliquant sur son nom. Vous pouvez également créer un modèle ou cliquer sur le menu déroulant d&apos;un modèle pour afficher plus d&apos;options. Les modèles en cours d&apos;utilisation ne peuvent pas être supprimés.</label>
+        <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Précédent : Champs du formulaire</label>
+        <name>geButtonBuilderNavBackFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Précédent : Informations sur le modèle</label>
+        <name>geButtonBuilderNavBackTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivant : En-tête du lot</label>
+        <name>geButtonBuilderNavBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivant : Champs du formulaire</label>
+        <name>geButtonBuilderNavFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Annuler et effacer le formulaire</label>
+        <name>geButtonCancelAndClear</name>
+    </customLabels>
+    <customLabels>
+        <label>Ajouter une section</label>
+        <name>geButtonFormFieldsAddSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Réduire tout</label>
+        <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Agrandir tout</label>
+        <name>geButtonFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Supprimer la section et les champs</label>
+        <name>geButtonFormFieldsModalDeleteSectionAndFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous pouvez également créer une autre opportunité.</label>
+        <name>geButtonMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Ajouter un nouveau paiement</label>
+        <name>geButtonMatchingNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifier les dons</label>
+        <name>geButtonMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionnez un autre don.</label>
+        <name>geButtonMatchingUpdateDonationSelection</name>
+    </customLabels>
+    <customLabels>
+        <label>Mettre à jour de cette opportunité</label>
+        <name>geButtonMatchingUpdateOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Mettre à jour ce paiement</label>
+        <name>geButtonMatchingUpdatePayment</name>
+    </customLabels>
+    <customLabels>
+        <label>Nouveau lot</label>
+        <name>geButtonNewBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Nouveau don unique</label>
+        <name>geButtonNewSingleGift</name>
+    </customLabels>
+    <customLabels>
+        <label>Enregistrer et saisir un nouveau don</label>
+        <name>geButtonSaveNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label>Créer un modèle</label>
+        <name>geButtonTemplatesTabCreateTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de dons désactivée</label>
+        <name>geDisableGiftEntryInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Don</label>
+        <name>geDonationColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Donateur</label>
+        <name>geDonorColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Modifier les informations sur le lot</label>
+        <name>geEditBatchInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de dons activée</label>
+        <name>geEnableGiftEntrySuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Le montant total ne correspond pas au {0}</label>
+        <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Complétez ce champ.</label>
+        <name>geErrorCompleteThisField</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez sélectionné {0} pour {1}, mais les champs {0} requis ne sont pas disponibles dans votre formulaire. Contactez votre administrateur.</label>
+        <name>geErrorDonorTypeInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label>Lorsque vous sélectionnez {0} pour {1}, vous devez saisir des informations dans au moins l&apos;un des champs suivants : {2} ou {3}</label>
+        <name>geErrorDonorTypeValidation</name>
+    </customLabels>
+    <customLabels>
+        <label>Lorsque vous sélectionnez {0} pour {1}, vous devez saisir des informations dans {2}</label>
+        <name>geErrorDonorTypeValidationSingle</name>
+    </customLabels>
+    <customLabels>
+        <label>Ce nom a été utilisé par un autre modèle. Saisissez un nom unique.</label>
+        <name>geErrorExistingTemplateName</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous devez disposer de l&apos;autorisation de modification de tous les objets du formulaire. Demandez à votre administrateur de vous accorder l&apos;accès aux objets suivants : {0}</label>
+        <name>geErrorFLSBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifier vos autorisations de champ</label>
+        <name>geErrorFLSHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous n&apos;êtes pas autorisé(e) à modifier ce champ.</label>
+        <name>geErrorFieldPermission</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous devez disposer de l&apos;autorisation de modification de tous les champs du formulaire. Demandez à votre administrateur de vous accorder l&apos;accès aux champs suivants : {0}</label>
+        <name>geErrorObjectCRUDBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifier vos autorisations d&apos;objet</label>
+        <name>geErrorObjectCRUDHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Cette fonctionnalité nécessite le Mappage avancé et la Saisie de dons. Activez-les dans les Paramètres de NPSP.</label>
+        <name>geErrorPageLevelAdvancedMappingBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Activer le Mappage avancé et la Saisie de dons</label>
+        <name>geErrorPageLevelAdvancedMappingHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Pour enregistrer les modifications apportées à ce modèle, vous devez disposer de l&apos;autorisation de modification de tous les champs du formulaire. Retirez les champs suivants : {0}</label>
+        <name>geErrorPageLevelFieldPermission1</name>
+    </customLabels>
+    <customLabels>
+        <label>Alternativement, quittez ce formulaire sans enregistrer, puis vérifiez vos autorisations sur l&apos;objet cible et sur l&apos;objet Importation de données NPSP.</label>
+        <name>geErrorPageLevelFieldPermission2</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous devez inclure tous les champs obligatoires dans votre modèle. Vérifiez les champs sources (objet Importation de données NPSP) des champs suivants :</label>
+        <name>geErrorPageLevelMissingRequiredFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Au moins l&apos;un des champs suivants est requis : {0}</label>
+        <name>geErrorPageLevelMissingRequiredGroupFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Champ obligatoire</label>
+        <name>geErrorRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Name of GAU Allocations field bundle --></label>
+        <name>geGauAllocationsBundle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for advanced form fields --></label>
+        <name>geHeaderAdvancedFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisir les informations sur le lot</label>
+        <name>geHeaderBatchEnterInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de dons par lots</label>
+        <name>geHeaderBatchGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionner les champs d&apos;en-tête du lot</label>
+        <name>geHeaderBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Configurer les champs d&apos;en-tête du lot</label>
+        <name>geHeaderBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionner un modèle</label>
+        <name>geHeaderBatchSelectTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Définir les valeurs par défaut</label>
+        <name>geHeaderBatchSetDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionner les champs à afficher</label>
+        <name>geHeaderCustomTableHeaders</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucun champ pour le moment</label>
+        <name>geHeaderEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Paquets de champs</label>
+        <name>geHeaderFieldBundles</name>
+    </customLabels>
+    <customLabels>
+        <label>Formulaire de saisie de dons</label>
+        <name>geHeaderFormFieldsDefaultSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label>Champs de formulaire et paquets de champs</label>
+        <name>geHeaderFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Supprimer la section</label>
+        <name>geHeaderFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Renommer la section</label>
+        <name>geHeaderFormFieldsModalRenameSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Paramètres de la section</label>
+        <name>geHeaderFormFieldsModalSectionSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>Configurer les champs du formulaire</label>
+        <name>geHeaderFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de dons</label>
+        <name>geHeaderGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>Don par {0}</label>
+        <name>geHeaderMatchingGiftBy</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} de {1} ({2})</label>
+        <name>geHeaderMatchingOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} de {1}</label>
+        <name>geHeaderMatchingPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifier les dons pour {0}</label>
+        <name>geHeaderMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>Nouvelle section</label>
+        <name>geHeaderNewSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Nouveau modèle</label>
+        <name>geHeaderNewTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifiez les erreurs sur cette page.</label>
+        <name>geHeaderPageLevelError</name>
+    </customLabels>
+    <customLabels>
+        <label>Saisie de don unique</label>
+        <name>geHeaderSingleGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>Information sur le modèle de saisie de dons</label>
+        <name>geHeaderTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account1 Object Group --></label>
+        <name>geHelpTextAccount1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account2 Object Group --></label>
+        <name>geHelpTextAccount2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Address Object Group --></label>
+        <name>geHelpTextAddressMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 1 object group --></label>
+        <name>geHelpTextAllocation1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 2 object group --></label>
+        <name>geHelpTextAllocation2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text about GAU Allocation field bundle --></label>
+        <name>geHelpTextAllocationBundle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous pouvez renommer les étiquettes des champs visibles par les utilisateurs.</label>
+        <name>geHelpTextBatchHeaderFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact1 Object Group --></label>
+        <name>geHelpTextContact1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact2 Object Group --></label>
+        <name>geHelpTextContact2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Ce champ utilise le Groupe d&apos;objets {0} pour cibler le champ {1} de l&apos;objet {2}.</label>
+        <name>geHelpTextFormFieldsFieldCustomLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Affiche le groupe d&apos;objets et le nom d&apos;API du champ cible. Vous pouvez modifier l&apos;étiquette ci-dessous visible par les utilisateurs.</label>
+        <name>geHelpTextFormFieldsFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Household Object Group --></label>
+        <name>geHelpTextHouseholdMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Champs visibles</label>
+        <name>geLabelCustomTableSelectedFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Champs disponibles</label>
+        <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Nom de la section</label>
+        <name>geLabelSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label>Description</label>
+        <name>geLabelTemplateInfoDescriptionField</name>
+    </customLabels>
+    <customLabels>
+        <label>Nom du modèle</label>
+        <name>geLabelTemplateInfoNameField</name>
+    </customLabels>
+    <customLabels>
+        <label>Recherchez...</label>
+        <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionnez...</label>
+        <name>geSelectPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>En-tête du lot</label>
+        <name>geTabBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Champs de formulaire</label>
+        <name>geTabFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Informations sur le modèle</label>
+        <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} élément</label>
+        <name>geTextListViewItemCount</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} éléments</label>
+        <name>geTextListViewItemsCount</name>
+    </customLabels>
+    <customLabels>
+        <label>• Classé par {0}</label>
+        <name>geTextListViewSortedBy</name>
+    </customLabels>
+    <customLabels>
+        <label>• Mis à jour {0}</label>
+        <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label>Vue de liste mise à jour.</label>
+        <name>geToastListViewUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label>Vos modifications ne peuvent pas être enregistrées. Veuillez réessayer.</label>
+        <name>geToastSaveFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionnez une section.</label>
+        <name>geToastSelectActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Le modèle « {0} » a été créé.</label>
+        <name>geToastTemplateCreateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Ce modèle est actuellement utilisé et ne peut pas être supprimé.</label>
+        <name>geToastTemplateDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label>Le modèle « {0} » a été supprimé.</label>
+        <name>geToastTemplateDeleteSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifiez l&apos;élément suivant : {0}</label>
+        <name>geToastTemplateTabsError</name>
+    </customLabels>
+    <customLabels>
+        <label>Le modèle « {0} » a été mis à jour.</label>
+        <name>geToastTemplateUpdateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Avertissement : En supprimant cette section, vous retirez également des champs obligatoires du modèle. Ces champs doivent être ajoutés à une autre section avant d&apos;enregistrer le modèle.</label>
+        <name>geWarningFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
         <label>Le traitement du don ne prend pas en charge le modèle de compte individuel (« à compartiments »).</label>
@@ -2345,6 +3269,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>healthDetailsInvalidPaymentField</name>
     </customLabels>
     <customLabels>
+        <label>La valeur de liste de sélection « {0} » n&apos;est pas prise en charge.</label>
+        <name>healthDetailsInvalidPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>La période de versement personnalisée {0} n’est pas incluse dans les valeurs de liste de sélection pour le champ de période de versement des dons réguliers.</label>
         <name>healthDetailsInvalidRDCustomPeriod</name>
     </customLabels>
@@ -2371,6 +3299,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>{0} opportunités devant avoir des paiements ont des paiements manquants.</label>
         <name>healthDetailsMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>La valeur de liste de sélection obligatoire « {0} » est manquante.</label>
+        <name>healthDetailsMissingRequiredPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>Les tâches planifiées par défaut de NPSP ne sont pas planifiées. Les tâches planifiées mettent à jour les champs de résumé sur les enregistrements chaque nuit.</label>
@@ -2641,7 +3573,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>healthSolutionEditSetting</name>
     </customLabels>
     <customLabels>
-        <label>Envisagez de supprimer ces comptes de foyer inutilisés pour gagner de l’espace. Si vous avez effectué une conversion vers le modèle Compte de foyer et que vous n&apos;avez plus besoin des données des enregistrements d&apos;objet du foyer, vous pouvez les supprimer en toute sécurité. Visionnez ces comptes de foyer en exécutant le rapport Comptes de foyer vides dans le dossier des rapports de contrôle d’intégrité de NPSP.</label>
+        <label>Vous pouvez supprimer ces enregistrements Compte de foyer inutilisés pour libérer de l’espace. Consultez ces enregistrements Compte de foyer en exécutant le rapport &lt;b&gt;Comptes de foyer vides&lt;/b&gt; dans le dossier des rapports de contrôle d’intégrité de NPSP</label>
         <name>healthSolutionHHAccNoContacts</name>
     </customLabels>
     <customLabels>
@@ -2693,6 +3625,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>healthSolutionMissingOppPayments</name>
     </customLabels>
     <customLabels>
+        <label>Ajoutez la valeur de liste de sélection requise « {0} » au champ « {1} ».</label>
+        <name>healthSolutionMissingPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>Pour replanifier les travaux NPSP par défaut, accédez à Paramètres NPSP | Processus de données en masse | Planificateur de processus. Cliquez sur Modifier. Assurez-vous que l&apos;option Ne pas activer la tâche NPSP par défaut de planification automatique n&apos;est pas sélectionnée. Cliquez sur Enregistrer. Pour plus d&apos;informations, consultez Modifier ou reprogrammer des tâches NPSP dans le hub Power of Us : https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
         <name>healthSolutionNothingScheduled</name>
     </customLabels>
@@ -2739,6 +3675,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>Dans l’onglet des paramètres NPSP, cliquez sur {0} | {1}, et ajoutez le champ d’opportunité manquant, ou supprimez l’enregistrement de cumul d’utilisateur.</label>
         <name>healthSolutionUDFOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>Désactivez ou supprimez la valeur de liste de sélection « {0} » dans le champ « {1} ».</label>
+        <name>healthSolutionUnsupportedPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>Revenir à la campagne</label>
@@ -3441,7 +4381,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>stgAllocationLevel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBDIGoToSetup --></label>
+        <label>Configurer le Mappage avancé</label>
         <name>stgBDIGoToSetup</name>
     </customLabels>
     <customLabels>
@@ -3493,7 +4433,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>stgBtnHHAutoName</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNew --></label>
+        <label>Nouveau</label>
         <name>stgBtnNew</name>
     </customLabels>
     <customLabels>
@@ -3600,7 +4540,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>stgCreatedBy</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDIFMNonAdminError --></label>
+        <label>Seul un administrateur système peut activer ou désactiver le Mappage avancé d&apos;importation de données.</label>
         <name>stgDIFMNonAdminError</name>
     </customLabels>
     <customLabels>
@@ -3608,15 +4548,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>stgDefaultValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentCustomMetadataMappingEnabled --></label>
+        <label><!-- The user do not have delete permission to delete custom setting. --></label>
+        <name>stgDeletePermissionError</name>
+    </customLabels>
+    <customLabels>
+        <label>Le Mappage avancé est activé.</label>
         <name>stgDeploymentCustomMetadataMappingEnabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentHasInvalidHelpTextMappings --></label>
+        <label>Le Mappage avancé est activé, mais nous avons détecté des mappages Texte d&apos;aide non valides qui n&apos;ont pas pu être migrés. &lt;b&gt;Prenez une capture d&apos;écran du tableau ci-dessous, qui ne sera plus affiché lorsque vous aurez quitté la page.&lt;/b&gt;</label>
         <name>stgDeploymentHasInvalidHelpTextMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentHelpTextMappingEnabled --></label>
+        <label>Le mappage Texte d&apos;aide est activé.</label>
         <name>stgDeploymentHelpTextMappingEnabled</name>
     </customLabels>
     <customLabels>
@@ -3624,7 +4568,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>stgDeploymentInProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentInProgress --></label>
+        <label>Page expirée.</label>
         <name>stgDeploymentTimedOut</name>
     </customLabels>
     <customLabels>
@@ -3649,6 +4593,10 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
+        <label><!-- The user do not have edit permission to edit custom setting. --></label>
+        <name>stgEditPermissionError</name>
+    </customLabels>
+    <customLabels>
         <label>La classe Apex que vous avez sélectionnée dans le champ Implementing Class n&apos;implémente pas l&apos;interface HH_INaming. Sélectionnez une autre classe Apex ou utilisez la classe NPSP par défaut HH_NameSpec.</label>
         <name>stgErrorINaming</name>
     </customLabels>
@@ -3661,11 +4609,11 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
         <name>stgErrorInvalidNameFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorMissingDefaultGauRecord --></label>
+        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Pour réactiver les Allocations par défaut, ouvrez la page Allocations UCG dans les Paramètres de NPSP.</label>
         <name>stgErrorMissingDefaultGauRecord</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorMissingDefaultGauRecordWithPmtAllocEnabled --></label>
+        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Vous devez réactiver les Allocations par défaut et sélectionner une Unité comptable générale par défaut pour pouvoir utiliser les allocations de paiement. Pour mettre à jour les Paramètres d&apos;allocation par défaut, ouvrez la page Allocations UCG dans les Paramètres de NPSP.</label>
         <name>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</name>
     </customLabels>
     <customLabels>
@@ -3677,31 +4625,34 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping1 --></label>
+        <label>Lorsque vous activez le Mappage avancé, nous convertissons les mappages de champs Texte d&apos;aide existants vers le Mappage avancé. Une fois activé, vous pouvez ensuite modifier les mappages et créer d&apos;autres mappages sur cette page.</label>
         <name>stgHelpAdvancedMapping1</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping2 --></label>
+        <label>Vous pouvez désactiver le Mappage avancé et rétablir le mappage Texte d&apos;aide, mais les modifications apportées au Mappage avancé sont perdues.</label>
         <name>stgHelpAdvancedMapping2</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping3 --></label>
+        <label>Vous pouvez consulter la documentation complète sur la configuration du Mappage avancé &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
         <name>stgHelpAdvancedMapping3</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping4 --></label>
+        <label>&lt;b&gt;Ce message ne sera pas affiché si vous quittez la page ! Prenez une capture d&apos;écran de cette page ou copiez les informations du tableau ci-dessous pour suivre les mappages Texte d&apos;aide que vous devez corriger. &lt;/b&gt;
+            &lt;br/&gt;
+            &lt;br/&gt;
+            Nous n&apos;avons pas pu convertir certains mappages Texte d&apos;aide qui n&apos;étaient pas valides. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Informations supplémentaires sur les problèmes courants de mappages Texte d&apos;aide&lt;/a&gt;. Nous recommandons de désactiver le Mappage avancé, de corriger les mappages Texte d&apos;aide non valides, puis de réactiver le Mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le Mappage avancé à l&apos;écran suivant, mais si vous désactivez le Mappage avancé, le Texte d&apos;aide non valide d&apos;origine sera rétabli pour ces mappages supplémentaires.</label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingInvalidHelpText --></label>
+        <label>Mappages Texte d&apos;aide non valides</label>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingTableHeader1 --></label>
+        <label>Champ d&apos;importation de données NPSP</label>
         <name>stgHelpAdvancedMappingTableHeader1</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingTableHeader2 --></label>
+        <label>Valeur Texte d&apos;aide actuelle</label>
         <name>stgHelpAdvancedMappingTableHeader2</name>
     </customLabels>
     <customLabels>
@@ -3873,7 +4824,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <name>stgHelpErrorLog</name>
     </customLabels>
     <customLabels>
-        <label>Lorsque cette option est sélectionnée, le système envoie des notifications pour certains types d’erreurs.</label>
+        <label>Lorsque cette option est sélectionnée, le système envoie des notifications pour certains types d’erreur.</label>
         <name>stgHelpErrorNotifyOn</name>
     </customLabels>
     <customLabels>
@@ -4099,7 +5050,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <name>stgHelpPrimaryContactRoleMergeBatch</name>
     </customLabels>
     <customLabels>
-        <label>Lorsque cette option est sélectionnée, NPSP ajoute la campagne que vous avez indiquée pour le don régulier à toutes les opportunités enfant. Si cette option n’est pas sélectionnée, la campagne apparait uniquement sur la première opportunité du don régulier.</label>
+        <label>Lorsque cette option est sélectionnée, NPSP copie la campagne que vous avez spécifiée depuis le Don récurrent vers ses Opportunités de versement.</label>
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
@@ -4137,6 +5088,10 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
         <name>stgHelpRDFieldMapRDField</name>
     </customLabels>
     <customLabels>
+        <label>Spécifie quand NPSP crée des Opportunités de versement pour des Dons récurrents. Le paramètre par défaut est Toujours créer le prochain versement.</label>
+        <name>stgHelpRDInstallmentCreateOptionMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Date et heure de la dernière mise à jour par lots des dons réguliers.</label>
         <name>stgHelpRDLastRun</name>
     </customLabels>
@@ -4153,7 +5108,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
         <name>stgHelpRDOppForecastMonths</name>
     </customLabels>
     <customLabels>
-        <label>Le type d’enregistrement d’opportunité assigné aux opportunités enfant du don régulier.</label>
+        <label>Le type d’enregistrement d’opportunité assigné aux opportunités enfants du don récurrent.</label>
         <name>stgHelpRDOppRT</name>
     </customLabels>
     <customLabels>
@@ -4336,6 +5291,18 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
+        <label>Désactiver tous les versements</label>
+        <name>stgInstallmentOppDisableAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Désactiver le premier versement lors de la création</label>
+        <name>stgInstallmentOppDisableFirst</name>
+    </customLabels>
+    <customLabels>
+        <label>Toujours créer le prochain versement</label>
+        <name>stgInstallmentOppEnableAll</name>
+    </customLabels>
+    <customLabels>
         <label>Action</label>
         <name>stgLabelActionColumn</name>
     </customLabels>
@@ -4426,6 +5393,10 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
     <customLabels>
         <label>Champ</label>
         <name>stgLabelField</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucun</label>
+        <name>stgLabelFieldValueNone</name>
     </customLabels>
     <customLabels>
         <label>Paramètres généraux</label>
@@ -4780,7 +5751,7 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>stgNavPeople</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRD2Enablement --></label>
+        <label>Mettre à jour vers les Dons récurrents avancés</label>
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
@@ -4884,7 +5855,7 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
     <customPageWebLinks>
-        <label><!-- Nonprofit Edition Reports --></label>
+        <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>
         <name>Nonprofit_Edition_Reports</name>
     </customPageWebLinks>
     <customTabs>
@@ -4910,6 +5881,10 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
     <customTabs>
         <label><!-- Contacts Settings --></label>
         <name>Contacts_Settings</name>
+    </customTabs>
+    <customTabs>
+        <label>Saisie de dons</label>
+        <name>GE_Gift_Entry</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>
@@ -5007,4 +5982,4 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
             <name>Contacts</name>
         </sections>
     </reportTypes>
-</Translations>
+    </Translations>

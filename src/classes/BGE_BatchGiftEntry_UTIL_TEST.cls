@@ -56,10 +56,13 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
     */
     @isTest
     static void testHandleMissingPermissions() {
-        List<DescribeFieldResult> dfrs = new List<DescribeFieldResult>();
-        dfrs.add(UTIL_Describe.getFieldDescribe('Account','Name'));
-        dfrs.add(UTIL_Describe.getFieldDescribe('Account','CreatedById'));
-        String expectedErrorMsg = Label.bgeFLSError + ' [Account Name, Created By ID]';
+        DescribeFieldResult acctNameDescribe = UTIL_Describe.getFieldDescribe('Account','Name');
+        DescribeFieldResult createdByIdDescribe = UTIL_Describe.getFieldDescribe('Account','CreatedById');
+        List<DescribeFieldResult> dfrs = new List<DescribeFieldResult> { acctNameDescribe, createdByIdDescribe };
+
+        String expectedErrorMsg = Label.bgeFLSError + ' ['
+            + acctNameDescribe.getLabel() + ', ' + createdByIdDescribe.getLabel()
+            + ']';
 
         try {
             BGE_BatchGiftEntry_UTIL.handleMissingPermissions(dfrs);
@@ -84,6 +87,55 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
             hasError = true;
             System.assert(false, 'Unhandled exception thrown.');
         }
+    }
+
+    @isTest
+    static void shouldIncludeWidgetFields() {
+        FORM_Element widgetElement =
+                new FORM_Element(
+                        'widget', '', '', '',
+                        new String[]{
+                                'Account_2_Country',
+                                'Account_2_City'
+                        });
+
+        FORM_Section formSection =
+                new FORM_Section('', '', '', '',
+                        new FORM_Element[]{
+                                widgetElement
+                        });
+
+        FORM_Layout formLayout =
+                new FORM_Layout('', new FORM_Section[]{
+                        formSection
+                });
+
+        FORM_Template formTemplate =
+                new FORM_Template(
+                        'testTemplate', '', '', formLayout);
+
+        Form_Template__c template = new Form_Template__c(
+                Template_JSON__c = JSON.serialize(formTemplate),
+                Format_Version__c = '1.0');
+        insert template;
+
+        DataImportBatch__c batch = new DataImportBatch__c(
+                Form_Template__c = template.Id,
+                Batch_Gift_Entry_Version__c = 2.0
+        );
+        insert batch;
+
+        List<String> queryFields =
+                BGE_BatchGiftEntry_UTIL.getDataImportFields(
+                        batch.Id, true
+                );
+
+        System.assert(
+                queryFields.contains(
+                        String.valueOf(DataImport__c.Account2_Country__c).toLowerCase()));
+        System.assert(
+                queryFields.contains(
+                        String.valueOf(DataImport__c.Account2_City__c).toLowerCase()));
     }
 
 }

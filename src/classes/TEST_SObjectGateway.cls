@@ -90,7 +90,10 @@ public class TEST_SObjectGateway {
                     npe03__Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
-                    Status__c
+                    Status__c,
+                    ClosedReason__c,
+                    CurrentYearValue__c,
+                    NextYearValue__c
                 FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];
@@ -173,6 +176,7 @@ public class TEST_SObjectGateway {
     public class OpportunityGateway {
         private Set<String> fields = new Set<String>{
             'Name',
+            'Description',
             'AccountId',
             'RecordTypeId',
             'Amount',
@@ -185,8 +189,19 @@ public class TEST_SObjectGateway {
             'npe03__Recurring_Donation__c',
             'Recurring_Donation_Installment_Number__c',
             'npe01__Contact_Id_for_Role__c',
-            'Primary_Contact__c'
+            'Primary_Contact__c',
+            'CommitmentId__c'
         };
+
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public OpportunityGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
 
         /***
         * @description Retrieves Opportunities for the related Recurring Donation
@@ -207,6 +222,31 @@ public class TEST_SObjectGateway {
                 .withFrom(Opportunity.SObjectType)
                 .withSelectFields(fields)
                 .withWhere('npe03__Recurring_Donation__c IN :rds')
+                .build();
+
+            return (List<Opportunity>) Database.query(soql);
+        }
+
+        /***
+        * @description Retrieves Opportunities sorted by Closedate for the related Recurring Donation
+        * @param rd Recurring donation
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecordsByCloseDate(npe03__Recurring_Donation__c rd) {
+            return getRecordsByCloseDate(new List<npe03__Recurring_Donation__c>{ rd });
+        }
+
+        /***
+        * @description Retrieves Opportunities sorted by CloseDate for related Recurring Donations
+        * @param rds Recurring donations
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecordsByCloseDate(List<npe03__Recurring_Donation__c> rds) {
+            String soql = new UTIL_Query()
+                .withFrom(Opportunity.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe03__Recurring_Donation__c IN :rds')
+                .withOrderBy('CloseDate ASC')
                 .build();
 
             return (List<Opportunity>) Database.query(soql);
@@ -236,6 +276,51 @@ public class TEST_SObjectGateway {
                 .build();
 
             return (List<Opportunity>) Database.query(soql);
+        }
+    }
+
+    /***
+    * @description Retrieves payments
+    */
+    public class PaymentGateway {
+        private Set<String> fields = new Set<String>{
+            'Name',
+            'npe01__Payment_Method__c',
+            'npe01__Payment_Amount__c',
+            'npe01__Opportunity__c'
+        };
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public PaymentGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
+
+        /***
+        * @description Retrieves payments for the related Opportunity
+        * @param opp Opportunity
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(Opportunity opp) {
+            return getRecords(new List<Opportunity>{ opp });
+        }
+
+        /***
+        * @description Retrieves payments for related Opportunities
+        * @param opps Opportunity records
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(List<Opportunity> opps) {
+            String soql = new UTIL_Query()
+                .withFrom(npe01__OppPayment__c.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe01__Opportunity__c IN :opps')
+                .build();
+
+            return (List<npe01__OppPayment__c>) Database.query(soql);
         }
     }
 

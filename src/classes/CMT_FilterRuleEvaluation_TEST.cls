@@ -155,7 +155,7 @@ private class CMT_FilterRuleEvaluation_TEST {
         Partial_Soft_Credit__c psc = new Partial_Soft_Credit__c(
                 Opportunity__c = opp.Id,
                 Contact__c = con.Id,
-                Role_Name__c = 'Donor',
+                Role_Name__c = CAO_Constants.OCR_DONOR_ROLE,
                 Amount__c = opp.Amount
         );
         insert psc;

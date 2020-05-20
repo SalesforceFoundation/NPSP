@@ -39,14 +39,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
     /**
-     * @description Contains Recurring Donation status values to filter
-     */
-    private static Set<String> statusFilter = new Set<String>{
-        RD2_Constants.STATUS_ACTIVE,
-        RD2_Constants.STATUS_LAPSED
-    };
-
-    /**
     * @description Batch size for Apex Job. Uses default if the Custom Setting batch size is not provided.
     */
     @TestVisible
@@ -173,9 +165,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(
                 new Set<String>{ 'Id' }
-            )
-            .withWhere(
-                String.valueOf(npe03__Recurring_Donation__c.Status__c) + ' IN :statusFilter'
             )
             .build();
     }

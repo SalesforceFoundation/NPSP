@@ -40,7 +40,6 @@ Create Household With Name Only
     ...                                   First Name=${first_name}
     ...                                   Last Name=${last_name}
     Click Modal Button                    Save
-    Verify Toast Message                  Contact "${first_name} ${last_name}" was created.
     Wait Until Modal Is Closed
     Current Page Should Be                Details                               Contact
     
@@ -67,7 +66,9 @@ Create Household With additional details
     ...                                   Last Name=${last_name1}
     ...                                   Work Email=automation@example.com
     Click Modal Button                    Save & New
-    
+    Wait Until Loading Is Complete
+    # Adding 5 secs of sleep to allow processing of the record before creating next one
+    Sleep                                 5
     # Create a contact with name and address  
     Populate Modal Form
     ...                                   First Name=${first_name2}
@@ -84,7 +85,7 @@ Create Household With additional details
     Current Page Should Be                Details                               Contact
     
     # Verify records are saved and displayed in recently viewed contact list
-    ${contact_id2} =                      Save Current Record ID For Deletion      Contact
+    ${contact_id2} =                      Save Current Record ID For Deletion   Contact
     &{contact2}                           Verify Record Is Created In Database  Contact                       ${contact_id2}
     Store Session Record                  Account                               &{contact2}[AccountId]
     Header Field Value                    Account Name                          ${last_name2} Household
@@ -93,7 +94,8 @@ Create Household With additional details
     Verify Record                         ${first_name2} ${last_name2}
     Verify Record                         ${first_name1} ${last_name1}
     Click Link                            ${first_name1} ${last_name1}
-    ${contact_id1} =                      Save Current Record ID For Deletion      Contact
+    Current Page Should Be                Details                               Contact
+    ${contact_id1} =                      Save Current Record ID For Deletion   Contact
     &{contact1}                           Verify Record Is Created In Database  Contact                        ${contact_id1}
     Store Session Record                  Account                               &{contact1}[AccountId]
     Navigate To And Validate Field Value  Work Email            contains        automation@example.com          Details

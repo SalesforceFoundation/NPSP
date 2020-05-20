@@ -9,76 +9,76 @@
         <value><!-- Data Import Object Mapping --></value>
     </caseValues>
     <fields>
-        <help><!-- If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method. --></help>
-        <label><!-- Custom Mapping Logic Class --></label>
+        <help>Als aangepaste Apex-logica moet worden gebruikt voor het toewijzen van de velden toe voor dit object, moet dit veld worden ingevuld met de naam van een klasse (inclusief naamruimte, indien benodigd), die de klasse BDI_ObjectMappingLogic uitbreidt en de methode populateObject overschrijft.</help>
+        <label>Logische klasse voor aangepast toewijzen</label>
         <name>Custom_Mapping_Logic_Class__c</name>
     </fields>
     <fields>
-        <help><!-- The Data Import Object Group containing this record. --></help>
-        <label><!-- Data Import Object Mapping Set --></label>
+        <help>De Objectgroep voor gegevensimport, die deze record bevat.</help>
+        <label>Objecttoewijzingsset voor gegevensimport</label>
         <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel><!-- Data Import Object Mappings --></relationshipLabel>
+        <relationshipLabel>Objecttoewijzingen voor gegevensimport</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched. --></help>
-        <label><!-- Imported Record Field Name --></label>
+        <help>De veld-API-naam voor het object NPSP-gegevensimport, waarin de ID voor de /geïmporteerde record wordt geplaatst wanneer het importeren is geslaagd. Dit is ook de plaats waar de code gaat verifiëren of deze record is geïmporteerd of is gekoppeld.</help>
+        <label>Veldnaam van geïmporteerde record</label>
         <name>Imported_Record_Field_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record. --></help>
-        <label><!-- Imported Record Status Field Name --></label>
+        <help>De veld-API-naam waarin het slagen of mislukken van de import wordt vastgelegd voor een record NPSP-gegevensimport.</help>
+        <label>Veldnaam voor status van geïmporteerde record</label>
         <name>Imported_Record_Status_Field_Name__c</name>
     </fields>
     <fields>
-        <label><!-- Is Deleted --></label>
+        <label>Is verwijderd</label>
         <name>Is_Deleted__c</name>
     </fields>
     <fields>
-        <help><!-- The legacy Data Import object name of the object this Data Import Object Group is based on. --></help>
-        <label><!-- Legacy Data Import Object Name --></label>
+        <help>De objectnaam van verouderde gegevensimport van het object, waarop deze Objectgroep voor gegevensimport is gebaseerd.</help>
+        <label>Objectnaam van verouderde gegevensimport</label>
         <name>Legacy_Data_Import_Object_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The API name of the target object for this Object Group. --></help>
-        <label><!-- Object API Name --></label>
+        <help>De API-naam van het doelobject voor deze objectgroep</help>
+        <label>Object-API-naam</label>
         <name>Object_API_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The Data Import Object Group record that must exist before this record can be created (either Parent or Child). --></help>
-        <label><!-- Predecessor --></label>
+        <help>De record Objectgroep voor gegevensimport, die moet bestaan voordat deze record kan worden gemaakt (hetzij bovenliggend, hetzij onderliggend).</help>
+        <label>Voorganger</label>
         <name>Predecessor__c</name>
     </fields>
     <fields>
-        <help><!-- If this Object Group is a child of the predecessor, this field should look up to the parent. If it&apos;s the parent of the predecessor, this should be the lookup field on the child record. --></help>
-        <label><!-- Relationship Field --></label>
+        <help>Als deze objectgroep een onderliggend element van de voorganger is, moet dit veld &quot;opzien&quot; naar het bovenliggende element. Als het het bovenliggende element van de voorganger is, moet dit het opzoekveld voor de onderliggende record zijn.</help>
+        <label>Relatieveld</label>
         <name>Relationship_Field__c</name>
     </fields>
     <fields>
-        <help><!-- This indicates if this object is a parent or child of the predecessor. --></help>
-        <label><!-- Relationship To Predecessor --></label>
+        <help>Dit geeft aan of dit object een bovenliggend of onderliggend element van de voorganger is.</help>
+        <label>Relatie met voorganger</label>
         <name>Relationship_To_Predecessor__c</name>
         <picklistValues>
             <masterLabel>Child</masterLabel>
-            <translation><!-- Child --></translation>
+            <translation>Onderliggend element</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Predecessor</masterLabel>
-            <translation><!-- No Predecessor --></translation>
+            <translation>Geen voorganger</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Parent</masterLabel>
-            <translation><!-- Parent --></translation>
+            <translation>Bovenliggend element</translation>
         </picklistValues>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Data Import Object Mapping Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Custom Object Relationship Details --></label>
+            <label>Details van aangepast-objectrelatie</label>
             <section>Custom Object Relationship Details</section>
         </sections>
     </layouts>

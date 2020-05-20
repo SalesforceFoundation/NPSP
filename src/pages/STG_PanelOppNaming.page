@@ -5,7 +5,7 @@
         // sets the format to the current picklist value
         function setOppNameSpec(sl, idTxt) {
             var strVal = sl.value;
-            if (strVal == '{!$Label.stgLabelOther}') {
+            if (strVal == '{!JSENCODE($Label.stgLabelOther)}') {
                 $("[id$='" + idTxt + "']").show();
                 strVal = $("[id$='" + idTxt + "']").val();
             } else if (idTxt != null) {
@@ -27,7 +27,7 @@
             var txt = $("[id$='" + idTxt + "']");
 
             if (sl.val() == '' && txt.val() != '') {
-                sl.val('{!$Label.stgLabelOther}');
+                sl.val('{!JSENCODE($Label.stgLabelOther)}');
                 txt.show();
             }
         }
@@ -82,7 +82,7 @@
                                     <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.so.Name}" />
                                 </apex:commandLink>
                                 <apex:outputText value=" | "/>
-                                <apex:commandLink id="deleteONS" action="{!delONS}" title="{!$Label.stgLinkDelete}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deleteONS" action="{!delONS}" title="{!$Label.stgLinkDelete}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!JSENCODE($Label.stgLabelAreYouSure)}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.so.Name}" />
                                 </apex:commandLink>
                             </td>

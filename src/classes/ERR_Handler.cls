@@ -380,7 +380,7 @@ public class ERR_Handler {
             return;
         }
 
-        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c || isRD2MigrationContext(context)) {
             Database.insert(errorRecords, false);
         }
 
@@ -400,6 +400,20 @@ public class ERR_Handler {
 
         Error__c error = createError(e, context);
         processErrorsOnly(new List<Error__c>{ error }, context);
+    }
+
+    /***
+    * @description returns true if this method is calling from data migration
+    * or validate migration context
+    * @param The context the errors were raised on.
+    * @returns Boolean
+    */
+    public static Boolean isRD2MigrationContext(String context) {
+        return String.isNotBlank(context)
+            && (
+                context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN)
+                || context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_MIGRATION)
+            );
     }
 
     /*******************************************************************************************************

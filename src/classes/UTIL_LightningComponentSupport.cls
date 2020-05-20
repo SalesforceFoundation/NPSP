@@ -35,6 +35,58 @@
 */
 
 public with sharing class UTIL_LightningComponentSupport {
+    /**
+     * @description Maps Schema.DisplayType to lightning-datatable column.type
+     */
+    @TestVisible
+    private static final Map<Schema.DisplayType, String> TYPES_BY_DISPLAY_TYPE = new Map<Schema.DisplayType, String> {
+        Schema.DisplayType.BOOLEAN => 'checkbox',
+        Schema.DisplayType.CURRENCY => 'currency',
+        Schema.DisplayType.DATE => 'date-local',
+        Schema.DisplayType.DATETIME => 'date',
+        Schema.DisplayType.DOUBLE => 'number',
+        Schema.DisplayType.EMAIL => 'email',
+        Schema.DisplayType.ENCRYPTEDSTRING => 'text',
+        Schema.DisplayType.ID => 'text',
+        Schema.DisplayType.INTEGER => 'number',
+        Schema.DisplayType.JSON => 'text',
+        Schema.DisplayType.LOCATION => 'location',
+        Schema.DisplayType.LONG => 'number',
+        Schema.DisplayType.MULTIPICKLIST => 'text',
+        Schema.DisplayType.PERCENT => 'percent',
+        Schema.DisplayType.PHONE => 'phone',
+        Schema.DisplayType.PICKLIST => 'text',
+        Schema.DisplayType.REFERENCE => 'text',
+        Schema.DisplayType.STRING => 'text',
+        Schema.DisplayType.TEXTAREA => 'text',
+        Schema.DisplayType.TIME => 'date',
+        Schema.DisplayType.URL => 'url'
+    };
+
+    /**
+     * @description Maps Schema.DisplayType to lightning-datatable column.typeAttributes
+     */
+    @TestVisible
+    private static final Map<Schema.DisplayType, Map<String, Object>> TYPE_ATTRIBUTES_BY_DISPLAY_TYPE = new Map<Schema.DisplayType, Map<String, Object>> {
+        Schema.DisplayType.DATE => new Map<String, Object> {
+            'year' => 'numeric',
+            'month' => 'numeric',
+            'day' => 'numeric'
+        },
+        Schema.DisplayType.DATETIME => new Map<String, Object> {
+            'year' => 'numeric',
+            'month' => 'numeric',
+            'day' => 'numeric',
+            'hour' => '2-digit',
+            'minute' => '2-digit',
+            'hour12' => 'true'
+        },
+        Schema.DisplayType.TIME => new Map<String, Object> {
+            'hour' => '2-digit',
+            'minute' => '2-digit',
+            'hour12' => 'true'
+        }
+    };
 
     public static final String LIGHTNING_DATA_TYPE_NUMBER = 'number';
     public static final String LIGHTNING_DATA_TYPE_TEXT = 'text';
@@ -76,6 +128,28 @@ public with sharing class UTIL_LightningComponentSupport {
         } else {
             return fieldDisplayType.name().toLowerCase();
         }
+    }
+
+    /***
+    * @description Converts Apex field data type to type expected by lightning:datatable.
+    * @param fieldDisplayType Field display type
+    * @return String The data type expected by lightning components
+    */
+    public static String getColumnType(Schema.DisplayType fieldDisplayType) {
+        String dataType = TYPES_BY_DISPLAY_TYPE.get(fieldDisplayType);
+
+        return String.isBlank(dataType)
+            ? fieldDisplayType.name().toLowerCase()
+            : dataType;
+    }
+
+    /***
+    * @description Returns type attributes used in the data table
+    * @param fieldDisplayType Field display type
+    * @return Map<String, Object> Attribute by data type map
+    */
+    public static Map<String, Object> getColumnTypeAttributes(Schema.DisplayType fieldDisplayType) {
+        return TYPE_ATTRIBUTES_BY_DISPLAY_TYPE.get(fieldDisplayType);
     }
 
     /**

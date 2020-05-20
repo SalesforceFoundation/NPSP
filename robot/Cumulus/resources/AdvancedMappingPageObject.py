@@ -48,6 +48,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
     def view_field_mappings_of_the_object(self,obj):
         """Click the dropdwon for obj and select View Field Mappings and verify that field mappings page is open"""
         self.selenium.wait_until_page_contains("Object Groups", timeout=60)
+        self.selenium.wait_until_page_contains(obj, timeout=30, error=f"{obj} did not load in 30 seconds")
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(obj)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
@@ -80,13 +81,14 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
     @capture_screenshot_on_error    
     def delete_field_mapping(self,fld_name):
         """Click the dropdown for fld_name and select Delete and wait for field mapping to not present on the page."""
-        locator=npsp_lex_locators['adv_mappings']['dropdown'].format(fld_name)    
+        locator=npsp_lex_locators['adv_mappings']['dropdown'].format(fld_name)
+        deleted=npsp_lex_locators['adv_mappings']['field-label'].format(fld_name)    
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
         self.selenium.wait_until_page_contains("Delete", timeout=60)
         self.selenium.click_link("Delete")
         self.selenium.wait_until_page_contains("Success", timeout=180)
-        self.selenium.wait_until_page_does_not_contain(fld_name, timeout=60)
+        self.selenium.wait_until_page_does_not_contain_element(deleted, timeout=60)
     
     @capture_screenshot_on_error    
     def delete_mapping_if_mapping_exists(self,fld_label):

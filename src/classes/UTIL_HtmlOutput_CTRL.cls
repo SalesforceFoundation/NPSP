@@ -102,6 +102,21 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     }
 
     /*******************************************************************************************************************
+    * @description Strips un-whitelisted javascript from string
+    */
+    public String sanitizeInlineJavaScript(String unsanitaryLink) {
+        if (String.isBlank(unsanitaryLink)) {
+            return '';
+        }
+
+        String quoteString = '(\'|\\Q' + SUBSTITUTION_BY_ALLOWED_URL.get('"') + '\\E)';
+        Pattern stripJavaScript = Pattern.compile('on[a-z]*\\s*=\\s*' + quoteString + '.*\\(.*\\)\\s*\\1');
+        Matcher matchStrip = stripJavaScript.matcher(unsanitaryLink);
+
+        return matchStrip.replaceAll('');
+    }
+
+    /*******************************************************************************************************************
     * @description Returns the unescaped html with the whitelisted tags and url replaced with temporary values
     */
     private String replaceWhitelist(String unescapedHtml) {
@@ -116,6 +131,8 @@ public with sharing class UTIL_HtmlOutput_CTRL {
                 replacedHtml = replacedHtml.replace(allowedUrl, SUBSTITUTION_BY_ALLOWED_URL.get(allowedUrl));
             }
         }
+
+        replacedHtml = sanitizeInlineJavaScript(replacedHtml);
 
         return replacedHtml;
     }

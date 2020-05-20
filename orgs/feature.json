@@ -3,6 +3,15 @@
   "edition": "Developer",
   "hasSampleData": "true",
   "settings": {
+    "userManagementSettings": {
+      "enableNewProfileUI": true
+    },
+    "securitySettings": {
+      "enableAdminLoginAsAnyUser": true,
+      "sessionSettings": {
+        "forceRelogin": false
+      }
+    },
     "chatterSettings": {
       "enableChatter": true
     },

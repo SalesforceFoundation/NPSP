@@ -9,222 +9,222 @@
         <value><!-- Recurring Donation Schedule --></value>
     </caseValues>
     <fields>
-        <help><!-- Establishes whether the Recurring Donation Schedule is active or inactive based on End Date. Read only. --></help>
-        <label><!-- Active --></label>
+        <help>Détermine si le Calendrier de dons récurrents est actif ou inactif en fonction de la Date de fin. En lecture seule.</help>
+        <label>Actif</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help><!-- The Campaign associated with the Recurring Donation when this schedule record was created. --></help>
-        <label><!-- Related Campaign --></label>
+        <help>La campagne associée au don récurrent lors de la création de l&apos;enregistrement de ce calendrier.</help>
+        <label>Campagne associée</label>
         <name>Campaign__c</name>
-        <relationshipLabel><!-- Recurring Donation Schedules --></relationshipLabel>
+        <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. --></help>
-        <label><!-- Day of Month --></label>
+        <help>Définit le jour spécifique du mois des futures opportunités de versement lorsque la Période de versement est Mensuelle.</help>
+        <label>Jour du mois</label>
         <name>DayOfMonth__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
-            <translation><!-- 1 --></translation>
+            <translation>1</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>10</masterLabel>
-            <translation><!-- 10 --></translation>
+            <translation>10</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>11</masterLabel>
-            <translation><!-- 11 --></translation>
+            <translation>11</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>12</masterLabel>
-            <translation><!-- 12 --></translation>
+            <translation>12</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>13</masterLabel>
-            <translation><!-- 13 --></translation>
+            <translation>13</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>14</masterLabel>
-            <translation><!-- 14 --></translation>
+            <translation>14</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>15</masterLabel>
-            <translation><!-- 15 --></translation>
+            <translation>15</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>16</masterLabel>
-            <translation><!-- 16 --></translation>
+            <translation>16</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>17</masterLabel>
-            <translation><!-- 17 --></translation>
+            <translation>17</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>18</masterLabel>
-            <translation><!-- 18 --></translation>
+            <translation>18</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>19</masterLabel>
-            <translation><!-- 19 --></translation>
+            <translation>19</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>2</masterLabel>
-            <translation><!-- 2 --></translation>
+            <translation>2</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>20</masterLabel>
-            <translation><!-- 20 --></translation>
+            <translation>20</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>21</masterLabel>
-            <translation><!-- 21 --></translation>
+            <translation>21</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>22</masterLabel>
-            <translation><!-- 22 --></translation>
+            <translation>22</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>23</masterLabel>
-            <translation><!-- 23 --></translation>
+            <translation>23</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>24</masterLabel>
-            <translation><!-- 24 --></translation>
+            <translation>24</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>25</masterLabel>
-            <translation><!-- 25 --></translation>
+            <translation>25</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>26</masterLabel>
-            <translation><!-- 26 --></translation>
+            <translation>26</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>27</masterLabel>
-            <translation><!-- 27 --></translation>
+            <translation>27</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>28</masterLabel>
-            <translation><!-- 28 --></translation>
+            <translation>28</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>3</masterLabel>
-            <translation><!-- 3 --></translation>
+            <translation>3</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
-            <translation><!-- 4 --></translation>
+            <translation>4</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>5</masterLabel>
-            <translation><!-- 5 --></translation>
+            <translation>5</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>6</masterLabel>
-            <translation><!-- 6 --></translation>
+            <translation>6</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>7</masterLabel>
-            <translation><!-- 7 --></translation>
+            <translation>7</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>8</masterLabel>
-            <translation><!-- 8 --></translation>
+            <translation>8</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>9</masterLabel>
-            <translation><!-- 9 --></translation>
+            <translation>9</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Last Day Of Month</masterLabel>
-            <translation><!-- Last Day Of Month --></translation>
+            <translation>Dernier jour du mois</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The ending date, if required, for this schedule record. --></help>
-        <label><!-- End Date --></label>
+        <help>La date de fin, si nécessaire, de l&apos;enregistrement de ce calendrier.</help>
+        <label>Date de fin</label>
         <name>EndDate__c</name>
     </fields>
     <fields>
-        <help><!-- For integration with external services or data warehouses. --></help>
-        <label><!-- External Schedule Id --></label>
+        <help>Pour l&apos;intégration à des services externes ou des entrepôts de données.</help>
+        <label>ID de calendrier externe</label>
         <name>ExternalId__c</name>
     </fields>
     <fields>
-        <help><!-- The amount for each installment Opportunity. --></help>
-        <label><!-- Amount --></label>
+        <help>Le montant de chaque opportunité de versement.</help>
+        <label>Montant</label>
         <name>InstallmentAmount__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
-        <label><!-- Installment Frequency --></label>
+        <help>Définit le calendrier de versement de ce don récurrent en fonction de la période de versement. Par exemple, si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
+        <label>Fréquence de versement</label>
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the installment schedule of this Recurring Donation along with Installment Frequency. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
-        <label><!-- Installment Period --></label>
+        <help>Définit le calendrier de versement de ce don récurrent en fonction de la fréquence de versement. Par exemple, si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
+        <label>Période de versement</label>
         <name>InstallmentPeriod__c</name>
         <picklistValues>
             <masterLabel>1st and 15th</masterLabel>
-            <translation><!-- 1st and 15th --></translation>
+            <translation>1er et 15e jours du mois</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Daily</masterLabel>
-            <translation><!-- Daily --></translation>
+            <translation>Quotidienne</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Monthly</masterLabel>
-            <translation><!-- Monthly --></translation>
+            <translation>Mensuelle</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Weekly</masterLabel>
-            <translation><!-- Weekly --></translation>
+            <translation>Hebdomadaire</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Yearly</masterLabel>
-            <translation><!-- Yearly --></translation>
+            <translation>Annuelle</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
-        <label><!-- Payment Method --></label>
+        <help>Le mode de paiement pour ce don récurrent. NPSP copie automatiquement la valeur sélectionnée dans chaque enregistrement de Paiement.</help>
+        <label>Mode de paiement</label>
         <name>PaymentMethod__c</name>
         <picklistValues>
             <masterLabel>ACH/EFT</masterLabel>
-            <translation><!-- ACH/EFT --></translation>
+            <translation>CCA/TEF</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>
-            <translation><!-- Check --></translation>
+            <translation>Chèque</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Credit Card</masterLabel>
-            <translation><!-- Credit Card --></translation>
+            <translation>Carte de crédit</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The Recurring Donation this schedule record is associated with. --></help>
-        <label><!-- Recurring Donation --></label>
+        <help>Le don récurrent auquel l&apos;enregistrement de ce calendrier est associé.</help>
+        <label>Don récurrent</label>
         <name>RecurringDonation__c</name>
-        <relationshipLabel><!-- Recurring Donation Schedules --></relationshipLabel>
+        <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The starting date for this schedule record. --></help>
-        <label><!-- Start Date --></label>
+        <help>La date à laquelle l&apos;enregistrement de ce calendrier s&apos;applique.</help>
+        <label>Date d&apos;entrée en vigueur</label>
         <name>StartDate__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Liens personnalisés</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Schedule Details --></label>
+            <label>Détails de planification</label>
             <section>Schedule Details</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Recurring Schedule Num --></nameFieldLabel>
+    <nameFieldLabel>Numéro de planification récurrente</nameFieldLabel>
     <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>

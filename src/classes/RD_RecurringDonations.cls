@@ -188,10 +188,11 @@ public class RD_RecurringDonations {
     * @return void
     */
     public static void updateRecurringDonationOnOppChange(Set<Id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        Boolean CRLPEnabled = CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
 
-        // only use this hard-coded RD rollup code if Customizable Rollups aren't enabled
-        if (CRLPEnabled) {
+        // do not calculate legacy rollups if customizable rollups or enhanced Recurring Donations are enabled
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+            || RD2_EnablementService.isRecurringDonations2Enabled
+        ) {
             return;
         }
 
@@ -199,7 +200,7 @@ public class RD_RecurringDonations {
         Map<Id, npe03__Recurring_Donation__c> updateMap = new Map<Id, npe03__Recurring_Donation__c>();
 
         //Get the closed label for opps
-        String closedLabel = System.Label.npe03.RecurringDonationClosedStatus;
+        String closedLabel = RD_Constants.OPEN_ENDED_STATUS_CLOSED;
 
         //before we query for any RD's, we must make sure that all previous changes to them have been committed!
         if (dmlWrapper != null) {
@@ -250,7 +251,7 @@ public class RD_RecurringDonations {
                 }
 
                 //if this is the summary row for this rd only update installments for open ended opportunities
-                if (isClosed == null && isWon == null && rd.npe03__open_ended_status__c == System.Label.npe03.RecurringDonationOpenStatus) {
+                if (isClosed == null && isWon == null && rd.npe03__open_ended_status__c == RD_Constants.OPEN_ENDED_STATUS_OPEN) {
                     rd.npe03__Installments__c = (Integer) obj.get('oppcount');
                     updateMap.put(rdid, rd);
                 }
@@ -392,7 +393,7 @@ public class RD_RecurringDonations {
         //Loop through the Recurring Donations and create the appropriate number of Opportunities
         for (npe03__Recurring_Donation__c r : recurringDonations) {
             //if we're not looking at an open-ended type donation, handle it the 'old' way
-            if (r.npe03__Open_Ended_Status__c != System.Label.npe03.RecurringDonationOpenStatus && r.npe03__Open_Ended_Status__c != System.Label.npe03.RecurringDonationClosedStatus) {
+            if (r.npe03__Open_Ended_Status__c != RD_Constants.OPEN_ENDED_STATUS_OPEN && r.npe03__Open_Ended_Status__c != RD_Constants.OPEN_ENDED_STATUS_CLOSED) {
 
                 Decimal installs = r.npe03__Installments__c;
                 Integer installments = (installs == null ? 0 : installs.intValue());
@@ -413,7 +414,7 @@ public class RD_RecurringDonations {
                     paidInstallments = Integer.valueOf(r.npe03__Total_Paid_Installments__c);
                     j = paidInstallments;
 
-                    if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue &&
+                    if (r.npe03__Schedule_Type__c != RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY &&
                         installments - paidInstallments > 0
                     ) {
                         installmentAmount = (r.npe03__Amount__c - paidAmount) / (installments - paidInstallments);
@@ -503,7 +504,7 @@ public class RD_RecurringDonations {
             //this is an open-ended rd that needs opptys
             else {
                 //if its not 'open', we're not doing anything to it
-                if (r.npe03__Open_Ended_Status__c == System.Label.npe03.RecurringDonationOpenStatus) {
+                if (r.npe03__Open_Ended_Status__c == RD_Constants.OPEN_ENDED_STATUS_OPEN) {
                     //get settings so we can figure out how many donations to create
                     Date oppCloseDate = getStartDate(r);
 
@@ -721,7 +722,7 @@ public class RD_RecurringDonations {
     */
     public static void updateExistingOpps(Set<Id> recIDs, TDTM_Runnable.DmlWrapper dmlWrapper) {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        String closedLabel = System.Label.npe03.RecurringDonationClosedStatus;
+        String closedLabel = RD_Constants.OPEN_ENDED_STATUS_CLOSED;
 
         String rdQuery = strQueryRDNoWhere();
         rdQuery+=' where npe03__Open_Ended_Status__c <> :closedLabel ';
@@ -829,8 +830,8 @@ public class RD_RecurringDonations {
         // closed an open recurring donation
         List<npe03__Recurring_Donation__c> newlycloseddonations = new List<npe03__Recurring_Donation__c>();
 
-        String openlabel = System.Label.npe03.RecurringDonationOpenStatus;
-        String closedlabel = System.Label.npe03.RecurringDonationClosedStatus;
+        String openlabel = RD_Constants.OPEN_ENDED_STATUS_OPEN;
+        String closedlabel = RD_Constants.OPEN_ENDED_STATUS_CLOSED;
 
         for (npe03__Recurring_Donation__c r : recurringDonations) {
             npe03__Recurring_Donation__c oldRD = oldRecurringDonations.get(r.id);
@@ -913,8 +914,8 @@ public class RD_RecurringDonations {
             TDTM_Config_API.disableAllRollupTriggers();
         }
 
-        String openlabel = System.Label.npe03.RecurringDonationOpenStatus;
-        String closedlabel = System.Label.npe03.RecurringDonationClosedStatus;
+        String openlabel = RD_Constants.OPEN_ENDED_STATUS_OPEN;
+        String closedlabel = RD_Constants.OPEN_ENDED_STATUS_CLOSED;
 
         // non open-ended rd's are handled strictly by the insert rd code.
         List<npe03__Recurring_Donation__c> listRDNonOpen = new List<npe03__Recurring_Donation__c>();
@@ -1167,8 +1168,8 @@ public class RD_RecurringDonations {
             ? r.npe03__Next_Payment_Date__c
             : dateEstablished;
 
-        if (r.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodMonthly
-            || r.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly
+        if (r.npe03__Installment_Period__c == RD_Constants.INSTALLMENT_PERIOD_MONTHLY
+            || r.npe03__Installment_Period__c == RD_Constants.INSTALLMENT_PERIOD_QUARTERLY
         ) {
             // For monthly or quarterly installments only, the initial date needs to be tweaked
             // to be the appropriate start date in the *current month*
@@ -1257,21 +1258,21 @@ public class RD_RecurringDonations {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         String InstallmentType = rd.npe03__Installment_Period__c;
 
-        if (InstallmentType == System.Label.npe03.RecurringDonationInstallmentPeriodYearly) {
+        if (InstallmentType == RD_Constants.INSTALLMENT_PERIOD_YEARLY) {
             calcDate = calcDate.addYears(1);
 
-        } else if (InstallmentType == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
+        } else if (InstallmentType == RD_Constants.INSTALLMENT_PERIOD_QUARTERLY) {
             calcDate = calcDate.addMonths(3);
             calcDate = adjustDayOfMonth(calcDate, rd);
 
-        } else if (InstallmentType == System.Label.npe03.RecurringDonationInstallmentPeriodMonthly) {
+        } else if (InstallmentType == RD_Constants.INSTALLMENT_PERIOD_MONTHLY) {
             calcDate = calcDate.addMonths(1);
             calcDate = adjustDayOfMonth(calcDate, rd);
 
-        } else if (InstallmentType == System.Label.npe03.RecurringDonationInstallmentPeriodWeekly) {
+        } else if (InstallmentType == RD_Constants.INSTALLMENT_PERIOD_WEEKLY) {
             calcDate = calcDate.addDays(7);
 
-        } else if (InstallmentType == System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th) {
+        } else if (InstallmentType == RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
             //increment it by one day until we hit either the 1st or 15th
             do {
                 calcDate = calcDate.addDays(1);

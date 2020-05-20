@@ -154,56 +154,116 @@
         <name>Address_Verification_Limit</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextActive --></label>
+        <label>有効</label>
         <name>AssistiveTextActive</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextComplete --></label>
+        <label>完了</label>
         <name>AssistiveTextComplete</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextError --></label>
+        <label>期限切れ</label>
         <name>AssistiveTextError</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextNewWindow --></label>
+        <label>情報</label>
+        <name>AssistiveTextInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>新しいウィンドウでリンクが開きます</label>
         <name>AssistiveTextNewWindow</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextWarning --></label>
+        <label>[レコード] アイコン</label>
+        <name>AssistiveTextRecordIcon</name>
+    </customLabels>
+    <customLabels>
+        <label>警告</label>
         <name>AssistiveTextWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressCompletedDate --></label>
+        <label>完了:</label>
         <name>BatchProgressCompletedDate</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressExtendedStatus --></label>
+        <label>拡張状況:</label>
         <name>BatchProgressExtendedStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressJobItemsProcessed --></label>
+        <label>処理済みバッチ:</label>
         <name>BatchProgressJobItemsProcessed</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressStatus --></label>
+        <label>状況:</label>
         <name>BatchProgressStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTimeElapsed --></label>
+        <label>完了</label>
+        <name>BatchProgressStatusComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>完了 (エラーあり)</label>
+        <name>BatchProgressStatusCompleteErrors</name>
+    </customLabels>
+    <customLabels>
+        <label>エラー</label>
+        <name>BatchProgressStatusError</name>
+    </customLabels>
+    <customLabels>
+        <label>失敗</label>
+        <name>BatchProgressStatusFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>保留中</label>
+        <name>BatchProgressStatusHolding</name>
+    </customLabels>
+    <customLabels>
+        <label>準備中</label>
+        <name>BatchProgressStatusPreparing</name>
+    </customLabels>
+    <customLabels>
+        <label>処理中</label>
+        <name>BatchProgressStatusProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>キューに登録済み</label>
+        <name>BatchProgressStatusQueued</name>
+    </customLabels>
+    <customLabels>
+        <label>停止済み</label>
+        <name>BatchProgressStatusStopped</name>
+    </customLabels>
+    <customLabels>
+        <label>成功</label>
+        <name>BatchProgressStatusSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>経過時間:</label>
         <name>BatchProgressTimeElapsed</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTimeElapsedDays --></label>
+        <label>日数</label>
         <name>BatchProgressTimeElapsedDays</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTitleRD2DataMigration --></label>
+        <label>データ移行の実行</label>
         <name>BatchProgressTitleRD2DataMigration</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTotalJobItems --></label>
+        <label>バッチ総数:</label>
         <name>BatchProgressTotalJobItems</name>
+    </customLabels>
+    <customLabels>
+        <label>レコード総数:</label>
+        <name>BatchProgressTotalRecords</name>
+    </customLabels>
+    <customLabels>
+        <label>失敗したレコード数:</label>
+        <name>BatchProgressTotalRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>処理済みレコード数:</label>
+        <name>BatchProgressTotalRecordsProcessed</name>
     </customLabels>
     <customLabels>
         <label>この {0} を削除しますか?</label>
@@ -745,140 +805,300 @@
         <name>PageMessagesWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- ProgressMarkerAssistiveTextProgress --></label>
+        <label>進行状況:</label>
         <name>ProgressMarkerAssistiveTextProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if value on the amount is valid or not --></label>
+        <label>有効な金額を入力してください。金額は 0、負数、空白にできません。</label>
         <name>RD2_AmountMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Installment Period cannot be converted to enhanced Recurring Donation format --></label>
+        <label>完了した支援のある継続支援の世帯団体または世帯個人は変更できません。</label>
+        <name>RD2_ContactChangeIsRestricted</name>
+    </customLabels>
+    <customLabels>
+        <label>支援通貨は関連する継続支援以外の通貨に変更できません。</label>
+        <name>RD2_CurrencyChangeIsRestrictedOnOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>関連する完了した支援がある場合、継続支援通貨は変更できません。</label>
+        <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
+    </customLabels>
+    <customLabels>
+        <label>現在のスケジュール</label>
+        <name>RD2_CurrentScheduleTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>[NPSP 設定] | [継続支援] で、[継続支援完了時の進行中の支援の動作] に [No_Action] 以外の値を選択します。データ移行が完了した後に設定を前の値に戻すことができます。</label>
+        <name>RD2_DataMigrationInvalidCloseAction</name>
+    </customLabels>
+    <customLabels>
+        <label>継続支援の間隔「{0}」は拡張継続支援形式に変換できません。[NPSP 設定] -&gt; [継続支援] -&gt; [継続支援のカスタム間隔] で間隔が定義されていることを確認してください。</label>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- Open Ended Status cannot be converted to enhanced Recurring Donation format --></label>
+        <label>継続支援状況「{0}」は拡張継続支援形式に変換できません。[進行中]、[完了]、[なし] のいずれかの値を使用する必要があります。</label>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate RD data if day of month is blank when installment is monthly --></label>
+        <label>[間隔] が [毎月] の場合、[日付] に値を入力する必要があります。</label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if it is valid day of month --></label>
+        <label>{0} は、[日付] でサポートされていない値です。1 ～ 30 の値、または [末日] を選択してください。</label>
         <name>RD2_DayOfMonthMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledHeader --></label>
+        <label>&lt;b&gt;警告: 拡張継続支援が有効になっています。カスタマイズ可能な積み上げ集計を無効にすると、継続支援への積み上げ集計が機能しなくなります。&lt;/b&gt;</label>
+        <name>RD2_DisableCustomizableRollupWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>もう少しで完了です。最初にいくつかのことを確認する必要があります . . .</label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledMessage --></label>
+        <label>(1) Lightning Experience を使用する準備ができたいない場合、画面上部の [Lightning Experience に切り替え] をクリックします。&lt;br/&gt;(2) [NPSP 設定] | [支援] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にします。&lt;br/&gt;&lt;br/&gt;ここに戻って、[拡張継続支援にアップグレード] ページに移動します。</label>
         <name>RD2_EnablementDisabledMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableConfirm --></label>
+        <label>移行を検証</label>
+        <name>RD2_EnablementDryRunBatchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>移行を検証</label>
+        <name>RD2_EnablementDryRunButton</name>
+    </customLabels>
+    <customLabels>
+        <label>検証が正常に完了しました。</label>
+        <name>RD2_EnablementDryRunComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP は、拡張継続支援モデルへの既存のデータの移行をシミュレーションし、エラーを識別します。エラーがある場合、[NPSP 設定] | [システムツール] | [エラーログ] に移動します。エラーを修正したら、ここに戻って移行を再度検証します。エラーなしで検証が完了したら、次のステップに進むことができます。&lt;br/&gt;&lt;br/&gt;検証プロセスが完了するまで時間がかかることがあります。このページから移動し、後で戻って進行状況を確認できます。</label>
+        <name>RD2_EnablementDryRunIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>移行準備完了</label>
+        <name>RD2_EnablementDryRunNextButton</name>
+    </customLabels>
+    <customLabels>
+        <label>移行の検証が完了してから 7 日以上経過しています。ページを更新して [移行を検証] をクリックし、エラーなくデータが移行されることを確認してください。</label>
+        <name>RD2_EnablementDryRunOutdatedError</name>
+    </customLabels>
+    <customLabels>
+        <label>移行の検証が完了から 7 日以上経過しています。[移行を検証] をクリックし、エラーなくデータが移行されることを確認してください。</label>
+        <name>RD2_EnablementDryRunOutdatedInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>検証をスキップ</label>
+        <name>RD2_EnablementDryRunSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label>検証を停止</label>
+        <name>RD2_EnablementDryRunStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label>移行を検証</label>
+        <name>RD2_EnablementDryRunTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>上記の準備および検証タスクを完了し、拡張継続支援を有効にする準備が整っていることを確認しました。</label>
         <name>RD2_EnablementEnableConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableIntro --></label>
+        <label>このステップにより、現在の継続支援処理ロジックが拡張継続支援ロジックに置き換わります。</label>
         <name>RD2_EnablementEnableIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableMessage --></label>
+        <label>拡張継続支援機能を有効にします。</label>
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableTitle --></label>
+        <label>拡張継続支援機能を有効化</label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableWarning --></label>
+        <label>&lt;b&gt;警告: NPSP には、従来の継続支援に戻す方法は用意されていません。&lt;/b&gt;</label>
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementIntro --></label>
+        <label>拡張継続支援は、Nonprofit Success Pack (NPSP) の再設計および改善された継続支援機能です。フィードバックを提供し、拡張継続支援の実現を支援してくれたコミュニティメンバーに感謝します。
+        &lt;br/&gt;&lt;br/&gt;NPSP にはすでに継続支援機能があるため、いくつかのアップグレードタスクを実行し、既存のデータを拡張継続支援モデルに移行する必要があります。必要なタスクの概要を以下に示します。
+        &lt;br/&gt;&lt;br/&gt;その過程で疑問が生じると思われますが、各ステップで準備を万全にしてください。アップグレードプロセスの進行時に&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;拡張継続支援のドキュメント&lt;/a&gt;を参照してください。</label>
         <name>RD2_EnablementIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirm --></label>
+        <label>拡張継続支援メタデータがインストールされていることを確認してください。</label>
         <name>RD2_EnablementMetaDeployConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirmError --></label>
+        <label>拡張継続支援メタデータがまだインストールされていません。[MetaDeploy を起動] をクリックして指示に従ってください。</label>
         <name>RD2_EnablementMetaDeployConfirmError</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployIntro --></label>
+        <label>MetaDeploy を使用して、拡張継続支援用の新しいメタデータ (選択リスト値、ヘルプテキストなど) をインストールしてください。MetaDeploy は Salesforce 組織の外部に存在するサービスです。メタデータをインストールしたら、このページに戻って拡張継続支援のアップグレードを継続してください。</label>
         <name>RD2_EnablementMetaDeployIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunch --></label>
+        <label>MetaDeploy サービスを使用して、拡張継続支援メタデータをインストールしてください。</label>
         <name>RD2_EnablementMetaDeployLaunch</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunchLinkLabel --></label>
+        <label>MetaDeploy を起動</label>
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployTitle --></label>
+        <label>拡張継続支援メタデータをインストール</label>
         <name>RD2_EnablementMetaDeployTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationButton --></label>
+        <label>移行を実行</label>
         <name>RD2_EnablementMigrationButton</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationCompleteMessage --></label>
+        <label>&lt;b&gt;アップグレードプロセスが完了しました。&lt;/b&gt;&lt;br/&gt;
+        &lt;br/&gt;組織で拡張継続支援の使用を開始する前に次の作業を行ってください:&lt;br/&gt;
+        &lt;ul&gt;&lt;li&gt;アップグレード前に無効にしたワークフロー、プロセス、入力規則、トリガを有効にする。&lt;/li&gt;
+        &lt;li&gt;拡張継続支援ページレイアウトをすべてのユーザプロファイルに割り当て、古い継続支援ページレイアウトを削除する。&lt;/li&gt;
+        &lt;li&gt;NPSP 継続支援 Lightning レコードページを組織のデフォルトとして割り当てる。&lt;/li&gt;   
+        &lt;li&gt;RD2_VisualizeScheduleController Apex クラスをカスタムプロファイルに割り当てる。&lt;/li&gt;    
+        &lt;li&gt;プロファイルおよび権限セットで必要に応じて継続支援項目の項目レベルセキュリティを調整する。&lt;/li&gt;
+        &lt;li&gt;拡張継続支援で機能するように継続支援レポートを調整する。&lt;/li&gt;
+        &lt;li&gt;拡張継続支援についてスタッフを教育する。&lt;/li&gt;</label>
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationIntro --></label>
+        <label>移行の実行でエラーが発生しました。正常に完了するには、これらのエラーを修正する必要があります。エラーを確認するには、[NPSP 設定] &gt; [システムツール] &gt; [エラーログ] に移動します。詳細は、&lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;ドキュメント&lt;/a&gt;を参照してください。エラーを修正してから戻ってもう一度お試しください。</label>
+        <name>RD2_EnablementMigrationErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>既存の継続支援データを拡張継続支援データモデルに移行します。このプロセスには時間がかかることがあります。このページから移動し、後で戻って進行状況を確認できます。</label>
         <name>RD2_EnablementMigrationIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationTitle --></label>
+        <label>検証に戻る</label>
+        <name>RD2_EnablementMigrationSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label>データ移行を再度検証するには、[移行を検証] をクリックします。</label>
+        <name>RD2_EnablementMigrationStepDryRun</name>
+    </customLabels>
+    <customLabels>
+        <label>データ移行プロセスを開始するには、[移行を実行] をクリックします。</label>
+        <name>RD2_EnablementMigrationStepFinal</name>
+    </customLabels>
+    <customLabels>
+        <label>移行を停止</label>
+        <name>RD2_EnablementMigrationStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label>データ移行を実行</label>
         <name>RD2_EnablementMigrationTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationWarning --></label>
+        <label>&lt;b&gt;警告: [移行を実行] をクリックすると、拡張継続支援モデルに合わせて既存の継続支援データが変更されます。まだ行っていない場合はデータベースをバックアップしてください。&lt;/b&gt;</label>
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepIntro --></label>
+        <label>潜在的なエラーを限定してデータを保護するには、拡張継続支援へのアップグレードを開始する前に次の準備タスクを実行します:</label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTasks --></label>
+        <label>&lt;ul&gt;&lt;li&gt;継続支援、支援、支払オブジェクトのワークフロー、プロセス、入力規則、トリガを無効にする。&lt;/li&gt;
+&lt;li&gt;データベース (すべての継続支援とそれらの関連レコードを含む) をバックアップする。&lt;/li&gt;
+&lt;li&gt;拡張継続支援の&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;ドキュメント&lt;/a&gt;を参照する。&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_EnablementPrepTasks</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTitle --></label>
+        <label>準備タスク</label>
         <name>RD2_EnablementPrepTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- The job can only be executed when Enhanced RD is enabled in the org --></label>
+        <label>拡張継続支援データ移行ジョブを実行する前に拡張継続支援を有効にする必要があります。</label>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- The RD2 Batch job can only be executed when Enhanced RD is enabled --></label>
+        <label>拡張継続支援データバッチジョブを実行する前に拡張継続支援を有効にする必要があります。</label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if it is valid install period --></label>
+        <label>[頻度] は必須です。1 ～ 20 の値を入力してください。</label>
+        <name>RD2_InstallmentFrequencyMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} は [間隔] でサポートされていない値です。[毎日]、[毎週]、[1 日と 15 日]、[毎月]、[毎年] を選択してください。</label>
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if contact is not found with HH Account --></label>
+        <label>[予定回数] は、[支払回数] よりも少なくすることはできません。</label>
+        <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
+    </customLabels>
+    <customLabels>
+        <label>[予定回数] は、固定の継続支援の場合にのみ使用します。[予定回数] の値を削除するか、[継続種別] を [固定] に変更してください。</label>
+        <name>RD2_NumberInstallmentsNotAllowedWhenOpen</name>
+    </customLabels>
+    <customLabels>
+        <label>[継続種別] が [固定] の場合、[予定回数] は必須です。</label>
+        <name>RD2_NumberInstallmentsRequiredWhenFixed</name>
+    </customLabels>
+    <customLabels>
+        <label>ページを使用できません</label>
+        <name>RD2_PageNotAvailableHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>このページは拡張継続支援では使用できません。ブラウザを更新して [NPSP 設定] に戻ってください。</label>
+        <name>RD2_PageNotAvailableMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>終了日</label>
+        <name>RD2_ScheduleLWCEndDate</name>
+    </customLabels>
+    <customLabels>
+        <label>将来のスケジュール</label>
+        <name>RD2_ScheduleLWCFutureSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>有効なスケジュール</label>
+        <name>RD2_ScheduleLWCTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>日付</label>
+        <name>RD2_ScheduleVisualizerColumnDate</name>
+    </customLabels>
+    <customLabels>
+        <label>このコンポーネントは、継続支援レコードページで使用する必要があります。</label>
+        <name>RD2_ScheduleVisualizerErrorEnhancedRDNot</name>
+    </customLabels>
+    <customLabels>
+        <label>このコンポーネントを使用するには、拡張継続支援を有効にする必要があります。</label>
+        <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
+    </customLabels>
+    <customLabels>
+        <label>この継続支援の有効なスケジュールはありません。</label>
+        <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>スケジュールされている割賦支援はありません。</label>
+        <name>RD2_ScheduleVisualizerMessageNoSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>今後の割賦</label>
+        <name>RD2_ScheduleVisualizerTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>この世帯団体に関連付けられている個人を選択する必要があります。</label>
         <name>RD_ContactMustBelongToAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if contact and account are missing --></label>
+        <label>団体または個人を選択する必要があります。</label>
         <name>RD_DonorIsRequired</name>
     </customLabels>
     <customLabels>
         <label>支援の更新</label>
         <name>RD_ErrorAddDonationHeaderText</name>
+    </customLabels>
+    <customLabels>
+        <label>[支援の更新] ボタンには、拡張継続支援の機能はありません。継続支援ページレイアウトからこのボタンを削除するようにシステム管理者に依頼してください。</label>
+        <name>RD_ErrorAddDonationLimitedToLegacyMode</name>
     </customLabels>
     <customLabels>
         <label>継続支援 ID がありません。有効な継続支援レコードを選択してください。</label>
@@ -889,7 +1109,7 @@
         <name>RD_ErrorAddDonationPermissionDenied</name>
     </customLabels>
     <customLabels>
-        <label><!-- The legacy RD Batch job cannot be executed when Enhanced RD is enabled --></label>
+        <label>この組織では拡張継続支援が有効になっているため、従来の継続支援バッチジョブは実行できません。</label>
         <name>RD_ErrorLegacyBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
@@ -899,6 +1119,10 @@
     <customLabels>
         <label>関連するすべての支援成立と Pledged 支援を組み合わせた値は、継続支援の固定長の値とマッチングする必要があります。</label>
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Confirmation message displayed to user before the process runs --></label>
+        <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
         <label>新規リレーションを作成</label>
@@ -1021,7 +1245,7 @@
         <name>RecurringDonationAccountAndContactError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Recurring Donation Name Suffix --></label>
+        <label>継続</label>
         <name>RecurringDonationNameSuffix</name>
     </customLabels>
     <customLabels>
@@ -1229,19 +1453,19 @@
         <name>bdiAccountCustomIdError</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjChildNotUpdated --></label>
+        <label>親レコードの ID が含まれる子レコードの参照項目は更新できません。次のシステムエラーのため、レコードを更新できませんでした:</label>
         <name>bdiAdditionalObjChildNotUpdated</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjPredNotFound --></label>
+        <label>エラー: レコードは作成されません。このレコードに連動する {0} が見つかりませんでした。</label>
         <name>bdiAdditionalObjPredNotFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjRequiredFieldsNull --></label>
+        <label>エラー: レコードは作成されません。必須項目がありません:</label>
         <name>bdiAdditionalObjRequiredFieldsNull</name>
     </customLabels>
     <customLabels>
-        <label><!-- Data Import Advanced Mapping Summary --></label>
+        <label>データインポート &amp; 支援エントリの高度な対応付け</label>
         <name>bdiAdvancedMapping</name>
     </customLabels>
     <customLabels>
@@ -1325,7 +1549,7 @@
         <name>bdiDataImporterDescription</name>
     </customLabels>
     <customLabels>
-        <label>各インポートレコードには、最大 2 人の個人、最大 2 つの団体、1 つの自宅住所 (省略可能)、1 つの支援 (省略可能) を含めることができます。</label>
+        <label>高度な対応付けを使用すると、個人、団体、支援に直接関連する任意の Salesforce オブジェクトおよび項目 (標準またはカスタム) に対応付けることができます。ヘルプテキストの対応付けでは、各インポートレコードには、最大 2 人の個人、最大 2 つの団体、1 つの自宅住所 (省略可能)、1 つの支援 (省略可能) を含めることができます。</label>
         <name>bdiDataImporterInfoLine1</name>
     </customLabels>
     <customLabels>
@@ -1357,7 +1581,7 @@
         <name>bdiDataImporterTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDeploymentInProgress --></label>
+        <label>現在、ヘルプテキストの対応付けは高度な対応付けに変換されています。</label>
         <name>bdiDeploymentInProgress</name>
     </customLabels>
     <customLabels>
@@ -1405,15 +1629,15 @@
         <name>bdiErrorBatchNameRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when updating data import custom settings --></label>
+        <label>[Data Import Setting (データインポート設定)] という名前のカスタム設定を更新しようとしたときにエラーが発生しました。</label>
         <name>bdiErrorDataImportCustomSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- error deploying metadata during migration from help text to metadata mapping --></label>
+        <label>ヘルプテキストの対応付けを変換し、高度な対応付けを有効にしようとしたときにエラーが発生しました。</label>
         <name>bdiErrorDeploymentFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- link to the deployment status page --></label>
+        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;ここでリリース状況を確認できます。&lt;/a&gt;</label>
         <name>bdiErrorDeploymentFailedLink</name>
     </customLabels>
     <customLabels>
@@ -1469,99 +1693,101 @@
         <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIBackToMapGroup --></label>
+        <label>オブジェクトグループに戻る</label>
         <name>bdiFMUIBackToMapGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDataType --></label>
+        <label>データ型</label>
         <name>bdiFMUIDataType</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDatatableMapsTo --></label>
+        <label>対応付けの対象</label>
         <name>bdiFMUIDatatableMapsTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDescription1 --></label>
+        <label>NPSP データインポートオブジェクトで作成した項目を以下のグリッドの対象オブジェクトの項目
+           に接続します。項目は、項目表示ラベルまたは項目 API 参照名で検索できます。</label>
         <name>bdiFMUIDescription1</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDescription2 --></label>
+        <label>NPSP データインポートオブジェクトの項目は、対象オブジェクトの互換性のある項目種別に対応付ける必要があります。
+            NPSP データインポート項目を選択する場合、互換性のある対象項目のみを使用できます。</label>
         <name>bdiFMUIDescription2</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIFieldAPIName --></label>
+        <label>項目 API 参照名</label>
         <name>bdiFMUIFieldAPIName</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIFieldLabel --></label>
+        <label>項目表示ラベル</label>
         <name>bdiFMUIFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeployment --></label>
+        <label>この項目の対応付けの変更に予測よりも長い時間がかかっています。</label>
         <name>bdiFMUILongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeploymentLink --></label>
+        <label>ここでリリース状況を確認します。</label>
         <name>bdiFMUILongDeploymentLink</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeploymentMessage --></label>
+        <label>この処理はバックグラウンドで続行されます。お待ちください。</label>
         <name>bdiFMUILongDeploymentMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUINewFieldMapping --></label>
+        <label>新規項目の対応付けを作成</label>
         <name>bdiFMUINewFieldMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUINoFieldMappings --></label>
+        <label>この対応付けグループにはまだ項目の対応付けがありません。</label>
         <name>bdiFMUINoFieldMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISearchSourceInputLabel --></label>
+        <label>表示ラベルまたは API 参照名で NPSP データインポートオブジェクトの項目を検索します。</label>
         <name>bdiFMUISearchSourceInputLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISearchTargetInputLabel --></label>
+        <label>表示ラベルまたは API 参照名で対象項目を検索します。</label>
         <name>bdiFMUISearchTargetInputLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceFieldDataTypeHelp --></label>
+        <label>NPSP データインポートオブジェクトで選択した項目のデータ型。</label>
         <name>bdiFMUISourceFieldDataTypeHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceFieldLabelHelp --></label>
+        <label>対応付ける NPSP データインポート項目。項目表示ラベルまたは API 参照名のいずれかで検索します。項目が見つからない場合、NPSP データインポートオブジェクトの項目を作成していることを確認してください。</label>
         <name>bdiFMUISourceFieldLabelHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceObject --></label>
+        <label>ソース (NPSP データインポートオブジェクト)</label>
         <name>bdiFMUISourceObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISuccessful --></label>
+        <label>成功</label>
         <name>bdiFMUISuccessful</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITarget --></label>
+        <label>対象</label>
         <name>bdiFMUITarget</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITargetFieldDataTypeHelp --></label>
+        <label>対象オブジェクトで選択した項目のデータ型。</label>
         <name>bdiFMUITargetFieldDataTypeHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITargetFieldLabelHelp --></label>
+        <label>NPSP データインポート項目に接続する対象項目。項目表示ラベルまたは API 参照名のいずれかで検索します。これは、NPSP データインポートオブジェクトで選択した項目と互換性のある対象オブジェクトの項目のみが表示されるように絞り込まれます。</label>
         <name>bdiFMUITargetFieldLabelHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITryAgain --></label>
+        <label>もう一度お試しください。</label>
         <name>bdiFMUITryAgain</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIUnsuccessful --></label>
+        <label>失敗</label>
         <name>bdiFMUIUnsuccessful</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIUpdate --></label>
+        <label>更新</label>
         <name>bdiFMUIUpdate</name>
     </customLabels>
     <customLabels>
@@ -1569,11 +1795,11 @@
         <name>bdiFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFieldMapping --></label>
+        <label>項目の対応付け</label>
         <name>bdiFieldMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFieldMappings --></label>
+        <label>項目の対応付け</label>
         <name>bdiFieldMappings</name>
     </customLabels>
     <customLabels>
@@ -1635,127 +1861,132 @@
         <name>bdiMatchedNone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error message for long deployment --></label>
+        <label>ヘルプテキストの対応付けから高度な対応付けへの変換に予測よりも長い時間がかかっています。</label>
         <name>bdiMigrationLongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Is Child/Parent Help Text --></label>
+        <label>対象オブジェクトと他のオブジェクトグループの関係性 (例: 一般会計単位の割り当ては支援の子、継続支援は支援の親)。</label>
         <name>bdiOMUIChildParentHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Is Child/Parent Field Label/Column Name --></label>
+        <label>子/親</label>
         <name>bdiOMUIChildParentLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Create Object Group modal. --></label>
+        <label>オブジェクトグループを作成</label>
         <name>bdiOMUICreateModalTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Create New Object Group button --></label>
+        <label>新規オブジェクトグループを作成</label>
         <name>bdiOMUICreateNewObjectGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Edit Object Group modal. --></label>
+        <label>オブジェクトグループを編集</label>
         <name>bdiOMUIEditModalTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when Group name is duplicate --></label>
+        <label>エラー: この名前はすでに使用されています。別の名前を選択してください。</label>
         <name>bdiOMUIErrorDupeName</name>
     </customLabels>
     <customLabels>
-        <label><!-- Basic error which any modal field is missing or invalid. --></label>
+        <label>1 つ以上の項目に空白または無効な値があります。</label>
         <name>bdiOMUIErrorInvalidValues</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when Group Name is too long. --></label>
+        <label>エラー: グループ名が長すぎます。40 文字以下になるように短くしてください。</label>
         <name>bdiOMUIErrorLabelNameTooLong</name>
     </customLabels>
     <customLabels>
-        <label><!-- First part of error displayed when there are no unmapped fields. --></label>
+        <label>エラー: NPSP データインポートオブジェクトに次で使用する対応付けられていない項目がありません:</label>
         <name>bdiOMUIErrorNoUnmappedFieldsPt1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Second part of error displayed when there are no unmapped fields. --></label>
+        <label>必要に応じて、NPSP データインポートオブジェクトに新しい項目を作成してください。</label>
         <name>bdiOMUIErrorNoUnmappedFieldsPt2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when there are no valid options for &quot;Through This Field&quot; --></label>
+        <label>エラー: [オブジェクト名]、[子/親]、[この対応付けグループに属している] の選択内容に基づく有効な項目がありません</label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Group Name Help Text --></label>
+        <label>このオブジェクトグループの名前。一般的な命名規則は [オブジェクト名] グループです。</label>
         <name>bdiOMUIGroupNameHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Group Name Label/Column Name --></label>
+        <label>グループ名</label>
         <name>bdiOMUIGroupNameLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Import Details section of the modal --></label>
+        <label>インポートの詳細</label>
         <name>bdiOMUIImportDetailsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Import Status Helptext --></label>
+        <label>Dry Run またはインポートの処理時に、オブジェクトグループのインポートの状況がこの項目に表示されます。</label>
         <name>bdiOMUIImportStatusHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Import Status Field Label/Column Name --></label>
+        <label>インポート状況</label>
         <name>bdiOMUIImportStatusLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to Record Helptext --></label>
+        <label>インポートの処理時に、このオブジェクトグループのレコードへのリンクまたはレコードの Salesforce ID がこの項目に表示されます。</label>
         <name>bdiOMUILinkToRecordHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to Record Label/Column Name --></label>
+        <label>レコードへのリンク。</label>
         <name>bdiOMUILinkToRecordLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error message for long deployment --></label>
+        <label>このオブジェクトグループの変更に予測よりも長い時間がかかっています。</label>
         <name>bdiOMUILongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Groups Title --></label>
+        <label>オブジェクトグループ</label>
         <name>bdiOMUIObjectGroupsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Name Helptext --></label>
+        <label>これらのデータインポートレコードが作成される対象オブジェクト。このオブジェクトのリストは絞り込まれています。使用可能なオブジェクトの完全なリストについては、ドキュメントを参照してください。</label>
         <name>bdiOMUIObjectNameHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Name Label/Column Name --></label>
+        <label>オブジェクト名</label>
         <name>bdiOMUIObjectNameLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Of This Object Group Helptext --></label>
+        <label>対象オブジェクトのレコードは別のオブジェクトグループに関連しています。ここで関連するオブジェクトグループを選択してください。</label>
         <name>bdiOMUIOfGroupHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Of This Object Group Label/Column --></label>
+        <label>このオブジェクトグループに属している</label>
         <name>bdiOMUIOfGroupLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 1 --></label>
+        <label>このテーブルの各行には、オブジェクトグループが表示されます。オブジェクトグループのドロップダウンアイコンをクリックするときに、個々の項目の対応付けを設定し、[項目の対応付けを表示] をクリックします。</label>
         <name>bdiOMUIPageDescriptionPt1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 2 --></label>
+        <label>オブジェクトグループは、作成または更新するレコードタイプ (個人、支援、支払など) を NPSP データインポートツールに通知する項目の対応付けのコレクションです。項目の対応付けが次のようにオブジェクトグループにバンドルされているため、NPSP はインポートの 1 つの行内の関連レコードを相互にリンクできます。</label>
         <name>bdiOMUIPageDescriptionPt2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 3 --></label>
+        <label>例として一般会計単位の割り当て 1 と一般会計単位の割り当て 2 の 2 つのオブジェクトグループを見ていきましょう。これらのオブジェクトグループは支援オブジェクトに直接リンクしています。
+            2 つの一般会計単位の割り当てを 1 つの支援に割り当てるには、インポートファイルの支援列に支援情報を入力し、最初の一般会計単位を一般会計単位の割り当て 1 列に、
+            2 番目の一般会計単位を一般会計単位の割り当て 2 列に含めます。一般会計単位の割り当て 1 と一般会計単位の割り当て 2 のオブジェクトの対応付けにより、
+            インポートするときに 2 つの一般会計単位の割り当てが両方とも支援に割り当てられます。</label>
         <name>bdiOMUIPageDescriptionPt3</name>
     </customLabels>
     <customLabels>
-        <label><!-- Through This Field Helptext --></label>
+        <label>対象オブジェクトを関連するオブジェクトグループに接続する参照関係項目または主従項目。
+            対象オブジェクトが関連オブジェクトの子である場合、この項目は対象オブジェクトに配置されます。または、
+            対象オブジェクトが関連オブジェクトの親である場合、この項目は関連オブジェクトに配置されます。</label>
         <name>bdiOMUIThroughFieldHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Through this field Label/Column Name --></label>
+        <label>この項目を使用</label>
         <name>bdiOMUIThroughFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- View Field Mappings action --></label>
+        <label>項目の対応付けを表示</label>
         <name>bdiOMUIViewFieldMappingsLabel</name>
     </customLabels>
     <customLabels>
@@ -1807,7 +2038,7 @@
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiUpdated --></label>
+        <label>更新済み</label>
         <name>bdiUpdated</name>
     </customLabels>
     <customLabels>
@@ -2052,19 +2283,19 @@
         <name>bgeTabHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <label>項目の対応付けが変更されました</label>
         <name>bgeUnmappedFieldsNoticeHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping enabled. --></label>
+        <label>このバッチには次の項目が含まれていますが、それらの項目の対応付けが削除されています: {0}。これを修正するには、[NPSP 設定] の高度な対応付けに移動し、項目を再度対応付けます。</label>
         <name>bgeUnmappedFieldsNoticeMessageAdvancedMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping disabled. --></label>
+        <label>このバッチには次の項目が含まれていますが、それらの項目の対応付けが削除されています: {0}。これを修正するには、NPSP データインポートオブジェクトに移動し、ヘルプテキストを使用して項目を再度対応付けます。</label>
         <name>bgeUnmappedFieldsNoticeMessageHelpTextMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <label>対応付けられていない項目がバッチに含まれています</label>
         <name>bgeUnmappedFieldsNoticeTitle</name>
     </customLabels>
     <customLabels>
@@ -2096,6 +2327,126 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>エラー</label>
+        <name>commonAssistiveError</name>
+    </customLabels>
+    <customLabels>
+        <label>情報</label>
+        <name>commonAssistiveInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>成功</label>
+        <name>commonAssistiveSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>警告</label>
+        <name>commonAssistiveWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>戻る</label>
+        <name>commonBack</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ</label>
+        <name>commonBatches</name>
+    </customLabels>
+    <customLabels>
+        <label>キャンセル</label>
+        <name>commonCancel</name>
+    </customLabels>
+    <customLabels>
+        <label>コピー</label>
+        <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label>デフォルト値</label>
+        <name>commonDefaultValue</name>
+    </customLabels>
+    <customLabels>
+        <label>削除</label>
+        <name>commonDelete</name>
+    </customLabels>
+    <customLabels>
+        <label>編集</label>
+        <name>commonEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>エラー</label>
+        <name>commonError</name>
+    </customLabels>
+    <customLabels>
+        <label>項目表示ラベル</label>
+        <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>新規支援</label>
+        <name>commonNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label>次へ</label>
+        <name>commonNext</name>
+    </customLabels>
+    <customLabels>
+        <label>いいえ</label>
+        <name>commonNo</name>
+    </customLabels>
+    <customLabels>
+        <label>表示する項目がありません。</label>
+        <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Open</label>
+        <name>commonOpen</name>
+    </customLabels>
+    <customLabels>
+        <label>詳細情報</label>
+        <name>commonReadMore</name>
+    </customLabels>
+    <customLabels>
+        <label>必須</label>
+        <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>保存</label>
+        <name>commonSave</name>
+    </customLabels>
+    <customLabels>
+        <label>保存して閉じる</label>
+        <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレート</label>
+        <name>commonTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレート</label>
+        <name>commonTemplates</name>
+    </customLabels>
+    <customLabels>
+        <label>不明なエラー</label>
+        <name>commonUnknownError</name>
+    </customLabels>
+    <customLabels>
+        <label>更新</label>
+        <name>commonUpdate</name>
+    </customLabels>
+    <customLabels>
+        <label>すべて表示</label>
+        <name>commonViewAll</name>
+    </customLabels>
+    <customLabels>
+        <label>さらに表示</label>
+        <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label>警告</label>
+        <name>commonWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>はい</label>
+        <name>commonYes</name>
+    </customLabels>
+    <customLabels>
         <label>個人 {0} {1} の団体を作成できませんでした。{2}</label>
         <name>conFailedAccountCreate</name>
     </customLabels>
@@ -2108,11 +2459,11 @@
         <name>conMergeErrNoPersonAccounts</name>
     </customLabels>
     <customLabels>
-        <label><!-- Delete permission on the Contact object is required to for merging --></label>
+        <label>個人をマージするには、個人に対する「削除」権限が必要です。</label>
         <name>conMergeErrorNoDeleteObjPermission</name>
     </customLabels>
     <customLabels>
-        <label><!-- Record sharing permission on the Contact object is required to for merging --></label>
+        <label>これらの個人をマージするレコード共有権限がありません。他の個人レコードを選択してください。または、システム管理者による共有権限の調整が必要になる場合もあります。</label>
         <name>conMergeErrorNoDeleteRecAccess</name>
     </customLabels>
     <customLabels>
@@ -2172,23 +2523,23 @@
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorNoContext --></label>
+        <label>コンストラクタにプロセスコンテキストが提供されていません</label>
         <name>errErrorNoContext</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeOther --></label>
+        <label>その他</label>
         <name>errErrorTypeOther</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeRequiredFieldMissing --></label>
+        <label>必須項目がありません</label>
         <name>errErrorTypeRequiredFieldMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeValidationFailed --></label>
+        <label>カスタム入力規則が失敗しました</label>
         <name>errErrorTypeValidationFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorUnsupportedDMLType --></label>
+        <label>サポートされていない操作です: この DML 操作種別のエラーは記録できません。</label>
         <name>errErrorUnsupportedDMLType</name>
     </customLabels>
     <customLabels>
@@ -2208,8 +2559,581 @@
         <name>flsError</name>
     </customLabels>
     <customLabels>
-        <label><!-- flsReadAccessError --></label>
+        <label>{0} にアクセスする権限がありません。</label>
         <name>flsReadAccessError</name>
+    </customLabels>
+    <customLabels>
+        <label>有効なセクション。</label>
+        <name>geAssistiveActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチヘッダーから {0} 項目を削除します。</label>
+        <name>geAssistiveBatchHeaderRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} 項目を下に移動します。</label>
+        <name>geAssistiveFieldDown</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} 項目を上に移動します。</label>
+        <name>geAssistiveFieldUp</name>
+    </customLabels>
+    <customLabels>
+        <label>すべてのオブジェクトグループとテンプレートコンポーネントを折りたたみます。</label>
+        <name>geAssistiveFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>すべてのオブジェクトグループとテンプレートコンポーネントを展開します。</label>
+        <name>geAssistiveFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレートから {0} 項目を削除します。</label>
+        <name>geAssistiveFormFieldsRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} セクション設定を編集します。</label>
+        <name>geAssistiveFormFieldsSectionEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>セクション設定への変更をキャンセルまたは破棄します。</label>
+        <name>geAssistiveModalCancelAndDiscard</name>
+    </customLabels>
+    <customLabels>
+        <label>選択したオプションを削除</label>
+        <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} セクションを下に移動します。</label>
+        <name>geAssistiveSectionDown</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} セクションを上に移動します。</label>
+        <name>geAssistiveSectionUp</name>
+    </customLabels>
+    <customLabels>
+        <label>メニューを表示します。</label>
+        <name>geAssistiveShowMenu</name>
+    </customLabels>
+    <customLabels>
+        <label>コンテンツを読み込んでいます。</label>
+        <name>geAssistiveSpinner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Advanced Form Fields header --></label>
+        <name>geBodyAdvancedFieldMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>このバッチのデフォルト値を設定します。デフォルト値は支援の入力時に上書きできます。</label>
+        <name>geBodyBatchDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label>このセクションに含まれる項目のデフォルト値を設定できません。</label>
+        <name>geBodyBatchFieldBundleInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチヘッダーに含める項目を選択します。項目を追加するにはチェックボックスをオンにし、フォームから項目を削除するにはオフにします。追加のカスタム項目をバッチヘッダーで使用できるようにするには、NPSP データインポートバッチオブジェクトにそれらを追加します。</label>
+        <name>geBodyBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>各項目で、項目表示ラベルを編集したり、必須としてマークしたり、デフォルト値を割り当てたりできます。バッチ作成者はデフォルト値を上書きできます。</label>
+        <name>geBodyBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>次の必須項目はバッチヘッダーに自動的に追加されました:</label>
+        <name>geBodyBatchHeaderWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>このセクションに追加する項目を選択します。</label>
+        <name>geBodyEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Field Bundles header --></label>
+        <name>geBodyFieldBundlesLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Form Fields header --></label>
+        <name>geBodyFormFieldsDescLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>フォームに含める項目を選択します。項目を追加する前に、項目を移動するメイン画面のセクションをクリックします。サイドバーで、項目を追加するにはチェックボックスをオンにし、フォームから項目を削除するにはオフにします。使用するオブジェクトまたは項目がリストされていない場合、高度な対応付けを使用して項目を設定していることを確認します。</label>
+        <name>geBodyFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>項目を設定する手順は、次のとおりです:
+        &lt;/br&gt;
+        &lt;/br&gt;
+        &lt;ol&gt;
+            &lt;li&gt; 対象オブジェクトの項目を作成します。&lt;/li&gt;
+            &lt;li&gt; NPSP データインポートオブジェクトの項目を作成します。&lt;/li&gt;
+            &lt;li&gt; これが新規オブジェクトグループに含まれている場合、新規オブジェクトグループの追加項目を作成し、[NPSP 設定] で新規オブジェクトグループを作成します。&lt;/li&gt;
+            &lt;li&gt; [NPSP 設定] で項目の対応付けを追加し、NPSP データインポート項目を対象項目に接続します。&lt;/li&gt;
+        &lt;/ol&gt;
+        高度な対応付けについての詳細は、NPSP ドキュメントを参照してください。</label>
+        <name>geBodyFormFieldsLeftColAdditional</name>
+    </customLabels>
+    <customLabels>
+        <label>このセクションを削除すると、そのセクション内の項目もすべて削除されます。</label>
+        <name>geBodyFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>セクションをクリックし、サイドバーで項目を選択してメイン画面のセクションに追加します。各項目で、項目表示ラベルを編集したり、必須としてマークしたり、デフォルト値を割り当てたり、セクションから削除したりできます。セクションの作成やセクションまたは項目の並び替えを行って支援エントリフォームのレイアウトを調整します。</label>
+        <name>geBodyFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>支援エントリを有効にする前に、高度な対応付けを有効にする必要があります。
+&lt;br/&gt;&lt;br/&gt;
+支援エントリテンプレートを使用して、1 回の支援または支援のバッチを入力します。古いバッチ支援エントリツールで入力されたすべての支援は支援エントリに表示されません (その逆も同様)。
+&lt;br/&gt;&lt;br/&gt;
+必要に応じて、支援エントリを無効にし、代わりに古いバッチ支援エントリ (GEM を使用する場合は 1 回の支援エントリ) を使用することもできます。</label>
+        <name>geBodyGiftEntryHelp</name>
+    </customLabels>
+    <customLabels>
+        <label>現在、新しい支払を次の支援に追加しています:</label>
+        <name>geBodyMatchingApplyNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>現在、新しい支援を作成しています。</label>
+        <name>geBodyMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>この支援には未払の支払がありません。</label>
+        <name>geBodyMatchingNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>この支援者には保留中の支援があります。</label>
+        <name>geBodyMatchingPendingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label>更新するレコードを選択します。</label>
+        <name>geBodyMatchingSelectRecord</name>
+    </customLabels>
+    <customLabels>
+        <label>現在、次を更新しています:</label>
+        <name>geBodyMatchingUpdatingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label>支援エントリテンプレートに関する詳細を入力します。</label>
+        <name>geBodyTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレートは、データエントリの項目の再利用可能なレイアウトです。テンプレート名をクリックして、テンプレートを編集します。または、新規テンプレートを作成するか、任意のテンプレートのドロップダウンメニューをクリックしてその他のオプションを表示します。使用中のテンプレートは削除できません。</label>
+        <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>戻る: フォーム項目</label>
+        <name>geButtonBuilderNavBackFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>戻る: テンプレート情報</label>
+        <name>geButtonBuilderNavBackTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>次へ: バッチヘッダー</label>
+        <name>geButtonBuilderNavBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>次へ: フォーム項目</label>
+        <name>geButtonBuilderNavFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>フォームをキャンセル &amp; クリア</label>
+        <name>geButtonCancelAndClear</name>
+    </customLabels>
+    <customLabels>
+        <label>セクションを追加</label>
+        <name>geButtonFormFieldsAddSection</name>
+    </customLabels>
+    <customLabels>
+        <label>すべて折りたたむ</label>
+        <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>すべて展開</label>
+        <name>geButtonFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label>セクションと項目を削除</label>
+        <name>geButtonFormFieldsModalDeleteSectionAndFields</name>
+    </customLabels>
+    <customLabels>
+        <label>もしくは、新しい支援を作成します。</label>
+        <name>geButtonMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>新規支払を追加</label>
+        <name>geButtonMatchingNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>支援の確認</label>
+        <name>geButtonMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>異なる支援を選択してください。</label>
+        <name>geButtonMatchingUpdateDonationSelection</name>
+    </customLabels>
+    <customLabels>
+        <label>この支援を更新</label>
+        <name>geButtonMatchingUpdateOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>この支払を更新</label>
+        <name>geButtonMatchingUpdatePayment</name>
+    </customLabels>
+    <customLabels>
+        <label>新規バッチ</label>
+        <name>geButtonNewBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>新しい 1 回の支援</label>
+        <name>geButtonNewSingleGift</name>
+    </customLabels>
+    <customLabels>
+        <label>保存して新規支援を入力</label>
+        <name>geButtonSaveNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレートを作成</label>
+        <name>geButtonTemplatesTabCreateTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>支援エントリが無効になっています</label>
+        <name>geDisableGiftEntryInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>支援</label>
+        <name>geDonationColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>支援者</label>
+        <name>geDonorColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ情報を編集</label>
+        <name>geEditBatchInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>支援エントリが有効になっています</label>
+        <name>geEnableGiftEntrySuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>総額が {0} と一致しません</label>
+        <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>この項目を入力してください。</label>
+        <name>geErrorCompleteThisField</name>
+    </customLabels>
+    <customLabels>
+        <label>{1} に {0} を選択しましたが、必須項目 {0} はフォームで使用できません。システム管理者に確認してください。</label>
+        <name>geErrorDonorTypeInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label>{1} に {0} を選択した場合、少なくとも {2} または {3} のいずれかの項目に情報を入力する必要があります</label>
+        <name>geErrorDonorTypeValidation</name>
+    </customLabels>
+    <customLabels>
+        <label>{1} に {0} を選択した場合、{2} に情報を入力する必要があります</label>
+        <name>geErrorDonorTypeValidationSingle</name>
+    </customLabels>
+    <customLabels>
+        <label>この名前は別のテンプレートで使用されています。一意の名前を入力してください。</label>
+        <name>geErrorExistingTemplateName</name>
+    </customLabels>
+    <customLabels>
+        <label>フォームのすべての項目を編集する権限が必要です。次の項目へのアクセスについて Salesforce システム管理者に確認してください: {0}</label>
+        <name>geErrorFLSBody</name>
+    </customLabels>
+    <customLabels>
+        <label>項目権限を確認してください</label>
+        <name>geErrorFLSHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>この項目を編集する権限がありません。</label>
+        <name>geErrorFieldPermission</name>
+    </customLabels>
+    <customLabels>
+        <label>フォームのすべてのオブジェクトを編集する権限が必要です。次のオブジェクトのアクセス権について Salesforce システム管理者に確認してください: {0}</label>
+        <name>geErrorObjectCRUDBody</name>
+    </customLabels>
+    <customLabels>
+        <label>オブジェクト権限を確認してください</label>
+        <name>geErrorObjectCRUDHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>この機能を使用するには、高度な対応付けと支援エントリの両方が必要です。[NPSP 設定] でこれらを有効にしてください。</label>
+        <name>geErrorPageLevelAdvancedMappingBody</name>
+    </customLabels>
+    <customLabels>
+        <label>高度な対応付けと支援エントリを有効にしてください</label>
+        <name>geErrorPageLevelAdvancedMappingHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>このテンプレートへの変更を保存するには、フォームのすべての項目を編集する権限が必要です。次の項目を削除してください: {0}</label>
+        <name>geErrorPageLevelFieldPermission1</name>
+    </customLabels>
+    <customLabels>
+        <label>または、保存せずにこのフォームを終了し、対象オブジェクトと NPSP データインポートオブジェクトの両方の権限を確認してください。</label>
+        <name>geErrorPageLevelFieldPermission2</name>
+    </customLabels>
+    <customLabels>
+        <label>すべての必須項目をテンプレートに含める必要があります。ソース項目 (NPSP データインポートオブジェクト) で次の項目を確認してください:</label>
+        <name>geErrorPageLevelMissingRequiredFields</name>
+    </customLabels>
+    <customLabels>
+        <label>少なくとも次のいずれかの項目が必要です: {0}</label>
+        <name>geErrorPageLevelMissingRequiredGroupFields</name>
+    </customLabels>
+    <customLabels>
+        <label>必須項目</label>
+        <name>geErrorRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Name of GAU Allocations field bundle --></label>
+        <name>geGauAllocationsBundle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for advanced form fields --></label>
+        <name>geHeaderAdvancedFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ情報の入力</label>
+        <name>geHeaderBatchEnterInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチ支援エントリ</label>
+        <name>geHeaderBatchGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチヘッダー項目を選択</label>
+        <name>geHeaderBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチヘッダー項目を設定</label>
+        <name>geHeaderBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレートを選択</label>
+        <name>geHeaderBatchSelectTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>デフォルト値を選択</label>
+        <name>geHeaderBatchSetDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label>表示する項目を選択</label>
+        <name>geHeaderCustomTableHeaders</name>
+    </customLabels>
+    <customLabels>
+        <label>まだ項目がありません</label>
+        <name>geHeaderEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label>項目バンドル</label>
+        <name>geHeaderFieldBundles</name>
+    </customLabels>
+    <customLabels>
+        <label>支援エントリフォーム</label>
+        <name>geHeaderFormFieldsDefaultSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label>フォーム項目 &amp; 項目バンドル</label>
+        <name>geHeaderFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>セクションを削除</label>
+        <name>geHeaderFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>セクション名を変更</label>
+        <name>geHeaderFormFieldsModalRenameSection</name>
+    </customLabels>
+    <customLabels>
+        <label>セクション設定</label>
+        <name>geHeaderFormFieldsModalSectionSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>フォーム項目を設定</label>
+        <name>geHeaderFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>支援エントリ</label>
+        <name>geHeaderGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} による支援</label>
+        <name>geHeaderMatchingGiftBy</name>
+    </customLabels>
+    <customLabels>
+        <label>{1} の {0} ({2})</label>
+        <name>geHeaderMatchingOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>{1} の {0}</label>
+        <name>geHeaderMatchingPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} の支援者を確認</label>
+        <name>geHeaderMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>新規セクション</label>
+        <name>geHeaderNewSection</name>
+    </customLabels>
+    <customLabels>
+        <label>新規テンプレート</label>
+        <name>geHeaderNewTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>このページのエラーを確認します。</label>
+        <name>geHeaderPageLevelError</name>
+    </customLabels>
+    <customLabels>
+        <label>1 回の支援エントリ</label>
+        <name>geHeaderSingleGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>支援エントリテンプレート情報</label>
+        <name>geHeaderTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account1 Object Group --></label>
+        <name>geHelpTextAccount1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account2 Object Group --></label>
+        <name>geHelpTextAccount2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Address Object Group --></label>
+        <name>geHelpTextAddressMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 1 object group --></label>
+        <name>geHelpTextAllocation1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 2 object group --></label>
+        <name>geHelpTextAllocation2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text about GAU Allocation field bundle --></label>
+        <name>geHelpTextAllocationBundle</name>
+    </customLabels>
+    <customLabels>
+        <label>ユーザに表示される項目表示ラベルの名前を変更できます。</label>
+        <name>geHelpTextBatchHeaderFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact1 Object Group --></label>
+        <name>geHelpTextContact1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact2 Object Group --></label>
+        <name>geHelpTextContact2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label>この項目では、{0} オブジェクトグループを使用して、{2} オブジェクトの {1} 項目を対象にします。</label>
+        <name>geHelpTextFormFieldsFieldCustomLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>これにより、オブジェクトグループと対象項目 API 参照名が表示されます。ユーザに表示される以下の表示ラベルは編集できます。</label>
+        <name>geHelpTextFormFieldsFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Household Object Group --></label>
+        <name>geHelpTextHouseholdMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>参照可能項目</label>
+        <name>geLabelCustomTableSelectedFields</name>
+    </customLabels>
+    <customLabels>
+        <label>使用可能な項目</label>
+        <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label>セクション名</label>
+        <name>geLabelSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label>説明</label>
+        <name>geLabelTemplateInfoDescriptionField</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレート名</label>
+        <name>geLabelTemplateInfoNameField</name>
+    </customLabels>
+    <customLabels>
+        <label>検索...</label>
+        <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>選択...</label>
+        <name>geSelectPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチヘッダー</label>
+        <name>geTabBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>フォーム項目</label>
+        <name>geTabFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>テンプレート情報</label>
+        <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} 個の項目</label>
+        <name>geTextListViewItemCount</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} 個の項目</label>
+        <name>geTextListViewItemsCount</name>
+    </customLabels>
+    <customLabels>
+        <label>• {0} で並び替え</label>
+        <name>geTextListViewSortedBy</name>
+    </customLabels>
+    <customLabels>
+        <label>• {0}に更新</label>
+        <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label>リストビューが更新されました。</label>
+        <name>geToastListViewUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label>変更を保存できません。もう一度お試しください。</label>
+        <name>geToastSaveFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>セクションを選択してください。</label>
+        <name>geToastSelectActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label>「{0}」テンプレートが作成されました。</label>
+        <name>geToastTemplateCreateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>このテンプレートは使用中であるため削除できません。</label>
+        <name>geToastTemplateDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label>「{0}」テンプレートが削除されました。</label>
+        <name>geToastTemplateDeleteSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>次を確認してください: {0}</label>
+        <name>geToastTemplateTabsError</name>
+    </customLabels>
+    <customLabels>
+        <label>「{0}」テンプレートが更新されました。</label>
+        <name>geToastTemplateUpdateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>警告: このセクションを削除すると、必須項目もテンプレートから削除されます。テンプレートを保存する前にこれらの項目を別のセクションに追加する必要があります。</label>
+        <name>geWarningFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
         <label>支援処理は個人 (「バケット」) 団体モデルをサポートしていません。</label>
@@ -2344,6 +3268,10 @@
         <name>healthDetailsInvalidPaymentField</name>
     </customLabels>
     <customLabels>
+        <label>選択リスト値「{0}」はサポートされていません。</label>
+        <name>healthDetailsInvalidPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>継続支援項目の間隔の選択リスト値にカスタム間隔 {0} が含まれていません。</label>
         <name>healthDetailsInvalidRDCustomPeriod</name>
     </customLabels>
@@ -2370,6 +3298,10 @@
     <customLabels>
         <label>支払が設定されている必要のある {0} 個の支援に支払が設定されていません。</label>
         <name>healthDetailsMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>必須選択リスト値「{0}」がありません。</label>
+        <name>healthDetailsMissingRequiredPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>NPSP グローバルスケジュールクラスがスケジュールされていません。</label>
@@ -2640,7 +3572,7 @@
         <name>healthSolutionEditSetting</name>
     </customLabels>
     <customLabels>
-        <label>これらの未使用の世帯団体を削除して領域を節約することを検討してください。これらの世帯団体を表示するには、NPSP 状態チェックレポートフォルダで&lt;b&gt;空の世帯団体&lt;/b&gt;レポートを実行します</label>
+        <label>これらの未使用の世帯団体レコードを削除して領域を節約することを検討してください。これらの世帯団体レコードを表示するには、NPSP 状態チェックレポートフォルダで&lt;b&gt;空の世帯団体&lt;/b&gt;レポートを実行します。</label>
         <name>healthSolutionHHAccNoContacts</name>
     </customLabels>
     <customLabels>
@@ -2692,6 +3624,10 @@
         <name>healthSolutionMissingOppPayments</name>
     </customLabels>
     <customLabels>
+        <label>「{1}」項目の必須選択リスト値「{0}」を追加してください。</label>
+        <name>healthSolutionMissingPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>{0} というジョブ名で毎日実行するようにクラス UTIL_MasterSchedulable をスケジュールする必要があります。</label>
         <name>healthSolutionNothingScheduled</name>
     </customLabels>
@@ -2738,6 +3674,10 @@
     <customLabels>
         <label>[NPSP 設定] タブで、{0} | {1} をクリックし、欠落している支援項目を追加するか、ユーザ積み上げ集計レコードを削除します。</label>
         <name>healthSolutionUDFOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>「{1}」項目の選択リスト値「{0}」を無効化または削除してください。</label>
+        <name>healthSolutionUnsupportedPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>キャンペーンに戻る</label>
@@ -3440,7 +4380,7 @@
         <name>stgAllocationLevel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBDIGoToSetup --></label>
+        <label>高度な対応付けを設定</label>
         <name>stgBDIGoToSetup</name>
     </customLabels>
     <customLabels>
@@ -3492,7 +4432,7 @@
         <name>stgBtnHHAutoName</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNew --></label>
+        <label>新規</label>
         <name>stgBtnNew</name>
     </customLabels>
     <customLabels>
@@ -3599,7 +4539,7 @@
         <name>stgCreatedBy</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDIFMNonAdminError --></label>
+        <label>システム管理者のみがデータインポートの高度な対応付けを有効または無効にできます。</label>
         <name>stgDIFMNonAdminError</name>
     </customLabels>
     <customLabels>
@@ -3607,15 +4547,19 @@
         <name>stgDefaultValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentCustomMetadataMappingEnabled --></label>
+        <label><!-- The user do not have delete permission to delete custom setting. --></label>
+        <name>stgDeletePermissionError</name>
+    </customLabels>
+    <customLabels>
+        <label>高度な対応付けが有効になっています。</label>
         <name>stgDeploymentCustomMetadataMappingEnabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentHasInvalidHelpTextMappings --></label>
+        <label>高度な対応付けが有効になっていますが、移行できなかったいくつかの無効なヘルプテキストの対応付けが見つかりました。&lt;b&gt;以下のテーブルのスクリーンショットを撮ってください。このページから移動すると、再度表示されません。&lt;/b&gt;</label>
         <name>stgDeploymentHasInvalidHelpTextMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentHelpTextMappingEnabled --></label>
+        <label>ヘルプテキストの対応付けが有効になっています。</label>
         <name>stgDeploymentHelpTextMappingEnabled</name>
     </customLabels>
     <customLabels>
@@ -3623,7 +4567,7 @@
         <name>stgDeploymentInProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentInProgress --></label>
+        <label>ページがタイムアウトしました。</label>
         <name>stgDeploymentTimedOut</name>
     </customLabels>
     <customLabels>
@@ -3648,6 +4592,10 @@
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
+        <label><!-- The user do not have edit permission to edit custom setting. --></label>
+        <name>stgEditPermissionError</name>
+    </customLabels>
+    <customLabels>
         <label>実装クラスにインターフェース HH_INaming が実装されていません。</label>
         <name>stgErrorINaming</name>
     </customLabels>
@@ -3660,11 +4608,11 @@
         <name>stgErrorInvalidNameFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorMissingDefaultGauRecord --></label>
+        <label>以前に設定したデフォルト一般会計単位は存在しなくなり、削除されています。デフォルトの割り当てを再度有効にするには、[NPSP 設定] で [一般会計単位の割り当て] ページを開いてください。</label>
         <name>stgErrorMissingDefaultGauRecord</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorMissingDefaultGauRecordWithPmtAllocEnabled --></label>
+        <label>以前に設定したデフォルト一般会計単位は存在しなくなり、削除されています。支払の割り当てを使用するには、デフォルトの割り当てを再度有効にし、デフォルト一般会計単位を選択する必要があります。[NPSP 設定] で [一般会計単位の割り当て] ページを開き、デフォルトの割り当て設定を更新してください。</label>
         <name>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</name>
     </customLabels>
     <customLabels>
@@ -3676,31 +4624,34 @@
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping1 --></label>
+        <label>高度な対応付けを有効にすると、既存のヘルプテキストの項目の対応付けが高度な対応付けに変換されます。有効になったら、このページで対応付けを編集したり、新しい対応付けを作成したりします。</label>
         <name>stgHelpAdvancedMapping1</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping2 --></label>
+        <label>高度な対応付けを無効にして、ヘルプテキストの対応付けに戻ることはできますが、高度な対応付けで行った変更は失われます。</label>
         <name>stgHelpAdvancedMapping2</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping3 --></label>
+        <label>高度な対応付けの完全な設定ドキュメントについては、&lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;こちら&lt;/a&gt;を参照してください。</label>
         <name>stgHelpAdvancedMapping3</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping4 --></label>
+        <label>&lt;b&gt;このメッセージは、このページから移動すると表示されなくなります。修正する必要のあるヘルプテキストの対応付けを追跡できるように、このページのスクリーンショットを撮るか、以下のテーブルの情報をコピーしてください。&lt;/b&gt;
+            &lt;br/&gt;
+            &lt;br/&gt;
+            既存のヘルプテキストの対応付けの一部は無効であったため変換できませんでした。&lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;ヘルプテキストの対応付けの一般的な問題についての詳細を確認してください&lt;/a&gt;。高度な対応付けを無効にし、無効なヘルプテキストの対応付けを修正してから高度な対応付けを再度有効にすることをお勧めします。または、次の画面で高度な対応付けを設定するときにこれらの対応付けを追加することもできますが、高度な対応付けを無効にすると、これらの追加の対応付けは元の無効なヘルプテキストに戻ります。</label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingInvalidHelpText --></label>
+        <label>無効なヘルプテキストの対応付け</label>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingTableHeader1 --></label>
+        <label>NPSP データインポート項目</label>
         <name>stgHelpAdvancedMappingTableHeader1</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingTableHeader2 --></label>
+        <label>現在のヘルプテキスト値</label>
         <name>stgHelpAdvancedMappingTableHeader2</name>
     </customLabels>
     <customLabels>
@@ -4107,7 +5058,7 @@
         <name>stgHelpPrimaryContactRoleMergeBatch</name>
     </customLabels>
     <customLabels>
-        <label>選択した場合、継続支援で指定したキャンペーンをすべての関連 (子) 支援に追加します。このオプションを選択していないと、キャンペーンは継続支援の最初の支援にのみ表示されます。</label>
+        <label>選択した場合、NPSP は継続支援で指定したキャンペーンをその割賦支援にコピーします。</label>
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
@@ -4145,6 +5096,10 @@
         <name>stgHelpRDFieldMapRDField</name>
     </customLabels>
     <customLabels>
+        <label>NPSP が継続支援の割賦支援を作成するタイミングを指定します。デフォルトは [常に次の割賦を作成] です。</label>
+        <name>stgHelpRDInstallmentCreateOptionMessage</name>
+    </customLabels>
+    <customLabels>
         <label>継続支援の前回の一括更新の日時。</label>
         <name>stgHelpRDLastRun</name>
     </customLabels>
@@ -4161,7 +5116,7 @@
         <name>stgHelpRDOppForecastMonths</name>
     </customLabels>
     <customLabels>
-        <label>継続支援の子支援に割り当てられた支援レコードタイプ。</label>
+        <label>継続支援の割賦支援に割り当てられた支援レコードタイプ。</label>
         <name>stgHelpRDOppRT</name>
     </customLabels>
     <customLabels>
@@ -4344,6 +5299,18 @@
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
+        <label>すべての割賦を無効化</label>
+        <name>stgInstallmentOppDisableAll</name>
+    </customLabels>
+    <customLabels>
+        <label>作成時に最初の割賦を無効化</label>
+        <name>stgInstallmentOppDisableFirst</name>
+    </customLabels>
+    <customLabels>
+        <label>常に次の割賦を作成</label>
+        <name>stgInstallmentOppEnableAll</name>
+    </customLabels>
+    <customLabels>
         <label>アクション</label>
         <name>stgLabelActionColumn</name>
     </customLabels>
@@ -4434,6 +5401,10 @@
     <customLabels>
         <label>項目</label>
         <name>stgLabelField</name>
+    </customLabels>
+    <customLabels>
+        <label>なし</label>
+        <name>stgLabelFieldValueNone</name>
     </customLabels>
     <customLabels>
         <label>一般設定</label>
@@ -4788,7 +5759,7 @@
         <name>stgNavPeople</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRD2Enablement --></label>
+        <label>拡張継続支援にアップグレード</label>
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
@@ -4892,7 +5863,7 @@
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
     <customPageWebLinks>
-        <label><!-- Nonprofit Edition Reports --></label>
+        <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>
         <name>Nonprofit_Edition_Reports</name>
     </customPageWebLinks>
     <customTabs>
@@ -4918,6 +5889,10 @@
     <customTabs>
         <label><!-- Contacts Settings --></label>
         <name>Contacts_Settings</name>
+    </customTabs>
+    <customTabs>
+        <label>支援エントリ</label>
+        <name>GE_Gift_Entry</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>
@@ -5015,4 +5990,4 @@
             <name>Contacts</name>
         </sections>
     </reportTypes>
-</Translations>
+    </Translations>

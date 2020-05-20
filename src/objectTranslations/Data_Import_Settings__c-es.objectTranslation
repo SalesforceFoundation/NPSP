@@ -24,14 +24,14 @@
         <name>Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
-        <label><!-- CMT API Deployment Result --></label>
+        <help>JSON para el resultado de la implementación de CMT
+{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
+        <label>Resultado implementación de API de CMT</label>
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help><!-- ID of Custom Metadata deployment --></help>
-        <label><!-- CMT Deployment ID --></label>
+        <help>Identificador de la implementación de metadatos personalizados</help>
+        <label>Id. de Implementación CMT</label>
         <name>CMT_Deployment_ID__c</name>
     </fields>
     <fields>
@@ -45,8 +45,8 @@
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The custom metadata api name of the Data Import Field Mapping Set record that should be used by default. --></help>
-        <label><!-- Default Data Import Field Mapping Set --></label>
+        <help>El nombre de la API de metadatos personalizada del registro del conjunto de asignación de campos de importación de datos que debe emplearse de forma predeterminada.</help>
+        <label>Conjunto asign. campos imp datos predet</label>
         <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
@@ -70,8 +70,8 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping. --></help>
-        <label><!-- Field Mapping Method --></label>
+        <help>Define el modo con que los campos del registro Importación de datos de NPSP se asignan a otros objetos en Salesforce. Las opciones son Texto de ayuda o Asignación de campos de importación de datos.</help>
+        <label>Método de asignación de campos</label>
         <name>Field_Mapping_Method__c</name>
     </fields>
     <fields>

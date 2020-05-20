@@ -1,10 +1,10 @@
-/* 
+/*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,33 +13,33 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
 * @date 2014
 * @group Settings
-* @description The controller for the Reciprocal Relationships panel 
+* @description The controller for the Reciprocal Relationships panel
 */
 public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
-    
+
     /*********************************************************************************************************
-    * @description Returns the string Id of the Reciprocal Relationships panel. 
+    * @description Returns the string Id of the Reciprocal Relationships panel.
     */
     public override string idPanel() { return 'idPanelRelReciprocal'; }
-    
+
     /*********************************************************************************************************
     * @description temporary rl used by the page for creating a new rl.
     */
@@ -51,7 +51,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description Action Method for going into edit mode (to create a new rl)
     * @return null
@@ -65,7 +65,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     * @description Action Method to save the new rl to the database.  Any errors are added as page messages.
     * @return null
     */
-    public PageReference createRelLookup() {        
+    public PageReference createRelLookup() {
         Savepoint sp = Database.setSavepoint();
         try {
             insert rlNew;
@@ -97,9 +97,9 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         UTIL_ListCustomSettingsFacade.mapRelationshipLookupSettings = null;
         listRelLookup = null;
     }
-    
+
     /*********************************************************************************************************
-    * @description String to hold the Id of an existing rl to be deleted. 
+    * @description String to hold the Id of an existing rl to be deleted.
     */
     public string rlIdDelete { get; set; }
 
@@ -108,9 +108,14 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteRl() {
+        if (!isRunningUserIsAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
+            return null;
+        }
+
         Savepoint sp = Database.setSavepoint();
         try {
-            STG_SettingsManager_CTRL.idPanelCurrent = idPanel();        
+            STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
             if (rlIdDelete != null) {
                 npe4__Relationship_Lookup__c rl = new npe4__Relationship_Lookup__c(Id = rlIdDelete);
                 delete rl;
@@ -131,22 +136,22 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     public list<npe4__Relationship_Lookup__c> listRelLookup {
         get {
             if (listRelLookup == null) {
-                
+
                 map<string, npe4__Relationship_Lookup__c> mapRL = UTIL_ListCustomSettingsFacade.getMapRelationshipLookupSettings();
-                
+
 	            // Sort them by name
 	            list<string> rlNames = new list<string>();
 	            rlNames.addAll(mapRL.keySet());
-	            rlNames.sort(); 
-	            
+	            rlNames.sort();
+
 	            listRelLookup = new list<npe4__Relationship_Lookup__c>();
 	            for (string str : rlNames) {
 	                listRelLookup.add(mapRL.get(str));
-	            }     
-            } 
-            return listRelLookup;           
+	            }
+            }
+            return listRelLookup;
         }
-        private set;     
+        private set;
     }
 
     /*********************************************************************************************************
@@ -155,32 +160,33 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     * @return void
     */
     public static void verifyRelLookups(STG_PanelHealthCheck_CTRL ctrl) {
-        
+
         map<string, npe4__Relationship_Lookup__c> mapRL = UTIL_ListCustomSettingsFacade.getMapRelationshipLookupSettings();
-        //string strSetting = Schema.Sobjecttype.npe4__Relationship_Lookup__c.getLabel(); 
+        //string strSetting = Schema.Sobjecttype.npe4__Relationship_Lookup__c.getLabel();
         boolean isValid = true;
         boolean isValidAll = true;
-        
+
         for (string s : mapRL.keySet()) {
             npe4__Relationship_Lookup__c rl = mapRL.get(s);
-            
+
             if (rl.npe4__Active__c && rl.npe4__Male__c == null && rl.npe4__Female__c == null && rl.npe4__Neutral__c == null) {
                 isValid = false;
                 String relationshipName = rl.Name;
                 if (String.isNotBlank(rl.Name))
                     relationshipName = rl.Name.escapeEcmaScript();
-                ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusError, 
-                    string.format(label.healthDetailsRelReciprocalInvalid, new string[]{relationshipName}), 
-                    string.format(label.healthSolutionRelReciprocalInvalid, new string[]{label.stgNavConnections, Label.stgNavRelReciprocal}));    
-            }               
-            
+                ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusError,
+                    string.format(label.healthDetailsRelReciprocalInvalid, new string[]{relationshipName}),
+                    string.format(label.healthSolutionRelReciprocalInvalid, new string[]{label.stgNavConnections, Label.stgNavRelReciprocal}));
+            }
+
             if (!isValid)
-                isValidAll = false;            
+                isValidAll = false;
         }
 
         if (isValidAll) {
-            ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRelReciprocalValid);            
-        }                           
-    }           
-    
+            ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRelReciprocalValid);
+        }
+    }
+
+
 }

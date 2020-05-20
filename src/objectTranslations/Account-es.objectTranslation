@@ -221,6 +221,10 @@
         <name>Manage_Household</name>
     </webLinks>
     <webLinks>
+        <label>Nuevo regalo</label>
+        <name>New_Gift</name>
+    </webLinks>
+    <webLinks>
         <label>Volver a calcular totales</label>
         <name>Recalculate_Rollups</name>
     </webLinks>

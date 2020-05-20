@@ -15,7 +15,7 @@
     <fields>
         <label>Account1 Geïmporteerd</label>
         <name>Account1Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Account1 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimport (Account1 geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
         <label>Account1 Stad</label>
@@ -56,7 +56,7 @@
     <fields>
         <label>Account2 Geïmporteerd</label>
         <name>Account2Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Account2 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimport (Account2 geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
         <label>Account2 Stad</label>
@@ -91,6 +91,11 @@
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
     <fields>
+        <help>Dit veld staat toe dat er een dynamisch aantal records voor een dynamisch aantal objecten wordt gemaakt vanuit één record Gegevensimport. Gegevens over extra objecten worden hier opgeslagen in JSON-indeling.</help>
+        <label>JSON voor extra object</label>
+        <name>Additional_Object_JSON__c</name>
+    </fields>
+    <fields>
         <help>De ApexJobID van de Batchtaak die de record verwerkt heeft.</help>
         <label>ApexJobId</label>
         <name>ApexJobId__c</name>
@@ -106,7 +111,7 @@
     <fields>
         <label>Contact1 Geïmporteerd</label>
         <name>Contact1Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Contact1 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimport (Contact1 geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
         <label>Contact1 Alternatieve E-mail</label>
@@ -199,7 +204,7 @@
     <fields>
         <label>Contact2 Geïmporteerd</label>
         <name>Contact2Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Contact2 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimport (Contact2 geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
         <label>Contact2 Alternatieve E-mail</label>
@@ -292,7 +297,7 @@
     <fields>
         <label>Bron van Donatiecampagne</label>
         <name>DonationCampaignImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimports</relationshipLabel>
     </fields>
     <fields>
         <label>Importstatus van Donatie</label>
@@ -301,7 +306,7 @@
     <fields>
         <label>Donatie Geïmporteerd</label>
         <name>DonationImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimport (Opportunity1 geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
         <label>Donatiebedrag</label>
@@ -375,57 +380,57 @@
         <name>FailureInformation__c</name>
     </fields>
     <fields>
-        <help><!-- The monetary amount attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 1: Amount --></label>
+        <help>Het geldbedrag dat is toegekend aan de eerste GAU-toewijzing van de opportunity. U moet Geavanceerd toewijzen voor gegevensimport gebruiken om dit veld toe te wijzen.</help>
+        <label>GAU-toewijzing 1: Bedrag</label>
         <name>GAU_Allocation_1_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the GAU to be used for the first allocation. --></help>
-        <label><!-- GAU Allocation 1: GAU --></label>
+        <help>De Salesforce-ID van de GAU die moet worden gebruikt voor de eerste toewijzing.</help>
+        <label>GAU-toewijzing 1: GAU</label>
         <name>GAU_Allocation_1_GAU__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimports (GAU 1)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the first GAU Allocation. --></help>
-        <label><!-- GAU Allocation 1: Import Status --></label>
+        <help>De status van de poging tot invoegen van de eerste GAU-toewijzing.</help>
+        <label>GAU-toewijzing 1: Importstatus</label>
         <name>GAU_Allocation_1_Import_Status__c</name>
     </fields>
     <fields>
-        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
-        <label><!-- GAU Allocation 1: Imported --></label>
+        <help>Een opzoekopdracht voor de eerste GAU-toewijzing als het maken ervan is geslaagd.</help>
+        <label>GAU-toewijzing 1: Geïmporteerd</label>
         <name>GAU_Allocation_1_Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimports (GAU 1)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 1: Percent --></label>
+        <help>Het percentage dat is toegekend aan de eerste GAU-toewijzing van Opportunity. U moet Geavanceerd toewijzen voor gegevensimport gebruiken om dit veld toe te wijzen.</help>
+        <label>GAU-toewijzing 1: Percentage</label>
         <name>GAU_Allocation_1_Percent__c</name>
     </fields>
     <fields>
-        <help><!-- The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 2: Amount --></label>
+        <help>Het geldbedrag dat is toegekend aan de tweede GAU-toewijzing van de opportunity. U moet Geavanceerd toewijzen voor gegevensimport gebruiken om dit veld toe te wijzen.</help>
+        <label>GAU-toewijzing 2: Bedrag</label>
         <name>GAU_Allocation_2_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the GAU to be used for the second GAU allocation. --></help>
-        <label><!-- GAU Allocation 2: GAU --></label>
+        <help>De Salesforce-ID van de GAU die moet worden gebruikt voor de tweede GAU-toewijzing.</help>
+        <label>GAU-toewijzing 2: GAU</label>
         <name>GAU_Allocation_2_GAU__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimports (GAU 2)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the second GAU Allocation. --></help>
-        <label><!-- GAU Allocation 2: Import Status --></label>
+        <help>De status van de poging tot invoegen van de tweede GAU-toewijzing.</help>
+        <label>GAU-toewijzing 2: Importstatus</label>
         <name>GAU_Allocation_2_Import_Status__c</name>
     </fields>
     <fields>
-        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
-        <label><!-- GAU Allocation 2: Imported --></label>
+        <help>Een opzoekopdracht voor de eerste GAU-toewijzing als het maken ervan is geslaagd.</help>
+        <label>GAU-toewijzing 2: Geïmporteerd</label>
         <name>GAU_Allocation_2_Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimports (GAU 2)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The percent attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 2: Percent --></label>
+        <help>Het percentage dat is toegekend aan de tweede GAU-toewijzing van Opportunity. U moet Geavanceerd toewijzen voor gegevensimport gebruiken om dit veld toe te wijzen.</help>
+        <label>GAU-toewijzing 2: Percentage</label>
         <name>GAU_Allocation_2_Percent__c</name>
     </fields>
     <fields>
@@ -435,7 +440,7 @@
     <fields>
         <label>Thuisadres Geïmporteerd</label>
         <name>HomeAddressImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimports</relationshipLabel>
     </fields>
     <fields>
         <label>Thuisstad</label>
@@ -460,7 +465,7 @@
     <fields>
         <label>Huishoudenaccount Geïmporteerd</label>
         <name>HouseholdAccountImported__c</name>
-        <relationshipLabel>NPSP-Gegevensimports (Huishoudenaccount Geïmporteerd)</relationshipLabel>
+        <relationshipLabel>NPSP-gegevensimports</relationshipLabel>
     </fields>
     <fields>
         <label>Telefoon van Huishouden</label>
@@ -478,33 +483,33 @@
         <relationshipLabel>NPSP-Gegevensimports</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the first Opportunity Contact Role. --></help>
-        <label><!-- Opportunity Contact Role 1: ImportStatus --></label>
+        <help>De status van de poging tot invoegen van de eerste Opportunitycontactpersoonsrol.</help>
+        <label>Opportunitycontactpersoonsrol 1: ImportStatus</label>
         <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 1: Imported --></label>
+        <help>De Salesforce-ID van de geïmporteerde Opportunitycontactpersoonsrol.</help>
+        <label>Opportunitycontactpersoonsrol 1: Geïmporteerd</label>
         <name>Opportunity_Contact_Role_1_Imported__c</name>
     </fields>
     <fields>
-        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 1: Role --></label>
+        <help>De rol waarmee de Opportunitycontactpersoonsrol moet worden gemaakt.  Geef bijvoorbeeld &quot;soft credit&quot; om een Opportunitycontactpersoonsrol voor &quot;soft credit&quot; te maken.</help>
+        <label>Opportunitycontactpersoonsrol 1: Rol</label>
         <name>Opportunity_Contact_Role_1_Role__c</name>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the second Opportunity Contact Role. --></help>
-        <label><!-- Opportunity Contact Role 2: ImportStatus --></label>
+        <help>De status van de poging tot invoegen van de tweede Opportunitycontactpersoonsrol.</help>
+        <label>Opportunitycontactpersoonsrol 2: ImportStatus</label>
         <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 2: Imported --></label>
+        <help>De Salesforce-ID van de geïmporteerde Opportunitycontactpersoonsrol.</help>
+        <label>Opportunitycontactpersoonsrol 2: Geïmporteerd</label>
         <name>Opportunity_Contact_Role_2_Imported__c</name>
     </fields>
     <fields>
-        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 2: Role --></label>
+        <help>De rol waarmee de Opportunitycontactpersoonsrol moet worden gemaakt.  Geef bijvoorbeeld &quot;soft credit&quot; om een Opportunitycontactpersoonsrol voor &quot;soft credit&quot; te maken.</help>
+        <label>Opportunitycontactpersoonsrol 2: Rol</label>
         <name>Opportunity_Contact_Role_2_Role__c</name>
     </fields>
     <fields>
@@ -578,11 +583,11 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 1 Information --></label>
+            <label>Gegevens over GAU-toewijzing 1</label>
             <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 2 Information --></label>
+            <label>Gegevens over GAU-toewijzing 2</label>
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
@@ -594,19 +599,19 @@
             <section>Household Account Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <label>Gegevens over Opportunitycontactpersoonsrol 1</label>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <label>Gegevens over Opportunitycontactpersoonsrol 2</label>
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Information --></label>
+            <label>Opportunitygegevens</label>
             <section>Opportunity Information</section>
         </sections>
         <sections>
-            <label><!-- Payment Information --></label>
+            <label>Betalingsgegevens</label>
             <section>Payment Information</section>
         </sections>
     </layouts>

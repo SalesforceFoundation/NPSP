@@ -6,29 +6,38 @@
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <fields>
-        <help><!-- The reason this Recurring Donation was closed. --></help>
-        <label><!-- Closed Reason --></label>
+        <help>この継続支援が完了した理由。</help>
+        <label>完了の理由</label>
         <name>ClosedReason__c</name>
         <picklistValues>
             <masterLabel>Card Expired</masterLabel>
-            <translation><!-- Card Expired --></translation>
+            <translation>カードの期限が切れた</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Commitment Completed</masterLabel>
+            <translation>約束を達成した</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Deceased Donor</masterLabel>
-            <translation><!-- Deceased Donor --></translation>
+            <translation>支援者が死亡した</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Financial Difficulty</masterLabel>
-            <translation><!-- Financial Difficulty --></translation>
+            <translation>資金難</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Longer Interested</masterLabel>
-            <translation><!-- No Longer Interested --></translation>
+            <translation>関心がなくなった</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Unknown</masterLabel>
-            <translation><!-- Unknown --></translation>
+            <translation>不明</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>今年または当会計年度の継続支援の総額 (参照のみ)。成立した支援とその年の残りの期間の割賦が含まれます。</help>
+        <label>今年の金額</label>
+        <name>CurrentYearValue__c</name>
     </fields>
     <fields>
         <help>次回の支援日にかかわらず、今後の月ごと、カスタムの月ごと、または四半期ごとの支援の各支払を指定日に設定します。注意: [常に末日を使用] チェックボックスを選択している場合、そちらの設定が優先されます。</help>
@@ -160,58 +169,71 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
-        <label><!-- Installment Frequency --></label>
+        <help>[頻度] と [間隔] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+        <label>頻度</label>
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
-        <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
-        <label><!-- Payment Method --></label>
+        <help>来年または翌会計年度の継続支援の予測総額 (参照のみ)。</help>
+        <label>来年の金額</label>
+        <name>NextYearValue__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援の支払のフォーム。NPSP は選択した値を関連する各支払レコードに自動的にコピーします。</help>
+        <label>支払方法</label>
         <name>PaymentMethod__c</name>
         <picklistValues>
             <masterLabel>ACH/EFT</masterLabel>
-            <translation><!-- ACH/EFT --></translation>
+            <translation>ACH/EFT</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>
-            <translation><!-- Check --></translation>
+            <translation>小切手</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Credit Card</masterLabel>
-            <translation><!-- Credit Card --></translation>
+            <translation>クレジットカード</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Default value is Open, meaning a recurring donation with no end date. --></help>
-        <label><!-- Recurring Type --></label>
+        <help>デフォルト値は [無期限] です。これは、終了日のない継続支援を意味します。</help>
+        <label>継続種別</label>
         <name>RecurringType__c</name>
         <picklistValues>
+            <masterLabel>Fixed</masterLabel>
+            <translation>固定</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Open</masterLabel>
-            <translation><!-- Open --></translation>
+            <translation>無期限</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date. --></help>
-        <label><!-- Start Date --></label>
+        <help>この継続支援の新規および更新されたスケジュール情報 (金額、日付など) が有効になる日付。デフォルトは現在の日付です。</help>
+        <label>発効日</label>
         <name>StartDate__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed. --></help>
-        <label><!-- Status --></label>
+        <help>継続支援が有効に使用されているのか、一時的に停止しているのか、完了しているのかを示します。</help>
+        <label>状況</label>
         <name>Status__c</name>
         <picklistValues>
             <masterLabel>Active</masterLabel>
-            <translation><!-- Active --></translation>
+            <translation>有効</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Closed</masterLabel>
-            <translation><!-- Closed --></translation>
+            <translation>完了</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
-            <translation><!-- Lapsed --></translation>
+            <translation>失効</translation>
         </picklistValues>
     </fields>
+    <quickActions>
+        <label>継続支援を完了</label>
+        <name>Close_Recurring_Donation</name>
+    </quickActions>
     <quickActions>
         <label>新規支援</label>
         <name>New_Opportunity</name>

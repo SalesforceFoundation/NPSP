@@ -149,56 +149,116 @@
         <name>Address_Verification_Limit</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextActive --></label>
+        <label>Actief</label>
         <name>AssistiveTextActive</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextComplete --></label>
+        <label>Voltooid</label>
         <name>AssistiveTextComplete</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextError --></label>
+        <label>Vervallen</label>
         <name>AssistiveTextError</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextNewWindow --></label>
+        <label>Info</label>
+        <name>AssistiveTextInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Koppeling wordt geopend in een nieuw venster</label>
         <name>AssistiveTextNewWindow</name>
     </customLabels>
     <customLabels>
-        <label><!-- AssistiveTextWarning --></label>
+        <label>Pictogram Record</label>
+        <name>AssistiveTextRecordIcon</name>
+    </customLabels>
+    <customLabels>
+        <label>Waarschuwing</label>
         <name>AssistiveTextWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressCompletedDate --></label>
+        <label>Voltooid:</label>
         <name>BatchProgressCompletedDate</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressExtendedStatus --></label>
+        <label>Uitgebreide status:</label>
         <name>BatchProgressExtendedStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressJobItemsProcessed --></label>
+        <label>Batches verwerkt:</label>
         <name>BatchProgressJobItemsProcessed</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressStatus --></label>
+        <label>Status:</label>
         <name>BatchProgressStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTimeElapsed --></label>
+        <label>Voltooid</label>
+        <name>BatchProgressStatusComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>Voltooid met fouten</label>
+        <name>BatchProgressStatusCompleteErrors</name>
+    </customLabels>
+    <customLabels>
+        <label>Fout</label>
+        <name>BatchProgressStatusError</name>
+    </customLabels>
+    <customLabels>
+        <label>Mislukt</label>
+        <name>BatchProgressStatusFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>In wachtstand</label>
+        <name>BatchProgressStatusHolding</name>
+    </customLabels>
+    <customLabels>
+        <label>In voorbereiding</label>
+        <name>BatchProgressStatusPreparing</name>
+    </customLabels>
+    <customLabels>
+        <label>Wordt verwerkt</label>
+        <name>BatchProgressStatusProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>In wachtrij geplaatst</label>
+        <name>BatchProgressStatusQueued</name>
+    </customLabels>
+    <customLabels>
+        <label>Gestopt</label>
+        <name>BatchProgressStatusStopped</name>
+    </customLabels>
+    <customLabels>
+        <label>Succes</label>
+        <name>BatchProgressStatusSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Tijd verstreken:</label>
         <name>BatchProgressTimeElapsed</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTimeElapsedDays --></label>
+        <label>dag(en)</label>
         <name>BatchProgressTimeElapsedDays</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTitleRD2DataMigration --></label>
+        <label>Uitvoering van gegevensmigratie</label>
         <name>BatchProgressTitleRD2DataMigration</name>
     </customLabels>
     <customLabels>
-        <label><!-- BatchProgressTotalJobItems --></label>
+        <label>Totale aantal batches:</label>
         <name>BatchProgressTotalJobItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Totale aantal records:</label>
+        <name>BatchProgressTotalRecords</name>
+    </customLabels>
+    <customLabels>
+        <label>Records mislukt:</label>
+        <name>BatchProgressTotalRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Records verwerkt:</label>
+        <name>BatchProgressTotalRecordsProcessed</name>
     </customLabels>
     <customLabels>
         <label>Bent u zeker dat u {0} wilt verwijderen?</label>
@@ -545,7 +605,7 @@
         <name>CRLP_DuplicateTargetField</name>
     </customLabels>
     <customLabels>
-        <label>&quot;Hard Credit&quot;</label>
+        <label>“Hard Credit”</label>
         <name>CRLP_HardCredit</name>
     </customLabels>
     <customLabels>
@@ -739,140 +799,300 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>PageMessagesWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- ProgressMarkerAssistiveTextProgress --></label>
+        <label>Voortgang:</label>
         <name>ProgressMarkerAssistiveTextProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if value on the amount is valid or not --></label>
+        <label>Geef een geldig aantal op. Het aantal mag niet nul, negatief of leeg zijn.</label>
         <name>RD2_AmountMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Installment Period cannot be converted to enhanced Recurring Donation format --></label>
+        <label>U kunt Account van huishouden of Contactpersoon niet wijzigen voor Terugkerende donatie die Gesloten opportunities heeft.</label>
+        <name>RD2_ContactChangeIsRestricted</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt de valuta van Opportunity niet wijzigen in een andere valuta dan de gerelateerde Terugkerende donatie.</label>
+        <name>RD2_CurrencyChangeIsRestrictedOnOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt de valuta van Terugkerende donatie valuta niet wijzigen wanneer er een gerelateerde gesloten Opportunity is.</label>
+        <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
+    </customLabels>
+    <customLabels>
+        <label>Huidige planning</label>
+        <name>RD2_CurrentScheduleTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer bij NPSP-instellingen | Terugkerende donaties elke andere waarde dan &quot;No_Action&quot; voor Werking voor Open opportunity bij TD sluiten. Nadat gegevensmigratie is voltooid, kunt u de instelling weer terug wijzigen naar de vorige waarde.</label>
+        <name>RD2_DataMigrationInvalidCloseAction</name>
+    </customLabels>
+    <customLabels>
+        <label>Termijn voor terugkerende donatie &quot;{0}&quot; kan niet worden geconverteerd naar de notatie voor Uitgebreide terugkerende donaties. Zorg ervoor dat Termijnperiode is gedefinieerd in NPSP-instellingen -&gt; Terugkerende donaties -&gt; Aangepaste termijnenperioden voor Terugkerende donaties.</label>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- Open Ended Status cannot be converted to enhanced Recurring Donation format --></label>
+        <label>Status van Terugkerende donatie met open einde &quot;{0}&quot; kan niet worden geconverteerd naar de notatie voor Uitgebreide terugkerende donaties. U moet een van deze waarden gebruiken: Open, Gesloten of Geen.</label>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate RD data if day of month is blank when installment is monthly --></label>
+        <label>U moet een waarde opgeven voor Dag van de maand wanneer Termijnperiode is ingesteld op Maandelijks.</label>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if it is valid day of month --></label>
+        <label>{0} is niet een ondersteunde waarde voor Dag van de maand. Selecteer een waarde tussen 1 en 30 of selecteer Laatste dag van de maand.</label>
         <name>RD2_DayOfMonthMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledHeader --></label>
+        <label>&lt;b&gt;WAARSCHUWING: u hebt Uitgebreide terugkerende donaties ingeschakeld. Bij uitschakeling van Aanpasbare totaliseringen zullen totaliseringen voor Terugkerende donaties niet langer functioneren.&lt;/b&gt;</label>
+        <name>RD2_DisableCustomizableRollupWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>We zijn er bijna! U hoeft eerst alleen nog maar een paar dingen te controleren. . .</label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledMessage --></label>
+        <label>(1) Als u niet al gebruikmaakt van Lightning Experience, klikt u op Overschakelen naar Lightning Experience boven aan uw scherm.&lt;br/&gt;(2) Schakel Aanpasbare totaliseringen in door naar NPSP-instellingen | Donaties | Aanpasbare totaliseringen te gaan.&lt;br/&gt;&lt;br/&gt;Keer hier terug naar de pagina Upgrade naar Uitgebreide terugkerende donaties.</label>
         <name>RD2_EnablementDisabledMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableConfirm --></label>
+        <label>Migratie valideren</label>
+        <name>RD2_EnablementDryRunBatchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Migratie valideren</label>
+        <name>RD2_EnablementDryRunButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Validatie met succes voltooid.</label>
+        <name>RD2_EnablementDryRunComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP simuleert het migreren van uw bestaande gegevens naar het model Uitgebreide terugkerende donaties en identificeert fouten. Als er fouten zijn, gaat u naar NPSP-instellingen | Systeemtools | Foutenlogboek. Nadat u de fouten hebt gecorrigeerd, komt u hier terug en valideert u de migratie opnieuw. Zodra de validatie zonder fouten is voltooid, kunt u doorgaan naar de volgende stap.&lt;br/&gt;&lt;br/&gt;De voltooiing van het validatieproces kan wel enige tijd duren. U kunt deze pagina verlaten en later terugkeren om de voortgang te controleren.</label>
+        <name>RD2_EnablementDryRunIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>Klaar voor migreren</label>
+        <name>RD2_EnablementDryRunNextButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Het is meer dan 7 dagen geleden sinds u een validatie van een migratie hebt voltooid. Vernieuw de pagina en klik op Migratie valideren om te bevestigen dat uw gegevens zonder fouten worden gemigreerd.</label>
+        <name>RD2_EnablementDryRunOutdatedError</name>
+    </customLabels>
+    <customLabels>
+        <label>Het is meer dan 7 dagen geleden sinds u een validatie van een migratie hebt voltooid. Klik op Migratie valideren om te bevestigen dat uw gegevens zonder fouten worden gemigreerd.</label>
+        <name>RD2_EnablementDryRunOutdatedInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Validatie overslaan</label>
+        <name>RD2_EnablementDryRunSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Validatie stoppen</label>
+        <name>RD2_EnablementDryRunStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Migratie valideren</label>
+        <name>RD2_EnablementDryRunTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Ik bevestig dat ik de bovenstaande voorbereidings- en validatietaken heb voltooid en dat ik zo ver ben om Uitgebreide terugkerende donaties in te schakelen.</label>
         <name>RD2_EnablementEnableConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableIntro --></label>
+        <label>Deze stap vervangt de huidige verwerkingslogica voor Terugkerende donaties door de logica voor Uitgebreide terugkerende donaties.</label>
         <name>RD2_EnablementEnableIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableMessage --></label>
+        <label>Schakel de functionaliteit van Uitgebreide terugkerende donaties in.</label>
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableTitle --></label>
+        <label>Uitgebreide terugkerende donaties inschakelen</label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableWarning --></label>
+        <label>&lt;b&gt;WAARSCHUWING: NPSP beschikt niet over een manier om te herstellen naar oudere Terugkerende donaties.&lt;/b&gt;</label>
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementIntro --></label>
+        <label>Gegroet! Uitgebreide terugkerende donaties is onze nieuw ontworpen en verbeterde voorziening voor Terugkerende donaties voor het Nonprofit Success Pack (NPSP). Onze grote dank gaat naar communityleden die hun feedback hebben gegeven en hebben geholpen om Uitgebreide terugkerende donaties mogelijk te maken.
+        &lt;br/&gt;&lt;br/&gt;Aangezien er al een voorziening Terugkerende donaties in NPSP is, moet u diverse upgradetaken uitvoeren en uw bestaande gegevens overzetten naar het model Uitgebreide terugkerende donaties. Hieronder hebben we de vereiste taken voor u op een rijtje gezet.
+        &lt;br/&gt;&lt;br/&gt;Waarschijnlijk hebt u later nog wat vragen; daarom willen we u volledig voorbereiden bij elke stap. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie over Uitgebreide terugkerend donaties&lt;/a&gt; terwijl u het upgradeproces doorloopt.</label>
         <name>RD2_EnablementIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirm --></label>
+        <label>Bevestig dat u de metagegevens voor Uitgebreide terugkerende donaties hebt geïnstalleerd.</label>
         <name>RD2_EnablementMetaDeployConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirmError --></label>
+        <label>U hebt de metagegevens voor Uitgebreide terugkerende donaties nog niet geïnstalleerd. Klik op MetaDeploy starten en volg de instructies.</label>
         <name>RD2_EnablementMetaDeployConfirmError</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployIntro --></label>
+        <label>Gebruik MetaDeploy voor het installeren van nieuwe metagegevens (keuzelijstwaarden, Help-tekst, enz.) voor Uitgebreide terugkerende donaties. MetaDeploy is een service die voorkomt buiten uw Salesforce-organisatie. Zodra u de metagegevens hebt geïnstalleerd, gaat u terug naar deze pagina om door te gaan met de upgrade naar Uitgebreide terugkerende donaties.</label>
         <name>RD2_EnablementMetaDeployIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunch --></label>
+        <label>Installeer de metagegevens voor Uitgebreide terugkerende donaties met behulp van de service MetaDeploy.</label>
         <name>RD2_EnablementMetaDeployLaunch</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunchLinkLabel --></label>
+        <label>MetaDeploy starten</label>
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployTitle --></label>
+        <label>Metagegevens voor Uitgebreide terugkerende donaties installeren</label>
         <name>RD2_EnablementMetaDeployTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationButton --></label>
+        <label>Migratie uitvoeren</label>
         <name>RD2_EnablementMigrationButton</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationCompleteMessage --></label>
+        <label>&lt;b&gt;Upgradeproces voltooid!&lt;/b&gt;&lt;br/&gt;
+        &lt;br/&gt;Voordat uw organisatie Uitgebreide terugkerende donaties gaat gebruiken:&lt;br/&gt;
+        &lt;ul&gt;&lt;li&gt;Schakel werkstromen, processen, validatieregels en triggers in, die u vóór de upgrade hebt uitgeschakeld.&lt;/li&gt;
+        &lt;li&gt;Wijs de paginalay-out Uitgebreide terugkerende donaties toe aan alle gebruikersprofielen en verwijder de oude paginalay-out Terugkerende donaties.&lt;/li&gt;
+        &lt;li&gt;Wijs de Lightning-recordpagina Terugkerende donatie voor NPSP toe als Standaard van de organisatie.&lt;/li&gt;   
+        &lt;li&gt;Wijs de Apex-klasse RD2_VisualizeScheduleController toe aan uw klantenprofielen.&lt;/li&gt;    
+        &lt;li&gt;Pas beveiliging op veldniveau voor velden van Terugkerende donaties naar behoefte aan voor uw profielen en machtigingensets.&lt;/li&gt;
+        &lt;li&gt;Pas rapporten van Terugkerende donaties dusdanig aan dat deze werken bij Uitgebreide terugkerende donaties.&lt;/li&gt;
+        &lt;li&gt;Informeer uw personeel over Uitgebreide terugkerende donaties.&lt;/li&gt;</label>
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationIntro --></label>
+        <label>De uitvoering van uw migratie heeft fouten; deze moeten worden gecorrigeerd om het voltooien van een migratie te laten slagen. Bekijk de fouten door naar NPSP-instellingen &gt; Systeemtools &gt; Foutenlogboeken te gaan. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentatie&lt;/a&gt; voor hulp. Corrigeer de fouten, ga terug en probeer het opnieuw.</label>
+        <name>RD2_EnablementMigrationErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Migreer uw bestaande gegevens voor Terugkerende donaties naar het gegevensmodel van Uitgebreide terugkerende donaties. Dit proces kan wat tijd in beslag nemen. U kunt deze pagina verlaten en later terugkeren om de voortgang te controleren.</label>
         <name>RD2_EnablementMigrationIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationTitle --></label>
+        <label>Terug naar Valideren</label>
+        <name>RD2_EnablementMigrationSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt de gegevensmigratie opnieuw valideren door op Migratie valideren te klikken.</label>
+        <name>RD2_EnablementMigrationStepDryRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Klik op Migratie uitvoeren om met het proces van de gegevensmigratie te starten.</label>
+        <name>RD2_EnablementMigrationStepFinal</name>
+    </customLabels>
+    <customLabels>
+        <label>Migratie stoppen</label>
+        <name>RD2_EnablementMigrationStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label>Gegevensmigratie uitvoeren</label>
         <name>RD2_EnablementMigrationTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationWarning --></label>
+        <label>&lt;b&gt;WAARSCHUWING: Migratie uitvoeren wijzigt bestaande gegevens van Terugkerende donaties dusdanig dat deze overeenkomen met het model van Uitgebreide terugkerende donaties. Maak een back-up van uw database als u dit nog niet hebt gedaan.&lt;/b&gt;</label>
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepIntro --></label>
+        <label>Voer voor het beperken van potentiële fouten en ter bescherming van uw gegevens deze voorbereidingstaken uit voordat u begint met de upgrade naar Uitgebreide terugkerende donaties:</label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTasks --></label>
+        <label>&lt;ul&gt;&lt;li&gt;Schakel werkstromen, processen, validatieregels en triggers uit voor de objecten Terugkerende donaties, Opportunity en Betaling.&lt;/li&gt;
+&lt;li&gt;Maak een back-up van uw database, inclusief alle Terugkerende donaties en hun gerelateerde records.&lt;/li&gt;
+&lt;li&gt;Lees de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie&lt;/a&gt; voor Uitgebreide terugkerende donaties.&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_EnablementPrepTasks</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTitle --></label>
+        <label>Voorbereidingstaken</label>
         <name>RD2_EnablementPrepTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- The job can only be executed when Enhanced RD is enabled in the org --></label>
+        <label>U moet Uitgebreide terugkerende donaties inschakelen voordat u de taak Gegevensmigratie van Uitgebreide terugkerende donaties kunt uitvoeren.</label>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- The RD2 Batch job can only be executed when Enhanced RD is enabled --></label>
+        <label>U moet Uitgebreide terugkerende donaties inschakelen voordat u de batchtaak Uitgebreide terugkerende donaties kunt uitvoeren.</label>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if it is valid install period --></label>
+        <label>Frequentie van termijn is verplicht. Geef een waarde op tussen 1 en 20.</label>
+        <name>RD2_InstallmentFrequencyMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} is niet een ondersteunde waarde voor Termijn. Selecteer Dagelijks, Wekelijks, 1e en 15e, Maandelijks of Jaarlijks.</label>
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if contact is not found with HH Account --></label>
+        <label>Aantal geplande termijnen mag niet kleiner zijn dan het aantal Betaalde termijnen.</label>
+        <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
+    </customLabels>
+    <customLabels>
+        <label>Aantal geplande termijnen is er alleen voor Vaste terugkerende donaties. Verwijder de waarde in Aantal geplande termijnen of wijzig het Type terugkeer in Vast.</label>
+        <name>RD2_NumberInstallmentsNotAllowedWhenOpen</name>
+    </customLabels>
+    <customLabels>
+        <label>Aantal geplande termijnen is verplicht wanneer Type terugkeer Vast is.</label>
+        <name>RD2_NumberInstallmentsRequiredWhenFixed</name>
+    </customLabels>
+    <customLabels>
+        <label>Pagina niet beschikbaar</label>
+        <name>RD2_PageNotAvailableHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze pagina is niet beschikbaar in Uitgebreide terugkerende donaties. Vernieuw uw browser en ga terug naar NPSP-instellingen.</label>
+        <name>RD2_PageNotAvailableMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Einddatum</label>
+        <name>RD2_ScheduleLWCEndDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Toekomstige planning</label>
+        <name>RD2_ScheduleLWCFutureSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>Actieve planningen</label>
+        <name>RD2_ScheduleLWCTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Datum</label>
+        <name>RD2_ScheduleVisualizerColumnDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze component moet worden gebruikt op een recordpagina Terugkerende donaties.</label>
+        <name>RD2_ScheduleVisualizerErrorEnhancedRDNot</name>
+    </customLabels>
+    <customLabels>
+        <label>U moet Uitgebreide terugkerende donaties inschakelen om deze component te gebruiken.</label>
+        <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is geen actieve planning voor deze terugkerende donatie.</label>
+        <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>Er zijn geen Opportunities voor geplande termijnen.</label>
+        <name>RD2_ScheduleVisualizerMessageNoSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label>Aanstaande termijnen</label>
+        <name>RD2_ScheduleVisualizerTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>U moet een contactpersoon selecteren, die is gekoppeld aan deze Account van huishouden.</label>
         <name>RD_ContactMustBelongToAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- Validate Recurring Donations data if contact and account are missing --></label>
+        <label>U moet een account of contactpersoon selecteren.</label>
         <name>RD_DonorIsRequired</name>
     </customLabels>
     <customLabels>
         <label>Opportunities opnieuw laden</label>
         <name>RD_ErrorAddDonationHeaderText</name>
+    </customLabels>
+    <customLabels>
+        <label>De knop Opportunities vernieuwen heeft geen functie bij Uitgebreide terugkerende donaties. Vraag uw beheerder om deze knop te verwijderen uit paginalay-outs Terugkerende donaties.</label>
+        <name>RD_ErrorAddDonationLimitedToLegacyMode</name>
     </customLabels>
     <customLabels>
         <label>ID van Terugkerende Donatie ontbreekt. Selecteer een geldige terugkerende donatierecord.</label>
@@ -883,7 +1103,7 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD_ErrorAddDonationPermissionDenied</name>
     </customLabels>
     <customLabels>
-        <label><!-- The legacy RD Batch job cannot be executed when Enhanced RD is enabled --></label>
+        <label>De verouderde batchtaak Terugkerende donaties kan niet worden uitgevoerd, omdat Uitgebreide terugkerende donaties is ingeschakeld in deze organisatie.</label>
         <name>RD_ErrorLegacyBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
@@ -893,6 +1113,10 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
     <customLabels>
         <label>Het gecombineerde Bedrag van alle gerelateerde Gesloten Gewonnen en Toegezegde Opportunities moet overeenstemmen met het Bedrag van een Terugkerende Donatie met een Einddatum.</label>
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Confirmation message displayed to user before the process runs --></label>
+        <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
         <label>Nieuwe Relatie maken</label>
@@ -1015,7 +1239,7 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RecurringDonationAccountAndContactError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Recurring Donation Name Suffix --></label>
+        <label>Terugkerend</label>
         <name>RecurringDonationNameSuffix</name>
     </customLabels>
     <customLabels>
@@ -1229,19 +1453,19 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiAccountCustomIdError</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjChildNotUpdated --></label>
+        <label>Kan het opzoekveld van de onderliggende record niet bijwerken met de ID van de bovenliggende record. De record kan niet worden bijgewerkt vanwege deze systeemfout:</label>
         <name>bdiAdditionalObjChildNotUpdated</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjPredNotFound --></label>
+        <label>Fout: record niet gemaakt. Deze record is afhankelijk van {0}, hetgeen niet kan worden gevonden.</label>
         <name>bdiAdditionalObjPredNotFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAdditionalObjRequiredFieldsNull --></label>
+        <label>Fout: record not gemaakt, ontbrekende verplichte velden:</label>
         <name>bdiAdditionalObjRequiredFieldsNull</name>
     </customLabels>
     <customLabels>
-        <label><!-- Data Import Advanced Mapping Summary --></label>
+        <label>Geavanceerd toewijzen voor Gegevensimport en Opgave van gift</label>
         <name>bdiAdvancedMapping</name>
     </customLabels>
     <customLabels>
@@ -1325,7 +1549,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiDataImporterDescription</name>
     </customLabels>
     <customLabels>
-        <label>Elke importrecord kan tot twee Contactpersonen, tot twee Organisaties, een optioneel Thuisadres en een optionele Donatie bevatten.</label>
+        <label>Als gebruikmaakt van Geavanceerd toewijzen, kunt u elk Salesforce-object en -veld—standaard of aangepast—toewijzen, dat rechtstreeks is gerelateerd aan Contactpersonen, Accounts en Opportunities. Bij toewijzen van Help-tekst kan elke record voor importeren maximaal 2 contactpersonen, maximaal 2 organisaties, een optioneel thuisadres en een optionele donatie bevatten.</label>
         <name>bdiDataImporterInfoLine1</name>
     </customLabels>
     <customLabels>
@@ -1357,7 +1581,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiDataImporterTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDeploymentInProgress --></label>
+        <label>Help-teksttoewijzingen worden momenteel geconverteerd naar Geavanceerd toewijzen.</label>
         <name>bdiDeploymentInProgress</name>
     </customLabels>
     <customLabels>
@@ -1405,15 +1629,15 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiErrorBatchNameRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when updating data import custom settings --></label>
+        <label>Er heeft zich een fout voorgedaan tijdens een poging tot het bijwerken van Aangepaste instellingen met de naam Gegevensimportinstellingen.</label>
         <name>bdiErrorDataImportCustomSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- error deploying metadata during migration from help text to metadata mapping --></label>
+        <label>Er heeft zich een fout voorgedaan tijdens een poging tot het converteren van Help-teksttoewijzingen en het inschakelen van Geavanceerd toewijzen.</label>
         <name>bdiErrorDeploymentFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- link to the deployment status page --></label>
+        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;U kunt de implementatiestatus hier weergeven.&lt;/a&gt;</label>
         <name>bdiErrorDeploymentFailedLink</name>
     </customLabels>
     <customLabels>
@@ -1469,99 +1693,100 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIBackToMapGroup --></label>
+        <label>Terug naar Objectgroep</label>
         <name>bdiFMUIBackToMapGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDataType --></label>
+        <label>Gegevenstype</label>
         <name>bdiFMUIDataType</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDatatableMapsTo --></label>
+        <label>Toegewezen aan</label>
         <name>bdiFMUIDatatableMapsTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDescription1 --></label>
+        <label>Verbind het veld dat u hebt gemaakt voor het object NPSP-gegevensimport, met het veld voor uw doelobject in het onderstaande raster. U kunt velden zoeken op Veldlabel of de Veld-API-naam.</label>
         <name>bdiFMUIDescription1</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIDescription2 --></label>
+        <label>Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibele veldtypen voor uw doelobject.
+            Wanneer u een veld NPSP-gegevensimport selecteert, zijn alleen de compatibele doelvelden beschikbaar.</label>
         <name>bdiFMUIDescription2</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIFieldAPIName --></label>
+        <label>Veld-API-naam</label>
         <name>bdiFMUIFieldAPIName</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIFieldLabel --></label>
+        <label>Veldlabel</label>
         <name>bdiFMUIFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeployment --></label>
+        <label>Het wijzigen van deze veldtoewijzing duurt langer dan verwacht.</label>
         <name>bdiFMUILongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeploymentLink --></label>
+        <label>Geef hier de implementatiestatus weer.</label>
         <name>bdiFMUILongDeploymentLink</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUILongDeploymentMessage --></label>
+        <label>De verwerking ervan blijft doorgaan op de achtergrond. Even geduld.</label>
         <name>bdiFMUILongDeploymentMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUINewFieldMapping --></label>
+        <label>Nieuwe veldtoewijzing maken</label>
         <name>bdiFMUINewFieldMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUINoFieldMappings --></label>
+        <label>Er zijn nog geen veldtoewijzingen voor deze Toewijzingsgroep.</label>
         <name>bdiFMUINoFieldMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISearchSourceInputLabel --></label>
+        <label>Zoek naar het veld van het object NPSP-gegevensimport op label of API-naam.</label>
         <name>bdiFMUISearchSourceInputLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISearchTargetInputLabel --></label>
+        <label>Zoek naar het doelveld op label of API-naam.</label>
         <name>bdiFMUISearchTargetInputLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceFieldDataTypeHelp --></label>
+        <label>Het gegevenstype van het veld dat u hebt gekozen voor het object NPSP-gegevensimport.</label>
         <name>bdiFMUISourceFieldDataTypeHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceFieldLabelHelp --></label>
+        <label>Het veld NPSP-gegevensimport, dat u wilt toewijzen. Zoek op Veldlabel of API-naam. Als u het veld niet kunt vinden, bevestigt u dat u het veld hebt gemaakt voor het object NPSP-gegevensimport.</label>
         <name>bdiFMUISourceFieldLabelHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISourceObject --></label>
+        <label>Bron (object NPSP-gegevensimport)</label>
         <name>bdiFMUISourceObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUISuccessful --></label>
+        <label>geslaagd</label>
         <name>bdiFMUISuccessful</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITarget --></label>
+        <label>Doel</label>
         <name>bdiFMUITarget</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITargetFieldDataTypeHelp --></label>
+        <label>Het gegevens type van het veld dat u hebt gekozen voor het doelobject.</label>
         <name>bdiFMUITargetFieldDataTypeHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITargetFieldLabelHelp --></label>
+        <label>Het doelveld dat u wilt verbinden met het veld NPSP-gegevensimport. Zoek op Veldlabel of API-naam. Dit wordt gefilterd om alleen velden voor uw doelobject te tonen, die compatibel zijn met het veld dat u hebt gekozen voor het object NPSP-gegevensimport.</label>
         <name>bdiFMUITargetFieldLabelHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUITryAgain --></label>
+        <label>Probeer het nogmaals.</label>
         <name>bdiFMUITryAgain</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIUnsuccessful --></label>
+        <label>mislukt</label>
         <name>bdiFMUIUnsuccessful</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFMUIUpdate --></label>
+        <label>bijwerken</label>
         <name>bdiFMUIUpdate</name>
     </customLabels>
     <customLabels>
@@ -1569,11 +1794,11 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFieldMapping --></label>
+        <label>Veldtoewijzing</label>
         <name>bdiFieldMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFieldMappings --></label>
+        <label>Veldtoewijzingen</label>
         <name>bdiFieldMappings</name>
     </customLabels>
     <customLabels>
@@ -1635,127 +1860,128 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiMatchedNone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error message for long deployment --></label>
+        <label>Het converteren van Helptekst toewijzingen naar Geavanceerd toewijzen duurt langer dan verwacht.</label>
         <name>bdiMigrationLongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Is Child/Parent Help Text --></label>
+        <label>De manier waarop het doelobject is gerelateerd aan de andere objectgroep. Zo is een GAU-toewijzing een onderliggend element van een opportunity of is een Terugkerende donatie een bovenliggend element van een opportunity.</label>
         <name>bdiOMUIChildParentHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Is Child/Parent Field Label/Column Name --></label>
+        <label>Is onderliggend/bovenliggend element</label>
         <name>bdiOMUIChildParentLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Create Object Group modal. --></label>
+        <label>Objectgroep maken</label>
         <name>bdiOMUICreateModalTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Create New Object Group button --></label>
+        <label>Nieuwe objectgroep maken</label>
         <name>bdiOMUICreateNewObjectGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Edit Object Group modal. --></label>
+        <label>Objectgroep bewerken</label>
         <name>bdiOMUIEditModalTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when Group name is duplicate --></label>
+        <label>Fout: deze naam wordt al gebruikt; kies een andere naam.</label>
         <name>bdiOMUIErrorDupeName</name>
     </customLabels>
     <customLabels>
-        <label><!-- Basic error which any modal field is missing or invalid. --></label>
+        <label>Blanco of ongeldig waarden in een of meer velden.</label>
         <name>bdiOMUIErrorInvalidValues</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when Group Name is too long. --></label>
+        <label>Fout: groepsnaam is te lang; verkort deze tot 40 lettertekens of minder.</label>
         <name>bdiOMUIErrorLabelNameTooLong</name>
     </customLabels>
     <customLabels>
-        <label><!-- First part of error displayed when there are no unmapped fields. --></label>
+        <label>Fout: er zijn geen niet-toegewezen velden voor het object NPSP-gegevensimport voor gebruik voor</label>
         <name>bdiOMUIErrorNoUnmappedFieldsPt1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Second part of error displayed when there are no unmapped fields. --></label>
+        <label>. Maak nieuwe velden voor het object NPSP-gegevensimport, indien benodigd.</label>
         <name>bdiOMUIErrorNoUnmappedFieldsPt2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error displayed when there are no valid options for &quot;Through This Field&quot; --></label>
+        <label>Fout: er zijn geen geldige velden gebaseerd op wat u hebt geselecteerd in &quot;Objectnaam&quot;, &quot;Is onderliggend/bovenliggend element&quot; en &quot;Van deze toewijzingsgroep&quot;</label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Group Name Help Text --></label>
+        <label>De naam van deze objectgroep. Een veel voorkomende naamgevingsconventie is [objectnaam]groep.</label>
         <name>bdiOMUIGroupNameHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Group Name Label/Column Name --></label>
+        <label>Groepsnaam</label>
         <name>bdiOMUIGroupNameLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title for the Import Details section of the modal --></label>
+        <label>Importdetails</label>
         <name>bdiOMUIImportDetailsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Import Status Helptext --></label>
+        <label>Tijdens een testuitvoering of bij de verwerking van de import wordt de status van het importeren voor de objectgroep in dit veld getoond.</label>
         <name>bdiOMUIImportStatusHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Import Status Field Label/Column Name --></label>
+        <label>Importstatus</label>
         <name>bdiOMUIImportStatusLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to Record Helptext --></label>
+        <label>Wanneer de import wordt verwerkt, heeft dit veld een koppeling naar de record van deze objectgroep of geeft het de Salesforce-ID van de record weer.</label>
         <name>bdiOMUILinkToRecordHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to Record Label/Column Name --></label>
+        <label>Koppelen naar record</label>
         <name>bdiOMUILinkToRecordLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error message for long deployment --></label>
+        <label>Het wijzigen van deze objectgroep duurt langer dan verwacht.</label>
         <name>bdiOMUILongDeployment</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Groups Title --></label>
+        <label>Objectgroepen</label>
         <name>bdiOMUIObjectGroupsTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Name Helptext --></label>
+        <label>Het doelobject waarin deze gegevensimportrecords worden gemaakt. Dit is een gefilterde lijst van objecten; raadpleeg de documentatie voor een volledige lijst van beschikbare objecten.</label>
         <name>bdiOMUIObjectNameHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object Name Label/Column Name --></label>
+        <label>Objectnaam</label>
         <name>bdiOMUIObjectNameLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Of This Object Group Helptext --></label>
+        <label>De records van uw doelobject zijn gerelateerd aan een andere objectgroep. Kies hier de gerelateerde objectgroep.</label>
         <name>bdiOMUIOfGroupHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Of This Object Group Label/Column --></label>
+        <label>Van deze objectgroep</label>
         <name>bdiOMUIOfGroupLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 1 --></label>
+        <label>Elke rij van deze tabel toont uw objectgroepen. U stelt individuele veldtoewijzingen in wanneer u klikt op het pictogram voor de vervolgkeuzelijst voor een objectgroep; klik vervolgens op Veldtoewijzingen weergeven.</label>
         <name>bdiOMUIPageDescriptionPt1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 2 --></label>
+        <label>Objectgroepen zijn verzamelingen veldtoewijzingen die aan de tool NPSP-gegevensimport doorgeven welke typen records (bijvoorbeeld Contactpersonen, Opportunities, Betalingen, enz.) moeten worden gemaakt of bijgewerkt. NPSP kan gerelateerde records binnen één rij van uw import koppelen aan elkaar, omdat veldtoewijzingen in objectgroepen op dezelfde manier zijn of worden gebundeld.</label>
         <name>bdiOMUIPageDescriptionPt2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Object groups description part 3 --></label>
+        <label>Laten we eens kijken naar de twee objectgroepen GAU-toewijzing 1 en GAU-toewijzing 2 als voorbeeld. Deze objectgroepen koppelen rechtstreeks naar het object Opportunity. Maar soms wilt u wellicht twee GAU-toewijzingen toewijzen aan één opportunity. Hiervoor geeft u in uw importbestand de gegevens van Opportunity op in de kolommen Donaties, en neemt u de eerste GAU op in de kolommen van GAU-toewijzingen 1 en de tweede GAU-toewijzing in de kolommen van GAU-toewijzingen 2. Vanwege de objecttoewijzingen GAU-toewijzing 1 en GAU-toewijzing 2 worden bij het importeren de twee GAU-toewijzingen beide toegewezen aan de opportunity.</label>
         <name>bdiOMUIPageDescriptionPt3</name>
     </customLabels>
     <customLabels>
-        <label><!-- Through This Field Helptext --></label>
+        <label>Het veld Opzoekrelatie of Hoofd/detail dat uw doelobject verbindt met de gerelateerde objectgroep.
+            Als het doelobject een onderliggend element van het gerelateerde object is, is dit veld voor het doelobject. Maar als het doelobject het bovenliggende element van het gerelateerde object is, is dit veld voor het gerelateerde object.</label>
         <name>bdiOMUIThroughFieldHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- Through this field Label/Column Name --></label>
+        <label>Middels dit veld</label>
         <name>bdiOMUIThroughFieldLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- View Field Mappings action --></label>
+        <label>Veldtoewijzingen weergeven</label>
         <name>bdiOMUIViewFieldMappingsLabel</name>
     </customLabels>
     <customLabels>
@@ -1807,7 +2033,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiUpdated --></label>
+        <label>Bijgewerkt</label>
         <name>bdiUpdated</name>
     </customLabels>
     <customLabels>
@@ -2047,23 +2273,23 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bgeProcessBatch</name>
     </customLabels>
     <customLabels>
-        <label>Batch Giftinvoer</label>
+        <label>Batchinvoer van giften</label>
         <name>bgeTabHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <label>Veldtoewijzing gewijzigd</label>
         <name>bgeUnmappedFieldsNoticeHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping enabled. --></label>
+        <label>De volgende velden zijn wel opgenomen in deze batch, maar hun veldtoewijzingen zijn verwijderd: {0}. Ga ter correctie hiervan naar Geavanceerd toewijzen in NPSP-instellingen en wijs de velden opnieuw toe.</label>
         <name>bgeUnmappedFieldsNoticeMessageAdvancedMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping disabled. --></label>
+        <label>De volgende velden zijn wel opgenomen in deze batch, maar hun veldtoewijzingen zijn verwijderd: {0}. Ga ter correctie hiervan naar het object NPSP-gegevensimport en wijs de velden opnieuw toe met behulp van Help-tekst.</label>
         <name>bgeUnmappedFieldsNoticeMessageHelpTextMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Title used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <label>Batch is inclusief niet-toegewezen velden</label>
         <name>bgeUnmappedFieldsNoticeTitle</name>
     </customLabels>
     <customLabels>
@@ -2095,6 +2321,126 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>fout</label>
+        <name>commonAssistiveError</name>
+    </customLabels>
+    <customLabels>
+        <label>info</label>
+        <name>commonAssistiveInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>geslaagd</label>
+        <name>commonAssistiveSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>waarschuwing</label>
+        <name>commonAssistiveWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Terug</label>
+        <name>commonBack</name>
+    </customLabels>
+    <customLabels>
+        <label>Batches</label>
+        <name>commonBatches</name>
+    </customLabels>
+    <customLabels>
+        <label>Annuleren</label>
+        <name>commonCancel</name>
+    </customLabels>
+    <customLabels>
+        <label>Klonen</label>
+        <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label>Standaardwaarde</label>
+        <name>commonDefaultValue</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwijderen</label>
+        <name>commonDelete</name>
+    </customLabels>
+    <customLabels>
+        <label>Bewerken</label>
+        <name>commonEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Fout</label>
+        <name>commonError</name>
+    </customLabels>
+    <customLabels>
+        <label>Veldlabel</label>
+        <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe gift</label>
+        <name>commonNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label>Volgende</label>
+        <name>commonNext</name>
+    </customLabels>
+    <customLabels>
+        <label>Nee</label>
+        <name>commonNo</name>
+    </customLabels>
+    <customLabels>
+        <label>Geen items om weer te geven.</label>
+        <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Open</label>
+        <name>commonOpen</name>
+    </customLabels>
+    <customLabels>
+        <label>Meer lezen</label>
+        <name>commonReadMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Verplicht</label>
+        <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Opslaan</label>
+        <name>commonSave</name>
+    </customLabels>
+    <customLabels>
+        <label>Opslaan en sluiten</label>
+        <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>Sjabloon</label>
+        <name>commonTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Sjablonen</label>
+        <name>commonTemplates</name>
+    </customLabels>
+    <customLabels>
+        <label>Onbekende fout</label>
+        <name>commonUnknownError</name>
+    </customLabels>
+    <customLabels>
+        <label>Bijwerken</label>
+        <name>commonUpdate</name>
+    </customLabels>
+    <customLabels>
+        <label>Alles weergeven</label>
+        <name>commonViewAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Meer weergeven</label>
+        <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Waarschuwing</label>
+        <name>commonWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Ja</label>
+        <name>commonYes</name>
+    </customLabels>
+    <customLabels>
         <label>Account maken voor Contactpersoon {0} {1} mislukt. {2}</label>
         <name>conFailedAccountCreate</name>
     </customLabels>
@@ -2107,11 +2453,11 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>conMergeErrNoPersonAccounts</name>
     </customLabels>
     <customLabels>
-        <label><!-- Delete permission on the Contact object is required to for merging --></label>
+        <label>U moet de machtigingen Verwijderen hebben voor Contactpersonen om Contactpersonen te kunnen samenvoegen.</label>
         <name>conMergeErrorNoDeleteObjPermission</name>
     </customLabels>
     <customLabels>
-        <label><!-- Record sharing permission on the Contact object is required to for merging --></label>
+        <label>U hebt niet de machtigingen voor het delen van records om deze contactpersonen te kunnen samenvoegen. Selecteer andere records voor Contactpersoon of anders moet uw systeembeheerder mogelijk machtigingen voor delen aanpassen.</label>
         <name>conMergeErrorNoDeleteRecAccess</name>
     </customLabels>
     <customLabels>
@@ -2171,23 +2517,23 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorNoContext --></label>
+        <label>Geen verwerkingscontext gegeven voor constructor</label>
         <name>errErrorNoContext</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeOther --></label>
+        <label>Overige</label>
         <name>errErrorTypeOther</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeRequiredFieldMissing --></label>
+        <label>Verplicht veld ontbreekt</label>
         <name>errErrorTypeRequiredFieldMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorTypeValidationFailed --></label>
+        <label>Aangepaste validatieregel mislukt</label>
         <name>errErrorTypeValidationFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- errErrorUnsupportedDMLType --></label>
+        <label>Niet-ondersteunde bewerking: kan geen fout vastleggen voor dit type DML-bewerking.</label>
         <name>errErrorUnsupportedDMLType</name>
     </customLabels>
     <customLabels>
@@ -2207,8 +2553,581 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>flsError</name>
     </customLabels>
     <customLabels>
-        <label><!-- flsReadAccessError --></label>
+        <label>U hebt geen machtigingen voor toegang tot {0}.</label>
         <name>flsReadAccessError</name>
+    </customLabels>
+    <customLabels>
+        <label>Actieve sectie.</label>
+        <name>geAssistiveActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwijder het veld {0} uit de koptekst van de batch.</label>
+        <name>geAssistiveBatchHeaderRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label>Verplaats het veld {0} omlaag.</label>
+        <name>geAssistiveFieldDown</name>
+    </customLabels>
+    <customLabels>
+        <label>Verplaats het veld {0} omhoog.</label>
+        <name>geAssistiveFieldUp</name>
+    </customLabels>
+    <customLabels>
+        <label>Vouw alle objectgroepen en sjablooncomponenten samen.</label>
+        <name>geAssistiveFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Vouw alle objectgroepen en sjablooncomponenten uit.</label>
+        <name>geAssistiveFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwijderen het veld {0} uit de sjabloon.</label>
+        <name>geAssistiveFormFieldsRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label>Bewerk de instellingen van de sectie {0}.</label>
+        <name>geAssistiveFormFieldsSectionEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Annuleer en negeer wijzigingen aan Sectie-instellingen.</label>
+        <name>geAssistiveModalCancelAndDiscard</name>
+    </customLabels>
+    <customLabels>
+        <label>Geselecteerde optie verwijderen</label>
+        <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>Verplaats de sectie {0} omlaag.</label>
+        <name>geAssistiveSectionDown</name>
+    </customLabels>
+    <customLabels>
+        <label>Verplaats de sectie {0} omhoog.</label>
+        <name>geAssistiveSectionUp</name>
+    </customLabels>
+    <customLabels>
+        <label>Geef menu weer.</label>
+        <name>geAssistiveShowMenu</name>
+    </customLabels>
+    <customLabels>
+        <label>Inhoud wordt geladen.</label>
+        <name>geAssistiveSpinner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Advanced Form Fields header --></label>
+        <name>geBodyAdvancedFieldMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Stel standaardwaarden in voor deze batch. U kunt standaardwaarden overschrijven wanneer u giften opgeeft.</label>
+        <name>geBodyBatchDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt geen standaardwaarden instellen voor velden die zijn opgenomen in deze sectie.</label>
+        <name>geBodyBatchFieldBundleInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Kies velden die moeten worden opgenomen in uw Koptekst van batch. Vink het selectievakje aan om een veld toe te voegen en hef de selectie op om het veld uit het formulier te verwijderen. Als u graag extra aangepaste velden beschikbaar wilt hebben voor Koptekst van batch, voegt u ze toe in het object NPSP-gegevensimportbatch.</label>
+        <name>geBodyBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Voor elk veld kunt u het veldlabel bewerken, het als verplicht aanduiden of er een standaardwaarde aan toewijzen. Standaardwaarden kunnen worden overschreven door degene die de batch heeft gemaakt.</label>
+        <name>geBodyBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze verplichte velden zijn automatisch toegevoegd aan Koptekst van batch:</label>
+        <name>geBodyBatchHeaderWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer aan deze sectie toe te voegen velden.</label>
+        <name>geBodyEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Field Bundles header --></label>
+        <name>geBodyFieldBundlesLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Form Fields header --></label>
+        <name>geBodyFormFieldsDescLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Kies in uw formulier op te nemen velden. Klik vóór het toevoegen van velden op de sectie in het hoofdscherm waar u de velden wilt hebben. Vink in de zijbalk het selectievakje aan om een veld toe te voegen en hef de selectie ervan op om het veld te verwijderen uit het formulier. Als het te gebruiken object of veld niet wordt vermeld, zorgt u ervoor dat u het veld hetbt ingesteld met Geavanceerd toewijzen.</label>
+        <name>geBodyFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Stel een veld in door het voltooien van de volgende stappen:
+        &lt;/br&gt;
+        &lt;/br&gt;
+        &lt;ol&gt;
+            &lt;li&gt; Maak het veld voor het doelobject. &lt;/li&gt;
+            &lt;li&gt; Maak het veld voor het object NPSP-gegevensimport. &lt;/li&gt;
+            &lt;li&gt; Als dit onderdeel vormt van een nieuwe objectgroep, maakt u extra velden voor een nieuwe objectgroep en creëert u de nieuwe objectgroep in NPSP-instellingen. &lt;/li&gt;
+            &lt;li&gt; Voeg Veldtoewijzing in NPSP-instellingen toe om het veld NPSP-gegevensimport te verbinden met het doelveld. &lt;/li&gt;
+        &lt;/ol&gt;
+        Raadpleeg de NPSP-documentatie over Geavanceerd toewijzen voor aanvullende gegevens.</label>
+        <name>geBodyFormFieldsLeftColAdditional</name>
+    </customLabels>
+    <customLabels>
+        <label>Het verwijderen van deze sectie verwijdert ook alle velden erin.</label>
+        <name>geBodyFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Klik op een sectie en selecteer vervolgens een veld in de zijbalk om het toe te voegen aan de sectie in het hoofdscherm. Voor elk veld kunt u het veldlabel bewerken, het als verplicht aanduiden, er een standaardwaarde aan toewijzen of het verwijderen uit de sectie. Pas de lay-out van het formulier voor Opgave van gift aan door secties te maken en secties of velden opnieuw te ordenen.</label>
+        <name>geBodyFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Voordat u Opgave van gift inschakelt, moet u Geavanceerd toewijzen inschakelen.
+&lt;br/&gt;&lt;br/&gt;
+Gebruik sjablonen voor Opgave van gift om enkelvoudige giften of batches van giften op te geven. Alle giften die u hebt opgegeven middels de oudere tool Batchopgave van giften, worden niet weergegeven in Opgave van gift en vice versa.
+&lt;br/&gt;&lt;br/&gt;
+Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats daarvan het oudere Batchopgave van giften gebruiken (of Opgave van eenmalige gift, bij gebruik van GEM).</label>
+        <name>geBodyGiftEntryHelp</name>
+    </customLabels>
+    <customLabels>
+        <label>U voegt momenteel een nieuwe betaling toe aan Opportunity:</label>
+        <name>geBodyMatchingApplyNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>U maakt momenteel een nieuwe Opportunity.</label>
+        <name>geBodyMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze opportunity heeft geen betalingen die niet zijn betaald.</label>
+        <name>geBodyMatchingNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze donor heeft donaties in afwachting.</label>
+        <name>geBodyMatchingPendingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer de record die u wilt bijwerken.</label>
+        <name>geBodyMatchingSelectRecord</name>
+    </customLabels>
+    <customLabels>
+        <label>U werkt momenteel bij:</label>
+        <name>geBodyMatchingUpdatingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label>Geef details op over deze Sjabloon Opgave van gift.</label>
+        <name>geBodyTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Een sjabloon is opnieuw bruikbare lay-out van velden voor gegevensinvoer. Bewerk een sjabloon door op de sjabloonnaam te klikken. Of maak anders een nieuwe sjabloon of klik op het vervolgkeuzemenu van een sjabloon voor meer opties. Sjablonen die in gebruik zijn, kunnen niet worden verwijderd.</label>
+        <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Vorige: Formuliervelden</label>
+        <name>geButtonBuilderNavBackFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Vorige: Sjablooninfo</label>
+        <name>geButtonBuilderNavBackTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Volgende: Koptekst van batch</label>
+        <name>geButtonBuilderNavBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Volgende: Formuliervelden</label>
+        <name>geButtonBuilderNavFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Annuleren en formulier wissen</label>
+        <name>geButtonCancelAndClear</name>
+    </customLabels>
+    <customLabels>
+        <label>Sectie toevoegen</label>
+        <name>geButtonFormFieldsAddSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Alles samenvouwen</label>
+        <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Alles uitvouwen</label>
+        <name>geButtonFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Sectie en velden verwijderen</label>
+        <name>geButtonFormFieldsModalDeleteSectionAndFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Of maak een nieuwe Opportunity.</label>
+        <name>geButtonMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe betaling toevoegen</label>
+        <name>geButtonMatchingNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>Donaties bekijken</label>
+        <name>geButtonMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer een andere donatie.</label>
+        <name>geButtonMatchingUpdateDonationSelection</name>
+    </customLabels>
+    <customLabels>
+        <label>Werk deze Opportunity bij</label>
+        <name>geButtonMatchingUpdateOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Werk deze Betaling bij</label>
+        <name>geButtonMatchingUpdatePayment</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe Batch</label>
+        <name>geButtonNewBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe eenmalige gift</label>
+        <name>geButtonNewSingleGift</name>
+    </customLabels>
+    <customLabels>
+        <label>Opslaan en nieuwe gift opgeven</label>
+        <name>geButtonSaveNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label>Sjabloon maken</label>
+        <name>geButtonTemplatesTabCreateTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Opgave van gift uitgeschakeld</label>
+        <name>geDisableGiftEntryInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Donaties</label>
+        <name>geDonationColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Donor</label>
+        <name>geDonorColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Batchinfo bewerken</label>
+        <name>geEditBatchInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Opgave van gift ingeschakeld</label>
+        <name>geEnableGiftEntrySuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Totaalbedrag komt niet overeen met {0}</label>
+        <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Vul dit veld in.</label>
+        <name>geErrorCompleteThisField</name>
+    </customLabels>
+    <customLabels>
+        <label>U hebt {0} voor {1} geselecteerd, maar de verplichte velden voor {0} zijn niet beschikbaar op uw formulier. Raadpleeg uw beheerder.</label>
+        <name>geErrorDonorTypeInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label>Wanneer u {0} selecteert voor {1}, moet u gegevens opgeven in minstens een van de volgende velden: {2} of {3}</label>
+        <name>geErrorDonorTypeValidation</name>
+    </customLabels>
+    <customLabels>
+        <label>Wanneer u {0} selecteert voor {1}, moet u invoeren opgeven in {2}</label>
+        <name>geErrorDonorTypeValidationSingle</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze naam is gebruikt door een andere sjabloon. Geef een unieke naam op.</label>
+        <name>geErrorExistingTemplateName</name>
+    </customLabels>
+    <customLabels>
+        <label>U moet de machtiging hebben om alle velden in het formulier te bewerken. Overleg met uw Salesforce-beheerder over het openen van de volgende velden: {0}</label>
+        <name>geErrorFLSBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Uw veldmachtigingen controleren</label>
+        <name>geErrorFLSHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>U hebt niet de machtiging om dit veld bewerken.</label>
+        <name>geErrorFieldPermission</name>
+    </customLabels>
+    <customLabels>
+        <label>U moet de machtiging hebben om alle objecten in het formulier te bewerken. Overleg met uw Salesforce-beheerder over toegang voor de volgende objecten: {0}</label>
+        <name>geErrorObjectCRUDBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Uw objectmachtigingen controleren</label>
+        <name>geErrorObjectCRUDHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze voorziening vereist zowel Geavanceerd toewijzen als Opgave van gift. Schakel ze in bij NPSP-instellingen.</label>
+        <name>geErrorPageLevelAdvancedMappingBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Geavanceerd toewijzen en Opgave van gift inschakelen</label>
+        <name>geErrorPageLevelAdvancedMappingHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Voor het opslaan van wijzigingen aan deze sjabloon moet u de have machtiging hebben om alle velden in het formulier te bewerken. Verwijder de volgende velden: {0}</label>
+        <name>geErrorPageLevelFieldPermission1</name>
+    </customLabels>
+    <customLabels>
+        <label>Of verlaat dit formulier zonder opslaan en controleer uw machtigingen voor zowel het doelobject als het object NPSP-gegevensimport.</label>
+        <name>geErrorPageLevelFieldPermission2</name>
+    </customLabels>
+    <customLabels>
+        <label>U moet alle verplichte velden opnemen in uw sjabloon. Controleer de bronvelden (object NPSP-gegevensimport) voor de volgende velden:</label>
+        <name>geErrorPageLevelMissingRequiredFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Minstens één van de volgende velden is verplicht: {0}</label>
+        <name>geErrorPageLevelMissingRequiredGroupFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Verplicht veld</label>
+        <name>geErrorRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Name of GAU Allocations field bundle --></label>
+        <name>geGauAllocationsBundle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for advanced form fields --></label>
+        <name>geHeaderAdvancedFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Batchinfo opgeven</label>
+        <name>geHeaderBatchEnterInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Batchinvoer van giften</label>
+        <name>geHeaderBatchGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>Velden van Koptekst van batch selecteren</label>
+        <name>geHeaderBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Velden van Koptekst van batch configureren</label>
+        <name>geHeaderBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Sjabloon selecteren</label>
+        <name>geHeaderBatchSelectTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Standaardwaarden instellen</label>
+        <name>geHeaderBatchSetDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label>Weer te geven velden selecteren</label>
+        <name>geHeaderCustomTableHeaders</name>
+    </customLabels>
+    <customLabels>
+        <label>Nog geen velden</label>
+        <name>geHeaderEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Veldbundels</label>
+        <name>geHeaderFieldBundles</name>
+    </customLabels>
+    <customLabels>
+        <label>Formulier voor Opgave van gift</label>
+        <name>geHeaderFormFieldsDefaultSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label>Formuliervelden en veldbundels</label>
+        <name>geHeaderFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Sectie verwijderen</label>
+        <name>geHeaderFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Naam van sectie wijzigen</label>
+        <name>geHeaderFormFieldsModalRenameSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Sectie-instellingen</label>
+        <name>geHeaderFormFieldsModalSectionSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>Formuliervelden configureren</label>
+        <name>geHeaderFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label>Opgave van gift</label>
+        <name>geHeaderGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>Gift op {0}</label>
+        <name>geHeaderMatchingGiftBy</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} voor {1} ({2})</label>
+        <name>geHeaderMatchingOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} voor {1}</label>
+        <name>geHeaderMatchingPayment</name>
+    </customLabels>
+    <customLabels>
+        <label>Donaties voor {0} controleren</label>
+        <name>geHeaderMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe Sectie</label>
+        <name>geHeaderNewSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe sjabloon</label>
+        <name>geHeaderNewTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label>Bekijk de fouten op deze pagina.</label>
+        <name>geHeaderPageLevelError</name>
+    </customLabels>
+    <customLabels>
+        <label>Opgave van eenmalige gift</label>
+        <name>geHeaderSingleGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label>Sjabloongegevens voor Opgave van gift</label>
+        <name>geHeaderTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account1 Object Group --></label>
+        <name>geHelpTextAccount1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account2 Object Group --></label>
+        <name>geHelpTextAccount2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Address Object Group --></label>
+        <name>geHelpTextAddressMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 1 object group --></label>
+        <name>geHelpTextAllocation1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 2 object group --></label>
+        <name>geHelpTextAllocation2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text about GAU Allocation field bundle --></label>
+        <name>geHelpTextAllocationBundle</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt de voor de gebruiker bedoelde veldlabels wijzigen.</label>
+        <name>geHelpTextBatchHeaderFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact1 Object Group --></label>
+        <name>geHelpTextContact1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact2 Object Group --></label>
+        <name>geHelpTextContact2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Dit veld gebruikt de objectgroep {0} om zich te richten op het veld {1} voor het object {2}.</label>
+        <name>geHelpTextFormFieldsFieldCustomLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Dit toont de objectgroep en het doelveld API-naam. Hieronder kunt u het voor de gebruiker bedoelde label bewerken.</label>
+        <name>geHelpTextFormFieldsFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Household Object Group --></label>
+        <name>geHelpTextHouseholdMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Zichtbare velden</label>
+        <name>geLabelCustomTableSelectedFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Beschikbare velden</label>
+        <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Naam sectie</label>
+        <name>geLabelSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label>Beschrijving</label>
+        <name>geLabelTemplateInfoDescriptionField</name>
+    </customLabels>
+    <customLabels>
+        <label>Sjabloonnaam</label>
+        <name>geLabelTemplateInfoNameField</name>
+    </customLabels>
+    <customLabels>
+        <label>Zoeken...</label>
+        <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteren...</label>
+        <name>geSelectPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Koptekst van batch</label>
+        <name>geTabBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Formuliervelden</label>
+        <name>geTabFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Sjablooninfo</label>
+        <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} item</label>
+        <name>geTextListViewItemCount</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} items</label>
+        <name>geTextListViewItemsCount</name>
+    </customLabels>
+    <customLabels>
+        <label>• Gesorteerd op {0}</label>
+        <name>geTextListViewSortedBy</name>
+    </customLabels>
+    <customLabels>
+        <label>• {0} bijgewerkt</label>
+        <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label>Lijstweergave bijgewerkt.</label>
+        <name>geToastListViewUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label>Uw wijzigingen kunnen niet worden opgeslagen. Probeer het nogmaals.</label>
+        <name>geToastSaveFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer een sectie.</label>
+        <name>geToastSelectActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label>De sjabloon &quot;{0}&quot; is gemaakt.</label>
+        <name>geToastTemplateCreateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze sjabloon is in gebruik en kan niet worden verwijderd.</label>
+        <name>geToastTemplateDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label>De sjabloon &quot;{0}&quot; is verwijderd.</label>
+        <name>geToastTemplateDeleteSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Controleer het/de volgende: {0}</label>
+        <name>geToastTemplateTabsError</name>
+    </customLabels>
+    <customLabels>
+        <label>De sjabloon &quot;{0}&quot; is bijgewerkt.</label>
+        <name>geToastTemplateUpdateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Waarschuwing: met het verwijderen van deze sectie verwijdert u ook verplichte velden uit de sjabloon. Deze velden moeten worden toegevoegd aan een andere sectie voordat u de sjabloon kunt opslaan.</label>
+        <name>geWarningFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
         <label>Giftverwerking ondersteunt het Individuele (&apos;Bucket&apos;) Accountmodel niet.</label>
@@ -2343,6 +3262,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>healthDetailsInvalidPaymentField</name>
     </customLabels>
     <customLabels>
+        <label>De keuzelijstwaarde &quot;{0}&quot; wordt niet ondersteund.</label>
+        <name>healthDetailsInvalidPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>Aangepaste Termijnperiode {0} is niet begrepen in de keuzelijstwaarden voor het veld Termijnperiode Terugkerende Donatie.</label>
         <name>healthDetailsInvalidRDCustomPeriod</name>
     </customLabels>
@@ -2369,6 +3292,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>{0} Opportunities die Betalingen zouden moeten hebben, hebben die Betalingen niet.</label>
         <name>healthDetailsMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>De verplichte keuzelijstwaarde &quot;{0}&quot; ontbreekt.</label>
+        <name>healthDetailsMissingRequiredPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>De NPSP-standaardtaken zijn niet gepland. Geplande taken werken elke nacht overzichtsvelden op records bij.</label>
@@ -2639,7 +3566,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>healthSolutionEditSetting</name>
     </customLabels>
     <customLabels>
-        <label>Overweeg om deze ongebruikte Huishoudenobjectrecords te verwijderen om ruimte te besparen. Als u een conversie naar het Huishoudenaccountmodel hebt voltooid en de gegevens op de Huishoudenobjectrecords niet meer nodig hebt, kunt u ze veilig verwijderen. Bekijk deze Huishoudenobjectrecords door het rapport Lege Huishoudenobjecten in de rapportenmap Controle van de NPSP-Toestand uit te voeren.</label>
+        <label>Overweeg het verwijderen van deze ongebruikt records voor Account van huishouden om ruimte te besparen. Geef deze records voor Account van huishouden weer door het rapport &lt;b&gt;Lege accounts voor huishouden&lt;/b&gt; in de map NPSP-rapporten over controle van toestand uit te voeren.</label>
         <name>healthSolutionHHAccNoContacts</name>
     </customLabels>
     <customLabels>
@@ -2691,6 +3618,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>healthSolutionMissingOppPayments</name>
     </customLabels>
     <customLabels>
+        <label>Voeg de verplichte keuzelijstwaarde &quot;{0}&quot; voor het veld &quot;{1}&quot; toe.</label>
+        <name>healthSolutionMissingPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>Om de standaard NPSP-Taken opnieuw te plannen, gaat u naar NPSP-Instellingen | Bulk Gegevensprocessen | Procesplanner. Klik op Bewerken. Zorg dat Automatisch Plannen van Standaard NPSP-Taak Niet Inschakelen niet is geselecteerd. Klik op Opslaan. Raadpleeg NPSP-Taken Bewerken of Opnieuw plannen in de Power of Us Hub voor meer informatie: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
         <name>healthSolutionNothingScheduled</name>
     </customLabels>
@@ -2737,6 +3668,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>Klik op het tabblad NPSP Instellingen op {0} | {1} en verwijder de record Gebruikerstotalisering die naar dit veld verwijst.</label>
         <name>healthSolutionUDFOppField</name>
+    </customLabels>
+    <customLabels>
+        <label>Deactiveer of verwijder de keuzelijstwaarde &quot;{0}&quot; voor het veld &quot;{1}&quot;.</label>
+        <name>healthSolutionUnsupportedPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>Terug naar Campagne</label>
@@ -3019,7 +3954,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>leadConvertViewContactError</name>
     </customLabels>
     <customLabels>
-        <label>Opslaan en nieuw</label>
+        <label>Opslaan en Nieuw</label>
         <name>lvlBtnSaveAndNew</name>
     </customLabels>
     <customLabels>
@@ -3439,7 +4374,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>stgAllocationLevel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBDIGoToSetup --></label>
+        <label>Geavanceerd toewijzen configureren</label>
         <name>stgBDIGoToSetup</name>
     </customLabels>
     <customLabels>
@@ -3491,7 +4426,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>stgBtnHHAutoName</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNew --></label>
+        <label>Nieuw</label>
         <name>stgBtnNew</name>
     </customLabels>
     <customLabels>
@@ -3597,7 +4532,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>stgCreatedBy</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDIFMNonAdminError --></label>
+        <label>Alleen systeembeheerders kunnen Geavanceerd toewijzen van Gegevensimport inschakelen of uitschakelen.</label>
         <name>stgDIFMNonAdminError</name>
     </customLabels>
     <customLabels>
@@ -3605,15 +4540,19 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>stgDefaultValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentCustomMetadataMappingEnabled --></label>
+        <label><!-- The user do not have delete permission to delete custom setting. --></label>
+        <name>stgDeletePermissionError</name>
+    </customLabels>
+    <customLabels>
+        <label>Geavanceerd toewijzen is ingeschakeld.</label>
         <name>stgDeploymentCustomMetadataMappingEnabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentHasInvalidHelpTextMappings --></label>
+        <label>Geavanceerd toewijzen is wel ingeschakeld, maar we hebben enkele ongeldige Help-teksttoewijzingen gevonden, die niet kunnen worden gemigreerd. &lt;b&gt;Maak een screenshot van de tabel hieronder; deze wordt niet meer/niet opnieuw weergegeven nadat u deze pagina hebt verlaten.&lt;/b&gt;</label>
         <name>stgDeploymentHasInvalidHelpTextMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentHelpTextMappingEnabled --></label>
+        <label>Help-tekst toewijzen is ingeschakeld.</label>
         <name>stgDeploymentHelpTextMappingEnabled</name>
     </customLabels>
     <customLabels>
@@ -3621,7 +4560,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>stgDeploymentInProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDeploymentInProgress --></label>
+        <label>Pagina afgebroken wegens time-out.</label>
         <name>stgDeploymentTimedOut</name>
     </customLabels>
     <customLabels>
@@ -3646,6 +4585,10 @@ Door Standaard NPSP-Taken Niet Automatisch Plannen te selecteren, laat u NPSP we
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
+        <label><!-- The user do not have edit permission to edit custom setting. --></label>
+        <name>stgEditPermissionError</name>
+    </customLabels>
+    <customLabels>
         <label>De Apex-klasse die u in het Implementatieklasseveld hebt geselecteerd, implementeert de HH_INaming-interface niet. Selecteer een andere Apex-klasse of gebruik de standaard NPSP-klasse HH_NameSpec.</label>
         <name>stgErrorINaming</name>
     </customLabels>
@@ -3658,11 +4601,11 @@ Door Standaard NPSP-Taken Niet Automatisch Plannen te selecteren, laat u NPSP we
         <name>stgErrorInvalidNameFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorMissingDefaultGauRecord --></label>
+        <label>De vorige geconfigureerde Standaardeenheid voor algemeen accounting bestaat niet langer en is verwijderd. Open voor het opnieuw inschakelen van Standaardtoewijzingen de pagina GAU-toewijzingen in NPSP-instellingen.</label>
         <name>stgErrorMissingDefaultGauRecord</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorMissingDefaultGauRecordWithPmtAllocEnabled --></label>
+        <label>De vorige geconfigureerde Standaardeenheid voor algemeen accounting bestaat niet langer en is verwijderd. U moet Standaardtoewijzingen opnieuw inschakelen en een Standaardeenheid voor algemeen accounting selecteren om betalingstoewijzingen te kunnen gebruiken. Open de pagina GAU-toewijzingen in NPSP-instellingen om Standaard toewijzingsinstellingen bij te werken.</label>
         <name>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</name>
     </customLabels>
     <customLabels>
@@ -3674,31 +4617,34 @@ Door Standaard NPSP-Taken Niet Automatisch Plannen te selecteren, laat u NPSP we
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping1 --></label>
+        <label>Wanneer u Geavanceerd toewijzen inschakelt, converteren we uw bestaande veldtoewijzingen voor Help-tekst naar Geavanceerd toewijzen. Eenmaal ingeschakeld, bewerkt u toewijzingen en maakt u nieuwe op deze pagina.</label>
         <name>stgHelpAdvancedMapping1</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping2 --></label>
+        <label>U kunt Geavanceerd toewijzen uitschakelen en teruggaan naar toewijzingen voor Help-tekst, maar alle wijzigingen die u aanbrengt met Geavanceerd toewijzen, gaan verloren.</label>
         <name>stgHelpAdvancedMapping2</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping3 --></label>
+        <label>Zoek &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt; naar de volledige set-updocumentatie voor Geavanceerd toewijzen.</label>
         <name>stgHelpAdvancedMapping3</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping4 --></label>
+        <label>&lt;b&gt;Dit bericht wordt niet weergegeven als u deze pagina verlaat! Maak een screenshot van deze pagina of kopieer de gegevens in de onderstaande tabel om de toewijzingen voor Help-tekst bij te houden, die u nodig hebt. &lt;/b&gt;
+            &lt;br/&gt;
+            &lt;br/&gt;
+            We kunnen enkele van uw bestaande toewijzingen voor Help-tekst niet converteren, omdat ze ongeldig zijn. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Meer informatie over veel voorkomende problemen met toewijzingen van Help-tekst&lt;/a&gt;. U wordt aangeraden om Geavanceerd toewijzen uit te schakelen, de ongeldige toewijzingen van Help-tekst te corrigeren en vervolgens Geavanceerd toewijzen opnieuw in te schakelen. Of anders kunt u deze toewijzingen toevoegen wanneer u Geavanceerd toewijzen configureert op het volgende scherm, maar deze extra toewijzingen zetten alles terug naar de oorspronkelijke ongeldig Help-tekst als u Geavanceerd toewijzen uitschakelt.</label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingInvalidHelpText --></label>
+        <label>Ongeldige toewijzingen van Help-tekst</label>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingTableHeader1 --></label>
+        <label>Importveld voor NPSP-gegevens</label>
         <name>stgHelpAdvancedMappingTableHeader1</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMappingTableHeader2 --></label>
+        <label>Huidige waarde van Help-tekst</label>
         <name>stgHelpAdvancedMappingTableHeader2</name>
     </customLabels>
     <customLabels>
@@ -3867,7 +4813,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
         <name>stgHelpErrorLog</name>
     </customLabels>
     <customLabels>
-        <label>Wanneer aangevinkt, geeft NPSP meldingen voor bepaalde soorten fouten weer.</label>
+        <label>Indien geselecteerd, geeft NPSP kennisgevingen voor bepaalde typen fouten weer.</label>
         <name>stgHelpErrorNotifyOn</name>
     </customLabels>
     <customLabels>
@@ -4093,7 +5039,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
         <name>stgHelpPrimaryContactRoleMergeBatch</name>
     </customLabels>
     <customLabels>
-        <label>Wanneer aangevinkt, kopieert NPSP de Campagne die u gespecificeerd hebt op de Terugkerende Donatierecord op alle onderliggende Opportunities. Als deze optie niet is geselecteerd, kopieert NPSP de Campagne enkel naar de eerste onderliggende Opportunity.</label>
+        <label>Indien geselecteerd, kopieert NPSP de campagne die u hebt opgegeven voor Terugkerende donatie, naar Opportunities voor termijnen ervan.</label>
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
@@ -4131,6 +5077,10 @@ Dit proces kan enige tijd duren, maar u kunt deze pagina afsluiten en het proces
         <name>stgHelpRDFieldMapRDField</name>
     </customLabels>
     <customLabels>
+        <label>Geeft op wanneer NPSP Opportunities voor termijnen gaat maken voor Terugkerende donaties. De standaardinstelling is Altijd volgende termijn maken.</label>
+        <name>stgHelpRDInstallmentCreateOptionMessage</name>
+    </customLabels>
+    <customLabels>
         <label>De datum en tijd van de laatste batchupdate van Terugkerende Donaties.</label>
         <name>stgHelpRDLastRun</name>
     </customLabels>
@@ -4147,7 +5097,7 @@ Dit proces kan enige tijd duren, maar u kunt deze pagina afsluiten en het proces
         <name>stgHelpRDOppForecastMonths</name>
     </customLabels>
     <customLabels>
-        <label>Het Opportunityrecordtype toegewezen aan de onderliggende Opportunities van de Terugkerende Donatie.</label>
+        <label>Het type Opportunityrecord dat is toegewezen aan de Opportunities voor termijnen van Terugkerende donatie.</label>
         <name>stgHelpRDOppRT</name>
     </customLabels>
     <customLabels>
@@ -4330,6 +5280,18 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
+        <label>Alle termijnen uitschakelen</label>
+        <name>stgInstallmentOppDisableAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Eerste termijn uitschakelen bij Maken</label>
+        <name>stgInstallmentOppDisableFirst</name>
+    </customLabels>
+    <customLabels>
+        <label>Altijd volgende termijn maken</label>
+        <name>stgInstallmentOppEnableAll</name>
+    </customLabels>
+    <customLabels>
         <label>Actie</label>
         <name>stgLabelActionColumn</name>
     </customLabels>
@@ -4420,6 +5382,10 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
     <customLabels>
         <label>Veld</label>
         <name>stgLabelField</name>
+    </customLabels>
+    <customLabels>
+        <label>Geen</label>
+        <name>stgLabelFieldValueNone</name>
     </customLabels>
     <customLabels>
         <label>Algemene Instellingen</label>
@@ -4774,7 +5740,7 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
         <name>stgNavPeople</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRD2Enablement --></label>
+        <label>Upgrade naar Uitgebreide terugkerende donaties uitvoeren</label>
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
@@ -4878,7 +5844,7 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
     <customPageWebLinks>
-        <label><!-- Nonprofit Edition Reports --></label>
+        <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>
         <name>Nonprofit_Edition_Reports</name>
     </customPageWebLinks>
     <customTabs>
@@ -4904,6 +5870,10 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
     <customTabs>
         <label><!-- Contacts Settings --></label>
         <name>Contacts_Settings</name>
+    </customTabs>
+    <customTabs>
+        <label>Opgave van gift</label>
+        <name>GE_Gift_Entry</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>
@@ -5001,4 +5971,4 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
             <name>Contacts</name>
         </sections>
     </reportTypes>
-</Translations>
+    </Translations>

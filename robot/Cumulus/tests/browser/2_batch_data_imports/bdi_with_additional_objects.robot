@@ -3,10 +3,12 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/DataImportPageObject.py
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
+...             Enable Advanced Mapping
 ...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
@@ -50,6 +52,7 @@ Setup Test Data
 
 Create Data Import with Additional Objects via API and Verify Values 
     [Documentation]    Create and a DI record with Contact, Account, Opportunity, Payment, Account Soft Credit and GAU details and verify that everything is saved as expected
+    [tags]             unstable
     Process Data Import Batch    Completed
     &{data_import_upd} =      Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Verify Expected Values    nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]

@@ -42,7 +42,20 @@ global without sharing class STG_InstallScript implements InstallHandler {
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
         UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
         CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL,
-        CREATE_OPP_STAGE_TO_STATE_RECORDS
+        CREATE_OPP_STAGE_TO_STATE_RECORDS,
+        CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS
+    }
+
+    public STG_InstallScript() {
+    }
+
+    /*******************************************************************************************************
+    * @description Helper and constructor that enables and supports mocking of test data
+	*/
+    private BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+    private BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(helper);
+    public STG_InstallScript(BDI_MigrationMappingUtility util) {
+        this.util = util;
     }
 
     /*******************************************************************************************************
@@ -74,6 +87,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             // Submit generic org telemetry data back to the LMO using FeatureManagement
             executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
+
+            // Check for advanced mapping setting then create migrated custom field mappings as needed
+            executeAction(InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -125,6 +141,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 populateNamespacePrefix();
             } else if (action == InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS) {
                 createOppStageToStateRecordsIfNecessary();
+            } else if (action == InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS) {
+                createMigratedCustomFieldMappings();
             }
 
         } catch(Exception e) {
@@ -189,6 +207,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getOrgBDESettings();
         UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
         UTIL_CustomSettingsFacade.getOrgDataImportSettings();
+        UTIL_CustomSettingsFacade.getOrgGiftEntrySettings();
 
         UTIL_Debug.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
 
@@ -323,12 +342,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
         updateDefaultRollupSettings();
         updateDefaultOrgContactsSettings();
         updateOpportunityNamingSettings();
+        createDefaultGiftEntrySettings();
     }
 
     /***
     * @description Update Opportunity Naming Settings Attribution value to the AttributionOptions API value
     */
-    public static void updateOpportunityNamingSettings() {
+    private static void updateOpportunityNamingSettings() {
         List <Opportunity_Naming_Settings__c> oppSettings = new List <Opportunity_Naming_Settings__c>();
         STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings();
 
@@ -344,7 +364,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @description Ensure that any default Org Contacts Settings Records are updated for custom settings
     * objects accordingly.
     */
-    public static void updateDefaultOrgContactsSettings() {
+    private static void updateDefaultOrgContactsSettings() {
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         if (npe01Settings.Contact_Role_for_Organizational_Opps__c == null) {
             npe01Settings.Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
@@ -357,7 +377,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * objects accordingly.  There was a swap of custom setting fields to get the account soft credit settings
     * pointed to the corresponding setting
     */
-    public static void updateDefaultRollupSettings() {
+    private static void updateDefaultRollupSettings() {
         Customizable_Rollup_Settings__c rollupSettings = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
         Boolean isUpdateNeeded = false;
         Decimal currentAccountSoftCreditBatchSize = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_BATCH_SIZE;
@@ -374,6 +394,15 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if (isUpdateNeeded) {
             update rollupSettings;
         }
+
+    }
+
+    /**
+     * @description Create the default gift entry and data import settings records for all new push upgrades
+     */
+    private static void createDefaultGiftEntrySettings() {
+        UTIL_CustomSettingsFacade.getOrgGiftEntrySettings();
+        UTIL_CustomSettingsFacade.getOrgDataImportSettings();
 
     }
 
@@ -406,6 +435,39 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         if (!metadataToInsert.isEmpty()) {
             Opp_StageMappingCMT.deployOppStageToStateMetadata(metadataToInsert, params);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a new set of Migrated Custom Field Mappings based on if advanced mapping is turned on
+    */
+    @TestVisible
+    private void createMigratedCustomFieldMappings() {
+
+        STG_PanelDataImportAdvancedMapping_CTRL ctrl = new STG_PanelDataImportAdvancedMapping_CTRL();
+
+        if (ctrl.isAdvancedMappingEnabled) {
+            List<String> newDefaultMappingStrings = new List<String>{
+                    'Payment_Authorized_Date',
+                    'Payment_Authorized_UTC_Timestamp',
+                    'Payment_Card_Expiration_Month',
+                    'Payment_Card_Expiration_Year',
+                    'Payment_Card_Last_4',
+                    'Payment_Card_Network',
+                    'Payment_Elevate_Created_Date',
+                    'Payment_Elevate_Created_UTC_Timestamp',
+                    'Payment_Elevate_ID',
+                    'Payment_Elevate_Original_Payment_ID',
+                    'Payment_Gateway_ID',
+                    'Payment_Gateway_Payment_ID',
+                    'Payment_Origin_ID',
+                    'Payment_Origin_Name',
+                    'Payment_Origin_Type',
+                    'Payment_Type',
+                    'Donation_Elevate_Recurring_ID'
+            };
+
+            util.migrateNewDefaultToCustomMetadata(newDefaultMappingStrings);
         }
     }
 

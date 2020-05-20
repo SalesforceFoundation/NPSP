@@ -1,35 +1,38 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
-Suite Setup      Run keywords
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
+Library         DateTime
+Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
 Match Based on Number of Days from Donation Date Functionality
     [Documentation]    The number of days from donation date field on the BGE wizard allows matching to be made by providing a margin of error on the Donation Date field for a record. If the gift created is within range of that date, gift is matched to the existing donation
-    [tags]  stable
-    Set Window Size    1024    768  
-    Select App Launcher Tab   Batch Gift Entry
+    [tags]  stable  
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
     Search Field By Value    Search Accounts    &{account}[Name]
+    Wait Until Modal Is Open
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    &{opp}[Name]
     ${pay_no}    Get BGE Card Header    &{opp}[Name]
     Log To Console    ${pay_no}
-    Click Button    title:Close this window
+    Click Button With Title     Close this window
+    Wait Until Modal Is Closed
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
@@ -41,12 +44,12 @@ Match Based on Number of Days from Donation Date Functionality
     # Verify that the gift matched to existing opportunity and updated it to closed won status with gift date and payment is paid
     Go To Record Home    &{opp}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
-    ${date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     Select Tab    Related
     Load Related List    GAU Allocations
-    Click Link    ${pay_no}
+    Click Link With Text    ${pay_no}
+    Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
@@ -73,6 +76,8 @@ Setup Test Data
     Set Suite Variable    &{account}
     ${api_date} =     Get Current Date    result_format=%Y-%m-%d
     Set Suite Variable    ${api_date}
+    ${date} =     Get Current Date    result_format=%-m/%-d/%Y
+    Set Suite Variable    ${date}
     ${opp_date} =     Get Current Date    result_format=%Y-%m-%d    increment=2 days
     &{opp} =     API Create Opportunity   &{account}[Id]    Donation  
     ...    StageName=Prospecting    

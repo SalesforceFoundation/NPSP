@@ -11,7 +11,7 @@
     <fields>
         <label>インポート済み(団体1)</label>
         <name>Account1Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Account1 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (団体1 インポート済み)</relationshipLabel>
     </fields>
     <fields>
         <label>市区郡(団体1)</label>
@@ -52,7 +52,7 @@
     <fields>
         <label>インポート済み(団体2)</label>
         <name>Account2Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Account2 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (団体2 インポート済み)</relationshipLabel>
     </fields>
     <fields>
         <label>市区郡(団体2)</label>
@@ -87,6 +87,11 @@
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
     <fields>
+        <help>この項目により、1 つのデータインポートレコードから動的な数のオブジェクトの動的な数のレコードを作成できます。追加オブジェクト情報は JSON 形式でここに保存されます。</help>
+        <label>追加オブジェクトの JSON</label>
+        <name>Additional_Object_JSON__c</name>
+    </fields>
+    <fields>
         <help>レコードを処理した一括処理ジョブの ApexJobID。</help>
         <label>ApexJobId</label>
         <name>ApexJobId__c</name>
@@ -102,7 +107,7 @@
     <fields>
         <label>インポート済み(個人1)</label>
         <name>Contact1Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Contact1 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (Contact1 インポート済み)</relationshipLabel>
     </fields>
     <fields>
         <label>その他のメール(個人1)</label>
@@ -195,7 +200,7 @@
     <fields>
         <label>インポート済み(個人2)</label>
         <name>Contact2Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Contact2 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (Contact2 インポート済み)</relationshipLabel>
     </fields>
     <fields>
         <label>その他のメール(個人2)</label>
@@ -288,7 +293,7 @@
     <fields>
         <label>支援キャンペーンソース</label>
         <name>DonationCampaignImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート</relationshipLabel>
     </fields>
     <fields>
         <label>インポート状況(支援)</label>
@@ -297,7 +302,7 @@
     <fields>
         <label>インポート済み(支援)</label>
         <name>DonationImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (Opportunity1 インポート済み)</relationshipLabel>
     </fields>
     <fields>
         <label>金額(支援)</label>
@@ -371,57 +376,57 @@
         <name>FailureInformation__c</name>
     </fields>
     <fields>
-        <help><!-- The monetary amount attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 1: Amount --></label>
+        <help>支援の最初の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label>一般会計単位の割り当て 1: 金額</label>
         <name>GAU_Allocation_1_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the GAU to be used for the first allocation. --></help>
-        <label><!-- GAU Allocation 1: GAU --></label>
+        <help>最初の割り当てで使用される一般会計単位の Salesforce ID。</help>
+        <label>一般会計単位の割り当て 1: 一般会計単位</label>
         <name>GAU_Allocation_1_GAU__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (一般会計単位 1)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the first GAU Allocation. --></help>
-        <label><!-- GAU Allocation 1: Import Status --></label>
+        <help>最初の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
+        <label>一般会計単位の割り当て 1: インポート状況</label>
         <name>GAU_Allocation_1_Import_Status__c</name>
     </fields>
     <fields>
-        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
-        <label><!-- GAU Allocation 1: Imported --></label>
+        <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
+        <label>一般会計単位の割り当て 1: インポート済み</label>
         <name>GAU_Allocation_1_Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (一般会計単位 1)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 1: Percent --></label>
+        <help>支援の最初の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label>一般会計単位の割り当て 1: パーセント</label>
         <name>GAU_Allocation_1_Percent__c</name>
     </fields>
     <fields>
-        <help><!-- The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 2: Amount --></label>
+        <help>支援の 2 番目の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label>一般会計単位の割り当て 2: 金額</label>
         <name>GAU_Allocation_2_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the GAU to be used for the second GAU allocation. --></help>
-        <label><!-- GAU Allocation 2: GAU --></label>
+        <help>2 番目の割り当てで使用される一般会計単位の Salesforce ID。</help>
+        <label>一般会計単位の割り当て 2: 一般会計単位</label>
         <name>GAU_Allocation_2_GAU__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (一般会計単位 2)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the second GAU Allocation. --></help>
-        <label><!-- GAU Allocation 2: Import Status --></label>
+        <help>2 番目の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
+        <label>一般会計単位の割り当て 2: インポート状況</label>
         <name>GAU_Allocation_2_Import_Status__c</name>
     </fields>
     <fields>
-        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
-        <label><!-- GAU Allocation 2: Imported --></label>
+        <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
+        <label>一般会計単位の割り当て 2: インポート済み</label>
         <name>GAU_Allocation_2_Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート (一般会計単位 2)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The percent attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 2: Percent --></label>
+        <help>支援の 2 番目の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label>一般会計単位の割り当て 2: パーセント</label>
         <name>GAU_Allocation_2_Percent__c</name>
     </fields>
     <fields>
@@ -431,7 +436,7 @@
     <fields>
         <label>インポート済み(自宅住所)</label>
         <name>HomeAddressImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP データインポート</relationshipLabel>
     </fields>
     <fields>
         <label>市町村(自宅)</label>
@@ -456,7 +461,7 @@
     <fields>
         <label>インポート済み(世帯団体)</label>
         <name>HouseholdAccountImported__c</name>
-        <relationshipLabel>NPSP データインポート (世帯団体インポート済み)</relationshipLabel>
+        <relationshipLabel>NPSP データインポート</relationshipLabel>
     </fields>
     <fields>
         <label>世帯電話</label>
@@ -474,33 +479,33 @@
         <relationshipLabel>NPSP データインポート</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the first Opportunity Contact Role. --></help>
-        <label><!-- Opportunity Contact Role 1: ImportStatus --></label>
+        <help>最初の支援個人の役割の挿入の試行に基づく状況。</help>
+        <label>支援個人の役割 1: ImportStatus</label>
         <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 1: Imported --></label>
+        <help>インポートされた支援個人の役割の Salesforce ID</help>
+        <label>支援個人の役割 1: 挿入済み</label>
         <name>Opportunity_Contact_Role_1_Imported__c</name>
     </fields>
     <fields>
-        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 1: Role --></label>
+        <help>支援個人の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの支援個人の役割を作成します。</help>
+        <label>支援個人の役割 1: 役割</label>
         <name>Opportunity_Contact_Role_1_Role__c</name>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the second Opportunity Contact Role. --></help>
-        <label><!-- Opportunity Contact Role 2: ImportStatus --></label>
+        <help>2 番目の支援個人の役割の挿入の試行に基づく状況。</help>
+        <label>支援個人の役割 2: ImportStatus</label>
         <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 2: Imported --></label>
+        <help>インポートされた支援個人の役割の Salesforce ID</help>
+        <label>支援個人の役割 2: 挿入済み</label>
         <name>Opportunity_Contact_Role_2_Imported__c</name>
     </fields>
     <fields>
-        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 2: Role --></label>
+        <help>支援個人の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの支援個人の役割を作成します。</help>
+        <label>支援個人の役割 2: 役割</label>
         <name>Opportunity_Contact_Role_2_Role__c</name>
     </fields>
     <fields>
@@ -573,11 +578,11 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 1 Information --></label>
+            <label>一般会計単位の割り当て 1 の情報</label>
             <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 2 Information --></label>
+            <label>一般会計単位の割り当て 2 の情報</label>
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
@@ -589,19 +594,19 @@
             <section>Household Account Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <label>支援個人の役割 1 の情報</label>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <label>支援個人の役割 2 の情報</label>
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Information --></label>
+            <label>支援情報</label>
             <section>Opportunity Information</section>
         </sections>
         <sections>
-            <label><!-- Payment Information --></label>
+            <label>お支払い情報</label>
             <section>Payment Information</section>
         </sections>
     </layouts>

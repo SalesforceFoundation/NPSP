@@ -55,6 +55,11 @@
         <name>Default_Address__c</name>
     </fields>
     <fields>
+        <help><!-- If selected, this address won&apos;t be included in address updates from the NCOA or address verification vendor. --></help>
+        <label><!-- Exclude from Updates --></label>
+        <name>Exclude_from_Updates__c</name>
+    </fields>
+    <fields>
         <label>住所(郵送先)</label>
         <name>Formula_MailingAddress__c</name>
     </fields>
@@ -106,6 +111,16 @@
     <fields>
         <label>町名・番地(郵送先)</label>
         <name>MailingStreet__c</name>
+    </fields>
+    <fields>
+        <help><!-- The most recent date and time the address was evaluated by the NCOA vendor. --></help>
+        <label><!-- NCOA Evaluation Date --></label>
+        <name>NCOA_Evaluation_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The result code form the NCOA vendor. --></help>
+        <label><!-- NCOA Result Code --></label>
+        <name>NCOA_Result_Code__c</name>
     </fields>
     <fields>
         <help>検証処理で情報が失われてしまう場合に備えて、リモートサービスを使用して検証する前に入力した住所が保存されます。</help>
@@ -492,12 +507,21 @@
         <name>Verification_Status__c</name>
     </fields>
     <fields>
+        <help><!-- The most recent date and time the address was verified. --></help>
+        <label><!-- Verified Date --></label>
+        <name>Verified_Date__c</name>
+    </fields>
+    <fields>
         <help>住所が外部住所検証サービスを使用して検証されているかどうかを示します。</help>
         <label>検証済み</label>
         <name>Verified__c</name>
     </fields>
     <layouts>
         <layout>Address Layout</layout>
+        <sections>
+            <label><!-- Address Verification --></label>
+            <section>Address Verification</section>
+        </sections>
         <sections>
             <label>カスタムリンク</label>
             <section>Custom Links</section>

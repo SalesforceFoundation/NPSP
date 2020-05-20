@@ -1,10 +1,10 @@
-/* 
+/*
     Copyright (c) 2012, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,33 +13,33 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
 * @date 2012 (2.0)
 * @group Settings
-* @description The controller for the Recurring Donations Custom Field Mapping panel 
+* @description The controller for the Recurring Donations Custom Field Mapping panel
 */
 public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
-    
+
     /*********************************************************************************************************
-    * @description Returns the string Id of the RD Field Mapping panel. 
+    * @description Returns the string Id of the RD Field Mapping panel.
     */
     public override string idPanel() { return 'idPanelRDFieldMap'; }
-    
+
     /*********************************************************************************************************
     * @description temporary fm used by the page for creating a new fm.
     */
@@ -51,9 +51,9 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
-    * @description Action Method for going into Edit mode (to create a new fm) 
+    * @description Action Method for going into Edit mode (to create a new fm)
     * @return null
     */
     public PageReference newCustomFieldMapping() {
@@ -62,17 +62,17 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Action Method to save the new fm to the database 
+    * @description Action Method to save the new fm to the database
     * @return null
     */
-    public PageReference createCustomFieldMapping() {  
-    	
-    	// validate first
+    public PageReference createCustomFieldMapping() {
+
+        // validate first
     	if (!isValidMapping(fmNew.npe03__Recurring_Donation_Field__c, fmNew.npe03__Opportunity_Field__c)) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, system.label.npe03.RecurringDonationBadFieldMapping));
-            return null;    		
-    	}      
-    	
+            return null;
+    	}
+
         Savepoint sp = Database.setSavepoint();
         try {
         	fmNew.Name = 'FieldMapping-' + system.now();
@@ -96,20 +96,21 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     */
     private boolean isValidMapping(string RDField, string OppField){
         boolean isValid = false;
-        
+
         Schema.Sobjectfield schemaRDField = schema.SObjectType.npe03__Recurring_Donation__c.fields.getMap().get(RDField);
         Schema.Sobjectfield schemaOppField = schema.SobjectType.Opportunity.fields.getMap().get(OppField);
-        
+
         if (schemaRDField != null && schemaOppField != null) {
             Schema.DescribeFieldResult RDF = schemaRDField.getDescribe();
-            Schema.DescribeFieldResult ODF = schemaOppField.getDescribe();                              
+            Schema.DescribeFieldResult ODF = schemaOppField.getDescribe();
             if  (RDF.isAccessible() && ODF.isAccessible() && !ODF.isDeprecatedAndHidden() && ODF.isUpdateable() &&
                 UTIL_Describe.canDisplaytypesCopy(RDF.getType(), ODF.getType()) ){
-                isValid = true;                           
+                isValid = true;
             }
         }
         return isValid;
     }
+
 
     /*********************************************************************************************************
     * @description Action Method to cancel out of creating a new fm.
@@ -120,7 +121,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         fmNew = null;
         return null;
     }
-    
+
     /*********************************************************************************************************
     * @description Holds the Id to a field mapping to be deleted
     */
@@ -131,9 +132,14 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteFm() {
-        Savepoint sp = Database.setSavepoint(); 
+        if (!isRunningUserIsAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
+            return null;
+        }
+
+        Savepoint sp = Database.setSavepoint();
         try {
-            STG_SettingsManager_CTRL.idPanelCurrent = idPanel();        
+            STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
             if (fmIdDelete != null) {
                 npe03__Custom_Field_Mapping__c fm = new npe03__Custom_Field_Mapping__c(Id = fmIdDelete);
                 delete fm;
@@ -171,14 +177,14 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
                     fm2.Id = fm.Id;
                     fm2.npe03__Opportunity_Field__c = strOppField;
                     fm2.npe03__Recurring_Donation_Field__c = strRDField;
-                    listRDCustomFieldMapping.add(fm2);                                      
-                }                
-            } 
-            return listRDCustomFieldMapping;           
+                    listRDCustomFieldMapping.add(fm2);
+                }
+            }
+            return listRDCustomFieldMapping;
         }
-        private set;     
+        private set;
     }
-    
+
     /*********************************************************************************************************
     * @description Returns the fields label.  This is a cover over describe call to handle fields that no longer exist.
     * @param strObj The Object
@@ -196,12 +202,12 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Set of invalid fields for opp mappings
     */
-    static set<string> setInvalidOppFields = new set<string>{'accountid', 'amount', 'campaignid', 'closedate', 'createdbyid', 
-                                                   'createddate', 'fiscal', 'fiscalquarter', 'fiscalyear', 'forecastcategory', 
+    static set<string> setInvalidOppFields = new set<string>{'accountid', 'amount', 'campaignid', 'closedate', 'createdbyid',
+                                                   'createddate', 'fiscal', 'fiscalquarter', 'fiscalyear', 'forecastcategory',
                                                    'stagename', 'npe03__recurring_donation__c', 'forecastcategoryname',
-                                                   'forecastname', 'hasopportunitylineitem', 'id', 'isclosed', 'isdeleted', 'isprivate', 
-                                                   'iswon', 'lastactivitydate', 'lastmodifiedbyid', 'lastmodifieddate', 'recordtypeid', 
-                                                   'systemmodstamp', 'totalopportunityquantity'};        
+                                                   'forecastname', 'hasopportunitylineitem', 'id', 'isclosed', 'isdeleted', 'isprivate',
+                                                   'iswon', 'lastactivitydate', 'lastmodifiedbyid', 'lastmodifieddate', 'recordtypeid',
+                                                   'systemmodstamp', 'totalopportunityquantity'};
 
     /*********************************************************************************************************
     * @description The SelectOption list of Opportunity Fields available for a new mapping
@@ -211,15 +217,15 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             if (listSOOppFields == null) {
                 listSOOppFields = new list<SelectOption>();
                 //listSOOppFields.add(new SelectOption('', Label.stgLabelNone));
-            
-                // filter out opp fields already used
-	            for (npe03__Custom_Field_Mapping__c fm : STG_Panel.stgService.listRDCustomFieldMapping) {   
-	                setInvalidOppFields.add(fm.npe03__Opportunity_Field__c);   
-	            }                 
 
-                map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.Opportunity.fields.getMap(); 
-                for (string fieldName : oppFieldTokenList.keyset()) {                	
-                	if (!setInvalidOppFields.contains(fieldName)) {                	
+                // filter out opp fields already used
+	            for (npe03__Custom_Field_Mapping__c fm : STG_Panel.stgService.listRDCustomFieldMapping) {
+	                setInvalidOppFields.add(fm.npe03__Opportunity_Field__c);
+	            }
+
+                map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.Opportunity.fields.getMap();
+                for (string fieldName : oppFieldTokenList.keyset()) {
+                	if (!setInvalidOppFields.contains(fieldName)) {
 	                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('Opportunity', fieldname);
 	                    if (f.isAccessible() && !f.isDeprecatedAndHidden() && f.isUpdateable() )
 	                       listSOOppFields.add(new SelectOption(f.getName(), f.getLabel()));
@@ -233,7 +239,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description The SelectOption list of Recurring Donation fields available for a new mapping 
+    * @description The SelectOption list of Recurring Donation fields available for a new mapping
     */
     static public list<SelectOption> listSORDFields {
         get {
@@ -241,9 +247,9 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
                 listSORDFields = new list<SelectOption>();
                 //listSORDFields.add(new SelectOption('', Label.stgLabelNone));
 
-                map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.npe03__Recurring_Donation__c.fields.getMap(); 
+                map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.npe03__Recurring_Donation__c.fields.getMap();
                 for (string fieldName : oppFieldTokenList.keyset()) {
-                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fieldname);                         
+                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fieldname);
                     listSORDFields.add(new SelectOption(f.getName(), f.getLabel()));
                 }
                 listSORDFields.sort();
@@ -259,52 +265,52 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     * @return void
     */
     public static void verifyRDMappings(STG_PanelHealthCheck_CTRL ctrl) {
-        
+
         map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
-        string strSetting = Schema.Sobjecttype.npe03__Custom_Field_Mapping__c.getLabel(); 
+        string strSetting = Schema.Sobjecttype.npe03__Custom_Field_Mapping__c.getLabel();
         boolean isValid = true;
-        
+
         for (string s : mapRDCustomField.keySet()){
             npe03__Custom_Field_Mapping__c cfm = mapRDCustomField.get(s);
             SobjectField RDField;
             SobjectField opportunityField;
             isValid = true;
-            
+
             //check source field
             opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(cfm.npe03__Opportunity_Field__c);
             if (opportunityField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-                    string.format(label.healthDetailsInvalidOppField, new string[]{cfm.npe03__Opportunity_Field__c}), 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError,
+                    string.format(label.healthDetailsInvalidOppField, new string[]{cfm.npe03__Opportunity_Field__c}),
                     string.format(label.healthSolutionRDBadOppField, new string[]{Label.stgNavDonations, label.stgNavRDFieldMap}));
-            }               
-                      
-            //check target fields            
+            }
+
+            //check target fields
             RDField = Schema.sObjectType.npe03__Recurring_Donation__c.fields.getMap().get(cfm.npe03__Recurring_Donation_Field__c);
             if (RDField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-                    string.format(label.healthDetailsBadRDField, new string[]{cfm.npe03__Recurring_Donation_Field__c}), 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError,
+                    string.format(label.healthDetailsBadRDField, new string[]{cfm.npe03__Recurring_Donation_Field__c}),
                     string.format(label.healthSolutionBadRDField, new string[]{Label.stgNavDonations, label.stgNavRDFieldMap}));
-            }               
-            
+            }
+
             //only if the other checks succeed, get the describe type
             if (isValid == true){
                 //check Field Types
                 Schema.Displaytype dtRD = UTIL_Describe.getFieldDisplaytype('npe03__Recurring_Donation__c', cfm.npe03__Recurring_Donation_Field__c);
                 Schema.Displaytype dtOpp = UTIL_Describe.getFieldDisplaytype('Opportunity', cfm.npe03__Opportunity_Field__c);
-                if (!UTIL_Describe.canDisplaytypesCopy(dtRD, dtOpp)) { 
+                if (!UTIL_Describe.canDisplaytypesCopy(dtRD, dtOpp)) {
                     isValid = false;
-                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-                        string.format(label.healthDetailsRDFieldsBadDatatypes, new string[]{cfm.npe03__Recurring_Donation_Field__c, cfm.npe03__Opportunity_Field__c}), 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError,
+                        string.format(label.healthDetailsRDFieldsBadDatatypes, new string[]{cfm.npe03__Recurring_Donation_Field__c, cfm.npe03__Opportunity_Field__c}),
                         string.format(label.healthSolutionRDFieldsBadDatatypes, new string[]{Label.stgNavDonations, label.stgNavRDFieldMap}));
-                }               
-            }            
+                }
+            }
         }
 
         if (isValid) {
-            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRDValid);            
-        }                           
-    }           
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRDValid);
+        }
+    }
 
 }

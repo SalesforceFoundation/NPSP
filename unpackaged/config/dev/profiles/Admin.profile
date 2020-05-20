@@ -138,4 +138,8 @@
         <tab>npe5__Affiliation__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
+    <tabVisibilities>
+        <tab>GE_Gift_Entry</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
 </Profile>

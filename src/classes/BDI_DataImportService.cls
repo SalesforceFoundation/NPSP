@@ -41,18 +41,18 @@ global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
 
-    public BDI_FieldMapping fieldMapper;
+    public BDI_MappingService mappingService;
 
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
-    public BDI_DataImportService(Boolean isDryRun, BDI_FieldMapping fieldMapper) {
+    public BDI_DataImportService(Boolean isDryRun, BDI_MappingService mappingService) {
         this.isDryRun = isDryRun;
-        this.fieldMapper = fieldMapper;
+        this.mappingService = mappingService;
 
         contactService = new BDI_ContactService(this);
-        if (fieldMapper instanceof BDI_FieldMappingCustomMetadata){
+        if (mappingService instanceof BDI_MappingServiceAdvanced){
             additionalObjectService = new BDI_AdditionalObjectService(this);
         }
     }
@@ -61,15 +61,15 @@ global with sharing class BDI_DataImportService {
     * @description queries the Data Import Settings custom setting to determine what type of field mapping to
     * use.
     */
-    public static BDI_FieldMapping getDefaultFieldMapping() {
-        BDI_FieldMapping bdiFm;
+    public static BDI_MappingService getDefaultMappingService() {
+        BDI_MappingService bdiMS;
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         if (dis.Field_Mapping_Method__c == FM_HELP_TEXT) {
-            bdiFm = BDI_FieldMappingHelpText.getInstance();
+            bdiMS = BDI_MappingServiceHelpText.getInstance();
         }else if (dis.Field_Mapping_Method__c == FM_DATA_IMPORT_FIELD_MAPPING) {
-            bdiFm = BDI_FieldMappingCustomMetadata.getInstance();
+            bdiMS = BDI_MappingServiceAdvanced.getInstance();
         }
-        return bdiFm;
+        return bdiMS;
     }
 
     /*******************************************************************************************************
@@ -494,14 +494,19 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
     * @param apexJobId the apexJob that this is executing under
-    * @param diSettings the settings to control processing behavior
-    * @param listDI a list of Data Import records to import
-    * @return void
+    * @param dataImportSettings the settings to control processing behavior
+    * @param dataImports a list of Data Import records to import
     */
     public void process(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports) {
+        // All data imports not meeting custom criteria will be filtered out before processing.
+        List<DataImport__c> filteredDataImports = shouldProcess(dataImports);
+
+        if (filteredDataImports.isEmpty()) {
+            return;
+        }
 
         // initialize our performance logger
-        perfLogger = new BDI_PerfLogger(dataImports[0].NPSP_Data_Import_Batch__c, dataImports.size());
+        perfLogger = new BDI_PerfLogger(filteredDataImports[0].NPSP_Data_Import_Batch__c, filteredDataImports.size());
         BDI_PerfLogger.PerfLog pl;
 
         SavePoint sp = Database.setSavepoint();
@@ -510,7 +515,7 @@ global with sharing class BDI_DataImportService {
             this.diSettings = dataImportSettings;
 
             // first set a clean state for each DI
-            for (DataImport__c dataImport : dataImports) {
+            for (DataImport__c dataImport : filteredDataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
@@ -518,8 +523,8 @@ global with sharing class BDI_DataImportService {
             }
 
             this.flsService = new BDI_DataImportFLSService(
-                    dataImports,
-                    fieldMapper,
+                    filteredDataImports,
+                    mappingService,
                     getFieldAccessLevelsToValidate()
             );
 
@@ -613,8 +618,50 @@ global with sharing class BDI_DataImportService {
     }
 
     /**
+     * @description Before processing data import records, this method filters out any data imports that do not meet
+     * custom criteria that applies to all data imports before allowing them to be processed.
+     * @param dataImports {List<DataImport__c>} List of data import records to be filtered
+     *
+     * @return List<DataImport__c>
+    */
+    private List<DataImport__c> shouldProcess(List<DataImport__c> dataImports) {
+        List<DataImport__c> dataImportsToProcess = new List<DataImport__c>();
+
+        for (DataImport__c dataImport : dataImports) {
+            /* Use a single boolean to determine if each data import should be processed. If new criteria is added
+            * it can be added to isSuccessfulPayment using conditional operators. */
+            Boolean shouldProcess = isSuccessfulPayment(dataImport);
+
+            if (shouldProcess) {
+                dataImportsToProcess.add(dataImport);
+            }
+        }
+
+        return dataImportsToProcess;
+    }
+
+    /**
+     * @description Checks a collection of data imports and returns a filtered list of only those data import records
+     * that have been successfully charged by payment services or those with a blank payment status which were not
+     * sent to payment services because a credit card charge was not required.
+     *
+     * @param dataImport {DataImport__c} List of data import records to be filtered
+     * @return Boolean
+     */
+    private Boolean isSuccessfulPayment(DataImport__c dataImport) {
+        String paymentStatus = dataImport.Payment_Status__c;
+
+        return String.isBlank(paymentStatus) ||
+            dataImport.Payment_Status__c.equalsIgnoreCase(
+                GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
+            );
+    }
+
+    /**
      * @description Provides the access levels that should be validated depending on whether
      * dry run is enabled.
+     *
+     * @return Set<BDI_DataImportFLSService.AccessLevel>
      */
     private Set<BDI_DataImportFLSService.AccessLevel> getFieldAccessLevelsToValidate() {
         Set<BDI_DataImportFLSService.AccessLevel> fieldAccessLevelsToValidate =
@@ -630,6 +677,7 @@ global with sharing class BDI_DataImportService {
         }
         return fieldAccessLevelsToValidate;
     }
+
 
     /**
      * @description Stamps Data Import records with their FLS exception details.
@@ -791,7 +839,7 @@ global with sharing class BDI_DataImportService {
                 String targetObjectName, 
                 List<String> dataImportFields) {
         
-        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_DataImportService.getDefaultFieldMapping());
+        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_DataImportService.getDefaultMappingService());
         return bdi.mapDataImportFields(dataImportObjectName, targetObjectName, dataImportFields);
     }
 
@@ -808,7 +856,7 @@ global with sharing class BDI_DataImportService {
                 String targetObjectName, 
                 List<String> dataImportFields) {
         
-        Map<String, String> targetFieldByDIField = fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
+        Map<String, String> targetFieldByDIField = mappingService.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
 
         return targetFieldByDIField;
     }    

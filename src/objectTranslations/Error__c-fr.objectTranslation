@@ -49,13 +49,13 @@
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help><!-- The Salesforce ID of the record associated with this error. --></help>
-        <label><!-- Related Record ID --></label>
+        <help>L&apos;ID Salesforce de l&apos;enregistrement associé à cette erreur.</help>
+        <label>ID d&apos;enregistrement associé</label>
         <name>Related_Record_ID__c</name>
     </fields>
     <fields>
-        <help><!-- When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes. --></help>
-        <label><!-- Retry Pending? --></label>
+        <help>Lorsque cette option est sélectionnée, l&apos;enregistrement spécifié dans ID d&apos;enregistrement associé est retraité dans le processus suivant. Si le nouveau traitement réussit, ce champ est désélectionné. S&apos;applique aux types d&apos;erreur des processus planifiés.</help>
+        <label>Nouvelle tentative en attente ?</label>
         <name>Retry_Pending__c</name>
     </fields>
     <fields>

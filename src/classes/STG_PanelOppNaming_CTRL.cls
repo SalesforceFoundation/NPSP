@@ -112,7 +112,13 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference delONS() {
+        if (!isRunningUserIsAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
+            return null;
+        }
+
         delete mapOppNameSettings.get(currentONSName);
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;//reset the Opp naming settings
         mapOppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
         return null;
     }
@@ -122,6 +128,11 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference editONS() {
+        if (!isRunningUserIsAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgEditPermissionError));
+            return null;
+        }
+
         currentONS = mapOppNameSettings.get(currentONSName);
         super.editSettings();
         return null;

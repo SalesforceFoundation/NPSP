@@ -10,12 +10,13 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 Enable Advanced Mapping
     [Documentation]    This test case checks if advanced mapping is enabled. If already enabled 
-    ...                then throws an error and if not, enables Advanced Mapping for Data Imports 
+    ...                then throws an error and if not, enables Advanced Mapping for Data Imports  
+    [tags]             feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
-    Click Link With Text                      Data Import Advanced Mapping
+    Click Link With Text                      Advanced Mapping for Data Import & Gift Entry
     Verify Advanced Mapping Is Not Enabled
-    Click Toggle Button                       DataImportAdvancedMapping
-    Wait Until Advanced Mapping Is Enabled
+    Click Toggle Button                       Advanced Mapping
+    Wait For Message                          Advanced Mapping is enabled
 
 

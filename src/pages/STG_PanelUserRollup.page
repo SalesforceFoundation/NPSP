@@ -110,7 +110,7 @@
                     <apex:repeat var="udr" value="{!udrlist}" >
                         <tr>
                             <td>
-                                <apex:commandLink id="deleteUDR" action="{!udr.deleteMe}" title="{!$Label.stgLinkDelete} {!udr.SourceFieldLabel} - {!udr.Operation}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" />
+                                <apex:commandLink id="deleteUDR" action="{!udr.deleteMe}" title="{!$Label.stgLinkDelete} {!udr.SourceFieldLabel} - {!udr.Operation}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!JSENCODE($Label.stgLabelAreYouSure)}')==false) { return false;}" rerender="form" />
                             </td>
                             <td><div class="slds-form-element__static">{!udr.SourceFieldLabel}</div></td>
                             <td><div class="slds-form-element__static">{!udr.Operation}</div></td>

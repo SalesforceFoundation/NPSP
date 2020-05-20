@@ -44,7 +44,7 @@ public with sharing class RD2_Donor_TEST {
     private static void shouldSetDonorWhenAccountDataIsProvided() {
         Account acc = new Account(
             Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
-            Name = 'Donor'
+            Name = CAO_Constants.OCR_DONOR_ROLE
         );
         RD2_Donor.Record donor = new RD2_Donor.Record(acc.Id, acc.Name);
 
@@ -69,7 +69,7 @@ public with sharing class RD2_Donor_TEST {
     }
 
     /***
-    * @description Verifies Donor (Account/Contact) names are queried 
+    * @description Verifies Donor (Account/Contact) names are queried
     * in order to construct the Recurring Donation name
     */
     @isTest

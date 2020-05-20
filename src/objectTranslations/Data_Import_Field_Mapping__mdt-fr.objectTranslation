@@ -9,50 +9,50 @@
         <value><!-- Data Import Field Mapping --></value>
     </caseValues>
     <fields>
-        <help><!-- The Data Import Field Mapping Set containing this field mapping. --></help>
-        <label><!-- Data Import Field Mapping Set --></label>
+        <help>L&apos;ensemble de mappages de champs d&apos;importation de données qui contient ce mappage de champs.</help>
+        <label>Ensemble mappages champs Import. données</label>
         <name>Data_Import_Field_Mapping_Set__c</name>
-        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+        <relationshipLabel>Mappages de champs d&apos;importation de données</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing. --></help>
-        <label><!-- Is Deleted --></label>
+        <help>Lorsque cette option est cochée, elle indique que cet enregistrement a été supprimé de l&apos;interface utilisateur Mappage avancé Importation de données et qu&apos;il sera ignoré lors du traitement Importation de données NPSP.</help>
+        <label>Est supprimé</label>
         <name>Is_Deleted__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates if the field on the NPSP Data Import object must contain a value. When it&apos;s required, Dry Run will fail if that field doesn&apos;t contain a value. --></help>
-        <label><!-- Required? --></label>
+        <help>Indique si le champ de l&apos;objet Importation de données NPSP doit contenir une valeur. Lorsqu&apos;une valeur est obligatoire, l&apos;importation test échoue si ce champ ne contient aucune valeur.</help>
+        <label>Obligatoire ?</label>
         <name>Required__c</name>
         <picklistValues>
             <masterLabel>No</masterLabel>
-            <translation><!-- No --></translation>
+            <translation>Non</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Yes</masterLabel>
-            <translation><!-- Yes --></translation>
+            <translation>Oui</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The API name of the field on the NPSP Data Import object. --></help>
-        <label><!-- Source Field API Name --></label>
+        <help>Le nom d&apos;API du champ dans l&apos;objet Importation de données NPSP.</help>
+        <label>Nom d&apos;API du champ source</label>
         <name>Source_Field_API_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The API name of the field on the target object. --></help>
-        <label><!-- Target Field API Name --></label>
+        <help>Le nom d&apos;API du champ dans l&apos;objet cible.</help>
+        <label>Nom d&apos;API du champ cible</label>
         <name>Target_Field_API_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The target Data Import Object Group for this field mapping. --></help>
-        <label><!-- Target Object Mapping --></label>
+        <help>Le Groupe d&apos;objets Importation de données cible de ce mappage de champs.</help>
+        <label>Mappage des objets cibles</label>
         <name>Target_Object_Mapping__c</name>
-        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+        <relationshipLabel>Mappages de champs d&apos;importation de données</relationshipLabel>
     </fields>
     <gender><!-- Masculine --></gender>
     <layouts>
         <layout>Data Import Field Mapping Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Liens personnalisés</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
