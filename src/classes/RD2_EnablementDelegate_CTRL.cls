@@ -182,15 +182,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             : batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
     }
 
-     /**
-    * @description indicates of CRLP is enabled
-    * @return Boolean
-    */
-    @TestVisible
-    private static Boolean isCrlpEnabled() {
-        return STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
-    }
-
     /***
     * @description Retrieves number of days that dry run is valid after completion
     * @param state Enablement state

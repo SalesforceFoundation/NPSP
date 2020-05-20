@@ -98,6 +98,7 @@ global with sharing class Callable_API implements System.Callable {
             } when 'settings.enableenhancedrecurringdonations' {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(scheduleJobsWhenComplete);
+                return null;
 
             } when else {
                 throw new MalformedMethodInvocationException(
