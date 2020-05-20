@@ -5313,7 +5313,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Notification about number and total of gifts not matching expected.</shortDescription>
+        <shortDescription>Notification about number and total of gifts not matching expected</shortDescription>
         <value>The expected and total number of gifts and amount of gifts must match before you can process this batch.</value>
     </labels>
     <labels>
