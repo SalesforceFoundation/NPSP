@@ -58,16 +58,15 @@ export default class rdEntryForm extends LightningElement {
     recurringDonationInfo;
     fieldInfos;
 
+    @track header = newHeaderLabel;
+
     @track isAutoNamingEnabled;
     @track isMultiCurrencyEnabled;
-
-    @track header = newHeaderLabel;
 
     @track contactId;
     @track accountId;
 
     @track isLoading = true;
-
     isSettingReady = false;
     isRecordReady = false;
 
@@ -116,7 +115,6 @@ export default class rdEntryForm extends LightningElement {
                 this.isRecordReady = true;
                 this.isLoading = false;
             }
-
         }
 
         if (response.error) {
@@ -192,11 +190,14 @@ export default class rdEntryForm extends LightningElement {
 
     /*******************************************************************************
     * @description Modify edit modal header
-    */ 
+    */
     modidifyEditHeader() {
         this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
     }
 
+    /*******************************************************************************
+    * @description Get org setting on init of the component 
+    */ 
     async connectedCallback() {
         getSetting({parentId: this.parentId})
         .then(response => {
@@ -239,22 +240,23 @@ export default class rdEntryForm extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handle error
+    * @description Handle all types of server error
+    *   error.body is the error from apex calls
+    *   error.body.output.errors is for AuraHandledException messages
+    *   error.body.message errors is the error from wired service
+    *   error.detail.output.errors is the error from record-edit-forms
     */
     handleError(error) {
         this.errorMessage.header = unknownErrorLabel;
         let message = unknownErrorLabel;
 
-        // error.body is the error from apex calls
-        // error.detail.output.errors is the error from record-edit-forms
-        // error.body.output.errors is for AuraHandledException messages
-        // error.body.message errors is the error from wired service
+        
         if (typeof error === 'string' || error instanceof String) {
             message = error;
 
         } else if (error.message) {
-
             message = error.message;
+
         } else if ((error.body && error.body.output)) {
             if (Array.isArray(error.body) &&
                 !error.body.output.errors) {
@@ -269,6 +271,7 @@ export default class rdEntryForm extends LightningElement {
                 message = error.body.output.errors.map(e => e.message).join(', ');
 
             }
+
         } else if (error.detail && error.detail.output && Array.isArray(error.detail.output.errors)) {
             this.errorMessage.header = error.detail.message;
             message = error.detail.output.errors.map(e => e.message).join(', ');
