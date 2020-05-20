@@ -924,8 +924,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()  
         
     def click_bge_button(self,text):  
-        """clicks on buttons for BGE"""  
-        self.builtin.log("This test is using javascript to click on button as regular click wouldn't work with Summer19", "WARN")    
+        """clicks on buttons for BGE"""      
         locator=npsp_lex_locators['bge']['button'].format(text)
         time.sleep(1)
         element = self.selenium.driver.find_element_by_xpath(locator)
@@ -959,7 +958,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clears the data in input field and enters the value specified """
         locator=npsp_lex_locators['bge']['edit_field'].format(title)
         field=self.salesforce._populate_field(locator, value)
-        
+
+    @capture_screenshot_on_error    
     def verify_row_count(self,value):
         """verifies if actual row count matches with expected value"""
         locator=npsp_lex_locators['bge']['count']
@@ -1435,6 +1435,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.wait_until_page_contains_element(footer)
         self.salesforce.populate_lookup_field(field,value)
 
+    @capture_screenshot_on_error
     def edit_record_dropdown_value(self,field,value):
         """Scrolls just a little below the field
            Clicks on Edit icon next to field and enters a value into the field"""

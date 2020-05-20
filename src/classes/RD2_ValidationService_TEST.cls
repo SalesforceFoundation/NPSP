@@ -303,35 +303,6 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies if it displays error message when installment period
-    * is monthly and day of month value is not valid
-    */
-    @isTest
-    private static void shouldFailWhenDayOfMonthIsNotValidForMonthlyInstallments() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        String day = '31';
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withContact(getContact().Id)
-            .withDayOfMonth(day)
-            .build();
-
-        String errMessage = '';
-        try {
-            insert rd;
-        } catch (Exception e) {
-            errMessage = e.getMessage();
-        }
-
-        String expectedMessage = String.format(
-            System.Label.RD2_DayOfMonthMustBeValid,
-            new String[]{ day }
-        );
-        System.assert(errMessage.contains(expectedMessage),
-            'The error message should contain invalid Day Of Month message: ' + errMessage);
-    }
-
-    /***
     * @description Verifies if it creates RDs when installment period is monthly and day of month value is valid
     */
     @isTest
@@ -431,6 +402,7 @@ private with sharing class RD2_ValidationService_TEST {
 
     /***
     * @description Verifies RD having no closed Opp can be updated to different contact
+    * and account is auto populated to the household account of the contact.
     */
     @isTest
     private static void shouldUpdateRdWithoutClosedOppWhenDonorContactChange() {
@@ -443,6 +415,7 @@ private with sharing class RD2_ValidationService_TEST {
         insert rd;
 
         Test.startTest();
+        rd.npe03__Organization__c = null;
         rd.npe03__Contact__c = householdContacts[1].Id;
         update rd;
         Test.stopTest();
@@ -451,6 +424,10 @@ private with sharing class RD2_ValidationService_TEST {
 
         System.assertEquals(householdContacts[1].Id, rd.npe03__Contact__c,
             'The RD should be successfully updated with new contact');
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+        System.assertEquals(householdContacts[1].AccountId, rd.npe03__Organization__c,
+            'The account on the recurring donations should match the account id on the contact');
     }
 
     /***
@@ -610,7 +587,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies DML should fail when installment frequency is updated to null 
+    * @description Verifies DML should fail when installment frequency is updated to null
     */
     @isTest
     private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesToNull() {
@@ -620,7 +597,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build();
-
         insert rd;
 
         rd.InstallmentFrequency__c = null;
@@ -641,7 +617,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty) 
+    * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty)
     */
     @isTest
     private static void shouldBlockRDUpdateWhenInstallmentFrequencyIsOutOfRange() {
@@ -651,7 +627,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build(3);
-            
         insert rds;
 
         rds[0].InstallmentFrequency__c = 20;
@@ -688,7 +663,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build();
-            
         insert rd;
 
         rd.InstallmentFrequency__c = 20;
@@ -696,12 +670,88 @@ private with sharing class RD2_ValidationService_TEST {
         Test.startTest();
         update rd;
         Test.stopTest();
-        
+
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(20, rd.InstallmentFrequency__c,
             'Installment Frequency should update when the value change is valid');
     }
+
+    /***
+    * @description Verifies user cannot change the RD originated in Elevate
+    * when Elevate integration is enabled and user has no permission
+    */
+    @isTest
+    private static void shouldBlockElevateRdUpdateWhenNonElevateUserUpdatesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.npe03__Amount__c += 10;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_ElevatePermissionRequired),
+            'RD update should fail when non-Elevate user attempts to change a restricted field: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies user can change the RD originated in Elevate
+    * when Elevate integration is enabled and user has permissions
+    */
+    @isTest
+    private static void shouldUpdateElevateRdWhenElevateUserUpdatesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.npe03__Amount__c += 10;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage),
+            'RD update should succeed when Elevate user attempts to change a restricted field: ' + errMessage
+        );
+    }
+
+
 
     // Helper Methods
     /////////////////////

@@ -273,6 +273,82 @@ private class RD2_DataMigration_TEST {
         assertBatchSummarySuccess(jobId, 1);
     }
 
+
+    /**
+     * @description Verifies that the data migration recalculates roll ups when disable rollups is not checked
+     */
+    @isTest
+    private static void shouldRecalcaluteRollupsOnRdWhenDisableRollupsIsNotSet() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withDateEstablished(DATE_ESTABLISHED.addMonths(1))
+            .build();
+        insert rd;
+        //set two opportunities in the rd to closed won for rollup calculations
+        setRdOppsToClosedWonForRollupTests(rd, 2);
+
+        rd = getRecords()[0];
+        rd.npe03__Total_Paid_Installments__c = null;
+        rd.npe03__Paid_Amount__c = null;
+        update rd;
+
+        RD2_OpportunityEvaluation_TEST.configureForBatchJobWithRollupDisableTests(false);
+
+        Id jobId = runDataMigration();
+        assertEnhancedFormat(getRecords());
+
+        rd = getRecords()[0];
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
+        System.assertEquals(200, rd.npe03__Paid_Amount__c,
+            'The paid amount should be recalculated by CRLP to 200');
+        System.assertEquals(2, rd.npe03__Total_Paid_Installments__c,
+            'The total paid installments should be recalculated by CRLP to 2');
+
+    }
+
+    /**
+     * @description Verifies that the data migration do not recalculate roll ups when disable rollups is checked
+     */
+    @isTest
+    private static void shouldNotRecalcaluteRollupsOnRdWhenDisableRollupsIsSet() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withDateEstablished(DATE_ESTABLISHED.addMonths(1))
+            .build();
+        insert rd;
+        //set two opportunities in the rd to closed won for rollup calculations
+        setRdOppsToClosedWonForRollupTests(rd, 2);
+
+        rd = getRecords()[0];
+        rd.npe03__Total_Paid_Installments__c = null;
+        rd.npe03__Paid_Amount__c = null;
+        update rd;
+
+        RD2_OpportunityEvaluation_TEST.configureForBatchJobWithRollupDisableTests(true);
+
+        Id jobId = runDataMigration();
+        assertEnhancedFormat(getRecords());
+
+        rd = getRecords()[0];
+
+        RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd);
+
+        System.assertEquals(true, mapper.isConverted(),
+            'This RD should be in Enhanced Recurring Donation format');
+        System.assertEquals(null, rd.npe03__Paid_Amount__c,
+            'The paid amount should not be recalculated by CRLP as disablerollups are set');
+        System.assertEquals(null, rd.npe03__Total_Paid_Installments__c,
+            'The total paid installments should not be recalculated by CRLP as disablerollups are set');
+
+    }
+
     /**
      * @description Verifies that a legacy RD is recognized correctly
      */
@@ -1855,6 +1931,89 @@ private class RD2_DataMigration_TEST {
             'Number of Planned Installments should be set to null');
     }
 
+    /**
+     * @description Verifies Account on RD is populated when it is not already specified
+     */
+    @IsTest
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecified() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+        insert rd;
+
+        Id jobId = runDataMigration();
+
+        rd = getRecords()[0];
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+             'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd);
+
+   }
+
+    /**
+     * @description Verifies Account on RD is populated when it is not already specified
+     * and there is a closed Opp on the RD
+    */
+    @IsTest
+    private static void shouldPopulateAccountOnRDWhenContactIsSpecifiedAndRDHasClosedOpp() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withAccount(null)
+            .build();
+
+        insert rd;
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(TODAY)
+            .withClosedWonStage()
+            .build();
+
+        Id jobId = runDataMigration();
+
+        rd = getRecords()[0];
+
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account on RD should be populated:' + rd);
+        System.assertEquals(getContact().AccountId, rd.npe03__Organization__c,
+            'Account on RD should be the Account associated with the Contact:' + rd );
+    }
+
+    /**
+ * @description Verifies that a Legacy Fixed Length RD is converted without metadata for Fixed type.
+ */
+    @IsTest
+    private static void shouldConvertFixedLengthRDWithoutFixedPicklistOption() {
+        final Integer installments = 12;
+
+        List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{
+            getLegacyRecurringDonationBuilder()
+                .withOpenEndedStatusNone()
+                .withPlannedInstallments(installments)
+                .withDateEstablished(DATE_ESTABLISHED)
+                .build()
+        };
+        rdList.add(rdList[0].clone());
+        rdList[1].npe03__Open_Ended_Status__c = null;
+
+        RD2_EnablementService.fixedOptionAvailable = false;
+        RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
+        for (npe03__Recurring_Donation__c rd : rdList) {
+            npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd, true)
+                .convertToEnhancedRD();
+            System.assertEquals(true, RD2_EnablementService.isFixedLength(convertedRD),
+                'The converted donation should be identified as fixed');
+            System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, convertedRD.RecurringType__c,
+                'The RecurringType should be open');
+        }
+    }
+
+
 
     // HELPER METHODS
     //////////////////////
@@ -2274,7 +2433,7 @@ private class RD2_DataMigration_TEST {
     * @return Boolean
     */
     private static Boolean isDayOfMonthRestrictedPicklistError(List<Error__c> errors) {
-        return !errors.isEmpty() 
+        return !errors.isEmpty()
             && errors[0].Full_Message__c.contains(
                 Schema.npe03__Recurring_Donation__c.Day_of_Month__c.getDescribe().getLabel()
             );
@@ -2285,6 +2444,21 @@ private class RD2_DataMigration_TEST {
     */
     private static Database.SaveResult mockErrorDMLResult() {
         return Database.insert(new Opportunity(), false);
+    }
+
+    /***
+    * @description Updates first two opportunities in the recurring donation to closed won for calculating rollups
+    */
+    private static void setRdOppsToClosedWonForRollupTests(npe03__Recurring_Donation__c rd, Integer numOpps) {
+        List<Opportunity> oppToUpdate = new List<Opportunity>();
+        List<Opportunity> rdOpps =  oppGateway.getRecordsByCloseDate(rd);
+
+         for (Integer i = 0; i < numOpps; i++) {
+            rdOpps[i].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+            oppToUpdate.add(rdOpps[i]);
+        }
+
+        update oppToUpdate;
     }
 
 }
