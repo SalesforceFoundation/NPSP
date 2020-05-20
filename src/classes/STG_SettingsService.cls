@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2015 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -36,12 +36,12 @@
 */
 
 public with sharing class STG_SettingsService {
-    
+
     /*********************************************************************************************************
-    * @description The shared instance of the Settings Service for all panels to use. 
+    * @description The shared instance of the Settings Service for all panels to use.
     */
     public static STG_SettingsService stgService = new STG_SettingsService();
-    
+
     /*********************************************************************************************************
     * @description The Contact and Orgs Settings object
     */
@@ -54,7 +54,7 @@ public with sharing class STG_SettingsService {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description The Households Settings object
     */
@@ -67,7 +67,7 @@ public with sharing class STG_SettingsService {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description The Household Naming Settings object
     */
@@ -93,7 +93,7 @@ public with sharing class STG_SettingsService {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description The Relationship Settings object
     */
@@ -106,7 +106,7 @@ public with sharing class STG_SettingsService {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description The Affilations Settings object
     */
@@ -119,7 +119,7 @@ public with sharing class STG_SettingsService {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description The Error Settings object
     */
@@ -132,7 +132,7 @@ public with sharing class STG_SettingsService {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description The Batch Data Entry Settings object
     */
@@ -145,7 +145,7 @@ public with sharing class STG_SettingsService {
         }
         private set;
     }
-    
+
     /*********************************************************************************************************
     * @description The Allocations Settings object
     */
@@ -183,62 +183,62 @@ public with sharing class STG_SettingsService {
             return stgLevels;
         }
         private set;
-    }    
+    }
 
     /*********************************************************************************************************
     * @description The RD Custom Field Mapping settings object
     */
-    public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
-    	get {
-    		if (mapRDCustomField == null) {
-			    mapRDCustomField = new map<string, npe03__Custom_Field_Mapping__c>();
-			    mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
-    		} 
-            return mapRDCustomField;    	   
-    	}
-    	public set;
+    public Map<String, npe03__Custom_Field_Mapping__c> mapRDCustomField {
+        get {
+            if (mapRDCustomField == null) {
+                mapRDCustomField = new Map<String, npe03__Custom_Field_Mapping__c>();
+                mapRDCustomField = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
+            }
+            return mapRDCustomField;
+        }
+        public set;
     }
-    
+
     /*********************************************************************************************************
     * @description The RD Custom Installment Settings object
     */
-    public list<npe03__Custom_Installment_Settings__c> listRDCustomInstallment {
+    public List<npe03__Custom_Installment_Settings__c> listRDCustomInstallment {
         get {
             if (listRDCustomInstallment == null) {
-                listRDCustomInstallment = new list<npe03__Custom_Installment_Settings__c>();
+                listRDCustomInstallment = new List<npe03__Custom_Installment_Settings__c>();
                 listRDCustomInstallment = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings().values();
-            } 
-            return listRDCustomInstallment;           
+            }
+            return listRDCustomInstallment;
         }
-        public set;     
+        public set;
     }
 
     /*********************************************************************************************************
     * @description The RD Custom Field Mapping settings object
     */
-    public list<npe03__Custom_Field_Mapping__c> listRDCustomFieldMapping {
+    public List<npe03__Custom_Field_Mapping__c> listRDCustomFieldMapping {
         get {
             if (listRDCustomFieldMapping == null) {
-                listRDCustomFieldMapping = new list<npe03__Custom_Field_Mapping__c>();
+                listRDCustomFieldMapping = new List<npe03__Custom_Field_Mapping__c>();
                 listRDCustomFieldMapping = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings().values();
-            } 
-            return listRDCustomFieldMapping;           
+            }
+            return listRDCustomFieldMapping;
         }
-        public set;     
+        public set;
     }
 
     /*********************************************************************************************************
     * @description The Payment Field Mapping Settings object
     */
-    public list<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
+    public List<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
         get {
             if (listPMTFieldMapping == null) {
-                listPMTFieldMapping = new list<npe01__Payment_Field_Mapping_Settings__c>();
+                listPMTFieldMapping = new List<npe01__Payment_Field_Mapping_Settings__c>();
                 listPMTFieldMapping = UTIL_ListCustomSettingsFacade.getMapPaymentFieldMappingSettings().values();
-            } 
-            return listPMTFieldMapping;           
+            }
+            return listPMTFieldMapping;
         }
-        public set;    	
+        public set;
     }
 
     /*********************************************************************************************************
@@ -255,7 +255,7 @@ public with sharing class STG_SettingsService {
     }
 
     /*********************************************************************************************************
-    * @description The Data Import Settings object
+    * @description The Gift Entry Settings object
     */
     public Gift_Entry_Settings__c stgGiftEntry {
         get {
@@ -269,7 +269,6 @@ public with sharing class STG_SettingsService {
 
     /*********************************************************************************************************
     * @description Saves all settings objects to the database
-    * @return void
     */
     public void saveAll() {
         if(!Test.isRunningTest()) {
@@ -285,5 +284,12 @@ public with sharing class STG_SettingsService {
             upsert stgCRLP;
             upsert stgLevels;
         }
+    }
+
+    /**
+    * @description Clear the Custom Settings SObject passed to force it to be re-loaded by the getter methods.
+    */
+    public void reset(SObject settings) {
+        settings = null;
     }
 }
