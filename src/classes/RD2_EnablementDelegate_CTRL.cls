@@ -159,8 +159,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             } else {
                 state.isMetaLaunched = state.isMetaLaunched && state.isEnabled;
                 state.isMetaConfirmed = state.isMetaConfirmed && state.isMetaLaunched && hasMetaDeployCompleted();
-            }   
-            
+            }
+
             state.dryRunLimit = getDryRunLimit(state);
 
         } catch (Exception e) {
@@ -177,7 +177,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return Boolean
     */
     private static Boolean isDryRunOutdated(EnablementState state) {
-        return (isSimpleVersion) 
+        return (isSimpleVersion)
             ? false
             : batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
     }
@@ -234,7 +234,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         if (isSimpleVersion) {
             state.isConfirmed = true;
             saveEnablementState(state);
-        }   
+        }
 
         try {
             STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
@@ -455,7 +455,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
     * @description Determine if the enablement page should be in simple or full version
-    * @return Boolean 
+    * @return Boolean
     */
     private static Boolean isSimplePageCandidate() {
         Boolean noLegacyRd = [
@@ -559,7 +559,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             cmtRollup.description += '\nThis rollup was disabled automatically when Enhanced Recurring Donations was enabled.';
 
             List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{ cmtRollup };
-            CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
+            CRLP_EnablementService.RollupMetadataHandler changeHandler = new CRLP_ApiService()
+                .sendChangeEvent(rollups)
+                .getCallbackHandler();
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
             CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
