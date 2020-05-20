@@ -24,15 +24,14 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		"""
 		formatted = object+": "+name
 		isPresent = False
-		self.builtin.log(formatted)
 		search_results = npsp_lex_locators['crlps']['setting_record'].format(formatted)
 		list_ele = self.selenium.get_webelements(search_results)
 		p_count=len(list_ele)
 		if p_count == 0:
-			self.builtin.log_to_console("crlp setting record Not found")
+			print("crlp setting record Not found")
 		else:
 			isPresent = True
-			self.builtin.log_to_console("crlp setting already exists")
+			print("crlp setting already exists")
 		return isPresent
 	
 	@capture_screenshot_on_error

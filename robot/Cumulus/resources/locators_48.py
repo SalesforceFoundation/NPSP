@@ -268,7 +268,8 @@ npsp_lex_locators={
         'target_object': "//select[@name = 'Target Object']",
         'target_object_option': "//select[@name = 'Target Object']/option[text()='{}']",
         'setting_record': "//lightning-button/button[text()='{}']",
-        'apex_job': "//table/tbody/tr/td/a[text()='{}']/following::tr/td[contains(@class,'dataCell') and text()='{}']"
+        'apex_job': "//table/tbody/tr/td/a[text()='{}']/following::tr/td[contains(@class,'dataCell') and text()='{}']",
+        'rollup_progress_notification': "//div/h2[contains(text(),'{}')]"
        },
     'gift_entry':{
         'button':'//*[@data-qa-locator="button {}"]/button',

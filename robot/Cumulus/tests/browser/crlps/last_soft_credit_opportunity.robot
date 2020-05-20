@@ -69,15 +69,12 @@ Create Crlp For Automated Soft Credit
     ...                                                   Soft Credit
     ...                                                   Primary=unchecked
 
-    # Navigate to Contact page and run recalculate rollups option
+    # Navigate to Contact page and run Batch Process
     Go To Page                                            Details
     ...                                                   Contact
     ...                                                   object_id=${data}[contact][Id]
-    Waitfor Actions Dropdown And Click Option             Recalculate Rollups
-    Wait Until Loading Is Complete
 
-    # Wait for the Relevant Apex Jobs to get Completed
-    Validate Async Apex Jobs
+    Run Donations Batch Process
 
     # Navigate to the contact page and asset that the rollup for the last soft credit opportunity occured
     Go To Page                                            Details
