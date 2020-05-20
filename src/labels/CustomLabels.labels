@@ -5305,7 +5305,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message preventing user from processing batch if totals don&apos;t match expected</shortDescription>
+        <shortDescription>Notification about either number or total of gifts not matching expected</shortDescription>
         <value>The expected doesn't match either the count of gifts or the amount of gifts. These values must match before you can process this batch.</value>
     </labels>
     <labels>
