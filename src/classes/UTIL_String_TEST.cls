@@ -38,7 +38,7 @@
 private class UTIL_String_TEST {
     private static final String mixedCharacterString = 'Abc0123456789!@#$%^&*()_+[{]}|;:,<.>/?èęàáöøûüìß';
     
-    /*******************************************************************************************************************
+    /**
     * @description Verifies that only numeric characters are returned after processing the string
     */
     @isTest private static void nonNumericCharactersShouldBeRemoved() {
@@ -47,7 +47,7 @@ private class UTIL_String_TEST {
         System.assertEquals(expectedValue, actualValue); 
     }
 
-    /*******************************************************************************************************************
+    /**
     * @description Verifies that only ascii alphabetic language characters are returned after processing the string
     */
     @isTest private static void nonAsciiAlphabeticCharactersShouldBeRemoved() {
@@ -56,7 +56,7 @@ private class UTIL_String_TEST {
         System.assertEquals(expectedValue, actualValue); 
     }
 
-    /*******************************************************************************************************************
+    /**
     * @description Verifies that only ascii alphanumeric characters are returned after processing the string
     */
     @isTest private static void nonAsciiAlphanuericCharactersShouldBeRemoved() {
@@ -65,7 +65,7 @@ private class UTIL_String_TEST {
         System.assertEquals(expectedValue, actualValue); 
     }
 
-    /*******************************************************************************************************************
+    /**
     * @description Verifies that null strings passed into string methods return null values
     */
     @isTest private static void nullStringsShouldReturnNull() {
@@ -73,6 +73,39 @@ private class UTIL_String_TEST {
         System.assertEquals(null, UTIL_String.removeNonAsciiAlphabeticCharacters(nullTarget)); 
         System.assertEquals(null, UTIL_String.removeNonNumericCharacters(nullTarget)); 
         System.assertEquals(null, UTIL_String.removeNonAsciiAlphanumericCharacters(nullTarget));
+    }
+
+    /**
+    * @description Verifies that a Url string is successfully mutated to form an internal-only Url
+    */
+
+    @IsTest
+    private static void urlShouldBeInternalOnly() {
+        String testUrl = 'https://salesforce.com/testPath';
+
+        System.assertEquals('/testPath', UTIL_String.getInternalUrlPath(testUrl));
+    }
+
+    /**
+    * @description Verifies that an internal Url is sanitized when passed to the method and that any additional forward
+    * hashes are removed if the string contains them
+    */
+    @IsTest
+    private static void internalUrlIsSanitized() {
+        String testUrl = '//testPath';
+
+        System.assertEquals('/testPath', UTIL_String.getInternalUrlPath(testUrl));
+    }
+
+    /**
+    * @description If the Url is not already and internal path and does not contain a protocol, the Url is invalid
+    * and should be returned as null
+    */
+    @IsTest
+    private static void urlShouldBeNull() {
+        String invalidUrl = 'www.salesforce.com';
+
+        System.assertEquals(null, UTIL_String.getInternalUrlPath(invalidUrl));
     }
 
 }

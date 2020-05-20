@@ -301,7 +301,6 @@ class BDI_DataImportDeleteBTN_TEST {
     /**
      * @description Apply delete action as a user with Standard User profile.
      * Assert the exception message is displayed on the Visualforce page.
-     * @return void
      */
     static void testPageErrorMessageDisplayOnDeleteActionException(
         String testMethodName,
@@ -336,7 +335,6 @@ class BDI_DataImportDeleteBTN_TEST {
     /**
      * @description Assert Home page URL and redirect values
      * @param actual Page to verify
-     * @return void
      */
     static void assertHomePage(PageReference actual) {
         assertPage('/home/home.jsp', actual);
@@ -346,7 +344,6 @@ class BDI_DataImportDeleteBTN_TEST {
      * @description Assert page URL and redirect values
      * @param expectedUrl Expected URL
      * @param actual Page to verify
-     * @return void
      */
     static void assertPage(String expectedUrl, PageReference actual) {
         System.assertNotEquals(null, actual);

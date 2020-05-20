@@ -10,13 +10,15 @@
                     type="Object" />
 
     <c:utilDedicatedListener eventName="geDonationMatchingEvent"
-                            onreceiveevent="{!c.closeModal}" />
+                             onreceiveevent="{!c.closeModal}" />
     <c:utilDedicatedListener eventName="geBatchWizardFormEvent"
-                            onreceiveevent="{!c.closeModal}" />
-    
+                             onreceiveevent="{!c.closeModal}" />
+    <c:utilDedicatedListener eventName="gePurchaseCallModalErrorEvent"
+                             onreceiveevent="{!c.closeModal}" />
+
     <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
-                        recordId="{!v.recordId}"
-                        sObjectName="{!v.sObjectName}"
-                        oneditbatch="{!c.handleEditBatch}"
-                        ontogglereviewdonationsmodal="{!c.handleReviewDonationsModal}" />
+                          recordId="{!v.recordId}"
+                          sObjectName="{!v.sObjectName}"
+                          oneditbatch="{!c.handleEditBatch}"
+                          ontogglemodal="{!c.handleToggleModal}"/>
 </aura:component>

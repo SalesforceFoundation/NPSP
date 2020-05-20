@@ -52,7 +52,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     /*******************************************************************************************************
     * @description Helper and constructor that enables and supports mocking of test data
 	*/
-    private BDI_MigrationMappingUtility util;
+    private BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+    private BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(helper);
     public STG_InstallScript(BDI_MigrationMappingUtility util) {
         this.util = util;
     }
@@ -462,7 +463,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Payment_Origin_ID',
                     'Payment_Origin_Name',
                     'Payment_Origin_Type',
-                    'Payment_Type'
+                    'Payment_Type',
+                    'Donation_Elevate_Recurring_ID'
             };
 
             util.migrateNewDefaultToCustomMetadata(newDefaultMappingStrings);

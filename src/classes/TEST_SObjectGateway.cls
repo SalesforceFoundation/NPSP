@@ -189,7 +189,8 @@ public class TEST_SObjectGateway {
             'npe03__Recurring_Donation__c',
             'Recurring_Donation_Installment_Number__c',
             'npe01__Contact_Id_for_Role__c',
-            'Primary_Contact__c'
+            'Primary_Contact__c',
+            'CommitmentId__c'
         };
 
 
@@ -221,6 +222,31 @@ public class TEST_SObjectGateway {
                 .withFrom(Opportunity.SObjectType)
                 .withSelectFields(fields)
                 .withWhere('npe03__Recurring_Donation__c IN :rds')
+                .build();
+
+            return (List<Opportunity>) Database.query(soql);
+        }
+
+        /***
+        * @description Retrieves Opportunities sorted by Closedate for the related Recurring Donation
+        * @param rd Recurring donation
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecordsByCloseDate(npe03__Recurring_Donation__c rd) {
+            return getRecordsByCloseDate(new List<npe03__Recurring_Donation__c>{ rd });
+        }
+
+        /***
+        * @description Retrieves Opportunities sorted by CloseDate for related Recurring Donations
+        * @param rds Recurring donations
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecordsByCloseDate(List<npe03__Recurring_Donation__c> rds) {
+            String soql = new UTIL_Query()
+                .withFrom(Opportunity.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe03__Recurring_Donation__c IN :rds')
+                .withOrderBy('CloseDate ASC')
                 .build();
 
             return (List<Opportunity>) Database.query(soql);
