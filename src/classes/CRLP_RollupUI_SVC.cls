@@ -718,7 +718,9 @@ public with sharing class CRLP_RollupUI_SVC {
             }
 
             List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{cmtRollup};
-            CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
+            CRLP_EnablementService.RollupMetadataHandler changeHandler = new CRLP_ApiService()
+                .sendChangeEvent(rollups)
+                .getCallbackHandler();
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
             String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
@@ -757,7 +759,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
             // Queue up the deployment
             List<CRLP_RollupCMT.FilterGroup> filterGroups = new List<CRLP_RollupCMT.FilterGroup>{cmtFilterGroup};
-            CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(filterGroups);
+            CRLP_EnablementService.RollupMetadataHandler changeHandler = new CRLP_ApiService()
+                .sendChangeEvent(filterGroups)
+                .getCallbackHandler();
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
             String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
