@@ -84,12 +84,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
                 // AFTER UPDATE
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-                    // note that we detect whether the address change is coming from the address trigger,
-                    // in which case we don't want to create a new address.
-                    if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
-                        UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Account_TDTM');
-                        continue;
-                    }
                     // if the address changed, remember the account we want to add a new address for
                     if (isAccountAddressChanged(newRecord, oldRecord)) {
                         listAccCreateAddr.add(newRecord);
