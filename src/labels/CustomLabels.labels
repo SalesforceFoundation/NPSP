@@ -1959,16 +1959,6 @@
         <shortDescription>Recurring Donation Entry Form Donor Information section header</shortDescription>
         <value>Donor Information</value>
     </labels>
-
-    <labels>
-        <fullName>RD2_EntryFormFieldLabelCurreny</fullName>
-        <categories>Recurring-Donations, Entry-Form</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form currency field label</shortDescription>
-        <value>Currency</value>
-    </labels>
-
     <labels>
         <fullName>RD2_EntryFormHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
@@ -7893,6 +7883,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>lblCountry</shortDescription>
         <value>Country</value>
+    </labels>
+     <labels>
+        <fullName>lblCurrency</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Override CurrencyIsoCode label</shortDescription>
+        <value>Currency</value>
     </labels>
     <labels>
         <fullName>lblDeleteContact</fullName>

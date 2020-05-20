@@ -1,16 +1,54 @@
 ({
     /**
-     * @description: Close and redirect the modal
+     * @description: Create the modal when initializing the component
      */
-    handleCloseModal: function(component) {
-        let navEvt = this.constructNavigationEvent(
-            component.get('v.parentId'),
-            component.get('v.recordId')
-        );
+    handleShowModal: function (component, event, helper) {
+        let recordId = component.get('v.recordId');
+        let parentId;
 
+        if (!recordId) {
+            parentId = helper.getParentId();
+            component.set('v.parentId', parentId);
+        }
+        
+        $A.createComponent("c:rd2EntryForm", {parentId, recordId},
+        function(content, status, errorMessage) {
+            if (status === "SUCCESS") {
+                const modalBody = content;
+
+                let modalReference = component.find('overlayLib').showCustomModal({
+                    body: modalBody,
+                    cssClass: component.getName() + ' slds-modal_medium custom-modal',
+                    showCloseButton: true,
+                    closeCallback: function() {
+                        helper.redirectToPage(component);
+                    }
+                });
+                component.set('v.modal', modalReference);
+            } else {
+                console.error(errorMessage);
+            }
+        });
+    },
+
+    /**
+    * @description Handle events sent from the modal
+    */
+    handleModalEvent: function(component, event) {
+        component.set('v.recordId', event.getParams('detail').recordId);
+        this.redirectToPage(component);
+    },
+
+    /**
+     * @description: Redirect the page to either parent or RD record
+     */
+    redirectToPage: function(component) {
         component.get('v.modal').then(modal => {
             modal.close();
         });
+        let navigateToId = component.get('v.parentId') || component.get('v.recordId');
+
+        let navEvt = this.constructNavigationEvent(navigateToId);
 
         navEvt.fire();
     },
@@ -18,13 +56,13 @@
     /**
      * @description: Determine where the page should be redirect and construct the event
      */
-    constructNavigationEvent: function(parentId, recordId) {
+    constructNavigationEvent: function(navigateToId) {
         let navEvt;
 
-        if(parentId || recordId) {
+        if(navigateToId) {
             navEvt = $A.get("e.force:navigateToSObject");
             navEvt.setParams({
-            "recordId": parentId || recordId,
+            "recordId": navigateToId,
             "slideDevName": "related"
             });
 
@@ -68,7 +106,7 @@
             return JSON.parse(window.atob(decodedFragment)).attributes.recordId;
 
         } catch(error) {
-
+            console.error(JSON.stringify(error));
         }
     }
 })

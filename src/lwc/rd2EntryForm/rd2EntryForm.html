@@ -1,5 +1,5 @@
 <template>
-    <header class="slds-modal__header slds-clearfix">
+    <header class="slds-modal__header slds-clearfix cssEditForm">
         <h2 class="slds-text-heading_medium slds-hyphenate header-string">
             {header}
         </h2>
@@ -20,11 +20,11 @@
                     </div>
                 </div>
             </template>
-            <template if:true={isInitialize}>
+            <template if:true={isDataReady}>
                 <div class={cssEditForm}>
 
                     <template if:true={hasError}> 
-                        <c-util-page-level-message title={errorMessage.message}
+                        <c-util-page-level-message title={errorMessage.header}
                                                 subtitle={errorMessage.detail}
                                                 variant='error'>
                         </c-util-page-level-message>
@@ -69,10 +69,6 @@
                                 <lightning-layout-item padding="horizontal-small" class="slds-m-bottom_x-small" size="12"  small-device-size="6">
                                     <lightning-input-field field-name={fields.installment.apiName}>
                                     </lightning-input-field>
-                                    <!-- <lightning-input data-lpignore="true" autocomplete="off" type="number" name={fields.installment.label} label={fields.installment.label} class="hide-last-pass" style="background-position: 150% 50% !important;
-                                    background-image: none !important;">
-                                    </lightning-input> -->
-                                
                                 </lightning-layout-item>
 
                                 <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">

@@ -43,33 +43,16 @@ private with sharing class RD2_EntryFormController_TEST {
     */
     @isTest
     private static void shouldReturnRDSettingForEntryForm() {
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withDefaultValues()
-            .withContact(c.Id)
-            .withAmount(100)
-            .build();
-        insert rd;
-
         Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
     
         Test.startTest();
-        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getSetting(rd.Id, accountId);
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getSetting(accountId);
         Test.stopTest();
-
-        rd = rdGateway.getRecord(rd.Id);
-        String expectedTitle = System.Label.commonEdit + ' ' + rd.Name;
 
         System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, ((Boolean) orgSettingsByKey.get('isAutoNamingEnabled')),
             'Recurring Donation Auto Naming setting should be returned accordingly');
         System.assertEquals(UserInfo.isMultiCurrencyOrganization(), (Boolean) orgSettingsByKey.get('isMultiCurrencyEnabled'),
             'Multi Currency Org should be detect in the configuration.');
-        System.assertEquals(expectedTitle, (String) orgSettingsByKey.get('header'), 
-            'Should Display Edit version of Modal Header');
         System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
             'Parent Sobject type should be correctly identified when value is not null');
     }

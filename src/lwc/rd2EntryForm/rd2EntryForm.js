@@ -27,7 +27,10 @@ import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe0
 
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
-import currencyFieldLabel from '@salesforce/label/c.RD2_EntryFormFieldLabelCurreny';
+import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
+import newHeaderLabel from '@salesforce/label/c.RD2_EntryFormHeader';
+import editHeaderLabel from '@salesforce/label/c.commonEdit';
+import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import donationSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
 import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHeader';
 import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHeader';
@@ -38,6 +41,10 @@ import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
 
 export default class rdEntryForm extends LightningElement {
 
+    @api parentId;
+    @api recordId;
+    listenerEvent = 'rdEntryFormEvent';
+
     customLabels = Object.freeze({
         cancelButtonLabel,
         saveButtonLabel,
@@ -47,36 +54,42 @@ export default class rdEntryForm extends LightningElement {
     });
 
     @track fields = {};
-
-    recurringDonationInfo;
-    fieldInfos
     @track record;
-
-    @api parentId;
-    @api recordId;
+    recurringDonationInfo;
+    fieldInfos;
 
     @track isAutoNamingEnabled;
     @track isMultiCurrencyEnabled;
 
-    @track header;
+    @track header = newHeaderLabel;
 
     @track contactId;
     @track accountId;
 
-    @track isInitialize = false;
     @track isLoading = true;
+
+    isSettingReady = false;
+    isRecordReady = false;
+
     @track hasError = false;
     @track errorMessage = {};
 
-    listenerEvent = 'rdEntryFormEvent';
+    
 
     /*******************************************************************************
     * @description Dynamic render edit form CSS to show/hide the edit form 
     */
     get cssEditForm() {
-        return (this.isLoading)
+        return (this.isLoading && this.isSettingReady && this.isRecordReady)
             ? 'slds-hide'
             : '';
+    }
+    
+    /*******************************************************************************
+    * @description Boolean to control if every server call is loaded
+    */
+    get isDataReady() {
+        return this.isSettingReady && this.isRecordReady;
     }
 
     /*******************************************************************************
@@ -91,7 +104,7 @@ export default class rdEntryForm extends LightningElement {
     * @description Retrieve Recurring Donation Object info
     */
     @wire(getObjectInfo, {objectApiName: '$recurringDonationName' })
-    wiredRecurringDonationBatchInfo(response) {
+    wiredRDObjectInfo(response) {
         if (response.data) {
             this.recurringDonationInfo = response.data;
             this.buildDisplayedFields(this.recurringDonationInfo.fields);
@@ -99,9 +112,15 @@ export default class rdEntryForm extends LightningElement {
                 this.recurringDonationInfo.fields,
                 this.recurringDonationInfo.apiName);
 
-            this.isInitialize = true;
-            this.isLoading = false;
+            if (!this.recorId) {
+                this.isRecordReady = true;
+                this.isLoading = false;
+            }
 
+        }
+
+        if (response.error) {
+            handleError(response.error);
         }
     }
 
@@ -158,15 +177,34 @@ export default class rdEntryForm extends LightningElement {
     wiredRecurringDonationRecord(response) {
         if (response.data) {
             this.record = response.data;
+            this.modidifyEditHeader();
+
+            this.isRecordReady = true;
+            this.isLoading = false;
+        }
+
+        if (response.error) {
+            handleError(response.error);
         }
     }
 
+    /*******************************************************************************
+    * @description Modify edit modal header
+    */ 
+    modidifyEditHeader() {
+        this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
+    }
+
     async connectedCallback() {
-        getSetting({ recordId: this.recordId, parentId: this.parentId}).then(response => {
+        getSetting({parentId: this.parentId})
+        .then(response => {
             this.isAutoNamingEnabled = response.isAutoNamingEnabled;
             this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
-            this.header = response.header;
             this.handleParentIdType(response.parentSObjectType);
+            this.isSettingReady = true;
+        })
+        .catch((error) => {
+            this.handleError(error);
         });
     }
 
@@ -179,7 +217,7 @@ export default class rdEntryForm extends LightningElement {
         }
 
         if (parentSObjecType === ACCOUNT_OBJECT.objectApiName) {
-            this.account = this.parentId;
+            this.accountId = this.parentId;
         } else if (parentSObjecType === CONTACT_OBJECT.objectApiName) {
             this.contactId = this.parentId;
         }
@@ -193,16 +231,55 @@ export default class rdEntryForm extends LightningElement {
         event.preventDefault();
         const fields = event.detail.fields;
         this.template.querySelector('lightning-record-edit-form').submit(fields);
+        this.template.querySelector("[data-id='submitButton']").disabled = true;
     }
 
+    handleLoad(event) {
+        this.isLoading = false;
+    }
     /*******************************************************************************
-    * @description Override standard error handling with custom error display
+    * @description Handle error
     */
-    handleError(event) {
+    handleError(error) {
+        this.errorMessage.header = unknownErrorLabel;
+        let message = unknownErrorLabel;
+
+        // error.body is the error from apex calls
+        // error.detail.output.errors is the error from record-edit-forms
+        // error.body.output.errors is for AuraHandledException messages
+        // error.body.message errors is the error from wired service
+        if (typeof error === 'string' || error instanceof String) {
+            message = error;
+
+        } else if (error.message) {
+
+            message = error.message;
+        } else if ((error.body && error.body.output)) {
+            if (Array.isArray(error.body) &&
+                !error.body.output.errors) {
+                message = error.body.map(e => e.message).join(', ');
+
+            } else if (typeof error.body.message === 'string' &&
+                !error.body.output.errors) {
+                message = error.body.message;
+
+            } else if (error.body.output &&
+                Array.isArray(error.body.output.errors)) {
+                message = error.body.output.errors.map(e => e.message).join(', ');
+
+            }
+        } else if (error.detail && error.detail.output && Array.isArray(error.detail.output.errors)) {
+            this.errorMessage.header = error.detail.message;
+            message = error.detail.output.errors.map(e => e.message).join(', ');
+
+        } else if (error.body && error.body.message) {
+            message = error.body.message;
+        }
+
+        this.errorMessage.detail = message;
         this.isLoading = false
         this.hasError = true;
-        this.errorMessage = event.detail;
-
+        this.template.querySelector("[data-id='submitButton']").disabled = false;
     }
 
     /*******************************************************************************

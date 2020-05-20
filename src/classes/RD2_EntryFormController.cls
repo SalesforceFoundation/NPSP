@@ -38,14 +38,11 @@ public with sharing class RD2_EntryFormController {
 
     /**
     * @description  Gather the org setting for Recurring Donation Entry Form
+    * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
     @AuraEnabled
-    public static Map<String, Object> getSetting(Id recordId, Id parentId) {
-        String header = (recordId == null)
-            ? System.Label.RD2_EntryFormHeader
-            : System.Label.commonEdit + ' ' + [SELECT Name FROM npe03__Recurring_Donation__c WHERE Id =: recordId LIMIT 1].Name;
-
+    public static Map<String, Object> getSetting(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
             : parentId.getSObjectType().getDescribe().getName();
@@ -53,7 +50,6 @@ public with sharing class RD2_EntryFormController {
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
-            'header' => header,
             'parentSObjectType' => parentSObjectType
         };
     }

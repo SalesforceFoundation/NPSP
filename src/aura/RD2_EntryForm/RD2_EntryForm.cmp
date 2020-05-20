@@ -6,7 +6,7 @@
     
     <lightning:overlayLibrary aura:id="overlayLib"/>
 
-    <aura:handler name="init" value="{!this}" action="{!c.handleShowModal}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <c:utilDedicatedListener eventName="rdEntryFormEvent"
                              onreceiveevent="{!c.handleModalEvent}" />

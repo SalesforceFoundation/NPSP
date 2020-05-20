@@ -1671,7 +1671,6 @@
         <members>RD2_EnablementSimpleIntro</members>
         <members>RD2_EntryFormDonationSectionHeader</members>
         <members>RD2_EntryFormDonorSectionHeader</members>
-        <members>RD2_EntryFormFieldLabelCurreny</members>
         <members>RD2_EntryFormHeader</members>
         <members>RD2_EntryFormInsertSuccessMessage</members>
         <members>RD2_EntryFormUpdateSuccessMessage</members>
@@ -2413,6 +2412,7 @@
         <members>lblCity</members>
         <members>lblCloned</members>
         <members>lblCountry</members>
+        <members>lblCurrency</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
         <members>lblDeprecated</members>
