@@ -37,7 +37,6 @@
 @isTest(IsParallel=true)
 private with sharing class RD2_EntryFormController_TEST {
 
-    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     /***
     * @description Verifies that Entry Form Controller gathers the correct org setting 
     */
