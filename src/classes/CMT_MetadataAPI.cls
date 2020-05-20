@@ -33,6 +33,8 @@
 */
 public class CMT_MetadataAPI {
 
+    public static final String DEPLOYMENT_SUCCESS_TEXT = 'Succeeded';
+
     /**
      * @description Static list of queued metadata updates to submit in a single process rather than
      * one update at a time.
@@ -183,7 +185,7 @@ public class CMT_MetadataAPI {
          */
         public MetadataCallbackHandler callbackHandler { get; set; }
         public Map<String, Object> callbackParams {get; set;}
-        
+
         /**
          * @description Constructor for Callback Class
          * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
@@ -228,15 +230,17 @@ public class CMT_MetadataAPI {
         }
 
         /**
-         * @description This method iterates through the successful deployments and grabs the 
+         * @description This method iterates through the successful deployments and grabs the
          * object name. It will then pass into the UTIL_OrgTelemetry_SVC class to determine
-         * whether or not to run the telemetry code. 
+         * whether or not to run the telemetry code.
+         * @param result - Deployment Result
+         * @return Set<String>
          */
         private Set<String> buildChangedMetadata(Metadata.DeployResult result) {
             Set<String> metadataObjectTypeSet = new Set<String>();
 
-            for (integer i = 0; i < result.details.componentSuccesses.size(); i++) {
-                        
+            for (Integer i = 0; i < result.details.componentSuccesses.size(); i++) {
+
                 // Metadata full name for a custom metadata is in this format:
                 // metadataObject.recordName
                 // Example:
