@@ -78,8 +78,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
                 // AFTER INSERT
                 if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-                    if (isAccountAddressSpecified(newRecord))
+                    if (isAccountAddressSpecified(newRecord)) {
                         listAccCreateAddr.add(newRecord);
+                    }
                 }
 
                 // AFTER UPDATE
@@ -93,8 +94,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
 
         // create any new Address objects
-        if (listAccCreateAddr.size() > 0)
+        if (listAccCreateAddr.size() > 0) {
             createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+        }
                     
         return dmlWrapper;    
     }
@@ -102,7 +104,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description utility to see if an address management is enabled
     * @param newRecord an Account
-    * @return Boolean.  true if an address is specified in any of the Account Billing fields
+    * @return Boolean.  true if address management is enabled
     ********************************************************************************************************/
     private Boolean isAddressManagementEnabled(Account newRecord) {
         if (newRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE
