@@ -27,5 +27,5 @@ Verify Error Message with GE Disabled and enable GE
     Click Toggle Button                       Gift Entry
     Wait For Message                          Gift Entry Enabled                              
     Go To Page                                Custom              GE_Gift_Entry
-    Wait Until Page Contains                  Templates
+    Click Link                                Templates
     Wait Until Page Contains                  Default Gift Entry Template
