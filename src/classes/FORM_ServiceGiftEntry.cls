@@ -338,7 +338,7 @@ public with sharing class FORM_ServiceGiftEntry {
 
         if (columnHeaders.isEmpty()) {
             //populate column headers with default headers
-            columnHeaders = populateDefaultColumnHeaders(listName, listNameDevName);
+            columnHeaders = populateDefaultColumnHeaders(listName);
         }
 
         FORM_PermissionValidator validator = new FORM_PermissionValidator(
@@ -361,17 +361,15 @@ public with sharing class FORM_ServiceGiftEntry {
     /**
      * @description Method to populate default column headers for the Gift Entry list view tables
      * @param listName
-     * @param listNameDevName
      * @return {Custom_Column_Header__c}
     */
-    private static Custom_Column_Header__c[] populateDefaultColumnHeaders(String listName, String listNameDevName) {
+    private static Custom_Column_Header__c[] populateDefaultColumnHeaders(String listName) {
         Custom_Column_Header__c[] columnHeaders = new Custom_Column_Header__c[]{};
         Integer index = 0;
         for (String field : buildListViewDefaultFields(listName)) {
             index++;
             Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
-            columnHeader.Field_Api_Name__c = UTIL_Describe.getFieldDescribe(
-                    UTIL_Namespace.StrTokenNSPrefix(listNameDevName), field).getLocalName();
+            columnHeader.Field_Api_Name__c = field;
             columnHeader.Index__c = index;
             columnHeader.Name = GE_GiftEntry_UTIL.generateId();
             columnHeader.List_Name__c = listName;
@@ -391,17 +389,17 @@ public with sharing class FORM_ServiceGiftEntry {
         if (listName == TEMPLATES) {
             defaultFields = new List<String> {
                     'Name',
-                    'Description__c',
+                    UTIL_Namespace.StrTokenNSPrefix('Description__c'),
                     'CreatedById',
                     'LastModifiedDate'
             };
         } else if (listName == BATCHES) {
             defaultFields = new List<String> {
                     'Name',
-                    'Batch_Description__c',
-                    'Form_Template__c',
-                    'Expected_Count_of_Gifts__c',
-                    'Expected_Total_Batch_Amount__c',
+                    UTIL_Namespace.StrTokenNSPrefix('Batch_Description__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('Expected_Count_of_Gifts__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('Expected_Total_Batch_Amount__c'),
                     'CreatedById',
                     'LastModifiedDate'
             };
