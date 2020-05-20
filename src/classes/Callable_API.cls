@@ -46,7 +46,7 @@ global with sharing class Callable_API implements System.Callable {
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
     * @param action string of the target action
-    * @param args name value map of arguments
+    * @param params name value map of arguments
     * @return Object returned will depend on the results of the target function otherwise it returns true
     ********************************************************************************************************/
     global Object call(String action, Map<String, Object> params) {
@@ -97,6 +97,10 @@ global with sharing class Callable_API implements System.Callable {
                 
             } when 'rd2.executedatamigration' {
                 return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
+
+            } when 'settings.enablecustomizablerollups' {
+                Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
+                return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
 
             } when else {
                 throw new MalformedMethodInvocationException(
