@@ -508,7 +508,7 @@ tasks:
                 - "UNABLE_TO_LOCK_ROW"
                 - "connection was cancelled here"
             retry_always: True
-    
+
     disable_triggers:
         class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
         description: "Disable all NPSP Trigger Handlers"
@@ -516,7 +516,7 @@ tasks:
             active: False
             namespace: npsp
             restore_file: trigger_status.yml
-    
+
     restore_triggers:
         class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
         description: "Restore all NPSP Trigger Handlers"
@@ -828,9 +828,13 @@ flows:
                 # Enables RD2 in Custom Settings. Do this before enabling CRLP so it does not create a rollup for NextDonationDate.
                 options:
                     apex: >
-                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-                        rdSettings.%%%NAMESPACE%%%isRecurringDonations2Enabled__c = true;
-                        upsert rdSettings;
+                        Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
+                        String shouldScheduleJobs = '%%%PARAM_1%%%';
+                        if (!String.isEmpty(shouldScheduleJobs)) {
+                            params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
+                        }
+                        Callable apiClass = new %%%NAMESPACE%%%Callable_Api();
+                        apiClass.call('settings.enableenhancedrecurringdonations', params);
             2:
                 task: enable_customizable_rollups
                 # Enable customizable rollups after enabling RD2
@@ -1254,7 +1258,7 @@ plans:
                         name: Configure Users
                     config_trailhead_task_ownership_marco:
                         name: Assign Event Ownership
-                    
+
     rd2:
         slug: enhanced-recurring-donations
         title: Enhanced Recurring Donations Metadata Updates
