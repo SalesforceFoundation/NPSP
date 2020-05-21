@@ -229,47 +229,11 @@ export default class rdEntryForm extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handle all types of server error
-    *   error.body is the error from apex calls
-    *   error.body.output.errors is for AuraHandledException messages
-    *   error.body.message errors is the error from wired service
-    *   error.detail.output.errors is the error from record-edit-forms
+    * @description Handle lwc when errors occur
     */
     handleError(error) {
+        this.errorMessage = this.constrcutErrorMessage(error);
         this.hasError = true;
-        this.errorMessage.header = unknownErrorLabel;
-        let message = unknownErrorLabel;
-
-        if (typeof error === 'string' || error instanceof String) {
-            message = error;
-
-        } else if (error.message) {
-            message = error.message;
-
-        } else if ((error.body && error.body.output)) {
-            if (Array.isArray(error.body) &&
-                !error.body.output.errors) {
-                message = error.body.map(e => e.message).join(', ');
-
-            } else if (typeof error.body.message === 'string' &&
-                !error.body.output.errors) {
-                message = error.body.message;
-
-            } else if (error.body.output &&
-                Array.isArray(error.body.output.errors)) {
-                message = error.body.output.errors.map(e => e.message).join(', ');
-
-            }
-
-        } else if (error.detail && error.detail.output && Array.isArray(error.detail.output.errors)) {
-            this.errorMessage.header = error.detail.message;
-            message = error.detail.output.errors.map(e => e.message).join(', ');
-
-        } else if (error.body && error.body.message) {
-            message = error.body.message;
-        }
-
-        this.errorMessage.detail = message;    
         this.isLoading = false;
 
         this.template.querySelector("[data-id='submitButton']").disabled = false;
@@ -290,6 +254,51 @@ export default class rdEntryForm extends LightningElement {
     handleSuccess(event) {
         this.showToast(event.detail.fields.Name.value);
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id});
+    }
+
+        /*******************************************************************************
+    * @description Contruct error wrapper from the error event 
+    *   error.body is the error from apex calls
+    *   error.body.output.errors is for AuraHandledException messages
+    *   error.body.message errors is the error from wired service
+    *   error.detail.output.errors is the error from record-edit-forms
+    */
+   constrcutErrorMessage(error) {
+        let header;
+        let message;
+
+        if (typeof error === 'string' || error instanceof String) {
+            message = error;
+
+        } else if (error.message) {
+            message = error.message;
+
+        } else if ((error.body && error.body.output)) {
+            if (Array.isArray(error.body) &&
+                !error.body.output.errors) {
+                message = error.body.map(e => e.message).join(', ');
+
+            } else if (typeof error.body.message === 'string' &&
+                !error.body.output.errors) {
+                message = error.body.message;
+
+            } else if (error.body.output &&
+                Array.isArray(error.body.output.errors)) {
+                message = error.body.output.errors.map(e => e.message).join(', ');
+            }
+
+        } else if (error.detail && error.detail.output && Array.isArray(error.detail.output.errors)) {
+            header = error.detail.message;
+            message = error.detail.output.errors.map(e => e.message).join(', ');
+
+        } else if (error.body && error.body.message) {
+            message = error.body.message;
+        }
+
+        return {
+            header: header || unknownErrorLabel,
+            detail: message || unknownErrorLabel
+        };
     }
 
     /*******************************************************************************
