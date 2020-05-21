@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2020 Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -47,6 +44,19 @@ public inherited sharing class RD2_RecurringDonation {
     * The Recurring Donation is considered as new if it has no related Opp
     */
     private Boolean isNew;
+
+    /**
+    * @description Indicates the converted State of the Recurring Donation from Status To State Mapping 
+    */
+    private String state {
+        get {
+            if (state == null) {
+                state = RD2_StatusMapper.getInstance().getState(rd.Status__c);
+            }
+            return state;
+        }
+        set;
+    }
 
     /**
     * @description A list of the fields that have been changed by one of the revise methods.
@@ -221,7 +231,15 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isActive() {
-        return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
+        return state == RD2_Constants.STATUS_ACTIVE;
+    }
+
+    /**
+    * @description Indicates if the Recurring Donation is lapsed
+    * @return Boolean
+    */
+    public Boolean isLapsed() {
+        return state == RD2_Constants.STATUS_LAPSED;
     }
 
     /**
@@ -229,7 +247,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isClosed() {
-        return rd.Status__c == RD2_Constants.STATUS_CLOSED;
+        return state == RD2_Constants.STATUS_CLOSED;
     }
 
     /**
@@ -275,6 +293,14 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.npe03__Total_Paid_Installments__c == null
             ? 0
             : rd.npe03__Total_Paid_Installments__c.intValue();
+    }
+
+    /**
+    * @description Return the state of the Recurring Donation.
+    * @return String 
+    */
+    public String getState() {
+        return state;
     }
 
     /**

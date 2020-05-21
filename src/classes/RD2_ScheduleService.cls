@@ -73,7 +73,7 @@ public without sharing class RD2_ScheduleService {
     public List<RecurringDonationSchedule__c> buildNewSchedules(npe03__Recurring_Donation__c rd) {
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+        if (new RD2_RecurringDonation(rd).isClosed()) {
             return newSchedules;
         }
 
@@ -121,18 +121,19 @@ public without sharing class RD2_ScheduleService {
     public TDTM_Runnable.DMLWrapper getUpdatedSchedules(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> schedules) {
 
         Date newStartDate = rd.StartDate__c;
+        Boolean isClosed = new RD2_RecurringDonation(rd).isClosed();
         TDTM_Runnable.DMLWrapper scheduleChanges = new TDTM_Runnable.DMLWrapper();
 
         if (schedules != null) {
             for (RecurringDonationSchedule__c schedule : schedules) {
 
-                if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c <= currentDate) {
+                if (!isClosed && schedule.StartDate__c <= currentDate) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
 
-                } else if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c > currentDate) {
+                } else if (!isClosed && schedule.StartDate__c > currentDate) {
                     schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
 
-                } else if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+                } else if (isClosed) {
                     schedule.EndDate__c = currentDate.addDays(-1);
                 }
 
@@ -160,6 +161,9 @@ public without sharing class RD2_ScheduleService {
     private Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
         Boolean isNeeded = false;
 
+        RD2_RecurringDonation newRDWrapper = new RD2_RecurringDonation(newRD);
+        RD2_RecurringDonation oldRDWrapper = new RD2_RecurringDonation(oldRD);
+
         // newRD should never be null.  This is a fail safe measure only.
         if (newRd == null) {
             isNeeded = false;
@@ -169,13 +173,13 @@ public without sharing class RD2_ScheduleService {
             isNeeded = true;
 
         // Invalid Installment Frequency should never result in a schedule update. This is a fail safe measure only
-        } else if (!(new RD2_RecurringDonation(newRd)).isValidInstallmentFrequency()) {
+        } else if (!newRDWrapper.isValidInstallmentFrequency()) {
             isNeeded = false;
 
         // These two special conditions should never result in a schedule update.
         } else if
-                ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
-                (newRd.Status__c == RD2_Constants.STATUS_ACTIVE && oldRd.Status__c == RD2_Constants.STATUS_LAPSED))
+                ((newRDWrapper.isLapsed() && oldRDWrapper.isActive()) ||
+                (newRDWrapper.isActive() && oldRDWrapper.isLapsed()))
         {
             isNeeded = false;
 
@@ -187,7 +191,7 @@ public without sharing class RD2_ScheduleService {
             newRd.Day_of_Month__c != oldRd.Day_of_Month__c ||
             newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
             newRd.PaymentMethod__c != oldRd.PaymentMethod__c ||
-            newRd.Status__c != oldRd.Status__c ||
+            newRDWrapper.getState() != oldRDWrapper.getState() ||
             newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c)
         {
             isNeeded = true;
@@ -767,7 +771,7 @@ public without sharing class RD2_ScheduleService {
             if (isScheduleUpdateNeeded(rd, oldRd)) {
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
                     rd.StartDate__c == null &&
-                    rd.Status__c != RD2_Constants.STATUS_CLOSED
+                    !(new RD2_RecurringDonation(rd)).isClosed()
                 ) {
                     rd.StartDate__c = currentDate;
                 }
