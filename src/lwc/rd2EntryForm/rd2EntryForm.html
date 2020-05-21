@@ -1,18 +1,18 @@
 <template>
-    <header class="slds-modal__header slds-clearfix cssEditForm">
-        <h2 class="slds-text-heading_medium slds-hyphenate header-string">
+    <header class="slds-modal__header slds-clearfix">
+        <h2 class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium">
             {header}
         </h2>
     </header>
-   
+
     <lightning-record-edit-form record-id={recordId}
                                 object-api-name="npe03__Recurring_Donation__c"
                                 onsubmit={handleSubmit}
                                 onerror={handleError}
                                 onsuccess={handleSuccess}>
 
-        <div class="slds-modal__content slds-p-around_medium">
-            <template if:true={isLoading}>
+        <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium">
+            <template if:true={isLoadingScreen}>
                 <div class="slds-grid slds-grid_align-center">
                     <div class="slds-is-relative slds-size_1-of-1">
                         <lightning-spinner alternative-text="Loading"></lightning-spinner>
@@ -21,12 +21,12 @@
                 </div>
             </template>
             <template if:true={isDataReady}>
-                <div class={cssEditForm}>
 
+                <div class={cssEditForm}>
                     <template if:true={hasError}> 
                         <c-util-page-level-message title={errorMessage.header}
                                                 subtitle={errorMessage.detail}
-                                                variant='error'>
+                                                variant="error">
                         </c-util-page-level-message>
                     </template>
                 
@@ -78,9 +78,11 @@
 
                                 <lightning-layout-item padding="horizontal-small" size="12"  small-device-size="6">
                                     <template if:true={isMultiCurrencyEnabled}>
-                                        <label for="currencyField" class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                        <lightning-input-field id="currencyField" field-name={fields.currency.apiName} variant="label-hidden" requried>
-                                        </lightning-input-field>
+                                        <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
+                                            <label for="currencyField" class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                            <lightning-input-field id="currencyField" field-name={fields.currency.apiName} variant="label-hidden" requried>
+                                            </lightning-input-field>
+                                        </div>
                                     </template>
                                 </lightning-layout-item>
 

@@ -73,17 +73,18 @@ export default class rdEntryForm extends LightningElement {
     @track hasError = false;
     @track errorMessage = {};
 
-    
-
     /*******************************************************************************
     * @description Dynamic render edit form CSS to show/hide the edit form 
     */
     get cssEditForm() {
-        return (this.isLoading && this.isSettingReady && this.isRecordReady)
-            ? 'slds-hide'
-            : '';
+        return (!this.loadingScreen)
+            ? ''
+            : 'slds-hide';
     }
-    
+
+    get isLoadingScreen() {
+        return this.isLoading || !this.isDataReady;
+    }
     /*******************************************************************************
     * @description Boolean to control if every server call is loaded
     */
@@ -247,10 +248,10 @@ export default class rdEntryForm extends LightningElement {
     *   error.detail.output.errors is the error from record-edit-forms
     */
     handleError(error) {
+        this.hasError = true;
         this.errorMessage.header = unknownErrorLabel;
         let message = unknownErrorLabel;
 
-        
         if (typeof error === 'string' || error instanceof String) {
             message = error;
 
@@ -280,10 +281,14 @@ export default class rdEntryForm extends LightningElement {
             message = error.body.message;
         }
 
-        this.errorMessage.detail = message;
+        
+        this.errorMessage.detail = message;    
         this.isLoading = false;
-        this.hasError = true;
         this.template.querySelector("[data-id='submitButton']").disabled = false;
+
+        this.template.querySelector(".slds-modal__header").scrollIntoView();
+
+
     }
 
     /*******************************************************************************
