@@ -1,6 +1,6 @@
 ({
     isSysAdmin : function(component) {
-        let userId = 'asdfsdf';
+        let userId = $A.get('$SObjectType.CurrentUser.Id');
 
         let action = component.get('c.isAdminUser');
         action.setParams({
