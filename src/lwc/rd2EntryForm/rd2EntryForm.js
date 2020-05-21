@@ -77,14 +77,11 @@ export default class rdEntryForm extends LightningElement {
     * @description Dynamic render edit form CSS to show/hide the edit form 
     */
     get cssEditForm() {
-        return (!this.loadingScreen)
+        return (!this.isLoading)
             ? ''
             : 'slds-hide';
     }
 
-    get isLoadingScreen() {
-        return this.isLoading || !this.isDataReady;
-    }
     /*******************************************************************************
     * @description Boolean to control if every server call is loaded
     */
@@ -114,7 +111,6 @@ export default class rdEntryForm extends LightningElement {
 
             if (!this.recorId) {
                 this.isRecordReady = true;
-                this.isLoading = false;
             }
         }
 
@@ -178,9 +174,7 @@ export default class rdEntryForm extends LightningElement {
         if (response.data) {
             this.record = response.data;
             this.modidifyEditHeader();
-
             this.isRecordReady = true;
-            this.isLoading = false;
         }
 
         if (response.error) {
@@ -206,6 +200,7 @@ export default class rdEntryForm extends LightningElement {
             this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
             this.handleParentIdType(response.parentSObjectType);
             this.isSettingReady = true;
+            this.isLoading = false;
         })
         .catch((error) => {
             this.isSettingReady = true;
