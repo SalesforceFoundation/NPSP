@@ -67,8 +67,8 @@ export default class rdEntryForm extends LightningElement {
     @track accountId;
 
     @track isLoading = true;
+    @track isRecordReady = false;
     isSettingReady = false;
-    isRecordReady = false;
 
     @track hasError = false;
     @track errorMessage = {};
@@ -77,16 +77,9 @@ export default class rdEntryForm extends LightningElement {
     * @description Dynamic render edit form CSS to show/hide the edit form 
     */
     get cssEditForm() {
-        return (!this.isLoading)
+        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
-    }
-
-    /*******************************************************************************
-    * @description Boolean to control if every server call is loaded
-    */
-    get isDataReady() {
-        return this.isSettingReady && this.isRecordReady;
     }
 
     /*******************************************************************************
@@ -109,7 +102,7 @@ export default class rdEntryForm extends LightningElement {
                 this.recurringDonationInfo.fields,
                 this.recurringDonationInfo.apiName);
 
-            if (!this.recorId) {
+            if (this.recordId == null) {
                 this.isRecordReady = true;
             }
         }
@@ -193,7 +186,7 @@ export default class rdEntryForm extends LightningElement {
     /*******************************************************************************
     * @description Get org setting on init of the component 
     */ 
-    async connectedCallback() {
+    connectedCallback() {
         getSetting({parentId: this.parentId})
         .then(response => {
             this.isAutoNamingEnabled = response.isAutoNamingEnabled;
