@@ -31,11 +31,6 @@ Validate And Create Required CustomField
     ...                                                  Last Soft Credit Opportunity
     ...                                                  Opportunity
 
-Validate Async Apex Jobs
-    Load page object                                     Custom                           ObjectManager
-    Load Apex Jobs
-    Validate Apex Job Status                             CRLP_RollupQueueable             Completed
-    Validate Apex Job Status                             CRLP_Contact_SoftCredit_BATCH    Completed
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
