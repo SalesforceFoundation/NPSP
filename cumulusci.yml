@@ -453,7 +453,7 @@ tasks:
             apex: initializeNPSPSettings();
 
     enable_crlp:
-        description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only). Include '-o param1 false' to NOT schedule NPSP jobs after enabling.
+        description: Enable the NPSP Customizable Rollups feature. Include '-o param1 false' to NOT schedule NPSP jobs after enabling.
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         group: NPSP
         options:
@@ -463,7 +463,9 @@ tasks:
                 if (!String.isEmpty(shouldScheduleJobs)) {
                     params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
                 }
-                Callable apiClass = new %%%NAMESPACE%%%Callable_Api();
+                String ns = ('%%%NAMESPACE%%%').replace('__','');
+                Type t = Type.forName(ns, 'Callable_Api');
+                Callable apiClass = (Callable)t.newInstance();
                 apiClass.call('settings.EnableCustomizableRollups', params);
 
     enable_incremental_rollups:
@@ -832,8 +834,18 @@ flows:
         group: NPSP
         steps:
             1:
+                task: enable_crlp
+                # Enable customizable rollups after enabling RD2
+            2:
+                task: custom_settings_value_wait
+                # Wait for CRLP to be fully enabled before continuing with data migration
+                options:
+                    object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
+                    field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
+                    value: true
+            3:
                 task: execute_anon
-                # Enables RD2 in Custom Settings. Do this before enabling CRLP so it does not create a rollup for NextDonationDate.
+                # Enables RD2 in Custom Settings.
                 options:
                     apex: >
                         Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
@@ -841,21 +853,13 @@ flows:
                         if (!String.isEmpty(shouldScheduleJobs)) {
                             params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
                         }
-                        Callable apiClass = new %%%NAMESPACE%%%Callable_Api();
+                        String ns = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(ns, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
                         apiClass.call('Settings.EnableEnhancedRecurringDonations', params);
-            2:
-                task: enable_crlp
-                # Enable customizable rollups after enabling RD2
-            3:
+            4:
                 task: deploy_rd2_config
                 # Deploys the unpackaged configuration required for RD2
-            4:
-                task: custom_settings_value_wait
-                # Wait for CRLP to be fully enabled before continuing with data migration
-                options:
-                    object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
-                    field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
-                    value: true
             5:
                 task: execute_anon
                 # Execute the data migration job in case there is any RD test data in the org
