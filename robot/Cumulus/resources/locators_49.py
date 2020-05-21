@@ -251,6 +251,7 @@ npsp_lex_locators={
         'label':'//div[./*/*[text()="{}"]]',
         },
     'gift_entry':{
+        'id':'//*[contains(@data-qa-locator,"{}")]',
         'button':'//*[@data-qa-locator="button {}"]/button',
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
         'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
