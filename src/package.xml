@@ -409,6 +409,10 @@
         <members>RD2_ScheduleService_TEST</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
+        <members>RD2_StatusMapper</members>
+        <members>RD2_StatusMapper_TEST</members>
+        <members>RD2_StatusMappingSettings_CTRL</members>
+        <members>RD2_StatusMappingSettings_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>
@@ -707,6 +711,7 @@
         <members>STG_PanelPrimaryContactRoleMerge</members>
         <members>STG_PanelRD</members>
         <members>STG_PanelRD2Enablement</members>
+        <members>STG_PanelRD2StatusMapping</members>
         <members>STG_PanelRDBatch</members>
         <members>STG_PanelRDCustomFieldMapping</members>
         <members>STG_PanelRDCustomInstallment</members>
@@ -1336,6 +1341,8 @@
         <members>Filter_Rule__mdt.Operator__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
+        <members>RecurringDonationStatusMapping__mdt.State__c</members>
+        <members>RecurringDonationStatusMapping__mdt.Status__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -1406,6 +1413,7 @@
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.StatusMappingDeploymentId__c</members>
         <members>npe03__Recurring_Donations_Settings__c.UseFiscalYearForRecurringDonationValue__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
@@ -1688,6 +1696,16 @@
         <members>RD2_ScheduleVisualizerMessageNoActiveSchedule</members>
         <members>RD2_ScheduleVisualizerMessageNoSchedule</members>
         <members>RD2_ScheduleVisualizerTitle</members>
+        <members>RD2_StatusMappingColumnState</members>
+        <members>RD2_StatusMappingColumnStatusAPIName</members>
+        <members>RD2_StatusMappingDefinitions</members>
+        <members>RD2_StatusMappingDeploymentAlreadyInProgress</members>
+        <members>RD2_StatusMappingInProgressMessage</members>
+        <members>RD2_StatusMappingIntro</members>
+        <members>RD2_StatusMappingStateUnmapped</members>
+        <members>RD2_StatusMappingSuccessMessage</members>
+        <members>RD2_StatusMustBeMapped</members>
+        <members>RD2_StatusMustBeMappedSolution</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -2873,6 +2891,7 @@
         <members>stgNavPayments</members>
         <members>stgNavPeople</members>
         <members>stgNavRD2Enablement</members>
+        <members>stgNavRD2StatusMapping</members>
         <members>stgNavRDBatch</members>
         <members>stgNavRDFieldMap</members>
         <members>stgNavRDInstallmentPeriods</members>
@@ -3058,6 +3077,7 @@
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
+        <members>RecurringDonationStatusMapping__mdt</members>
         <members>Rollup__mdt</members>
         <name>CustomObject</name>
     </types>
@@ -3386,6 +3406,13 @@
         <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
+        <members>RecurringDonationStatusMapping__mdt-de</members>
+        <members>RecurringDonationStatusMapping__mdt-en_US</members>
+        <members>RecurringDonationStatusMapping__mdt-es</members>
+        <members>RecurringDonationStatusMapping__mdt-fr</members>
+        <members>RecurringDonationStatusMapping__mdt-iw</members>
+        <members>RecurringDonationStatusMapping__mdt-ja</members>
+        <members>RecurringDonationStatusMapping__mdt-nl_NL</members>
         <members>Rollup__mdt-de</members>
         <members>Rollup__mdt-en_US</members>
         <members>Rollup__mdt-es</members>
@@ -3571,6 +3598,7 @@
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
+        <members>RecurringDonationStatusMapping__mdt-Recurring Donation Status Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
@@ -3584,6 +3612,8 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>customDatatable</members>
+        <members>customPicklistType</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>
@@ -3623,6 +3653,7 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
         <members>util</members>
