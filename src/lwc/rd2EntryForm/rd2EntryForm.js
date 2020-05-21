@@ -269,14 +269,12 @@ export default class rdEntryForm extends LightningElement {
             message = error.body.message;
         }
 
-        
         this.errorMessage.detail = message;    
         this.isLoading = false;
+
         this.template.querySelector("[data-id='submitButton']").disabled = false;
 
         this.template.querySelector(".slds-modal__header").scrollIntoView();
-
-
     }
 
     /*******************************************************************************
