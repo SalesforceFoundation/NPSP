@@ -273,7 +273,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         if (hasMetaDeployCompleted()) {
             state.isMetaConfirmed = true;
-            state.isReady = true;
             state.isMetaLaunched = true;
 
             saveEnablementState(state);
