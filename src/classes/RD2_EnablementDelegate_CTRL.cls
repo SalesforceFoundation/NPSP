@@ -263,6 +263,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
 
         enableEnhancement(rescheduleBatchJobs);
+
+        if (rescheduleBatchJobs) {
+            System.enqueueJob(new EnablementQueueable(QueueableMode.DisableRollup));
+        }
     }
 
     /***
