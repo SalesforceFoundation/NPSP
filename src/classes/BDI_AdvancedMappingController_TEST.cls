@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 @isTest
-private class BDI_AdvancedMappingControllerTest {
+private class BDI_AdvancedMappingController_TEST {
 
     @isTest
     static void userIsAdmin() {
