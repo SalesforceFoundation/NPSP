@@ -1,6 +1,6 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { isEmpty, deepClone } from 'c/utilCommon';
+import { isEmpty, isNotEmpty, deepClone } from 'c/utilCommon';
 
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
@@ -357,11 +357,13 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
         for (const element of section.elements) {
             if (element.elementType === 'field') {
                 for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                    let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                    if (objectName === apiName) {
-                        let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
-                        fieldNames.push(`${objectName}.${fieldName}`);
-                    }
+                    if (isNotEmpty(fieldMappings[fieldMappingDevName])) {
+                        let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                        if (objectName === apiName) {
+                            let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                            fieldNames.push(`${objectName}.${fieldName}`);
+                        }
+                    }                
                 }
             }
 
