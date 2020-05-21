@@ -1,4 +1,4 @@
-<aura:component implements="lightning:isUrlAddressable" controller="BDI_ManageAdvancedMappingController">
+<aura:component implements="lightning:isUrlAddressable" controller="BDI_ManageAdvancedMappingCtrl">
 
     <aura:attribute name="shouldRender" type="Boolean"
                     description="used for conditionally rendering the component based on permissions" />
