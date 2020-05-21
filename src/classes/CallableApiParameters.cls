@@ -48,6 +48,7 @@ public class CallableApiParameters {
     public static final String PARAM_CONTEXT_TYPE = 'ContextType';
     public static final String PARAM_PROCESSING_BOUNDARY = 'ProcessingBoundary';
     public static final String PARAM_DISABLE_ALLOCATION_TRIGGERS = 'DisableAllocationTriggers';
+    public static final String PARAM_SCHEDULE_JOBS = 'ScheduleJobs';
 
     private Map<String, Object> params;
 
@@ -62,6 +63,7 @@ public class CallableApiParameters {
     /**
      * @description Retrieve the specified Parameter as a String value
      * @param paramName Map key for the params collection
+     * @return String representation of that parameter
      */
     public String getString(String paramName) {
         try {
