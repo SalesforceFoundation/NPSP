@@ -256,7 +256,7 @@ export default class rdEntryForm extends LightningElement {
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id});
     }
 
-        /*******************************************************************************
+    /*******************************************************************************
     * @description Contruct error wrapper from the error event 
     *   error.body is the error from apex calls
     *   error.body.output.errors is for AuraHandledException messages
