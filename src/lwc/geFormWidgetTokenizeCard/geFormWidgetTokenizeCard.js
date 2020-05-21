@@ -37,7 +37,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         const namespace = getNamespace(DATA_IMPORT_OBJECT.objectApiName);
         if (namespace) return `/apex/${namespace}__${TOKENIZE_CARD_PAGE_NAME}`;
 
-        return `/apex/${tokenizeCardPageName}`;
+        return `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
     }
 
     async connectedCallback() {

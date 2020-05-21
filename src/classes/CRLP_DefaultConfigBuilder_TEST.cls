@@ -86,9 +86,9 @@ private class CRLP_DefaultConfigBuilder_TEST {
      */
     static testMethod void test_createDefaults_simple() {
         setupLegacySettings();
-        test.startTest();
-        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
-        test.stopTest();
+        Test.startTest();
+        new CRLP_DefaultConfigBuilder_SVC().convertLegacyRollupsIntoCustomizableRollups();
+        Test.stopTest();
 
         Integer fgCount = 0;
         Integer rlpCount = 0;
@@ -118,7 +118,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
         ));
 
         Test.startTest();
-        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+        new CRLP_DefaultConfigBuilder_SVC().convertLegacyRollupsIntoCustomizableRollups();
         Test.stopTest();
 
         Set<String> filterRuleLabels = new Set<String>();
@@ -179,7 +179,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
         ));
 
         Test.startTest();
-        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+        new CRLP_DefaultConfigBuilder_SVC().convertLegacyRollupsIntoCustomizableRollups();
         Test.stopTest();
 
         Set<String> filterRuleLabels = new Set<String>();
@@ -226,9 +226,9 @@ private class CRLP_DefaultConfigBuilder_TEST {
                 npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests,
                 npo02__Enable_Soft_Credit_Rollups__c = false
         ));
-        test.startTest();
-        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
-        test.stopTest();
+        Test.startTest();
+        new CRLP_DefaultConfigBuilder_SVC().convertLegacyRollupsIntoCustomizableRollups();
+        Test.stopTest();
 
         Integer fgCount = 0;
         Integer rlpCount = 0;
