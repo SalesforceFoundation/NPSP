@@ -127,10 +127,12 @@ public inherited sharing class STG_PanelRDHealthCheck {
         result.withRecurringDonationScope();
 
         validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
-            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+        System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
-        validateSupportedPicklistValues(supported.status, String.valueOf(npe03__Recurring_Donation__c.Status__c),
-            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+        validateRequiredPicklistValues(supported.status, String.valueOf(npe03__Recurring_Donation__c.Status__c),
+            System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
+        
+        validateStatusMapping();
 
         validateRequiredPicklistValues(supported.recurringTypes, String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
@@ -197,6 +199,27 @@ public inherited sharing class STG_PanelRDHealthCheck {
         }
     }
 
+    /**
+    * @description Validate that all RD Status are mapped to valid States
+    * @return void
+    */
+    @TestVisible
+    private void validateStatusMapping() {
+        List<SelectOption> picklistValues = 
+            UTIL_Describe.getSelectOptions(RD_SOBJECT_NAME, String.valueOf(npe03__Recurring_Donation__c.Status__c));
+
+        for (SelectOption option : picklistValues) {
+            if (!option.getDisabled() && String.isBlank(RD2_StatusMapper.getInstance().getState(option.getValue()))) {
+                result.addError(
+                    String.format(
+                        System.Label.RD2_StatusMustBeMapped,
+                        new String[] { option.getLabel()}
+                    ),
+                    System.Label.RD2_StatusMustBeMappedSolution
+                );
+            }
+        }
+    }
     /**
      * @description Validates specified stage name exists as an open stage and it is active
      * @param oppStageName Opportunity Stage Name

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Recurring Donation Status Mapping</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Recurring Donation Status Mappings</value>
+    </caseValues>
+    <fields>
+        <help><!-- Valid entries are Active, Lapsed, and Closed. --></help>
+        <label><!-- Recurring Donation State --></label>
+        <name>State__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed</masterLabel>
+            <translation><!-- Closed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lapsed</masterLabel>
+            <translation><!-- Lapsed --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- API name of the Recurring Donation Status that is mapped to a State. --></help>
+        <label><!-- Recurring Donation Status --></label>
+        <name>Status__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

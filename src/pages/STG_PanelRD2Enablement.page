@@ -1,5 +1,29 @@
 <apex:page controller="RD2_EnablementDelegate_CTRL" id="RD2_Enablement" standardStylesheets="false">
 
+    <script>
+        var j$ = jQuery.noConflict();
+
+        function displayListItem(idPanel) {
+            var node = document.getElementById(idPanel);
+            if (node === undefined || node === null) {
+                return;
+            }
+            node.classList.add('slds-tree__item');
+            node.style.display = 'block';
+
+            var childNodes = node.childNodes;
+            if (childNodes === undefined || childNodes === null) {
+                return;
+            }
+
+            for (var i = 0, size = childNodes.length; i < size; i++) {
+                if (childNodes[i].nodeName !== '#text') {
+                    childNodes[i].style.display = 'block';
+                }
+            }
+        }
+    </script>
+
     <apex:slds/>
     <apex:includeLightning/>
 
@@ -13,7 +37,10 @@
     </div>
 
     <apex:form id="form">
-        <apex:actionFunction name="refreshPanels" action="{!refreshPanels}" reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
+        <apex:actionFunction name="refreshPanels" 
+            action="{!refreshPanels}" 
+            oncomplete="displayListItem('idPanelRD2StatusMappingNav');return false;" 
+            reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRD2StatusMapping, idPanelRDInstPd, idPanelRDFieldMap"
             status="statusLoad" />
     </apex:form>
 
