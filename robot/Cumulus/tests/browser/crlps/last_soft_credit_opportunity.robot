@@ -73,7 +73,6 @@ Create Crlp For Automated Soft Credit
     Go To Page                                            Details
     ...                                                   Contact
     ...                                                   object_id=${data}[contact][Id]
-
     Run Donations Batch Process
 
     # Navigate to the contact page and asset that the rollup for the last soft credit opportunity occured
