@@ -2104,6 +2104,89 @@
         <value>Upcoming Installments</value>
     </labels>
     <labels>
+        <fullName>RD2_StatusMappingColumnState</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapping datatable State field label</shortDescription>
+        <value>State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingColumnStatusAPIName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapping datatable Status field containing the API Name</shortDescription>
+        <value>API Name</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingDefinitions</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status to state mapping definitions</shortDescription>
+        <value>&lt;b&gt;State Definitions&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Active: The donor is actively donating. NPSP creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
+&lt;li&gt;Lapsed: Donations aren&apos;t being received as expected, but NPSP still creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
+&lt;li&gt;Closed: The donor has stopped making donations for this Recurring Donation. NPSP doesn&apos;t create any new installment Opportunities.&lt;/li&gt;&lt;/ul&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingDeploymentAlreadyInProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when save action cannot start due to another deployment</shortDescription>
+        <value>You can&apos;t save a mapping while NPSP is processing another Status to State mapping.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status to state mapping page introduction and guidelines</shortDescription>
+        <value>When you create custom picklist values for Recurring Donation Status, you must map them to a State so that NPSP knows how to process records with those custom Status values.
+        &lt;br/&gt;&lt;br/&gt;If you haven&apos;t created any custom picklist values for Recurring Donation Status, there's nothing you need to map.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingInProgressMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when mapping save action succeeds</shortDescription>
+        <value>Saving Status to State mapping.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingSuccessMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when mapping save action succeeds</shortDescription>
+        <value>Status to State mapping saved.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingStateUnmapped</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>State label displayed when status is unmapped</shortDescription>
+        <value>-- Unmapped --</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMustBeMapped</fullName>
+        <categories>Recurring-Donations, Error, Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation and health check error message when status is not mapped to a state.</shortDescription>
+        <value>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMustBeMappedSolution</fullName>
+        <categories>Recurring-Donations, Error, Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation and health check solution when status is not mapped to a state.</shortDescription>
+        <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
@@ -11707,6 +11790,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>stgNavRD2Enablement</shortDescription>
         <value>Upgrade to Enhanced Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRD2StatusMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu name for the status to state mapping settings</shortDescription>
+        <value>Status to State Mapping</value>
     </labels>
     <labels>
         <fullName>stgNavRDBatch</fullName>
