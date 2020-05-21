@@ -21,7 +21,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 											  error="Current page is not a customizable rollups setting view")
 	
 	def is_rollup_present(self, object, name):
-    		""" Search for the presense of the same rollup record. Return a boolean value accordingly
+    	""" Search for the presense of the same rollup record. Return a boolean value accordingly
 		"""
 		formatted = object+": "+name
 		isPresent = False
