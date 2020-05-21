@@ -798,4 +798,4 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.npspNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
         }
     }
-}// BDI_ManageAdvancedMappingCtrl
+}
