@@ -295,7 +295,7 @@ export default class rdEntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the cancel action
     */
     handleCancel() {
-        fireEvent(this.pageRef, this.listenerEvent, { action: 'cancel' });
+        fireEvent(this.pageRef, this.listenerEvent, { action: 'cancel', recordId : this.recordId });
     }
 
     /*******************************************************************************
