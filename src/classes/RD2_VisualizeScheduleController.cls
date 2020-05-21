@@ -84,8 +84,8 @@ public with sharing class RD2_VisualizeScheduleController {
     public static Map<String, Object> getInstallments(Id recordId, Integer displayNum) {
         validate(recordId);
 
-        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
-        DataTable dataTable = buildInstallmentDataTable(rd);
+        RD2_RecurringDonation rd = getRecurringDonation(recordId);
+        DataTable dataTable = buildInstallmentDataTable(rd.getSObject());
 
         if (dataTable.getColumns().isEmpty()) {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSInstallment);
@@ -110,16 +110,16 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param dataTable Data table to populate with projected installment records
      * @return void
      */
-    private static void getInstallmentRecords(npe03__Recurring_Donation__c rd, Integer displayNum, DataTable dataTable) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+    private static void getInstallmentRecords(RD2_RecurringDonation rd, Integer displayNum, DataTable dataTable) {
+        if (rd.isClosed()) {
             return;
         }
 
         Integer counter = 1;
-        scheduleService.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
+        scheduleService.evaluateScheduleEndDateForFixedLength(rd.getSObject(), rd.getSobject().RecurringDonationSchedules__r);
 
         for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
-            RD2_ScheduleService.currentDate, displayNum, rd.RecurringDonationSchedules__r
+            RD2_ScheduleService.currentDate, displayNum, rd.getSobject().RecurringDonationSchedules__r
         )) {
             dataTable.addRecord(new Installment(counter++, installment));
         }
@@ -134,16 +134,16 @@ public with sharing class RD2_VisualizeScheduleController {
     public static Map<String, Object> getSchedules(Id recordId) {
         validate(recordId);
 
-        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
-        DataTable dataTable = buildScheduleDataTable(rd);
+        RD2_RecurringDonation rd = getRecurringDonation(recordId);
+        DataTable dataTable = buildScheduleDataTable(rd.getSObject());
 
         if (dataTable.getColumns().size() <= 1) {//"isCurrent" field is always part of the data table fields
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
         }
 
         Integer counter = 1;
-        if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            for (RD2_ScheduleService.ActiveSchedule schedule : scheduleService.getVisualizedSchedules(rd)) {
+        if (!rd.isClosed()) {
+            for (RD2_ScheduleService.ActiveSchedule schedule : scheduleService.getVisualizedSchedules(rd.getSObject())) {
                 dataTable.addRecord(new Schedule(counter++, schedule));
             }
         }
@@ -300,8 +300,9 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param recordId Recurring Donations Id
      * @return npe03__Recurring_Donation__c
      */
-    private static npe03__Recurring_Donation__c cachedRd;
-    private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
+    @TestVisible
+    private static RD2_RecurringDonation cachedRd;
+    private static RD2_RecurringDonation getRecurringDonation(Id recordId) {
         if (cachedRd == null) {
             Set<String> queryFields = new Set<String>{
                 'Id',
@@ -331,7 +332,7 @@ public with sharing class RD2_VisualizeScheduleController {
                 .withWhere('Id = :recordId')
                 .build();
 
-            cachedRd = Database.query(soql);
+            cachedRd = new RD2_RecurringDonation(Database.query(soql));
         }
 
         return cachedRd;
