@@ -48,7 +48,8 @@ public with sharing class GE_PaymentServices {
     @TestVisible static final String API_KEY = 'apiKey';
     @TestVisible static final String BASE_URL = 'baseURL';
     @TestVisible static final String JWT_TOKEN = 'jwttoken';
-    @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantIds';
+    // Note that the casing difference between "sfdo.merchantids" and "sfdo.gatewayIds" is intentional
+    @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
     @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
     @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
     @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
@@ -128,8 +129,10 @@ public with sharing class GE_PaymentServices {
         request.setHeader(JWT_TOKEN, getJwt());
         request.setHeader(SFDO_USERNAME, UserInfo.getUserName());
         if (config.get(SFDO_MERCHANTIDS) != null) {
-            request.setHeader(SFDO_MERCHANTIDS, config.get(SFDO_MERCHANTIDS));
+            request.setHeader(SFDO_MERCHANTIDS.toLowerCase(), config.get(SFDO_MERCHANTIDS));
         }
+
+        // merchantId 
 
         // Set the body as a JSON object...
         String purchaseCallBodyString = purchaseCallBody.getAsJson();
