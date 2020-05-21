@@ -65,8 +65,8 @@ as well as many other features needed to define the workspace for the org's inte
 
 | Name                          | Type | Description                                                                                  |
 | ----------------------------- | ---- | -------------------------------------------------------------------------------------------- |
-| `enable_customizable_rollups` | Task | Enable the NPSP Customizable Rollups feature (unmanaged deploys only)                        |
-| `enable_incremental_rollups`  | Task | Configure NPSP Customizable Rollups to activate Incremental Rollups (unmanaged deploys only) |
+| `enable_crlp` | Task | Enable the NPSP Customizable Rollups feature (works for both Managed and Unmanaged)                          |
+| `enable_incremental_rollups`  | Task | Configure NPSP Customizable Rollups to activate Incremental Rollups                          |
 
 ### Static Analysis
 | Name  | Type | Description                                                                                                                     |
@@ -89,6 +89,7 @@ as well as many other features needed to define the workspace for the org's inte
 | Name                          | Type | Description                                                                         |
 | ----------------------------- | ---- | ----------------------------------------------------------------------------------- |
 | `enable_pilot_in_scratch_org` | Task | Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment |
+|  |  | Current Features That Require Pilot Access: (none) |
 
 ### User Setup
 
