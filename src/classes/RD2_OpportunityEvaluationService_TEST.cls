@@ -1520,6 +1520,72 @@ private class RD2_OpportunityEvaluationService_TEST {
             'Next Year Value should match the expected planned installment and the future open Opp amounts');
     }
 
+    /**
+     * @description Verifies that inserting Recurring Donation with status mapped to Active will creates an Installment Opportunity
+     */
+    @IsTest
+    private static void shouldCreateAnInstallmentOppWhenRDStatusIsMappedToActive() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        String newStatus = 'New';
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(newStatus, RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withStatus(newStatus)
+            .withCalculateNextDonationDate()
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), new RD2_ScheduleService().buildNewSchedules(rd));
+
+        Test.startTest();
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        evalService.rds = new List<npe03__Recurring_Donation__c>{ rd};
+        Test.stopTest();
+
+        System.assertEquals(true, evalService.isNewOpportunityCandidate(rd),
+            'RD with status mapped to Active should be considered as new opportunity candidate');
+
+    }
+
+    /**
+     * @description Verifies that inserting a Recurring Donation with Status mapped to Closed does not create an Installment Opportunity
+     */
+    @IsTest
+    private static void shouldNotCreateAnInstallmentOppWhenRDStatusIsMappedToClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        String newStatus = 'Canceled';
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(newStatus, RD2_Constants.STATUS_CLOSED);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withStatus(newStatus)
+            .withDayOfMonth('20')
+            .withCalculateNextDonationDate()
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), new RD2_ScheduleService().buildNewSchedules(rd));
+
+        Test.startTest();
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        evalService.rds = new List<npe03__Recurring_Donation__c>{ rd};
+        Test.stopTest();
+
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd),
+            'RD with status mapped to Closed state should not have a new installment Opp created');
+    }
     // Helpers
     ///////////////////
 
