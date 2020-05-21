@@ -269,14 +269,12 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         state.isConfirmed = true;
         state.isEnabled = true;
 
-        saveEnablementState(state);
-
         if (hasMetaDeployCompleted()) {
             state.isMetaConfirmed = true;
             state.isMetaLaunched = true;
-
-            saveEnablementState(state);
         }
+
+        saveEnablementState(state);
 
         System.enqueueJob(new EnablementQueueable(QueueableMode.DisableRollup));
     }
