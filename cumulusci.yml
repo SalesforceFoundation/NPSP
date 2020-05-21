@@ -858,7 +858,9 @@ flows:
                 options:
                     apex: >
                         Map<String, Object> params = new Map<String, Object>();
-                        Callable apiClass = new %%%NAMESPACE%%%Callable_Api();
+                        String ns = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(ns, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
                         apiClass.call('RD2.ExecuteDataMigration', params);
             6:
                 task: batch_apex_wait
