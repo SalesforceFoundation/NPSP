@@ -12,19 +12,19 @@
             const SUCCESS = 'SUCCESS';
             const ERROR = 'ERROR';
 
-            if(state === SUCCESS) {
+            if (state === SUCCESS) {
                 let isAdmin = response.getReturnValue();
 
-                if(isAdmin) {
+                if (isAdmin) {
                     component.set('v.shouldRender', true);
                 } else {
                     component.set('v.shouldRender', false);
                 }
-            } else if(state === ERROR) {
+            } else if (state === ERROR) {
                 let errors = response.getError();
 
-                if(errors) {
-                    if(errors[0] && errors[0].message) {
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
                         this.showToast('sticky', 'error', errors[0].message);
                     }
                 }
