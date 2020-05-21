@@ -65,7 +65,7 @@ export default class utilPageLevelMessage extends LightningElement {
     }
 
     get subtitleClass() {
-        let classNames = 'slds-p-top_x-small ';
+        let classNames = 'slds-p-horizontal_medium slds-p-vertical_xx-small ';
         if (this.variant === ERROR) {
             classNames += TEXT_ERROR;
         }
