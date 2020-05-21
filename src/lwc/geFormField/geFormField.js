@@ -282,7 +282,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldType() {
-        return this.fieldInfo.Target_Field_Data_Type;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Field_Data_Type;
+        }
     }
 
     get isLightningInput() {
@@ -313,7 +315,9 @@ export default class GeFormField extends LightningElement {
 
     @api
     get objectMappingDevName() {
-        return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+        }
     }
 
     get objectApiName() {
@@ -324,12 +328,16 @@ export default class GeFormField extends LightningElement {
 
     @api
     get fieldApiName() {
-        return this.fieldInfo.Target_Field_API_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Field_API_Name;
+        }
     }
 
     @api
     get sourceFieldAPIName() {
-        return this.fieldInfo.Source_Field_API_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Source_Field_API_Name;
+        }
     }
 
     @api
