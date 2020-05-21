@@ -1,0 +1,32 @@
+/* 
+* The "slds-truncate" applied on the column in edit mode sets overflow to hidden.
+* This overrides the overflow to visible so the picklist field options are displayed on edit.
+*/
+.slds-scope .slds-truncate {
+    overflow: visible;
+}
+
+/*
+* Sets overflow to visible for the datatable
+* so the picklist field options are displayed in the few last rows on edit.
+*/
+.slds-scope .slds-scrollable_y, 
+.slds-scope .slds-scrollable_x {
+    overflow: visible;
+}
+
+/* 
+* Removes the datatable cell box shadow when user clicks on it. 
+*/
+th.slds-has-focus, 
+td.slds-has-focus {
+    box-shadow: none !important;
+}
+
+/* 
+* Sets the row number column width on the datatable edit.
+* The row number is always displayed on edit and the property cannot be overriden.
+*/
+.slds-table_edit thead th:first-child {
+    width: 30px;
+}

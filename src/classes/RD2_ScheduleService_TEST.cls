@@ -1637,7 +1637,82 @@ private with sharing class RD2_ScheduleService_TEST {
         testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_YEARLY, startDate, null, nextDonationDateByIndex);
     }
 
+        /***
+    * @description Verifies schedule is not created when RD Status is mapped to Closed.
+    */
+    @isTest
+    private static void shouldNotCreateScheduleWhenRDStatusIsMappedToClosed() {
+        String newStatus = 'Canceled';
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStatus(newStatus)
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(newStatus, RD2_Constants.STATUS_CLOSED);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
+
+        System.assertEquals(0, schedules.size(), 'No schedule should be returned for a RD with status mapped to Closed');
+    }
+
+    /***
+    * @description Verifies new schedule is created when new RD Status is mapped to Active
+    */
+    @isTest
+    private static void shouldCreateNewScheduleWhenNewRDStatusIsMappedToActive() {
+        Date startDate = Date.newInstance(2018, 3, 17);
+        String newStatus = 'New';
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withStatus(newStatus)
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(newStatus, RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        System.assertEquals(1, schedules.size(), '1 new schedule should be created when RD status is mapped to Active.');
+        System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
+    }
+
+    /***
+    * @description Verifies new schedule is created when new RD status is mapped lapsed
+    */
+    @isTest
+    private static void shouldCreateNewScheduleWhenNewRDStatusIsMappedToLapsed() {
+        Date startDate = Date.newInstance(2018, 3, 17);
+        String newStatus = 'Outdated';
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withStatus(newStatus)
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(newStatus, RD2_Constants.STATUS_LAPSED);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        System.assertEquals(1, schedules.size(), '1 new schedule should be created when RD status is mapped to Lapsed.');
+        System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
+    }
 
     //// Helpers
     //////////////////////////
