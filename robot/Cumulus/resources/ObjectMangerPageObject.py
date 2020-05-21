@@ -12,20 +12,6 @@ from logging import exception
 class ObjectManagerPage(BaseNPSPPage, BasePage):
 	
 	@capture_screenshot_on_error
-	def load_apex_jobs(self):
-		"""To go to object manager page for a specific object"""
-		url_template = "{root}/lightning/setup/AsyncApexJobs/home"
-		url = url_template.format(root=self.cumulusci.org.lightning_base_url)
-		self.selenium.go_to(url)
-		self.salesforce.wait_until_loading_is_complete()
-		self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
-		self.npsp.choose_frame('vfFrameId')
-	
-	@capture_screenshot_on_error
-	def validate_apex_job_status(self, jobname, status):
-		self.npsp.wait_for_apexjob_to_process(jobname, status)
-	
-	@capture_screenshot_on_error
 	def open_fields_and_relationships(self, object_name):
 		"""To go to object manager page for a specific object"""
 		url_template = "{root}/lightning/setup/ObjectManager/{object}/FieldsAndRelationships/view"

@@ -869,36 +869,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     sec= sec+30
                     print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
 
-    @capture_screenshot_on_error
-    def wait_for_apexjob_to_process(self, jobname,status):
-        """Checks every 30 secs for upto 5mins for batch with given status
-        """
-        i = 0
-        sec=0
-        expected = npsp_lex_locators['crlps']['apex_job'].format(jobname,status)
-        buttons = self.selenium.driver.find_elements_by_xpath(expected)
-        while True:
-            i += 1
-            if i > 10:
-                self.selenium.capture_page_screenshot()
-                raise AssertionError("Timed out waiting for batch {} with status {} to load.".format(jobname,status))
-            
-            else:
-                try:
-                    self.selenium.wait_until_element_is_visible(buttons[0])
-                    break
-                except Exception:
-                    sec= sec+30
-                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
 
     def get_npsp_settings_value(self,field_name):
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-
-
-
     def verify_payment_details(self, numpayments):
         """Gets the payment details from the UI and compares with the expected number of payments"""
         locator = "//tbody/tr/td[2]/span/span"

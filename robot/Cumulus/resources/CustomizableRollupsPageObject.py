@@ -20,11 +20,11 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 											  message="Current page is not a custom rollup setting view")
 	
 	def is_setting_present(self, object, name):
-		""" Search for the presense of the same setting record. Return a boolean value accordingly
+		""" Search for the presence of an active crlp setting record already. Return a boolean value accordingly
 		"""
 		formatted = object+": "+name
 		isPresent = False
-		search_results = npsp_lex_locators['crlps']['setting_record'].format(formatted)
+		search_results = npsp_lex_locators['crlps']['active_setting_record'].format(formatted)
 		list_ele = self.selenium.get_webelements(search_results)
 		p_count=len(list_ele)
 		if p_count == 0:
