@@ -264,6 +264,21 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         enableEnhancement(rescheduleBatchJobs);
 
+        EnablementState state = getEnablementState();
+        state.isReady = true;
+        state.isConfirmed = true;
+        state.isEnabled = true;
+
+        saveEnablementState(state);
+
+        if (hasMetaDeployCompleted()) {
+            state.isMetaConfirmed = true;
+            state.isReady = true;
+            state.isMetaLaunched = true;
+
+            saveEnablementState(state);
+        }
+
         System.enqueueJob(new EnablementQueueable(QueueableMode.DisableRollup));
     }
 
