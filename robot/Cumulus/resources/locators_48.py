@@ -253,6 +253,7 @@ npsp_lex_locators={
     'crlps':{
         'select_locator': "//select[@name ='{}']",
         'success_toast': "//div[contains(@class,'slds-notify.slds-notify_toast,slds-theme_success')]",
+        'rollup_options':"//tr[./th//button[text()='{}']]/td//button",
        },    
     'gift_entry':{
         'id':'//*[contains(@data-qa-locator,"{}")]',

@@ -146,7 +146,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         else:
             self.builtin.log("Customizable Rollups is not enabled by default, enabling it")
             self.click_toggle_button("Customizable Rollups")
-            self.selenium.wait_until_page_contains_element(locator,timeout=60)
+            self.selenium.wait_until_page_contains_element(locator,timeout=180)
             self.builtin.log("Customizable Rollups is enabled")  
 
     def verify_gift_entry_is_not_enabled(self):
