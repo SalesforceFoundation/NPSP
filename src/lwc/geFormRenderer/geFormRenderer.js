@@ -1054,7 +1054,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         for (let [key, value] of Object.entries(fieldData)) {
             let fieldWrapper = GeFormService.getFieldMappingWrapper(key);
-            diRecord[fieldWrapper.Source_Field_API_Name] = value;
+            if (isNotEmpty(fieldWrapper)) {
+                diRecord[fieldWrapper.Source_Field_API_Name] = value;
+            }
         }
 
         // Include any fields from a user selected donation, if
