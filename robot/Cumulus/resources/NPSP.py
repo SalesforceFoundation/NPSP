@@ -1218,7 +1218,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
-        self.selenium.click_link(value) 
+        self.click_link(value) 
         
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects

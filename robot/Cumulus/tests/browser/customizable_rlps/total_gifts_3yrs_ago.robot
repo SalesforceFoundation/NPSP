@@ -6,22 +6,8 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/CustomizableRollupsPageObject.py
 Suite Setup     Run Keywords
 ...             Open Test Browser
-...             Setup Test Data
 ...             Enable Customizable Rollups
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
-
-*** Variables ***
-&{contact1_fields}       Email=test@example.com
-&{opportunity_fields}    Type=Donation   Name=Customizable rollup test $3000 Donation   Amount=3000  StageName=Closed Won  npe01__Do_Not_Automatically_Create_Payment__c=false
-
-***Keywords***
-# creates test data a contact and an opportunity for the contact
-Setup Test Data
-    Setupdata   contact   ${contact1_fields}     ${opportunity_fields}
-    ${date} =   Get Current Date    increment=1096 days       result_format=%-m/%-d/%Y
-    Log To Console  ${date}
-    Set suite variable    ${date}
-
 
 *** Test Cases ***
 
@@ -37,10 +23,22 @@ Calculate CRLPs for Total Gifts 3 Years Ago
     ...                                                   Description=The total of all gifts three calendar years ago where the Contact is the Opportunity Primary Contact.
     ...                                                   Operation=Sum
     ...                                                   Years Ago=3 Years Ago
+    
+    Verify Rollup exists        
+    ...                                                   Label=Contact: Total Gifts Three Years Ago
+    ...                                                   Active__c=true
 
-# Navigate to Contact page and run recalculate rollups option
+# create a contact and opportunity via API and verify new Rollup
+    &{contact} =     API Create Contact  FirstName=${faker.first_name()}    LastName=${faker.last_name()}
+    &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  
+    ...    StageName=Closed Won    
+    ...    Amount=3000    
+    ...    CloseDate=${date}    
+    ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
+    ...    Name=&{contact}[Name] $3000 Donation
     Go To Page                                            Details
     ...                                                   Contact
-    ...                                                   object_id=${data}[contact][Id]
-    Waitfor Actions Dropdown And Click Option             Recalculate Rollups
-    Wait Until Loading Is Complete
+    ...                                                   object_id=&{contact}[Id]
+    Navigate To And Validate Field Value                  Total Gifts Three Years Ago      contains    $3000.00
+
+
