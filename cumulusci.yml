@@ -875,21 +875,42 @@ flows:
                 # Wait until after the data migration job has completed
                 options:
                     class_name: RD2_DataMigration_BATCH
-            7:
-                task: execute_anon
-                # Execute the nightly job to update the RD records as needed
-                options:
-                    apex: >
-                        %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH();
-                        Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
+#            7:
+#                task: execute_anon
+#                # Execute the nightly job to update the RD records as needed (skipped in a beta org)
+#                options:
+#                    apex: >
+#                        if ('%%%NAMESPACE%%%' == '') {
+#                            %%%NAMESPACED_RT%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACED_RT%%%RD2_OpportunityEvaluation_BATCH();
+#                            Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
+#                        }
             8:
                 task: execute_anon
                 # Update enhanced Recurring Donation enablement page state
                 options:
-                    apex: >                        
+                    apex: >
                         npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
                         rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
-                        upsert rdSettings;                       
+                        upsert rdSettings;
+
+    deploy_rd2_testing_managed:
+        description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (managed package only)'
+        group: NPSP
+        steps:
+            1:
+                flow: deploy_rd2_testing
+                options:
+                    enable_crlp:
+                        managed: true
+                        param1: false
+                    custom_settings_value_wait:
+                        managed: true
+                    execute_anon:
+                        managed: true
+                        unmanaged: false
+                    deploy_rd2_config:
+                        managed: true
+                        unmanaged: false
 
     config_managed:
         steps:
