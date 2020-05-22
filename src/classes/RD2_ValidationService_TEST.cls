@@ -792,8 +792,8 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
-            RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            .withMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );
@@ -862,8 +862,8 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
-            RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            .withMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
         );

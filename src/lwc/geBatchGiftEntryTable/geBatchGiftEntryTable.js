@@ -14,6 +14,7 @@ import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import commonOpen from '@salesforce/label/c.commonOpen';
+import { isNotEmpty } from 'c/utilCommon';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -112,17 +113,18 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     .filter(e => e.elementType === 'field')
                     .forEach(
                     element => {
-                        const column = {
-                            label: element.label,
-                            fieldName: GeFormService.getFieldMappingWrapper(
-                                element.dataImportFieldMappingDevNames[0]
-                            ).Source_Field_API_Name,
-                            type: GeFormService.getInputTypeFromDataType(
-                                element.dataType
-                            ) === 'date' ? 'date-local' :
-                                GeFormService.getInputTypeFromDataType(element.dataType)
-                        };
-                        columns.push(column);
+                        const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+                        if (isNotEmpty(fieldWrapper)) {
+                            const column = {
+                                label: element.label,
+                                fieldName: fieldWrapper.Source_Field_API_Name,
+                                type: GeFormService.getInputTypeFromDataType(
+                                    element.dataType
+                                ) === 'date' ? 'date-local' :
+                                    GeFormService.getInputTypeFromDataType(element.dataType)
+                            };
+                            columns.push(column);
+                        }
                     }
                 );
             }

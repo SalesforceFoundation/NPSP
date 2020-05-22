@@ -1649,7 +1649,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping(newStatus, RD2_Constants.STATUS_CLOSED);
+            .withMapping(newStatus, RD2_Constants.STATUS_CLOSED);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -1674,7 +1674,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping(newStatus, RD2_Constants.STATUS_ACTIVE);
+            .withMapping(newStatus, RD2_Constants.STATUS_ACTIVE);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
@@ -1701,7 +1701,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
-            .withStatusMapping(newStatus, RD2_Constants.STATUS_LAPSED);
+            .withMapping(newStatus, RD2_Constants.STATUS_LAPSED);
         RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             mapperStub
