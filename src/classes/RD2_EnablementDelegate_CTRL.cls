@@ -453,6 +453,25 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Starts the data migration batch based onthe the Callable API request
+    * @return Id Batch Job Id
+    */
+    public static Id callableApiRunMigration() {
+        if (!RD2_EnablementService.getInstance().isRecurringDonations2Enabled()) {
+            throw new EnablementException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
+        }
+
+        if (!STG_Panel.runningUserIsAdmin()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_EnablementPermissionRequired);
+        }
+
+        setMigrationEnabled(true);
+
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        return Database.executeBatch(batch, batch.batchSize);
+    }
+
+    /***
     * @description Saves the current enablement state
     * @param state Enablement state
     * @return void
@@ -514,6 +533,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         return noLegacyRd && noMigrationRan;
     }
+
 
     /***
     * @description Represents enhanced Recurring Donation options and status
@@ -618,6 +638,5 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @description Custom enablement exception
     */
     private class EnablementException extends Exception { }
-
-
+    
 }
