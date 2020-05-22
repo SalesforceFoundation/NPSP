@@ -98,6 +98,11 @@ global with sharing class Callable_API implements System.Callable {
             } when 'rd2.executedatamigration' {
                 return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
 
+            } when 'settings.enableenhancedrecurringdonations' {
+                Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
+                RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(scheduleJobsWhenComplete);
+                return null;
+
             } when 'settings.enablecustomizablerollups' {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
