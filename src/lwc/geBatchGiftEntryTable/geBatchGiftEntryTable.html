@@ -8,6 +8,37 @@
                             class="loading">
                     </lightning-spinner>
                 </div>
+
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size=12
+                                           class="slds-p-top_small"
+                                           padding="horizontal-small">
+                        <div>
+                            <h1 class="slds-text-title_bold">{title}</h1>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 medium-device-size=6
+                                           class="slds-p-top_small"
+                                           padding="horizontal-small">
+                        <c-util-progress-bar
+                                title={geBatchGiftsCountLabel}
+                                actual-value={count}
+                                expected-value={expectedCount}>
+                        </c-util-progress-bar>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=12 medium-device-size=6
+                                           class="slds-p-top_small"
+                                           padding="horizontal-small">
+                        <c-util-progress-bar
+                                title={geBatchGiftsTotalLabel}
+                                actual-value={total}
+                                expected-value={expectedTotal}
+                                format-style="currency"
+                                currency-code="USD">
+                        </c-util-progress-bar>
+                    </lightning-layout-item>
+                </lightning-layout>
+
                 <div style="height: 20rem;">
                     <lightning-datatable
                             key-field="uid"
@@ -17,7 +48,9 @@
                             onrowaction={handleRowActions}
                             enable-infinite-loading
                             onloadmore={loadMoreData}
-                            data-qa-locator="datatable Batch Gifts">
+                            data-qa-locator="datatable Batch Gifts"
+                            count={count}
+                            total={total}>
                     </lightning-datatable>
                 </div>
             </div>
