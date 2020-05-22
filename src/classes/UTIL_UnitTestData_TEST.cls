@@ -466,7 +466,7 @@ public class UTIL_UnitTestData_TEST {
         FORM_Element widget = new FORM_Element('widget',
                                                'DisplayRule',
                                                'ComponentName',
-                                                new List<String>{'Contact_1_First_Name',                        'Contact_1_Last_Name'});
+                                                new List<String>{'Contact_1_First_Name','Contact_1_Last_Name'});
 
         FORM_Element[] elements = new FORM_Element[]{field,widget};
 
@@ -491,21 +491,21 @@ public class UTIL_UnitTestData_TEST {
 
         Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
         columnHeader.Name = 'sampleColumnHeader';
-        columnHeader.List_Name__c = 'Sample List';
+        columnHeader.List_Name__c = 'Templates';
         columnHeader.Index__c = 0;
-        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
+        columnHeader.Field_Api_Name__c = 'Name';
 
         Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
         columnHeader2.Name = 'sampleColumnHeader2';
-        columnHeader2.List_Name__c = 'Sample List 2';
+        columnHeader2.List_Name__c = 'Batches';
         columnHeader2.Index__c = 0;
-        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
+        columnHeader2.Field_Api_Name__c = 'Name';
 
         Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
         columnHeader3.Name = 'sampleColumnHeader3';
-        columnHeader3.List_Name__c = 'Sample List 2';
+        columnHeader3.List_Name__c = 'Templates1';
         columnHeader3.Index__c = 1;
-        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
+        columnHeader3.Field_Api_Name__c = 'Name';
 
         return new List<Custom_Column_Header__c> { columnHeader, columnHeader2, columnHeader3 };
     }
