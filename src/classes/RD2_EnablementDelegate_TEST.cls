@@ -160,7 +160,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isConfirmed = true;
         setEnablementState(JSON.serialize(expectedState));
 
-        stubRD2ReadyAndEnabled();
+        setEnablementDelegateRD2Enabled();
 
         RD2_EnablementDelegate_CTRL.launchMetaDeploy();
 
@@ -184,7 +184,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
 
-        stubRD2ReadyAndEnabled();
+        setEnablementDelegateRD2Enabled();
 
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
 
@@ -209,7 +209,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
 
-        stubRD2ReadyAndEnabled();
+        setEnablementDelegateRD2Enabled();
 
         //mock value that does not exist but is expected
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '32';
@@ -268,7 +268,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         insert getLegacyRecurringDonationBuilder(getContact().Id).build();
 
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
-        stubRD2ReadyAndEnabled();
+        setEnablementDelegateRD2Enabled();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
@@ -300,7 +300,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isEnabled = true;
         setEnablementState(JSON.serialize(expectedState));
 
-        stubRD2ReadyAndEnabled();
+        setEnablementDelegateRD2Enabled();
 
         RD2_EnablementDelegate_CTRL.skipDryRun();
 
@@ -319,7 +319,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isEnabled = true;
         setEnablementState(JSON.serialize(expectedState));
 
-        stubRD2ReadyAndEnabled();
+        setEnablementDelegateRD2Enabled();
 
         RD2_EnablementDelegate_CTRL.skipMigration();
 
@@ -342,10 +342,93 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Id jobId = RD2_EnablementDelegate_CTRL.runMigration();
         Test.stopTest();
 
-        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
-        System.assertEquals(1, job.JobItemsProcessed,
-            'The batch should have run with one child batch processed'
-        );
+        assertDataMigrationBatch();
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations migration batch job is executed
+     * when the call is being done via "callableApiRunMigration()"
+     */
+    @IsTest
+    private static void callableApiShouldRunMigrationWhenRD2IsEnabled() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.callableApiRunMigration();
+        Test.stopTest();
+
+        assertDataMigrationBatch();
+
+        RD2_EnablementDelegate_CTRL.EnablementState enablementState = RD2_EnablementDelegate_CTRL.getEnablementState();
+        System.assertEquals(true, enablementState.isMigrationEnabled, 
+            'Enablement state should have migration flag enabled');
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations migration batch job is not executed
+     * when enhanced Recurring Donations are not enabled
+     */
+    @IsTest
+    private static void callableApiShouldNotRunMigrationWhenRD2IsNotEnabled() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        Exception actualException;
+        try {
+            Test.startTest();
+            Id jobId = RD2_EnablementDelegate_CTRL.callableApiRunMigration();
+            Test.stopTest();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        System.assertEquals(System.Label.RD2_ErrorDataMigrationJobCannotBeRun, actualException.getMessage(), 
+            'The exception message should match');
+
+        assertNoDataMigrationBatch();
+
+        RD2_EnablementDelegate_CTRL.EnablementState enablementState = RD2_EnablementDelegate_CTRL.getEnablementState();
+        System.assertEquals(false, enablementState.isMigrationEnabled, 
+            'Enablement state should not have migration flag enabled');
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations migration batch job is not executed
+     * when user does not have System Admin permissions
+     */
+    @IsTest
+    private static void callableApiShouldNotRunMigrationWhenUserHasNoAdminPermissions() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+        
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Exception actualException;
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        System.runAs(readOnlyUser) {
+            try {
+                Test.startTest();
+                Id jobId = RD2_EnablementDelegate_CTRL.callableApiRunMigration();
+                Test.stopTest();
+
+            } catch (Exception e) {
+                actualException = e;
+            }
+        }
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        System.assertEquals(System.Label.RD2_EnablementPermissionRequired, actualException.getMessage(), 
+            'The exception message should match');
+
+        assertNoDataMigrationBatch();
     }
 
     /****
@@ -439,7 +522,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         insert getLegacyRecurringDonationBuilder(getContact().Id).build();
 
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
-        stubRD2ReadyAndEnabled();
+        setEnablementDelegateRD2Enabled();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
@@ -673,7 +756,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @description Set enablement service to return true for the enablement ready and enabled state
     * @return void
     */
-    private static void stubRD2ReadyAndEnabled() {
+    public static void setEnablementDelegateRD2Enabled() {
         RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
             RD2_EnablementService.class,
             new RD2_EnablementService_TEST.Stub()
@@ -755,5 +838,23 @@ public with sharing class RD2_EnablementDelegate_TEST {
             .withAmount(100)
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('1');
+    }
+
+    /**
+     * @description Verifies RD2 data migration batch has been executed
+     */
+    private static void assertDataMigrationBatch() {
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
+    }
+
+    /**
+     * @description Verifies RD2 data migration batch has not been executed
+     */
+    private static void assertNoDataMigrationBatch() {
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
+        System.assertEquals(null, job, 'The batch should not be executed');
     }
 }
