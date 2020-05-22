@@ -232,7 +232,7 @@ export default class rdEntryForm extends LightningElement {
     * @description Handle lwc when errors occur
     */
     handleError(error) {
-        this.errorMessage = this.constrcutErrorMessage(error);
+        this.errorMessage = this.constructErrorMessage(error);
         this.hasError = true;
         this.isLoading = false;
 
@@ -252,7 +252,7 @@ export default class rdEntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the success action
     */
     handleSuccess(event) {
-        this.showToast(event.detail.fields.Name.value);
+        this.showSuccessToast(event.detail.fields.Name.value);
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id});
     }
 
@@ -263,7 +263,7 @@ export default class rdEntryForm extends LightningElement {
     *   error.body.message errors is the error from wired service
     *   error.detail.output.errors is the error from record-edit-forms
     */
-   constrcutErrorMessage(error) {
+   constructErrorMessage(error) {
         let header;
         let message;
 
@@ -304,7 +304,7 @@ export default class rdEntryForm extends LightningElement {
     /*******************************************************************************
     * @description Fires a toast event to display success message
     */
-    showToast(recordName) {
+    showSuccessToast(recordName) {
         let succeedMessage = (this.recordId)
             ? updateSuccessMessage.replace("{0}", recordName)
             : insertSuccessMessage.replace("{0}", recordName);
