@@ -1672,6 +1672,7 @@
         <members>RD2_EnablementMigrationStopButton</members>
         <members>RD2_EnablementMigrationTitle</members>
         <members>RD2_EnablementMigrationWarning</members>
+        <members>RD2_EnablementPermissionRequired</members>
         <members>RD2_EnablementPrepIntro</members>
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>

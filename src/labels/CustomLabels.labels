@@ -1908,6 +1908,14 @@
         <value>&lt;b&gt;WARNING: Run Migration modifies existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven't already done so.&lt;/b&gt;</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementPermissionRequired</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when user does not have System Admin permissions</shortDescription>
+        <value>Only System Administrators can perform Enhanced Recurring Donations upgrade actions.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementPrepIntro</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -4776,7 +4784,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Common label for expiration date (MM/YY)</shortDescription>
         <value>MM/YY</value>
     </labels>
-    <labels>        
+    <labels>
         <fullName>commonMissingRequiredFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
