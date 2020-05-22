@@ -239,14 +239,6 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isLapsed() {
-        return state == RD2_Constants.STATUS_LAPSED;
-    }
-
-    /**
-    * @description Indicates if the Recurring Donation is lapsed
-    * @return Boolean
-    */
-    public Boolean isLapsed() {
         return rd.Status__c == RD2_Constants.STATUS_LAPSED;
     }
 
