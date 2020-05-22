@@ -5384,6 +5384,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBatchGiftsCount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for displaying the number of gifts in the batch</shortDescription>
+        <value>Count of Gifts</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsExpectedCountOrTotalMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notification about either number or total of gifts not matching expected</shortDescription>
+        <value>The expected doesn't match either the count of gifts or the amount of gifts. These values must match before you can process this batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsExpectedTotalsMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notification about number and total of gifts not matching expected</shortDescription>
+        <value>The expected and total number of gifts and amount of gifts must match before you can process this batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsTotal</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for displaying the total value of the gifts in the batch</shortDescription>
+        <value>Total Batch Amount</value>
+    </labels>
+    <labels>
         <fullName>geBodyAdvancedFieldMapping</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5398,6 +5430,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Text block about inability to set default values for Field Bundles</shortDescription>
         <value>You can't set default values for fields included in this section.</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for number of gifts entered in batch</shortDescription>
+        <value>Gifts Entered for {0}</value>
     </labels>
     <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
