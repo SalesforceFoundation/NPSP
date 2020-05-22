@@ -506,7 +506,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /**
-    * @description Verifies that when no legacy RD exists in the org, the enablement page should load the simple version 
+    * @description Verifies that when no legacy RD exists in the org, the enablement page should load the simple version
     */
     @isTest
     private static void shouldIndicateSimplePageConfigWhenNoLegacyRdExists() {
@@ -518,7 +518,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /***
-    * @description Verifies that when a legacy RD exists, the enablement page should load the full version 
+    * @description Verifies that when a legacy RD exists, the enablement page should load the full version
     */
     @isTest
     private static void shouldIndicateFullPageConfigWhenLegacyRdExists() {
@@ -533,12 +533,12 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
     /***
     * @description Verifies when the RD2 is enabled through the simple page(no migration ran and no legacy RD exists),
-    * the enablement page should stay in the simple version after the RD2 is enable and enhanced RD is created 
+    * the enablement page should stay in the simple version after the RD2 is enable and enhanced RD is created
     */
     @isTest
     private static void shouldPreserveSinglePageConfigWhenEnablingRdThroughSimplePage() {
         Boolean isSimpleVersionBefore = RD2_EnablementDelegate_CTRL.isSimpleVersion;
-        
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         insert TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -553,6 +553,74 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Test.stopTest();
 
         System.assertEquals(isSimpleVersionBefore, isSimpleVersionAfter, 'The page version should stay the same once enablement is fully completed');
+    }
+
+    /**
+     * @description Verifies RD2 can be enabled via the Callable API request
+     */
+    @IsTest
+    private static void callableApiShouldEnableRD2WhenCrlpIsEnabled() {
+        RD2_EnablementService_Test.setCustomizableRollups(true);
+
+        Test.startTest();
+        RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
+        Test.stopTest();
+
+        System.assertEquals(true,  STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c,
+            'RD2 should be enabled');
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations is not enabled when CRLP is disabled
+     */
+    @IsTest
+    private static void callableApiShouldNotEnableRD2WhenCrlpIsDisabled() {
+        RD2_EnablementService_Test.setCustomizableRollups(false);
+
+        Exception actualException;
+        try {
+            Test.startTest();
+            RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
+            Test.stopTest();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        System.assertEquals(System.Label.CRLP_DisabledMessage, actualException.getMessage(),
+            'The exception message should match');
+        System.assertEquals(false, STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c,
+            'RD2 should not be enabled');
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations are not enabled when user
+     * does not have System Admin permissions
+     */
+    @IsTest
+    private static void callableApiShouldNotEnableRD2WhenUserHasNoAdminPermissions() {
+        RD2_EnablementService_Test.setCustomizableRollups(true);
+
+        Exception actualException;
+
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        System.runAs(readOnlyUser) {
+            try {
+                Test.startTest();
+                RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(false);
+                Test.stopTest();
+
+            } catch (Exception e) {
+                actualException = e;
+            }
+        }
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        System.assertEquals(System.Label.RD2_EnablementPermissionRequired, actualException.getMessage(),
+            'The exception message should match');
+         System.assertEquals(false,  STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c,
+            'RD2 should not be enabled');
     }
 
     // Helpers
