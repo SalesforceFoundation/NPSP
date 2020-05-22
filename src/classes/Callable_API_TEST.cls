@@ -39,6 +39,7 @@ private with sharing class Callable_API_TEST {
 
     private static final String TDTM_TRIGGER_ACTION = 'TDTM.DisableAllTriggers';
     private static final String CRLP_IS_ENABLED_ACTION = 'CRLP.iscrlpenabled';
+    private static final String RD2_ENABLE_ACTION = 'Settings.EnableEnhancedRecurringDonations';
 
     /*******************************************************************************************************
     * @description verify the TDTM Callable action returns an Object
@@ -114,5 +115,24 @@ private with sharing class Callable_API_TEST {
 
         Test.stopTest();
     }
+
+     /**
+     * @description Verifies if Enhanced Recurring Donations are enabled
+     */
+    @IsTest
+    private static void shouldEnableRD2OnEnableRD2Action() {
+        RD2_EnablementService_Test.setCustomizableRollups(true);
+
+        Test.startTest();
+
+        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> args = new Map<String, Object>{ 'ScheduleJobs' => false };
+        callableApi.call(RD2_ENABLE_ACTION, args);
+
+        Test.stopTest();
+
+        System.assertEquals(true,  STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c);
+    }
+
 
 }
