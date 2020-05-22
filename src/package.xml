@@ -2115,6 +2115,11 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geBatchGiftsCount</members>
+        <members>geBatchGiftsExpectedCountOrTotalMessage</members>
+        <members>geBatchGiftsExpectedTotalsMessage</members>
+        <members>geBatchGiftsHeader</members>
+        <members>geBatchGiftsTotal</members>
         <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
@@ -3673,6 +3678,7 @@
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
+        <members>utilProgressBar</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
         <members>utilTemplateBuilder</members>
