@@ -117,11 +117,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         insert allHeaders;
         Test.stopTest();
 
-        Custom_Column_Header__c[] selectedHeaders =
-            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Sample List');
+        FORM_ServiceGiftEntry.ColumnHeaderData selectedHeaders =
+            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Templates');
 
         System.assertEquals(3, allHeaders.size());
-        System.assertEquals(1, selectedHeaders.size());
+        System.assertEquals(1, selectedHeaders.columnHeaders.size());
     }
 
     /*******************************************************************************************************
@@ -135,27 +135,27 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         insert allHeaders;
         Test.stopTest();
 
-        Custom_Column_Header__c[] selectedHeaders =
-            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Sample List 2');
+        FORM_ServiceGiftEntry.ColumnHeaderData selectedHeaders =
+            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Batches');
 
         Custom_Column_Header__c columnHeaderToKeep = new Custom_Column_Header__c();
-        columnHeaderToKeep.Name = 'sampleColumnHeader2';
-        columnHeaderToKeep.List_Name__c = 'Sample List 2';
+        columnHeaderToKeep.Name = 'sampleColumnHeader4';
+        columnHeaderToKeep.List_Name__c = 'Batches';
         columnHeaderToKeep.Index__c = 0;
-        columnHeaderToKeep.Field_Api_Name__c = 'Sample_Field_2__c';
+        columnHeaderToKeep.Field_Api_Name__c = 'Name';
 
         String columnHeaderStringToKeep = JSON.serialize(new Custom_Column_Header__c[]{columnHeaderToKeep});
 
-        FORM_ServiceGiftEntry.upsertCustomColumnHeaders(columnHeaderStringToKeep, 'Sample List 2');
+        FORM_ServiceGiftEntry.upsertCustomColumnHeaders(columnHeaderStringToKeep, 'Batches');
 
-        Custom_Column_Header__c[] updatedColumnHeadersList =
-            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Sample List 2');
+        FORM_ServiceGiftEntry.ColumnHeaderData updatedColumnHeadersList =
+            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Batches');
         
-        Custom_Column_Header__c columnHeaderToCheck = updatedColumnHeadersList[0];
+        Custom_Column_Header__c columnHeaderToCheck = updatedColumnHeadersList.columnHeaders[0];
 
-        System.assertEquals(2, selectedHeaders.size());
-        System.assertEquals(1, updatedColumnHeadersList.size());
-        System.assertEquals('Sample_Field_2__c', columnHeaderToCheck.Field_Api_Name__c);
+        System.assertEquals(1, selectedHeaders.columnHeaders.size());
+        System.assertEquals(1, updatedColumnHeadersList.columnHeaders.size());
+        System.assertEquals('Name', columnHeaderToCheck.Field_Api_Name__c);
     }
 
     /*******************************************************************************************************
