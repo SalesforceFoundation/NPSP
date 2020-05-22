@@ -5879,7 +5879,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Body of full page error when insufficient access to all objects on the form</shortDescription>
-        <value>You must have permission to edit all objects in the form. Check with your Salesforce admin about access for the following objects: {0}</value>
+        <value>Check with your Salesforce admin about your object access. You must have permission to edit the following objects: {0}</value>
     </labels>
     <labels>
         <fullName>geErrorFLSHeader</fullName>
@@ -5895,7 +5895,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Body of full page error when insufficient field access to what's on the form</shortDescription>
-        <value>You must have permission to edit all fields in the form. Check with your Salesforce admin about accessing the following fields: {0}</value>
+        <value>Check with your Salesforce admin about your field-level access. You must have permission to edit the following fields: {0}</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelAdvancedMappingBody</fullName>
