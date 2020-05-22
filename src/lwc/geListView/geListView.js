@@ -1,8 +1,19 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
-import { format, deepClone, hasNestedProperty } from 'c/utilCommon';
+import {
+    dispatch,
+    handleError,
+    generateId,
+    showToast,
+} from 'c/utilTemplateBuilder'
+import {
+    format,
+    deepClone,
+    isNotEmpty,
+    hasNestedProperty,
+} from 'c/utilCommon'
+import { fireEvent } from 'c/pubsubNoPageRef'
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -10,33 +21,14 @@ import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.up
 import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
 import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
 import userId from '@salesforce/user/Id';
-
 import USER_TIMEZONE_SID_KEY_FIELD from '@salesforce/schema/User.TimeZoneSidKey';
-
 import COLUMN_ID_INFO from '@salesforce/schema/Custom_Column_Header__c.Id';
 import COLUMN_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Name';
 import COLUMN_FIELD_API_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Field_Api_Name__c';
 import COLUMN_INDEX_INFO from '@salesforce/schema/Custom_Column_Header__c.Index__c';
 import COLUMN_LIST_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.List_Name__c';
-
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
-// import default templates list view column header fields describe info
-import FORM_TEMPLATE_NAME_INFO from '@salesforce/schema/Form_Template__c.Name';
-import FORM_TEMPLATE_DESCRIPTION_INFO from '@salesforce/schema/Form_Template__c.Description__c';
-import FORM_TEMPLATE_CREATED_BY_INFO from '@salesforce/schema/Form_Template__c.CreatedById';
-import FORM_TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
-// import default templates list view column header fields describe info
-import DATA_IMPORT_BATCH_NAME_INFO from '@salesforce/schema/DataImportBatch__c.Name';
-import DATA_IMPORT_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Description__c';
-import DATA_IMPORT_BATCH_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
-import DATA_IMPORT_EXPECTED_COUNT_GIFTS_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
-import DATA_IMPORT_EXPECTED_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
-import DATA_IMPORT_CREATED_BY_INFO from '@salesforce/schema/DataImportBatch__c.CreatedById';
-import DATA_IMPORT_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/DataImportBatch__c.LastModifiedDate';
-
-const TEMPLATES = 'Templates';
-const BATCHES = 'Batches';
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
 const DEFAULT_INCREMENT_BY = 10;
 const DEFAULT_LIMIT = 10;
@@ -229,6 +221,15 @@ export default class geListView extends LightningElement {
                 this.isLoaded = true;
             }
         }
+
+        if (response.error) {
+            // Build CRUD error and inform geHome
+            this.informGiftEntryHomeApp('listViewPermissionsChange',
+              this.CUSTOM_LABELS.geErrorObjectCRUDHeader,
+              GeLabelService.format(this.CUSTOM_LABELS.geErrorObjectCRUDBody,
+                [this.objectApiName])
+            );
+        }
     }
 
     init = async () => {
@@ -237,15 +238,22 @@ export default class geListView extends LightningElement {
 
         // Set 'Available Fields' options for the column headers
         this.options = this.buildFieldsToDisplayOptions(this.objectInfo.fields);
-
         // Get column header data
         let columnHeaderData = await this.getColumnHeaderData(this.listName)
             .catch(error => {
                 handleError(error);
             });
 
-        if (columnHeaderData === null || columnHeaderData.length < 1) {
-            columnHeaderData = this.buildDefaultColumnHeadersData(this.listName);
+        let flsErrors = columnHeaderData.permissionErrorData;
+
+        if (isNotEmpty(flsErrors)) {
+            // Inform geHome about the FLS error
+            this.informGiftEntryHomeApp('listViewPermissionsChange',
+              this.CUSTOM_LABELS.geErrorFLSHeader,
+              GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody,
+                [flsErrors])
+            );
+            return;
         }
 
         // Set currently selected column headers
@@ -327,7 +335,7 @@ export default class geListView extends LightningElement {
     };
 
     /*******************************************************************************
-    * @description Method sets the columnHeadersByFieldApiName map. Map conatains
+    * @description Method sets the columnHeadersByFieldApiName map. Map contains
     * currently selected column headers and is used to quickly find a column header
     * records based on their target field api name.
     *
@@ -335,66 +343,10 @@ export default class geListView extends LightningElement {
     */
     setSelectedColumnHeaders(columnHeaderData) {
         this.columnHeadersByFieldApiName = {};
-
-        return columnHeaderData.map(column => {
+        return columnHeaderData.columnHeaders.map(column => {
             this.columnHeadersByFieldApiName[column[COLUMN_FIELD_API_NAME_INFO.fieldApiName]] = column;
             return column[COLUMN_FIELD_API_NAME_INFO.fieldApiName]
         });
-    }
-
-    /*******************************************************************************
-    * @description Method sets the default column headers for a given list if no
-    * headers exist.
-    *
-    * @param {string} listName: Name of the list to create default headers for
-    */
-    buildDefaultColumnHeadersData(listName) {
-        let defaultFields = [];
-        let defaultColumnHeaders = [];
-
-        if (listName === TEMPLATES) {
-            defaultFields = [
-                FORM_TEMPLATE_NAME_INFO.fieldApiName,
-                FORM_TEMPLATE_DESCRIPTION_INFO.fieldApiName,
-                FORM_TEMPLATE_CREATED_BY_INFO.fieldApiName,
-                FORM_TEMPLATE_LAST_MODIFIED_DATE_INFO.fieldApiName,
-            ];
-        } else if (listName === BATCHES) {
-            defaultFields = [
-                DATA_IMPORT_BATCH_NAME_INFO.fieldApiName,
-                DATA_IMPORT_BATCH_DESCRIPTION_INFO.fieldApiName,
-                DATA_IMPORT_BATCH_TEMPLATE_INFO.fieldApiName,
-                DATA_IMPORT_EXPECTED_COUNT_GIFTS_INFO.fieldApiName,
-                DATA_IMPORT_EXPECTED_BATCH_AMOUNT_INFO.fieldApiName,
-                DATA_IMPORT_CREATED_BY_INFO.fieldApiName,
-                DATA_IMPORT_LAST_MODIFIED_DATE_INFO.fieldApiName
-            ];
-        }
-
-        for (let i = 0; i < defaultFields.length; i++) {
-            defaultColumnHeaders.push(this.constructColumnHeader(defaultFields[i], i, listName));
-        }
-
-        return defaultColumnHeaders;
-    }
-
-    /*******************************************************************************
-    * @description Method constructs an instance of Custom_Column_Header__c.
-    *
-    * @param {string} fieldApiName: Field Api Name of a field from an SObject.
-    * @param {integer} index: Desired position of the column header in the table.
-    * @param {string} listName: Value of the List_Name__c field in the
-    * Custom_Column_Header__c object for grouping a collection of headers.
-    */
-    constructColumnHeader(fieldApiName, index, listName) {
-        let columnHeader = {};
-        columnHeader[COLUMN_ID_INFO.fieldApiName] = undefined;
-        columnHeader[COLUMN_NAME_INFO.fieldApiName] = generateId();
-        columnHeader[COLUMN_FIELD_API_NAME_INFO.fieldApiName] = fieldApiName;
-        columnHeader[COLUMN_INDEX_INFO.fieldApiName] = index;
-        columnHeader[COLUMN_LIST_NAME_INFO.fieldApiName] = listName;
-
-        return columnHeader;
     }
 
     /*******************************************************************************
@@ -427,7 +379,7 @@ export default class geListView extends LightningElement {
     * fields in the utilDualListbox component. utilDualListbox is used in the list
     * settings modal.
     *
-    * @param {list} fields: List of fields from the object describe info.
+    * @param {list} headerFieldApiNames: List of fields from the object describe info.
     */
     setDatatableColumns(headerFieldApiNames) {
         this.columnEntriesByName = {};
@@ -711,5 +663,13 @@ export default class geListView extends LightningElement {
         };
 
         dispatch(this, EVENT_TOGGLE_MODAL, detail);
+    }
+
+    informGiftEntryHomeApp (eventName, messageHeader, messageBody) {
+        fireEvent(null, eventName,
+          {
+              messageBody: messageBody,
+              messageHeader: messageHeader,
+          });
     }
 }
