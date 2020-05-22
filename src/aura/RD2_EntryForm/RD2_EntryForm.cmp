@@ -1,5 +1,5 @@
 <aura:component implements="lightning:actionOverride,force:hasRecordId">
-    <aura:dependency resource="c:rdEntryForm" />
+    <aura:dependency resource="c:rd2EntryForm" />
 
     <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if open from related list"/>
     <aura:attribute name="modal" type="Object" description="Reference to the modal in which RD2 entry form is displayed"/>
@@ -8,6 +8,6 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
-    <c:utilDedicatedListener eventName="rdEntryFormEvent"
+    <c:utilDedicatedListener eventName="rd2EntryFormEvent"
                              onreceiveevent="{!c.handleModalEvent}" />
 </aura:component>

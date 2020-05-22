@@ -43,7 +43,7 @@ export default class rdEntryForm extends LightningElement {
 
     @api parentId;
     @api recordId;
-    listenerEvent = 'rdEntryFormEvent';
+    listenerEvent = 'rd2EntryFormEvent';
 
     customLabels = Object.freeze({
         cancelButtonLabel,
