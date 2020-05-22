@@ -39,7 +39,7 @@ import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccess
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
 
-export default class rdEntryForm extends LightningElement {
+export default class rd2EntryForm extends LightningElement {
 
     @api parentId;
     @api recordId;
