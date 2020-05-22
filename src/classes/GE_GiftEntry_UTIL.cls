@@ -54,4 +54,17 @@ public with sharing class GE_GiftEntry_UTIL {
             throw new AuraHandledException(e.getMessage());
         }
     }
+
+    /*******************************************************************************************************
+    * @description @description Creates a 'unique' id made to look like a UUID..
+    *
+    * @return {String} guid: Generated UUID.
+    */
+    public static String generateId() {
+        Blob key = Crypto.generateAesKey(128);
+        String hexString = EncodingUtil.convertToHex(key);
+        String generateUniqueId = hexString.substring(0,8)+ '-' + hexString.substring(8,12) +
+                '-' + hexString.substring(12,16) + '-' + hexString.substring(16,20) + '-' + hexString.substring(20);
+        return generateUniqueId;
+    }
 }
