@@ -239,7 +239,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isLapsed() {
-        return rd.Status__c == RD2_Constants.STATUS_LAPSED;
+        return state == RD2_Constants.STATUS_LAPSED;
     }
 
     /**
