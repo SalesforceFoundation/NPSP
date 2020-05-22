@@ -802,9 +802,9 @@ public class ALLO_AllocationsRecalculateService_TEST {
 
         allocRecalcSvc.processPaymentAllocations();
 
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 3, 'After Process Payment Allocations - Delete List');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 4, 'After Process Payment Allocations - Insert List');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 8, 'After Process Payment Allocations - Update List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 6, 'After Process Payment Allocations - Delete List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 3, 'After Process Payment Allocations - Insert List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 5, 'After Process Payment Allocations - Update List');
 
         Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>([SELECT    Id,
                                                                             (SELECT     Id
@@ -879,17 +879,17 @@ public class ALLO_AllocationsRecalculateService_TEST {
         alloc1 = null;
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[4].Id, 0, null, defaultGAU.Id, message + 'Update - Allocation 0');
 
-        // Opportunity 6, Payment 5  - (null), Default Allocation needs resizing
+        // Opportunity 6, Payment 5  - (null), Default Allocation to remove
         //                             Payment Allocations (Default GAU, $10)
         //                             Proposed Allocation DML: Updates (Default GAU, $0)
         message = 'Opportunity 6, Payment 5 - ';
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForInsertByPmtId.get(pmts[5].Id), null, message + 'Allocations - Insert');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[5].Id), 1, message + 'Allocations - Update');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[5].Id), null, message + 'Allocations - Delete');
-        allocs = allocsForUpdateByPmtId.get(pmts[5].Id);
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[5].Id), null, message + 'Allocations - Update');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[5].Id), 1, message + 'Allocations - Delete');
+        allocs = allocsForDeleteByPmtId.get(pmts[5].Id);
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
         alloc1 = null;
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[5].Id, 0, null, defaultGAU.Id, message + 'Update - Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[5].Id, 10, null, defaultGAU.Id, message + 'Delete - Allocation 0');
 
         // Opportunity 6, Payment 6  - $0, Percent Allocation to update
         //                             Payment Allocations (GAU0, 10%, $1)
@@ -903,17 +903,17 @@ public class ALLO_AllocationsRecalculateService_TEST {
         alloc1 = null;
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[6].Id, 0, 10, gaus[0].Id, message + 'Update - Allocation 0');
 
-        // Opportunity 6, Payment 7  - (null), Percent Allocation to update
+        // Opportunity 6, Payment 7  - (null), Percent Allocation to delete
         //                             Payment Allocations (GAU0, 10%, $1)
         //                             Proposed Allocation DML: Updates (GAU0, 10%, $0)
         message = 'Opportunity 6, Payment 7 - ';
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForInsertByPmtId.get(pmts[7].Id), null, message + 'Allocations - Insert');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[7].Id), 1, message + 'Allocations - Update');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[7].Id), null, message + 'Allocations - Delete');
-        allocs = allocsForUpdateByPmtId.get(pmts[7].Id);
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[7].Id), null, message + 'Allocations - Update');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[7].Id), 1, message + 'Allocations - Delete');
+        allocs = allocsForDeleteByPmtId.get(pmts[7].Id);
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
         alloc1 = null;
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[7].Id, 0, 10, gaus[0].Id, message + 'Update - Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[7].Id, 1, 10, gaus[0].Id, message + 'Delete - Allocation 0');
 
         // Opportunity 6, Payment 8  - $0, Percent Allocation to update, Default Allocation to remove
         //                             Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
@@ -929,18 +929,17 @@ public class ALLO_AllocationsRecalculateService_TEST {
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[8].Id, 0, 10, gaus[0].Id, message + 'Update - Allocation 0');
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc1, pmts[8].Id, 10, null, defaultGAU.Id, message + 'Delete - Allocation 1');
 
-        // Opportunity 6, Payment 9  - (null), Percent Allocation to update, Default Allocation to remove
+        // Opportunity 6, Payment 9  - (null), Allocations to remove
         //                             Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
         //                             Proposed Allocation DML: Updates (GAU0, 10%, $0); Deletes (Default GAU, $10)
         message = 'Opportunity 6, Payment 9 - ';
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForInsertByPmtId.get(pmts[9].Id), null, message + 'Allocations - Insert');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[9].Id), 1, message + 'Allocations - Update');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[9].Id), 1, message + 'Allocations - Delete');
-        allocs = allocsForUpdateByPmtId.get(pmts[9].Id);
-        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[9].Id), null, message + 'Allocations - Update');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[9].Id), 2, message + 'Allocations - Delete');
         allocs = allocsForDeleteByPmtId.get(pmts[9].Id);
+        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
         alloc1 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[9].Id, 0, 10, gaus[0].Id, message + 'Update - Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[9].Id, 1, 10, gaus[0].Id, message + 'Delete - Allocation 0');
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc1, pmts[9].Id, 10, null, defaultGAU.Id, message + 'Delete - Allocation 1');
 
         // Opportunity 6, Payment 10 - $0, Needs Allocations
@@ -953,15 +952,12 @@ public class ALLO_AllocationsRecalculateService_TEST {
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[10].Id, 0, 100, gaus[1].Id, message + 'Insert - Allocation 0');
 
-        // Opportunity 6, Payment 11 - (null), Needs Allocations
+        // Opportunity 6, Payment 11 - (null), No changes required
         //                             Proposed Allocation DML: Inserts (GAU1, 100%, $0)
         message = 'Opportunity 6, Payment 11 - ';
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForInsertByPmtId.get(pmts[11].Id), 1, message + 'Allocations - Insert');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForInsertByPmtId.get(pmts[11].Id), null, message + 'Allocations - Insert');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[11].Id), null, message + 'Allocations - Update');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[11].Id), null, message + 'Allocations - Delete');
-        allocs = allocsForInsertByPmtId.get(pmts[11].Id);
-        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[11].Id, 0, 100, gaus[1].Id, message + 'Insert - Allocation 0');
 
         // Opportunity 6, Payment 12 - $10, Invalid Allocation (no amount or percent)
         //                             Payment Allocations (GAU1)
@@ -982,97 +978,4 @@ public class ALLO_AllocationsRecalculateService_TEST {
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[0].Id), null, message + 'Allocations - Delete');
     }
 
-    /**
-     * @description Confirm Review Service flags Opportunity for Allocation when
-     *              Payment Amount is null and Allocations with Percent and No Amount are present
-     *              Amount should be set to zero.
-     *              Fix for W-041432
-     *              Default Allocations Enabled
-     *              Payment Allocations Enabled
-     *              [ALLO_AllocationsReviewService.evaluateAllocations]
-     */
-    @isTest
-    private static void confirmPaymentAllocationsSetAmountToZeroIfNullWhenZeroingOutPaymentAllocationsForNullAmount() {
-        ALLO_UnitTestHelper_TEST.AllocationSetupTest alloSetupTest = new ALLO_UnitTestHelper_TEST.AllocationSetupTest()
-            .disableAllocationTriggers()
-            .enableDefaultAllocations()
-            .enablePaymentAllocations()
-            .applyConfiguration();
-
-        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
-        insert ctcs;
-
-        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
-        opps[0].npe01__Do_Not_Automatically_Create_Payment__c = true;
-        insert opps;
-
-        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c> {
-            new npe01__OppPayment__c(
-                npe01__Payment_Amount__c = null,
-                npe01__Opportunity__c = opps[0].Id,
-                npe01__Scheduled_Date__c = System.today()
-            )
-        };
-
-        insert pmts;
-
-        List<General_Accounting_Unit__c> gaus = alloSetupTest.getGAUs();
-        General_Accounting_Unit__c defaultGAU = alloSetupTest.getDefaultGAU();
-
-        List<Allocation__c> allosForInsert = new list<Allocation__c> {
-            new Allocation__c(
-                Opportunity__c = opps[0].Id, Amount__c = 20, Percent__c = 100, General_Accounting_Unit__c = gaus[1].Id
-            ),
-            new Allocation__c(
-                Payment__c = pmts[0].Id, Amount__c = null, Percent__c = 10, General_Accounting_Unit__c = gaus[1].Id
-            ),
-            new Allocation__c(
-                Payment__c = pmts[0].Id, Amount__c = 18, General_Accounting_Unit__c = defaultGAU.Id
-            )
-        };
-
-        insert allosForInsert;
-
-        Set<Id> oppIdsAsSet = new Set<Id>();
-        oppIdsAsSet.add(opps[0].Id);
-
-        ALLO_AllocationsWrapper allocWrapper = new ALLO_AllocationsRetrievalService()
-            .withOpportunities(oppIdsAsSet)
-            .retrieveData()
-            .allocationsWrapper;
-
-        ALLO_AllocationsReviewService allocReviewSvc = new ALLO_AllocationsReviewService()
-            .withAllocationsWrapper(allocWrapper);
-
-        Set<Id> oppIdsForReview = allocReviewSvc.evaluateAllocations();
-
-        allocWrapper.filterTo(oppIdsForReview);
-
-        ALLO_AllocationsRecalculateService allocRecalcSvc = new ALLO_AllocationsRecalculateService()
-            .withAllocationsWrapper(allocWrapper);
-
-        allocRecalcSvc.processPaymentAllocations();
-
-        Map<Id, List<Allocation__c>> allocsForDeleteByPmtId = ALLO_UnitTestHelper_TEST.buildMapOfAllocationsByPaymentId(allocWrapper.allocationsForDelete);
-        Map<Id, List<Allocation__c>> allocsForInsertByPmtId = ALLO_UnitTestHelper_TEST.buildMapOfAllocationsByPaymentId(allocWrapper.allocationsForInsert);
-        Map<Id, List<Allocation__c>> allocsForUpdateByPmtId = ALLO_UnitTestHelper_TEST.buildMapOfAllocationsByPaymentId(allocWrapper.allocationsForUpdate);
-
-        // Payment With Null Amount Default Allocation for $18, Percent Allocation For 10% and null Amount for GAU
-        //                             Proposed Allocation DML: Update GAU1 Alloc Set Amount = 0, Delete Default Allocation
-        List<Allocation__c> allocs = null;
-        String message = 'Payment 0 - ';
-
-        Allocation__c alloc0 = null;
-        Allocation__c alloc1 = null;
-        Allocation__c alloc2 = null;
-
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForInsertByPmtId.get(pmts[0].Id), null, message + 'Allocations - Insert');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForUpdateByPmtId.get(pmts[0].Id), 1, message + 'Allocations - Update');
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByPmtId.get(pmts[0].Id), 1, message + 'Allocations - Delete');
-        allocs = allocsForUpdateByPmtId.get(pmts[0].Id);
-        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
-        allocs = allocsForDeleteByPmtId.get(pmts[0].Id);
-        alloc1 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc1, pmts[0].Id, 18, null, defaultGAU.Id, message + 'Delete - Allocation 1');
-    }
 }

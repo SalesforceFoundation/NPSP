@@ -165,10 +165,8 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
     public void copyAllocationsToTarget(SObject targetObj, Decimal sourceAmount, List<Allocation__c> sourceAllocations, Boolean copyInactiveAllocations, Boolean convertToPercentages) {
         Decimal amount = ALLO_AllocationsUtil.getAmountFor(targetObj);
 
-        Boolean isParentPayment = targetObj instanceOf npe01__OppPayment__c;
-
         // Allocations should not be copied to the target if the target object's amount is null
-        if (amount == null && !isParentPayment) {
+        if (amount == null) {
             return;
         }
 
@@ -391,9 +389,6 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
         if (parentAmount != null && parentAmount != 0) {
             return;
         }
-
-        // Will treat as zero instead of null if Payment
-        parentAmount = (isParentPaymentObj && parentAmount == null) ? 0.00 : parentAmount;
 
         Boolean requiresUpdates = false;
 

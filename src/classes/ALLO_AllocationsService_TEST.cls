@@ -976,14 +976,12 @@ public class ALLO_AllocationsService_TEST {
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[4].Id, 0, null, defaultGAU.Id, message + ' - Allocation 0');
 
-        // Opportunity 6, Payment 5  - (null), Default Allocation needs resizing
+        // Opportunity 6, Payment 5  - (null), Default Allocation needs to be deleted
         //                             Payment Allocations (Default GAU, $10)
-        //                             Result: Payment Allocations (Default GAU, $0)
+        //                             Result: Allocation Deleted
         message = baseMessage + 'Payment 5';
         allocs = allocsByPmtId.get(pmts[5].Id);
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
-        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[5].Id, 0, null, defaultGAU.Id, message + ' - Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, null, message);
 
         // Opportunity 6, Payment 6  - $0, Percent Allocation to update
         //                             Payment Allocations (GAU0, 10%, $1)
@@ -994,14 +992,12 @@ public class ALLO_AllocationsService_TEST {
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[6].Id, 0, 10, gaus[0].Id, message + ' - Allocation 0');
 
-        // Opportunity 6, Payment 7  - (null), Percent Allocation to update
+        // Opportunity 6, Payment 7  - (null), Percent Allocation present
         //                             Payment Allocations (GAU0, 10%, $1)
-        //                             Result: Payment Allocations (GAU0, 10%, $0)
+        //                             Result: Payment Allocation removed
         message = baseMessage + 'Payment 7';
         allocs = allocsByPmtId.get(pmts[7].Id);
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
-        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[7].Id, 0, 10, gaus[0].Id, message + ' - Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, null, message);
 
         // Opportunity 6, Payment 8  - $0, Percent Allocation to update, Default Allocation to remove
         //                             Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
@@ -1014,12 +1010,10 @@ public class ALLO_AllocationsService_TEST {
 
         // Opportunity 6, Payment 9  - (null), Percent Allocation to update, Default Allocation to remove
         //                             Payment Allocations (GAU0, 10%, $1), (Default GAU, $10)
-        //                             Result: Payment Allocations (GAU0, 10%, $0)
+        //                             Result: Payment Allocations removed
         message = baseMessage + 'Payment 9';
         allocs = allocsByPmtId.get(pmts[9].Id);
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
-        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[9].Id, 0, 10, gaus[0].Id, message + ' - Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, null, message);
 
         // Opportunity 6, Payment 10 - $0, Needs Allocations
         //                             Result: Payment Allocations (GAU1, 100%, $0)
@@ -1029,13 +1023,11 @@ public class ALLO_AllocationsService_TEST {
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[10].Id, 0, 100, gaus[1].Id, message + ' - Allocation 0');
 
-        // Opportunity 6, Payment 11 - (null), Needs Allocations
-        //                             Result: Payment Allocations (GAU1, 100%, $0)
+        // Opportunity 6, Payment 11 - (null), No allocations present
+        //                             Result: No change
         message = baseMessage + 'Payment 11';
         allocs = allocsByPmtId.get(pmts[11].Id);
-        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message);
-        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
-        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[11].Id, 0, 100, gaus[1].Id, message + ' - Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, null, message);
 
         // Opportunity 6, Payment 12 - $10, Invalid Allocation (no amount or percent)
         //                             Payment Allocations (GAU1)
