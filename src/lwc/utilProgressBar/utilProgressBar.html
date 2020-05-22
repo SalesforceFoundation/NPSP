@@ -1,0 +1,47 @@
+<template>
+    <lightning-layout multiple-rows="true" horizontal-align="spread">
+
+        <lightning-layout-item size=6 flexibility="auto"
+                               class="slds-float_left">
+            <span class=slds-text-title>{title}</span>
+        </lightning-layout-item>
+
+        <lightning-layout-item size=6 flexibility="auto">
+            <div class="slds-text-title slds-float_right">
+                <strong>
+                    <template if:true={isCurrency}>
+                        <lightning-formatted-number value={actualValue}
+                                                    format-style="currency"
+                                                    currency-code="USD">
+                        </lightning-formatted-number>
+                    </template>
+                    <template if:false={isCurrency}>
+                        {actualValue}
+                    </template>
+                    <template if:true={expectedValue}>
+                        <span> / </span>
+                        <template if:true={isCurrency}>
+                            <lightning-formatted-number value={expectedValue}
+                                                        format-style="currency"
+                                                        currency-code="USD">
+                            </lightning-formatted-number>
+                        </template>
+                        <template if:false={isCurrency}>
+                                {expectedValue}
+                        </template>
+                    </template>
+                </strong>
+            </div>
+        </lightning-layout-item>
+
+        <template if:true={expectedValue}>
+            <lightning-layout-item size=12 flexibility="auto"
+                                   class="slds-p-top_xx-small slds-p-bottom_small">
+                <lightning-progress-bar value={progress}
+                                        size="large">
+                </lightning-progress-bar>
+            </lightning-layout-item>
+        </template>
+
+    </lightning-layout>
+</template>

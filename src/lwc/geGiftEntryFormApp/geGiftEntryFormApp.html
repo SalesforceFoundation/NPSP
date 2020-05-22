@@ -4,7 +4,8 @@
                 batch-id={recordId}
                 is-permission-error={isPermissionError}
                 onbatchdryrun={handleBatchDryRun}
-                onedit={handleEditBatch}>
+                onedit={handleEditBatch}
+                onprocessbatch={handleProcessBatch}>
         </c-ge-batch-gift-entry-header>
         <br/>
     </template>
@@ -21,8 +22,16 @@
     <template if:false={isPermissionError}>
         <template if:true={isBatchMode}>
             <c-ge-batch-gift-entry-table
+                    title={giftsTableTitle}
+                    count={count}
+                    expected-count={expectedCountOfGifts}
+                    total={total}
+                    expected-total={expectedTotalBatchAmount}
                     batch-id={recordId}
-                    onloaddata={handleLoadData}>
+                    onloaddata={handleLoadData}
+                    ondelete={handleDelete}
+                    oncountchanged={handleCountChanged}
+                    ontotalchanged={handleTotalChanged}>
             </c-ge-batch-gift-entry-table>
         </template>
     </template>
