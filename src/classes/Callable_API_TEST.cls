@@ -116,24 +116,6 @@ private with sharing class Callable_API_TEST {
     }
 
     /**
-     * @description Verifies Enhanced Recurring Donations migration batch job is executed
-     */
-    @IsTest
-    private static void shouldRunRD2DataMigrationWhenRD2IsEnabled() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
-        Map<String, Object> args = new Map<String, Object>();
-        Object result = callableApi.call(RD2_EXECUTE_MIGRATION_ACTION, args);
-
-        Test.stopTest();
-        
-        AsyncApexJob job = new TEST_SObjectGateway.AsyncApexJobGateway()
-            .getRecord('RD2_DataMigration_BATCH');
-        System.assertNotEquals(null, job, 'The batch should be executed');
-    }
-
-    /**
      * @description Verifies if Enhanced Recurring Donations are enabled
      */
     @IsTest
@@ -151,5 +133,23 @@ private with sharing class Callable_API_TEST {
         System.assertEquals(true,  STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c);
     }
 
+    /**
+     * @description Verifies Enhanced Recurring Donations migration batch job is executed
+     */
+    @IsTest
+    private static void shouldRunRD2DataMigrationWhenRD2IsEnabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        Test.startTest();
+
+        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> args = new Map<String, Object>();
+        Object result = callableApi.call(RD2_EXECUTE_MIGRATION_ACTION, args);
+
+        Test.stopTest();
+        
+        AsyncApexJob job = new TEST_SObjectGateway.AsyncApexJobGateway()
+            .getRecord('RD2_DataMigration_BATCH');
+        System.assertNotEquals(null, job, 'The batch should be executed');
+    }
 }
