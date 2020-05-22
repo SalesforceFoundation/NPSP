@@ -265,9 +265,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         enableEnhancement(rescheduleBatchJobs);
 
         EnablementState state = getEnablementState();
-        state.isReady = true;
         state.isConfirmed = true;
-        state.isEnabled = true;
 
         if (hasMetaDeployCompleted()) {
             state.isMetaConfirmed = true;
