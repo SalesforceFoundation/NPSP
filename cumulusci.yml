@@ -862,11 +862,14 @@ flows:
                 # Deploys the unpackaged configuration required for RD2
             5:
                 task: execute_anon
-                # Execute the data migration job in case there is any RD test data in the org
+                 # Execute the data migration job in case there is any RD test data in the org
                 options:
                     apex: >
-                        %%%NAMESPACE%%%RD2_DataMigration_BATCH rdMigrationBatch = new %%%NAMESPACE%%%RD2_DataMigration_BATCH();
-                        Database.executeBatch(rdMigrationBatch, rdMigrationBatch.batchSize);
+                        Map<String, Object> params = new Map<String, Object>();
+                        String ns = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(ns, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('RD2.ExecuteDataMigration', params);
             6:
                 task: batch_apex_wait
                 # Wait until after the data migration job has completed
@@ -879,6 +882,14 @@ flows:
                     apex: >
                         %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH();
                         Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
+            8:
+                task: execute_anon
+                # Update enhanced Recurring Donation enablement page state
+                options:
+                    apex: >                        
+                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+                        rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
+                        upsert rdSettings;                       
 
     config_managed:
         steps:
