@@ -250,7 +250,7 @@ public with sharing class RD2_EnablementService_TEST {
         RD2_EnablementService.isUserRunningLightning = true;
         setPilotEnabledFeatureParameter(false);
 
-        System.assertEquals(true, service.isRecurringDonations2Ready(), 
+        System.assertEquals(true, service.isRecurringDonations2Ready(),
             'Enhancement should be ready for enablement regardless of the PilotEnabled value');
     }
 
@@ -304,7 +304,7 @@ public with sharing class RD2_EnablementService_TEST {
     * @param isEnabled Indicates if the CRLP should be enabled in the custom settings
     * @param none
     */
-    private static void setCustomizableRollups(Boolean isEnabled) {
+    public static void setCustomizableRollups(Boolean isEnabled) {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
             Customizable_Rollups_Enabled__c = isEnabled
         ));
