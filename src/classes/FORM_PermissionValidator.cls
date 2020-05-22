@@ -53,9 +53,22 @@ public with sharing class FORM_PermissionValidator {
         this.accessLevels = accessLevels;
     }
 
-    /*******************************************************************************************************
-    * @description Method for validating CRUD/FLS permissions for a template */
+    public FORM_PermissionValidator (Set<AccessLevel> accessLevels) {
+        this.accessLevels = accessLevels;
+    }
 
+    public Boolean hasObjectPermissions (String objectDevName) {
+        return isValid(objectDevName, accessLevels);
+    }
+
+    public Boolean hasFieldPermissions (String objectDevName, String fieldDevName) {
+        return isValid(objectDevName, fieldDevName, accessLevels);
+    }
+
+    /*******************************************************************************************************
+    * @description Method for validating CRUD/FLS permissions for a template
+    * @return {FORM_Template} template
+    * */
     public FORM_Template validateTemplate() {
         Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
 
@@ -109,6 +122,7 @@ public with sharing class FORM_PermissionValidator {
     * @description Perform CRUD validation on an SObject
     * @param objDevName - the API name of the SObject to validate
     * @param accessLevels - the levels of access to validate on the SObject
+    * @return {Boolean}
     */
     private Boolean isValid(String objDevName, Set<AccessLevel> accessLevels) {
 
@@ -132,6 +146,7 @@ public with sharing class FORM_PermissionValidator {
     * @param objDevName - the API name of the SObject
     * @param fieldDevName - the API name of the SObject field to validate
     * @param accessLevels - the levels of access to validate on the SObject
+    * @return {Boolean}
     */
     private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
 
@@ -156,6 +171,7 @@ public with sharing class FORM_PermissionValidator {
     * @description Performs FLS update validation, taking master-detail relationships and campaign lookups into account 
     * @param objectType - SObjectType of the object
     * @param field - SObjectField type to validate
+    * @return {Boolean}
     */
     private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field) {
         if (describeService.isMasterDetailField(field)) {
@@ -196,8 +212,9 @@ public with sharing class FORM_PermissionValidator {
     }
 
     /*******************************************************************************************************
-    * @description Format FLS errors for the UI in a readable format, pairing all fields with their                associated SObject
+    * @description Format FLS errors for the UI in a readable format, pairing all fields with their associated SObject
     * @param permissionErrorsBySObject - map of all FLS fields in error with their associated SObject
+     * @return {String} message
     */
     private static String formatFLSError(Map<String, Set<String>> permissionErrorsBySObject) {
         String message;
