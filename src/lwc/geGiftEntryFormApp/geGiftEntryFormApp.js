@@ -1,13 +1,20 @@
 /*******************************************************************************
 * @description Server / Platform  Imports
 */
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
-import { isNotEmpty, validateJSONString, format } from 'c/utilCommon';
+import { isNotEmpty, validateJSONString, format, getNamespace } from 'c/utilCommon';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
+import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
+import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
+import geBatchGiftsExpectedTotalsMessage
+    from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
+import geBatchGiftsExpectedCountOrTotalMessage
+    from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
@@ -18,6 +25,13 @@ import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServic
 * @description Schema imports
 */
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
+import BATCH_NAME
+    from '@salesforce/schema/DataImportBatch__c.Name';
+import EXPECTED_COUNT_OF_GIFTS
+    from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
+import EXPECTED_TOTAL_BATCH_AMOUNT
+    from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DI_PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
 import DI_PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
@@ -51,6 +65,7 @@ const PAYMENT_TRANSACTION_ID = DI_PAYMENT_GATEWAY_TRANSACTION_ID.fieldApiName;
 const PAYMENT_AUTHORIZED_AT = DI_PAYMENT_AUTHORIZED_AT.fieldApiName;
 const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
 const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
+const BDI_DATA_IMPORT_PAGE = 'BDI_DataImport';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -70,9 +85,18 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
+    namespace;
+    count;
+    total;
+
     get isBatchMode() {
         return this.sObjectName &&
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    }
+
+    constructor() {
+        super();
+        this.namespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
     }
 
     connectedCallback() {
@@ -115,14 +139,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     batchGiftSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         this.dataImportRecord = event.detail.dataImportRecord;
-        saveAndDryRunDataImport({ batchId: this.recordId, dataImport: this.dataImportRecord })
+        saveAndDryRunDataImport({batchId: this.recordId, dataImport: this.dataImportRecord})
             .then((result) => {
                 let dataImportModel = JSON.parse(result);
                 Object.assign(dataImportModel.dataImportRows[0],
                     dataImportModel.dataImportRows[0].record);
                 table.upsertData(dataImportModel.dataImportRows[0], 'Id');
-                table.setTotalCount(dataImportModel.totalCountOfRows);
-                table.setTotalAmount(dataImportModel.totalAmountOfRows);
+                this.count = dataImportModel.totalCountOfRows;
+                this.total = dataImportModel.totalRowAmount;
                 event.detail.success(); //Re-enable the Save button
             })
             .catch(error => {
@@ -536,4 +560,105 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             }
         });
     }
+
+    get expectedCountOfGifts() {
+        return getFieldValue(this.batch.data, EXPECTED_COUNT_OF_GIFTS);
+    }
+
+    get expectedTotalBatchAmount() {
+        return getFieldValue(this.batch.data, EXPECTED_TOTAL_BATCH_AMOUNT);
+    }
+
+    get batchName() {
+        return getFieldValue(this.batch.data, BATCH_NAME);
+    }
+
+    get giftsTableTitle() {
+        return format(geBatchGiftsHeader, [this.batchName]);
+    }
+
+    @wire(getRecord, {
+        recordId: '$recordId',
+        fields: [BATCH_NAME, EXPECTED_COUNT_OF_GIFTS,
+            EXPECTED_TOTAL_BATCH_AMOUNT, REQUIRE_TOTAL_MATCH]
+    })
+    batch;
+
+    handleProcessBatch() {
+        if (this.isProcessable) {
+            this.navigateToDataImportProcessingPage();
+        } else {
+            if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+                handleError(geBatchGiftsExpectedTotalsMessage);
+            } else {
+                handleError(geBatchGiftsExpectedCountOrTotalMessage);
+            }
+        }
+    }
+
+    navigateToDataImportProcessingPage() {
+        let url = '/apex/' + this.bdiDataImportPageName +
+            '?batchId=' + this.recordId + '&retURL=' + this.recordId;
+
+        this[NavigationMixin.Navigate]({
+                type: 'standard__webPage',
+                attributes: {
+                    url: url
+                }
+            },
+            true
+        );
+    }
+
+    get bdiDataImportPageName() {
+        return this.namespace ?
+            `${this.namespace}__${BDI_DATA_IMPORT_PAGE}` :
+            BDI_DATA_IMPORT_PAGE;
+    };
+
+    get requireTotalMatch() {
+        return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
+    }
+
+    get totalsMatch() {
+        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+            return this.countMatches && this.amountMatches;
+        } else if (this.expectedCountOfGifts) {
+            return this.countMatches;
+        } else if (this.expectedTotalBatchAmount) {
+            return this.amountMatches;
+        }
+    }
+
+    get countMatches() {
+        return this.count === this.expectedCountOfGifts;
+    }
+
+    get amountMatches() {
+        return this.total === this.expectedTotalBatchAmount;
+    }
+
+    get isProcessable() {
+        if (this.totalsMatch) {
+            return true;
+        } else if (this.requireTotalMatch) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    handleDelete(event) {
+        this.count--;
+        this.total = this.total - event.detail.amount;
+    }
+
+    handleCountChanged(event) {
+        this.count = event.detail.value;
+    }
+
+    handleTotalChanged(event) {
+        this.total = event.detail.value;
+    }
+
 }

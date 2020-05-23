@@ -4,6 +4,7 @@ import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import DataImport from '@salesforce/schema/DataImport__c';
+import { registerListener } from 'c/pubsubNoPageRef'
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -20,7 +21,10 @@ export default class geHome extends LightningElement {
     @track formTemplateId;
     @track cloneFormTemplate;
     @track isLoading = true;
-    @track isAccessible = true;
+    @track isAppAccessible = true;
+    @track isListViewAccessible = true;
+    _listViewPermissionErrorHeader;
+    _listViewPermissionErrorBody;
 
     giftEntryTabName;
 
@@ -33,8 +37,10 @@ export default class geHome extends LightningElement {
     }
 
     async connectedCallback() {
-        this.isAccessible = await getPageAccess();
-        if (this.isAccessible) {
+        registerListener('listViewPermissionsChange',
+          this.handleListViewPermissionsChange, this);
+        this.isAppAccessible = await getPageAccess();
+        if (this.isAppAccessible) {
             this.setGiftEntryTabName();
             this.setInitialView();
         }
@@ -117,6 +123,22 @@ export default class geHome extends LightningElement {
     */
     toggleModal(event) {
         dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
+    }
+
+    handleListViewPermissionsChange(event) {
+        this.setListViewPermissionErrors(event);
+    }
+
+    /**
+     * @description Set permission (CRUD & FLS) errors for the geListView component
+     * @param {object} event : Event object containing the error message
+     */
+    setListViewPermissionErrors(event) {
+        this.isListViewAccessible = false;
+        if (event) {
+            this._listViewPermissionErrorBody = event.messageBody;
+            this._listViewPermissionErrorHeader = event.messageHeader;
+        }
     }
 
     get namespace() {
