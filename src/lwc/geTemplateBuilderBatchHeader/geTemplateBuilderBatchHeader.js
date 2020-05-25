@@ -22,20 +22,22 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    @track isLoading = true;
     @api batchFields;
     @api selectedBatchFields;
-    @track hasErrors;
     @api missingRequiredFields;
-    isInitialized = false;
+
+    @track isLoading = true;
+    @track hasErrors;
+
+    _isInitialized = false;
 
     get dataImportBatchName() {
         return DI_BATCH_INFO && DI_BATCH_INFO.objectApiName ? DI_BATCH_INFO.objectApiName : null;
     }
 
     renderedCallback() {
-        if (!this.isInitialized && this.isLoading === false) {
-            this.isInitialized = true;
+        if (!this._isInitialized && this.isLoading === false) {
+            this._isInitialized = true;
             this.validate();
         }
     }
