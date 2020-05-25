@@ -8,21 +8,31 @@
             <lightning-tabset variant='scoped'>
                 <lightning-tab label='Batch Table Columns'
                                class='slds-p-around_none'>
-                    <div class='slds-grid slds-wrap'>
-                        <div class='slds-size_1-of-1 slds-medium-size_3-of-12 slds-large-size_3-of-12 slds-p-around_small'>
+                    <lightning-layout>
+                        <lightning-layout-item size='12'
+                                               small-device-size='1'
+                                               medium-device-size='3'
+                                               large-device-size='3'
+                                               padding='around-small'>
                             <p class='slds-text-body_regular'>
                                 PLACEHOLDER
                             </p>
-                        </div>
-                        <div class='slds-size_1-of-1 slds-medium-size_3-of-12 slds-large-size_3-of-12 slds-p-around_small slds-border_left'>
+                        </lightning-layout-item>
+                        <lightning-layout-item size='12'
+                                               small-device-size='1'
+                                               medium-device-size='3'
+                                               large-device-size='3'
+                                               class='slds-border_left'
+                                               padding='horizontal-large'>
                             <lightning-dual-listbox name="languages"
                                                     source-label="Available"
                                                     selected-label="Selected"
                                                     options={options}
-                                                    onchange={handleChange}>
+                                                    onchange={handleChange}
+                                                    class='slds-p-top_small slds-p-bottom_large'>
                             </lightning-dual-listbox>
-                        </div>
-                    </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
                 </lightning-tab>
                 <lightning-tab label='Batch Header'
                                class='slds-p-around_none'>
