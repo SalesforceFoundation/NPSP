@@ -453,7 +453,7 @@ tasks:
             apex: initializeNPSPSettings();
 
     enable_crlp:
-        description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only). Include '-o param1 false' to NOT schedule NPSP jobs after enabling.
+        description: Enable the NPSP Customizable Rollups feature. Include '-o param1 false' to NOT schedule NPSP jobs after enabling.
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         group: NPSP
         options:
@@ -463,7 +463,9 @@ tasks:
                 if (!String.isEmpty(shouldScheduleJobs)) {
                     params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
                 }
-                Callable apiClass = new %%%NAMESPACE%%%Callable_Api();
+                String ns = ('%%%NAMESPACE%%%').replace('__','');
+                Type t = Type.forName(ns, 'Callable_Api');
+                Callable apiClass = (Callable)t.newInstance();
                 apiClass.call('settings.EnableCustomizableRollups', params);
 
     enable_incremental_rollups:
@@ -516,7 +518,7 @@ tasks:
                 - "UNABLE_TO_LOCK_ROW"
                 - "connection was cancelled here"
             retry_always: True
-    
+
     disable_triggers:
         class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
         description: "Disable all NPSP Trigger Handlers"
@@ -524,7 +526,7 @@ tasks:
             active: False
             namespace: npsp
             restore_file: trigger_status.yml
-    
+
     restore_triggers:
         class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
         description: "Restore all NPSP Trigger Handlers"
@@ -832,33 +834,42 @@ flows:
         group: NPSP
         steps:
             1:
-                task: execute_anon
-                # Enables RD2 in Custom Settings. Do this before enabling CRLP so it does not create a rollup for NextDonationDate.
-                options:
-                    apex: >
-                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-                        rdSettings.%%%NAMESPACE%%%isRecurringDonations2Enabled__c = true;
-                        upsert rdSettings;
-            2:
                 task: enable_crlp
                 # Enable customizable rollups after enabling RD2
-            3:
-                task: deploy_rd2_config
-                # Deploys the unpackaged configuration required for RD2
-            4:
+            2:
                 task: custom_settings_value_wait
                 # Wait for CRLP to be fully enabled before continuing with data migration
                 options:
                     object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
                     field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
                     value: true
-            5:
+            3:
                 task: execute_anon
-                # Execute the data migration job in case there is any RD test data in the org
+                # Enables RD2 in Custom Settings.
                 options:
                     apex: >
-                        %%%NAMESPACE%%%RD2_DataMigration_BATCH rdMigrationBatch = new %%%NAMESPACE%%%RD2_DataMigration_BATCH();
-                        Database.executeBatch(rdMigrationBatch, rdMigrationBatch.batchSize);
+                        Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
+                        String shouldScheduleJobs = '%%%PARAM_1%%%';
+                        if (!String.isEmpty(shouldScheduleJobs)) {
+                            params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
+                        }
+                        String ns = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(ns, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('Settings.EnableEnhancedRecurringDonations', params);
+            4:
+                task: deploy_rd2_config
+                # Deploys the unpackaged configuration required for RD2
+            5:
+                task: execute_anon
+                 # Execute the data migration job in case there is any RD test data in the org
+                options:
+                    apex: >
+                        Map<String, Object> params = new Map<String, Object>();
+                        String ns = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(ns, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('RD2.ExecuteDataMigration', params);
             6:
                 task: batch_apex_wait
                 # Wait until after the data migration job has completed
@@ -871,6 +882,14 @@ flows:
                     apex: >
                         %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH();
                         Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
+            8:
+                task: execute_anon
+                # Update enhanced Recurring Donation enablement page state
+                options:
+                    apex: >                        
+                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+                        rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
+                        upsert rdSettings;                       
 
     config_managed:
         steps:
@@ -1250,7 +1269,7 @@ plans:
                         name: Configure Users
                     config_trailhead_task_ownership_marco:
                         name: Assign Event Ownership
-                    
+
     rd2:
         slug: enhanced-recurring-donations
         title: Enhanced Recurring Donations Metadata Updates
