@@ -22,7 +22,8 @@ import {
     findIndexByProperty,
     getQueryParameters,
     shiftToIndex,
-    sort
+    sort,
+    getNamespace
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DONATION_RECORD_TYPE_NAME
@@ -131,10 +132,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         return this.activeTab === this.TabEnums.FORM_FIELDS_TAB ? true : false;
     }
 
-    get namespace() {
-        return this.currentNamespace ? `${this.currentNamespace}__` : '';
-    }
-
     /*******************************************************************************
     * Start getters for data-qa-locator attributes
     */
@@ -177,7 +174,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+            this.currentNamespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
 
             const queryParameters = getQueryParameters();
             // If we have no template record id, check if there's a record id in the url
