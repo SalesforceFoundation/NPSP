@@ -26,7 +26,7 @@ Calculate CRLPs for Total Gifts 3 Years Ago
     
     Verify Rollup exists        
     ...                                                   Label=Contact: Total Gifts Three Years Ago
-    ...                                                   Active__c=true
+    ...                                                   Active__c=True
 
 # create a contact and opportunity via API and verify new Rollup
     &{contact} =     API Create Contact  FirstName=${faker.first_name()}    LastName=${faker.last_name()}
