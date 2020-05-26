@@ -896,36 +896,31 @@ global with sharing class BDI_DataImportService {
         SObject destinationRecord,
         Map<String, String> mapDIFieldToDstField) {
 
-        //try {
-            Object value = dataImport.get(dataImportField);
+        Object value = dataImport.get(dataImportField);
 
-            // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
-            if (value != null && value != false) {
-                String destinationField = mapDIFieldToDstField.get(dataImportField);
+        // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
+        if (value != null && value != false) {
+            String destinationField = mapDIFieldToDstField.get(dataImportField);
 
-                // if values haven't changed, don't copy it and say the object was modified!
-                if (destinationRecord.get(destinationField) == value) {
-                    return false;
-                }
-
-                // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
-                // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
-                // null, "True", or "False"
-                if (!(value instanceof Boolean) && 
-                    fieldIsBooleanDisplayType(destinationRecord, destinationField)) {
-
-                    value = Boolean.valueOf(value);
-                }
-
-                destinationRecord.put(destinationField, value);
-                return true;
-            } else {
+            // if values haven't changed, don't copy it and say the object was modified!
+            if (destinationRecord.get(destinationField) == value) {
                 return false;
             }
-        //} catch (SObjectException soe) {
-        //    System.debug(' **** Could not access field: '+dataImportField+' due to '+soe.getMessage());
-        //    return false;
-        //}
+
+            // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
+            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
+            // null, "True", or "False"
+            if (!(value instanceof Boolean) && 
+                fieldIsBooleanDisplayType(destinationRecord, destinationField)) {
+
+                value = Boolean.valueOf(value);
+            }
+
+            destinationRecord.put(destinationField, value);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*******************************************************************************************************
