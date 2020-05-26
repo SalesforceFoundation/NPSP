@@ -467,7 +467,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     /*******************************************************************************************************
     * @description Returns a list of DataImport__c records by their ids, with fields needed for dry run
-    * @param batchId a Data Import Batch Id
     * @param dataImportIds List of Data Import Ids
     * @return DataImport__c
     */
