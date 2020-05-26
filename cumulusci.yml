@@ -875,16 +875,7 @@ flows:
                 # Wait until after the data migration job has completed
                 options:
                     class_name: RD2_DataMigration_BATCH
-#            7:
-#                task: execute_anon
-#                # Execute the nightly job to update the RD records as needed (skipped in a beta org)
-#                options:
-#                    apex: >
-#                        if ('%%%NAMESPACE%%%' == '') {
-#                            %%%NAMESPACED_RT%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACED_RT%%%RD2_OpportunityEvaluation_BATCH();
-#                            Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
-#                        }
-            8:
+            7:
                 task: execute_anon
                 # Update enhanced Recurring Donation enablement page state
                 options:
