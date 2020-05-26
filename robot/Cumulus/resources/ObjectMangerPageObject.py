@@ -20,9 +20,38 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		search_button = npsp_lex_locators['object_manager']['global_search']
 		self.salesforce.wait_until_loading_is_complete()
 		self.selenium.wait_until_page_contains_element(search_button)
+		
+	def create_lookup_field(self,field_name, related):
+		"""Creates a Lookpup field by taking in the inputs field_name and related field"""
+		lookup_locator = npsp_lex_locators['object_manager']['lookup_option']
+		next_button = npsp_lex_locators['object_manager']['button'].format("Next")
+		save_button = npsp_lex_locators['object_manager']['button'].format("Save")
+		option = npsp_lex_locators['object_manager']['select_related_option'].format(related)
+		field_label = npsp_lex_locators['object_manager']['input_field_label']
+		self.selenium.wait_until_page_contains_element(lookup_locator,60)
+		self.selenium.click_element(lookup_locator)
+		time.sleep(1)
+		self.selenium.click_element(next_button)
+		related = npsp_lex_locators['object_manager']['select_related']
+		self.selenium.wait_until_page_contains_element(related,60)
+		self.selenium.scroll_element_into_view(related)
+		self.selenium.get_webelement(related).click()
+		self.selenium.click_element(option)
+		time.sleep(2)
+		self.selenium.click_element(next_button)
+		field_label_input = self.selenium.find_element(field_label)
+		self.salesforce.populate_field('Field Label', field_name)
+		self.salesforce.populate_field('Description', "This is a custion field generated during automation")
+		self.selenium.click_element(next_button)
+		self.selenium.click_element(next_button)
+		self.selenium.click_element(next_button)
+		self.selenium.click_element(save_button)
+		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90,
+												   message="Detail page did not load in 1 min")
 	
 	@capture_screenshot_on_error
-	def create_custom_field(self, type, field_name, related_to):
+	def create_custom_field(self, type, field_name, related_to=None):
+		"""Creates a custom field based on type paramenter and the field_name """
 		search_button = npsp_lex_locators['object_manager']['global_search']
 		self.selenium.wait_until_page_contains_element(search_button,60)
 		self.selenium.get_webelement(search_button).send_keys(field_name)
@@ -41,29 +70,4 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 			self.npsp.choose_frame('vfFrameId')
 			if type == 'Lookup':
-				lookup_locator = npsp_lex_locators['object_manager']['Lookup_option']
-				next_button = npsp_lex_locators['object_manager']['button'].format("Next")
-				save_button = npsp_lex_locators['object_manager']['button'].format("Save")
-				option = npsp_lex_locators['object_manager']['select_related_option'].format(related_to)
-				field_label = npsp_lex_locators['object_manager']['input_field_label']
-				self.selenium.wait_until_page_contains_element(lookup_locator,60)
-				self.selenium.click_element(lookup_locator)
-				time.sleep(1)
-				self.selenium.click_element(next_button)
-				related = npsp_lex_locators['object_manager']['select_related']
-				self.selenium.wait_until_page_contains_element(related,60)
-				self.selenium.scroll_element_into_view(related)
-				self.selenium.get_webelement(related).click()
-				self.selenium.click_element(option)
-				time.sleep(2)
-				self.selenium.click_element(next_button)
-				field_label_input = self.selenium.find_element(field_label)
-				self.salesforce.populate_field('Field Label', field_name)
-				self.salesforce.populate_field('Description', "This is a custion field generated during automation")
-				self.selenium.click_element(next_button)
-				self.selenium.click_element(next_button)
-				self.selenium.click_element(next_button)
-				self.selenium.click_element(save_button)
-				self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90,
-												   message="Detail page did not load in 1 min")
-			
+				self.create_lookup_field(field_name,related_to)
