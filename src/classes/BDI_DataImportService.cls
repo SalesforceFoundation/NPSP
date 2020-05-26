@@ -73,6 +73,27 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description constructs the soql String to run a Data Import process for list of DataImport ids.
+    * @param dataImportIds list of data import ids to include in query
+    * @return String the soql String
+    */
+    public static String strSoqlForDataImportProcess(List<Id> dataImportIds) {
+        String dataImportQuery;
+
+        // construct or SOQL for the batch
+        dataImportQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
+        dataImportQuery += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        dataImportQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
+
+        dataImportQuery += ' AND Id =: dataImportIds';
+
+        // this ensures consistency for our test code, but also should
+        // help users figure out import problems by importing in a consistent order.
+        dataImportQuery += ' ORDER BY Name ';
+        return dataImportQuery;
+    }
+
+    /*******************************************************************************************************
     * @description constructs the soql String to run a Data Import process with or without a Batch.
     * @param batchId an optional DataImportBatch to scope the records to
     * @return String the soql String
@@ -875,31 +896,36 @@ global with sharing class BDI_DataImportService {
         SObject destinationRecord,
         Map<String, String> mapDIFieldToDstField) {
 
-        Object value = dataImport.get(dataImportField);
+        //try {
+            Object value = dataImport.get(dataImportField);
 
-        // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
-        if (value != null && value != false) {
-            String destinationField = mapDIFieldToDstField.get(dataImportField);
+            // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
+            if (value != null && value != false) {
+                String destinationField = mapDIFieldToDstField.get(dataImportField);
 
-            // if values haven't changed, don't copy it and say the object was modified!
-            if (destinationRecord.get(destinationField) == value) {
+                // if values haven't changed, don't copy it and say the object was modified!
+                if (destinationRecord.get(destinationField) == value) {
+                    return false;
+                }
+
+                // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
+                // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
+                // null, "True", or "False"
+                if (!(value instanceof Boolean) && 
+                    fieldIsBooleanDisplayType(destinationRecord, destinationField)) {
+
+                    value = Boolean.valueOf(value);
+                }
+
+                destinationRecord.put(destinationField, value);
+                return true;
+            } else {
                 return false;
             }
-
-            // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
-            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
-            // null, "True", or "False"
-            if (!(value instanceof Boolean) && 
-                fieldIsBooleanDisplayType(destinationRecord, destinationField)) {
-
-                value = Boolean.valueOf(value);
-            }
-
-            destinationRecord.put(destinationField, value);
-            return true;
-        } else {
-            return false;
-        }
+        //} catch (SObjectException soe) {
+        //    System.debug(' **** Could not access field: '+dataImportField+' due to '+soe.getMessage());
+        //    return false;
+        //}
     }
 
     /*******************************************************************************************************

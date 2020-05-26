@@ -93,6 +93,50 @@ public with sharing class BDI_ContactService {
     }
 
     /*******************************************************************************************************
+    * @description There are similar sets of fields for Contact1 and Contact2, differentiated
+    *  by which of these tokens starts the field name.
+    */    
+    private final static Set<String> contactFieldNamePrefixes = new Set<String> {
+        'Contact1',
+        'Contact2'
+    };
+    
+    /*******************************************************************************************************
+    * @description These fields, preceeded by either "Contact1" or "Contact2", are always required to 
+    *  process contacts.
+    */    
+    private final static Set<String> contactFieldNameSuffixes = new Set<String> {
+        'Imported__c',
+        '_Firstname__c',
+        '_Lastname__c',
+        '_Personal_Email__c',
+        '_Work_Email__c',
+        '_Alternate_Email__c',
+        '_Home_Phone__c',
+        '_Mobile_Phone__c',
+        '_Other_Phone__c',
+        '_Work_Phone__c'
+    };
+
+    /*******************************************************************************************************
+    * @description These fields are required to be available in order to process Contacts
+    */       
+    public static Set<String> dataImportFieldsRequiredForContactProcessing {
+        get {
+            if (dataImportFieldsRequiredForContactProcessing == null) {
+                dataImportFieldsRequiredForContactProcessing = new Set<String>();
+                for (String prefix: contactFieldNamePrefixes) {
+                    for (String suffix: contactFieldNameSuffixes) {
+                        dataImportFieldsRequiredForContactProcessing.add(prefix+suffix);
+                    }
+                }
+            }
+            return dataImportFieldsRequiredForContactProcessing;
+        }
+        set;        
+    }
+
+    /*******************************************************************************************************
     * @description handles importing or updating Contact1 and Contact2, creating their Household if none
     * exists. at completion, appropriate contact and household account lookups will be populated.
     * @return void
@@ -156,16 +200,13 @@ public with sharing class BDI_ContactService {
     * @return Boolean true if any of the contact's dikey fields are not empty
     */
     private boolean isContactSpecified(DataImport__c di, String strCx) {
-        return di.get(strCx + 'Imported__c') != null ||
-            di.get(strCx + '_Firstname__c') != null ||
-            di.get(strCx + '_Lastname__c') != null ||
-            di.get(strCx + '_Personal_Email__c') != null ||
-            di.get(strCx + '_Work_Email__c') != null ||
-            di.get(strCx + '_Alternate_Email__c') != null ||
-            di.get(strCx + '_Home_Phone__c') != null ||
-            di.get(strCx + '_Mobile_Phone__c') != null ||
-            di.get(strCx + '_Other_Phone__c') != null ||
-            di.get(strCx + '_Work_Phone__c') != null;
+        for (String suffix: contactFieldNameSuffixes) {
+            if (di.get(strCx + suffix) != null) {
+                return true;
+            } 
+        }
+        
+        return false;
     }
 
     /*******************************************************************************************************
