@@ -116,8 +116,8 @@ export default class rd2EntryForm extends LightningElement {
     }
 
    /*******************************************************************************
-   * @description Matches today's calender day into the Day of Month picklist value.
-   *    If the value does not matches the picklist value (31), return Last_Day API value
+   * @description Matches today's calender day with the RD Day of Month picklist value.
+   *    If the day does not match any picklist value(the case of 31), return api value 'Last_Day'
    * @return String Today's day in Day of Month picklist api value
    */
     getTodayDateOfMonth() {
