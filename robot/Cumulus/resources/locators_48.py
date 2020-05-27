@@ -235,11 +235,9 @@ npsp_lex_locators={
 
     'object_manager':{
         'button':'//input[@title="{}"]',
-        'lookup_option':'//td/input[@id = "dtypeY"]',
+		'input':'//input[@id="{}"]',
         'select_related':'//select[@id = "DomainEnumOrId"]',
         'select_related_option':'//select[@id = "DomainEnumOrId"]/option[@value="{}"]',
-        'input_field_label': '//input[@id="MasterLabel"]',
-        'global_search':'//input[@id="globalQuickfind"]',
         'search_result': '//tbody/tr/td/a/span[contains(text(),"{}")]'
         },
     'custom_settings':{
