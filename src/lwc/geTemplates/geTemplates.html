@@ -14,12 +14,14 @@
                                   title={CUSTOM_LABELS.geButtonNewBatch}
                                   variant="neutral"
                                   class="slds-float_right"
+                                  data-qa-locator={qaLocatorButtonNewBatch}
                                   onclick={openNewBatchWizard}>
                 </lightning-button>
                 <lightning-button label={CUSTOM_LABELS.geButtonNewSingleGift}
                                   title={CUSTOM_LABELS.geButtonNewSingleGift}
                                   variant="neutral"
                                   class="slds-float_right"
+                                  data-qa-locator={qaLocatorButtonNewSingleGift}
                                   onclick={navigateToForm}>
                 </lightning-button>
             </lightning-button-group>
@@ -34,10 +36,11 @@
         </template>
 
 
-            <lightning-tabset active-tab-value={CUSTOM_LABELS.commonTemplates}>
+            <lightning-tabset active-tab-value={CUSTOM_LABELS.commonBatches}>
 
                 <lightning-tab value={CUSTOM_LABELS.commonBatches}
                                label={CUSTOM_LABELS.commonBatches}
+                               data-qa-locator={qaLocatorBatches}
                                class="slds-p-around_none">
                     <template if:true={isLoading}>
                         <c-util-stencil row-count="5"
@@ -67,6 +70,7 @@
 
                 <lightning-tab value={CUSTOM_LABELS.commonTemplates}
                                label={CUSTOM_LABELS.commonTemplates}
+                               data-qa-locator={qaLocatorTemplates}
                                class="slds-p-around_none">
                     <template if:true={isLoading}>
                         <c-util-stencil row-count="5"

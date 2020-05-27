@@ -28,6 +28,9 @@ const RICH_TEXT_FORMATS = [
 const CURRENCY = 'currency';
 const PERCENT = 'percent';
 const DECIMAL = 'decimal';
+const DATE = 'date';
+const DATETIME = 'datetime-local';
+const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
     @track value;
@@ -63,7 +66,7 @@ export default class GeFormField extends LightningElement {
             const detail = {
                 ...event.detail,
                 objectMappingDevName: objMappingDevName
-            }
+            };
 
             const selectRecordEvent = new CustomEvent(
                 'lookuprecordselect',
@@ -149,7 +152,9 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element !== null && this.element.required) {
-            return isNotEmpty(this.value) && fieldIsValid;
+            return isNotEmpty(this.value)
+                && this.value !== this.CUSTOM_LABELS.commonLabelNone
+                && fieldIsValid;
         }
 
         return fieldIsValid;
@@ -216,6 +221,10 @@ export default class GeFormField extends LightningElement {
             // the RecordType Name
             fieldAndValue[this.formElementName] =
                 this.objectDescribeInfo.recordTypeInfos[this.value].name;
+        } else if (this.isPicklist){
+            // If the displayed value of the picklist is '--None--' treat the value as blank.
+            fieldAndValue[this.formElementName] =
+                (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
         } else {
             fieldAndValue[this.formElementName] = this.value;
         }
@@ -273,7 +282,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldType() {
-        return this.fieldInfo.Target_Field_Data_Type;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Field_Data_Type;
+        }
     }
 
     get isLightningInput() {
@@ -304,7 +315,9 @@ export default class GeFormField extends LightningElement {
 
     @api
     get objectMappingDevName() {
-        return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+        }
     }
 
     get objectApiName() {
@@ -315,12 +328,16 @@ export default class GeFormField extends LightningElement {
 
     @api
     get fieldApiName() {
-        return this.fieldInfo.Target_Field_API_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Field_API_Name;
+        }
     }
 
     @api
     get sourceFieldAPIName() {
-        return this.fieldInfo.Source_Field_API_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Source_Field_API_Name;
+        }
     }
 
     @api
@@ -535,6 +552,39 @@ export default class GeFormField extends LightningElement {
             // and set recordTypeId on sibling fields.
             this.fireLookupRecordSelectEvent();
         }
+    }
+
+    get qaLocatorBase() {
+        const rowIndex = this.getAttribute('data-qa-row');
+        if(rowIndex) {
+            return `${this.fieldLabel} ${rowIndex}`;
+        } else {
+            return this.fieldLabel;
+        }
+    }
+
+    get qaLocatorInputPrefix() {
+        switch (this.inputType) {
+            case DATE:
+            case DATETIME:
+                return 'datetime';
+            case CHECKBOX:
+                return this.inputType;
+            default:
+                return 'input';
+        }
+    }
+
+    get qaLocatorInput() {
+        return `${this.qaLocatorInputPrefix} ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorRichText() {
+        return `richtext ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorTextArea() {
+        return `textarea ${this.qaLocatorBase}`;
     }
 
 }

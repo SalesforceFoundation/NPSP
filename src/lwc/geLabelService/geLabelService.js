@@ -42,6 +42,7 @@ import commonViewAll from '@salesforce/label/c.commonViewAll';
 import commonViewMore from '@salesforce/label/c.commonViewMore';
 import commonWarning from '@salesforce/label/c.commonWarning';
 import commonYes from '@salesforce/label/c.commonYes';
+import geAddNewAllocation from '@salesforce/label/c.geAddNewAllocation';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
@@ -193,6 +194,7 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
+import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 
 class GeLabelService {
 
@@ -221,6 +223,7 @@ class GeLabelService {
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonLabelNone,
         commonGauAllocations,
         commonGeneralAccountUnit,
         commonMMYY,
@@ -244,6 +247,7 @@ class GeLabelService {
         commonViewMore,
         commonWarning,
         commonYes,
+        geAddNewAllocation,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
         geAssistiveFieldDown,

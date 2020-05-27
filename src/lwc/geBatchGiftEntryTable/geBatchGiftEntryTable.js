@@ -7,13 +7,17 @@ import GeFormService from 'c/geFormService';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD
     from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import {deleteRecord} from 'lightning/uiRecordApi';
 import {handleError} from 'c/utilTemplateBuilder';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
+import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
+import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 import commonOpen from '@salesforce/label/c.commonOpen';
+import { isNotEmpty } from 'c/utilCommon';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -48,8 +52,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     };
 
-    _totalCountOfGifts;
-    _totalAmountOfGifts;
+
+    @api title;
+    @api total;
+    @api expectedTotal;
+    @api count;
+    @api expectedCount;
     @track isLoaded = true;
 
     connectedCallback() {
@@ -67,8 +75,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
-                    this._totalCountOfGifts = dataImportModel.totalCountOfRows;
-                    this._totalAmountOfGifts = dataImportModel.totalRowAmount;
+                    this._count = dataImportModel.totalCountOfRows;
+                    this._total = dataImportModel.totalRowAmount;
                     dataImportModel.dataImportRows.forEach(row => {
                             this.data.push(
                                 Object.assign(row, row.record));
@@ -112,17 +120,18 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     .filter(e => e.elementType === 'field')
                     .forEach(
                     element => {
-                        const column = {
-                            label: element.label,
-                            fieldName: GeFormService.getFieldMappingWrapper(
-                                element.dataImportFieldMappingDevNames[0]
-                            ).Source_Field_API_Name,
-                            type: GeFormService.getInputTypeFromDataType(
-                                element.dataType
-                            ) === 'date' ? 'date-local' :
-                                GeFormService.getInputTypeFromDataType(element.dataType)
-                        };
-                        columns.push(column);
+                        const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+                        if (isNotEmpty(fieldWrapper)) {
+                            const column = {
+                                label: element.label,
+                                fieldName: fieldWrapper.Source_Field_API_Name,
+                                type: GeFormService.getInputTypeFromDataType(
+                                    element.dataType
+                                ) === 'date' ? 'date-local' :
+                                    GeFormService.getInputTypeFromDataType(element.dataType)
+                            };
+                            columns.push(column);
+                        }
                     }
                 );
             }
@@ -152,16 +161,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     }
 
-    @api
-    setTotalCount(value) {
-        this._totalCountOfGifts = value;
-    }
-
-    @api
-    setTotalAmount(value) {
-        this._totalAmountOfGifts = value;
-    }
-
     handleRowActions(event) {
         switch (event.detail.action.name) {
             case 'open':
@@ -183,6 +182,11 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         const index = this.data.findIndex(isRowToDelete);
         this.data.splice(index, 1);
         this.data = [...this.data];
+        this.dispatchEvent(new CustomEvent('delete', {
+            detail: {
+                amount: rowToDelete[DONATION_AMOUNT.fieldApiName]
+            }
+        }));
     }
 
     loadMoreData(event) {
@@ -204,7 +208,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 );
                 this.data = [...this.data];
-                if (this.data.length >= this._totalCountOfGifts) {
+                if (this.data.length >= this.count) {
                     disableInfiniteLoading();
                 }
                 disableIsLoading();
@@ -222,8 +226,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         })
             .then(result => {
                 const dataImportModel = JSON.parse(result);
-                this.setTotalCount(dataImportModel.totalCountOfRows);
-                this.setTotalCount(dataImportModel.totalRowAmount);
+                this._count = dataImportModel.totalCountOfRows;
+                this._total = dataImportModel.totalRowAmount;
                 dataImportModel.dataImportRows.forEach((row, idx) => {
                     this.upsertData(
                         Object.assign(row, row.record), 'Id');
@@ -237,9 +241,39 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             });
     }
 
+    get geBatchGiftsCountLabel() {
+        return geBatchGiftsCount;
+    }
+
+    get geBatchGiftsTotalLabel() {
+        return geBatchGiftsTotal;
+    }
+
     loadRow(row) {
         this.dispatchEvent(new CustomEvent('loaddata', {
             detail: row
         }));
     }
+
+    /**
+     * @description Internal setters used to communicate the current count and total
+     *              up to the App, which needs them to keep track of whether the batch's
+     *              expected totals match.
+     */
+    set _count(count) {
+        this.dispatchEvent(new CustomEvent('countchanged', {
+            detail: {
+                value: count
+            }
+        }));
+    }
+
+    set _total(total) {
+        this.dispatchEvent(new CustomEvent('totalchanged', {
+            detail: {
+                value: total
+            }
+        }));
+    }
+
 }

@@ -141,6 +141,19 @@ tasks:
         options:
             path: unpackaged/config/delete
 
+    deploy_trailhead_config:
+        description: Deploys the metadata for Trailhead Playground config
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/trailhead
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_trailhead_delete_config:
+        description: Deploys the deletion metadata for Trailhead Playground config
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/trailhead_delete
+
     deploy_trial_translations:
         description: Deploys the translations for trial configured organizations
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -313,6 +326,105 @@ tasks:
                 };
                 insert defaultRelationships;
 
+    config_trailhead_relationships:
+        description: 'Runs Anonymous Apex to insert extra relationship values for Trailhead'
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                List<npe4__Relationship_Lookup__c> thRelationships = new List<npe4__Relationship_Lookup__c>{
+                    new npe4__Relationship_Lookup__c(Name = 'Leader', npe4__Male__c = 'Member', npe4__Female__c = 'Member', npe4__Neutral__c = 'Member'),
+                    new npe4__Relationship_Lookup__c(Name = 'Member', npe4__Male__c = 'Leader', npe4__Female__c = 'Leader', npe4__Neutral__c = 'Leader'),
+                    new npe4__Relationship_Lookup__c(Name = 'Mentee', npe4__Male__c = 'Mentor', npe4__Female__c = 'Mentor', npe4__Neutral__c = 'Mentor'),
+                    new npe4__Relationship_Lookup__c(Name = 'Mentor', npe4__Male__c = 'Mentee', npe4__Female__c = 'Mentee', npe4__Neutral__c = 'Mentee')
+                };
+                insert thRelationships;
+
+    config_trailhead_create_user_sunil:
+        description: 'Runs Anonymous Apex to create user for Trailhead'
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                insert new User(
+                    FirstName = 'Sunil',
+                    LastName = 'Divani',
+                    Alias = 'sunil',
+                    Email = 'sunil@example.com',
+                    UserName = 'sunil-' + DateTime.now().getTime() + String.valueOf(Math.random()) + '@example-th.com',
+                    TimeZoneSidKey = 'America/Los_Angeles',
+                    LocaleSidKey = 'en_US',
+                    EmailEncodingKey = 'UTF-8',
+                    LanguageLocaleKey = 'en_US',
+                    ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id
+                );
+
+    config_trailhead_create_user_marco:
+        description: 'Runs Anonymous Apex to create user for Trailhead'
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                insert new User(
+                    FirstName = 'Marco',
+                    LastName = 'Forster',
+                    Alias = 'marco',
+                    Email = 'marco@example.com',
+                    UserName = 'marco-' + DateTime.now().getTime() + String.valueOf(Math.random()) + '@example-th.com',
+                    TimeZoneSidKey = 'America/Los_Angeles',
+                    LocaleSidKey = 'en_US',
+                    EmailEncodingKey = 'UTF-8',
+                    LanguageLocaleKey = 'en_US',
+                    ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id
+                );
+
+    config_trailhead_task_ownership_marco:
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                List<Task> tasks;
+                User marco = [SELECT Id FROM User WHERE LastName = 'Forster'];
+                Set<String> marcoSubjects = new Set<String>{
+                    'Thank You Phone Call'
+                };
+                tasks = [SELECT Id FROM Task WHERE Subject IN :marcoSubjects];
+                for (Task t: tasks) {
+                    t.OwnerId = marco.Id;
+                }
+                update tasks;
+
+                List<Event> events = [SELECT Id FROM Event];
+                for (Event e: events) {
+                    e.OwnerId = marco.Id;
+                }
+                update events;
+
+    config_trailhead_task_ownership_sunil:
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                List<Task> tasks;
+                User sunil = [SELECT Id FROM User WHERE LastName = 'Divani'];
+                Set<String> sunilSubjects = new Set<String>{
+                    'Send Gold level packet in mail',
+                    'Schedule Facility Tour & Lunch',
+                    'Send Impact Report'
+                };
+                tasks = [SELECT Id FROM Task WHERE Subject IN :sunilSubjects];
+                for (Task t: tasks) {
+                    t.OwnerId = sunil.Id;
+                }
+                update tasks;
+
+    config_trailhead_deactivate_user:
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                User sunil = [SELECT Id FROM User WHERE LastName = 'Divani'];
+                sunil.IsActive = false;
+                update sunil;
+
+    dx:
+        group: "Salesforce DX"
+        description: "Calls a sfdx task with the cci Org User specified.  Enter the sfdx task with the command option"
+        class_path: cumulusci.tasks.sfdx.SFDXOrgTask
 
     test_data_delete_managed:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
@@ -340,22 +452,32 @@ tasks:
             path: scripts/configure_npsp_default_settings.cls
             apex: initializeNPSPSettings();
 
-    enable_customizable_rollups:
-        description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only)
-        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        group: NPSP
-        options:
-            apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
-
-    enable_incremental_rollups:
-        description: Configure NPSP Customizable Rollups to activate Incremental Rollups (unmanaged deploys only)
+    enable_crlp:
+        description: Enable the NPSP Customizable Rollups feature. Include '-o param1 false' to NOT schedule NPSP jobs after enabling.
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         group: NPSP
         options:
             apex: >
-                STG_SettingsService.stgService.stgCRLP.AccountHardCreditNonSkew_Incremental__c = true;
-                STG_SettingsService.stgService.stgCRLP.ContactHardCreditNonSkew_Incremental__c = true;
-                STG_SettingsService.stgService.saveAll();
+                Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
+                String shouldScheduleJobs = '%%%PARAM_1%%%';
+                if (!String.isEmpty(shouldScheduleJobs)) {
+                    params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
+                }
+                String ns = ('%%%NAMESPACE%%%').replace('__','');
+                Type t = Type.forName(ns, 'Callable_Api');
+                Callable apiClass = (Callable)t.newInstance();
+                apiClass.call('settings.EnableCustomizableRollups', params);
+
+    enable_incremental_rollups:
+        description: Configure NPSP Customizable Rollups to activate Incremental Rollups for Account & Contact Hard Credit
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        group: NPSP
+        options:
+            apex: >
+                %%%NAMESPACE%%%Customizable_Rollup_Settings__c crlpSettings = %%%NAMESPACE%%%Customizable_Rollup_Settings__c.getOrgDefaults();
+                crlpSettings.%%%NAMESPACE%%%AccountHardCreditNonSkew_Incremental__c = true;
+                crlpSettings.%%%NAMESPACE%%%ContactHardCreditNonSkew_Incremental__c = true;
+                upsert crlpSettings;
 
     add_second_currency:
         description: Add CAD as a 2nd currency for a multicurrency org
@@ -396,6 +518,23 @@ tasks:
                 - "UNABLE_TO_LOCK_ROW"
                 - "connection was cancelled here"
             retry_always: True
+
+    disable_triggers:
+        class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
+        description: "Disable all NPSP Trigger Handlers"
+        options:
+            active: False
+            namespace: npsp
+            restore_file: trigger_status.yml
+
+    restore_triggers:
+        class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
+        description: "Restore all NPSP Trigger Handlers"
+        options:
+            restore: True
+            namespace: npsp
+            restore_file: trigger_status.yml
+
 
     cleanup_translation_metadata:
         description: Delete extraneous and translation-excluded metadata from translation files after using retrieve_unpackaged to pull down cleaned translations from a scratch org.
@@ -661,6 +800,13 @@ flows:
             #    ui_options:
             #        name: "Install Program Management Module Profile"
 
+    config_packaging:
+        steps:
+            1:
+                task: update_admin_profile
+                options:
+                    package_xml: lib/admin_profile_packaging.xml
+
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
         group: NPSP
@@ -688,33 +834,42 @@ flows:
         group: NPSP
         steps:
             1:
-                task: execute_anon
-                # Enables RD2 in Custom Settings. Do this before enabling CRLP so it does not create a rollup for NextDonationDate.
-                options:
-                    apex: >
-                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-                        rdSettings.%%%NAMESPACE%%%isRecurringDonations2Enabled__c = true;
-                        upsert rdSettings;
-            2:
-                task: enable_customizable_rollups
+                task: enable_crlp
                 # Enable customizable rollups after enabling RD2
-            3:
-                task: deploy_rd2_config
-                # Deploys the unpackaged configuration required for RD2
-            4:
+            2:
                 task: custom_settings_value_wait
                 # Wait for CRLP to be fully enabled before continuing with data migration
                 options:
                     object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
                     field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
                     value: true
-            5:
+            3:
                 task: execute_anon
-                # Execute the data migration job in case there is any RD test data in the org
+                # Enables RD2 in Custom Settings.
                 options:
                     apex: >
-                        %%%NAMESPACE%%%RD2_DataMigration_BATCH rdMigrationBatch = new %%%NAMESPACE%%%RD2_DataMigration_BATCH();
-                        Database.executeBatch(rdMigrationBatch, rdMigrationBatch.batchSize);
+                        Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
+                        String shouldScheduleJobs = '%%%PARAM_1%%%';
+                        if (!String.isEmpty(shouldScheduleJobs)) {
+                            params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
+                        }
+                        String ns = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(ns, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('Settings.EnableEnhancedRecurringDonations', params);
+            4:
+                task: deploy_rd2_config
+                # Deploys the unpackaged configuration required for RD2
+            5:
+                task: execute_anon
+                 # Execute the data migration job in case there is any RD test data in the org
+                options:
+                    apex: >
+                        Map<String, Object> params = new Map<String, Object>();
+                        String ns = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(ns, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('RD2.ExecuteDataMigration', params);
             6:
                 task: batch_apex_wait
                 # Wait until after the data migration job has completed
@@ -727,6 +882,14 @@ flows:
                     apex: >
                         %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH();
                         Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
+            8:
+                task: execute_anon
+                # Update enhanced Recurring Donation enablement page state
+                options:
+                    apex: >                        
+                        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+                        rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
+                        upsert rdSettings;                       
 
     config_managed:
         steps:
@@ -750,6 +913,81 @@ flows:
                 task: deploy_reports
                 options:
                     unmanaged: False
+
+    config_trailhead_playground:
+        steps:
+            1:
+                task: deploy_post
+                options:
+                    unmanaged: False
+            2:
+                task: deploy_trial_config
+                options:
+                    unmanaged: False
+            3:
+                task: test_data_relationships
+            4:
+                task: config_trailhead_relationships
+            5:
+                task: deploy_reports
+                options:
+                    unmanaged: False
+            5.5:
+                task: ensure_record_type
+                options:
+                    record_type_label: Default
+                    record_type_developer_name: Default
+                    sobject: Campaign
+            6:
+                task: deploy_trailhead_config
+                options:
+                    unmanaged: False
+            7:
+                task: deploy_trailhead_delete_config
+            8:
+                task: update_admin_profile
+                options:
+                    include_packaged_objects: True
+            9:
+                task: disable_triggers
+                options:
+                    handlers:
+                    # Disable all trigger handlers other than Engagement Plans
+                        - Account
+                        - npsp__Account_Soft_Credit__c
+                        - npsp__Address__c
+                        - npsp__Allocation__c
+                        - Campaign
+                        - CampaignMember
+                        - Contact
+                        - npsp__General_Accounting_Unit__c
+                        - npsp__Level__c
+                        - npe01__OppPayment__c
+                        - npe03__Recurring_Donation__c
+                        - npe5__Affiliation__c
+                        - npo02__Household__c
+                        - Opportunity
+                        - npsp__Partial_Soft_Credit__c
+                        - npe4__Relationship__c
+                        - User
+
+            10:
+                task: load_dataset
+                options:
+                    sql_path: datasets/trailhead/test_data.sql
+                    mapping: datasets/trailhead/mapping.yml
+            11:
+                task: restore_triggers
+            12:
+                task: config_trailhead_create_user_sunil
+            13:
+                task: config_trailhead_task_ownership_sunil
+            14:
+                task: config_trailhead_deactivate_user
+            15:
+                task: config_trailhead_create_user_marco
+            16:
+                task: config_trailhead_task_ownership_marco
 
     config_regression:
         steps:
@@ -866,17 +1104,20 @@ flows:
             3:
                 task: ensure_record_type
 
-    rd2_pilot_org:
-        group: NPSP
+    trailhead_org:
         steps:
             1:
-                flow: install_prod
+                task: update_dependencies
             2:
-                task: load_dataset
+                task: deploy
                 options:
-                    mapping: datasets/rd2_pilot/mapping_managed.yml
-                    sql_path: datasets/rd2_pilot/data.sql
-                    database_url: ""
+                    path: unpackaged/pre/account_record_types
+            3:
+                task: ensure_record_type
+            4:
+                task: install_managed
+            5:
+                flow: config_trailhead_playground
 
     create_testing_user:
         description: Creates a testing User assigned a new NPSP_Standard_User profile with access to all NPSP objects & fields. Perfect for testing security with a non-system admin type User. Use with the "qa_org" flow.
@@ -992,25 +1233,43 @@ plans:
             4:
                 task: install_managed
             5:
-                flow: config_managed
-                options:
-                    deploy_reports:
-                        unmanaged: False
+                flow: config_trailhead_playground
                 ui_options:
                     deploy_post:
                         first:
                             name: NPSP Config for Salesforce Mobile App
-                    deploy_dev_config_delete:
-                        name: Delete Developer Edition Sample Profiles
-                        description: This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.
-                        is_required: False
                     deploy_trial_config:
                         name: NPSP Trial Experience
                     test_data_relationships:
                         name: Set Default Relationship Settings
+                    config_trailhead_relationships:
+                        name: Add Relationships for Trailhead
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
+                    deploy_trailhead_config:
+                        name: Trailhead Playground Configuration
+                    deploy_trailhead_delete_config:
+                        name: Remove Default Metadata
+                    update_admin_profile:
+                        name: Update Administrator Profile
+                    disable_triggers:
+                        name: Prepare for Data Load
+                    load_dataset:
+                        name: Load Trailhead Data Set
+                    restore_triggers:
+                        name: Finalize Data Load
+                    config_trailhead_create_user_marco:
+                        name: Create User
+                    config_trailhead_create_user_sunil:
+                        name: Create User
+                    config_trailhead_task_ownership_sunil:
+                        name: Assign Task Ownership
+                    config_trailhead_deactivate_user:
+                        name: Configure Users
+                    config_trailhead_task_ownership_marco:
+                        name: Assign Event Ownership
+
     rd2:
         slug: enhanced-recurring-donations
         title: Enhanced Recurring Donations Metadata Updates

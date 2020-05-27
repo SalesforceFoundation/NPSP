@@ -85,18 +85,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
-    * Start getters for data-qa-locator attributes
-    */
-
-    get qaLocatorCreateTemplate() {
-        return `button ${this.CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}`;
-    }
-
-    /*******************************************************************************
-    * End getters for data-qa-locator attributes
-    */
-
-    /*******************************************************************************
     * @description Public method for receiving modal related events from geListView.
     *
     * @param {object} modalData: Event object containing the action and modal payload.
@@ -228,4 +216,33 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     navigateToForm() {
         dispatch(this, 'changeview', { view: 'Single_Gift_Entry' });
     }
+
+    /*******************************************************************************
+     * Start getters for data-qa-locator attributes
+     */
+
+    get qaLocatorButtonNewBatch() {
+        return `button Header ${this.CUSTOM_LABELS.geButtonNewBatch}`;
+    }
+
+    get qaLocatorButtonNewSingleGift() {
+        return `button Header ${this.CUSTOM_LABELS.geButtonNewSingleGift}`;
+    }
+
+    get qaLocatorCreateTemplate() {
+        return `button ${this.CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}`;
+    }
+
+    get qaLocatorBatches() {
+        return `tab link ${this.CUSTOM_LABELS.commonBatches}`;
+    }
+
+    get qaLocatorTemplates() {
+        return `tab link ${this.CUSTOM_LABELS.commonTemplates}`;
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
+
 }

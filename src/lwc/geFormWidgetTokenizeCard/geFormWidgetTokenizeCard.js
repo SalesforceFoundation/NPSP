@@ -3,14 +3,16 @@ import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import { format } from 'c/utilCommon';
+import { format, getNamespace } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
 import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
+const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api cardHolderName;
@@ -25,11 +27,17 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track hasEventDisabledWidget = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
     get displayDoNotChargeCardButton() {
         return this.hasEventDisabledWidget || this.hasUserDisabledWidget ? false : true;
+    }
+
+    get tokenizeCardPageUrl() {
+        const namespace = getNamespace(DATA_IMPORT_OBJECT.objectApiName);
+        if (namespace) return `/apex/${namespace}__${TOKENIZE_CARD_PAGE_NAME}`;
+
+        return `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
     }
 
     async connectedCallback() {

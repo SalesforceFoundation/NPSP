@@ -44,6 +44,7 @@ public class CallableApiParameters {
     public static final String PARAM_ROLLUP_DATA = 'RollupData';
     public static final String PARAM_ROLLUP_COMMIT = 'CommitToDatabase';
     public static final String PARAM_OPPORTUNITY_STAGE = 'OpportunityStage';
+    public static final String PARAM_SCHEDULE_JOBS = 'ScheduleJobs';
 
     private Map<String, Object> params;
 
@@ -58,6 +59,7 @@ public class CallableApiParameters {
     /**
      * @description Retrieve the specified Parameter as a String value
      * @param paramName Map key for the params collection
+     * @return String representation of that parameter
      */
     public String getString(String paramName) {
         try {
