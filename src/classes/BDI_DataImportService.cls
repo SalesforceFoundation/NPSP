@@ -82,7 +82,7 @@ global with sharing class BDI_DataImportService {
 
         // construct or SOQL for the batch
         dataImportQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
-        dataImportQuery += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        dataImportQuery += ' FROM ' + DataImport__c.SObjectType.getDescribe().localName;
         dataImportQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
 
         dataImportQuery += ' AND Id =: dataImportIds';
@@ -103,7 +103,7 @@ global with sharing class BDI_DataImportService {
 
         // construct or SOQL for the batch
         batchQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
-        batchQuery += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        batchQuery += ' FROM ' + DataImport__c.SObjectType.getDescribe().localName;
         batchQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
 
         if (batchId != null) {
