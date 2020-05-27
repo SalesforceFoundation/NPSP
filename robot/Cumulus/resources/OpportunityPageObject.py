@@ -41,7 +41,7 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.salesforce._jsclick(dropdown)
         self.selenium.wait_until_element_is_visible(edit)
         self.selenium.click_element(edit)
-        time.sleep(2)
+        self.salesforce.wait_until_modal_is_open()
         self.npsp.select_value_from_dropdown ("Role",role)
         self.npsp.populate_modal_form(**kwargs)
         self.salesforce.click_modal_button("Save")
