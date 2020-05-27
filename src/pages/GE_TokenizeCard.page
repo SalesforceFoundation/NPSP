@@ -10,6 +10,12 @@
             <div id="payments"></div>
         </form>
     </article>
+    
+    <!--TODO - remove once elevate can process the gateway id-->
+    <!-- for QE: to display visually the gateway id when it's passed to tokenize method -->
+    <article class='slds-scope'>
+        <div><span id="gatewayInfo"></span></div>
+    </article>
 
     <script src="{!elevateSDKURL}"></script>
     <script>
@@ -54,6 +60,12 @@
             postMessage(message);
         }
 
+        // TODO - remove once elevate can process the gateway id
+        // for QE: display the gateway id visually as it's been passed to tokenize
+        function showGatewayIdForTesting(gatewayId) {
+            document.getElementById('gatewayInfo').textContent = `Gateway Id: ${gatewayId}`;
+        }
+
         /*******************************************************************************
         * @description Method listens for messages from geFormWidgetTokenizeCard
         */
@@ -62,6 +74,9 @@
                 // Reject any messages from an unexpected origin
                 return;
             } else if (event.data && event.data.action === 'createToken') {
+                // TODO - remove once elevate can process the gateway id
+                showGatewayIdForTesting('{!gatewayIds}');
+
                 handleTokenCreation();
             }
         }
