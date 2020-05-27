@@ -17,17 +17,17 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		url_template = "{root}/lightning/setup/ObjectManager/{object}/FieldsAndRelationships/view"
 		url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
 		self.selenium.go_to(url)
-		search_button = npsp_lex_locators['object_manager']['global_search']
+		search_button = npsp_lex_locators['object_manager']['input'].format("globalQuickfind")
 		self.salesforce.wait_until_loading_is_complete()
 		self.selenium.wait_until_page_contains_element(search_button)
 		
 	def create_lookup_field(self,field_name, related):
 		"""Creates a Lookpup field by taking in the inputs field_name and related field"""
-		lookup_locator = npsp_lex_locators['object_manager']['lookup_option']
+		lookup_locator = npsp_lex_locators['object_manager']['input'].format("dtypeY")
 		next_button = npsp_lex_locators['object_manager']['button'].format("Next")
 		save_button = npsp_lex_locators['object_manager']['button'].format("Save")
 		option = npsp_lex_locators['object_manager']['select_related_option'].format(related)
-		field_label = npsp_lex_locators['object_manager']['input_field_label']
+		field_label = npsp_lex_locators['object_manager']['input'].format("MasterLabel")
 		self.selenium.wait_until_page_contains_element(lookup_locator,60)
 		self.selenium.click_element(lookup_locator)
 		time.sleep(1)
@@ -52,7 +52,7 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 	@capture_screenshot_on_error
 	def create_custom_field(self, type, field_name, related_to=None):
 		"""Creates a custom field based on type paramenter and the field_name """
-		search_button = npsp_lex_locators['object_manager']['global_search']
+		search_button = npsp_lex_locators['object_manager']['input'].format("globalQuickfind")
 		self.selenium.wait_until_page_contains_element(search_button,60)
 		self.selenium.get_webelement(search_button).send_keys(field_name)
 		self.selenium.get_webelement(search_button).send_keys(Keys.ENTER)
