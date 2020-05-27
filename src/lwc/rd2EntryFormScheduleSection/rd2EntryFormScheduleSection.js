@@ -27,28 +27,27 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
     @api recordId;
     @api isMultiCurrencyEnabled;
+    @track isLoaded = false;
     @track fields = {};
-    @track isRecordReady = false;
-    rdObjectInfo;
-    fieldInfos;
 
     /**
-    * @description Retrieve Recurring Donation Object info
+    * @description Retrieve Recurring Donation SObject info
     */
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
-    wiredRDObjectInfo(response) {
+    wiredRecurringDonationObjectInfo(response) {
         if (response.data) {
-            this.rdObjectInfo = response.data;
-            this.setFields(this.rdObjectInfo.fields);
-            this.fieldInfos = this.buildFieldDescribes(
-                this.rdObjectInfo.fields,
-                this.rdObjectInfo.apiName
+            let rdObjectInfo = response.data;
+            this.setFields(rdObjectInfo.fields);
+            this.buildFieldDescribes(
+                rdObjectInfo.fields,
+                rdObjectInfo.apiName
             );
-            this.isRecordReady = true;
 
         } else if (response.error) {
             console.error(JSON.stringify(response.error));
         }
+
+        this.isLoaded = true;
     }
 
     /**
@@ -65,7 +64,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-    * @description Contrcut any needed field info from the SObject Info
+    * @description Construct field describe info from the Recurring Donation SObject info
     */
     setFields(fieldInfos) {
         this.fields.recurringType = this.extractFieldInfo(fieldInfos[FIELD_RECURRING_TYPE.fieldApiName]);
@@ -80,7 +79,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-    * @description 
+    * @description Converts field describe info into a object that is easily accessible from the front end
     */
     extractFieldInfo(field) {
         return {
@@ -92,6 +91,43 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
+     * Resets the Schedule fields as they were upon the initial load
+     */
+    @api
+    reset() {
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                field.reset();
+            });
+    }
+
+    /**
+     * Populates the Schedule form fields based on provided data
+     */
+    @api
+    load(data) {
+        //TODO, what is the format of "data"?
+    }
+
+    /**
+     * Checks if values specified on fields are valid
+     * @return Boolean
+     */
+    @api
+    isValid() {
+        const scheduleFields = this.template.querySelectorAll('lightning-input-field');
+
+        for (const field of scheduleFields) {
+            if (!field.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @description Returns fields displayed on the Recurring Donation Schedule section
+     * @return Object containing field API names and their values
      */
     @api
     returnValues() {

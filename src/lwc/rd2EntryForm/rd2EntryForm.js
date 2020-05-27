@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-import { getNestedProperty } from 'c/utilCommon';
+import { isNull } from 'c/utilCommon';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 
@@ -30,8 +30,6 @@ import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
 
 export default class rd2EntryForm extends LightningElement {
 
-    @api parentId;
-    @api recordId;
     listenerEvent = 'rd2EntryFormEvent';
 
     customLabels = Object.freeze({
@@ -41,9 +39,11 @@ export default class rd2EntryForm extends LightningElement {
         otherSectionHeader
     });
 
-    @track fields = {};
+    @api parentId;
+    @api recordId;
+
     @track record;
-    rdObjectInfo;
+    @track fields = {};
     fieldInfos;
 
     @track header = newHeaderLabel;
@@ -71,23 +71,16 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Get Recurring Donation SObject API name 
-    */
-    get recurringDonationName() {
-        return getNestedProperty(RECURRING_DONATION_OBJECT, 'objectApiName');
-    }
-
-    /***
     * @description Retrieve Recurring Donation Object info
     */
-    @wire(getObjectInfo, { objectApiName: '$recurringDonationName' })
-    wiredRDObjectInfo(response) {
+    @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
+    wiredRecurringDonationObjectInfo(response) {
         if (response.data) {
-            this.rdObjectInfo = response.data;
-            this.setFields(this.rdObjectInfo.fields);
+            let rdObjectInfo = response.data;
+            this.setFields(rdObjectInfo.fields);
             this.fieldInfos = this.buildFieldDescribes(
-                this.rdObjectInfo.fields,
-                this.rdObjectInfo.apiName
+                rdObjectInfo.fields,
+                rdObjectInfo.apiName
             );
 
             if (this.recordId == null) {
@@ -115,7 +108,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Contrcut any needed field info from the Sobject Info
+    * @description Construct field describe info from the Recurring Donation SObject info
     */
     setFields(fieldInfos) {
         this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
@@ -126,7 +119,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Method converts field describe info into a object that is easily accessiable from the front end
+    * @description Method converts field describe info into a object that is easily accessible from the front end
     */
     extractFieldInfo(field) {
         return {
@@ -195,7 +188,9 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Override the standard submit. Add any fields before the submittion
+    * @description Overrides the standard submit. 
+    * Collects fields displayed on the form and any integrated LWC (for example Schedule section)
+    * and submits them for the record insert or update.
     */
     handleSubmit(event) {
         this.isLoading = true;
@@ -216,7 +211,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Handle lwc when errors occur
+    * @description Handle component display when an error occurs
     */
     handleError(error) {
         this.errorMessage = this.constructErrorMessage(error);
