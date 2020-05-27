@@ -1684,8 +1684,8 @@
         <members>RD2_EntryFormDonorSectionHeader</members>
         <members>RD2_EntryFormHeader</members>
         <members>RD2_EntryFormInsertSuccessMessage</members>
-        <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_EntryFormOtherSectionHeader</members>
+        <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>

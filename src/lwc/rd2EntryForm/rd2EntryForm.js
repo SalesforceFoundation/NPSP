@@ -2,11 +2,10 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-import { getNestedProperty } from 'c/utilCommon';
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { getRecord} from 'lightning/uiRecordApi';
 
-import RECURRING_DONATION_INFO from '@salesforce/schema/npe03__Recurring_Donation__c';
+import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
@@ -14,9 +13,8 @@ import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_ACCOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 import FIELD_CONTACT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 import FIELD_DATE_ESTABLISHED from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Date_Established__c';
-import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
-import FIELD_INSTALLMENT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
+import FIELD_PLANNED_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
 import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
@@ -57,6 +55,7 @@ export default class rd2EntryForm extends LightningElement {
     @track record;
     recurringDonationInfo;
     fieldInfos;
+    dayOfMonthPicklistValue;
 
     @track header = newHeaderLabel;
 
@@ -67,7 +66,8 @@ export default class rd2EntryForm extends LightningElement {
     @track accountId;
 
     @track isLoading = true;
-    @track isRecordReady = false;
+    @track fieldInfoReady = false;
+    isRecordReady = false;
     isSettingReady = false;
 
     @track hasError = false;
@@ -77,39 +77,59 @@ export default class rd2EntryForm extends LightningElement {
     * @description Dynamic render edit form CSS to show/hide the edit form 
     */
     get cssEditForm() {
-        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
+        return (!this.isLoading && this.isSettingReady && this.fieldInfoReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
     }
 
     /*******************************************************************************
-    * @description Get Recurring Donation SObject API name 
+    * @description Set today's date as default Date of Month in New entry form
     */
-    get recurringDonationName() {
-        return getNestedProperty(RECURRING_DONATION_INFO, 'objectApiName');
+    get defaultDayOfMonth() {
+        return (this.recordId == null && this.dayOfMonthPicklistValue)
+            ? this.getTodayDateOfMonth()
+            : undefined;
     }
 
+    /*******************************************************************************
+    * @description Set Installment Frequency to 1 in New entry form
+    */
+    get defaultInstallmentFrequency() {
+        return (this.recordId == null)
+            ? '1'
+            : undefined;
+    }
 
     /*******************************************************************************
     * @description Retrieve Recurring Donation Object info
     */
-    @wire(getObjectInfo, {objectApiName: '$recurringDonationName' })
+    @wire(getObjectInfo, {objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
     wiredRDObjectInfo(response) {
         if (response.data) {
             this.recurringDonationInfo = response.data;
-            this.buildDisplayedFields(this.recurringDonationInfo.fields);
-            this.fieldInfos = this.buildFieldDescribesForWiredMethod(
+            this.setFields(this.recurringDonationInfo.fields);
+            this.fieldInfos = this.buildFieldDescribes(
                 this.recurringDonationInfo.fields,
                 this.recurringDonationInfo.apiName);
-
-            if (this.recordId == null) {
-                this.isRecordReady = true;
-            }
+                this.fieldInfoReady = true;
         }
 
         if (response.error) {
-            this.isRecordReady = true;
+            this.fieldInfoReady = true;
             handleError(response.error);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Retrieve Recurring Donation Day of Month picklist values
+    */
+    @wire(getPicklistValues, {fieldApiName: FIELD_DAY_OF_MONTH, recordTypeId: '$recurringDonationInfo.defaultRecordTypeId' })
+    wiredPicklistValues({error, data}) {
+        if(data) {
+           this.dayOfMonthPicklistValue = data.values;
+        }
+        if(error) {
+            this.handleError(error);
         }
     }
 
@@ -117,7 +137,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Method converts field describe info into objects that the
     * getRecord method can accept into its 'fields' parameter.
     */
-    buildFieldDescribesForWiredMethod(fields, objectApiName) {
+    buildFieldDescribes(fields, objectApiName) {
         return Object.keys(fields).map((fieldApiName) => {
             return {
                 fieldApiName: fieldApiName,
@@ -127,15 +147,14 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Contrcut any needed field info from the Sobject Info
+    * @description Construct field describe info from the Recurring Donation SObject info
     */ 
-    buildDisplayedFields(fieldInfos) {
+    setFields(fieldInfos) {
         this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
         this.fields.account = this.extractFieldInfo(fieldInfos[FIELD_ACCOUNT.fieldApiName]);
         this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
         this.fields.recurringType = this.extractFieldInfo(fieldInfos[FIELD_RECURRING_TYPE.fieldApiName]);
         this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
-        this.fields.status = this.extractFieldInfo(fieldInfos[FIELD_STATUS.fieldApiName]);
         this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
         this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
         this.fields.period = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_PERIOD.fieldApiName]);
@@ -144,7 +163,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.startDate = this.extractFieldInfo(fieldInfos[FIELD_START_DATE.fieldApiName]);
         this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
         this.fields.currency = {label: currencyFieldLabel, apiName: 'CurrencyIsoCode'};
-        this.fields.installment = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT.fieldApiName]);
+        this.fields.plannedInstallments = this.extractFieldInfo(fieldInfos[FIELD_PLANNED_INSTALLMENTS.fieldApiName]);
     }
 
     /*******************************************************************************
@@ -166,7 +185,7 @@ export default class rd2EntryForm extends LightningElement {
     wiredRecurringDonationRecord(response) {
         if (response.data) {
             this.record = response.data;
-            this.modidifyEditHeader();
+            this.modifyEditHeader();
             this.isRecordReady = true;
         }
 
@@ -179,14 +198,31 @@ export default class rd2EntryForm extends LightningElement {
     /*******************************************************************************
     * @description Modify edit modal header
     */
-    modidifyEditHeader() {
+    modifyEditHeader() {
         this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
+    }
+
+    /*******************************************************************************
+    * @description Get today's date of month
+    */
+    getTodayDateOfMonth() {
+        let todayDate = new Date().getDate().toString();
+        
+        let convertedPicklist = this.dayOfMonthPicklistValue.find(value => {
+                return value.label == todayDate;
+            }) || this.dayOfMonthPicklistValue[this.dayOfMonthPicklistValue.length - 1];
+
+        return convertedPicklist.value;
     }
 
     /*******************************************************************************
     * @description Get org setting on init of the component 
     */ 
     connectedCallback() {
+        if (this.recordId == null) {
+            this.isRecordReady = true;
+        }
+
         getSetting({parentId: this.parentId})
         .then(response => {
             this.isAutoNamingEnabled = response.isAutoNamingEnabled;
@@ -204,14 +240,14 @@ export default class rd2EntryForm extends LightningElement {
     /*******************************************************************************
     * @description Determine the parentId Sobject Type
     */
-    handleParentIdType(parentSObjecType) {
-        if (parentSObjecType == null) {
+    handleParentIdType(parentSObjType) {
+        if (parentSObjType == null) {
             return;
         }
 
-        if (parentSObjecType === ACCOUNT_OBJECT.objectApiName) {
+        if (parentSObjType === ACCOUNT_OBJECT.objectApiName) {
             this.accountId = this.parentId;
-        } else if (parentSObjecType === CONTACT_OBJECT.objectApiName) {
+        } else if (parentSObjType === CONTACT_OBJECT.objectApiName) {
             this.contactId = this.parentId;
         }
     }
@@ -305,12 +341,12 @@ export default class rd2EntryForm extends LightningElement {
     * @description Fires a toast event to display success message
     */
     showSuccessToast(recordName) {
-        let succeedMessage = (this.recordId)
+        let message = (this.recordId)
             ? updateSuccessMessage.replace("{0}", recordName)
             : insertSuccessMessage.replace("{0}", recordName);
 
         const event = new ShowToastEvent({
-            title: succeedMessage,
+            title: message,
             variant: 'success',
         });
         this.dispatchEvent(event);

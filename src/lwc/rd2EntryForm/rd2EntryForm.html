@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </template>
-            <template if:true={isRecordReady}>
+            <template if:true={fieldInfoReady}>
 
                 <div class={cssEditForm}>
                     <template if:true={hasError}> 
@@ -68,7 +68,7 @@
                                 </lightning-layout-item>
 
                                 <lightning-layout-item padding="horizontal-small" class="slds-m-bottom_x-small" size="12"  small-device-size="6">
-                                    <lightning-input-field field-name={fields.installment.apiName}>
+                                    <lightning-input-field field-name={fields.plannedInstallments.apiName}>
                                     </lightning-input-field>
                                 </lightning-layout-item>
 
@@ -88,7 +88,7 @@
                                 </lightning-layout-item>
 
                                 <lightning-layout-item padding="horizontal-small" size="12"  large-device-size="3" small-device-size="6">
-                                    <lightning-input-field field-name={fields.installmentFrequency.apiName} required>
+                                    <lightning-input-field field-name={fields.installmentFrequency.apiName} required value={defaultInstallmentFrequency}>
                                 </lightning-input-field>
 
                                 </lightning-layout-item>
@@ -98,7 +98,7 @@
                                 </lightning-layout-item>
 
                                 <lightning-layout-item padding="horizontal-small" size="12"  large-device-size="3" small-device-size="6">
-                                    <lightning-input-field field-name={fields.dayOfMonth.apiName}>
+                                    <lightning-input-field field-name={fields.dayOfMonth.apiName} value={defaultDayOfMonth}>
                                     </lightning-input-field>
                                 </lightning-layout-item>
 

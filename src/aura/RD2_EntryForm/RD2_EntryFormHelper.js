@@ -12,7 +12,7 @@
         }
         
         $A.createComponent("c:rd2EntryForm", {parentId, recordId},
-        function(content, status, errorMessage) {
+        function(content, status, error) {
             if (status === "SUCCESS") {
                 const modalBody = content;
 
@@ -26,7 +26,7 @@
                 });
                 component.set('v.modal', modalReference);
             } else {
-                console.error(errorMessage);
+                console.error(JSON.stringify(error));
             }
         });
     },
