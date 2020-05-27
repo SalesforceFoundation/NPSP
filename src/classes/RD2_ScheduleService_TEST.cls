@@ -1714,6 +1714,29 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
     }
 
+    /***
+    * @description Verifies schedule end date is populate with RD end date
+    */
+    @isTest
+    private static void shouldSetEndDateOnScheduleWhenRDEndDateIsSet() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Date endDate = DATE_ESTABLISHED.addMonths(5);
+        
+        RD2_ScheduleService service = new RD2_ScheduleService();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withEndDate(endDate)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RD2_ScheduleService.ActiveSchedule> schedules = service.getVisualizedSchedules(rd);
+        System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
+        System.assertEquals(endDate, schedules[0].endDate, 'The schedule end date should match the RD end date');
+    }
+
     //// Helpers
     //////////////////////////
 

@@ -238,6 +238,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets End Date
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withEndDate(Date dt) {
+        valuesByFieldName.put('EndDate__c', dt);
+        return this;
+    }
+
+    /***
     * @description Sets Next Payment Date
     * @param dt Date
     * @return TEST_RecurringDonationBuilder Builder instance

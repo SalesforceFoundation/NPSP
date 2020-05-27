@@ -269,6 +269,16 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>%%%NAMESPACE%%%EndDate__c</fullName>
+        <description>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</inlineHelpText>
+        <label>End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
         <fullName>%%%NAMESPACE%%%RecurringType__c</fullName>
         <description>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.</description>
         <externalId>false</externalId>
