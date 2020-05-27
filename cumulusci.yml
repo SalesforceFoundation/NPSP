@@ -126,6 +126,15 @@ tasks:
             path: unpackaged/config/rd2_post_config
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_rd2_config_managed:
+        description: Deploys updates to fully enable Enhanced Recurring Donations, specifically for an Org with a Managed Package
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: NPSP
+        options:
+            path: unpackaged/config/rd2_post_config
+            namespace_inject: $project_config.project__package__namespace
+            unmanaged: False
+
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -829,7 +838,7 @@ flows:
             2:
                 task: update_admin_profile
 
-    deploy_rd2_testing:
+    enable_rd2:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
         group: NPSP
         steps:
@@ -884,12 +893,12 @@ flows:
                         rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
                         upsert rdSettings;
 
-    deploy_rd2_testing_managed:
+    enable_rd2_managed:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (managed package only)'
         group: NPSP
         steps:
             1:
-                flow: deploy_rd2_testing
+                flow: enable_rd2
                 options:
                     enable_crlp:
                         managed: true
@@ -1293,9 +1302,7 @@ plans:
               message: "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation."
         steps:
             1:
-                task: deploy_rd2_config
-                options:
-                    unmanaged: False
+                task: deploy_rd2_config_managed
                 ui_options:
                     name: "Enhanced Recurring Donations Metadata Updates"
     reports:
