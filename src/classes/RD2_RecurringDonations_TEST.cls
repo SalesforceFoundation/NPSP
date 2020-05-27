@@ -683,7 +683,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
             List<npe03__Recurring_Donation__c> oldRds = null;
 
-            tdtm.transformDataBeforeValidation(rds, triggerAction);
+            tdtm.transformDataBeforeValidation(rds, oldRds, triggerAction);
             tdtm.validate(rds, oldRds, triggerAction);
             tdtm.transformDataInBeforeContext(rds, oldRds, triggerAction);
 
@@ -694,6 +694,49 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assert(String.isBlank(errMessage), 'No error should be generated: ' + errMessage);
         System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, rd.Day_of_Month__c, 
             'Day of Month field should be set to the Last_Day value');
+    }
+
+    @isTest
+    private static void shouldAutoPopulateEndDateToRDWhenRdIsUpdatedToClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStatusActive()
+            .build();
+        insert rd;
+
+        Test.startTest();
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(Date.today().addDays(-1), rd.EndDate__c,
+            'If End Date is blank, the field should be automatically populated with yesterday when RD is updated to Closed');
+    }
+
+    @isTest
+    private static void shouldLeaveRdStatusNotClosedWhenEndDateIsInTheFuture() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Date endDate = Date.today().addMonths(10);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStatusActive()
+            .build();
+        insert rd;
+
+        Test.startTest();
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        rd.EndDate__c = endDate;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD2_Constants.STATUS_Active, rd.Status__c,
+            'When end date is in the future, RD will stay opened until the end date');
+        System.assertEquals(endDate, rd.EndDate__c, 'End Date should be populated on RD');
     }
 
 

@@ -93,7 +93,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        transformDataBeforeValidation(rds, triggerAction);
+        transformDataBeforeValidation(rds, oldRds, triggerAction);
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
@@ -176,7 +176,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     @TestVisible
-    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
         //data transformation happens in the Before context only
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
@@ -198,6 +198,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
             }
         }
+
+        adjustClosedRdEndDateAndStatus(rds, oldRds);
     }
 
     /***
@@ -233,6 +235,31 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             ) {
                 rd.npe03__Organization__c = contactById.get(rd.npe03__Contact__c).AccountId;
             }
+        }
+    }
+
+    /***
+    * @description Evaluate Closed and End Date on RD.
+    * If the RD Status is updated to Closed but the End Date is in the future, leave the RD status un-change.
+    * If the RD Status is updated to CLosed and the End Date is null, auto-populate the end date to yesterday.
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    */
+    private void adjustClosedRdEndDateAndStatus(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
+        for (Integer i = 0; i < rds.size(); i++) {
+            npe03__Recurring_Donation__c newRd = rds[i];
+
+            if (newRd.Status__c != RD2_Constants.STATUS_CLOSED) {
+                continue;
+            }
+            
+            if (newRd.EndDate__c == null) {
+                newRd.EndDate__c = Date.today().addDays(-1);
+
+            } else if (newRd.EndDate__c > Date.today()) {
+                newRd.Status__c = oldRds[i].Status__c;
+            }
+            
         }
     }
 
