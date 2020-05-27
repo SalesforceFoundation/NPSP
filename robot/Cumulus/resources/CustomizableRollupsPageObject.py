@@ -22,26 +22,45 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 
 	@capture_screenshot_on_error
 	def clone_rollup(self,rollup_name, **kwargs):
-		""" Clone an existing rollup and edit required fields and save
+		""" If new rollup doesn't exist - Clone an existing rollup, enter arguments passed  and create new rollup
+			If new rollup exists - logs that rollup already exists
 		"""
-		locator = npsp_lex_locators['crlps']['rollup_options'].format(rollup_name)
-		select_locator = npsp_lex_locators['crlps']['select_locator'].format("Target Object")
-		success_toast = npsp_lex_locators['crlps']['success_toast']
-		self.selenium.scroll_element_into_view(locator)
-		self.selenium.click_element(locator)
-		self.selenium.wait_until_page_contains("Clone")
-		self.selenium.click_link("Clone")
-		self.selenium.wait_until_page_contains_element(select_locator)
-		self.npsp.populate_modal_form(**kwargs)
-		self.selenium.click_button("Save")
-		self.selenium.wait_until_element_is_not_visible(success_toast)	
+		current_rollup=self._check_rollup_status(Label=rollup_name,Active__c=True)
+		new_label=kwargs['Target Object']+": "+kwargs['Target Field']
+		new_rollup=self._check_rollup_status(Label=new_label,Active__c=True)
+		if current_rollup and not new_rollup:
+				locator = npsp_lex_locators['crlps']['rollup_options'].format(rollup_name)
+				select_locator = npsp_lex_locators['crlps']['select_locator'].format("Target Object")
+				success_toast = npsp_lex_locators['crlps']['success_toast']
+				self.selenium.scroll_element_into_view(locator)
+				self.selenium.click_element(locator)
+				self.selenium.wait_until_page_contains("Clone")
+				self.selenium.click_link("Clone")
+				self.selenium.wait_until_page_contains_element(select_locator)
+				self.npsp.populate_modal_form(**kwargs)
+				self.selenium.click_button("Save")
+				self.selenium.wait_until_element_is_not_visible(success_toast)	
+		elif not current_rollup:
+    			raise Exception("Rollup you are trying to clone doesn't exist")
+		elif new_rollup:
+    			self.builtin.log("Rollup {new_rollup} already exists, skipping creation")	
+    			
+    			
  
 	def verify_rollup_exists(self,**kwargs):
-		"""Using API verifies if the rollup with specified key,value pairs exist, if doesn't exist raises exception"""
-		ns=self.npsp.get_npsp_namespace_prefix()
-		object=ns+'Rollup__mdt'
-		record=self.salesforce.salesforce_query(object,**kwargs)
-		if len(record)>0:
+		"""Using API verifies if the rollup with specified key,value pairs exist, if doesn't exist raises exception
+		   Always Pass rollup label and active flag to make sure rollup is active or not	
+		"""
+		if self._check_rollup_status(**kwargs):
 			self.builtin.log("This rollup exists")
 		else:
 			raise Exception("Rollup does not exist")	
+
+	def _check_rollup_status(self,**kwargs):
+		ns=self.npsp.get_npsp_namespace_prefix()
+		object=ns+'Rollup__mdt'
+		status=False
+		record=self.salesforce.salesforce_query(object,**kwargs)
+		if len(record)>0:
+			status=True
+		return status
