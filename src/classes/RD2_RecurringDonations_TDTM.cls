@@ -93,7 +93,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        transformDataBeforeValidation(rds, oldRds, triggerAction);
+        transformDataBeforeValidation(rds, triggerAction);
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
@@ -149,6 +149,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
+        adjustClosedRdEndDateAndStatus(rds, oldRds);
+
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = triggerAction == TDTM_Runnable.Action.BeforeUpdate
             ? scheduleService.getAllRecurringDonationSchedules(rds, oldRds)
             : new Map<Id, List<RecurringDonationSchedule__c>>();
@@ -176,7 +178,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     @TestVisible
-    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
         //data transformation happens in the Before context only
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
@@ -198,8 +200,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
             }
         }
-
-        adjustClosedRdEndDateAndStatus(rds, oldRds);
     }
 
     /***
@@ -249,7 +249,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c newRd = rds[i];
 
-            if (newRd.Status__c != RD2_Constants.STATUS_CLOSED) {
+            if ( !(new RD2_RecurringDonation(newRd)).isClosed() ) {
                 continue;
             }
             

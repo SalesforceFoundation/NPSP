@@ -889,9 +889,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(endDate, schedules[0].endDate, 'Schedule End Date should be undefined');
     }
 
-    // @isTest
-    // private static void shouldUpdateFutureScheduleEndDateWhen
-
     //// Helpers
     //////////////////////////
 
