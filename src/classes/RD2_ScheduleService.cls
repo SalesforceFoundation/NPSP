@@ -603,7 +603,7 @@ public without sharing class RD2_ScheduleService {
                 }
                 first1stAnd15thFound = true;
             }
-            activeSchedules.add(new ActiveSchedule(schedule));
+            activeSchedules.add(new ActiveSchedule(schedule, rd));
         }
 
         return activeSchedules;
@@ -627,12 +627,12 @@ public without sharing class RD2_ScheduleService {
         public Id scheduleId { get; set; }
         public Date startDate { get; set; }
 
-        public ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
+        public ActiveSchedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
             isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
             campaignId = rdSchedule.Campaign__c;
             campaignName = rdSchedule.Campaign__r.Name;
             dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
-            endDate = rdSchedule.EndDate__c;
+            endDate = (rd.EndDate__c == null || (rdSchedule.EndDate__c != null && rdSchedule.EndDate__c < rd.EndDate__c)) ? rdSchedule.EndDate__c : rd.EndDate__c;
             installmentAmount = rdSchedule.InstallmentAmount__c;
             installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
             installmentPeriod = rdSchedule.InstallmentPeriod__c;

@@ -316,7 +316,8 @@ public with sharing class RD2_VisualizeScheduleController {
                 'Status__c',
                 'RecurringType__c',
                 'npe03__Installments__c',
-                'npe03__Total_Paid_Installments__c'
+                'npe03__Total_Paid_Installments__c',
+                'EndDate__c'
             };
             if (UserInfo.isMultiCurrencyOrganization()) {
                 queryFields.add('CurrencyIsoCode');
