@@ -56,6 +56,7 @@ export default class rd2EntryForm extends LightningElement {
     recurringDonationInfo;
     fieldInfos;
     dayOfMonthPicklistValue;
+    lastDayPicklistValue;
 
     @track header = newHeaderLabel;
 
@@ -67,7 +68,7 @@ export default class rd2EntryForm extends LightningElement {
 
     isNew = false;
     @track isLoading = true;
-    @track fieldInfoReady = false;
+    @track isFieldInfoReady = false;
     isRecordReady = false;
     isSettingReady = false;
 
@@ -78,7 +79,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Dynamic render edit form CSS to show/hide the edit form 
     */
     get cssEditForm() {
-        return (!this.isLoading && this.isSettingReady && this.fieldInfoReady && this.isRecordReady)
+        return (!this.isLoading && this.isSettingReady && this.isFieldInfoReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
     }
@@ -116,17 +117,19 @@ export default class rd2EntryForm extends LightningElement {
 
    /*******************************************************************************
    * @description Matches today's calender day into the Day of Month picklist value.
-   *    If the value does not matches the picklist value (31), return the last option 'Last Day Of Month''s api value
+   *    If the value does not matches the picklist value (31), return Last_Day API value
    * @return String Today's day in Day of Month picklist api value
    */
     getTodayDateOfMonth() {
-        let todayDate = new Date().getDate().toString();
+        let currentDay = new Date().getDate().toString();
        
         let convertedPicklist = this.dayOfMonthPicklistValue.find(value => {
-                return value.value == todayDate;
-            }) || this.dayOfMonthPicklistValue[this.dayOfMonthPicklistValue.length - 1];
+                return value.value == currentDay;
+            });
 
-        return convertedPicklist.value;
+        return (convertedPicklist) 
+            ? convertedPicklist.value 
+            : this.lastDayPicklistValue;
     }
 
     /*******************************************************************************
@@ -140,11 +143,11 @@ export default class rd2EntryForm extends LightningElement {
             this.fieldInfos = this.buildFieldDescribes(
                 this.recurringDonationInfo.fields,
                 this.recurringDonationInfo.apiName);
-                this.fieldInfoReady = true;
+                this.isFieldInfoReady = true;
         }
 
         if (response.error) {
-            this.fieldInfoReady = true;
+            this.isFieldInfoReady = true;
             handleError(response.error);
         }
     }
@@ -234,6 +237,7 @@ export default class rd2EntryForm extends LightningElement {
             this.handleParentIdType(response.parentSObjectType);
             this.isSettingReady = true;
             this.isLoading = false;
+            this.lastDayPicklistValue = response.dayOfMonthLastDay;
         })
         .catch((error) => {
             this.isSettingReady = true;

@@ -50,7 +50,8 @@ public with sharing class RD2_EntryFormController {
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
-            'parentSObjectType' => parentSObjectType
+            'parentSObjectType' => parentSObjectType,
+            'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY
         };
     }
 }
