@@ -65,6 +65,7 @@ export default class rd2EntryForm extends LightningElement {
     @track contactId;
     @track accountId;
 
+    isNew = false;
     @track isLoading = true;
     @track fieldInfoReady = false;
     isRecordReady = false;
@@ -83,21 +84,49 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /*******************************************************************************
+    * @description Set Installment Frequency to 1 in New entry form
+    */
+    get defaultInstallmentFrequency() {
+        return (this.isNew)
+            ? '1'
+            : undefined;
+    }
+
+    /*******************************************************************************
     * @description Set today's date as default Date of Month in New entry form
     */
     get defaultDayOfMonth() {
-        return (this.recordId == null && this.dayOfMonthPicklistValue)
+        return (this.isNew && this.dayOfMonthPicklistValue)
             ? this.getTodayDateOfMonth()
             : undefined;
     }
 
     /*******************************************************************************
-    * @description Set Installment Frequency to 1 in New entry form
+    * @description Retrieve Recurring Donation Day of Month picklist values
     */
-    get defaultInstallmentFrequency() {
-        return (this.recordId == null)
-            ? '1'
-            : undefined;
+    @wire(getPicklistValues, {fieldApiName: FIELD_DAY_OF_MONTH, recordTypeId: '$recurringDonationInfo.defaultRecordTypeId' })
+    wiredPicklistValues({error, data}) {
+       if(data) {
+          this.dayOfMonthPicklistValue = data.values;
+       }
+       if(error) {
+           this.handleError(error);
+       }
+    }
+
+   /*******************************************************************************
+   * @description Matches today's calender day into the Day of Month picklist value.
+   *    If the value does not matches the picklist value (31), return the last option 'Last Day Of Month''s api value
+   * @return String Today's day in Day of Month picklist api value
+   */
+    getTodayDateOfMonth() {
+        let todayDate = new Date().getDate().toString();
+       
+        let convertedPicklist = this.dayOfMonthPicklistValue.find(value => {
+                return value.label == todayDate;
+            }) || this.dayOfMonthPicklistValue[this.dayOfMonthPicklistValue.length - 1];
+
+        return convertedPicklist.value;
     }
 
     /*******************************************************************************
@@ -117,19 +146,6 @@ export default class rd2EntryForm extends LightningElement {
         if (response.error) {
             this.fieldInfoReady = true;
             handleError(response.error);
-        }
-    }
-
-    /*******************************************************************************
-    * @description Retrieve Recurring Donation Day of Month picklist values
-    */
-    @wire(getPicklistValues, {fieldApiName: FIELD_DAY_OF_MONTH, recordTypeId: '$recurringDonationInfo.defaultRecordTypeId' })
-    wiredPicklistValues({error, data}) {
-        if(data) {
-           this.dayOfMonthPicklistValue = data.values;
-        }
-        if(error) {
-            this.handleError(error);
         }
     }
 
@@ -203,23 +219,11 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Get today's date of month
-    */
-    getTodayDateOfMonth() {
-        let todayDate = new Date().getDate().toString();
-        
-        let convertedPicklist = this.dayOfMonthPicklistValue.find(value => {
-                return value.label == todayDate;
-            }) || this.dayOfMonthPicklistValue[this.dayOfMonthPicklistValue.length - 1];
-
-        return convertedPicklist.value;
-    }
-
-    /*******************************************************************************
     * @description Get org setting on init of the component 
     */ 
     connectedCallback() {
-        if (this.recordId == null) {
+        if (this.recordId === undefined) {
+            this.isNew = true;
             this.isRecordReady = true;
         }
 
