@@ -1951,6 +1951,16 @@
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
         &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
     </labels>
+
+    <labels>
+        <fullName>RD2_EndDateMustBeLaterThanCloseWonOpp</fullName>
+        <categories>Recurring Donations Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Recurring Donation End Date must be valid.</shortDescription>
+        <value>End Date must be later than the last Closed Won Opportunity's Close Date.</value>
+    </labels>
+
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
         <categories>Recurring-Donations, Error</categories>
