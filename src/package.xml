@@ -1688,6 +1688,7 @@
         <members>RD2_EnablementMigrationStopButton</members>
         <members>RD2_EnablementMigrationTitle</members>
         <members>RD2_EnablementMigrationWarning</members>
+        <members>RD2_EnablementPermissionRequired</members>
         <members>RD2_EnablementPrepIntro</members>
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
@@ -2134,6 +2135,11 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geBatchGiftsCount</members>
+        <members>geBatchGiftsExpectedCountOrTotalMessage</members>
+        <members>geBatchGiftsExpectedTotalsMessage</members>
+        <members>geBatchGiftsHeader</members>
+        <members>geBatchGiftsTotal</members>
         <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
@@ -3692,6 +3698,7 @@
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
+        <members>utilProgressBar</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
         <members>utilTemplateBuilder</members>

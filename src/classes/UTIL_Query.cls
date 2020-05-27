@@ -59,6 +59,8 @@ public with sharing class UTIL_Query {
     private Integer limitRows;
     /** @description Indicates if toLabel() should be used on the Salutation field  */
     private Boolean isToLabelSalutation = false;
+    /** @description Indicates if fls and user profile permissions should be enforced */
+    private Boolean isSecurityEnforced = false;
 
     /*********************************************************************************************************
     * @description The constructor
@@ -169,6 +171,15 @@ public with sharing class UTIL_Query {
     }
 
     /*********************************************************************************************************
+    * @description Registers a clause to be used in the SECURITY_ENFORCED clause
+    * @return UTIL_Query The instance of the Query builder
+    */
+    public UTIL_Query withSecurityEnforced() {
+        this.isSecurityEnforced = true;
+        return this;
+    }
+
+    /*********************************************************************************************************
     * @description Validates and builds a SOQL
     * @return String The SOQL
     */
@@ -183,11 +194,12 @@ public with sharing class UTIL_Query {
         }
 
         return String.format(
-            'SELECT {0} FROM {1}{2}{3}{4}',
+            'SELECT {0} FROM {1}{2}{3}{4}{5}',
             new String[] {
                 String.join(uniqueSelectFields, ', '),
                 entity,
                 buildWhereClause(),
+                buildSecurityEnforcedClause(),
                 buildOrderByClause(),
                 buildLimitClause()
             }
@@ -272,5 +284,17 @@ public with sharing class UTIL_Query {
         }
 
         return ' LIMIT ' + limitRows;
+    }
+
+    /*********************************************************************************************************
+    * @description Builds the SECURITY_ENFORCED clause
+    * @return String The SECURITY_ENFORCED clause
+    */
+    private String buildSecurityEnforcedClause() {
+        if (!isSecurityEnforced) {
+           return '';
+        }
+
+        return ' WITH SECURITY_ENFORCED ';
     }
 }
