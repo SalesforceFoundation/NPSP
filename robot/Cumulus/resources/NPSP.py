@@ -867,16 +867,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     break
                 except Exception:
                     sec= sec+30
-                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))                 
+                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
 
-    def get_npsp_settings_value(self,field_name): 
+
+    def get_npsp_settings_value(self,field_name):
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-
-
-
     def verify_payment_details(self, numpayments):
         """Gets the payment details from the UI and compares with the expected number of payments"""
         locator = "//tbody/tr/td[2]/span/span"
@@ -1218,7 +1216,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
-        self.selenium.click_link(value) 
+        self.npsp.click_link_with_text(value)
         
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects
