@@ -64,12 +64,8 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
            Click on the desired option passed as a parameter
         """
         loc=npsp_lex_locators['contacts_actions_dropdown_menu']
-        self.npsp.click_more_actions_button()
         self.selenium.wait_until_element_is_visible(loc)
         self.selenium.click_link(option)
-        if option == 'Recalculating Rollups':
-            notification = npsp_lex_locators['crlps']['rollup_progress_notification'].format("rollups batch job is calculating")
-            self.selenium.wait_until_element_is_visible(notification)
 
     def validate_relation_status_message(self, contact1, contact2, relation):
         """Obtains the status message displayed on the relationships section of contact details page

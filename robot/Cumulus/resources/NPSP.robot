@@ -269,4 +269,16 @@ Enable Customizable Rollups
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            Donations
     Click Link With Text                      Customizable Rollups
-    Enable Customizable Rollups If Not Enabled         
+    Enable Customizable Rollups If Not Enabled
+
+Validate And Create Required CustomField
+    [Documentation]        Reads key value pair arguments.
+    ...                    Go to Object Manager page and load fields and relationships for the specific object
+    ...                    Run keyword to create custom field based on the field type selection
+    [Arguments]       &{fields}
+    Load Page Object                                     Custom                           ObjectManager
+    Open Fields And Relationships                        &{fields}[Object]
+    Run Keyword If     '&{fields}[Field_Type]' == "Lookup"   Create Custom Field
+    ...                                                      &{fields}[Field_Type]
+    ...                                                      &{fields}[Field_Name]
+    ...                                                      &{fields}[Related_To]

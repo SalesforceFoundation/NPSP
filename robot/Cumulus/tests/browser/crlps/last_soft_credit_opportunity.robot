@@ -11,8 +11,6 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-...             Validate And Create Required CustomField
-...             Enable Customizable Rollups
 Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
@@ -22,16 +20,6 @@ Setup Test Data
     ${date} =   Get Current Date       result_format=%-m/%-d/%Y
     Set suite variable    ${date}
 
-# Navigates to Object Manger for the specified object and checks for the presence of the custom field
-# If the specified custom field is not present adds the custom field
-Validate And Create Required CustomField
-    load page object                                     Custom                           ObjectManager
-    open fields and relationships                        Contact
-    create custom field                                  Lookup
-    ...                                                  Last Soft Credit Opportunity
-    ...                                                  Opportunity
-
-
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
 &{opportunity_fields}    Type=Donation   Name=Customizable rollup test $100 Donation   Amount=100  StageName=Closed Won  npe01__Do_Not_Automatically_Create_Payment__c=false
@@ -39,12 +27,23 @@ Validate And Create Required CustomField
 *** Test Cases ***
 
 Create Crlp For Automated Soft Credit
-    [Documentation]
+    [Documentation]     This testcase is to ensure customizable rollups are working for Last soft credit opportunity
+    ...                 Create the required lookup customfield on contact object -(https://foundation.lightning.force.com/lightning/r/agf__ADM_Work__c/a2x1E000001HpCOQA0/view)
+    ...                 Enable CRLP from settings, create a setting record. Create an opportunity associated with a contact that is not primary
+    ...                 Run the relevant rollup batch job and ensure that rollups are happening and displayed on the opportunity page
 
-    [tags]                                                W-037650                         feature:
+    [tags]                                                W-037793                         feature:crlps
+
+    # Create a custom lookup field requried for this particular testcase
+    Validate And Create Required CustomField
+    ...                                                    Object=Contact
+    ...                                                    Field_Type=Lookup
+    ...                                                    Field_Name=Last Soft Credit Opportunity
+    ...                                                    Related_To=Opportunity
+    Enable Customizable Rollups
 
     # Create a crlp settings record for the field last soft credit opportuntiy
-    Load Page Object                                      Custom                          CustomRollupSettings
+    Load Page Object                                       Custom                          CustomRollupSettings
     Navigate To Crlpsettings
     Create New Rollup Setting
     ...                                                   Target Object=Contact
@@ -76,5 +75,4 @@ Create Crlp For Automated Soft Credit
     ...                                                   object_id=${data}[contact][Id]
     Wait Until Loading Is Complete
     Reload Page
-
     Navigate To And Validate Field Value                  Last Soft Credit Opportunity                contains         Customizable rollup test $100 Donation
