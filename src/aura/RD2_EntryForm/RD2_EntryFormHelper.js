@@ -10,31 +10,31 @@
             parentId = helper.getParentId();
             component.set('v.parentId', parentId);
         }
-        
-        $A.createComponent("c:rd2EntryForm", {parentId, recordId},
-        function(content, status, errorMessage) {
-            if (status === "SUCCESS") {
-                const modalBody = content;
 
-                let modalReference = component.find('overlayLib').showCustomModal({
-                    body: modalBody,
-                    cssClass: component.getName() + ' slds-modal_medium custom-modal',
-                    showCloseButton: true,
-                    closeCallback: function() {
-                        helper.redirectToPage(component);
-                    }
-                });
-                component.set('v.modal', modalReference);
-            } else {
-                console.error(errorMessage);
-            }
-        });
+        $A.createComponent("c:rd2EntryForm", { parentId, recordId },
+            function (content, status, error) {
+                if (status === "SUCCESS") {
+                    const modalBody = content;
+
+                    let modalReference = component.find('overlayLib').showCustomModal({
+                        body: modalBody,
+                        cssClass: component.getName() + ' slds-modal_medium custom-modal',
+                        showCloseButton: true,
+                        closeCallback: function () {
+                            helper.redirectToPage(component);
+                        }
+                    });
+                    component.set('v.modal', modalReference);
+                } else {
+                    console.error(JSON.stringify(error));
+                }
+            });
     },
 
     /**
     * @description Handle events sent from the modal
     */
-    handleModalEvent: function(component, event) {
+    handleModalEvent: function (component, event) {
         component.set('v.recordId', event.getParams('detail').recordId);
         this.redirectToPage(component);
     },
@@ -42,7 +42,7 @@
     /**
      * @description: Redirect the page to either parent or RD record
      */
-    redirectToPage: function(component) {
+    redirectToPage: function (component) {
         component.get('v.modal').then(modal => {
             modal.close();
         });
@@ -56,14 +56,14 @@
     /**
      * @description: Determine where the page should be redirect and construct the event
      */
-    constructNavigationEvent: function(navigateToId) {
+    constructNavigationEvent: function (navigateToId) {
         let navEvt;
 
-        if(navigateToId) {
+        if (navigateToId) {
             navEvt = $A.get("e.force:navigateToSObject");
             navEvt.setParams({
-            "recordId": navigateToId,
-            "slideDevName": "related"
+                "recordId": navigateToId,
+                "slideDevName": "related"
             });
 
         } else {
@@ -88,7 +88,7 @@
     * @return ParentId using wubdiw.atob() to convert the base64 string.
     * 
     */
-    getParentId: function() {
+    getParentId: function () {
         try {
             let syntax = 'inContextOfRef';
             syntax = syntax.replace(/[\[\]]/g, "\\$&");
@@ -101,11 +101,11 @@
             } else if (!encodedParameters[2]) {
                 return '';
             }
-            
+
             const decodedFragment = decodeURIComponent(encodedParameters[2].replace(/\+/g, " "));
             return JSON.parse(window.atob(decodedFragment)).attributes.recordId;
 
-        } catch(error) {
+        } catch (error) {
             console.error(JSON.stringify(error));
         }
     }
