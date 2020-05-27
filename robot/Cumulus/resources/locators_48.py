@@ -235,7 +235,7 @@ npsp_lex_locators={
 
     'object_manager':{
         'button':'//input[@title="{}"]',
-		'input':'//input[@id="{}"]',
+        'input':'//input[@id="{}"]',
         'select_related':'//select[@id = "DomainEnumOrId"]',
         'select_related_option':'//select[@id = "DomainEnumOrId"]/option[@value="{}"]',
         'search_result': '//tbody/tr/td/a/span[contains(text(),"{}")]'

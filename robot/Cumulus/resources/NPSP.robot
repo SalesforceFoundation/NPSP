@@ -317,14 +317,6 @@ Enable Customizable Rollups
     Open Main Menu                            Donations
     Click Link With Text                      Customizable Rollups
     Enable Customizable Rollups If Not Enabled
-Enable Advanced Mapping
-    [Documentation]    This keyword enables advanced mapping if not already enabled.
-    Go To Page                              Custom          NPSP_Settings
-    Open Main Menu                          System Tools
-    Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
-    Enable Advanced Mapping If Not Enabled
-
-    Enable Customizable Rollups If Not Enabled
 
 Validate And Create Required CustomField
     [Documentation]        Reads key value pair arguments.
