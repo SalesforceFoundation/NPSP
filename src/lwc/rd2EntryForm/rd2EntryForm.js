@@ -4,6 +4,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { getRecord} from 'lightning/uiRecordApi';
+import { isNull } from 'c/utilCommon';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -225,7 +226,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Get org setting on init of the component 
     */ 
     connectedCallback() {
-        if (this.recordId === undefined) {
+        if (isNull(this.recordId)) {
             this.isNew = true;
             this.isRecordReady = true;
         }
