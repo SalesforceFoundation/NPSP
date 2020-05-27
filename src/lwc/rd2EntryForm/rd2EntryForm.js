@@ -123,7 +123,7 @@ export default class rd2EntryForm extends LightningElement {
         let todayDate = new Date().getDate().toString();
        
         let convertedPicklist = this.dayOfMonthPicklistValue.find(value => {
-                return value.label == todayDate;
+                return value.value == todayDate;
             }) || this.dayOfMonthPicklistValue[this.dayOfMonthPicklistValue.length - 1];
 
         return convertedPicklist.value;
