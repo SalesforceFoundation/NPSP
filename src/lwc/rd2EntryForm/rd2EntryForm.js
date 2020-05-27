@@ -250,7 +250,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Determine the parentId Sobject Type
     */
     handleParentIdType(parentSObjType) {
-        if (parentSObjType == null) {
+        if (isNull(parentSObjType)) {
             return;
         }
 
