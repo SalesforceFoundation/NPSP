@@ -18,14 +18,16 @@
                     </lightning-breadcrumb>
                 </lightning-breadcrumbs>
             </div>
-            <div class="slds-size_1-of-2 slds-m-bottom_small">
-                <lightning-button
-                    label={customLabels.bdiOMUICreateNewObjectGroup}
-                    title={customLabels.bdiOMUICreateNewObjectGroup}
-                    onclick={handleOpenModal}
-                    class="slds-m-left_x-small slds-float_right">
-                </lightning-button>
-            </div>
+            <template if:true={shouldRender}>
+                <div class="slds-size_1-of-2 slds-m-bottom_small">
+                    <lightning-button
+                        label={customLabels.bdiOMUICreateNewObjectGroup}
+                        title={customLabels.bdiOMUICreateNewObjectGroup}
+                        onclick={handleOpenModal}
+                        class="slds-m-left_x-small slds-float_right">
+                    </lightning-button>
+                </div>
+            </template>
             <div class="slds-size_1-of-1 slds-m-bottom_large">
                 <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{customLabels.bdiAdvancedMapping}</h1>
                 <template if:true={shouldRender}>
