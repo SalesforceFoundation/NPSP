@@ -16,10 +16,12 @@
                 let isAdmin = response.getReturnValue();
 
                 if (isAdmin) {
-                    component.set('v.shouldRender', true);
+                    component.set('v.hasPermission', true);
                 } else {
-                    component.set('v.shouldRender', false);
+                    component.set('v.hasPermission', false);
                 }
+
+                $A.util.removeClass(component.find('wrapper'), 'slds-hide');
             } else if (state === ERROR) {
                 let errors = response.getError();
 

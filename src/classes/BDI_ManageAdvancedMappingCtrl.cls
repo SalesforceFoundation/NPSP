@@ -88,7 +88,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     */
     @AuraEnabled
     public static Boolean isAdminUser(Id userId) {
-        List<User> runningUser = [SELECT ProfileId FROM User WHERE Id = :userId WITH SECURITY_ENFORCED];
+        List<User> runningUser = [SELECT ProfileId FROM User WHERE Id = :userId];
         Map<Id, Boolean> userIdToIsAdmin = USER_UserService.isSysAdmin(
                 runningUser
         );
