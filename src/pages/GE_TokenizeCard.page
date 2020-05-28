@@ -14,7 +14,7 @@
     <!--TODO - remove once elevate can process the gateway id-->
     <!-- for QE: to display visually the gateway id when it's passed to tokenize method -->
     <article class='slds-scope'>
-        <div><span id="gatewayInfo"></span></div>
+        <div><small><span id="gatewayInfo"></span></small></div>
     </article>
 
     <script src="{!elevateSDKURL}"></script>
@@ -63,7 +63,12 @@
         // TODO - remove once elevate can process the gateway id
         // for QE: display the gateway id visually as it's been passed to tokenize
         function showGatewayIdForTesting(gatewayId) {
-            document.getElementById('gatewayInfo').textContent = `Gateway Id: ${gatewayId}`;
+            let gatewayIdDisplay = gatewayId;
+            if (gatewayId.includes('-')) {
+                let gatewayIdParts = gatewayId.split('-');
+                gatewayIdDisplay = gatewayIdParts[gatewayIdParts.length - 1];
+            }
+            document.getElementById('gatewayInfo').textContent = `Gateway Id: ****-${gatewayIdDisplay}`;
         }
 
         /*******************************************************************************
