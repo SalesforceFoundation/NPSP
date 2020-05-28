@@ -80,6 +80,7 @@
         <members>BDI_DataImport_CTRL</members>
         <members>BDI_DataImport_TEST</members>
         <members>BDI_DataImport_TEST2</members>
+        <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
         <members>BDI_DryRun_TEST</members>
         <members>BDI_DynamicSource</members>
@@ -2014,6 +2015,8 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonAdminPermissionErrorMessage</members>
+        <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
         <members>commonAssistiveError</members>
         <members>commonAssistiveInfo</members>
@@ -2922,8 +2925,6 @@
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
-        <members>commonAdminPermissionErrorMessage</members>
-        <members>commonAdminPermissionErrorTitle</members>
         <name>CustomLabel</name>
     </types>
     <types>
