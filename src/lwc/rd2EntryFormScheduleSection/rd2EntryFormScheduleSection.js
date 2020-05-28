@@ -69,12 +69,12 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                 this.rdObjectInfo.fields,
                 this.rdObjectInfo.apiName
             );
+            this.isLoading = false;
 
         } else if (response.error) {
+            this.isLoading = false;
             handleError(response.error);
         }
-
-        this.isLoading = false;
     }
 
     /**

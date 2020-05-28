@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { showToast } from 'c/utilTemplateBuilder'
+import { showToast } from 'c/utilTemplateBuilder';
 import { isNull } from 'c/utilCommon';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -49,10 +49,10 @@ export default class rd2EntryForm extends LightningElement {
     fieldInfos;
 
     @track header = newHeaderLabel;
+
     @track isAutoNamingEnabled;
     @track isLoading = true;
-    @track isFieldInfoReady = false;
-    isRecordReady = false;
+    @track isRecordReady = false;
     isSettingReady = false;
 
     @track hasError = false;
@@ -66,7 +66,7 @@ export default class rd2EntryForm extends LightningElement {
         //If the isSettingReady is not checked, then the form on an error resets all fields
         //including the Schedule section LWC fields.
         //TODO: check why and how this expression can be simplifed.
-        return (!this.isLoading && this.isSettingReady && this.isFieldInfoReady && this.isRecordReady)
+        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
     }
@@ -75,11 +75,6 @@ export default class rd2EntryForm extends LightningElement {
     * @description Get settings required to enable or disable fields and populate their values
     */
     connectedCallback() {
-        if (isNull(this.recordId)) {
-            //Fields can be displayed since the record does not exist
-            this.isRecordReady = true;
-        }
-
         getSetting({ parentId: this.parentId })
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
@@ -121,12 +116,15 @@ export default class rd2EntryForm extends LightningElement {
                 rdObjectInfo.fields,
                 rdObjectInfo.apiName
             );
+
+            if (isNull(this.recordId)) {
+                this.isRecordReady = true;
+            }
         }
 
-        this.isFieldInfoReady = true;
-
         if (response.error) {
-            handleError(response.error);
+            this.isRecordReady = true;
+            this.handleError(response.error);
         }
     }
 
@@ -174,14 +172,15 @@ export default class rd2EntryForm extends LightningElement {
         if (response.data) {
             this.record = response.data;
             this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
+            this.isRecordReady = true;
         }
-
-        this.isRecordReady = true;
 
         if (response.error) {
-            handleError(response.error);
+            this.isRecordReady = true;
+            this.handleError(response.error);
         }
     }
+
 
     /***
     * @description Overrides the standard submit. 
@@ -189,8 +188,8 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     handleSubmit(event) {
-        this.hasError = false;
         this.isLoading = true;
+        this.hasError = false;
         this.template.querySelector("[data-id='submitButton']").disabled = true;
 
         event.preventDefault();
@@ -204,6 +203,7 @@ export default class rd2EntryForm extends LightningElement {
         const allFields = {
             ...fields, ...scheduleFields
         };
+
         this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
     }
 
@@ -213,11 +213,10 @@ export default class rd2EntryForm extends LightningElement {
     handleError(error) {
         this.errorMessage = this.constructErrorMessage(error);
         this.hasError = true;
+        this.isLoading = false;
 
         this.template.querySelector("[data-id='submitButton']").disabled = false;
         this.template.querySelector(".slds-modal__header").scrollIntoView();
-
-        this.isLoading = false;
     }
 
     /***
