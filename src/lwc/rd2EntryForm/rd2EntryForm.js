@@ -1,8 +1,8 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
 import { isNull } from 'c/utilCommon';
+
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 
@@ -43,19 +43,16 @@ export default class rd2EntryForm extends LightningElement {
     @api recordId;
 
     @track record;
+    @track contactId;
+    @track accountId;
     @track fields = {};
     fieldInfos;
 
     @track header = newHeaderLabel;
-
     @track isAutoNamingEnabled;
-    @track isMultiCurrencyEnabled;
-
-    @track contactId;
-    @track accountId;
-
     @track isLoading = true;
-    @track isRecordReady = false;
+    isFieldInfoReady = false;
+    isRecordReady = false;
     isSettingReady = false;
 
     @track hasError = false;
@@ -65,9 +62,47 @@ export default class rd2EntryForm extends LightningElement {
     * @description Dynamic render edit form CSS to show/hide the edit form 
     */
     get cssEditForm() {
-        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
+        //Note: all of these flags need to be checked before the sections are displayed.
+        //If the isSettingReady is not checked, then the form on an error resets all fields
+        //including the Schedule section LWC fields.
+        return (!this.isLoading && this.isSettingReady && this.isFieldInfoReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
+    }
+
+    /***
+    * @description Get settings required to enable or disable fields and populate their values
+    */
+    connectedCallback() {
+        if (isNull(this.recordId)) {
+            this.isRecordReady = true;
+        }
+        getSetting({ parentId: this.parentId })
+            .then(response => {
+                this.isAutoNamingEnabled = response.isAutoNamingEnabled;
+                this.handleParentIdType(response.parentSObjectType);
+                this.isSettingReady = true;
+                this.isLoading = false;
+            })
+            .catch((error) => {
+                this.isSettingReady = true;
+                this.handleError(error);
+            });
+    }
+
+    /***
+    * @description Determine the parentId Sobject Type
+    */
+    handleParentIdType(parentSObjType) {
+        if (isNull(parentSObjType)) {
+            return;
+        }
+
+        if (parentSObjType === ACCOUNT_OBJECT.objectApiName) {
+            this.accountId = this.parentId;
+        } else if (parentSObjType === CONTACT_OBJECT.objectApiName) {
+            this.contactId = this.parentId;
+        }
     }
 
     /***
@@ -82,14 +117,11 @@ export default class rd2EntryForm extends LightningElement {
                 rdObjectInfo.fields,
                 rdObjectInfo.apiName
             );
-
-            if (this.recordId == null) {
-                this.isRecordReady = true;
-            }
         }
 
+        this.isFieldInfoReady = true;
+
         if (response.error) {
-            this.isRecordReady = true;
             handleError(response.error);
         }
     }
@@ -137,53 +169,13 @@ export default class rd2EntryForm extends LightningElement {
     wiredRecurringDonationRecord(response) {
         if (response.data) {
             this.record = response.data;
-            this.modifyEditHeader();
-            this.isRecordReady = true;
+            this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
         }
+
+        this.isRecordReady = true;
 
         if (response.error) {
-            this.isRecordReady = true;
             handleError(response.error);
-        }
-    }
-
-    /***
-    * @description Modify edit modal header
-    */
-    modifyEditHeader() {
-        this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
-    }
-
-    /***
-    * @description Get org setting on init of the component 
-    */
-    connectedCallback() {
-        getSetting({ parentId: this.parentId })
-            .then(response => {
-                this.isAutoNamingEnabled = response.isAutoNamingEnabled;
-                this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
-                this.handleParentIdType(response.parentSObjectType);
-                this.isSettingReady = true;
-                this.isLoading = false;
-            })
-            .catch((error) => {
-                this.isSettingReady = true;
-                this.handleError(error);
-            });
-    }
-
-    /***
-    * @description Determine the parentId Sobject Type
-    */
-    handleParentIdType(parentSObjType) {
-        if (parentSObjType == null) {
-            return;
-        }
-
-        if (parentSObjType === ACCOUNT_OBJECT.objectApiName) {
-            this.accountId = this.parentId;
-        } else if (parentSObjType === CONTACT_OBJECT.objectApiName) {
-            this.contactId = this.parentId;
         }
     }
 
@@ -193,6 +185,7 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     handleSubmit(event) {
+        this.hasError = false;
         this.isLoading = true;
         this.template.querySelector("[data-id='submitButton']").disabled = true;
 
@@ -203,10 +196,10 @@ export default class rd2EntryForm extends LightningElement {
         const scheduleFields = (scheduleSection === null || scheduleSection === undefined)
             ? {}
             : scheduleSection.returnValues();
+
         const allFields = {
             ...fields, ...scheduleFields
         };
-
         this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
     }
 
@@ -216,11 +209,11 @@ export default class rd2EntryForm extends LightningElement {
     handleError(error) {
         this.errorMessage = this.constructErrorMessage(error);
         this.hasError = true;
-        this.isLoading = false;
 
         this.template.querySelector("[data-id='submitButton']").disabled = false;
-
         this.template.querySelector(".slds-modal__header").scrollIntoView();
+
+        this.isLoading = false;
     }
 
     /***

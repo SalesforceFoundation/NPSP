@@ -18,7 +18,7 @@
                     </div>
                 </div>
             </template>
-            <template if:true={isRecordReady}>
+            <template if:true={isFieldInfoReady}>
 
                 <div class={cssEditForm}>
                     <template if:true={hasError}>
@@ -52,9 +52,7 @@
                         </div>
                     </div>
 
-                    <c-rd2-entry-form-schedule-section record-id={recordId}
-                        is-multi-currency-enabled={isMultiCurrencyEnabled}>
-                    </c-rd2-entry-form-schedule-section>
+                    <c-rd2-entry-form-schedule-section record-id={recordId}></c-rd2-entry-form-schedule-section>
 
                     <div class="slds-section slds-is-open">
                         <h3 class="slds-section__title slds-theme_shade">

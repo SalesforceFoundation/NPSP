@@ -1,11 +1,11 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { isNull } from 'c/utilCommon';
 
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { getRecord } from 'lightning/uiRecordApi';
+import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
-
 import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
 import FIELD_PLANNED_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
 import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
@@ -26,9 +26,33 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     });
 
     @api recordId;
-    @api isMultiCurrencyEnabled;
-    @track isLoaded = false;
+    @track isLoading = true;
+    isNew = false;
+
+    @track isMultiCurrencyEnabled = false;
     @track fields = {};
+    rdObjectInfo;
+    dayOfMonthPicklistValues;
+    dayOfMonthLastDay;
+
+    /***
+    * @description Get settings required to enable or disable fields and populate their values
+    */
+    connectedCallback() {
+        if (isNull(this.recordId)) {
+            this.isNew = true;
+        }
+
+        getSetting({ parentId: null })
+            .then(response => {
+                this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
+                this.dayOfMonthLastDay = response.dayOfMonthLastDay;
+                this.isLoading = false;
+            })
+            .catch((error) => {
+                this.handleError(error);
+            });
+    }
 
     /**
     * @description Retrieve Recurring Donation SObject info
@@ -36,18 +60,18 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
     wiredRecurringDonationObjectInfo(response) {
         if (response.data) {
-            let rdObjectInfo = response.data;
-            this.setFields(rdObjectInfo.fields);
+            this.rdObjectInfo = response.data;
+            this.setFields(this.rdObjectInfo.fields);
             this.buildFieldDescribes(
-                rdObjectInfo.fields,
-                rdObjectInfo.apiName
+                this.rdObjectInfo.fields,
+                this.rdObjectInfo.apiName
             );
 
         } else if (response.error) {
             console.error(JSON.stringify(response.error));
         }
 
-        this.isLoaded = true;
+        this.isLoading = false;
     }
 
     /**
@@ -88,6 +112,52 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             inlineHelpText: field.inlineHelpText,
             dataType: field.dataType
         };
+    }
+
+    /***
+    * @description Set Installment Frequency to 1 for a new Recurring Donation record
+    */
+    get defaultInstallmentFrequency() {
+        return (this.isNew) ? '1' : undefined;
+    }
+
+    /***
+    * @description Set today's day as default Day of Month value for a new Recurring Donation record
+    */
+    get defaultDayOfMonth() {
+        return (this.isNew && this.dayOfMonthPicklistValues)
+            ? this.getCurrentDayOfMonth()
+            : undefined;
+    }
+
+    /***
+    * @description Retrieve Recurring Donation Day of Month picklist values
+    */
+    @wire(getPicklistValues, { fieldApiName: FIELD_DAY_OF_MONTH, recordTypeId: '$rdObjectInfo.defaultRecordTypeId' })
+    wiredPicklistValues({ error, data }) {
+        if (data) {
+            this.dayOfMonthPicklistValues = data.values;
+        }
+        if (error) {
+            this.handleError(error);
+        }
+    }
+
+    /***
+    * @description Sets Day of Month to current day for a new Recurring Donation record.
+    * When no match is found, ie today is day 31 in a month, return 'Last_Day' API value.
+    * @return String Current day 
+    */
+    getCurrentDayOfMonth() {
+        let currentDay = new Date().getDate().toString();
+
+        let matchingPicklistValue = this.dayOfMonthPicklistValues.find(value => {
+            return value.value == currentDay;
+        });
+
+        return (matchingPicklistValue)
+            ? matchingPicklistValue.value
+            : this.dayOfMonthLastDay;
     }
 
     /**

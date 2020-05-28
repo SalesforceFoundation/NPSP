@@ -9,7 +9,7 @@
             </h3>
             <div aria-hidden="false" class="slds-section__content">
 
-                <template if:true={isLoaded}>
+                <template if:false={isLoading}>
 
                     <lightning-layout horizontal-align="spread" multiple-rows="true">
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
@@ -42,7 +42,8 @@
 
                         <lightning-layout-item padding="horizontal-small" size="12" large-device-size="3"
                             small-device-size="6">
-                            <lightning-input-field field-name={fields.installmentFrequency.apiName} required>
+                            <lightning-input-field field-name={fields.installmentFrequency.apiName} required
+                                value={defaultInstallmentFrequency}>
                             </lightning-input-field>
 
                         </lightning-layout-item>
@@ -54,7 +55,7 @@
 
                         <lightning-layout-item padding="horizontal-small" size="12" large-device-size="3"
                             small-device-size="6">
-                            <lightning-input-field field-name={fields.dayOfMonth.apiName}>
+                            <lightning-input-field field-name={fields.dayOfMonth.apiName} value={defaultDayOfMonth}>
                             </lightning-input-field>
                         </lightning-layout-item>
 
