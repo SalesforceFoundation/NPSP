@@ -68,6 +68,15 @@ as well as many other features needed to define the workspace for the org's inte
 | `enable_crlp` | Task | Enable the NPSP Customizable Rollups feature (works for both Managed and Unmanaged)                          |
 | `enable_incremental_rollups`  | Task | Configure NPSP Customizable Rollups to activate Incremental Rollups                          |
 
+### Enhanced Recurring Donations
+
+| Name                          | Type | Description                                                                                  |
+| ----------------------------- | ---- | -------------------------------------------------------------------------------------------- |
+| `enable_rd2` | Flow | Fully enables NPSP Enhanced Recurring Donations, including enabling CRLP and running the data migration (unmanaged only)
+| `enable_rd2_managed` | Flow | Fully enables NPSP Enhanced Recurring Donations, including enabling CRLP and running the data migration (managed only)
+| `deploy_rd2_config`  | Task | Deploys the Unpackaged Metadata needed for Enhanced Recurring Donations (unmanaged only)
+| `deploy_rd2_config_managed`  | Task | Deploys the Unpackaged Metadata needed for Enhanced Recurring Donations (managed only)
+
 ### Static Analysis
 | Name  | Type | Description                                                                                                                     |
 | ----- | ---- | ------------------------------------------------------------------------------------------------------------------------------- |
