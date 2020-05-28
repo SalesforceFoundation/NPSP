@@ -683,7 +683,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{ rd };
             List<npe03__Recurring_Donation__c> oldRds = null;
 
-            tdtm.transformDataBeforeValidation(rds, triggerAction);
+            tdtm.transformDataBeforeValidation(rds, oldRds, triggerAction);
             tdtm.validate(rds, oldRds, triggerAction);
             tdtm.transformDataInBeforeContext(rds, oldRds, triggerAction);
 
@@ -696,6 +696,9 @@ private with sharing class RD2_RecurringDonations_TEST {
             'Day of Month field should be set to the Last_Day value');
     }
 
+    /***
+    * @description Verifies that Rd End Date should be auto-populate when RD is closed without an End Date 
+    */
     @isTest
     private static void shouldAutoPopulateEndDateToRDWhenRdIsUpdatedToClosed() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -716,6 +719,9 @@ private with sharing class RD2_RecurringDonations_TEST {
             'If End Date is blank, the field should be automatically populated with yesterday when RD is updated to Closed');
     }
 
+    /***
+    * @description Verifies that Rd Status should be revert from Closed when RD End Date is in the future 
+    */
     @isTest
     private static void shouldLeaveRdStatusNotClosedWhenEndDateIsInTheFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();

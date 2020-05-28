@@ -113,6 +113,18 @@ public with sharing class RD2_ValidationService {
     }
 
     /***
+    * @descripton Recurring Donations to its most recent closed won opportunity's close date.
+    */
+    private Map<Id, Date> closeWonDateByRdId {
+        get {
+            if (closeWonDateByRdId == null) {
+                closeWonDateByRdId = getMostRecentCloseWonDateByRdId();
+            }
+            return closeWonDateByRdId;
+        }
+        set;
+    }
+    /***
     * @descripton Elevate integration service
     */
     private RD2_ElevateIntegrationService elevateService {
@@ -173,6 +185,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
+            validateRecurringDonationEndDate(rd);
             validateStatus(rd);
 
             Boolean isValid = validateDonorChange(rd, oldRd);
@@ -286,6 +299,25 @@ public with sharing class RD2_ValidationService {
             && !noClosedOppRDIds.contains(rd.Id)
         ) {
             rd.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
+        }
+    }
+
+    /**
+    * @description Validate the End Date on the Recurring Donation
+    * @param rd The Recurring Donation to validaate
+    * @return void
+    */
+    private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd) {
+        Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
+
+        if (mostRecentCloseWonDate == null
+            || (new RD2_RecurringDonation(rd)).isClosed()
+            || rd.EndDate__c == null) {
+            return;
+        }
+
+        if (rd.EndDate__c < mostRecentCloseWonDate) {
+            rd.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
         }
     }
 
@@ -453,6 +485,32 @@ public with sharing class RD2_ValidationService {
         }
 
         return rdIds;
+    }
+
+    /***
+    * @description Get each Recurring Donation's most recent Closed Won opp close date group by Id
+    * @return map<Id, Date>
+    */
+    private map<Id, Date> getMostRecentCloseWonDateByRdId() {
+        Map<Id, Date> closeWonDateByRdId = new Map<Id, Date>();
+        for (npe03__Recurring_Donation__c rd : [
+            SELECT (
+                SELECT CloseDate
+                FROM npe03__Donations__r
+                WHERE IsClosed = true
+                    AND IsWon = true
+                ORDER BY CloseDate DESC
+                LIMIT 1
+            )
+            FROM npe03__Recurring_Donation__c
+            WHERE Id IN : rds
+        ]) {
+            if (!rd.npe03__Donations__r.isEmpty()) {
+                closeWonDateByRdId.put(rd.Id, rd.npe03__Donations__r[0].CloseDate);
+            }
+        }
+
+        return closeWonDateByRdId;
     }
 
 }

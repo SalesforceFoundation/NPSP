@@ -69,6 +69,20 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         set;
     }
 
+    /**
+     * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
+     * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
+     * When executed from a scheduler or standard DML, the current date is always today.
+    */
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = RD2_ScheduleService.currentDate;
+            }
+            return currentDate;
+        } set;
+    }
+
     /***
     * @description Trigger handler on Recurring Donations when enhancement is enabled
     * @param rds Trigger.new records
@@ -93,7 +107,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        transformDataBeforeValidation(rds, triggerAction);
+        transformDataBeforeValidation(rds, oldRds, triggerAction);
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
@@ -149,8 +163,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        adjustClosedRdEndDateAndStatus(rds, oldRds);
-
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = triggerAction == TDTM_Runnable.Action.BeforeUpdate
             ? scheduleService.getAllRecurringDonationSchedules(rds, oldRds)
             : new Map<Id, List<RecurringDonationSchedule__c>>();
@@ -178,7 +190,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     @TestVisible
-    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
         //data transformation happens in the Before context only
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
@@ -200,6 +212,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
             }
         }
+
+        adjustClosedRdEndDateAndStatus(rds, oldRds);
     }
 
     /***
@@ -254,9 +268,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             }
             
             if (newRd.EndDate__c == null) {
-                newRd.EndDate__c = Date.today().addDays(-1);
+                newRd.EndDate__c = currentDate.addDays(-1);
 
-            } else if (newRd.EndDate__c > Date.today()) {
+            } else if (newRd.EndDate__c > currentDate) {
                 newRd.Status__c = oldRds[i].Status__c;
             }
             
