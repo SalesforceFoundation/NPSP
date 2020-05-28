@@ -46,13 +46,6 @@
                             </lightning-formatted-rich-text>
                         </p>
                 </template>
-                <template if:false={shouldRender}>
-                    <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
-                                         message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
-                                         size='large'
-                                         variant='lake-mountain'>
-                    </c-util-illustration>
-                </template>
             </div>
             <template if:true={shouldRender}>
                 <div class="slds-size_1-of-1 slds-m-bottom_small">
