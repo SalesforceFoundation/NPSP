@@ -25,9 +25,9 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		""" If new rollup doesn't exist - Clone an existing rollup, enter arguments passed  and create new rollup
 			If new rollup exists - logs that rollup already exists
 		"""
-		current_rollup=self._check_rollup_status(Label=rollup_name,Active__c=True)
+		current_rollup=self._check_rollup_status(rollup_name)
 		new_label=kwargs['Target Object']+": "+kwargs['Target Field']
-		new_rollup=self._check_rollup_status(Label=new_label,Active__c=True)
+		new_rollup=self._check_rollup_status(new_label)
 		if current_rollup and not new_rollup:
 				locator = npsp_lex_locators['crlps']['rollup_options'].format(rollup_name)
 				select_locator = npsp_lex_locators['crlps']['select_locator'].format("Target Object")
@@ -38,8 +38,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 				self.selenium.click_link("Clone")
 				self.selenium.wait_until_page_contains_element(select_locator)
 				self.npsp.populate_modal_form(**kwargs)
-				self.selenium.click_button("Save")
-				self.selenium.wait_until_element_is_not_visible(success_toast)	
+				# self.selenium.click_button("Save")
+				# self.selenium.wait_until_element_is_not_visible(success_toast)	
 		elif not current_rollup:
     			raise Exception("Rollup you are trying to clone doesn't exist")
 		elif new_rollup:
@@ -47,20 +47,22 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
     			
     			
  
-	def verify_rollup_exists(self,**kwargs):
+	def verify_rollup_exists(self,label):
 		"""Using API verifies if the rollup with specified key,value pairs exist, if doesn't exist raises exception
 		   Always Pass rollup label and active flag to make sure rollup is active or not	
 		"""
-		if self._check_rollup_status(**kwargs):
+		if self._check_rollup_status(label):
 			self.builtin.log("This rollup exists")
 		else:
 			raise Exception("Rollup does not exist")	
 
-	def _check_rollup_status(self,**kwargs):
+	def _check_rollup_status(self,label):
 		ns=self.npsp.get_npsp_namespace_prefix()
 		object=ns+'Rollup__mdt'
 		status=False
-		record=self.salesforce.salesforce_query(object,**kwargs)
+		query="SELECT Id FROM {} WHERE Active__c = True AND Label = '{}'".format(object,label)
+		record=self.salesforce.soql_query(query).get("records", [])
+		print(f"record is {record}")
 		if len(record)>0:
 			status=True
 		return status
