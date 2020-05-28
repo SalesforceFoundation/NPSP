@@ -51,7 +51,7 @@ export default class rd2EntryForm extends LightningElement {
     @track header = newHeaderLabel;
     @track isAutoNamingEnabled;
     @track isLoading = true;
-    isFieldInfoReady = false;
+    @track isFieldInfoReady = false;
     isRecordReady = false;
     isSettingReady = false;
 
