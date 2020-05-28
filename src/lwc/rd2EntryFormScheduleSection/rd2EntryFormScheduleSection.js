@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { handleError } from 'c/utilTemplateBuilder'
 import { isNull } from 'c/utilCommon';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
@@ -47,10 +48,12 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             .then(response => {
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.dayOfMonthLastDay = response.dayOfMonthLastDay;
-                this.isLoading = false;
             })
             .catch((error) => {
-                this.handleError(error);
+                handleError(error);
+            })
+            .finally(() => {
+                this.isLoading = false;
             });
     }
 
@@ -68,7 +71,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             );
 
         } else if (response.error) {
-            console.error(JSON.stringify(response.error));
+            handleError(response.error);
         }
 
         this.isLoading = false;
@@ -139,7 +142,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             this.dayOfMonthPicklistValues = data.values;
         }
         if (error) {
-            this.handleError(error);
+            handleError(error);
         }
     }
 

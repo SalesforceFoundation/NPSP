@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { showToast } from 'c/utilTemplateBuilder'
 import { isNull } from 'c/utilCommon';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -65,6 +65,7 @@ export default class rd2EntryForm extends LightningElement {
         //Note: all of these flags need to be checked before the sections are displayed.
         //If the isSettingReady is not checked, then the form on an error resets all fields
         //including the Schedule section LWC fields.
+        //TODO: check why and how this expression can be simplifed.
         return (!this.isLoading && this.isSettingReady && this.isFieldInfoReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
@@ -75,18 +76,21 @@ export default class rd2EntryForm extends LightningElement {
     */
     connectedCallback() {
         if (isNull(this.recordId)) {
+            //Fields can be displayed since the record does not exist
             this.isRecordReady = true;
         }
+
         getSetting({ parentId: this.parentId })
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.handleParentIdType(response.parentSObjectType);
-                this.isSettingReady = true;
-                this.isLoading = false;
             })
             .catch((error) => {
-                this.isSettingReady = true;
                 this.handleError(error);
+            })
+            .finally(() => {
+                this.isSettingReady = true;
+                this.isLoading = false;
             });
     }
 
@@ -227,7 +231,13 @@ export default class rd2EntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the success action
     */
     handleSuccess(event) {
-        this.showSuccessToast(event.detail.fields.Name.value);
+        const recordName = event.detail.fields.Name.value;
+        const message = (this.recordId)
+            ? updateSuccessMessage.replace("{0}", recordName)
+            : insertSuccessMessage.replace("{0}", recordName);
+
+        showToast(message, '', 'success');
+
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
     }
 
@@ -274,20 +284,5 @@ export default class rd2EntryForm extends LightningElement {
             header: header || unknownErrorLabel,
             detail: message || unknownErrorLabel
         };
-    }
-
-    /***
-    * @description Fires a toast event to display success message
-    */
-    showSuccessToast(recordName) {
-        let message = (this.recordId)
-            ? updateSuccessMessage.replace("{0}", recordName)
-            : insertSuccessMessage.replace("{0}", recordName);
-
-        const event = new ShowToastEvent({
-            title: message,
-            variant: 'success',
-        });
-        this.dispatchEvent(event);
     }
 }
