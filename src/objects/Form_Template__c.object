@@ -186,6 +186,17 @@
         <type>LongTextArea</type>
         <visibleLines>5</visibleLines>
     </fields>
+    <fields>
+        <fullName>Default_Batch_Table_Columns_JSON__c</fullName>
+        <description>Batch Table Columns JSON, a colletion of soure field api names.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Batch Table Columns JSON, a colletion of soure field api names.</inlineHelpText>
+        <label>Default Batch Table Columns JSON</label>
+        <length>55000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
     <label>Form Template</label>
     <nameField>
         <label>Form Template Name</label>

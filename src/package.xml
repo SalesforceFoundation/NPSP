@@ -1181,6 +1181,7 @@
         <members>Error__c.Related_Record_ID__c</members>
         <members>Error__c.Retry_Pending__c</members>
         <members>Error__c.Stack_Trace__c</members>
+        <members>Form_Template__c.Default_Batch_Table_Columns_JSON__c</members>
         <members>Form_Template__c.Description__c</members>
         <members>Form_Template__c.Format_Version__c</members>
         <members>Form_Template__c.Template_JSON__c</members>
