@@ -129,7 +129,7 @@ public with sharing class GE_PaymentServices {
         request.setHeader(JWT_TOKEN, getJwt());
         request.setHeader(SFDO_USERNAME, UserInfo.getUserName());
         if (config.get(SFDO_MERCHANTIDS) != null) {
-            request.setHeader(SFDO_MERCHANTIDS.toLowerCase(), config.get(SFDO_MERCHANTIDS));
+            request.setHeader(SFDO_MERCHANTIDS, config.get(SFDO_MERCHANTIDS));
         }
 
         // Set the body as a JSON object...
