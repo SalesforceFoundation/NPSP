@@ -927,6 +927,38 @@ private with sharing class RD2_ValidationService_TEST {
         );
     }
 
+    /***
+    * @description Verifies that Fixed RD fail to update when End Date is populated. 
+    */
+    @isTest
+    private static void shouldFailFixedRDUpdateWhenEndDateIsPopulated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Date rdEndDate = Date.today().addDays(20);
+        RD2_ScheduleService.currentDate = rdEndDate;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withRecurringTypeFixed()
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.EndDate__c = rdEndDate;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(System.Label.RD2_EndDateNotAllowedWhenFixed),
+            'Fixed RD update should fail when Rd End Date is populated: ' + errMessage
+        );
+    }
+
     // Helper Methods
     /////////////////////
 

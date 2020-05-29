@@ -304,24 +304,27 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate the End Date on the Recurring Donation
-    * @param rd The Recurring Donation to validaate
+    * @param rd The Recurring Donation to validate
     * @return void
     */
     private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd) {
-        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
-            return;
-        }
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
-        Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
+        if (rdRecord.isFixedLength() && rd.EndDate__c != null) {
+            rd.AddError(System.Label.RD2_EndDateNotAllowedWhenFixed); 
 
-        if (mostRecentCloseWonDate == null
-            || (new RD2_RecurringDonation(rd)).isClosed()
-            || rd.EndDate__c == null) {
-            return;
-        }
+        } else if (rdRecord.isOpenEnded()) {
+            Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
 
-        if (rd.EndDate__c < mostRecentCloseWonDate) {
-            rd.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
+            if (mostRecentCloseWonDate == null
+                || rdRecord.isClosed()
+                || rd.EndDate__c == null) {
+                return;
+            }
+    
+            if (rd.EndDate__c < mostRecentCloseWonDate) {
+                rd.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
+            }
         }
     }
 
