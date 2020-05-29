@@ -2015,6 +2015,8 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonAdminPermissionErrorMessage</members>
+        <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
         <members>commonAssistiveError</members>
         <members>commonAssistiveInfo</members>
