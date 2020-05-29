@@ -864,9 +864,10 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     @isTest
     private static void shouldSetEndDateOnScheduleWhenRDEndDateIsSet() {
         Date startDate = Date.newInstance(2018, 2, 1);
-        Date endDate = startDate.addMonths(10);
         Date today = Date.newInstance(2019, 7, 31);
+        Date endDate = today.addMonths(10);
         String dayOfMonth = '12';
+        RD2_ScheduleService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -880,7 +881,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         insert rd;
         Test.stopTest();
 
-        RD2_ScheduleService.currentDate = today;
         List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
