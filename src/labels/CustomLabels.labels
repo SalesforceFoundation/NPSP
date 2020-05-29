@@ -1957,7 +1957,7 @@
         <categories>Recurring Donations Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Validate Recurring Donation End Date must be valid.</shortDescription>
+        <shortDescription>Recurring Donation End Date must be valid.</shortDescription>
         <value>End Date must be later than the last Closed Won Opportunity's Close Date.</value>
     </labels>
     <labels>
@@ -1966,7 +1966,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Disallow a value in End Date on the RD for Recurring Type is Fixed</shortDescription>
-        <value>End Date is for Open Recurring Donations only. Remove the value in End Date.</value>
+        <value>You can't add an End Date when the Recurring Type is Fixed.</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
