@@ -97,6 +97,34 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
         '"Relationship_To_Predecessor":null}';
 
     /*******************************************************************************************************
+    * @description Test that an admin user is correctly identified.
+    */
+    @isTest
+    static void userIsAdmin() {
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+
+        System.runAs(adminUser) {
+            Boolean isAdmin = BDI_ManageAdvancedMappingCtrl.isAdminUser(UserInfo.getUserId());
+
+            System.assertEquals(true, isAdmin, 'The admin user was not correctly identified as an admin.');
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Test that a standard user is not incorrectly identified as an admin.
+    */
+    @isTest
+    static void userIsNotAdmin() {
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Standard User');
+
+        System.runAs(standardUser) {
+            Boolean isAdmin = BDI_ManageAdvancedMappingCtrl.isAdminUser(UserInfo.getUserId());
+
+            System.assertEquals(false, isAdmin, 'The standard user was incorrectly identified as an admin.');
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Test that we get the current namespace and npsp namespace
     */
     @isTest
