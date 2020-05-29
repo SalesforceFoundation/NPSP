@@ -142,6 +142,15 @@ public inherited sharing class RD2_RecurringDonation {
         return this;
     }
 
+    public RD2_RecurringDonation reviseStatus() {
+        if (isFixedLength()) {
+            reviseStatusForFixedLength();
+
+        } else if (isOpenEnded()) {
+            reviseStatusForOpenEnded();
+        }
+        return this;
+    }
     /**
     * @description Revises and modifies the Recurring Donation if it is Fixed Length and is now fully completed
     * based on the Number of Planned Installments as compared to the Number of Paid Installments.
@@ -160,6 +169,24 @@ public inherited sharing class RD2_RecurringDonation {
             changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
         }
+        return this;
+    }
+
+    /**
+    *@description Revises and modifies the Recurring Donation if it is Open Ended and it past the RD End Date
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation reviseStatusForOpenEnded() {
+        if (isActive()
+            && isOpenEnded()
+            && rd.EndDate__c != null
+            && rd.EndDate__c < RD2_ScheduleService.currentDate
+        ) {
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            
+            changedFields.add(npe03__Recurring_Donation__c.Status__c);
+        }
+
         return this;
     }
 

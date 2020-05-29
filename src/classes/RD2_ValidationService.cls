@@ -308,6 +308,10 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd) {
+        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
+            return;
+        }
+
         Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
 
         if (mostRecentCloseWonDate == null

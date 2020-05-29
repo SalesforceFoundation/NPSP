@@ -1239,7 +1239,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(null, rdSchedules[0].EndDate__c, 'The End Date should not be set');
 
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), rdSchedules);
-        service.evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
+        service.evaluateScheduleEndDate(new RD2_RecurringDonation(rd), rdSchedules);
 
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
@@ -1289,7 +1289,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(null, rdSchedules[0].EndDate__c, 'The End Date should not be set');
 
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, opps, rdSchedules);
-        service.evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
+        service.evaluateScheduleEndDate(new RD2_RecurringDonation(rd), rdSchedules);
 
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
@@ -1351,7 +1351,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(null, rdSchedules[0].EndDate__c, 'The End Date should not be set');
 
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, opps, rdSchedules);
-        service.evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
+        service.evaluateScheduleEndDate(new RD2_RecurringDonation(rd), rdSchedules);
 
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
@@ -1408,7 +1408,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(1, rdSchedules.size(), 'There should be one schedule');
 
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, opps, rdSchedules);
-        service.evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
+        service.evaluateScheduleEndDate(new RD2_RecurringDonation(rd), rdSchedules);
 
         System.assertEquals(scheduleEndDate, opps[plannedInstallments - 1].CloseDate, 
             'The last planned Opp Close Date should match');
@@ -1469,7 +1469,7 @@ private with sharing class RD2_ScheduleService_TEST {
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, opps, rdSchedules);
 
         Test.startTest();
-        service.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
+        service.evaluateScheduleEndDate(new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r);
         Test.stopTest();
 
         System.assertEquals(nextDonationDate, rd.RecurringDonationSchedules__r[0].EndDate__c,
@@ -1526,7 +1526,7 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(1, rdSchedules.size(), 'There should be one schedule');
 
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, opps, rdSchedules);
-        service.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
+        service.evaluateScheduleEndDate(new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r);
 
         System.assertEquals(Date.newInstance(2020, plannedInstallments + 1, 1), rd.RecurringDonationSchedules__r[0].EndDate__c,
             'The schedule end date should be moved one month forward since one Opp is Closed Lost');

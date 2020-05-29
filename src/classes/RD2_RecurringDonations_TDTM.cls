@@ -176,7 +176,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 rdRecord
-                    .reviseStatusForFixedLength()
+                    .reviseStatus()
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
             }
         }
@@ -213,7 +213,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             }
         }
 
-        adjustClosedRdEndDateAndStatus(rds, oldRds);
+        adjustClosedRdEndDateAndStatus(rds, oldRds, triggerAction);
     }
 
     /***
@@ -253,27 +253,35 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Evaluate Closed and End Date on RD.
-    * If the RD Status is updated to Closed but the End Date is in the future, leave the RD status un-change.
-    * If the RD Status is updated to CLosed and the End Date is null, auto-populate the end date to yesterday.
+    * @description Evaluate Closed and End Date on OpenEnded RD.
+    * If the RD Status is updated to Closed but the End Date is in the future, revert the status to before update.
+    * If the RD Status is inserted/updated to Closed and the End Date is null, auto-populate the end date to yesterday.
+    * If the RD is reopened, clear out the End Date
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     */
-    private void adjustClosedRdEndDateAndStatus(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
+    private void adjustClosedRdEndDateAndStatus(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
         for (Integer i = 0; i < rds.size(); i++) {
-            npe03__Recurring_Donation__c newRd = rds[i];
+            RD2_RecurringDonation newRd = new RD2_RecurringDonation(rds[i]);
 
-            if ( !(new RD2_RecurringDonation(newRd)).isClosed() ) {
+            if (newRd.isFixedLength()) {
                 continue;
             }
-            
-            if (newRd.EndDate__c == null) {
-                newRd.EndDate__c = currentDate.addDays(-1);
 
-            } else if (newRd.EndDate__c > currentDate) {
-                newRd.Status__c = oldRds[i].Status__c;
+            if (newRd.isClosed() && rds[i].EndDate__c == null) {
+                rds[i].EndDate__c = currentDate.addDays(-1);
+                
             }
-            
+
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                if (rds[i].EndDate__c != null && rds[i].EndDate__c > currentDate) {
+                    rds[i].Status__c = oldRds[i].Status__c;
+                }
+
+                if (!newRd.isClosed() && (new RD2_RecurringDonation(oldRds[i]).isClosed())) {
+                    rds[i].EndDate__c = null;
+                }
+            }
         }
     }
 
