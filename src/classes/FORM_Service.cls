@@ -79,8 +79,9 @@ public virtual with sharing class FORM_Service {
                                             String name, 
                                             String description, 
                                             String formatVersion, 
-                                            String templateJSON) {
+                                            String templateJSON,
+                                            String batchTableColumns) {
 
-        FORM_ServiceGiftEntry.storeFormTemplate(id,name,description,formatVersion,templateJSON);
+        FORM_ServiceGiftEntry.storeFormTemplate(id,name,description,formatVersion,templateJSON,batchTableColumns);
     }
 }

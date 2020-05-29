@@ -112,7 +112,7 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
 
         FORM_Template formTemplate =
                 new FORM_Template(
-                        'testTemplate', '', '', formLayout);
+                        'testTemplate', '', '', formLayout, '[]');
 
         Form_Template__c template = new Form_Template__c(
                 Template_JSON__c = JSON.serialize(formTemplate),
