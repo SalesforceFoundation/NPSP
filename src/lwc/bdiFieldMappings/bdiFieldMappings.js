@@ -80,6 +80,7 @@ export default class bdiFieldMappings extends LightningElement {
     @api diFieldDescribes;
     @api mappedDiFieldDescribes;
     @api targetObjectFieldDescribes;
+    @api shouldRender;
 
     @track displayFieldMappings = false;
     @track isLoading = true;
