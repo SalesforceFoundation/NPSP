@@ -4873,6 +4873,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Review Form</value>
     </labels>
     <labels>
+        <fullName>commonAdminPermissionErrorMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message about permissions</shortDescription>
+        <value>You must be a System Administrator to access this page.</value>
+    </labels>
+    <labels>
+        <fullName>commonAdminPermissionErrorTitle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error title about permissions</shortDescription>
+        <value>Check Your Permissions</value>
+    </labels>
+    <labels>
         <fullName>commonSave</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
