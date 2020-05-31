@@ -6,6 +6,7 @@ npsp_lex_locators={
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
     'button-title':"//button[@title='{}']",
+    'button-text':"//button[text()='{}']",
     'button-with-text':'//button[contains(text(),"{}")]',
     'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
@@ -251,7 +252,6 @@ npsp_lex_locators={
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
-        'button':"//button[text()='Create New Field Mapping']",
         'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
         },
     'modal-form':{
