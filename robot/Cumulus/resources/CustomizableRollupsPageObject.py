@@ -37,9 +37,10 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 				self.selenium.wait_until_page_contains("Clone")
 				self.selenium.click_link("Clone")
 				self.selenium.wait_until_page_contains_element(select_locator)
-				self.npsp.populate_modal_form(**kwargs)
-				# self.selenium.click_button("Save")
-				# self.selenium.wait_until_element_is_not_visible(success_toast)	
+				self.populate_crlp_form(**kwargs)
+				# self.npsp.populate_modal_form(**kwargs)
+				self.selenium.click_button("Save")
+				self.selenium.wait_until_element_is_not_visible(success_toast)	
 		elif not current_rollup:
     			raise Exception("Rollup you are trying to clone doesn't exist")
 		elif new_rollup:
@@ -66,3 +67,16 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		if len(record)>0:
 			status=True
 		return status
+
+	def select_from_list(self,key,value):
+		""""""
+		locator=npsp_lex_locators['crlps']['select_locator'].format(key)
+		self.selenium.select_from_list_by_label(locator,value)
+
+	def populate_crlp_form(self,**kwargs):
+		""""""
+		for key,value in kwargs.items():
+			if key=='Description':
+				self.salesforce.populate_field(key,value)
+			else:
+				self.select_from_list(key,value)
