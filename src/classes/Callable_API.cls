@@ -103,6 +103,27 @@ global with sharing class Callable_API implements System.Callable {
                 RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(scheduleJobsWhenComplete);
                 return null;
 
+            } when 'allo.processoppsandpmts' {
+                // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.
+                // If you have any questions, please inquire on the Power of Us Hub.
+                Set<Id> opportunityIds = paramService.getSetId(CallableApiParameters.PARAM_OPPORTUNITY_IDS);
+                String contextType = paramService.getString(CallableApiParameters.PARAM_CONTEXT_TYPE);
+                Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
+                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.PARAM_DISABLE_ALLOCATION_TRIGGERS);
+
+                return new ALLO_AllocationsService()
+                                .withAllocationTriggersDisabled(disableOppAndPmtAlloTriggers)
+                                .withAlternateContextType(contextType)
+                                .withCommitAndClearRecordsEnabled(true)
+                                .processRecords(opportunityIds);
+
+            } when 'allo.validatepmtallocationconfig' {
+                // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.
+                // If you have any questions, please inquire on the Power of Us Hub.
+                return ALLO_AllocationsSettings.getSettings().validatePaymentAllocationsConfiguration();
+
             } when 'settings.enablecustomizablerollups' {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
