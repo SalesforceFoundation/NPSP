@@ -79,7 +79,6 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		currency_locator=npsp_lex_locators['object_manager']['input'].format("dtypeC")
 		next_button=npsp_lex_locators['object_manager']['button'].format("Next")
 		save_button=npsp_lex_locators['object_manager']['button'].format("Save")
-		field_label = npsp_lex_locators['object_manager']['input'].format("MasterLabel")
 		self.selenium.wait_until_page_contains_element(currency_locator,timeout=60)
 		self.selenium.click_element(currency_locator)
 		time.sleep(1)

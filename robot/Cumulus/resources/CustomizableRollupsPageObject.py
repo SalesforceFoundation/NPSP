@@ -21,6 +21,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		link=npsp_lex_locators['link-text'].format("Back to NPSP Settings")										   
 		self.selenium.wait_until_page_contains_element(link,
 											  error="Current page is not a customizable rollups setting view")
+
 	
 	def is_setting_present(self, object, name):
 		""" Search for the presence of an active crlp setting record already. Return a boolean value accordingly
@@ -107,9 +108,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 				self.select_from_list(key,value)		
 
 	def _check_rollup_status(self,label):
-		"""This is a helper API that checks if the rollup exists and active
-		   Returns true if both conditions are met, else returns false 	
-		"""
+    	"""This is a helper API that checks if the rollup exists and active. 
+	    Returns true if both condtions are met, else returns false """
 		ns=self.npsp.get_npsp_namespace_prefix()
 		object=ns+'Rollup__mdt'
 		status=False
@@ -117,7 +117,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		record=self.salesforce.soql_query(query).get("records", [])
 		print(f"record is {record}")
 		if len(record)>0:
-    			status=True
+			status=True
 		return status
 
     			
