@@ -328,24 +328,21 @@ public with sharing class RD2_ValidationService {
 
         RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
-        if (rdRecord.isFixedLength()) {
-            if (rdRecord.isClosed()
-                && rd.EndDate__c > currentDate
-            ) {
+        if (rdRecord.isFixedLength()
+            && rdRecord.isClosed()
+            && rd.EndDate__c > currentDate) {
                 rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
             }
 
-        } else if (rdRecord.isOpenEnded()) {
-            Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
-
-            if (mostRecentCloseWonDate == null) {
-                return;
-            }
-    
-            if (rd.EndDate__c < mostRecentCloseWonDate) {
-                rd.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
-            }
+        Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
+        if (mostRecentCloseWonDate == null) {
+            return;
         }
+
+        if (rd.EndDate__c < mostRecentCloseWonDate) {
+            rd.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
+        }
+
     }
 
     /**
