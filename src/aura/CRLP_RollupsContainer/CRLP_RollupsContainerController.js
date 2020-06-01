@@ -16,6 +16,10 @@
                 var labels = model.labels;
                 cmp.set("v.labels", labels);
 
+                if (!model.isAdmin) {
+                    cmp.set("v.isAdmin", false);
+                }
+
                 //notify user that CRLP is disabled or proceed with setting data
                 if (!model.isCRLPEnabled) {
                     cmp.set("v.isCRLPEnabled", false);
