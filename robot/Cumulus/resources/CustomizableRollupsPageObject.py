@@ -92,18 +92,6 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		else:
 			raise Exception("Rollup does not exist")	
 
-	def _check_rollup_status(self,label):
-    	"""This is a helper API that checks if the rollup exists and active. 
-		   Returns true if both condtions are met, else returns false """
-		ns=self.npsp.get_npsp_namespace_prefix()
-		object=ns+'Rollup__mdt'
-		status=False
-		query="SELECT Id FROM {} WHERE Active__c = True AND Label = '{}'".format(object,label)
-		record=self.salesforce.soql_query(query).get("records", [])
-		print(f"record is {record}")
-		if len(record)>0:
-			status=True
-		return status
 
 	def select_from_list(self,key,value):
 		"""Selects the specified value from the dropdown identified with key on rollups form"""
@@ -117,3 +105,21 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 				self.salesforce.populate_field(key,value)
 			else:
 				self.select_from_list(key,value)		
+
+	def _check_rollup_status(self,label):
+		"""This is a helper API that checks if the rollup exists and active
+		   Returns true if both conditions are met, else returns false 	
+		"""
+		ns=self.npsp.get_npsp_namespace_prefix()
+		object=ns+'Rollup__mdt'
+		status=False
+		query="SELECT Id FROM {} WHERE Active__c = True AND Label = '{}'".format(object,label)
+		record=self.salesforce.soql_query(query).get("records", [])
+		print(f"record is {record}")
+		if len(record)>0:
+    			status=True
+		return status
+
+    			
+
+

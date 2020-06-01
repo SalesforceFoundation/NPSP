@@ -74,15 +74,13 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 			elif type == 'Currency':
 				self.create_currency_field(field_name)	
 
-
 	def create_currency_field(self,field_name):
-    	"""Creates a currency field by taking in the field_name"""
-		currency_locator = npsp_lex_locators['object_manager']['input'].format("dtypeC")
-		next_button = npsp_lex_locators['object_manager']['button'].format("Next")
-		save_button = npsp_lex_locators['object_manager']['button'].format("Save")
-		option = npsp_lex_locators['object_manager']['select_related_option'].format(related)
+		"""Creates a currency field by taking in the field name"""
+		currency_locator=npsp_lex_locators['object_manager']['input'].format("dtypeC")
+		next_button=npsp_lex_locators['object_manager']['button'].format("Next")
+		save_button=npsp_lex_locators['object_manager']['button'].format("Save")
 		field_label = npsp_lex_locators['object_manager']['input'].format("MasterLabel")
-		self.selenium.wait_until_page_contains_element(lookup_locator,60)
+		self.selenium.wait_until_page_contains_element(currency_locator,timeout=60)
 		self.selenium.click_element(currency_locator)
 		time.sleep(1)
 		self.selenium.click_element(next_button)
@@ -93,5 +91,9 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.click_element(next_button)
 		self.selenium.click_element(next_button)
 		self.selenium.click_element(save_button)
-		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90,
-												   message="Fields And Relationships page did not load in 1 min")			
+		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90, message="Fields And Relationships page did not load in 1 min")
+		
+
+
+
+
