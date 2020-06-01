@@ -5,6 +5,7 @@ from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 
+
 @pageobject("Custom", "CustomRollupSettings")
 class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
     def navigate_to_crlpsettings(self, filter_name=None):
