@@ -928,7 +928,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies that Fixed RD is failed to Close when End Date is in the future. 
+    * @description Verifies that Fixed RD fail to Closes when End Date is in the future. 
     */
     @isTest
     private static void shouldFailFixedRDUpdateWhenEndDateIsInTheFuture() {
@@ -956,7 +956,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         System.assert(
             errMessage.contains(System.Label.RD2_EndDateMustBeValidForFixedLength),
-            'Fixed RD update should fail when Rd End Date is populated: ' + errMessage
+            'Fixed RD update should fail when Rd End Date is in the future: ' + errMessage
         );
     }
 
