@@ -1958,7 +1958,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Recurring Donation End Date must be valid.</shortDescription>
-        <value>End Date must be later than the last Closed Won Opportunity's Close Date.</value>
+        <value>End Date must be later than the last Closed Won Opportunity&apos;s Close Date.</value>
     </labels>
     <labels>
         <fullName>RD2_EndDateMustBeValidForFixedLength</fullName>
@@ -1966,7 +1966,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Fixed Length Recurring Donation End Date must be valid</shortDescription>
-        <value>End Date can't be in the future when Recurring Type is Fixed.</value>
+        <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
