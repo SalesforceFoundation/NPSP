@@ -22,9 +22,9 @@ Setup Test Data
 *** Test Cases ***
 
 Calculate CRLPs for Total Gifts 3 Years Ago
-    [Documentation]             This test case checks if advanced mapping is enabled. If already enabled 
-    ...                         then throws an error and if not, enables Advanced Mapping for Data Imports  
-    [tags]                      feature:Customizable Rollups
+    [Documentation]             Create a New rollup for Total Gifts 3 years ago by cloning an existing rollup called Total Gifts Two Years Ago 
+    ...                         and create an opportunity for 3 ago from current date and verify the rollup value on newly created Total Gifts Three Years Ago field   
+    [tags]                      feature:Customizable Rollups    W-038217
     Load Page Object            Custom   CustomRollupSettings
     Navigate To Crlpsettings
     Clone Rollup                Contact: Total Gifts Two Years Ago
