@@ -2702,6 +2702,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
         <value>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
     </labels>
+   <labels>
+        <fullName>alloDefaultGAUNotActive</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when the Default General Accounting Unit is not active</shortDescription>
+        <value>The Default General Accounting Unit is not active. Set the {0} General Accounting Unit to Active, or change the Default General Accounting Unit to one that’s active.</value>
+    </labels>
     <labels>
         <fullName>alloDefaultNotEnabled</fullName>
         <categories>Allocation, Error</categories>
@@ -2807,12 +2815,44 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when a record’s Allocation total exceeds its Amount</shortDescription>
+        <value>The total of the Allocations on this {0} exceeds its Amount. Update the {0} Allocations to make their total equal to the {0} Amount.</value>
+    </labels>
+    <labels>
         <fullName>alloPaidPmtsExceedsOpp</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
         <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchAllocationError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message wrapper for a specific Allocation in a batch</shortDescription>
+        <value>Error occurred while processing the {0} record associated with Allocation {1} ({2}). Details: {3}</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchRecordError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message wrapper for a batch when a specific Allocation can’t be identified</shortDescription>
+        <value>Error occurred while processing {0} {1}. Details: {2}</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchRetriesExceeded</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when the Accounting Scheduled Job retry can’t process Allocations</shortDescription>
+        <value>Error occurred while processing records that didn&apos;t error on the first attempt. No data was saved.</value>
     </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
@@ -2877,6 +2917,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>Each Allocation must have a single parent object: Pmt, Opp, Rec Donation, Camp.</shortDescription>
         <value>Ensure that this Allocation has only one parent object: Payment, Opportunity, Recurring Donation, or Campaign.</value>
+    </labels>
+    <labels>
+        <fullName>alloSuccessfulRecordRetry</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success text added to Error Logs when retry successfully processes Allocations</shortDescription>
+        <value>Processing these Allocations was retried and completed successfully.</value>
     </labels>
     <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
