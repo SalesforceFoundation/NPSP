@@ -454,6 +454,24 @@ public class UTIL_UnitTestData_TEST {
         insert listConT;
     }
 
+    /**
+     * @description Create General Accounting Units (GAUs) for unit testing.
+     * @param n The number of General Accounting Units to be created
+     * @return List of General Accounting Units
+     */
+    public static List<General_Accounting_Unit__c> createGAUs (Integer n) {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        for (Integer i=0; i < n; i++) {
+            gaus.add(
+                new General_Accounting_Unit__c(
+                    Name = 'Test ' + getUniqueString()
+                )
+            );
+        }
+        return gaus;
+    }
+
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
 
