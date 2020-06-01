@@ -931,11 +931,11 @@ private with sharing class RD2_ValidationService_TEST {
     * @description Verifies that Fixed RD fail to update when End Date is populated. 
     */
     @isTest
-    private static void shouldFailFixedRDUpdateWhenEndDateIsPopulated() {
+    private static void shouldFailFixedRDUpdateWhenEndDateIsInTheFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Date rdEndDate = Date.today().addDays(20);
-        RD2_ScheduleService.currentDate = rdEndDate;
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
@@ -946,7 +946,8 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         try {
             Test.startTest();
-            rd.EndDate__c = rdEndDate;
+            rd.EndDate__c = today.addDays(1);
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
             update rd;
             Test.stopTest();
         } catch (Exception e) {
@@ -954,7 +955,7 @@ private with sharing class RD2_ValidationService_TEST {
         }
 
         System.assert(
-            errMessage.contains(System.Label.RD2_EndDateNotAllowedWhenFixed),
+            errMessage.contains(System.Label.RD2_EndDateMustBeValidForFixedLength),
             'Fixed RD update should fail when Rd End Date is populated: ' + errMessage
         );
     }

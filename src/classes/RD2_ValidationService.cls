@@ -138,6 +138,20 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
+     * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
+     * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
+     * When executed from a scheduler or standard DML, the current date is always today.
+    */
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = RD2_ScheduleService.currentDate;
+            }
+            return currentDate;
+        } set;
+    }
+
+    /**
     * @description Constructor for the RD2_ValidationService class
     * @param rds New rds that will be validated
     */
@@ -308,17 +322,23 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd) {
+        if (rd.EndDate__c == null) {
+            return;
+        }
+
         RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
-        if (rdRecord.isFixedLength() && rd.EndDate__c != null) {
-            rd.AddError(System.Label.RD2_EndDateNotAllowedWhenFixed); 
+        if (rdRecord.isFixedLength()) {
+            if (rdRecord.isClosed()
+                &&rd.EndDate__c > currentDate
+            ) {
+                rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
+            }
 
         } else if (rdRecord.isOpenEnded()) {
             Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
 
-            if (mostRecentCloseWonDate == null
-                || rdRecord.isClosed()
-                || rd.EndDate__c == null) {
+            if (mostRecentCloseWonDate == null) {
                 return;
             }
     

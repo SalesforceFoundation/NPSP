@@ -264,17 +264,14 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         for (Integer i = 0; i < rds.size(); i++) {
             RD2_RecurringDonation newRd = new RD2_RecurringDonation(rds[i]);
 
-            if (newRd.isFixedLength()) {
-                continue;
-            }
-
             if (newRd.isClosed() && rds[i].EndDate__c == null) {
                 rds[i].EndDate__c = currentDate.addDays(-1);
-                
             }
 
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                if (rds[i].EndDate__c != null && rds[i].EndDate__c > currentDate) {
+            if (newRd.isOpenEnded() && triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                if (newRd.isClosed()
+                    && rds[i].EndDate__c != null 
+                    && rds[i].EndDate__c > currentDate) {
                     rds[i].Status__c = oldRds[i].Status__c;
                 }
 

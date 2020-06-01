@@ -632,7 +632,7 @@ public without sharing class RD2_ScheduleService {
             campaignId = rdSchedule.Campaign__c;
             campaignName = rdSchedule.Campaign__r.Name;
             dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
-            endDate = (rd.EndDate__c == null || (rdSchedule.EndDate__c != null && rdSchedule.EndDate__c < rd.EndDate__c)) ? rdSchedule.EndDate__c : rd.EndDate__c;
+            endDate = (rdSchedule.EndDate__c != null) ? rdSchedule.EndDate__c : rd.EndDate__c;
             installmentAmount = rdSchedule.InstallmentAmount__c;
             installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
             installmentPeriod = rdSchedule.InstallmentPeriod__c;
