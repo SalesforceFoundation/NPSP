@@ -268,15 +268,18 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 rds[i].EndDate__c = currentDate.addDays(-1);
             }
 
-            if (newRd.isOpenEnded() && triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                if (newRd.isClosed()
-                    && rds[i].EndDate__c != null 
-                    && rds[i].EndDate__c > currentDate) {
-                    rds[i].Status__c = oldRds[i].Status__c;
-                }
-
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 if (!newRd.isClosed() && (new RD2_RecurringDonation(oldRds[i]).isClosed())) {
                     rds[i].EndDate__c = null;
+                }
+
+                if (
+                    newRd.isOpenEnded()
+                    && newRd.isClosed()
+                    && rds[i].EndDate__c != null 
+                    && rds[i].EndDate__c > currentDate
+                ) {
+                    rds[i].Status__c = oldRds[i].Status__c;
                 }
             }
         }
