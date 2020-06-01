@@ -42,6 +42,21 @@
         <members>ADV_PackageInfo_SVC</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
+        <members>ALLO_AllocationsDMLService</members>
+        <members>ALLO_AllocationsDMLService_TEST</members>
+        <members>ALLO_AllocationsRecalculateService</members>
+        <members>ALLO_AllocationsRecalculateService_TEST</members>
+        <members>ALLO_AllocationsRetrievalService</members>
+        <members>ALLO_AllocationsRetrievalService_TEST</members>
+        <members>ALLO_AllocationsReviewService</members>
+        <members>ALLO_AllocationsReviewService_TEST</members>
+        <members>ALLO_AllocationsService</members>
+        <members>ALLO_AllocationsService_TEST</members>
+        <members>ALLO_AllocationsSettings</members>
+        <members>ALLO_AllocationsSettings_TEST</members>
+        <members>ALLO_AllocationsUtil</members>
+        <members>ALLO_AllocationsUtil_TEST</members>
+        <members>ALLO_AllocationsWrapper</members>
         <members>ALLO_Allocations_TDTM</members>
         <members>ALLO_Allocations_TEST</members>
         <members>ALLO_MakeDefaultAllocations_BATCH</members>
@@ -54,6 +69,7 @@
         <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
+        <members>ALLO_UnitTestHelper_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -1773,6 +1789,7 @@
         <members>alloCampaignExceedsOppAmount</members>
         <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
+        <members>alloDefaultGAUNotActive</members>
         <members>alloDefaultNotEnabled</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
@@ -1786,7 +1803,11 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
+        <members>alloOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>
+        <members>alloPaymentAllocationBatchAllocationError</members>
+        <members>alloPaymentAllocationBatchRecordError</members>
+        <members>alloPaymentAllocationBatchRetriesExceeded</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>
@@ -1795,6 +1816,7 @@
         <members>alloRemoveOppWithPmt</members>
         <members>alloSignMistmatch</members>
         <members>alloSingleParent</members>
+        <members>alloSuccessfulRecordRetry</members>
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
