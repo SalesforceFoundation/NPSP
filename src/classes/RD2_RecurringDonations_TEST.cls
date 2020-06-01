@@ -745,6 +745,31 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(endDate, rd.EndDate__c, 'End Date should be populated on RD');
     }
 
+    /***
+    * @description Verifies that Rd End Date should be removed when the RD is reopened
+    */
+    @isTest
+    private static void shouldClearEndDateIfRDIsReOpened() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStatusActive()
+            .withStatusClosed()
+            .withEndDate(Date.today().addDays(-1))
+            .build();
+        insert rd;
+
+        Test.startTest();
+        rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(null, rd.EndDate__c,
+            'The RD End Date should be null out when RD is reopened');
+    }
+
 
 
     // Helpers

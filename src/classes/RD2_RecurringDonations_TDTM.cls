@@ -253,9 +253,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Evaluate Closed and End Date on OpenEnded RD.
-    * If the RD Status is updated to Closed but the End Date is in the future, revert the status to before update.
+    * @description Evaluate End Date on Recurring Donation
     * If the RD Status is inserted/updated to Closed and the End Date is null, auto-populate the end date to yesterday.
+    * If the Open Eened RD Status is updated to Closed but the End Date is in the future, revert the status to before update.
     * If the RD is reopened, clear out the End Date
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records

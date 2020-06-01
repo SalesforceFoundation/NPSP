@@ -975,7 +975,6 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         assertBatchJobIteration(1);
 
-
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c, 'RD should be updated to closed when End Date pass');
 

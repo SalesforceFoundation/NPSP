@@ -140,6 +140,11 @@ public inherited sharing class RD2_RecurringDonation {
         return this;
     }
 
+    /**
+    * @description Revises and modifies the Recurring Donation status
+    * @param currentDate Used to determined current date
+    * @return RD2_RecurringDonation This record instance
+    */
     public RD2_RecurringDonation reviseStatus(Date currentDate) {
         if (isFixedLength()) {
             reviseStatusForFixedLength();
@@ -149,6 +154,7 @@ public inherited sharing class RD2_RecurringDonation {
         }
         return this;
     }
+
     /**
     * @description Revises and modifies the Recurring Donation if it is Fixed Length and is now fully completed
     * based on the Number of Planned Installments as compared to the Number of Paid Installments.

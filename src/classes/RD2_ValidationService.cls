@@ -330,7 +330,7 @@ public with sharing class RD2_ValidationService {
 
         if (rdRecord.isFixedLength()) {
             if (rdRecord.isClosed()
-                &&rd.EndDate__c > currentDate
+                && rd.EndDate__c > currentDate
             ) {
                 rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
             }

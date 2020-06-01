@@ -928,7 +928,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies that Fixed RD fail to update when End Date is populated. 
+    * @description Verifies that Fixed RD is failed to Close when End Date is in the future. 
     */
     @isTest
     private static void shouldFailFixedRDUpdateWhenEndDateIsInTheFuture() {
