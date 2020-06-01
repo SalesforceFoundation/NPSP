@@ -39,7 +39,10 @@ import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_
 
 import getOpenDonations from '@salesforce/apex/GE_FormRendererService.getOpenDonations';
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DATA_IMPORT_ACCOUNT1_NAME_FIELD from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
+import DATA_IMPORT_CONTACT1_LASTNAME_FIELD from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
 import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
@@ -129,6 +132,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     _donationDonor;
     _account1Imported;
     _contact1Imported;
+    _account1Name;
+    _contact1LastName;
+    _contact1FirstName;
 
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
@@ -889,20 +895,28 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     setStoredDonationDonorProperties(dataImport) {
-    if (dataImport[DONATION_DONOR_FIELDS.donationDonorField]) {
+        const donationDonor = dataImport[DONATION_DONOR_FIELDS.donationDonorField];
+        if (donationDonor) {
             this.handleDonationDonorChange(
                 dataImport[DONATION_DONOR_FIELDS.donationDonorField]
             );
         }
         if (dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]) {
-            this.handleDonorAccountChange(
-                dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]
-            );
+            this.handleDonorAccountChange(dataImport);
         }
         if (dataImport[DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName]) {
             this.handleDonorContactChange(
                 dataImport[DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName]
             );
+        }
+        if (dataImport[DATA_IMPORT_CONTACT1_LASTNAME_FIELD.fieldApiName]) {
+            this._contact1LastName = dataImport[DATA_IMPORT_CONTACT1_LASTNAME_FIELD.fieldApiName].value;
+        }
+        if (dataImport[DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD.fieldApiName]) {
+            this._contact1FirstName = dataImport[DATA_IMPORT_CONTACT1_FIRSTNAME_FIELD.fieldApiName].value;
+        }
+        if (dataImport[DATA_IMPORT_ACCOUNT1_NAME_FIELD.fieldApiName]) {
+            this._account1Name = dataImport[DATA_IMPORT_ACCOUNT1_NAME_FIELD.fieldApiName].value;
         }
     }
 
@@ -933,6 +947,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._donationDonor = null;
         this._account1Imported = null;
         this._contact1Imported = null;
+        this._account1Name = null;
+        this._contact1LastName = null;
+        this._contact1FirstName = null;
     }
 
     get mode() {
@@ -951,6 +968,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     get isUpdateActionDisabled() {
         return this.dataImport && this.dataImport[STATUS_FIELD.fieldApiName] === 'Imported';
+    }
+
+    /**
+     * Combine fabricated names and lookup names, giving priority to non-empty fabricated names
+     */
+    @api
+    getCardholderNames() {
+        const names = this.fabricatedCardholderNames;
+        const firstName = isNotEmpty(names.firstName) ? names.firstName : this._contact1FirstName;
+        const lastName = isNotEmpty(names.lastName) ? names.lastName : this._contact1LastName;
+        const accountName = isNotEmpty(names.accountName) ? names.accountName : this._account1Name;
+        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
+            return {
+                firstName: accountName,
+                lastName: accountName
+            }
+        } else {
+            return { firstName, lastName };
+        }
+
     }
 
     /**
@@ -1521,6 +1558,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorAccountChange(selectedRecordId) {
         this._account1Imported = selectedRecordId;
+        if (selectedRecordId == null) {
+            this._account1Name = null;
+        }
         if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             this.setReviewDonationsDonorProperties(this._account1Imported);
         } else if (this._donationDonor === null) {
@@ -1530,6 +1570,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorContactChange(selectedRecordId) {
         this._contact1Imported = selectedRecordId;
+        if (selectedRecordId == null) {
+            this._contact1LastName = null;
+            this._contact1FirstName = null;
+        }
         if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
             this.setReviewDonationsDonorProperties(this._contact1Imported);
         } else if (this._donationDonor === null) {
@@ -1597,10 +1641,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 ].value === DONATION_DONOR.isContact1 ?
                 DONATION_DONOR_TYPE_ENUM.CONTACT1 : DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
 
+            this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
                     section.setCardHolderName(this.fabricateCardHolderName(fieldList));
-                    this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
                 }
             });
         }
