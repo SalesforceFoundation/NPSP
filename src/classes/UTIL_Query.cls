@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2017, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -35,7 +35,7 @@
 */
 public with sharing class UTIL_Query {
     /** @description Exception raised by the Query builder */
-    public class UTIL_QueryException extends Exception {} 
+    public class UTIL_QueryException extends Exception {}
 
     /** @description Error message when no SELECT field is provided */
     private static final String SELECT_FIELDS_REQUIRED = 'At least one SELECT field is required.';
@@ -51,13 +51,13 @@ public with sharing class UTIL_Query {
     private String[] selectFields = new String[0];
     /** @description An Sobject name or a relationship name used in the SOQL's FROM segment */
     private String entity = null;
-    /** @description WHERE clauses used in the SOQL's WHERE segment */ 
+    /** @description WHERE clauses used in the SOQL's WHERE segment */
     private String[] whereClauses = new String[0];
-    /** @description ORDER BY clauses used in the SOQL's ORDER BY segment */ 
+    /** @description ORDER BY clauses used in the SOQL's ORDER BY segment */
     private String orderBy;
-    /** @description LIMIT statement used in the SOQL's LIMIT segment */ 
+    /** @description LIMIT statement used in the SOQL's LIMIT segment */
     private Integer limitRows;
-    /** @description Indicates if toLabel() should be used on the Salutation field  */ 
+    /** @description Indicates if toLabel() should be used on the Salutation field  */
     private Boolean isToLabelSalutation = false;
     /** @description Indicates if fls and user profile permissions should be enforced */
     private Boolean isSecurityEnforced = false;
@@ -74,16 +74,27 @@ public with sharing class UTIL_Query {
     * @return UTIL_Query The instance of the Query builder
     */
     public UTIL_Query withSelectFields(Set<String> fieldNames) {
-        return withSelectFields(new List<String>(fieldNames));     
-    } 
-    
+        return withSelectFields(new List<String>(fieldNames));
+    }
+
     /*********************************************************************************************************
     * @description Registers SELECT fields
     * @param fieldNames List of field names
     * @return UTIL_Query The instance of the Query builder
     */
     public UTIL_Query withSelectFields(String[] fieldNames) {
-        selectFields.addAll(fieldNames);            
+        selectFields.addAll(fieldNames);
+        return this;
+    }
+
+    /*********************************************************************************************************
+    * @description Registers the CurrencyIsoCode Field as part of SELECT field list if in a MultiCurrency Org
+    * @return UTIL_Query The instance of the Query builder
+    */
+    public UTIL_Query withMultiCurrencyField() {
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            selectFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+        }
         return this;
     }
 
@@ -114,27 +125,27 @@ public with sharing class UTIL_Query {
     public UTIL_Query withToLabelSalutation() {
         isToLabelSalutation = true;
         return this;
-    }     
-    
+    }
+
     /*********************************************************************************************************
     * @description Registers the FROM Sobject
     * @param sobjectType Type of the Sobject
     * @return UTIL_Query The instance of the Query builder
     */
-    public UTIL_Query withFrom(Schema.SObjectType sObjectType) {           
+    public UTIL_Query withFrom(Schema.SObjectType sObjectType) {
         return withFrom(String.valueOf(sObjectType));
     }
-    
+
     /*********************************************************************************************************
     * @description Registers FROM entity
     * @param entity An Sobject name or a relationship name
     * @return UTIL_Query The instance of the Query builder
     */
     public UTIL_Query withFrom(String entity) {
-        this.entity = entity;            
+        this.entity = entity;
         return this;
-    }        
-    
+    }
+
     /*********************************************************************************************************
     * @description Registers a clause to be used in the SOQL's WHERE clause
     * @param whereClause A WHERE clause
@@ -146,7 +157,7 @@ public with sharing class UTIL_Query {
         }
         return this;
     }
-    
+
     /*********************************************************************************************************
     * @description Registers WHERE clauses
     * @param whereClauses A list of WHERE clauses
@@ -154,7 +165,7 @@ public with sharing class UTIL_Query {
     */
     public UTIL_Query withWhere(String[] whereClauses) {
         if (whereClauses != null && !whereClauses.isEmpty()) {
-            this.whereClauses.addAll(whereClauses);    
+            this.whereClauses.addAll(whereClauses);
         }
         return this;
     }
@@ -169,7 +180,7 @@ public with sharing class UTIL_Query {
     }
 
     /*********************************************************************************************************
-    * @description Validates and builds a SOQL 
+    * @description Validates and builds a SOQL
     * @return String The SOQL
     */
     public String build() {
@@ -206,8 +217,8 @@ public with sharing class UTIL_Query {
         for (String fieldName : selectFields) {
             if (String.isBlank(fieldName)) {
                 throw new UTIL_QueryException(SELECT_FIELD_CANNOT_BE_EMPTY);
-            } 
-            
+            }
+
             if (collectedFields.contains(fieldName.toLowerCase())) {
                 continue;
             }
@@ -230,7 +241,7 @@ public with sharing class UTIL_Query {
         }
 
         return fieldName;
-    }           
+    }
 
     /*********************************************************************************************************
     * @description Validates and builds the WHERE clause
@@ -240,14 +251,14 @@ public with sharing class UTIL_Query {
         if (whereClauses.isEmpty()) {
             return '';
         }
-        
-        String soqlWhere = ''; 
-        
+
+        String soqlWhere = '';
+
         for (String clause : whereClauses) {
             soqlWhere += String.isBlank(soqlWhere) ? '' : AND_OPERATOR;
             soqlWhere += clause;
         }
-        
+
         return String.isBlank(soqlWhere) ? '' : ' WHERE ' + soqlWhere;
     }
 
