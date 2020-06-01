@@ -319,6 +319,26 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         System.assertEquals(null, actual.Parent_Task__c, 'New Task should not have parent Task');
     }
 
+    /**
+    * @description Validate that the generated picklist of time options are all formatted correctly.
+    */
+    @IsTest
+    private static void shouldShowCorrectTimeOptions() {
+        Engagement_Plan_Template__c template = createTemplate();
+        Engagement_Plan_Task__c epTask = createTask(template.Id);
+        Engagement_Plan_Task__c dependentEpTask = createDependentTask(template.Id, epTask.Id);
+
+        setUpPage(template.Id);
+
+        EP_ManageEPTemplate_CTRL ctrl = new EP_ManageEPTemplate_CTRL(new ApexPages.StandardController(template));
+        for (System.SelectOption option : ctrl.reminderTimeOptions) {
+            String optionLabel = option.getLabel();
+            System.assert(optionLabel.left(1).isNumeric(), 'The time option must always start with a number - ' + optionLabel);
+            System.assert(optionLabel.contains(':'), 'The time option must always contain a colon (:) - ' + optionLabel);
+            System.assert(optionLabel.right(1).isAlpha(), 'The time option must always end with a letter (AM|PM) - ' + optionLabel);
+        }
+    }
+
     // Helpers
     ///////////
 

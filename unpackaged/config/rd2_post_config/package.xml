@@ -42,5 +42,5 @@
         <members>npe03__Recurring_Donation__c-Enhanced Recurring Donations Layout</members>
         <name>Layout</name>
     </types>
-    <version>47.0</version>
+    <version>48.0</version>
 </Package>
