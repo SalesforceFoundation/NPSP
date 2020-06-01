@@ -21,6 +21,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		link=npsp_lex_locators['link-text'].format("Back to NPSP Settings")										   
 		self.selenium.wait_until_page_contains_element(link,
 											  error="Current page is not a customizable rollups setting view")
+
 	
 	def is_setting_present(self, object, name):
 		""" Search for the presence of an active crlp setting record already. Return a boolean value accordingly
@@ -117,3 +118,4 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 				self.salesforce.populate_field(key,value)
 			else:
 				self.select_from_list(key,value)		
+
