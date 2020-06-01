@@ -1092,7 +1092,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
             'Current Year Value should include current year Closed Won amounts when RD is Closed');
         System.assertEquals(0, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
-            'Next Year Value should include next year Closed Won amounts when RD is Closed');
+            'Next Year Value should not include future Open Opp');
     }
 
     /**
@@ -1239,7 +1239,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c * 2, rd.CurrentYearValue__c,
             'Current Year Value should include Sep-Oct 2019 Opps for the current fiscal year ending on Oct 31, 2019');
         System.assertEquals(0, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
-            'Next Year Value should include Nov-Dec 2019 and Jan 2020 closed Opps when RD is Closed');
+            'Next Year Value should not include the future open Opps');
     }
 
     /**
