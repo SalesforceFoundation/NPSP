@@ -41,9 +41,12 @@ export default class bdiObjectMappings extends LightningElement {
     @track isLoading = true;
     @track isModalOpen = false;
     @track columns = [];
+    @track objectMappings;
+
     @api objectMapping;
     @api objectOptions;
-    @track objectMappings;
+    @api shouldRender;
+
 
     @track npspSettingsURL = '/lightning/n/npsp__NPSP_Settings';  
 
