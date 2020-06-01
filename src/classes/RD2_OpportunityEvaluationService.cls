@@ -214,6 +214,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+    * @description Contains Map of Recurring Donation Ids to Boolean indicating a schedule change
+    */
+    @TestVisible
+    private Map<Id, Boolean> isScheduleChangedById {
+        get {
+            if (isScheduleChangedById == null) {
+                isScheduleChangedById = new Map<Id, Boolean>();
+            }
+            return isScheduleChangedById;
+        } set;
+    }
+
+    /**
     * @description Contains Number of Paid Installments for fixed-length RD records only
     */
     @TestVisible
@@ -255,6 +268,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public RD2_OpportunityEvaluationService withRds(Set<Id> rdIds) {
         this.rdIds = rdIds;
+        return this;
+    }
+
+    /**
+     * @description Map of Recurring Donation Ids to Boolean indicating a changed schedule
+     * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean
+     * @return RD2_OpportunityEvaluationService The service instance
+     */
+    public RD2_OpportunityEvaluationService withIsScheduleChangedById(Map<Id, Boolean> isScheduleChangedById) {
+        this.isScheduleChangedById = isScheduleChangedById;
         return this;
     }
 
@@ -350,7 +373,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         oppService
             .createOpportunities(newOppRDs)
-            .updateOpportunities(updateOppRDs)
+            .updateOpportunities(updateOppRDs, isScheduleChangedById)
             .voidOpenOpportunities(closedRDs);
 
         handleOutdatedRecurringDonations(rdRecords);

@@ -1586,6 +1586,192 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(false, evalService.isNewOpportunityCandidate(rd),
             'RD with status mapped to Closed state should not have a new installment Opp created');
     }
+
+    /**
+     * @description Verifies that an open Opportunity representing the next installment
+     * has its CloseDate changed when the Recurring Donation schedule changes to a date
+     * outside the default match range.
+     */
+    @IsTest
+    private static void shouldUpdateOppCloseDateWhenNextDonationChangedFromCurrentDate() {
+        //set current date override
+        final Date today = Date.newInstance(2020, 3, 20);
+        final Date newCloseDate = Date.newInstance(2020, 4, 1);
+        final String dayOfMonthOriginal = '20';
+        final String dayOfMonthNew = '1';
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth(dayOfMonthOriginal)
+            .build();
+        insert rd;
+        rd.npe03__Next_Payment_Date__c = today;
+        update rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(today)
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Test.startTest();
+
+        rd.StartDate__c = today;
+        rd.Day_of_Month__c = dayOfMonthNew;
+        update rd;
+
+        Test.stopTest();
+
+        List<Opportunity> opportunities = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opportunities.size(), 'The number of returned Opps should match');
+
+        Opportunity opp = opportunities[0];
+        System.assertEquals(false, opp.isClosed, 'The Opp should stay open');
+        System.assertEquals(newCloseDate, opp.CloseDate, 'The Opp close date should match the new date');
+        System.assertEquals(RD_AMOUNT, opp.Amount, 'The Opp Amount should be unchanged');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
+     * @description Verifies that the next open Opportunity has its CloseDate changed
+     * when a Recurring Donation is changed to a date less than its original date
+     * when it is outside the normal match window.
+     */
+    @IsTest
+    private static void shouldUpdateOppCloseDateWhenNextDonationChangedFromFutureDate() {
+        //set current date override
+        final Date today = Date.newInstance(2020, 3, 20);
+        final Date nextDonationDate = Date.newInstance(2020, 4, 20);
+        final Date newCloseDate = Date.newInstance(2020, 4, 1);
+        final String dayOfMonthOriginal = '20';
+        final String dayOfMonthNew = '1';
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth(dayOfMonthOriginal)
+            .build();
+        insert rd;
+        rd.npe03__Next_Payment_Date__c = nextDonationDate;
+        update rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(today)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(nextDonationDate)
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Test.startTest();
+
+        rd.StartDate__c = today;
+        rd.Day_of_Month__c = dayOfMonthNew;
+        update rd;
+
+        Test.stopTest();
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+
+        System.assertEquals(2, oppById.size(), 'The number of returned Opps should match');
+
+        Opportunity opp = oppById.get(opps[0].Id);
+        System.assertEquals(true, opp.isClosed && opp.isWon, 'The first Opp should stay Closed Won');
+        System.assertEquals(today, opp.CloseDate, 'The first Opp Close Date should be unchanged');
+        System.assertEquals(RD_AMOUNT, opp.Amount, 'The first Opp Amount should be unchanged');
+
+        opp = oppById.get(opps[1].Id);
+        System.assertEquals(false, opp.isClosed, 'The second Opp should stay open');
+        System.assertEquals(newCloseDate, opp.CloseDate, 'The second Opp Close Date should match the new date');
+        System.assertEquals(RD_AMOUNT, opp.Amount, 'The second Opp Amount should be unchanged');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
+     * @description Verifies that an Opportunity representing the next installment is
+     * changed when a schedule changes when two open opportunities exist.
+     */
+    @IsTest
+    private static void shouldUpdateOppCloseDateWhenTwoOpenOpportunitiesExist() {
+        //set current date override
+        final Date today = Date.newInstance(2020, 3, 20);
+        final Date manualDonationDate = Date.newInstance(2020, 3, 25);
+        final Date newCloseDate = Date.newInstance(2020, 4, 1);
+        final String dayOfMonthOriginal = '20';
+        final String dayOfMonthNew = '1';
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth(dayOfMonthOriginal)
+            .build();
+        insert rd;
+        rd.npe03__Next_Payment_Date__c = today;
+        update rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(today)
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(manualDonationDate)
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Test.startTest();
+
+        rd.StartDate__c = today;
+        rd.Day_of_Month__c = dayOfMonthNew;
+        update rd;
+
+        Test.stopTest();
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+
+        System.assertEquals(2, oppById.size(), 'The number of returned Opps should match');
+
+        Opportunity opp = oppById.get(opps[0].Id);
+        System.assertEquals(false, opp.isClosed, 'The first Opp should stay open');
+        System.assertEquals(newCloseDate, opp.CloseDate, 'The first Opp Close Date should match the new date');
+        System.assertEquals(RD_AMOUNT, opp.Amount, 'The first Opp Amount should be unchanged');
+
+        opp = oppById.get(opps[1].Id);
+        System.assertEquals(false, opp.isClosed, 'The second Opp should stay open');
+        System.assertEquals(manualDonationDate, opp.CloseDate, 'The second Opp Close Date should be unchanged');
+        System.assertEquals(RD_AMOUNT, opp.Amount, 'The second Opp Amount should be unchanged');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+
+
     // Helpers
     ///////////////////
 

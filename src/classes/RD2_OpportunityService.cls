@@ -225,6 +225,17 @@ public with sharing class RD2_OpportunityService {
     * @return RD2_OpportunityService This Opportunity Service instance
     */
     public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds) {
+        return updateOpportunities(rds, new Map<Id, Boolean>());
+    }
+
+    /***
+    * @description Updates related future open installment Opps
+    * @param rds Recurring Donations
+    * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean indicating whether
+    * schedule has changed
+    * @return RD2_OpportunityService This Opportunity Service instance
+    */
+    public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds, Map<Id, Boolean> isScheduleChangedById) {
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
@@ -237,7 +248,21 @@ public with sharing class RD2_OpportunityService {
                 currentDate, matcher.getNumberOfOpportunities(), rd.RecurringDonationSchedules__r
             ));
 
+            // Track unmatched matcher records so we can connect Opps and RDs from RDs with altered schedules
+            Boolean openOpportunityMatched = false;
+            Opportunity earliestUnmatchedOpportunity;
+            RD2_ScheduleService.Installment earliestUnmatchedInstallment;
+
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
+
+                if (record.hasInstallment() && record.isNew()) {
+                    if (earliestUnmatchedInstallment == null ||
+                        earliestUnmatchedInstallment.nextDonationDate > record.getInstallment().nextDonationDate
+                        ) {
+                        earliestUnmatchedInstallment = record.getInstallment();
+                    }
+                }
+
                 if (record.isNew() || !record.isOpen()) {
                     continue;
                 }
@@ -245,6 +270,15 @@ public with sharing class RD2_OpportunityService {
                 Opportunity opp = record.getOpportunity();
                 if (record.hasInstallment()) {
                     installmentByOppId.put(opp.Id, record.getInstallment());
+                    openOpportunityMatched = true;
+                }
+
+                if (!record.hasInstallment()){
+                    if (earliestUnmatchedOpportunity == null ||
+                        earliestUnmatchedOpportunity.CloseDate > record.getOpportunity().CloseDate
+                        ) {
+                        earliestUnmatchedOpportunity = record.getOpportunity();
+                    }
                 }
 
                 Boolean isChanged = syncOppWithRecurringDonation(opp, rd);
@@ -252,6 +286,27 @@ public with sharing class RD2_OpportunityService {
                 if (isChanged) {
                     opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
                     oppsToUpdate.add(opp);
+                }
+            }
+
+            if (!openOpportunityMatched) {
+                if (earliestUnmatchedOpportunity == null || earliestUnmatchedInstallment == null) {
+                    break;
+                }
+
+                Boolean isNewSchedule =
+                    isScheduleChangedById.get(rd.Id) == null
+                    ? false
+                    : isScheduleChangedById.get(rd.Id);
+                if (!isNewSchedule) {
+                    break;
+                }
+
+                Boolean isChanged = syncOppWithRecurringDonation(earliestUnmatchedOpportunity, rd);
+                isChanged = syncOppWithInstallment(earliestUnmatchedOpportunity, earliestUnmatchedInstallment);
+                if (isChanged) {
+                    earliestUnmatchedOpportunity.Name = buildOpportunityName(rd.npe03__Donor_Name__c, earliestUnmatchedOpportunity);
+                    oppsToUpdate.add(earliestUnmatchedOpportunity);
                 }
             }
         }
