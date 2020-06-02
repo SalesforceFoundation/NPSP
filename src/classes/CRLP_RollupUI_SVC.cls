@@ -101,7 +101,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public List<FilterGroupTableItem> filterGroups;
         @AuraEnabled public Boolean isCRLPEnabled;
-        @AuraEnabled public Boolean isAdmin;
+        @AuraEnabled public Boolean isSystemAdminUser;
 
     }
 
@@ -148,7 +148,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         model.labels = getAppLabels();
         model.isCRLPEnabled = Customizable_Rollup_Settings__c.getOrgDefaults().Customizable_Rollups_Enabled__c;
-        model.isAdmin = STG_Panel.runningUserIsAdmin();
+        model.isSystemAdminUser = STG_Panel.runningUserIsAdmin();
 
         //return early with just labels and CRLP enabled flag if CRLP is disabled
         if (!(model.isCRLPEnabled)) {

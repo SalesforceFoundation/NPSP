@@ -56,7 +56,7 @@
     <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
     <aura:attribute name="isFilterGroupDetail" type="Boolean" access="private" description="Determines if Filter Group Detail is shown."/>
     <aura:attribute name="isCRLPEnabled" type="Boolean" access="private" description="Determines if CRLP is enabled." default="true"/>
-    <aura:attribute name="isAdmin" type="Boolean" access="private" description="Determines if user is System Admin." default="true"/>
+    <aura:attribute name="isSystemAdminUser" type="Boolean" access="private" description="Determines if user is System Admin." default="true"/>
     <aura:attribute name="lastActiveRecordId" type="Id" description="ID of the previous record to save for return."/>
     <aura:attribute name="width" type="Integer" access="private" default="12" description="Size of the current container width."/>
     <aura:attribute name="sortedBy" type="String" access="private" description="The field name that the table is sorted by."/>
@@ -125,17 +125,17 @@
         <!--END BREADCRUMB-->
 
         <!-- START ACCESS DISABLED MESSAGE -->
-        <aura:if isTrue="{! !and(v.isCRLPEnabled, v.isAdmin)}">
+        <aura:if isTrue="{! !and(v.isCRLPEnabled, v.isSystemAdminUser)}">
             <div class="slds-p-around_medium">
                 <div class="slds-notify slds-notify_toast slds-theme_warning">
                     <lightning:icon iconName="utility:block_visitor" class="slds-p-right_small" variant="inverse"
                                     size="small" alternativeText="{!v.notificationText.alternativeText}"/>
                     <div class="slds-notify__content">
-                        <aura:if isTrue="{! and(!v.isCRLPEnabled, v.isAdmin)}">
+                        <aura:if isTrue="{! and(!v.isCRLPEnabled, v.isSystemAdminUser)}">
                             <h2 class="slds-text-heading_small">{!v.labels.crlpNotEnabledTitle}</h2>
                             <p>{!v.labels.crlpNotEnabledMessage}</p>
                         </aura:if>
-                        <aura:if isTrue="{! !v.isAdmin}">
+                        <aura:if isTrue="{! !v.isSystemAdminUser}">
                             <h2 class="slds-text-heading_small">{!v.labels.crlpNoAccessPerms}</h2>
                         </aura:if>
                     </div>
@@ -144,7 +144,7 @@
         </aura:if>
         <!-- START ACCESS DISABLED MESSAGE -->
 
-        <aura:if isTrue="{!v.isAdmin}">
+        <aura:if isTrue="{!v.isSystemAdminUser}">
             <!--BEGIN HEADER-->
             <div class="slds-p-around_large">
                 <!--BEGIN TITLE-->
