@@ -82,12 +82,15 @@
                     <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
                                                         batch-fields={batchFieldFormElements}
                                                         missing-required-fields={missingRequiredBatchFields}
+                                                        available-batch-table-column-options={availableBatchTableColumnOptions}
+                                                        selected-batch-table-column-options={selectedBatchTableColumnOptions}
                                                         onupdatevalidity={handleUpdateValidity}
                                                         onaddbatchheaderfield={handleAddBatchHeaderField}
                                                         onremovebatchheaderfield={handleRemoveBatchHeaderField}
                                                         onbatchheaderfieldup={handleBatchHeaderFieldUp}
                                                         onbatchheaderfielddown={handleBatchHeaderFieldDown}
-                                                        onupdatebatchheaderfield={handleUpdateBatchHeaderField}>
+                                                        onupdatebatchheaderfield={handleUpdateBatchHeaderField}
+                                                        onupdatetemplatedefaultbatchtablecolumns={handleUpdateSelectedBatchTableColumns}>
                     </c-ge-template-builder-batch-header>
                 </lightning-tab>
             </lightning-tabset>
