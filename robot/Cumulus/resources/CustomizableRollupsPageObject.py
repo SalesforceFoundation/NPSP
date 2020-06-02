@@ -8,6 +8,7 @@ from NPSP import npsp_lex_locators
 
 @pageobject("Custom", "CustomRollupSettings")
 class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
+
     def navigate_to_crlpsettings(self, filter_name=None):
         """ Click on the Navigate CRLP Button and wait for the page to load
                 """
@@ -126,3 +127,4 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         if len(record) > 0:
             status = True
         return status
+
