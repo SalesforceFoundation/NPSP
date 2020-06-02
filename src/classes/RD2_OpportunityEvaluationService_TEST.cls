@@ -88,6 +88,37 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+     * @description Verifies that creating a new Lapsed Recurring Donation creates an Installment Opportunity
+     */
+    @IsTest
+    private static void shouldCreateAnInstallmentOppWhenLapsedRDIsCreated() {
+        RD2_ScheduleService.currentDate = START_DATE;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withStatusLapsed()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'The number of returned Opp should match');
+        System.assertEquals(rd.npe03__Amount__c, opps[0].Amount, 'The Opportunity Amount does not match the RD Amount');
+        System.assertEquals(rd.npe03__Contact__c, opps[0].Primary_Contact__c, 'The Opportunity Contact does not match the RD Contact');
+        System.assertEquals(rd.npe03__Next_Payment_Date__c, opps[0].CloseDate, 'The Opportunity CloseDate does not match the RD NextDonationDate');
+
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated when RD is created');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated when RD is created');
+    }
+
+    /**
      * @description Verifies that inserting a Closed Recurring Donation does not create an Installment Opportunity
      */
     @IsTest
@@ -594,16 +625,38 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @description Verifies future open Opp is updated when an active RD is updated
      */
     @IsTest
-    private static void shouldUpdateFutureOpenOppWhenRDIsUpdated() {
+    private static void shouldUpdateFutureOpenOppWhenActiveRDIsUpdated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+        
+        testFutureOppUpdateOnRDUpdate(rd);
+    }
+
+    /**
+     * @description Verifies future open Opp is updated when a Lapsed RD is updated
+     */
+    @IsTest
+    private static void shouldUpdateFutureOpenOppWhenLapsedRDIsUpdated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withStatusLapsed()
+            .build();
+
+        testFutureOppUpdateOnRDUpdate(rd);
+    }
+
+    /**
+     * @description Verifies future open Opp is updated when the RD is updated
+     * @param rd Recurring Donation
+     * @return void
+     */
+    private static void testFutureOppUpdateOnRDUpdate(npe03__Recurring_Donation__c rd) {
         //set current date override
         final Date today = START_DATE.addDays(1);
         RD2_ScheduleService.currentDate = today;
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
-            .withCalculateNextDonationDate()
-            .build();
         insert rd;
 
         insert getOpportunityBuilder(rd)
@@ -1551,7 +1604,6 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         System.assertEquals(true, evalService.isNewOpportunityCandidate(rd),
             'RD with status mapped to Active should be considered as new opportunity candidate');
-
     }
 
     /**
@@ -1586,6 +1638,8 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(false, evalService.isNewOpportunityCandidate(rd),
             'RD with status mapped to Closed state should not have a new installment Opp created');
     }
+
+    
     // Helpers
     ///////////////////
 

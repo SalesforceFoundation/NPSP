@@ -300,15 +300,37 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
      * @description Verifies an Opp with Close Date equal to the Recurring Donation Next Donation Date is created
      */
     @IsTest
-    private static void shouldCreateNextOppWhenCloseDateIsInFuture() {
+    private static void shouldCreateNextOppWhenRDStatusIsActive() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        
+        testNextInstallmentOppCreation(rd);
+    }
+
+    /**
+     * @description Verifies next installment Opp is created for a Lapsed RD
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenRDStatusIsLapsed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStatusLapsed()
+            .build();
+
+        testNextInstallmentOppCreation(rd);
+    }
+
+    /**
+     * @description Verifies next installment Opp is created for the next installment date
+     */
+    private static void testNextInstallmentOppCreation(npe03__Recurring_Donation__c rd) {
         final Date prevCloseDate = START_DATE.addMonths(1);
         final Date today = prevCloseDate.addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(2);
         RD2_ScheduleService.currentDate = today;
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
         insert getOpportunityBuilder(rd)
@@ -762,7 +784,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     * than the number of planned installments..
     */
     @IsTest
-    private static void shouldLeaveFixedRDActiveIfPlannedInstallmentsNotReached() {
+    private static void shouldLeaveFixedRDActiveWhenPlannedInstallmentsNotReached() {
         final Integer plannedInstallments = 5;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
