@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -58,11 +58,12 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             List<SelectOption> options = new List<SelectOption>();
             for (Integer minutes = 0; minutes <= 1410; minutes += 30) {
                 //start with midnight and increment 30 minutes
-                DateTime dt = DateTime.newInstance(1984, 1, 1, 0, minutes, 0);
-                //since we don't have a time.format(), use datetime.format() and remove date.format(), 
-                //works in all locales tested, even weird ones :)
-                String localeTime = dt.format().replace(dt.date().format(), '').trim();
-                
+                Datetime dt = Datetime.newInstance(1984, 1, 1, 0, minutes, 0);
+                // Since we don't have a time.format(), use datetime.format() and remove date.format() (along with the
+                // comma that is added starting with API v48.
+                // Works in all locales tested, even weird ones :)
+                String localeTime = dt.format().replace(dt.date().format(), '').replace(',','').trim();
+
                 options.add(new SelectOption(String.valueOf(minutes), localeTime));
             }
             return options;
@@ -128,7 +129,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         util = new EP_Task_UTIL(templateId);
 
         template = util.templateMap.get(templateId);
-        
+
         if (templateId == null || template == null) {
             template = new Engagement_Plan_Template__c();
         }
@@ -149,20 +150,20 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * EP tasks and a hierarchy of wrappers.*/
     public void initWrapperHierarchy() {
         parentTaskWrappers = new list<TaskWrapper>();
-        
+
         for (Integer i=0; i < util.epTaskMap.values().size(); i++) {
             Engagement_Plan_Task__c task = util.epTaskMap.values()[i];
             //seed top level tasks, then get children recursively
             if (task.Parent_Task__c == null) {
                 TaskWrapper wrapper = new TaskWrapper(task);
-                
+
                 if (!task.Engagement_Plan_Tasks__r.isEmpty()) {
                     initChildrenRecursive(wrapper);
                 }
-            
+
                 //once initialitzation is finished, clone the task
                 if (isClone) {
-                    wrapper.detail = task.clone(false,true,false,false);   
+                    wrapper.detail = task.clone(false,true,false,false);
                 }
 
                 parentTaskWrappers.add(wrapper);
@@ -177,7 +178,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     public void initChildrenRecursive(TaskWrapper wrapper) {
         for (Integer i=0; i<wrapper.detail.Engagement_Plan_Tasks__r.size(); i++) {
             Engagement_Plan_Task__c childTask = util.epTaskMap.get(wrapper.detail.Engagement_Plan_Tasks__r[i].id);
-            
+
             TaskWrapper childWrapper = new TaskWrapper(childTask);
             childWrapper.parent = wrapper;
             wrapper.children.add(childWrapper);
@@ -194,8 +195,8 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             }
         }
     }
-    
-    /** @description Save method attempts to save the template, delete EP Tasks that have been removed, create and 
+
+    /** @description Save method attempts to save the template, delete EP Tasks that have been removed, create and
     * update EP Tasks. */
     public pageReference saveClose() {
         //manual validation that the Name field is populated to avoid visualforce refresh issues when required attribute is set
@@ -216,7 +217,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Map<Id, Id> existingParentIdsByTaskId = new Map<Id, Id>();
         Id templateId = template.Id;
 
-        Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint();
         try {
             upsert template;
 
@@ -307,12 +308,12 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         TaskWrapper newWrapper = new TaskWrapper(newTask);
         newWrapper.parent = parentTask;
-        
+
         parentTask.children.add(newWrapper);
 
         return null;
     }
-    
+
     /** @description Deletes a task from the Hierarchy, reparenting any children tasks to the
     * deleted task's parent, and recalculating level names. */
     public pageReference deleteTask() {
@@ -343,7 +344,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     }
 
     /** @description Removes a given wrapper from the hierarchy by removing the current wrapper from the parent's list
-    * of children, and adding current children to parent's list of children. 
+    * of children, and adding current children to parent's list of children.
     * @param wrapper The TaskWrapper to remove from the wrapper hierarchy.
     * @return void This method updates class properties.
     */
@@ -405,11 +406,11 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * @return Component.Apex.OutputPanel
     */
     public Component.Apex.OutputPanel getTaskTree(){
-    
+
         mapTaskWrappers = new Map<String, TaskWrapper>();
 
         Component.Apex.OutputPanel topLevelPanel = new Component.Apex.OutputPanel(styleClass = 'slds-form', layout='block');
-    
+
         for (integer i = 0; i < parentTaskWrappers.size(); i++) {
             topLevelPanel.childComponents.add( addChildComponents(parentTaskWrappers[i], i, 'parentTaskWrappers', String.valueOf(i+1)) );
         }
@@ -426,7 +427,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         );
         addTaskButton.expressions.action = '{!addTask}';
         addTaskButton.expressions.value = '{!$Label.EPAddTask}';
-        
+
         buttonGridPanel.childComponents.add(buttonColPanel);
         buttonColPanel.childComponents.add(addTaskButton);
 
@@ -453,13 +454,13 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         Component.Apex.OutputPanel topLevelPanel = new Component.Apex.OutputPanel(styleClass='slds-m-left_medium slds-m-top_small', layout='block');
         Component.Apex.OutputPanel formPanel = new Component.Apex.OutputPanel();
-    
+
         //creates a box around the form with a label for the hierarchy level, and a color bar to more easily grock which level we're at
         // uses escape = false but the labels are escaped to prevent xss
-        Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
+        Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level +
             '", class="slds-m-left_medium slds-m-top_small"><fieldset class="slds-box slds-theme_default slds-container_fluid '+
             'slds-p-around_small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
-            ' class="slds-text-heading_small">' + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level + 
+            ' class="slds-text-heading_small">' + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level +
             '</legend>', escape=false);
 
         Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
@@ -481,23 +482,23 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         // Creates an add dependent task button on the form
         // Uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
-            value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button_brand" id="btnAddDepTask">' + System.Label.EPAddDependentTask.escapeHtml4() + 
-            '<span class="slds-assistive-text"> ' + System.Label.EPTo.escapeHtml4() + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level + 
+            value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+
+            'class="slds-button slds-button_brand" id="btnAddDepTask">' + System.Label.EPAddDependentTask.escapeHtml4() +
+            '<span class="slds-assistive-text"> ' + System.Label.EPTo.escapeHtml4() + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level +
             '</span></button>',
             escape=false
         );
-         
+
         // Creates a delete task button on the form
         // Uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
-            value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
+            value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+
             'class="slds-button slds-button_destructive" id="btnDelTask">' + System.Label.EPDeleteTask.escapeHtml4() +
-            '<span class="slds-assistive-text">' + wrapper.level + 
+            '<span class="slds-assistive-text">' + wrapper.level +
             '</span></button>',
             escape=false
         );
-        
+
         buttonGroup.childComponents.add(addDependentTaskButton);
         buttonGroup.childComponents.add(deleteTaskButton);
         cardFooter.childComponents.add(buttonGroup);
@@ -505,7 +506,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         topLevelPanel.childComponents.add(formPanel);
         formPanel.childComponents.add(boxAndLabel);
-        
+
         formPanel.childComponents.add(firstRow);
         formPanel.childComponents.add(secondRow);
         formPanel.childComponents.add(cardFooter);
@@ -517,7 +518,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         //recursively call this method to add children
         for (integer i = 0; i < wrapper.children.size(); i++) {
             topLevelPanel.childComponents.add( addChildComponents(wrapper.children[i], i, accessString + '.children', levelString+'-'+(i+1)) );
-        } 
+        }
         return topLevelPanel;
     }
 
