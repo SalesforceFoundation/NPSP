@@ -51,6 +51,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             menuAlignment: 'auto'
         }
     };
+    _userDefinedBatchTableColumnNames;
+    _columnsBySourceFieldApiName = {};
 
 
     @api title;
@@ -61,7 +63,16 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @track isLoaded = true;
 
     connectedCallback() {
-        if (this.batchId) {
+        if (this.batchId && this._columnsLoaded) {
+            this.loadBatch();
+        } else {
+            this.needsToLoadBatch = true;
+        }
+    }
+
+    renderedCallback() {
+        if (this.needsToLoadBatch) {
+            this.needsToLoadBatch = false;
             this.loadBatch();
         }
     }
@@ -84,6 +95,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     );
                     this.data = [...this.data];
                     this.hasData = this.data.length > 0 ? true : false;
+                    this._userDefinedBatchTableColumnNames =
+                        dataImportModel.batchTableColumnSourceFieldApiNames;
+
                     this.batchLoaded();
                 }
             )
@@ -101,19 +115,28 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     @api
     handleSectionsRetrieved(sections) {
-        this.initColumns(this.buildColumns(sections));
+        this.buildColumns(sections);
+        this.initColumns(this.getUserDefinedColums());
+    }
+
+    getUserDefinedColums() {
+        let userDefinedColumns = [];
+        this._userDefinedBatchTableColumnNames.forEach(columnName => {
+            userDefinedColumns.push(this._columnsBySourceFieldApiName[columnName]);
+        });
+        return userDefinedColumns;
     }
 
     initColumns(userDefinedColumns) {
         this.columns = [
-            ...this._columns,
             ...userDefinedColumns,
             this._actionsColumn];
         this.columnsLoaded();
     }
 
     buildColumns(sections) {
-        const columns = [];
+        this.addSpecialCasedColumns();
+
         sections.forEach(
             section => {
                 section.elements
@@ -130,13 +153,21 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                                 ) === 'date' ? 'date-local' :
                                     GeFormService.getInputTypeFromDataType(element.dataType)
                             };
-                            columns.push(column);
+
+                            this._columnsBySourceFieldApiName[column.fieldName] = column;
                         }
                     }
                 );
             }
         );
-        return columns;
+
+    }
+
+    addSpecialCasedColumns() {
+        this._columnsBySourceFieldApiName[this._columns[0].fieldName] = this._columns[0];
+        this._columnsBySourceFieldApiName[this._columns[1].fieldName] = this._columns[1];
+        this._columnsBySourceFieldApiName[this._columns[2].fieldName] = this._columns[2];
+        this._columnsBySourceFieldApiName[this._columns[3].fieldName] = this._columns[3];
     }
 
     columnsLoaded() {
