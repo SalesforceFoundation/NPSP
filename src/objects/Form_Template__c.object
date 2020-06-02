@@ -188,9 +188,9 @@
     </fields>
     <fields>
         <fullName>Default_Batch_Table_Columns_JSON__c</fullName>
-        <description>Batch Table Columns JSON, a colletion of soure field api names.</description>
+        <description>API names for fields included in the batch gift table for this Gift Entry template. Stored as JSON.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Batch Table Columns JSON, a colletion of soure field api names.</inlineHelpText>
+        <inlineHelpText>API names for fields included in the batch gift table for this Gift Entry template. Stored as JSON.</inlineHelpText>
         <label>Default Batch Table Columns JSON</label>
         <length>55000</length>
         <trackTrending>false</trackTrending>
