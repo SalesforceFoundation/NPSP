@@ -151,7 +151,7 @@ public with sharing class CRLP_RollupUI_SVC {
         model.isSystemAdminUser = STG_Panel.runningUserIsAdmin();
 
         //return early with just labels and CRLP enabled flag if CRLP is disabled
-        if (!(model.isCRLPEnabled)) {
+        if (!model.isCRLPEnabled) {
             return JSON.serialize(model);
         }
 
