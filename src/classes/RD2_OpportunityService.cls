@@ -258,7 +258,7 @@ public with sharing class RD2_OpportunityService {
                 if (record.hasInstallment() && record.isNew()) {
                     if (earliestUnmatchedInstallment == null ||
                         earliestUnmatchedInstallment.nextDonationDate > record.getInstallment().nextDonationDate
-                        ) {
+                    ) {
                         earliestUnmatchedInstallment = record.getInstallment();
                     }
                 }
@@ -276,14 +276,14 @@ public with sharing class RD2_OpportunityService {
                 if (!record.hasInstallment()){
                     if (earliestUnmatchedOpportunity == null ||
                         earliestUnmatchedOpportunity.CloseDate > record.getOpportunity().CloseDate
-                        ) {
+                    ) {
                         earliestUnmatchedOpportunity = record.getOpportunity();
                     }
                 }
 
-                Boolean isChanged = syncOppWithRecurringDonation(opp, rd);
-                isChanged = syncOppWithInstallment(opp, record.getInstallment()) || isChanged;
-                if (isChanged) {
+                Boolean wasOpportunityChanged = syncOppWithRecurringDonation(opp, rd);
+                wasOpportunityChanged = syncOppWithInstallment(opp, record.getInstallment()) || wasOpportunityChanged;
+                if (wasOpportunityChanged) {
                     opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
                     oppsToUpdate.add(opp);
                 }
@@ -294,17 +294,13 @@ public with sharing class RD2_OpportunityService {
                     break;
                 }
 
-                Boolean isNewSchedule =
-                    isScheduleChangedById.get(rd.Id) == null
-                    ? false
-                    : isScheduleChangedById.get(rd.Id);
-                if (!isNewSchedule) {
+                if (isScheduleChangedById.get(rd.Id) == true) {
                     break;
                 }
 
-                Boolean isChanged = syncOppWithRecurringDonation(earliestUnmatchedOpportunity, rd);
-                isChanged = syncOppWithInstallment(earliestUnmatchedOpportunity, earliestUnmatchedInstallment);
-                if (isChanged) {
+                Boolean wasOpportunityChanged = syncOppWithRecurringDonation(earliestUnmatchedOpportunity, rd);
+                wasOpportunityChanged = syncOppWithInstallment(earliestUnmatchedOpportunity, earliestUnmatchedInstallment);
+                if (wasOpportunityChanged) {
                     earliestUnmatchedOpportunity.Name = buildOpportunityName(rd.npe03__Donor_Name__c, earliestUnmatchedOpportunity);
                     oppsToUpdate.add(earliestUnmatchedOpportunity);
                 }

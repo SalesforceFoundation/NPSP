@@ -215,6 +215,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
     * @description Contains Map of Recurring Donation Ids to Boolean indicating a schedule change
+    * @return Map<Id, Boolean> isScheduleChangedById maps Recurring Donation Id to a boolean
+    * indicating whether the Recurring Donation update results in a new schedule.
     */
     @TestVisible
     private Map<Id, Boolean> isScheduleChangedById {
