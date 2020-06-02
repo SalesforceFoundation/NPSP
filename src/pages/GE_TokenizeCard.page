@@ -42,7 +42,7 @@
                     'padding: 0;' +
                 '}' +
                 '.error-wrapper.fieldset.exp {' +
-                    'max-width: 7rem;' +
+                    'max-width: fit-content;' +
                 '}'
         })
         .then(() => {
