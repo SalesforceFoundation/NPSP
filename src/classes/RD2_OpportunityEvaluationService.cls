@@ -417,7 +417,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     private  Boolean isNewOpportunityCandidate(RD2_RecurringDonation rd) {
-        Boolean hasMandatoryConditions = rd.isActive()
+        Boolean hasMandatoryConditions = (rd.isActive() || rd.isLapsed())
             && rd.hasNextDonationDate()
             && rd.hasSchedule()
             && (!RD2_ElevateIntegrationService.isIntegrationEnabled() || !rd.isElevateRecord());
@@ -446,7 +446,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     private Boolean hasOpenOpportunity(RD2_RecurringDonation rd) {
         return !isBatchContext
-            && rd.isActive()
+            && (rd.isActive() || rd.isLapsed())
             && rd.hasSchedule()
             && rd.hasOpenOpportunity();
     }
