@@ -16,6 +16,7 @@ const EVENT_BATCH_HEADER_FIELD_UP = 'batchheaderfieldup';
 const EVENT_BATCH_HEADER_FIELD_DOWN = 'batchheaderfielddown';
 const EVENT_BATCH_HEADER_FIELD_ADD = 'addbatchheaderfield';
 const EVENT_BATCH_HEADER_FIELD_REMOVE = 'removebatchheaderfield';
+const EVENT_BATCH_TABLE_DEFAULT_COLUMNS = 'updatetemplatedefaultbatchtablecolumns';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
 
@@ -25,6 +26,8 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     @api batchFields;
     @api selectedBatchFields;
     @api missingRequiredFields;
+    @api availableBatchTableColumnOptions;
+    @api selectedBatchTableColumnOptions;
 
     @track isLoading = true;
     @track hasErrors;
@@ -52,6 +55,14 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             handleError(error);
             this.isLoading = false;
         }
+    }
+
+    handleChangeBatchTableColumnSelection(event) {
+        this.batchTableDualListboxValues = event.detail.value;
+        const changeSelectionEvent = new CustomEvent(EVENT_BATCH_TABLE_DEFAULT_COLUMNS, {
+            detail: event.detail.value
+        });
+        this.dispatchEvent(changeSelectionEvent);
     }
 
     /*******************************************************************************

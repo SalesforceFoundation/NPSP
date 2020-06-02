@@ -28,8 +28,9 @@
                             <lightning-dual-listbox name="languages"
                                                     source-label="Available"
                                                     selected-label="Selected"
-                                                    options={options}
-                                                    onchange={handleChange}
+                                                    options={availableBatchTableColumnOptions}
+                                                    value={selectedBatchTableColumnOptions}
+                                                    onchange={handleChangeBatchTableColumnSelection}
                                                     class='slds-p-top_small slds-p-bottom_large'>
                             </lightning-dual-listbox>
                         </lightning-layout-item>
@@ -152,8 +153,8 @@
                                                                   onupdateformelement={handleUpdateBatchHeaderField}
                                                                   ondeleteformelement={handleDeleteBatchHeaderField}>
                                 </c-ge-template-builder-form-field>
-
                             </template>
+
                         </lightning-layout-item>
                     </lightning-layout>
                 </lightning-tab>
