@@ -144,7 +144,8 @@ public with sharing class FORM_ServiceGiftEntry {
                 Name,
                 Template_JSON__c,
                 Description__c,
-                Format_Version__c
+                Format_Version__c,
+                Default_Batch_Table_Columns_JSON__c
             FROM Form_Template__c
             WITH SECURITY_ENFORCED
             ORDER BY Name ASC
@@ -268,14 +269,14 @@ public with sharing class FORM_ServiceGiftEntry {
                                             String description,
                                             String formatVersion,
                                             String templateJSON,
-                                            String batchTableColumns) {
+                                            String defaultBatchTableColumns) {
         if (templateJSON != null) {
             Form_Template__c templateObj = new Form_Template__c(Id = id, 
                                                             Name = name,
                                                             Description__c = description,
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion,
-                                                            Default_Batch_Table_Columns_JSON__c = batchTableColumns);
+                                                            Default_Batch_Table_Columns_JSON__c = defaultBatchTableColumns);
             upsert templateObj;
             return templateObj.Id;
         }

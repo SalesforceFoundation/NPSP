@@ -94,6 +94,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
+        dataImportModel.batchTableColumnSourceFieldApiNames =
+            (String[]) JSON.deserialize(getGiftEntryDefinedBatchTableColumns(batchId), String[].class);
+
         // check permissions on hard coded fields
         BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
             UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
@@ -395,6 +398,15 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Gets the Gift Entry defined list of Batch Table Columns as JSON.
+    * @param recordId the ID of the NPSP_Data_Import_Batch__c
+    * @return String: List of Batch Table Columns as JSON
+    */
+    private static String getGiftEntryDefinedBatchTableColumns(Id recordId) {
+        return [SELECT Batch_Table_Columns_JSON__c FROM DataImportBatch__c WHERE Id =: recordId].Batch_Table_Columns_JSON__c;
+    }
+
+    /*******************************************************************************************************
     * @description prepare the data import record for dry run by clearing certain fields or retaining them
     * based on if user has already selected a match, or if they want to let matching run. Either way, we want to use Dry Run
     * to check for potential errors.
@@ -525,6 +537,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Decimal totalRowAmount;
         @AuraEnabled public List<UTIL_LightningComponentSupport.Notice> notices =
                 new List<UTIL_LightningComponentSupport.Notice>();
+        @AuraEnabled public String[] batchTableColumnSourceFieldApiNames;
 
         /*******************************************************************************************************
         * @description Retrieves the related list of columns for the BGE interface

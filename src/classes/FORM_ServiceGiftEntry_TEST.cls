@@ -369,7 +369,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             'This is the description.',
             '1.0',
             layout,
-            '[]');
+            new List<String> {});
 
         return template;
     }

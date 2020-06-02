@@ -501,7 +501,7 @@ public class UTIL_UnitTestData_TEST {
                                                    'This is the description.',
                                                    '1.0',
                                                    layout,
-                                                   '[]');
+                                                   new List<String> {});
         return template;
     }
 
