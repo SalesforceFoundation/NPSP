@@ -330,9 +330,10 @@ public with sharing class RD2_ValidationService {
 
         if (rdRecord.isFixedLength()
             && rdRecord.isClosed()
-            && rd.EndDate__c > currentDate) {
-                rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
-            }
+            && rd.EndDate__c > currentDate
+        ) {
+            rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
+        }
 
         Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
         if (mostRecentCloseWonDate == null) {

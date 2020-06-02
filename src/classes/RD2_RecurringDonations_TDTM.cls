@@ -187,6 +187,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * - Assign Installment Frequency to the recurring donation record if the field is null on insert
     * - Set Day of Month to be the Last_Day if the original value is "31"
     * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     @TestVisible
