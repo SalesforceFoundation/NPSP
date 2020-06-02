@@ -74,8 +74,8 @@
                     </c-ge-template-builder-form-fields>
                 </lightning-tab>
 
-                <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
-                               label={TabEnums.BATCH_HEADER_TAB}
+                <lightning-tab value={TabEnums.BATCH_SETTINGS_TAB}
+                               label={TabEnums.BATCH_SETTINGS_TAB}
                                class="slds-p-around_none"
                                onactive={handleOnActiveTab}
                                show-error-indicator={hasBatchHeaderTabError}>
@@ -135,7 +135,7 @@
                             </lightning-progress-step>
                             <lightning-progress-step label="Batch Header"
                                                      aria-label="Batch Header"
-                                                     value={TabEnums.BATCH_HEADER_TAB}>
+                                                     value={TabEnums.BATCH_SETTINGS_TAB}>
                             </lightning-progress-step>
                         </lightning-progress-indicator>
                     </div>
@@ -156,7 +156,7 @@
                                               class="slds-float_right"
                                               onclick={handleGoToTab}
                                               variant="brand"
-                                              data-tab-value={TabEnums.BATCH_HEADER_TAB}
+                                              data-tab-value={TabEnums.BATCH_SETTINGS_TAB}
                                               data-qa-locator={qaLocatorNextBatchHeaderFields}>
                             </lightning-button>
                         </template>

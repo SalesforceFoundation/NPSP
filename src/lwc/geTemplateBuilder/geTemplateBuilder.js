@@ -94,7 +94,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     TabEnums = Object.freeze({
         INFO_TAB: this.CUSTOM_LABELS.geTabTemplateInfo,
         FORM_FIELDS_TAB: this.CUSTOM_LABELS.geTabFormFields,
-        BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
+        BATCH_SETTINGS_TAB: this.CUSTOM_LABELS.geTabBatchSettings
     });
 
     @api formTemplateRecordId;
@@ -181,7 +181,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get inBatchHeaderTab() {
-        return this.activeTab === this.TabEnums.BATCH_HEADER_TAB ? true : false;
+        return this.activeTab === this.TabEnums.BATCH_SETTINGS_TAB ? true : false;
     }
 
     get inSelectFieldsTab() {
@@ -458,8 +458,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             case this.TabEnums.FORM_FIELDS_TAB:
                 this.activeTab = this.TabEnums.FORM_FIELDS_TAB;
                 break;
-            case this.TabEnums.BATCH_HEADER_TAB:
-                this.activeTab = this.TabEnums.BATCH_HEADER_TAB;
+            case this.TabEnums.BATCH_SETTINGS_TAB:
+                this.activeTab = this.TabEnums.BATCH_SETTINGS_TAB;
                 break;
             default:
                 this.activeTab = this.TabEnums.INFO_Tab;

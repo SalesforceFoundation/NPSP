@@ -2150,6 +2150,7 @@
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
+        <members>geBodyBatchTableColumns</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsDescLeftCol</members>
@@ -2273,6 +2274,8 @@
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
+        <members>geTabBatchSettings</members>
+        <members>geTabBatchTableColumns</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTextChargingCard</members>

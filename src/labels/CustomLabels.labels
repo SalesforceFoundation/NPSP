@@ -5488,6 +5488,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>For more advanced gift entry options, select fields from the following Object Groups.</value>
     </labels>
     <labels>
+        <fullName>geBodyBatchTableColumns</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Advanced Form Fields header</shortDescription>
+        <value>The batch table appears under your gift entry form and lists the gifts included in the batch. The recommended fields are included. Status and Error are required for batch processing.</value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchFieldBundleInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5717,8 +5725,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button to continue and configure the batch header</shortDescription>
-        <value>Next: Batch Header</value>
+        <shortDescription>Button to continue and configure the batch settings</shortDescription>
+        <value>Next: Batch Settings</value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavFormFields</fullName>
@@ -6572,6 +6580,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for Batch Header navigation subtab</shortDescription>
         <value>Batch Header</value>
+    </labels>
+    <labels>
+        <fullName>geTabBatchSettings</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Batch Settings tab</shortDescription>
+        <value>Batch Settings</value>
+    </labels>
+    <labels>
+        <fullName>geTabBatchTableColumns</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Batch Table Columns</shortDescription>
+        <value>Batch Table Columns</value>
     </labels>
     <labels>
         <fullName>geTabFormFields</fullName>
