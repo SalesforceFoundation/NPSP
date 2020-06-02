@@ -123,7 +123,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                         const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
                         if (isNotEmpty(fieldWrapper)) {
                             const column = {
-                                label: element.label,
+                                label: element.customLabel,
                                 fieldName: fieldWrapper.Source_Field_API_Name,
                                 type: GeFormService.getInputTypeFromDataType(
                                     element.dataType
