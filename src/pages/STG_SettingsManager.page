@@ -42,7 +42,7 @@
 
 <script>
     var j$ = jQuery.noConflict();
-    var idPanelCurrent = '{!idPanelCurrent}';
+    var idPanelCurrent = '{!JSINHTMLENCODE(idPanelCurrent)}';
     if (idPanelCurrent == '') idPanelCurrent = 'idPanelHome';
 
     // page init function
@@ -97,7 +97,7 @@
         // the correct tab when a validation error was hit on Save,
         // but for some reason the page reloads with {idPanelCurrent} empty,
         // even though it has been set by this actionFunction before editing the panel.
-        if (idPanelCurrent != '{!idPanelCurrent}') {
+        if (idPanelCurrent != '{!JSINHTMLENCODE(idPanelCurrent)}') {
             setPanelCurrent(idPanelCurrent);
         }
     }
@@ -195,6 +195,15 @@
                                 </li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDNav">
                                     <a href="#" onclick="ShowPanel('idPanelRD');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRecurringDonations}</a>
+                                </li>
+                                <li role="treeitem" aria-level="2" id="idPanelRD2StatusMappingNav"
+                                    class="{!IF(isRD2Enabled, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRD2StatusMapping');return false;"
+                                        class="slds-grow slds-m-left_large"
+                                        style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+                                        {!$Label.stgNavRD2StatusMapping}</a>
                                 </li>
                                 <li role="treeitem" aria-level="2" id="idPanelRDInstPdNav"
                                     class="{!IF(!isRD2Enabled, 'slds-tree__item', 'hide')}"
@@ -359,6 +368,10 @@
 
                 <div class="panel noborder" id="idPanelRD" style="display:none" >
                     <apex:include pageName="STG_PanelRD" id="idPanelRD"/>
+                </div> 
+
+                <div class="panel noborder" id="idPanelRD2StatusMapping" style="display:none">
+                    <apex:include pageName="STG_PanelRD2StatusMapping" id="idPanelRD2StatusMapping"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >

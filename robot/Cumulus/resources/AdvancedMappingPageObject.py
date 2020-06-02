@@ -96,3 +96,6 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators['adv_mappings']['field-label'].format(fld_label)
         if self.npsp.check_if_element_exists(locator):
             self.delete_field_mapping(fld_label)
+        else :
+            self.builtin.log(f"the locator {locator} for element you are trying to delete is not found on page") 
+            self.selenium.capture_page_screenshot()   

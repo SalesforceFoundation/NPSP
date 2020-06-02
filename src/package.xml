@@ -42,6 +42,21 @@
         <members>ADV_PackageInfo_SVC</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
+        <members>ALLO_AllocationsDMLService</members>
+        <members>ALLO_AllocationsDMLService_TEST</members>
+        <members>ALLO_AllocationsRecalculateService</members>
+        <members>ALLO_AllocationsRecalculateService_TEST</members>
+        <members>ALLO_AllocationsRetrievalService</members>
+        <members>ALLO_AllocationsRetrievalService_TEST</members>
+        <members>ALLO_AllocationsReviewService</members>
+        <members>ALLO_AllocationsReviewService_TEST</members>
+        <members>ALLO_AllocationsService</members>
+        <members>ALLO_AllocationsService_TEST</members>
+        <members>ALLO_AllocationsSettings</members>
+        <members>ALLO_AllocationsSettings_TEST</members>
+        <members>ALLO_AllocationsUtil</members>
+        <members>ALLO_AllocationsUtil_TEST</members>
+        <members>ALLO_AllocationsWrapper</members>
         <members>ALLO_Allocations_TDTM</members>
         <members>ALLO_Allocations_TEST</members>
         <members>ALLO_MakeDefaultAllocations_BATCH</members>
@@ -54,6 +69,7 @@
         <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
+        <members>ALLO_UnitTestHelper_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -179,6 +195,8 @@
         <members>CRLP_DefaultConfigBuilder</members>
         <members>CRLP_DefaultConfigBuilder_SVC</members>
         <members>CRLP_DefaultConfigBuilder_TEST</members>
+        <members>CRLP_EnablementService</members>
+        <members>CRLP_EnablementService_TEST</members>
         <members>CRLP_FiscalYears</members>
         <members>CRLP_FiscalYears_TEST</members>
         <members>CRLP_GAU_BATCH</members>
@@ -407,6 +425,10 @@
         <members>RD2_ScheduleService_TEST</members>
         <members>RD2_Settings</members>
         <members>RD2_Settings_TEST</members>
+        <members>RD2_StatusMapper</members>
+        <members>RD2_StatusMapper_TEST</members>
+        <members>RD2_StatusMappingSettings_CTRL</members>
+        <members>RD2_StatusMappingSettings_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>
@@ -536,6 +558,8 @@
         <members>UTIL_AbstractChunkingLDV_BATCH_TEST</members>
         <members>UTIL_AbstractChunkingLDV_MOCK</members>
         <members>UTIL_AbstractRollup_BATCH</members>
+        <members>UTIL_Address</members>
+        <members>UTIL_Address_TEST</members>
         <members>UTIL_BatchJobProgress_CTRL</members>
         <members>UTIL_BatchJobProgress_TEST</members>
         <members>UTIL_BatchJobService</members>
@@ -703,6 +727,7 @@
         <members>STG_PanelPrimaryContactRoleMerge</members>
         <members>STG_PanelRD</members>
         <members>STG_PanelRD2Enablement</members>
+        <members>STG_PanelRD2StatusMapping</members>
         <members>STG_PanelRDBatch</members>
         <members>STG_PanelRDCustomFieldMapping</members>
         <members>STG_PanelRDCustomInstallment</members>
@@ -1332,6 +1357,8 @@
         <members>Filter_Rule__mdt.Operator__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_Stage__c</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt.Opportunity_State__c</members>
+        <members>RecurringDonationStatusMapping__mdt.State__c</members>
+        <members>RecurringDonationStatusMapping__mdt.Status__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -1402,6 +1429,7 @@
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.StatusMappingDeploymentId__c</members>
         <members>npe03__Recurring_Donations_Settings__c.UseFiscalYearForRecurringDonationValue__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
@@ -1660,6 +1688,7 @@
         <members>RD2_EnablementMigrationStopButton</members>
         <members>RD2_EnablementMigrationTitle</members>
         <members>RD2_EnablementMigrationWarning</members>
+        <members>RD2_EnablementPermissionRequired</members>
         <members>RD2_EnablementPrepIntro</members>
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
@@ -1684,6 +1713,16 @@
         <members>RD2_ScheduleVisualizerMessageNoActiveSchedule</members>
         <members>RD2_ScheduleVisualizerMessageNoSchedule</members>
         <members>RD2_ScheduleVisualizerTitle</members>
+        <members>RD2_StatusMappingColumnState</members>
+        <members>RD2_StatusMappingColumnStatusAPIName</members>
+        <members>RD2_StatusMappingDefinitions</members>
+        <members>RD2_StatusMappingDeploymentAlreadyInProgress</members>
+        <members>RD2_StatusMappingInProgressMessage</members>
+        <members>RD2_StatusMappingIntro</members>
+        <members>RD2_StatusMappingStateUnmapped</members>
+        <members>RD2_StatusMappingSuccessMessage</members>
+        <members>RD2_StatusMustBeMapped</members>
+        <members>RD2_StatusMustBeMappedSolution</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -1750,6 +1789,7 @@
         <members>alloCampaignExceedsOppAmount</members>
         <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
+        <members>alloDefaultGAUNotActive</members>
         <members>alloDefaultNotEnabled</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
@@ -1763,7 +1803,11 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
+        <members>alloOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>
+        <members>alloPaymentAllocationBatchAllocationError</members>
+        <members>alloPaymentAllocationBatchRecordError</members>
+        <members>alloPaymentAllocationBatchRetriesExceeded</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>
@@ -1772,6 +1816,7 @@
         <members>alloRemoveOppWithPmt</members>
         <members>alloSignMistmatch</members>
         <members>alloSingleParent</members>
+        <members>alloSuccessfulRecordRetry</members>
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
@@ -1992,6 +2037,8 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonAdminPermissionErrorMessage</members>
+        <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
         <members>commonAssistiveError</members>
         <members>commonAssistiveInfo</members>
@@ -2090,6 +2137,11 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geBatchGiftsCount</members>
+        <members>geBatchGiftsExpectedCountOrTotalMessage</members>
+        <members>geBatchGiftsExpectedTotalsMessage</members>
+        <members>geBatchGiftsHeader</members>
+        <members>geBatchGiftsTotal</members>
         <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
@@ -2869,6 +2921,7 @@
         <members>stgNavPayments</members>
         <members>stgNavPeople</members>
         <members>stgNavRD2Enablement</members>
+        <members>stgNavRD2StatusMapping</members>
         <members>stgNavRDBatch</members>
         <members>stgNavRDFieldMap</members>
         <members>stgNavRDInstallmentPeriods</members>
@@ -3054,6 +3107,7 @@
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt</members>
+        <members>RecurringDonationStatusMapping__mdt</members>
         <members>Rollup__mdt</members>
         <name>CustomObject</name>
     </types>
@@ -3382,6 +3436,13 @@
         <members>Opportunity_Stage_To_State_Mapping__mdt-iw</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
+        <members>RecurringDonationStatusMapping__mdt-de</members>
+        <members>RecurringDonationStatusMapping__mdt-en_US</members>
+        <members>RecurringDonationStatusMapping__mdt-es</members>
+        <members>RecurringDonationStatusMapping__mdt-fr</members>
+        <members>RecurringDonationStatusMapping__mdt-iw</members>
+        <members>RecurringDonationStatusMapping__mdt-ja</members>
+        <members>RecurringDonationStatusMapping__mdt-nl_NL</members>
         <members>Rollup__mdt-de</members>
         <members>Rollup__mdt-en_US</members>
         <members>Rollup__mdt-es</members>
@@ -3567,6 +3628,7 @@
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-Opportunity Stage To State Mapping Layout</members>
+        <members>RecurringDonationStatusMapping__mdt-Recurring Donation Status Mapping Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
@@ -3580,6 +3642,8 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
+        <members>customDatatable</members>
+        <members>customPicklistType</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>
@@ -3619,6 +3683,7 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
         <members>util</members>
@@ -3635,6 +3700,7 @@
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
+        <members>utilProgressBar</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
         <members>utilTemplateBuilder</members>
@@ -3771,5 +3837,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>47.0</version>
+    <version>48.0</version>
 </Package>

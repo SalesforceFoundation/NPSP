@@ -1908,6 +1908,14 @@
         <value>&lt;b&gt;WARNING: Run Migration modifies existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven't already done so.&lt;/b&gt;</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementPermissionRequired</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when user does not have System Admin permissions</shortDescription>
+        <value>Only System Administrators can perform Enhanced Recurring Donations upgrade actions.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementPrepIntro</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2102,6 +2110,89 @@
         <protected>true</protected>
         <shortDescription>Title of the Schedule Visualizer Component</shortDescription>
         <value>Upcoming Installments</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingColumnState</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapping datatable State field label</shortDescription>
+        <value>State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingColumnStatusAPIName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapping datatable Status field containing the API Name</shortDescription>
+        <value>API Name</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingDefinitions</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status to state mapping definitions</shortDescription>
+        <value>&lt;b&gt;State Definitions&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Active: The donor is actively donating. NPSP creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
+&lt;li&gt;Lapsed: Donations aren&apos;t being received as expected, but NPSP still creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
+&lt;li&gt;Closed: The donor has stopped making donations for this Recurring Donation. NPSP doesn&apos;t create any new installment Opportunities.&lt;/li&gt;&lt;/ul&gt;</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingDeploymentAlreadyInProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when save action cannot start due to another deployment</shortDescription>
+        <value>You can&apos;t save a mapping while NPSP is processing another Status to State mapping.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status to state mapping page introduction and guidelines</shortDescription>
+        <value>When you create custom picklist values for Recurring Donation Status, you must map them to a State so that NPSP knows how to process records with those custom Status values.
+        &lt;br/&gt;&lt;br/&gt;If you haven&apos;t created any custom picklist values for Recurring Donation Status, there's nothing you need to map.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingInProgressMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when mapping save action succeeds</shortDescription>
+        <value>Saving Status to State mapping.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingSuccessMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when mapping save action succeeds</shortDescription>
+        <value>Status to State mapping saved.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMappingStateUnmapped</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>State label displayed when status is unmapped</shortDescription>
+        <value>-- Unmapped --</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMustBeMapped</fullName>
+        <categories>Recurring-Donations, Error, Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation and health check error message when status is not mapped to a state.</shortDescription>
+        <value>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMustBeMappedSolution</fullName>
+        <categories>Recurring-Donations, Error, Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation and health check solution when status is not mapped to a state.</shortDescription>
+        <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
@@ -2611,6 +2702,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
         <value>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
     </labels>
+   <labels>
+        <fullName>alloDefaultGAUNotActive</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when the Default General Accounting Unit is not active</shortDescription>
+        <value>The Default General Accounting Unit is not active. Set the {0} General Accounting Unit to Active, or change the Default General Accounting Unit to one that’s active.</value>
+    </labels>
     <labels>
         <fullName>alloDefaultNotEnabled</fullName>
         <categories>Allocation, Error</categories>
@@ -2716,12 +2815,44 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when a record’s Allocation total exceeds its Amount</shortDescription>
+        <value>The total of the Allocations on this {0} exceeds its Amount. Update the {0} Allocations to make their total equal to the {0} Amount.</value>
+    </labels>
+    <labels>
         <fullName>alloPaidPmtsExceedsOpp</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
         <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchAllocationError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message wrapper for a specific Allocation in a batch</shortDescription>
+        <value>Error occurred while processing the {0} record associated with Allocation {1} ({2}). Details: {3}</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchRecordError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message wrapper for a batch when a specific Allocation can’t be identified</shortDescription>
+        <value>Error occurred while processing {0} {1}. Details: {2}</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchRetriesExceeded</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when the Accounting Scheduled Job retry can’t process Allocations</shortDescription>
+        <value>Error occurred while processing records that didn&apos;t error on the first attempt. No data was saved.</value>
     </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
@@ -2786,6 +2917,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>Each Allocation must have a single parent object: Pmt, Opp, Rec Donation, Camp.</shortDescription>
         <value>Ensure that this Allocation has only one parent object: Payment, Opportunity, Recurring Donation, or Campaign.</value>
+    </labels>
+    <labels>
+        <fullName>alloSuccessfulRecordRetry</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success text added to Error Logs when retry successfully processes Allocations</shortDescription>
+        <value>Processing these Allocations was retried and completed successfully.</value>
     </labels>
     <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
@@ -4693,7 +4832,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Common label for expiration date (MM/YY)</shortDescription>
         <value>MM/YY</value>
     </labels>
-    <labels>        
+    <labels>
         <fullName>commonMissingRequiredFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4780,6 +4919,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Review Form</shortDescription>
         <value>Review Form</value>
+    </labels>
+    <labels>
+        <fullName>commonAdminPermissionErrorMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message about permissions</shortDescription>
+        <value>You must be a System Administrator to access this page.</value>
+    </labels>
+    <labels>
+        <fullName>commonAdminPermissionErrorTitle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error title about permissions</shortDescription>
+        <value>Check Your Permissions</value>
     </labels>
     <labels>
         <fullName>commonSave</fullName>
@@ -5293,6 +5448,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBatchGiftsCount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for displaying the number of gifts in the batch</shortDescription>
+        <value>Count of Gifts</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsExpectedCountOrTotalMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notification about either number or total of gifts not matching expected</shortDescription>
+        <value>The expected doesn't match either the count of gifts or the amount of gifts. These values must match before you can process this batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsExpectedTotalsMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notification about number and total of gifts not matching expected</shortDescription>
+        <value>The expected and total number of gifts and amount of gifts must match before you can process this batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsTotal</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for displaying the total value of the gifts in the batch</shortDescription>
+        <value>Total Batch Amount</value>
+    </labels>
+    <labels>
         <fullName>geBodyAdvancedFieldMapping</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5307,6 +5494,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Text block about inability to set default values for Field Bundles</shortDescription>
         <value>You can't set default values for fields included in this section.</value>
+    </labels>
+    <labels>
+        <fullName>geBatchGiftsHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for number of gifts entered in batch</shortDescription>
+        <value>Gifts Entered for {0}</value>
     </labels>
     <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
@@ -5796,7 +5991,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Body of full page error when insufficient access to all objects on the form</shortDescription>
-        <value>You must have permission to edit all objects in the form. Check with your Salesforce admin about access for the following objects: {0}</value>
+        <value>Check with your Salesforce admin about your object access. You must have permission to edit the following objects: {0}</value>
     </labels>
     <labels>
         <fullName>geErrorFLSHeader</fullName>
@@ -5812,7 +6007,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Body of full page error when insufficient field access to what's on the form</shortDescription>
-        <value>You must have permission to edit all fields in the form. Check with your Salesforce admin about accessing the following fields: {0}</value>
+        <value>Check with your Salesforce admin about your field-level access. You must have permission to edit the following fields: {0}</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelAdvancedMappingBody</fullName>
@@ -11145,7 +11340,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgLabelNone</shortDescription>
+        <shortDescription>--None-- picklist value</shortDescription>
         <value>--None--</value>
     </labels>
     <labels>
@@ -11707,6 +11902,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>stgNavRD2Enablement</shortDescription>
         <value>Upgrade to Enhanced Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRD2StatusMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu name for the status to state mapping settings</shortDescription>
+        <value>Status to State Mapping</value>
     </labels>
     <labels>
         <fullName>stgNavRDBatch</fullName>

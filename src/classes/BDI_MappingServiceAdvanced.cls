@@ -345,8 +345,10 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
                 constructSimulatedFieldMapping(unmappedFieldDescribe, simulatedDataImportObjectMapping);
 
             fieldMappingByDevName.put(simulatedFieldMapping.DeveloperName, simulatedFieldMapping);
-            BDI_FieldMapping[] currentObjectMappings = fieldMappingsByObjMappingDevName.get(objectMappingDevName);
-            currentObjectMappings.add(simulatedFieldMapping);
+            if (fieldMappingsByObjMappingDevName.containsKey(objectMappingDevName)) {
+                BDI_FieldMapping[] currentObjectMappings = fieldMappingsByObjMappingDevName.get(objectMappingDevName);
+                currentObjectMappings.add(simulatedFieldMapping);
+            }           
         }
 
         BDI_FieldMapping donationDonorField =

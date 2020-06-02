@@ -116,19 +116,22 @@ private class STG_PanelRDHealthCheck_TEST {
             }
         }
 
-        // Since RD1 is enabled by default, there are 4 configuration errors:
-        // - Value of Quarterly in the Installment Period field
-        // - Value of 31 in the DayOfMonth field
-        System.assertEquals(2, errCount,
-            'Number of entries in the validation should match.\n' + results
-        );
+        if (isRD2MetadataDeployed()) {
+            System.assertEquals(0, errCount,
+                'No error should be reported when RD2 metadata is deployed.\n' + results);
 
-        System.assert(errResults.contains(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY),
-            'The error should reference the "' + RD_Constants.INSTALLMENT_PERIOD_QUARTERLY + '" picklist value.\n' + errResults
-        );
-        System.assert(errResults.contains('31'),
-            'The error should reference the "31" picklist value.\n' + errResults
-        );
+        } else {
+            System.assertEquals(2, errCount,
+                'Number of entries in the validation should match.\n' + results
+            );
+
+            System.assert(errResults.contains(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY),
+                'The error should reference the "' + RD_Constants.INSTALLMENT_PERIOD_QUARTERLY + '" picklist value.\n' + errResults
+            );
+            System.assert(errResults.contains('31'),
+                'The error should reference the "31" picklist value.\n' + errResults
+            );
+        }
     }
 
     /**
@@ -137,6 +140,9 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     @IsTest
     private static void shouldValidateLegacyPeriodPicklistEntries() {
+        if (isRD2MetadataDeployed()) {
+            return;
+        }
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
@@ -155,19 +161,24 @@ private class STG_PanelRDHealthCheck_TEST {
     }
 
     /**
-     * @description Validates that an unsupported InstallmentPeriod picklist entry is identified by the
-     * health check.
-     */
+    * @description Validates that an unsupported InstallmentPeriod picklist entry is identified by the 
+    * health check.
+    */
     @IsTest
     private static void shouldIdentifyInvalidLegacyPeriodPicklistEntry() {
+        if (isRD2MetadataDeployed()) {
+            return;
+        }
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
+
         Set<String> supportedInstallmentPeriods = getLegacyPeriodPicklistForTest();
         supportedInstallmentPeriods.add(BAD_PICKLIST_VALUE);
         healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
-            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);	
+
 
         String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
@@ -257,6 +268,63 @@ private class STG_PanelRDHealthCheck_TEST {
         );
     }
 
+    /**
+    * @description Validate that the checking of RD Status Mapping Settings fail when at least one status is not mapped
+    */
+    @IsTest
+    private static void shouldValidateMissingRDStatusMappingSetting() {
+        configureEnhancedRDSettings();
+
+        //reset stub to remove the Active Status from the mapping mock
+        String unmappedState = null;
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withAllMapping()
+            .withMapping(RD2_Constants.STATUS_ACTIVE, unmappedState);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
+
+        Test.startTest();
+        healthCheck.validateStatusMapping();
+        Test.stopTest();
+
+        String results = getValidationResults(ctrl);
+        System.assertEquals(1, ctrl.listDR.size(), 'There should one result in the Status Mapping validation.\n' + results);
+
+        String errorMessage = String.format(
+            System.Label.RD2_StatusMustBeMapped,
+            new String[] { RD2_Constants.STATUS_ACTIVE}
+        );
+
+        System.assert(results.contains(errorMessage),
+            'The error should reference the "' + errorMessage + '" Status.\n' + results
+        );
+    }
+
+    /**
+    * @description Validate that RD Status Mapping Settings validation pass when all Status are mapped
+    */
+    @IsTest
+    private static void shouldValidateRDStatusMappingSetting() {
+        configureEnhancedRDSettings();
+
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
+
+        Test.startTest();
+        healthCheck.validateStatusMapping();
+        Test.stopTest();
+
+        String results = getValidationResults(ctrl);
+        System.assertEquals(0, ctrl.listDR.size(),
+            'There should zero errors in the RD Status Mapping validation\n' + results
+        );
+    }
+
     // ==================================================================================
     // HELPER METHODS
     // ==================================================================================
@@ -279,6 +347,8 @@ private class STG_PanelRDHealthCheck_TEST {
      * @description Configure RD Settings for Legacy RD's
      */
     private static void configureLegacyRDSettings() {
+        RD2_EnablementService_TEST.setRecurringDonations2Disabled();
+
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = false,
@@ -296,6 +366,13 @@ private class STG_PanelRDHealthCheck_TEST {
     private static void configureEnhancedRDSettings() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withAllMapping();
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
@@ -308,17 +385,34 @@ private class STG_PanelRDHealthCheck_TEST {
     }
 
     /**
-     * @description Returns a set of supported InstallmentPeriod picklist entries for Legacy RD's
-     * @return Set<String>
-     */
+    * @description Returns a set of supported InstallmentPeriod picklist entries for Legacy RD's
+    * @return Set<String>
+    */
     private static Set<String> getLegacyPeriodPicklistForTest() {
         Set<String> supportedInstallmentPeriods = new Set<String>();
         supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
         supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
+        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);	
         supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
         supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
 
         return supportedInstallmentPeriods;
+    }
+
+    /**
+    * @description Check if RD2 metadata is deployed by verifying if the "Day Of Month" field contains 'Last Day' value
+    * @return Boolean
+    */
+    private static Boolean isRD2MetadataDeployed() {
+        List<SelectOption> options = UTIL_Describe.getSelectOptions(
+            'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.Day_Of_Month__c)
+        );
+
+        for (SelectOption option : options) {
+            if (option.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2017 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -33,16 +33,17 @@
 * @group Utilities
 * @description Unit tests for UTIL_Query class
 */
-@isTest(isParallel=true)
+@IsTest(IsParallel=true)
 private class UTIL_Query_TEST {
-	
+
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when duplicate fields are added to SELECT fields
     verify:
-        The SOQL contains unique field names 
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlDoesNotContainDuplicateSelectFields() {
+        The SOQL contains unique field names
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldNotContainDuplicateSelectFields() {
         String[] selectFields = new String[]{
             'Id', 'accountId', 'ACCOUNTid',
             'npo02__Household__r.Number_of_HOUSEHOLD_Members__c',
@@ -54,58 +55,61 @@ private class UTIL_Query_TEST {
             .withSelectFields(selectFields)
             .withFrom('Contact')
             .build();
-        
+
         String expectedSoql = 'SELECT Id, accountId, npo02__Household__r.Number_of_HOUSEHOLD_Members__c, firstname FROM Contact';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should exclude duplicate field names');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when WHERE, ORDER BY and LIMIT Clauses are not provided
     verify:
         The SOQL contains SELECT fields and a FROM value
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlIsCorrectWhenOptionalClausesAreNotProvided() {
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldBeCorrectWhenOptionalClausesAreNotProvided() {
         Set<String> selectFields = new Set<String> { 'Id', 'Name' };
 
         String soql = new UTIL_Query()
             .withSelectFields(selectFields)
             .withFrom('Account')
             .build();
-        
+
         String expectedSoql = 'SELECT Id, Name FROM Account';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should be correct without WHERE clause');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when FROM is sObjectType
     verify:
         The SOQL contains a FROM value
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlIsCorrectWhenFromSObjectTypeIsProvided() {
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldBeCorrectWhenFromSObjectTypeIsProvided() {
         Set<String> selectFields = new Set<String> { 'Id', 'Name' };
 
         String soql = new UTIL_Query()
             .withSelectFields(selectFields)
             .withFrom(Account.getSObjectType())
             .build();
-        
+
         String expectedSoql = 'SELECT Id, Name FROM Account';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should be correct with FROM clause from sObjectType');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when WHERE Clause is provided
     verify:
         The SOQL contains WHERE Clause
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlIsCorrectWhenWhereClauseIsProvided() {
-        Account[] accounts = new Account[]{ 
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldBeCorrectWhenWhereClauseIsProvided() {
+        Account[] accounts = new Account[]{
             new Account(Name = 'Test1 Where'),
             new Account(Name = 'Test2 Where'),
             new Account(Name = 'Test3 Where')
@@ -121,7 +125,7 @@ private class UTIL_Query_TEST {
             .withFrom('Account')
             .withWhere('Id IN :expectedAccounts')
             .build();
-        
+
         String expectedSoql = 'SELECT Id, Name FROM Account WHERE Id IN :expectedAccounts';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should include WHERE clause');
@@ -131,18 +135,21 @@ private class UTIL_Query_TEST {
         Set<Id> expectedAccountIds = new Map<Id, Account>(expectedAccounts).keySet();
         Set<Id> actualAccountIds = new Map<Id, Account>(actualAccounts).keySet();
 
-        System.assertEquals(expectedAccountIds.size(), actualAccountIds.size(), 'Expected Accounts ' + expectedAccounts + ' should be the same as actual Accounts ' + actualAccounts);
-        System.assert(expectedAccountIds.containsAll(actualAccountIds), 'Expected Accounts ' + expectedAccounts + ' should be the same as actual Accounts ' + actualAccounts);
+        System.assertEquals(expectedAccountIds.size(), actualAccountIds.size(), 'Expected Accounts '
+            + expectedAccounts + ' should be the same as actual Accounts ' + actualAccounts);
+        System.assert(expectedAccountIds.containsAll(actualAccountIds), 'Expected Accounts '
+            + expectedAccounts + ' should be the same as actual Accounts ' + actualAccounts);
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when multiple WHERE Clause are provided
     verify:
         The SOQL contains WHERE Clause
     **********************************************************************************************************/
-    private static testMethod void testSoqlIsCorrectWhenMultipleWhereClausesAreProvided() {
-        Account[] accounts = new Account[]{ 
+    @IsTest
+    private static void shouldBeCorrectWhenMultipleWhereClausesAreProvided() {
+        Account[] accounts = new Account[]{
             new Account(Name = 'Test1 Multi Where'),
             new Account(Name = 'Test2 Multi Where'),
             new Account(Name = 'Test3 Multi Where')
@@ -163,20 +170,21 @@ private class UTIL_Query_TEST {
             .withFrom('Account')
             .withWhere(whereClauses)
             .build();
-        
+
         String expectedSoql = 'SELECT Id, Name FROM Account WHERE Id IN :expectedAccounts AND Name LIKE Test%';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should include both WHERE clauses');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when ORDER BY Clause is provided
     verify:
         The SOQL contains ORDER BY Clause
     **********************************************************************************************************/
-    private static testMethod void testSoqlIsCorrectWhenOrderByClauseIsProvided() {
-        Account[] accounts = new Account[]{ 
+    @IsTest
+    private static void shouldBeCorrectWhenOrderByClauseIsProvided() {
+        Account[] accounts = new Account[]{
             new Account(Name = 'Test1 Order By'),
             new Account(Name = 'Test2 Order By'),
             new Account(Name = 'Test3 Order By')
@@ -192,20 +200,21 @@ private class UTIL_Query_TEST {
             .withFrom('Account')
             .withOrderBy('Id')
             .build();
-        
+
         String expectedSoql = 'SELECT Id, Name FROM Account ORDER BY Id';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should include ORDER BY clause');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when LIMIT Clause is provided
     verify:
         The SOQL contains LIMIT Clause
     **********************************************************************************************************/
-    private static testMethod void testSoqlIsCorrectWhenLimitClauseIsProvided() {
-        Account[] accounts = new Account[]{ 
+    @IsTest
+    private static void shouldBeCorrectWhenLimitClauseIsProvided() {
+        Account[] accounts = new Account[]{
             new Account(Name = 'Test1 Limit'),
             new Account(Name = 'Test2 Limit'),
             new Account(Name = 'Test3 Limit')
@@ -221,7 +230,7 @@ private class UTIL_Query_TEST {
             .withFrom('Account')
             .withLimit(2)
             .build();
-        
+
         String expectedSoql = 'SELECT Id, Name FROM Account LIMIT 2';
         Account[] actualAccounts = Database.query(soql);
 
@@ -230,12 +239,13 @@ private class UTIL_Query_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when SELECT fields are not provided
     verify:
         The build() throws an exception
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlBuildFailsWhenNoSelectFieldIsProvided() {
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldBeBuildFailsWhenNoSelectFieldIsProvided() {
         try {
             String soql = new UTIL_Query()
                 .withFrom('Account')
@@ -248,12 +258,13 @@ private class UTIL_Query_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when a SELECT field is empty or null
     verify:
         The build() throws an exception
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlBuildFailsWhenSelectFieldIsEmpty() {
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldFailWhenSelectFieldIsEmpty() {
         for (String fieldName : new String[]{ ' ', '', null}) {
             try {
                 String soql = new UTIL_Query()
@@ -269,12 +280,13 @@ private class UTIL_Query_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when FROM entity value is not provided
     verify:
         The build() throws an exception
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlBuildFailsWhenFromValueIsNotProvided() {
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldFailWhenFromValueIsNotProvided() {
         String[] selectFields = new String[]{ 'Id', 'Name' };
 
         try {
@@ -289,12 +301,13 @@ private class UTIL_Query_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when passed a WHERE clause is empty or null
     verify:
         The build() succeeds and the empty WHERE clause is ignored
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlBuildSucceedsWhenWhereClauseIsEmpty() {
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldSucceedWhenWhereClauseIsEmpty() {
         String[] selectFields = new String[]{ 'Id', 'Name' };
 
         for (String whereClause : new String[]{ ' ', '', null}) {
@@ -314,12 +327,13 @@ private class UTIL_Query_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when toLabelSalutation is ON
     verify:
-        The SOQL contains toLabel() for the Salutation field 
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlIncludesToLabelSalutationWhenSettingsIsOn() {
+        The SOQL contains toLabel() for the Salutation field
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldIncludeToLabelSalutationWhenSettingsIsOn() {
         String[] selectFields = new String[]{
             'Id', 'AccountId', 'SaLuTaTiOn', 'FirstName', 'LastName'
         };
@@ -329,19 +343,20 @@ private class UTIL_Query_TEST {
             .withToLabelSalutation()
             .withFrom('Contact')
             .build();
-    
+
         String expectedSoql = 'SELECT Id, AccountId, toLabel(SaLuTaTiOn), FirstName, LastName FROM Contact';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should include toLabel for Salutation field');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests SOQL builder when toLabelSalutation is OFF
     verify:
         The SOQL contains Salutation field without toLabel()
-    **********************************************************************************************************/   
-    private static testMethod void testSoqlExcludesToLabelSalutationWhenSettingsIsOff() {
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldExcludeToLabelSalutationWhenSettingsIsOff() {
         String[] selectFields = new String[]{
             'Id', 'AccountId', 'SaLuTaTiOn', 'FirstName', 'LastName'
         };
@@ -350,10 +365,55 @@ private class UTIL_Query_TEST {
             .withSelectFields(selectFields)
             .withFrom('Contact')
             .build();
-    
+
         String expectedSoql = 'SELECT Id, AccountId, SaLuTaTiOn, FirstName, LastName FROM Contact';
 
         System.assertEquals(expectedSoql, soql, 'SOQL should not include toLabel for Salutation field');
     }
-	
+
+    /*********************************************************************************************************
+    @description
+        Tests SOQL builder for whenMultiCurrencyField()
+    verify:
+        The SOQL contains CurrencyISOCode if in a Multi Currency Org
+    **********************************************************************************************************/
+    @isTest
+    private static void shouldIncludeMultiCurrencyOrgIfMultiCurrencyEnabled() {
+        String[] selectFields = new String[]{
+            'Id', 'Amount'
+        };
+
+        String soql = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withMultiCurrencyField()
+            .withFrom('Opportunity')
+            .build();
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            System.assert(soql.contains(UTIL_Currency.CURRENCY_ISO_CODE_FIELD), 'Multi Currency Org: CurrencyIsoCode should be present. SOQL: ' + soql);
+        } else {
+            System.assert(!soql.contains(UTIL_Currency.CURRENCY_ISO_CODE_FIELD), 'Not a Multi Currency Org: CurrencyIsoCode should NOT be present. SOQL: ' + soql);
+        }
+    }
+
+    /**
+     * @description Test SOQL Builder when withSecurityEnforced is turned on
+    */
+    @IsTest
+    private static void shouldIncludeSecurityEnforcedClause() {
+        String[] selectFields = new String[]{
+            'Id', 'AccountId', 'FirstName', 'LastName'
+
+        };
+
+        String soql = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Contact')
+            .withSecurityEnforced()
+            .build();
+
+        String expectedSoql = 'SELECT Id, AccountId, FirstName, LastName FROM Contact WITH SECURITY_ENFORCED';
+
+        System.assertEquals(expectedSoql, soql, 'SOQL should not include toLabel for Salutation field');
+    }
 }
