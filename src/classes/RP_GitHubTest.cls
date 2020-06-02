@@ -129,7 +129,7 @@ public with sharing class RP_GitHubTest {
         Test.stopTest();
 
         // Asserting that the new format date is returning the same date with another format
-        System.assertEquals(newDate, '7/17/2017 5:50 pm');
+        System.assertEquals(newDate, '7/17/2017, 5:50 pm');
 
     }
 
