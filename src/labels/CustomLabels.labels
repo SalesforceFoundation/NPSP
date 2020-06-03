@@ -4713,6 +4713,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batches</value>
     </labels>
     <labels>
+        <fullName>commonCVV</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for CVV code</shortDescription>
+        <value>CVV</value>
+    </labels>
+    <labels>
         <fullName>commonCancel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4742,7 +4750,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Common label for credit card number</shortDescription>
-        <value>Credit Number</value>
+        <value>Card Number</value>
     </labels>
     <labels>
         <fullName>commonCriticalError</fullName>
@@ -4830,7 +4838,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Common label for expiration date (MM/YY)</shortDescription>
-        <value>MM/YY</value>
+        <value>Exp. Date</value>
     </labels>
     <labels>
         <fullName>commonMissingRequiredFields</fullName>
@@ -4885,7 +4893,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Common label for Payment Services</shortDescription>
+        <shortDescription>Common label for Elevate Payment Services</shortDescription>
         <value>Salesforce.org Elevate</value>
     </labels>
     <labels>
@@ -6484,7 +6492,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Banner failure message for tokenization or purchase errors</shortDescription>
+        <shortDescription>Field Bundle banner failure message for tokenization or purchase errors</shortDescription>
         <value>There was an error processing the transaction.</value>
     </labels>
     <labels>
@@ -6638,6 +6646,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Text telling the user they're being taken to the Opportunity</shortDescription>
         <value>Let's go look at the Opportunity...</value>
+    </labels>
+    <labels>
+        <fullName>geTextPaymentsSaveNotice</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notification user will process a payment and record donation when clicking Save</shortDescription>
+        <value>Click Save to process the card payment and record the donation in Salesforce.</value>
     </labels>
     <labels>
         <fullName>geTextProcessing</fullName>
