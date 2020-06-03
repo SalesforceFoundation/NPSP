@@ -117,6 +117,18 @@ const isEmpty = (value) => {
 };
 
 /**
+ * Check if an object is empty
+ * @param object         Object to check.
+ * @returns {boolean}   TRUE when the given object is empty.
+ */
+const isEmptyObject = (object) => {
+    for (let key in object) {
+        if (object.hasOwnProperty(key)) return false;
+    }
+    return true;
+}
+
+/**
  * Inverse of isEmpty
  * @param value         Value to check.
  * @returns {boolean}   TRUE when the given value is not undefined, null or blank string.
@@ -425,6 +437,7 @@ export {
     getQueryParameters,
     getSubsetObject,
     isEmpty,
+    isEmptyObject,
     isNotEmpty,
     isNumeric,
     isFunction,
