@@ -2150,7 +2150,8 @@
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
-        <members>geBodyBatchTableColumns</members>
+        <members>geBodyBatchTableColumnsPart1</members>
+        <members>geBodyBatchTableColumnsPart2</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsDescLeftCol</members>

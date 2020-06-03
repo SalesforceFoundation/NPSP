@@ -5488,12 +5488,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>For more advanced gift entry options, select fields from the following Object Groups.</value>
     </labels>
     <labels>
-        <fullName>geBodyBatchTableColumns</fullName>
+        <fullName>geBodyBatchTableColumnsPart1</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Body below the Advanced Form Fields header</shortDescription>
-        <value>The batch table appears under your gift entry form and lists the gifts included in the batch. The recommended fields are included. Status and Error are required for batch processing.</value>
+        <shortDescription>Description for Batch Table Columns, part 1</shortDescription>
+        <value>The batch table appears under your gift entry form and lists the gifts included in the batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchTableColumnsPart2</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Batch Table Columns, part 2</shortDescription>
+        <value>The recommended fields are included. Status and Error are required for batch processing.</value>
     </labels>
     <labels>
         <fullName>geBodyBatchFieldBundleInfo</fullName>

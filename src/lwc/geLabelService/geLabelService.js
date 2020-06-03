@@ -64,7 +64,8 @@ import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBund
 import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
-import geBodyBatchTableColumns from '@salesforce/label/c.geBodyBatchTableColumns';
+import geBodyBatchTableColumnsPart1 from '@salesforce/label/c.geBodyBatchTableColumnsPart1';
+import geBodyBatchTableColumnsPart2 from '@salesforce/label/c.geBodyBatchTableColumnsPart2';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
 import geBodyFieldBundlesLeftCol from '@salesforce/label/c.geBodyFieldBundlesLeftCol';
 import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
@@ -271,7 +272,8 @@ class GeLabelService {
         geBodyBatchHeaderLeftCol,
         geBodyBatchHeaderRightCol,
         geBodyBatchHeaderWarning,
-        geBodyBatchTableColumns,
+        geBodyBatchTableColumnsPart1,
+        geBodyBatchTableColumnsPart2,
         geBodyEmptyFormSection,
         geBodyFieldBundlesLeftCol,
         geBodyFormFieldsDescLeftCol,
