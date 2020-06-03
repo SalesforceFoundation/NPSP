@@ -276,6 +276,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.clearRecordIdOnClone(queryParameters);
     }
 
+    /*******************************************************************************
+    * @description Builds a map of form fields by their source field api names.
+    */
     buildFormFieldsBySourceApiNameMap() {
         let elements = {};
         this.formSections.map(section => {
@@ -305,6 +308,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.selectedBatchTableColumnOptions = event.detail;
     }
 
+    /*******************************************************************************
+    * @description Builds default option objects from a defined list of field
+    * mappings for the dual-listbox component inside the Batch Table Columns subtab
+    * of the Batch Settings tab.
+    */
     buildDefaultBatchTableColumnOptions() {
         let defaultBatchTableColumnOptions = [
             { label: 'Donor', value: 'donorLink' },
@@ -330,6 +338,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.availableBatchTableColumnOptions = defaultBatchTableColumnOptions;
     }
 
+    /*******************************************************************************
+    * @description Builds option objects from all form field elements in the form
+    * for the dual-listbox component inside the Batch Table Columns subtab of the
+    * Batch Settings tab.
+    */
     buildBatchTableColumnOptions() {
         if (!this.formSections || this.formSections.length === 0) return;
         this.getFormFieldsFromSections(this.formSections).forEach(formField => {
@@ -349,6 +362,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         });
     }
 
+    /*******************************************************************************
+    * @description Collects all form field elements from all form sections.
+    *
+    * @param {array} formSections: A list of form section objects
+    *
+    * @return {array} formFields: A list of form field objects
+    */
     getFormFieldsFromSections(formSections) {
         let formFields = [];
         formSections.forEach(formSection => {
@@ -915,6 +935,14 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
     }
 
+    /*******************************************************************************
+    * @description Retrieve provided field mapping's source field api name unless
+    * the field mapping's source is the derived donor or donation field in which
+    * case return special api names that are usable as links for the batch table.
+    *
+    * @param {object} fieldMapping: Instance of Data_Import_Field_Mapping__mdt
+    * @param {object} field: Instance of a form field from the form
+    */
     getSourceFieldApiName(fieldMapping) {
         if (fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName) return 'donorLink';
         if (fieldMapping.Source_Field_API_Name === DONATION_FIELD.fieldApiName) return 'matchedRecordUrl';
@@ -922,17 +950,19 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         return fieldMapping.Source_Field_API_Name;
     }
 
+    /*******************************************************************************
+    * @description Retrieve the form field's user editable custom label unless
+    * field the field is the derived Donor or Donation field in which case return
+    * special labels.
+    *
+    * @param {object} fieldMapping: Instance of Data_Import_Field_Mapping__mdt
+    * @param {object} field: Instance of a form field from the form
+    */
     getBatchTableColumnOptionLabel(fieldMapping, field) {
         if (fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName) return 'Donor';
         if (fieldMapping.Source_Field_API_Name === DONATION_FIELD.fieldApiName) return 'Donation';
 
         return field.customLabel;
-    }
-
-    removeFieldFromBatchTableColumn(fieldMappingDeveloperName) {
-        const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDeveloperName];
-        removeFromArray(this.selectedBatchTableColumnOptions, fieldMapping.Source_Field_API_Name);
-        removeByProperty(this.availableBatchTableColumnOptions, VALUE, fieldMapping.Source_Field_API_Name);
     }
 
     /*******************************************************************************
@@ -956,7 +986,22 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         this.formSections = formSections;
 
-        this.removeFieldFromBatchTableColumn(fieldMappingDeveloperName);
+        this.removeOptionFromBatchTableColumn(fieldMappingDeveloperName);
+    }
+
+    /*******************************************************************************
+    * @description Removes an option from "available fields" of the Batch Table
+    * Columns dual-listbox component.
+    *
+    * @param {string} fieldMappingDeveloperName: Developer name of the options
+    * corresponding field mapping.
+    */
+    removeOptionFromBatchTableColumn(fieldMappingDeveloperName) {
+        const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDeveloperName];
+        if (!fieldMapping) return;
+
+        removeFromArray(this.selectedBatchTableColumnOptions, fieldMapping.Source_Field_API_Name);
+        removeByProperty(this.availableBatchTableColumnOptions, VALUE, fieldMapping.Source_Field_API_Name);
     }
 
     /*******************************************************************************
