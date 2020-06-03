@@ -24,7 +24,9 @@ Setup Test Data
 Calculate CRLPs for Total Gifts 3 Years Ago
     [Documentation]             Create a New rollup for Total Gifts 3 years ago by cloning an existing rollup called Total Gifts Two Years Ago 
     ...                         and create an opportunity for 3 ago from current date and verify the rollup value on newly created Total Gifts Three Years Ago field   
-    [tags]                      feature:Customizable Rollups    W-038217
+    [tags]                      unstable    feature:Customizable Rollups    W-038217
+
+# clone an existing rollup and create a new one and verify that its created     
     Load Page Object            Custom   CustomRollupSettings
     Navigate To Crlpsettings
     Clone Rollup                Contact: Total Gifts Two Years Ago
@@ -36,7 +38,7 @@ Calculate CRLPs for Total Gifts 3 Years Ago
     
     Verify Rollup exists        Contact: Total Gifts Three Years Ago
 
-# create a contact and opportunity via API and verify new Rollup
+# create a contact and opportunity via API and verify new rollup is working
     &{contact} =         API Create Contact       FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     ${date} =            Get Current Date         result_format=%Y-%m-%d             increment=-1098 days
     &{opportunity} =     API Create Opportunity   &{contact}[AccountId]              Donation  
