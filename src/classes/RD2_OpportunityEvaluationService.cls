@@ -214,6 +214,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+    * @description Contains Map of Recurring Donation Ids to Boolean indicating a schedule change
+    * @return Map<Id, Boolean> isScheduleChangedById maps Recurring Donation Id to a boolean
+    * indicating whether the Recurring Donation update results in a new schedule.
+    */
+    @TestVisible
+    private Map<Id, Boolean> isScheduleChangedById {
+        get {
+            if (isScheduleChangedById == null) {
+                isScheduleChangedById = new Map<Id, Boolean>();
+            }
+            return isScheduleChangedById;
+        } set;
+    }
+
+    /**
     * @description Contains Number of Paid Installments for fixed-length RD records only
     */
     @TestVisible
@@ -259,6 +274,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Map of Recurring Donation Ids to Boolean indicating a changed schedule
+     * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean
+     * @return RD2_OpportunityEvaluationService The service instance
+     */
+    public RD2_OpportunityEvaluationService withIsScheduleChangedById(Map<Id, Boolean> isScheduleChangedById) {
+        this.isScheduleChangedById = isScheduleChangedById;
+        return this;
+    }
+
+    /**
      * @description Returns number of failed Recurring Donation records
      * @return Integer
      */
@@ -276,16 +301,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         Boolean isChanged =
             rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
-            rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
-            rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
-            rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
-            rd.npe03__Installments__c != oldRd.npe03__Installments__c ||
-            rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
-            rd.StartDate__c != oldRd.StartDate__c ||
-            rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
-            rd.Status__c != oldRd.Status__c ||
-            rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
-            rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c;
+                rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
+                rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+                rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+                rd.npe03__Installments__c != oldRd.npe03__Installments__c ||
+                rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+                rd.StartDate__c != oldRd.StartDate__c ||
+                rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+                rd.Status__c != oldRd.Status__c ||
+                rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+                rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c;
 
         if (!isChanged && isMultiCurrencyEnabled) {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
@@ -350,7 +375,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         oppService
             .createOpportunities(newOppRDs)
-            .updateOpportunities(updateOppRDs)
+            .updateOpportunities(updateOppRDs, isScheduleChangedById)
             .voidOpenOpportunities(closedRDs);
 
         handleOutdatedRecurringDonations(rdRecords);
@@ -380,7 +405,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (rdRecord
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()//checks all changed values on the RD
-            ) {
+                ) {
                 outdatedRDs.add(rdRecord.getUpdate());
             }
         }
@@ -473,8 +498,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         for (String fld : allRdFields.keySet()) {
             DescribeFieldResult fldResult = allRdFields.get(fld);
             if (fldResult.getType() == DisplayType.BASE64 ||
-                    fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
-                    (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)) {
+                fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
+                (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)) {
                 continue;
             }
             queryFields.add(fld);
@@ -540,7 +565,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             .withFrom('npe03__Donations__r')
             .withWhere(
                 'IsClosed = false ' +
-                'OR CloseDate >= :startDate '
+                    'OR CloseDate >= :startDate '
             )
             .withOrderBy('npe03__Recurring_Donation__c, CloseDate ASC')
             .build();
@@ -558,11 +583,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         for (npe03__Recurring_Donation__c rd : [
             SELECT Id,
-                (
-                    SELECT Id
-                    FROM npe03__Donations__r
-                    LIMIT 1
-                )
+            (
+                SELECT Id
+                FROM npe03__Donations__r
+                LIMIT 1
+            )
             FROM npe03__Recurring_Donation__c
             WHERE Id IN :rdIds
         ]) {
