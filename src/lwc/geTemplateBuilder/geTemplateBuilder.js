@@ -580,8 +580,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     handleBatchHeaderFieldUp(event) {
         let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index > 0) {
-            this.batchHeaderFields =
-                shiftToIndex(this.batchHeaderFields, index, index - 1);
+            this.batchHeaderFields = shiftToIndex(this.batchHeaderFields, index, index - 1);
         }
     }
 
@@ -596,8 +595,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     handleBatchHeaderFieldDown(event) {
         let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index < this.batchHeaderFields.length - 1) {
-            this.batchHeaderFields =
-                shiftToIndex(this.batchHeaderFields, index, index + 1);
+            this.batchHeaderFields = shiftToIndex(this.batchHeaderFields, index, index + 1);
         }
     }
 
@@ -902,16 +900,19 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             const sourceFieldApiName = this.getSourceFieldApiName(fieldMapping);
             const existingOptionIndex =
                 findIndexByProperty(this.availableBatchTableColumnOptions, VALUE, sourceFieldApiName);
+            const label = fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName ?
+                'Donor' :
+                field.customLabel;
 
             const isExistingOption = existingOptionIndex === -1;
             if (isExistingOption) {
                 const option = {
-                    label: field.customLabel,
+                    label: label,
                     value: fieldMapping.Source_Field_API_Name
-                }
+                };
                 this.availableBatchTableColumnOptions = [...this.availableBatchTableColumnOptions, option];
             } else {
-                this.availableBatchTableColumnOptions[existingOptionIndex].label = field.customLabel;
+                this.availableBatchTableColumnOptions[existingOptionIndex].label = label;
             }
         }
     }
