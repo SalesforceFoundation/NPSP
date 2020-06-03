@@ -93,6 +93,3 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90, message="Fields And Relationships page did not load in 1 min")
 		
 
-
-
-
