@@ -336,3 +336,7 @@ Validate And Create Required CustomField
     ...                                                      &{fields}[Field_Type]
     ...                                                      &{fields}[Field_Name]
     ...                                                      &{fields}[Related_To]
+    Run Keyword If     '&{fields}[Field_Type]' == "Currency"   Create Custom Field
+    ...                                                      &{fields}[Field_Type]
+    ...                                                      &{fields}[Field_Name]
+

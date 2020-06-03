@@ -6,6 +6,7 @@ npsp_lex_locators={
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
     'button-title':"//button[@title='{}']",
+    'button-text':"//button[text()='{}']",
     'button-with-text':'//button[contains(text(),"{}")]',
     'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
@@ -251,7 +252,6 @@ npsp_lex_locators={
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
-        'button':"//button[text()='Create New Field Mapping']",
         'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
         },
     'modal-form':{
@@ -263,6 +263,7 @@ npsp_lex_locators={
         'success_toast': "//div[contains(@class,'slds-notify.slds-notify_toast,slds-theme_success')]",
         'active_setting_record': "//td[@data-label='Active']/following::tr/th//span/div//lightning-button/button[text()='{}']",
         'rollup_progress_notification': "//div/h2[contains(text(),'{}')]",
+        'rollup_options':"//tr[./th//button[text()='{}']]/td//button",
        },
     'gift_entry':{
         'id':'//*[contains(@data-qa-locator,"{}")]',
