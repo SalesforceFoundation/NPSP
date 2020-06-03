@@ -2046,6 +2046,7 @@
         <members>commonAssistiveWarning</members>
         <members>commonBack</members>
         <members>commonBatches</members>
+        <members>commonCVV</members>
         <members>commonCancel</members>
         <members>commonCardType</members>
         <members>commonClone</members>
@@ -2279,6 +2280,7 @@
         <members>geTextListViewSortedBy</members>
         <members>geTextListViewUpdatedAgo</members>
         <members>geTextNavigateToOpportunity</members>
+        <members>geTextPaymentsSaveNotice</members>
         <members>geTextProcessing</members>
         <members>geTextSaving</members>
         <members>geTextUpdating</members>

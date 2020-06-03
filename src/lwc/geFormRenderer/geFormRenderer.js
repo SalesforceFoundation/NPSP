@@ -27,7 +27,8 @@ import {
     arraysMatch,
     deepClone,
     getSubsetObject,
-    validateJSONString
+    validateJSONString,
+    isEmptyObject
 } from 'c/utilCommon';
 import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -112,6 +113,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track formTemplateId;
     _batchDefaults;
     _isCreditCardWidgetInDoNotChargeState = false;
+    _hasCreditCardWidget = false;
 
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
@@ -135,6 +137,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     _account1Name;
     _contact1LastName;
     _contact1FirstName;
+
+    /** Determines when we show payment related text above the cancel and save buttons */
+    get showPaymentSaveNotice() {
+        return this._hasCreditCardWidget && this._isCreditCardWidgetInDoNotChargeState === false;
+    }
 
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
@@ -356,8 +363,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     catchCardChargedBDIFailedError(error) {
         this.dispatchdDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
         this.toggleModalByComponentName('gePurchaseCallModalError');
-        this.addPageLevelErrorMessage(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed, 0);
-        this.handleCatchOnSave(error.apexException);
+
+        const apexException = new ExceptionDataError(error.apexException);
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
+            multilineMessages: [{
+                message: apexException.errorMessage || this.CUSTOM_LABELS.commonUnknownError,
+                index: 0
+            }]
+        }];
+        this.hasPageLevelError = true;
 
         return;
     }
@@ -1644,6 +1660,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.fabricatedCardholderNames = this.fabricateCardHolderName(fieldList);
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
+                    this._hasCreditCardWidget = true;
                     section.setCardHolderName(this.fabricateCardHolderName(fieldList));
                 }
             });
