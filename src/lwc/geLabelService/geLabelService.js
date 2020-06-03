@@ -87,6 +87,8 @@ import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNav
 import geButtonCancelAndClear from '@salesforce/label/c.geButtonCancelAndClear';
 import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFieldsAddSection';
 import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
+import geButtonFormFieldsDisplayOptionCollapsed from '@salesforce/label/c.geButtonFormFieldsDisplayOptionCollapsed';
+import geButtonFormFieldsDisplayOptionExpanded from '@salesforce/label/c.geButtonFormFieldsDisplayOptionExpanded';
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
 import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.geButtonFormFieldsModalDeleteSectionAndFields';
 import geButtonMatchingNewOpportunity from '@salesforce/label/c.geButtonMatchingNewOpportunity';
@@ -139,6 +141,7 @@ import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLef
 import geHeaderFormFieldsModalDeleteSection from '@salesforce/label/c.geHeaderFormFieldsModalDeleteSection';
 import geHeaderFormFieldsModalRenameSection from '@salesforce/label/c.geHeaderFormFieldsModalRenameSection';
 import geHeaderFormFieldsModalSectionSettings from '@salesforce/label/c.geHeaderFormFieldsModalSectionSettings';
+import geHeaderFormFieldsModalDisplayOptionsSection from '@salesforce/label/c.geHeaderFormFieldsModalDisplayOptionsSection';
 import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
 import geHeaderGiftEntry from '@salesforce/label/c.geHeaderGiftEntry';
 import geHeaderMatchingGiftBy from '@salesforce/label/c.geHeaderMatchingGiftBy';
@@ -166,6 +169,7 @@ import geHelpTextHouseholdMapping from '@salesforce/label/c.geHelpTextHouseholdM
 import geHelpTextPaymentServices from '@salesforce/label/c.geHelpTextPaymentServices';
 import geLabelCustomTableSelectedFields from '@salesforce/label/c.geLabelCustomTableSelectedFields';
 import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTableSourceFields';
+import geLabelDisplaySections from '@salesforce/label/c.geLabelDisplaySections';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
@@ -292,6 +296,8 @@ class GeLabelService {
         geButtonCancelAndClear,
         geButtonFormFieldsAddSection,
         geButtonFormFieldsCollapseAll,
+        geButtonFormFieldsDisplayOptionCollapsed,
+        geButtonFormFieldsDisplayOptionExpanded,
         geButtonFormFieldsExpandAll,
         geButtonFormFieldsModalDeleteSectionAndFields,
         geButtonMatchingNewOpportunity,
@@ -344,6 +350,7 @@ class GeLabelService {
         geHeaderFormFieldsModalDeleteSection,
         geHeaderFormFieldsModalRenameSection,
         geHeaderFormFieldsModalSectionSettings,
+        geHeaderFormFieldsModalDisplayOptionsSection,
         geHeaderFormFieldsRightCol,
         geHeaderGiftEntry,
         geHeaderMatchingGiftBy,
@@ -371,6 +378,7 @@ class GeLabelService {
         geHelpTextPaymentServices,
         geLabelCustomTableSelectedFields,
         geLabelCustomTableSourceFields,
+        geLabelDisplaySections,
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
