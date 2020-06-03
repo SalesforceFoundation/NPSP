@@ -325,7 +325,7 @@ public with sharing class RD2_OpportunityService {
     private Opportunity getEarliestOpportunity(Opportunity currentOpportunity, Opportunity earliestUnmatchedOpportunity) {
         if (earliestUnmatchedOpportunity == null ||
             earliestUnmatchedOpportunity.CloseDate > currentOpportunity.CloseDate
-            ) {
+        ) {
             earliestUnmatchedOpportunity = currentOpportunity;
         }
         return earliestUnmatchedOpportunity;
