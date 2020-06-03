@@ -179,7 +179,7 @@ private with sharing class RD2_ScheduleService_TEST {
         Date startDate = Date.newInstance(2018, 3, 17);
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .withStartDate(startDate)
-            .withStatus(RD2_Constants.STATUS_LAPSED)
+            .withStatusLapsed()
             .build();
 
         RD2_ScheduleService service = new RD2_ScheduleService();
@@ -520,7 +520,7 @@ private with sharing class RD2_ScheduleService_TEST {
         Date startDate = Date.newInstance(2018, 3, 17);
         npe03__Recurring_Donation__c rd = getRecurringDonationDailyBuilder()
             .withStartDate(startDate)
-            .withStatus(RD2_Constants.STATUS_LAPSED)
+            .withStatusLapsed()
             .build();
 
         RD2_ScheduleService service = new RD2_ScheduleService();
