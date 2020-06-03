@@ -29,8 +29,8 @@
                                                class='right-panel'
                                                padding='horizontal-large'>
                             <lightning-dual-listbox name="languages"
-                                                    source-label="Available"
-                                                    selected-label="Selected"
+                                                    source-label={CUSTOM_LABELS.geLabelCustomTableSourceFields}
+                                                    selected-label={CUSTOM_LABELS.geLabelCustomTableSelectedFields}
                                                     options={availableBatchTableColumnOptions}
                                                     value={selectedBatchTableColumnOptions}
                                                     onchange={handleChangeBatchTableColumnSelection}

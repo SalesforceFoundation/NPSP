@@ -898,11 +898,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDevNames[0]];
             const sourceFieldApiName = this.getSourceFieldApiName(fieldMapping);
+            const label = this.getBatchTableColumnOptionLabel(fieldMapping, field);
             const existingOptionIndex =
                 findIndexByProperty(this.availableBatchTableColumnOptions, VALUE, sourceFieldApiName);
-            const label = fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName ?
-                'Donor' :
-                field.customLabel;
 
             const isExistingOption = existingOptionIndex === -1;
             if (isExistingOption) {
@@ -922,6 +920,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (fieldMapping.Source_Field_API_Name === DONATION_FIELD.fieldApiName) return 'matchedRecordUrl';
 
         return fieldMapping.Source_Field_API_Name;
+    }
+
+    getBatchTableColumnOptionLabel(fieldMapping, field) {
+        if (fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName) return 'Donor';
+        if (fieldMapping.Source_Field_API_Name === DONATION_FIELD.fieldApiName) return 'Donation';
+
+        return field.customLabel;
     }
 
     removeFieldFromBatchTableColumn(fieldMappingDeveloperName) {
