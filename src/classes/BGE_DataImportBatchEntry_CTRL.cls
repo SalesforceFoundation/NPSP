@@ -94,8 +94,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
-        dataImportModel.batchTableColumnSourceFieldApiNames =
-            (String[]) JSON.deserialize(getGiftEntryDefinedBatchTableColumns(batchId), String[].class);
+        dataImportModel.batchTableColumnSourceFieldApiNames = getGiftEntryDefinedBatchTableColumns(batchId);
 
         // check permissions on hard coded fields
         BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
@@ -402,8 +401,15 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return String: List of Batch Table Columns as JSON
     */
-    private static String getGiftEntryDefinedBatchTableColumns(Id recordId) {
-        return [SELECT Batch_Table_Columns_JSON__c FROM DataImportBatch__c WHERE Id =: recordId].Batch_Table_Columns_JSON__c;
+    private static String[] getGiftEntryDefinedBatchTableColumns(Id recordId) {
+        DataImportBatch__c batch =
+            [SELECT Batch_Table_Columns_JSON__c FROM DataImportBatch__c WHERE Id =: recordId];
+
+        if (batch.Batch_Table_Columns_JSON__c == null) {
+            return new String[] { };
+        }
+
+        return (String[]) JSON.deserialize(batch.Batch_Table_Columns_JSON__c, String[].class);
     }
 
     /*******************************************************************************************************
