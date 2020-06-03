@@ -1005,6 +1005,28 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
+    * @description Removes an option from "available fields" of the Batch Table
+    * Columns dual-listbox component.
+    *
+    * @param {string} fieldMappingDeveloperName: Developer name of the options
+    * corresponding field mapping.
+    */
+    updateOptionFromBatchTableColumn(formField) {
+        const fieldMapping =
+            TemplateBuilderService.fieldMappingByDevName[formField.dataImportFieldMappingDevNames[0]];
+        if (!fieldMapping) return;
+
+        const index = findIndexByProperty(
+            this.availableBatchTableColumnOptions,
+            VALUE,
+            fieldMapping.Source_Field_API_Name);
+
+        if (index !== -1) {
+            this.availableBatchTableColumnOptions[index].label = formField.customLabel;
+        }
+    }
+
+    /*******************************************************************************
     * @description Receives and handles event from child component to move a form
     * field up within its parent form section.
     *
@@ -1066,7 +1088,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         });
 
         if (section.elements[index].elementType === 'field') {
-            this.removeFieldFromBatchTableColumn(section.elements[index].dataImportFieldMappingDevNames[0]);
+            this.removeOptionFromBatchTableColumn(section.elements[index].dataImportFieldMappingDevNames[0]);
         }
 
         section.elements.splice(index, 1);
@@ -1092,6 +1114,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (element) {
             element[property] = value;
         }
+
+        this.updateOptionFromBatchTableColumn(element);
     }
 
     /*******************************************************************************
