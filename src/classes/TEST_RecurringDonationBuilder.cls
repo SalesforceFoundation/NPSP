@@ -424,6 +424,14 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Recurring Donation Status to Lapsed
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusLapsed() {
+        return withStatus(RD2_Constants.STATUS_LAPSED);
+    }
+
+    /***
     * @description Sets Recurring Donation Status to Closed
     * @return TEST_RecurringDonationBuilder Builder instance
     */
