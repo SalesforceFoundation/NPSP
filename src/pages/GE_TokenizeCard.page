@@ -43,6 +43,9 @@
                 '}' +
                 '.error-wrapper.fieldset.exp {' +
                     'max-width: fit-content;' +
+                '}' +
+                '.error-wrapper.fieldset.cvc {' +
+                    'max-width: fit-content;' +
                 '}'
         })
         .then(() => {
