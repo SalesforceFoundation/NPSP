@@ -145,7 +145,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     ) {
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
-            ) {
+        ) {
             return;
         }
 
@@ -180,7 +180,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         //data transformation happens in the Before context only
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
-            ) {
+        ) {
             return;
         }
 

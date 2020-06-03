@@ -301,16 +301,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         Boolean isChanged =
             rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
-                rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
-                rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
-                rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
-                rd.npe03__Installments__c != oldRd.npe03__Installments__c ||
-                rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
-                rd.StartDate__c != oldRd.StartDate__c ||
-                rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
-                rd.Status__c != oldRd.Status__c ||
-                rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
-                rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c;
+            rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
+            rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
+            rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            rd.npe03__Installments__c != oldRd.npe03__Installments__c ||
+            rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
+            rd.StartDate__c != oldRd.StartDate__c ||
+            rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
+            rd.Status__c != oldRd.Status__c ||
+            rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
+            rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c;
 
         if (!isChanged && isMultiCurrencyEnabled) {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
@@ -405,7 +405,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (rdRecord
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()//checks all changed values on the RD
-                ) {
+            ) {
                 outdatedRDs.add(rdRecord.getUpdate());
             }
         }
@@ -499,7 +499,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             DescribeFieldResult fldResult = allRdFields.get(fld);
             if (fldResult.getType() == DisplayType.BASE64 ||
                 fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
-                (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)) {
+                (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)
+            ) {
                 continue;
             }
             queryFields.add(fld);

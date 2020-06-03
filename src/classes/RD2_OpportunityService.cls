@@ -147,7 +147,7 @@ public with sharing class RD2_OpportunityService {
             if (nextDonationDateRecord == null
                 || !nextDonationDateRecord.isNew()
                 || nextDonationDateRecord.getInstallment().nextDonationDate < currentDate
-                ) {
+            ) {
                 continue;
             }
 
@@ -162,7 +162,7 @@ public with sharing class RD2_OpportunityService {
         for (Opportunity opp : oppsToCreate) {
             if (createdOppIds.contains(opp.Id)
                 && installmentsByRDId.containsKey(opp.npe03__Recurring_Donation__c)
-                ) {
+            ) {
                 installmentByOppId.put(opp.Id, installmentsByRDId.get(opp.npe03__Recurring_Donation__c)[0]);
             }
         }
@@ -269,7 +269,7 @@ public with sharing class RD2_OpportunityService {
                     openOpportunityMatched = true;
                 }
 
-                if (!record.hasInstallment()){
+                if (!record.hasInstallment()) {
                     earliestUnmatchedOpportunity = getEarliestOpportunity(record.getOpportunity(), earliestUnmatchedOpportunity);
                 }
 
@@ -310,7 +310,7 @@ public with sharing class RD2_OpportunityService {
     private RD2_ScheduleService.Installment getEarliestInstallment(RD2_ScheduleService.Installment currentInstallment, RD2_ScheduleService.Installment earliestInstallment) {
         if (earliestInstallment == null ||
             earliestInstallment.nextDonationDate > currentInstallment.nextDonationDate
-            ) {
+        ) {
             earliestInstallment = currentInstallment;
         }
         return earliestInstallment;
@@ -325,7 +325,7 @@ public with sharing class RD2_OpportunityService {
     private Opportunity getEarliestOpportunity(Opportunity currentOpportunity, Opportunity earliestUnmatchedOpportunity) {
         if (earliestUnmatchedOpportunity == null ||
             earliestUnmatchedOpportunity.CloseDate > currentOpportunity.CloseDate
-            ) {
+        ) {
             earliestUnmatchedOpportunity = currentOpportunity;
         }
         return earliestUnmatchedOpportunity;
@@ -390,7 +390,7 @@ public with sharing class RD2_OpportunityService {
         if (installment.campaignId != null
             && opp.CampaignId != installment.campaignId
             && rdSettings.shouldSetInstallmentCampaign
-            ) {
+        ) {
             opp.CampaignId = installment.campaignId;
             isChanged = true;
         }
@@ -473,7 +473,7 @@ public with sharing class RD2_OpportunityService {
             if (installment != null
                 && String.isNotBlank(installment.paymentMethod)
                 && payment.npe01__Payment_Method__c != installment.paymentMethod
-                ) {
+            ) {
                 payment.npe01__Payment_Method__c = installment.paymentMethod;
                 payments.add(payment);
             }
