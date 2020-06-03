@@ -95,6 +95,11 @@ private class CMT_FilterRule_TEST {
      * @description Test various User Interface methods in the UI Service class
      */
     private static testMethod void test_OperationMethods() {
+        Integer OCR_FIELD_COUNT = 10;
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            OCR_FIELD_COUNT++;
+        }
+
         mockFilterCMTValues();
 
         test.startTest();
@@ -105,8 +110,8 @@ private class CMT_FilterRule_TEST {
 
         // Validate that fields are returned for the given SObject
         System.AssertNotEquals(0, CMT_FilterRuleUI_SVC.getAvailableFields(Opportunity.SObjectType).size());
-        System.AssertEquals(10, CMT_FilterRuleUI_SVC.getAvailableFields(OpportunityContactRole.SObjectType).size(),
-                'There should be exactly 10 available fields for the OpportunityContactRole object\n' +
+        System.AssertEquals(OCR_FIELD_COUNT, CMT_FilterRuleUI_SVC.getAvailableFields(OpportunityContactRole.SObjectType).size(),
+                'There should be exactly ' + OCR_FIELD_COUNT + ' available fields for the OpportunityContactRole object\n' +
                 CMT_FilterRuleUI_SVC.getAvailableFields(OpportunityContactRole.SObjectType));
     }
 
