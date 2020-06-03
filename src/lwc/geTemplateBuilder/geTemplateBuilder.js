@@ -234,9 +234,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             const queryParameters = getQueryParameters();
             await this.checkForFormTemplateRecordId(queryParameters);
 
-            this.buildFormFieldsBySourceApiNameMap(this.formSections);
             this.buildBatchHeaderFields();
             this.buildDefaultFormFields();
+            this.buildFormFieldsBySourceApiNameMap(this.formSections);
             this.buildDefaultBatchTableColumnOptions();
             this.buildBatchTableColumnOptions(this.formSections);
             this.setInitialActiveFormSection();
@@ -899,8 +899,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (isAFieldMappingField) {
 
             const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDevNames[0]];
-            const existingOptionIndex = findIndexByProperty(
-                this.availableBatchTableColumnOptions, VALUE, fieldMapping.Source_Field_API_Name);
+            const sourceFieldApiName = this.getSourceFieldApiName(fieldMapping);
+            const existingOptionIndex =
+                findIndexByProperty(this.availableBatchTableColumnOptions, VALUE, sourceFieldApiName);
 
             const isExistingOption = existingOptionIndex === -1;
             if (isExistingOption) {
@@ -913,6 +914,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.availableBatchTableColumnOptions[existingOptionIndex].label = field.customLabel;
             }
         }
+    }
+
+    getSourceFieldApiName(fieldMapping) {
+        if (fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName) return 'donorLink';
+        if (fieldMapping.Source_Field_API_Name === DONATION_FIELD.fieldApiName) return 'matchedRecordUrl';
+
+        return fieldMapping.Source_Field_API_Name;
     }
 
     removeFieldFromBatchTableColumn(fieldMappingDeveloperName) {
