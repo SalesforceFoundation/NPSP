@@ -115,23 +115,32 @@
                         </c-ge-form-section>
                     </template>
 
-                    <article if:false={isPermissionError}
-                             class='slds-align_absolute-center slds-p-vertical_small'>
-                        <lightning-button label={cancelButtonText}
-                                          title={cancelButtonText}
-                                          data-qa-locator={qaLocatorCancelButton}
-                                          onclick={handleCancel}
-                                          class='slds-m-left_x-small'>
-                        </lightning-button>
-                        <lightning-button variant='brand'
-                                          label={saveActionLabel}
-                                          title={saveActionLabel}
-                                          data-qa-locator={qaLocatorSaveButton}
-                                          onclick={handleSave}
-                                          class='slds-m-left_x-small'
-                                          disabled={isUpdateActionDisabled}>
-                        </lightning-button>
-                    </article>
+                    <lightning-layout multiple-rows='true'
+                                      horizontal-align='center'
+                                      if:false={isPermissionError}>
+                        <lightning-layout-item size='12'
+                                               if:true={showPaymentSaveNotice}>
+                            <p class='slds-align_absolute-center slds-p-top_small'>
+                                {CUSTOM_LABELS.geTextPaymentsSaveNotice}
+                            </p>
+                        </lightning-layout-item>
+                        <lightning-layout-item size='12'>
+                            <div class='slds-align_absolute-center slds-p-vertical_small'>
+                                <lightning-button label={cancelButtonText}
+                                                  title={cancelButtonText}
+                                                  onclick={handleCancel}
+                                                  class='slds-m-left_x-small'>
+                                </lightning-button>
+                                <lightning-button variant='brand'
+                                                  label={saveActionLabel}
+                                                  title={saveActionLabel}
+                                                  onclick={handleSave}
+                                                  class='slds-m-left_x-small'
+                                                  disabled={isUpdateActionDisabled}>
+                                </lightning-button>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
                 </lightning-layout-item>
             </template>
         </lightning-layout>
