@@ -22,6 +22,7 @@ Edit GE Template And Verify Changes
     [tags]                                    unstable  feature:GE          W-039559   
                        
     Go To Page                                Landing                       GE_Gift_Entry
+    Click Link                                Templates
     Select Template Action                    Default Gift Entry Template   Edit
     Current Page Should Be                    Template                      GE_Gift_Entry
     Click Gift Entry Button                   Next: Form Fields
@@ -32,6 +33,7 @@ Edit GE Template And Verify Changes
     ...                                       Opportunity: Close Date=&{date}
     ...                                       Payment: Check/Reference Number=&{check}
     ...                                       Payment: Payment Method=&{method} 
-    Add Field Bundle To New Section           GAU Allocations
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing              GE_Gift_Entry
+    Click Gift Entry Button                   New Single Gift
+    

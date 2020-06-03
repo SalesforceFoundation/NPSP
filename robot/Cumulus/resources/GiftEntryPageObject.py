@@ -38,6 +38,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         """clicks on Gift Entry button identified with title"""
         locator=npsp_lex_locators["gift_entry"]["button"].format(title)
         self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.scroll_element_into_view(locator)
         self.selenium.click_element(locator)  
 
     def select_template_action(self,name,action):

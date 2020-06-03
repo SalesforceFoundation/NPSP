@@ -216,7 +216,7 @@ npsp_lex_locators={
         'locate_dropdown':'//div[contains(@class,"BGE_DataImportBatchEntry")]//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
         'gift-amount':'//div[./label[text()="{}"]]',
         'modal-link':'//tbody/tr/td/a[text()="{}"]',
-        'datepicker_open':"//div[contains(@class,'slds-is-open')][./label[text()='{}']]",
+        'datepicker_open':"//div[contains(@class,'slds-is-open')][./label[contains(text(),'{}')]]",
         },    
     'bge-lists':{
         'list1':"//div[./label[text()='{}']]/div//select",
@@ -252,7 +252,7 @@ npsp_lex_locators={
         },
     'gift_entry':{
         'id':'//*[contains(@data-qa-locator,"{}")]',
-        'button':'//*[@data-qa-locator="button {}"]/button',
+        'button':'//*[contains(@data-qa-locator,"{}")]/button',
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
         'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
