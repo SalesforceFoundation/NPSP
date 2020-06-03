@@ -9,6 +9,7 @@ import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
+import commonCVV from '@salesforce/label/c.commonCVV';
 import commonCancel from '@salesforce/label/c.commonCancel';
 import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
@@ -183,6 +184,7 @@ import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCou
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedAgo';
 import geTextNavigateToOpportunity from '@salesforce/label/c.geTextNavigateToOpportunity';
+import geTextPaymentsSaveNotice from '@salesforce/label/c.geTextPaymentsSaveNotice';
 import geTextProcessing from '@salesforce/label/c.geTextProcessing';
 import geTextSaving from '@salesforce/label/c.geTextSaving';
 import geTextUpdating from '@salesforce/label/c.geTextUpdating';
@@ -213,6 +215,7 @@ class GeLabelService {
         commonAssistiveWarning,
         commonBack,
         commonBatches,
+        commonCVV,
         commonCancel,
         commonCardType,
         commonClone,
@@ -388,6 +391,7 @@ class GeLabelService {
         geTextListViewSortedBy,
         geTextListViewUpdatedAgo,
         geTextNavigateToOpportunity,
+        geTextPaymentsSaveNotice,
         geTextProcessing,
         geTextSaving,
         geTextUpdating,
