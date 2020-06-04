@@ -101,6 +101,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public List<FilterGroupTableItem> filterGroups;
         @AuraEnabled public Boolean isCRLPEnabled;
+        @AuraEnabled public Boolean isSystemAdminUser;
 
     }
 
@@ -147,6 +148,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         model.labels = getAppLabels();
         model.isCRLPEnabled = Customizable_Rollup_Settings__c.getOrgDefaults().Customizable_Rollups_Enabled__c;
+        model.isSystemAdminUser = STG_Panel.runningUserIsAdmin();
 
         //return early with just labels and CRLP enabled flag if CRLP is disabled
         if (!model.isCRLPEnabled) {
@@ -164,9 +166,10 @@ public with sharing class CRLP_RollupUI_SVC {
     /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model. Used by the CRLP_Rollup component
     * during the init() function to retrieve and set up the LEX page for view/edit
+    * @param rollupId Id of selected rollup
     * @param targetObjectNames list of target objects used in rollups
     * @param detailObjectNames list of detail objects used in rollups
-    * @return model with optional rollup and fields with data types
+    * @return String model with optional rollup and fields with data types
     */
     @AuraEnabled
     public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
@@ -578,6 +581,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'creditType' => Label.CRLP_CreditType,
                 'crlpNotEnabledTitle' => Label.CRLP_DisabledTitle,
                 'crlpNotEnabledMessage' => Label.CRLP_DisabledMessage,
+                'crlpNoAccessPerms' => Label.stgEditPermissionError,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
                 'daysBackError' => Label.CRLP_DaysBack,
