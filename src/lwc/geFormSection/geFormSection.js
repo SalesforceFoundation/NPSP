@@ -23,7 +23,7 @@ export default class GeFormSection extends LightningElement {
     }
 
 
-    get shouldCollapseSection() {
+    get isCollapsed() {
         return this.section.defaultDisplayMode === COLLAPSED_DISPLAY_MODE;
     }
 
