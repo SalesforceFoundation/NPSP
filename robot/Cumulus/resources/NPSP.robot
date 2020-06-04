@@ -35,6 +35,12 @@ API Create Contact
     [return]         &{contact}
 
 API Modify Contact
+    [Documentation]  This keyword is used to update an existing contact by passing contact id and apifieldname and value.
+    ...              This keyword returns the contact dictonary after the update, when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | contact_id   | id of the contact Ex: 000axb57689    |
+    ...              | field_api_name=value   | Ex: if old value is my@test.com and u wnat to update then pass Email=abc@test.com    |
     [Arguments]      ${contact_id}      &{fields}
     Salesforce Update       Contact     ${contact_id}
     ...                     &{fields}
@@ -45,6 +51,11 @@ API Modify Contact
     [return]         &{contact}
 
 API Create Campaign
+    [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name 
+    ...              as random strings and no additional info. This keyword returns the campaign dictonary when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | field_api_name=value   | Ex: MobilePhone=1234567098    |
     [Arguments]      &{fields}
     ${name} =   Generate Random String
     ${campaign_id} =  Salesforce Insert  Campaign
@@ -141,6 +152,10 @@ API Create Relationship
     [return]         &{relation}
 
 API Create Recurring Donation
+    [Documentation]         Creates a recurring donation with specified fields.This keyword returns the recurring donation dictonary when called
+    ...                     Syntax for passing parameters:
+    ...
+    ...                     |   field_api_name=value |   Ex: npe03__Installment_Period__c=Monthly   |
     [Arguments]        &{fields}
     ${ns} =            Get Npsp Namespace Prefix
     ${recurring_id} =  Salesforce Insert  npe03__Recurring_Donation__c

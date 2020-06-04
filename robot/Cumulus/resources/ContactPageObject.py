@@ -92,7 +92,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
             self.pageobjects.current_page_should_be("Details","Contact")
             try :
                 self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
-                self.builtin.log("Found rollup value on the page on initial try")
+                self.builtin.log("Found rollup value on the page after recalculate")
             except Exception :
                 self.selenium.reload_page()
                 self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)

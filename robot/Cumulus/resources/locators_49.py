@@ -172,6 +172,8 @@ npsp_lex_locators={
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
         'field-value':"//div[contains(@class,'slds-form-element')][./span[text()='{}']]/following-sibling::div",
         'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th",
+        'loc1':"//tbody/tr/td[2]/span/span",
+        'loc2':"//tbody/tr/td[3]/span/span",
         },
     'gaus':{
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',

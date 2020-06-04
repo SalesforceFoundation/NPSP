@@ -71,7 +71,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
                         If new rollup exists - logs that rollup already exists
                 """
         current_rollup = self._check_rollup_status(rollup_name)
-        new_label = kwargs["Target Object"] + ": " + kwargs["Target Field"]
+        new_label = f'{kwargs["Target Object"]}: {kwargs["Target Field"]}'
         new_rollup = self._check_rollup_status(new_label)
         if current_rollup and not new_rollup:
             locator = npsp_lex_locators["crlps"]["rollup_options"].format(rollup_name)

@@ -39,7 +39,6 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.click_element(option)
 		time.sleep(2)
 		self.selenium.click_element(next_button)
-		field_label_input = self.selenium.find_element(field_label)
 		self.salesforce.populate_field('Field Label', field_name)
 		self.salesforce.populate_field('Description', "This is a custom field generated during automation")
 		self.selenium.click_element(next_button)

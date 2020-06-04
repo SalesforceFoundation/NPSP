@@ -877,9 +877,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     
     def verify_payment_details(self, numpayments):
         """Gets the payment details from the UI and compares with the expected number of payments"""
-        locator = "//tbody/tr/td[2]/span/span"
+        locator = npsp_lex_locators['payments']['loc1']
         locs1 = self.selenium.get_webelements(locator)
-        locator2 = "//tbody/tr/td[3]/span/span"
+        locator2 = npsp_lex_locators['payments']['loc2']
         locs2 = self.selenium.get_webelements(locator2)
         for i, j in list(zip(locs1, locs2)):
             #loc1_vaue = self.selenium.get_webelemt(i).text
