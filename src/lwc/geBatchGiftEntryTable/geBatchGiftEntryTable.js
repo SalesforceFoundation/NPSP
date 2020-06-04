@@ -62,18 +62,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api expectedCount;
     @track isLoaded = true;
 
-    connectedCallback() {
-        if (this.batchId && this._columnsLoaded) {
-            this.loadBatch();
-        } else {
-            this.needsToLoadBatch = true;
-        }
-    }
-
-    renderedCallback() {
-        if (this.needsToLoadBatch) {
-            this.needsToLoadBatch = false;
-            this.loadBatch();
+    @api
+    handleSectionsRetrieved(sections) {
+        if (!this._batchLoaded) {
+            this.loadBatch(sections);
         }
     }
 
@@ -81,23 +73,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.ready = this._columnsLoaded && this._batchLoaded;
     }
 
-    loadBatch() {
+    loadBatch(sections) {
         getDataImportModel({batchId: this.batchId})
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
-                    this._count = dataImportModel.totalCountOfRows;
-                    this._total = dataImportModel.totalRowAmount;
-                    dataImportModel.dataImportRows.forEach(row => {
-                            this.data.push(
-                                Object.assign(row, row.record));
-                        }
-                    );
-                    this.data = [...this.data];
-                    this.hasData = this.data.length > 0 ? true : false;
-                    this._userDefinedBatchTableColumnNames =
-                        dataImportModel.batchTableColumnSourceFieldApiNames;
-
+                    this.setTableProperties(dataImportModel);
+                    this.initColumns(sections);
                     this.batchLoaded();
                 }
             )
@@ -113,10 +95,29 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.setReady();
     }
 
-    @api
-    handleSectionsRetrieved(sections) {
-        this.buildColumns(sections);
-        this.initColumns(this.getUserDefinedColums());
+    setTableProperties(dataImportModel) {
+        this._count = dataImportModel.totalCountOfRows;
+        this._total = dataImportModel.totalRowAmount;
+        dataImportModel.dataImportRows.forEach(row => {
+                this.data.push(
+                    Object.assign(row, row.record));
+            }
+        );
+        this.data = [...this.data];
+        this.hasData = this.data.length > 0 ? true : false;
+        this._userDefinedBatchTableColumnNames = dataImportModel.batchTableColumnSourceFieldApiNames;
+    }
+
+    initColumns(formSections) {
+        this.buildColumnsFromFormFields(formSections);
+        const userDefinedColumns = this.getUserDefinedColums();
+
+        this.columns = [
+            ...userDefinedColumns,
+            this._actionsColumn
+        ];
+
+        this.columnsLoaded();
     }
 
     getUserDefinedColums() {
@@ -127,15 +128,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return userDefinedColumns;
     }
 
-    initColumns(userDefinedColumns) {
-        this.columns = [
-            ...userDefinedColumns,
-            this._actionsColumn];
-        this.columnsLoaded();
-    }
-
-    buildColumns(sections) {
+    buildColumnsFromFormFields(sections) {
         this.addSpecialCasedColumns();
+        if (!sections) return;
 
         sections.forEach(
             section => {
@@ -160,9 +155,16 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 );
             }
         );
-
     }
 
+    /**
+     * @description Adds special cased columns to the map of columns. These
+     *              four special cased fields are the Donor, Donation, Status,
+     *              Failure Information fields. Donor and Donation are derived
+     *              fields and constructed in the BGE_DataImportBatchEntry_CTRL
+     *              class. Status and Failure Information are fields on the
+     *              DataImport__c object.
+     */
     addSpecialCasedColumns() {
         this._columnsBySourceFieldApiName[this._columns[0].fieldName] = this._columns[0];
         this._columnsBySourceFieldApiName[this._columns[1].fieldName] = this._columns[1];
