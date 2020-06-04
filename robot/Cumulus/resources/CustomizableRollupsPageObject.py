@@ -49,7 +49,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
                     Confirm that a rollup setting of the same type does not exist
                         Click on new and create a new rollup settings record
                 """
-        locator = npsp_lex_locators["crlps"]["new_button"].format("New Rollup")
+        locator = npsp_lex_locators["button-with-text"].format("New Rollup")
         select_locator = npsp_lex_locators["crlps"]["select_locator"].format(
             "Target Object"
         )

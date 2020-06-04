@@ -6,7 +6,6 @@ npsp_lex_locators={
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
     'button-title':"//button[@title='{}']",
-    'button-text':"//button[text()='{}']",
     'button-with-text':'//button[contains(text(),"{}")]',
     'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
@@ -258,7 +257,6 @@ npsp_lex_locators={
         'label':'//div[./*/*[text()="{}"]]',
         },
     'crlps':{
-        'new_button': '//button[text() = "{}"]',
         'select_locator': "//select[@name ='{}']",
         'success_toast': "//div[contains(@class,'slds-notify.slds-notify_toast,slds-theme_success')]",
         'active_setting_record': "//td[@data-label='Active']/following::tr/th//span/div//lightning-button/button[text()='{}']",
