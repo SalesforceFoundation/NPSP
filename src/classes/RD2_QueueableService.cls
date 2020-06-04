@@ -43,12 +43,35 @@ public class RD2_QueueableService {
     public class EvaluateInstallmentOpportunities implements Queueable {
         Set<Id> rdIds;
 
+        /**
+        * @description Contains Map of Recurring Donation Ids to Boolean
+        */
+        @TestVisible
+        private Map<Id, Boolean> isScheduleChangedById {
+            get {
+                if (isScheduleChangedById == null) {
+                    isScheduleChangedById = new Map<Id, Boolean>();
+                }
+                return isScheduleChangedById;
+            } set;
+        }
+
         /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
          */
         public EvaluateInstallmentOpportunities(Set<Id> rdIds) {
             this.rdIds = rdIds;
+        }
+
+        /***
+         * @description Constructor
+         * @param rdIds - the RD Ids to process in this Queueable action
+         * @param isScheduleChangedById - map of RD Ids to Boolean indicating changed schedule
+         */
+        public EvaluateInstallmentOpportunities(Set<Id> rdIds, Map<Id, Boolean> isScheduleChangedById) {
+            this.rdIds = rdIds;
+            this.isScheduleChangedById = isScheduleChangedById;
         }
 
         /**
@@ -70,6 +93,7 @@ public class RD2_QueueableService {
         public void executeOppEvaluationService() {
             new RD2_OpportunityEvaluationService()
                 .withRds(rdIds)
+                .withIsScheduleChangedById(isScheduleChangedById)
                 .evaluateOpportunities();
         }
     }
