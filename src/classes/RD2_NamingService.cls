@@ -97,7 +97,7 @@ public with sharing class RD2_NamingService {
     * @description Autogenerates recurring donation names if Name construct fields have changed
     * @param rds New/changed Recurring Donations
     * @param oldRds Old Recurring Donations
-    * @return none
+    * @return void
     */
     public void autogenerateNamesOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
         if (!isAutomaticNamingEnabled) {
@@ -113,7 +113,7 @@ public with sharing class RD2_NamingService {
             }
         }
 
-        autogenerateNames(changedRds);
+        constructNames(changedRds);
     }
 
     /***
@@ -137,17 +137,38 @@ public with sharing class RD2_NamingService {
     }
 
     /***
-    * @description Autogenerates recurring donation names for all specified records
+    * @description Autogenerates recurring donation names for all specified records on insert
     * @param rds New Recurring Donation records
-    * @return none
+    * @return void
     */
     public void autogenerateNames(List<npe03__Recurring_Donation__c> rds) {
-        if (!isAutomaticNamingEnabled || rds == null || rds.isEmpty()) {
+        if (isAutomaticNamingEnabled) {
+            constructNames(rds);
+
+        } else if (RD2_EnablementService.isRecurringDonations2Enabled) {
+            //autogenerate names when Elevate RD Name is empty
+            List<npe03__Recurring_Donation__c> elevateRds = new List<npe03__Recurring_Donation__c>();
+            for (npe03__Recurring_Donation__c rd : rds) {
+                if (String.isNotBlank(rd.CommitmentId__c) && String.isBlank(rd.Name)) {
+                    elevateRds.add(rd);
+                }
+            }
+            constructNames(elevateRds);
+        }
+        //no special name handling for legacy RDs when auto-naming is not enabled
+    }
+
+    /***
+    * @description Autogenerates recurring donation names for all specified records
+    * @param rds New Recurring Donation records
+    * @return void
+    */
+    private void constructNames(List<npe03__Recurring_Donation__c> rds) {
+        if (rds == null || rds.isEmpty()) {
             return;
         }
 
         Map<Id, RD2_Donor.Record> donorById = donorGateway.getDonors(rds);
-
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.Name = constructName(rd, donorById);
         }
