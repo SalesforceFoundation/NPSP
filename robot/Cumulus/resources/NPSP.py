@@ -1262,7 +1262,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if account_data is not None:
             # create the account based on the user input specified account type
-            acctname = self.randomString(10);
+            acctname = self.randomString(10)
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
             account_data.update( {'Name' : acctname,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
@@ -1272,8 +1272,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if contact_data is not None:
             # create the contact
-            firstname = self.randomString(10);
-            lastname = self.randomString(10);
+            firstname = self.randomString(10)
+            lastname = self.randomString(10)
             contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
             contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
             contact = self.salesforce.salesforce_get("Contact",contact_id)
@@ -1312,7 +1312,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if gau_data is not None:
             object_key =  f"{ns}General_Accounting_Unit__c"
             gauname = gau_data['Name']
-            random = self.randomString(10);
+            random = self.randomString(10)
             gau_data.update( {'name' : f"{random}{gauname}"} )
             gau_id = self.salesforce.salesforce_insert(object_key, **gau_data)
             gau = self.salesforce.salesforce_get(object_key,gau_id)

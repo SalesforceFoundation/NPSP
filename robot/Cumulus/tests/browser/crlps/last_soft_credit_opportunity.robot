@@ -75,4 +75,4 @@ Create Crlp For Automated Soft Credit
     ...                                                   object_id=${data}[contact][Id]
     Wait Until Loading Is Complete
     Reload Page
-    Verify Rollup Field Value                             Last Soft Credit Opportunity                contains         Customizable rollup test $100 Donation
+    Navigate To And Validate Field Value                  Last Soft Credit Opportunity                contains         Customizable rollup test $100 Donation
