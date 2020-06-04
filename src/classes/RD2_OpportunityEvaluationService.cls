@@ -214,6 +214,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+    * @description Contains Map of Recurring Donation Ids to Boolean indicating a schedule change
+    * @return Map<Id, Boolean> isScheduleChangedById maps Recurring Donation Id to a boolean
+    * indicating whether the Recurring Donation update results in a new schedule.
+    */
+    @TestVisible
+    private Map<Id, Boolean> isScheduleChangedById {
+        get {
+            if (isScheduleChangedById == null) {
+                isScheduleChangedById = new Map<Id, Boolean>();
+            }
+            return isScheduleChangedById;
+        } set;
+    }
+
+    /**
     * @description Contains Number of Paid Installments for fixed-length RD records only
     */
     @TestVisible
@@ -255,6 +270,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public RD2_OpportunityEvaluationService withRds(Set<Id> rdIds) {
         this.rdIds = rdIds;
+        return this;
+    }
+
+    /**
+     * @description Map of Recurring Donation Ids to Boolean indicating a changed schedule
+     * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean
+     * @return RD2_OpportunityEvaluationService The service instance
+     */
+    public RD2_OpportunityEvaluationService withIsScheduleChangedById(Map<Id, Boolean> isScheduleChangedById) {
+        this.isScheduleChangedById = isScheduleChangedById;
         return this;
     }
 
@@ -350,7 +375,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         oppService
             .createOpportunities(newOppRDs)
-            .updateOpportunities(updateOppRDs)
+            .updateOpportunities(updateOppRDs, isScheduleChangedById)
             .voidOpenOpportunities(closedRDs);
 
         handleOutdatedRecurringDonations(rdRecords);
@@ -473,8 +498,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         for (String fld : allRdFields.keySet()) {
             DescribeFieldResult fldResult = allRdFields.get(fld);
             if (fldResult.getType() == DisplayType.BASE64 ||
-                    fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
-                    (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)) {
+                fldResult.getType() == DisplayType.ENCRYPTEDSTRING ||
+                (fldResult.getSoapType() == SoapType.STRING && fldResult.getLength() > 4096)
+            ) {
                 continue;
             }
             queryFields.add(fld);
@@ -540,7 +566,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             .withFrom('npe03__Donations__r')
             .withWhere(
                 'IsClosed = false ' +
-                'OR CloseDate >= :startDate '
+                    'OR CloseDate >= :startDate '
             )
             .withOrderBy('npe03__Recurring_Donation__c, CloseDate ASC')
             .build();
@@ -558,11 +584,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         for (npe03__Recurring_Donation__c rd : [
             SELECT Id,
-                (
-                    SELECT Id
-                    FROM npe03__Donations__r
-                    LIMIT 1
-                )
+            (
+                SELECT Id
+                FROM npe03__Donations__r
+                LIMIT 1
+            )
             FROM npe03__Recurring_Donation__c
             WHERE Id IN :rdIds
         ]) {
