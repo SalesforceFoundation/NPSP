@@ -105,6 +105,8 @@ import geButtonPaymentAlternate from '@salesforce/label/c.geButtonPaymentAlterna
 import geButtonPaymentDoNotCharge from '@salesforce/label/c.geButtonPaymentDoNotCharge';
 import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
+import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
+import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
 import geErrorCardChargedBDIFailed from '@salesforce/label/c.geErrorCardChargedBDIFailed';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
@@ -315,6 +317,8 @@ class GeLabelService {
         geButtonPaymentDoNotCharge,
         geButtonSaveNewGift,
         geButtonTemplatesTabCreateTemplate,
+        geDonationColumnLabel,
+        geDonorColumnLabel,
         geErrorAmountDoesNotMatch,
         geErrorCardChargedBDIFailed,
         geErrorCompleteThisField,

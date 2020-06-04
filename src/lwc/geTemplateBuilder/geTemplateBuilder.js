@@ -31,11 +31,8 @@ import {
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
-
 // imports used for default batch table column headers
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
-import DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
-import DONATION_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
 import DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_FIELD from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
@@ -52,8 +49,6 @@ const DEFAULT_BATCH_TABLE_HEADERS_WITH_FIELD_MAPPINGS = [
 ];
 
 const SKIPPED_BATCH_TABLE_HEADER_FIELDS = [
-    DONOR_FIELD.fieldApiName,
-    DONATION_FIELD.fieldApiName,
     DONATION_AMOUNT_FIELD.fieldApiName,
     DONATION_DATE_FIELD.fieldApiName,
     DONATION_CAMPAIGN_SOURCE_FIELD.fieldApiName,
@@ -309,18 +304,26 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
-    * @description Builds default option objects from a defined list of field
-    * mappings for the dual-listbox component inside the Batch Table Columns subtab
-    * of the Batch Settings tab.
+    * @description Builds default options from a defined list of field mappings
+    * for the dual-listbox component inside the Batch Table Columns subtab of
+    * the Batch Settings tab.
     */
     buildDefaultBatchTableColumnOptions() {
         let defaultBatchTableColumnOptions = [
-            { label: 'Donor', value: 'donorLink' },
-            { label: 'Donation', value: 'matchedRecordUrl' },
+            { label: this.CUSTOM_LABELS.geDonorColumnLabel, value: 'donorLink' },
+            { label: this.CUSTOM_LABELS.geDonationColumnLabel, value: 'matchedRecordUrl' },
         ];
 
         DEFAULT_BATCH_TABLE_HEADERS_WITH_FIELD_MAPPINGS.forEach(fieldApiName => {
             const hasFieldMappingInForm = this.formFieldsBySourceApiName[fieldApiName];
+
+            const shouldBeExcludedInEditMode =
+                this.mode === EDIT &&
+                !hasFieldMappingInForm &&
+                fieldApiName !== STATUS_FIELD.fieldApiName &&
+                fieldApiName !== FAILURE_INFORMATION_FIELD.fieldApiName;
+
+            if (shouldBeExcludedInEditMode) return;
 
             const label = hasFieldMappingInForm ?
                 this.formFieldsBySourceApiName[fieldApiName].customLabel :
@@ -913,56 +916,29 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const fieldMappingDevNames = field.dataImportFieldMappingDevNames;
 
         const isAFieldMappingField =
-            fieldMappingDevNames && fieldMappingDevNames[0] && field.elementType === 'field';
+            fieldMappingDevNames &&
+            fieldMappingDevNames[0] &&
+            field.elementType === 'field';
+
         if (isAFieldMappingField) {
-
             const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDevNames[0]];
-            const sourceFieldApiName = this.getSourceFieldApiName(fieldMapping);
-            const label = this.getBatchTableColumnOptionLabel(fieldMapping, field);
-            const existingOptionIndex =
-                findIndexByProperty(this.availableBatchTableColumnOptions, VALUE, sourceFieldApiName);
+            const existingOptionIndex = findIndexByProperty(
+                this.availableBatchTableColumnOptions,
+                VALUE,
+                fieldMapping.Source_Field_API_Name
+            );
 
-            const isExistingOption = existingOptionIndex === -1;
-            if (isExistingOption) {
+            const isNewOption = existingOptionIndex === -1;
+            if (isNewOption) {
                 const option = {
-                    label: label,
+                    label: field.customLabel,
                     value: fieldMapping.Source_Field_API_Name
                 };
                 this.availableBatchTableColumnOptions = [...this.availableBatchTableColumnOptions, option];
             } else {
-                this.availableBatchTableColumnOptions[existingOptionIndex].label = label;
+                this.availableBatchTableColumnOptions[existingOptionIndex].label = field.customLabel;
             }
         }
-    }
-
-    /*******************************************************************************
-    * @description Retrieve provided field mapping's source field api name unless
-    * the field mapping's source is the derived donor or donation field in which
-    * case return special api names that are usable as links for the batch table.
-    *
-    * @param {object} fieldMapping: Instance of Data_Import_Field_Mapping__mdt
-    * @param {object} field: Instance of a form field from the form
-    */
-    getSourceFieldApiName(fieldMapping) {
-        if (fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName) return 'donorLink';
-        if (fieldMapping.Source_Field_API_Name === DONATION_FIELD.fieldApiName) return 'matchedRecordUrl';
-
-        return fieldMapping.Source_Field_API_Name;
-    }
-
-    /*******************************************************************************
-    * @description Retrieve the form field's user editable custom label unless
-    * field the field is the derived Donor or Donation field in which case return
-    * special labels.
-    *
-    * @param {object} fieldMapping: Instance of Data_Import_Field_Mapping__mdt
-    * @param {object} field: Instance of a form field from the form
-    */
-    getBatchTableColumnOptionLabel(fieldMapping, field) {
-        if (fieldMapping.Source_Field_API_Name === DONOR_FIELD.fieldApiName) return 'Donor';
-        if (fieldMapping.Source_Field_API_Name === DONATION_FIELD.fieldApiName) return 'Donation';
-
-        return field.customLabel;
     }
 
     /*******************************************************************************
