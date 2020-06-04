@@ -5509,7 +5509,17 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description for Batch Table Columns, part 2</shortDescription>
-        <value>The recommended fields are included. Status and Error are required for batch processing.</value>
+        <!-- "Donor Name" and "Donation Name" texts in this label have related custom labels. -->
+        <!-- Related custom labels are geDonorColumnLabel annd geDonationColumnLabel -->
+        <value>
+        The recommended fields are included.
+        &lt;/br&gt;
+        &lt;ul&gt;
+            &lt;li&gt; Donor Name links to the Organization Account or Contact giving the donation. &lt;/li&gt;
+            &lt;li&gt; Donation Name links to the Opportunity or Payment for the donation. &lt;/li&gt;
+            &lt;li&gt; Status and Failure Information give you information about batch processing. &lt;/li&gt;
+        &lt;/ul&gt;
+        </value>
     </labels>
     <labels>
         <fullName>geBodyBatchFieldBundleInfo</fullName>
@@ -5902,7 +5912,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for column in batch gift entry table that links to the matched Gift.</shortDescription>
-        <value>Donation</value>
+        <value>Donation Name</value>
     </labels>
     <labels>
         <fullName>geErrorAmountDoesNotMatch</fullName>
@@ -5926,7 +5936,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
-        <value>Donor</value>
+        <value>Donor Name</value>
     </labels>
     <labels>
         <fullName>geEnableGiftEntrySuccess</fullName>

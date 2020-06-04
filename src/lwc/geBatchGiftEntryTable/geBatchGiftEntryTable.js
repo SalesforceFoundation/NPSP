@@ -18,6 +18,7 @@ import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 import commonOpen from '@salesforce/label/c.commonOpen';
 import { isNotEmpty } from 'c/utilCommon';
+import { isEmpty } from 'c/util';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -110,14 +111,30 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     initColumns(formSections) {
         this.buildColumnsFromFormFields(formSections);
-        const userDefinedColumns = this.getUserDefinedColums();
+        const computedColumns = this.getComputedColumns();
 
         this.columns = [
-            ...userDefinedColumns,
+            ...computedColumns,
             this._actionsColumn
         ];
 
         this.columnsLoaded();
+    }
+
+    getComputedColumns() {
+        if (isEmpty(this._userDefinedBatchTableColumnNames)) {
+            return this.getAllColumns();
+        }
+
+        return this.getUserDefinedColums();
+    }
+
+    getAllColumns() {
+        let allColumns = [];
+        for (const columnValue in this._columnsBySourceFieldApiName) {
+            allColumns.push(this._columnsBySourceFieldApiName[columnValue]);
+        }
+        return allColumns;
     }
 
     getUserDefinedColums() {
