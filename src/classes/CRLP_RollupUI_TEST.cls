@@ -35,7 +35,7 @@
 * @description Unit Tests for the Lightning Component Apex Controller for the CRLP UI.
 */
 
-@isTest(IsParallel=true)
+@isTest(IsParallel=false)
 public class CRLP_RollupUI_TEST {
 
     /*********************************************************************************************************
@@ -245,8 +245,8 @@ public class CRLP_RollupUI_TEST {
         mockRollupCMTValues();
 
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
+            Customizable_Rollups_Enabled__c = true,
+            CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
         ));
 
         String recordName = CRLP_Rollup_SEL.cachedRollups[0].DeveloperName;
@@ -260,6 +260,36 @@ public class CRLP_RollupUI_TEST {
 
         System.assertNotEquals(null, response);
 
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that setupRollupGrid() properly identifies user as System Admin
+    */
+    @isTest
+    public static void shouldIdentifyUserAsSystemAdmin() {
+        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        System.runAs(sysAdmin) {
+            CRLP_RollupUI_SVC.RollupGridModel model =
+                (CRLP_RollupUI_SVC.RollupGridModel) JSON.deserialize(CRLP_RollupUI_SVC.setupRollupGrid(), CRLP_RollupUI_SVC.RollupGridModel.class);
+
+            System.assertEquals(true, model.isSystemAdminUser, 'User should be identified as System Administrator');
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that setupRollupGrid() properly identifies user as not System Admin
+    */
+    @isTest
+    public static void shouldIdentifyUserAsNotSystemAdmin() {
+        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER);
+
+        System.runAs(sysAdmin) {
+            CRLP_RollupUI_SVC.RollupGridModel model =
+                (CRLP_RollupUI_SVC.RollupGridModel) JSON.deserialize(CRLP_RollupUI_SVC.setupRollupGrid(), CRLP_RollupUI_SVC.RollupGridModel.class);
+
+            System.assertEquals(false, model.isSystemAdminUser, 'User should be identified as not System Administrator');
+        }
     }
 
     /********************************************************************************************************
