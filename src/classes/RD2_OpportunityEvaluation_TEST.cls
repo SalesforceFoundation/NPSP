@@ -974,6 +974,37 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             'The Next Donation Date should advance and the newly created Opp should match it');
     }
 
+    /**
+    * @description Verifies that RD should be Closed Automatically when End Date pass
+    */
+    @isTest
+    private static void shouldCloseOpenRDWhenEndDatePass() {
+
+        Date startDate = Date.newInstance(2020, 1, 1);
+        Date endDate = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = startDate;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withEndDate(endDate)
+            .withStatusActive()
+            .build();
+        insert rd;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(endDate.addDays(1)));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c, 'RD should be updated to closed when End Date pass');
+
+        for (Opportunity opp : oppGateway.getRecords(rd)) {
+            System.assertEquals(true, opp.IsClosed, 'All Opportunities should be closed');
+        }
+    }
+
 
     // Helpers
     //////////////
