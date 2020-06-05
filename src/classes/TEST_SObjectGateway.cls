@@ -93,7 +93,8 @@ public class TEST_SObjectGateway {
                     Status__c,
                     ClosedReason__c,
                     CurrentYearValue__c,
-                    NextYearValue__c
+                    NextYearValue__c,
+                    EndDate__c
                 FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];
@@ -123,7 +124,8 @@ public class TEST_SObjectGateway {
                     npe03__Total_Paid_Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
-                    Status__c
+                    Status__c,
+                    EndDate__c
                 FROM npe03__Recurring_Donation__c
             ];
         }
