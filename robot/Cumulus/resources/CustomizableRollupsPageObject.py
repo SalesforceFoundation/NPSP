@@ -86,7 +86,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains_element(select_locator)
             self.populate_crlp_form(**kwargs)
             self.selenium.click_button("Save")
-            self.selenium.wait_until_element_is_not_visible(success_toast)
+            self.selenium.wait_until_element_is_visible(success_toast,timeout=60)
         elif not current_rollup:
             raise Exception("Rollup you are trying to clone doesn't exist")
         elif new_rollup:
