@@ -303,35 +303,6 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies if it displays error message when installment period
-    * is monthly and day of month value is not valid
-    */
-    @isTest
-    private static void shouldFailWhenDayOfMonthIsNotValidForMonthlyInstallments() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        String day = '31';
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withContact(getContact().Id)
-            .withDayOfMonth(day)
-            .build();
-
-        String errMessage = '';
-        try {
-            insert rd;
-        } catch (Exception e) {
-            errMessage = e.getMessage();
-        }
-
-        String expectedMessage = String.format(
-            System.Label.RD2_DayOfMonthMustBeValid,
-            new String[]{ day }
-        );
-        System.assert(errMessage.contains(expectedMessage),
-            'The error message should contain invalid Day Of Month message: ' + errMessage);
-    }
-
-    /***
     * @description Verifies if it creates RDs when installment period is monthly and day of month value is valid
     */
     @isTest
@@ -431,6 +402,7 @@ private with sharing class RD2_ValidationService_TEST {
 
     /***
     * @description Verifies RD having no closed Opp can be updated to different contact
+    * and account is auto populated to the household account of the contact.
     */
     @isTest
     private static void shouldUpdateRdWithoutClosedOppWhenDonorContactChange() {
@@ -443,6 +415,7 @@ private with sharing class RD2_ValidationService_TEST {
         insert rd;
 
         Test.startTest();
+        rd.npe03__Organization__c = null;
         rd.npe03__Contact__c = householdContacts[1].Id;
         update rd;
         Test.stopTest();
@@ -451,6 +424,10 @@ private with sharing class RD2_ValidationService_TEST {
 
         System.assertEquals(householdContacts[1].Id, rd.npe03__Contact__c,
             'The RD should be successfully updated with new contact');
+        System.assertNotEquals(null, rd.npe03__Organization__c,
+            'Account in recurring donations should be auto populated from contact');
+        System.assertEquals(householdContacts[1].AccountId, rd.npe03__Organization__c,
+            'The account on the recurring donations should match the account id on the contact');
     }
 
     /***
@@ -610,7 +587,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies DML should fail when installment frequency is updated to null 
+    * @description Verifies DML should fail when installment frequency is updated to null
     */
     @isTest
     private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesToNull() {
@@ -620,7 +597,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build();
-
         insert rd;
 
         rd.InstallmentFrequency__c = null;
@@ -641,7 +617,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty) 
+    * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty)
     */
     @isTest
     private static void shouldBlockRDUpdateWhenInstallmentFrequencyIsOutOfRange() {
@@ -651,7 +627,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build(3);
-            
         insert rds;
 
         rds[0].InstallmentFrequency__c = 20;
@@ -688,7 +663,6 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
             .build();
-            
         insert rd;
 
         rd.InstallmentFrequency__c = 20;
@@ -696,11 +670,294 @@ private with sharing class RD2_ValidationService_TEST {
         Test.startTest();
         update rd;
         Test.stopTest();
-        
+
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(20, rd.InstallmentFrequency__c,
             'Installment Frequency should update when the value change is valid');
+    }
+
+    /***
+    * @description Verifies user cannot change the RD originated in Elevate
+    * when Elevate integration is enabled and user has no permission
+    */
+    @isTest
+    private static void shouldBlockElevateRdUpdateWhenNonElevateUserUpdatesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.npe03__Amount__c += 10;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_ElevatePermissionRequired),
+            'RD update should fail when non-Elevate user attempts to change a restricted field: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies user can change the RD originated in Elevate
+    * when Elevate integration is enabled and user has permissions
+    */
+    @isTest
+    private static void shouldUpdateElevateRdWhenElevateUserUpdatesTheRD() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.npe03__Amount__c += 10;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage),
+            'RD update should succeed when Elevate user attempts to change a restricted field: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that RD is inserted successfully when Status is mapped
+    */
+    @isTest
+    private static void shouldCreateRDWhenStatusIsMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withDefaultMapping();
+            RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusActive()
+            .build();
+        
+        String errMessage = '';
+        try {
+            Test.startTest();
+            insert rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage),
+            'RD insert should succeed when Status is mapped: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that RD fail to inserted when Status is not mapped
+    */
+    @isTest
+    private static void shouldFailRDInsertWhenStatusIsNotMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusClosed()
+            .build();
+    
+        String errMessage = '';
+        try {
+            Test.startTest();
+            insert rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(formatStatusMappingError(rd.Status__c)),
+            'RD should fail to inserted when the status is not mapped:' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that RD is updated successfully when Status is mapped
+    */
+    @isTest
+    private static void shouldUpdateRDWhenStatusIsMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withDefaultMapping();
+            RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusActive()
+            .build();
+        insert rd;
+        
+        
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(String.isBlank(errMessage),
+            'RD update should succeed when Status is mapped: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that RD fail to update when Status is not mapped
+    */
+    @isTest
+    private static void shouldFailRDUpdateWhenStatusIsNotMapped() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(RD2_Constants.STATUS_ACTIVE, RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusActive()
+            .build();
+        insert rd;
+        
+        
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.Status__c = RD2_Constants.STATUS_LAPSED;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(formatStatusMappingError(rd.Status__c)),
+            'RD update should fail when Status is not mapped: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that RD fail to update when End Date is before the latest closed won Opp close date. 
+    */
+    @isTest
+    private static void shouldFailRDUpdateWhenEndDateIsBeforeOppClosedWonDate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Date rdEndDate = Date.today().addDays(20);
+        RD2_ScheduleService.currentDate = rdEndDate;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withCloseDate(rdEndDate.addDays(5))
+            .withClosedWonStage()
+        .build();
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.EndDate__c = rdEndDate;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp),
+            'RD update should fail when Rd End Date is after the opportunity closed won date: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that Fixed RD fail to Closes when End Date is in the future. 
+    */
+    @isTest
+    private static void shouldFailFixedRDUpdateWhenEndDateIsInTheFuture() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withRecurringTypeFixed()
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.EndDate__c = today.addDays(1);
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(System.Label.RD2_EndDateMustBeValidForFixedLength),
+            'Fixed RD update should fail when Rd End Date is in the future: ' + errMessage
+        );
     }
 
     // Helper Methods
@@ -757,5 +1014,16 @@ private with sharing class RD2_ValidationService_TEST {
             .withRecurringDonation(rd.Id)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1);
+    }
+
+    /**
+    * @description Format the Status Mapping Validation Error
+    * @param status Status that will be included in the error message
+    */
+    private static String formatStatusMappingError(String status) {
+        return String.format(
+            System.Label.RD2_StatusMustBeMapped + ' ' + System.Label.RD2_StatusMustBeMappedSolution,
+            new List<String>{status}
+        );
     }
 }

@@ -190,7 +190,7 @@
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
         <valueSet>
-            <restricted>true</restricted>
+            <restricted>false</restricted>
             <valueSetDefinition>
                 <sorted>false</sorted>
                 <value>
@@ -337,11 +337,13 @@
                     <fullName>29</fullName>
                     <default>false</default>
                     <label>29</label>
+                    <isActive>true</isActive>
                 </value>
                 <value>
                     <fullName>30</fullName>
                     <default>false</default>
                     <label>30</label>
+                    <isActive>true</isActive>
                 </value>
                 <value>
                     <fullName>Last_Day</fullName>
@@ -356,7 +358,7 @@
         <description>The ending date, if required, for this schedule record.</description>
         <externalId>false</externalId>
         <inlineHelpText>The ending date, if required, for this schedule record.</inlineHelpText>
-        <label>End Date</label>
+        <label>Schedule End Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Date</type>

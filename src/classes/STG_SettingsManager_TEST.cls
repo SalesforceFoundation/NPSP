@@ -200,7 +200,7 @@ private with sharing class STG_SettingsManager_TEST {
         System.assertEquals('value1;value2', con.npo02__Naming_Exclusions__c, 'Field value should remain the API value');
 
         Test.startTest();
-        ctrl.listStrValues = new List<String>{'value2', 'value3'};        
+        ctrl.listStrValues = new List<String>{'value2', 'value3'};
         Test.stopTest();
 
         System.assertEquals('label2;label3', ctrl.strValues, 'strValues should be convert to label for display');
@@ -1590,6 +1590,7 @@ private with sharing class STG_SettingsManager_TEST {
         // Clear cache so test passes in orgs that have rollups
         CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>();
         panel.enableCRLPs();
+        System.assertNotEquals(null, panel.jobId, 'JobId should not be null');
         System.assertEquals(true, panel.isPolling, 'Polling should be active.');
         //fake the success result.
         UTIL_CustomSettingsFacade.getCustomizableRollupSettings().CMT_API_Status__c = '123 Succeeded';
@@ -1752,6 +1753,34 @@ private with sharing class STG_SettingsManager_TEST {
         system.assertEquals(true, panel.isRunningBatch);
     }
 
+    /***
+    * @description Verifies that when RD2 is not enabled, the legacy RD batch description should be displayed
+    */
+    @isTest
+    private static void shouldDisplayLegacyRDPageDescriptionWhenRD2IsNotEnabled() {
+        STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
+
+        Test.startTest();
+        String batchDescription = controller.getPageDescription();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgHelpRDBatch, batchDescription, 'The Legacy RD batch description should be displayed');
+    }
+
+    /***
+    * @description Verifies that when RD2 is enabled, the RD2 batch description should be displayed
+    */
+    @isTest
+    private static void shouldDisplayRD2PageDescriptionWhenRD2IsEnabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
+
+        Test.startTest();
+        String batchDescription = controller.getPageDescription();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgHelpEnhancedRDBatch, batchDescription, 'RD2 batch description should be displayed');
+    }
     //Helper Methods
     /**
      * @description Builds a read only user with readonly profile

@@ -69,6 +69,20 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         set;
     }
 
+    /**
+     * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
+     * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
+     * When executed from a scheduler or standard DML, the current date is always today.
+    */
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = RD2_ScheduleService.currentDate;
+            }
+            return currentDate;
+        } set;
+    }
+
     /***
     * @description Trigger handler on Recurring Donations when enhancement is enabled
     * @param rds Trigger.new records
@@ -93,7 +107,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        transformDataBeforeInsert(rds, triggerAction);
+        transformDataBeforeValidation(rds, oldRds, triggerAction);
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
@@ -103,6 +117,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         // service to determine what Opportunities to insert or modify
         TDTM_TriggerHandler.processDML(dmlActions);
         dmlActions = null;
+
+        findMatchingElevateOpps(rds, triggerAction);
 
         evaluateOpportunities(rds, oldRds, triggerAction);
 
@@ -137,6 +153,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, BeforeUpdate, etc.
     */
+    @TestVisible
     private void transformDataInBeforeContext(List<npe03__Recurring_Donation__c> rds,
         List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction
     ) {
@@ -159,7 +176,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 rdRecord
-                    .reviseStatusForFixedLength()
+                    .reviseStatus(currentDate)
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
             }
         }
@@ -168,17 +185,103 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     /***
     * @description Data Transformation Actions for Before Insert; and before validation
     * - Assign Installment Frequency to the recurring donation record if the field is null on insert
+    * - Set Day of Month to be the Last_Day if the original value is "31"
     * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    private void transformDataBeforeInsert(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
-        if (triggerAction != TDTM_Runnable.Action.BeforeInsert) {
+    @TestVisible
+    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+        //data transformation happens in the Before context only
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert
+            && triggerAction != TDTM_Runnable.Action.BeforeUpdate
+        ) {
             return;
         }
 
+        autoPopulateAccounts(rds);
+
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.InstallmentFrequency__c == null) {
+
+            //map the Day of Month value of "31" to the Last_Day value
+            if (rd.Day_of_Month__c == '31') {
+                rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
+            }
+
+            //set the default installment frequency when value is not provided on the RD insert
+            if (rd.InstallmentFrequency__c == null && triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
+            }
+        }
+
+        adjustClosedRdEndDateAndStatus(rds, oldRds, triggerAction);
+    }
+
+    /***
+    * @description Auto-populates empty Account field on a Recurring Donation having Contact specified
+    * @param rds Recurring Donation records
+    * @return none
+    */
+    private void autoPopulateAccounts(List<npe03__Recurring_Donation__c> rds) {
+        if (rds == null || rds.isEmpty()) {
+            return;
+        }
+
+        Set<Id> contactIds = new Set<Id>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.npe03__Organization__c == null && rd.npe03__Contact__c != null) {
+                contactIds.add(rd.npe03__Contact__c);
+            }
+        }
+        if (contactIds.isEmpty()) {
+            return;
+        }
+
+        Map<Id, Contact> contactById = new Map<Id, Contact>([
+            SELECT Name, AccountId
+            FROM Contact
+            WHERE Id IN :contactIds
+        ]);
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.npe03__Organization__c == null
+                && rd.npe03__Contact__c != null
+                && contactById.containsKey(rd.npe03__Contact__c)
+                ) {
+                rd.npe03__Organization__c = contactById.get(rd.npe03__Contact__c).AccountId;
+            }
+        }
+    }
+
+    /***
+    * @description Evaluate End Date on Recurring Donation
+    * If the RD Status is inserted/updated to Closed and the End Date is null, auto-populate the end date to yesterday.
+    * If the Open Ended RD Status is updated to Closed but the End Date is in the future, revert the status to before update.
+    * If the RD is reopened, clear out the End Date
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    */
+    private void adjustClosedRdEndDateAndStatus(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+        for (Integer i = 0; i < rds.size(); i++) {
+            RD2_RecurringDonation newRd = new RD2_RecurringDonation(rds[i]);
+
+            if (newRd.isClosed() && rds[i].EndDate__c == null) {
+                rds[i].EndDate__c = currentDate.addDays(-1);
+            }
+
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                if (!newRd.isClosed() && (new RD2_RecurringDonation(oldRds[i]).isClosed())) {
+                    rds[i].EndDate__c = null;
+                }
+
+                if (
+                    newRd.isOpenEnded()
+                    && newRd.isClosed()
+                    && rds[i].EndDate__c != null 
+                    && rds[i].EndDate__c > currentDate
+                ) {
+                    rds[i].Status__c = oldRds[i].Status__c;
+                }
             }
         }
     }
@@ -186,6 +289,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     /***
     * @description Validates Recurring Donations data
     * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
@@ -199,6 +303,41 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 .withOldRecurringDonations(oldRds)
                 .validateOnChange();
         }
+    }
+
+    /**
+    * @description When new recurring donations are inserted that have a value in the CommitmentId field
+    * launch up a queueable process to look for matching existing Opportunities with that same CommmitmentId.
+    * @param rds Inserted Recurring Donations
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void findMatchingElevateOpps(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+
+        if (triggerAction != Action.AfterInsert) {
+            return;
+        }
+
+        Map<String, Id> rdIdByCommitmentId = new Map<String, Id>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (String.isNotBlank(rd.CommitmentId__c)) {
+                rdIdByCommitmentId.put(rd.CommitmentId__c, rd.Id);
+            }
+        }
+
+        if (rdIdByCommitmentId.isEmpty()) {
+            return;
+        }
+
+        RD2_QueueableService.ElevateOpportunityMatcher service
+            = new RD2_QueueableService.ElevateOpportunityMatcher(rdIdByCommitmentId);
+
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+            System.enqueueJob(service);
+
+        } else {
+            service.match();
+        }
+
     }
 
     /***
@@ -218,6 +357,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         Set<Id> rdIds = new Set<Id>();
+        Map<Id, Boolean> isScheduleChangedById = new Map<Id, Boolean>();
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             rdIds = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
 
@@ -229,19 +369,24 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 if (evalService.hasKeyFieldChanged(rd, oldRdsById.get(rd.Id))) {
                     rdIds.add(rd.Id);
                 }
+                if (rd.npe03__Next_Payment_Date__c != oldRdsById.get(rd.Id).npe03__Next_Payment_Date__c) {
+                    isScheduleChangedById.put(rd.Id, true);
+                }
             }
         }
 
-        if (!rdIds.isEmpty()) {
-            RD2_QueueableService.EvaluateInstallmentOpportunities service =
-                new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
+        if (rdIds.isEmpty()) {
+            return;
+        }
 
-            if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-                System.enqueueJob(service);
+        RD2_QueueableService.EvaluateInstallmentOpportunities service =
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, isScheduleChangedById);
 
-            } else {
-                service.executeOppEvaluationService();
-            }
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+            System.enqueueJob(service);
+
+        } else {
+            service.executeOppEvaluationService();
         }
     }
 
@@ -303,4 +448,5 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             dmlActions.objectsToUpdate.addAll(revisedSchedules.objectsToUpdate);
         }
     }
+
 }

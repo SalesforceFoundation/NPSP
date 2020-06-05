@@ -35,7 +35,7 @@
 * @description Unit Tests for the Lightning Component Apex Controller for the CRLP UI.
 */
 
-@isTest(IsParallel=true)
+@isTest(IsParallel=false)
 public class CRLP_RollupUI_TEST {
 
     /*********************************************************************************************************
@@ -105,6 +105,54 @@ public class CRLP_RollupUI_TEST {
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
     }
 
+    /***
+    * @description Verifies if there are no exception thrown in setting up the Rollups when Einstein
+    * insights platform is enabled in the org
+    */
+    @isTest
+    private static void shouldNotThrowExceptionInCRLPSetupWhenEinsteinIsEnabled() {
+        String errMessage = '';
+        String scriptError = 'Script-thrown exception';
+
+        mockRollupCMTValues();
+        Rollup__mdt rollup = CRLP_Rollup_SEL.cachedRollups[0];
+
+        List<String> targetObjectNames = new List<String>{'Account','Contact'};
+        List<String> detailObjectNames = new List<String>{'Opportunity'};
+
+        if (!UTIL_Namespace.isEinsteinInsightsInstalled()) {
+            return;
+        }
+
+        try {
+            String jsonModel = CRLP_RollupUI_SVC.setupRollupDetail(rollup.Id, targetObjectNames, detailObjectNames);
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(!errMessage.contains(scriptError));
+        System.assertEquals('', errMessage, 'No exception is returned when Einstein is enabled');
+    }
+
+    /***
+    * @description Validate that the response from getdetailsfieldswithtype does not include the
+    * System field for account object
+    */
+    @isTest
+    private static void shouldNotHaveSystemFieldsInResponseFromGetDetailsType() {
+        mockRollupCMTValues();
+        Rollup__mdt rollup = CRLP_Rollup_SEL.cachedRollups[0];
+
+        String detailObj = 'Account';
+
+        List<Map<String, String>> detailNameToFieldTypeObj = CRLP_RollupUI_SVC.getDetailFieldsWithType(detailObj);
+
+        for(Map<String,String> apiFieldNames: detailNameToFieldTypeObj) {
+            System.assert(!apiFieldNames.get('name').containsIgnoreCase('npe01__SYSTEM_AccountType__c'),
+                'The returned collection of Field API Names should not include the "npe01__SYSTEM_AccountType__c" field');
+        }
+
+    }
+
     /*********************************************************************************************************
     * @description Tests Saving a new Rollup With Summaries Disabled returns a job id for the deployment
     */
@@ -112,7 +160,7 @@ public class CRLP_RollupUI_TEST {
     private static void saveRollupReturnsDeploymentJob() {
         CRLP_RollupCMT.Rollup rollup = CRLP_RollupCMT_Test.generateRollup('test');
         String rollupString = JSON.serialize(rollup);
-       
+
         Test.startTest();
         String saveResult = CRLP_RollupUI_SVC.saveRollup(rollupString);
         Test.stopTest();
@@ -197,8 +245,8 @@ public class CRLP_RollupUI_TEST {
         mockRollupCMTValues();
 
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
+            Customizable_Rollups_Enabled__c = true,
+            CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
         ));
 
         String recordName = CRLP_Rollup_SEL.cachedRollups[0].DeveloperName;
@@ -212,6 +260,36 @@ public class CRLP_RollupUI_TEST {
 
         System.assertNotEquals(null, response);
 
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that setupRollupGrid() properly identifies user as System Admin
+    */
+    @isTest
+    public static void shouldIdentifyUserAsSystemAdmin() {
+        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        System.runAs(sysAdmin) {
+            CRLP_RollupUI_SVC.RollupGridModel model =
+                (CRLP_RollupUI_SVC.RollupGridModel) JSON.deserialize(CRLP_RollupUI_SVC.setupRollupGrid(), CRLP_RollupUI_SVC.RollupGridModel.class);
+
+            System.assertEquals(true, model.isSystemAdminUser, 'User should be identified as System Administrator');
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that setupRollupGrid() properly identifies user as not System Admin
+    */
+    @isTest
+    public static void shouldIdentifyUserAsNotSystemAdmin() {
+        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER);
+
+        System.runAs(sysAdmin) {
+            CRLP_RollupUI_SVC.RollupGridModel model =
+                (CRLP_RollupUI_SVC.RollupGridModel) JSON.deserialize(CRLP_RollupUI_SVC.setupRollupGrid(), CRLP_RollupUI_SVC.RollupGridModel.class);
+
+            System.assertEquals(false, model.isSystemAdminUser, 'User should be identified as not System Administrator');
+        }
     }
 
     /********************************************************************************************************

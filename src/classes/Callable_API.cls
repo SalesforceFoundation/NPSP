@@ -46,7 +46,7 @@ global with sharing class Callable_API implements System.Callable {
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
     * @param action string of the target action
-    * @param args name value map of arguments
+    * @param params name value map of arguments
     * @return Object returned will depend on the results of the target function otherwise it returns true
     ********************************************************************************************************/
     global Object call(String action, Map<String, Object> params) {
@@ -94,6 +94,39 @@ global with sharing class Callable_API implements System.Callable {
                 // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
                 // parameter service depending on which action was invoked
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
+                
+            } when 'rd2.executedatamigration' {
+                return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
+
+            } when 'settings.enableenhancedrecurringdonations' {
+                Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
+                RD2_EnablementDelegate_CTRL.callableApiEnableEnhancement(scheduleJobsWhenComplete);
+                return null;
+
+            } when 'allo.processoppsandpmts' {
+                // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.
+                // If you have any questions, please inquire on the Power of Us Hub.
+                Set<Id> opportunityIds = paramService.getSetId(CallableApiParameters.PARAM_OPPORTUNITY_IDS);
+                String contextType = paramService.getString(CallableApiParameters.PARAM_CONTEXT_TYPE);
+                Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
+                Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.PARAM_DISABLE_ALLOCATION_TRIGGERS);
+
+                return new ALLO_AllocationsService()
+                                .withAllocationTriggersDisabled(disableOppAndPmtAlloTriggers)
+                                .withAlternateContextType(contextType)
+                                .withCommitAndClearRecordsEnabled(true)
+                                .processRecords(opportunityIds);
+
+            } when 'allo.validatepmtallocationconfig' {
+                // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.
+                // If you have any questions, please inquire on the Power of Us Hub.
+                return ALLO_AllocationsSettings.getSettings().validatePaymentAllocationsConfiguration();
+
+            } when 'settings.enablecustomizablerollups' {
+                Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
+                return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
 
             } when else {
                 throw new MalformedMethodInvocationException(

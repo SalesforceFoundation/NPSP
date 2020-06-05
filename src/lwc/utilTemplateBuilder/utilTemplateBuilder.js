@@ -1,6 +1,6 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { isEmpty, deepClone } from 'c/utilCommon';
+import { isEmpty, isNotEmpty, deepClone } from 'c/utilCommon';
 
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
@@ -55,6 +55,11 @@ import DI_CONTACT1_LAST_NAME_INFO from '@salesforce/schema/DataImport__c.Contact
 
 import CONTACT_INFO from '@salesforce/schema/Contact';
 import ACCOUNT_INFO from '@salesforce/schema/Account';
+
+import CONTACT_FIRST_NAME_INFO from '@salesforce/schema/Contact.FirstName';
+import CONTACT_LAST_NAME_INFO from '@salesforce/schema/Contact.LastName';
+import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name';
+
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
@@ -310,7 +315,7 @@ const handleError = (error) => {
             Array.isArray(error.detail.output.errors)) {
             message = error.detail.output.errors.map(e => e.message).join(', ');
         }
-    } else if (error.body.message) {
+    } else if (error.body && error.body.message) {
         message = error.body.message;
     }
 
@@ -352,11 +357,13 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
         for (const element of section.elements) {
             if (element.elementType === 'field') {
                 for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                    let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                    if (objectName === apiName) {
-                        let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
-                        fieldNames.push(`${objectName}.${fieldName}`);
-                    }
+                    if (isNotEmpty(fieldMappings[fieldMappingDevName])) {
+                        let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                        if (objectName === apiName) {
+                            let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                            fieldNames.push(`${objectName}.${fieldName}`);
+                        }
+                    }                
                 }
             }
 
@@ -494,9 +501,14 @@ export {
     EXCLUDED_BATCH_HEADER_FIELDS,
     CONTACT_INFO,
     ACCOUNT_INFO,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO,
+    ACCOUNT_NAME_INFO,
     DI_CONTACT1_IMPORTED_INFO,
     DI_ACCOUNT1_IMPORTED_INFO,
     DI_DONATION_DONOR_INFO,
+    DI_ACCOUNT1_NAME_INFO,
+    DI_CONTACT1_LAST_NAME_INFO,
     CONTACT1,
     ACCOUNT1,
     DONATION_DONOR_FIELDS,

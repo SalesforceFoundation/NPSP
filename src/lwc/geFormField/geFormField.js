@@ -8,6 +8,15 @@ import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
+import {
+    DI_DONATION_DONOR_INFO,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO,
+    ACCOUNT_NAME_INFO,
+    DI_ACCOUNT1_IMPORTED_INFO,
+    DI_CONTACT1_IMPORTED_INFO
+} from "c/utilTemplateBuilder";
+
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
@@ -19,6 +28,9 @@ const RICH_TEXT_FORMATS = [
 const CURRENCY = 'currency';
 const PERCENT = 'percent';
 const DECIMAL = 'decimal';
+const DATE = 'date';
+const DATETIME = 'datetime-local';
+const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
     @track value;
@@ -54,7 +66,7 @@ export default class GeFormField extends LightningElement {
             const detail = {
                 ...event.detail,
                 objectMappingDevName: objMappingDevName
-            }
+            };
 
             const selectRecordEvent = new CustomEvent(
                 'lookuprecordselect',
@@ -74,6 +86,11 @@ export default class GeFormField extends LightningElement {
             // fire event for reactive widget component containing the Data Import field API name and Value
             // currently only used for the Donation Amount.
             fireEvent(null, 'widgetData', { donationAmount: this.value });
+        }
+
+        if (this.isValidNameOnCardField) {
+            const evt = new CustomEvent('creditcardvaluechange');
+            this.dispatchEvent(evt);
         }
     };
 
@@ -135,7 +152,9 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element !== null && this.element.required) {
-            return isNotEmpty(this.value) && fieldIsValid;
+            return isNotEmpty(this.value)
+                && this.value !== this.CUSTOM_LABELS.commonLabelNone
+                && fieldIsValid;
         }
 
         return fieldIsValid;
@@ -202,6 +221,10 @@ export default class GeFormField extends LightningElement {
             // the RecordType Name
             fieldAndValue[this.formElementName] =
                 this.objectDescribeInfo.recordTypeInfos[this.value].name;
+        } else if (this.isPicklist){
+            // If the displayed value of the picklist is '--None--' treat the value as blank.
+            fieldAndValue[this.formElementName] =
+                (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
         } else {
             fieldAndValue[this.formElementName] = this.value;
         }
@@ -259,7 +282,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldType() {
-        return this.fieldInfo.Target_Field_Data_Type;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Field_Data_Type;
+        }
     }
 
     get isLightningInput() {
@@ -290,7 +315,9 @@ export default class GeFormField extends LightningElement {
 
     @api
     get objectMappingDevName() {
-        return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+        }
     }
 
     get objectApiName() {
@@ -299,13 +326,18 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    @api
     get fieldApiName() {
-        return this.fieldInfo.Target_Field_API_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Target_Field_API_Name;
+        }
     }
 
     @api
     get sourceFieldAPIName() {
-        return this.fieldInfo.Source_Field_API_Name;
+        if(isNotEmpty(this.fieldInfo)) {
+            return this.fieldInfo.Source_Field_API_Name;
+        }
     }
 
     @api
@@ -322,6 +354,26 @@ export default class GeFormField extends LightningElement {
 
         return returnMap;
 
+    }
+
+    get isValidNameOnCardField() {
+        return (
+            this.element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName ||
+            this.element.fieldApiName === CONTACT_FIRST_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === ACCOUNT_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName ||
+            this.element.fieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName
+        );
+    }
+
+    @api
+    get fieldValueAndFieldApiName() {
+        let fieldWrapper = { value: this.value, apiName: this.fieldApiName };
+        let returnMap = {};
+        returnMap[ this.fieldApiName ] = fieldWrapper;
+
+        return returnMap;
     }
 
     @api
@@ -500,6 +552,39 @@ export default class GeFormField extends LightningElement {
             // and set recordTypeId on sibling fields.
             this.fireLookupRecordSelectEvent();
         }
+    }
+
+    get qaLocatorBase() {
+        const rowIndex = this.getAttribute('data-qa-row');
+        if(rowIndex) {
+            return `${this.fieldLabel} ${rowIndex}`;
+        } else {
+            return this.fieldLabel;
+        }
+    }
+
+    get qaLocatorInputPrefix() {
+        switch (this.inputType) {
+            case DATE:
+            case DATETIME:
+                return 'datetime';
+            case CHECKBOX:
+                return this.inputType;
+            default:
+                return 'input';
+        }
+    }
+
+    get qaLocatorInput() {
+        return `${this.qaLocatorInputPrefix} ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorRichText() {
+        return `richtext ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorTextArea() {
+        return `textarea ${this.qaLocatorBase}`;
     }
 
 }

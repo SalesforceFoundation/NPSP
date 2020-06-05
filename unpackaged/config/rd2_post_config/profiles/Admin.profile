@@ -5,6 +5,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>%%%NAMESPACE%%%RD2_StatusMappingSettings_CTRL</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>%%%NAMESPACE%%%RD2_VisualizeScheduleController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -28,6 +32,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Day_of_Month__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%EndDate__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

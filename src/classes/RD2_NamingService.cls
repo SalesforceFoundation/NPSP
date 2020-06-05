@@ -91,13 +91,13 @@ public with sharing class RD2_NamingService {
             return userDefaultCurrencySymbol;
         }
         set;
-    }    
+    }
 
     /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
     * @param rds New/changed Recurring Donations
     * @param oldRds Old Recurring Donations
-    * @return none
+    * @return void
     */
     public void autogenerateNamesOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
         if (!isAutomaticNamingEnabled) {
@@ -113,7 +113,7 @@ public with sharing class RD2_NamingService {
             }
         }
 
-        autogenerateNames(changedRds);
+        constructNames(changedRds);
     }
 
     /***
@@ -137,27 +137,46 @@ public with sharing class RD2_NamingService {
     }
 
     /***
-    * @description Autogenerates recurring donation names for all specified records
+    * @description Autogenerates recurring donation names for all specified records on insert
     * @param rds New Recurring Donation records
-    * @return none
+    * @return void
     */
     public void autogenerateNames(List<npe03__Recurring_Donation__c> rds) {
-        if (!isAutomaticNamingEnabled || rds == null || rds.isEmpty()) {
+        if (isAutomaticNamingEnabled) {
+            constructNames(rds);
+
+        } else if (RD2_EnablementService.isRecurringDonations2Enabled) {
+            //autogenerate names when Elevate RD Name is empty
+            List<npe03__Recurring_Donation__c> elevateRds = new List<npe03__Recurring_Donation__c>();
+            for (npe03__Recurring_Donation__c rd : rds) {
+                if (String.isNotBlank(rd.CommitmentId__c) && String.isBlank(rd.Name)) {
+                    elevateRds.add(rd);
+                }
+            }
+            constructNames(elevateRds);
+        }
+        //no special name handling for legacy RDs when auto-naming is not enabled
+    }
+
+    /***
+    * @description Autogenerates recurring donation names for all specified records
+    * @param rds New Recurring Donation records
+    * @return void
+    */
+    private void constructNames(List<npe03__Recurring_Donation__c> rds) {
+        if (rds == null || rds.isEmpty()) {
             return;
         }
 
         Map<Id, RD2_Donor.Record> donorById = donorGateway.getDonors(rds);
-
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.Name = constructName(rd, donorById);
         }
-    }   
+    }
 
     /***
     * @description Constructs recurring donation name
-    * Name formatting: 
-    *   If multi-currency, then "{!DonorName} {ISO Code} {!Amount} - Recurring".
-    *   Otherwise, "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
+    * Name formatting: "{!DonorName} {User Default Currency Symbol}{!Amount} - Recurring".
     *
     * @param rd Recurring Donation record
     * @param donorById Account/Contact donor record by Id
@@ -170,15 +189,15 @@ public with sharing class RD2_NamingService {
 
         String nameSuffix = ' ' + formatAmount(rd) + ' - ' + System.Label.RecurringDonationNameSuffix;
 
-        String donorName = donor == null 
-            ? '' 
+        String donorName = donor == null
+            ? ''
             : donor.Name.abbreviate(MAX_NAME_LENGTH - nameSuffix.length());
 
         return donorName + nameSuffix;
     }
 
     /***
-    * @description Formats amount used to construct the name    
+    * @description Formats amount used to construct the name
     * @param rd Recurring Donation record
     * @return String Formatted amount
     */
@@ -191,19 +210,16 @@ public with sharing class RD2_NamingService {
             formattedAmount = formattedAmount.removeEnd('.0');
         }
 
+        String currencySymbol = userDefaultCurrencySymbol;
         if (isMultiCurrencyEnabled) {
             String code = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(code);
+        }
 
-            if (String.isNotBlank(code)) {
-                formattedAmount = code + ' ' + formattedAmount;
-            }
+        if (String.isNotBlank(currencySymbol) && currencySymbol.length() > 1) {
+            formattedAmount = currencySymbol + ' ' + formattedAmount;
         } else {
-            if (String.isNotBlank(userDefaultCurrencySymbol) && userDefaultCurrencySymbol.length() > 1) {
-                formattedAmount = userDefaultCurrencySymbol + ' ' + formattedAmount;
-                
-            } else {
-                formattedAmount = userDefaultCurrencySymbol + formattedAmount;
-            }
+            formattedAmount = currencySymbol + formattedAmount;
         }
 
         return formattedAmount;

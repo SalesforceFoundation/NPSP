@@ -43,12 +43,35 @@ public class RD2_QueueableService {
     public class EvaluateInstallmentOpportunities implements Queueable {
         Set<Id> rdIds;
 
+        /**
+        * @description Contains Map of Recurring Donation Ids to Boolean
+        */
+        @TestVisible
+        private Map<Id, Boolean> isScheduleChangedById {
+            get {
+                if (isScheduleChangedById == null) {
+                    isScheduleChangedById = new Map<Id, Boolean>();
+                }
+                return isScheduleChangedById;
+            } set;
+        }
+
         /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
          */
         public EvaluateInstallmentOpportunities(Set<Id> rdIds) {
             this.rdIds = rdIds;
+        }
+
+        /***
+         * @description Constructor
+         * @param rdIds - the RD Ids to process in this Queueable action
+         * @param isScheduleChangedById - map of RD Ids to Boolean indicating changed schedule
+         */
+        public EvaluateInstallmentOpportunities(Set<Id> rdIds, Map<Id, Boolean> isScheduleChangedById) {
+            this.rdIds = rdIds;
+            this.isScheduleChangedById = isScheduleChangedById;
         }
 
         /**
@@ -70,8 +93,45 @@ public class RD2_QueueableService {
         public void executeOppEvaluationService() {
             new RD2_OpportunityEvaluationService()
                 .withRds(rdIds)
+                .withIsScheduleChangedById(isScheduleChangedById)
                 .evaluateOpportunities();
         }
     }
 
+    /**
+     * @description Queueable service to process inserted Recurring Donations that have a value
+     * in the Elevate CommitmentId__c field.
+     */
+    public class ElevateOpportunityMatcher implements Queueable {
+        Map<String, Id> rdIdByCommitmentId;
+
+        /***
+         * @description Constructor
+         * @param rdIdByCommitmentId - Map of CommitmentId's to RecurringDonation.Id
+         */
+        public ElevateOpportunityMatcher(Map<String, Id> rdIdByCommitmentId) {
+            this.rdIdByCommitmentId = rdIdByCommitmentId;
+        }
+
+        /**
+         * @description Execute method called when the Queueable runs. Delegates to the
+         * evaluation service
+         * @param context queuableContext
+         */
+        public void execute(QueueableContext context) {
+            if (rdIdByCommitmentId == null || rdIdByCommitmentId.isEmpty()) {
+                return;
+            }
+
+            match();
+        }
+
+        /**
+         * @description Delegate processing of the Recurring Donations to the Evaluation Service
+         */
+        public void match() {
+            new RD2_ElevateIntegrationService()
+                .matchRecurringDonationsToOpps(rdIdByCommitmentId);
+        }
+    }
 }

@@ -776,9 +776,118 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertNotEquals(null, record.dayOfMonth, 'DayOfMonth should be specified');
     }
 
+    /****
+    * @description Validates that a active schedule is returned for when RD Status is mapped to Active
+    */
+    @IsTest
+    private static void shouldReturnActiveScheduleWhenRDStatusIsMappedToActive() {
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2019, 7, 31);
+        String dayOfMonth = '12';
+        String newStatus = 'New';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .withStatusActive()
+            .build();
+        insert rd;
 
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(newStatus, RD2_Constants.STATUS_ACTIVE);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
 
+        rd.Status__c = newStatus;
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), new RD2_ScheduleService().buildNewSchedules(rd));
+
+        RD2_VisualizeScheduleController.cachedRd = new RD2_RecurringDonation(rd);
+        RD2_ScheduleService.currentDate = today;
+        
+        Test.startTest();
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
+        Test.stopTest();
+        
+        System.assertEquals(newStatus, RD2_VisualizeScheduleController.cachedRd.getSObject().Status__c, 'Cached RD status should be New');
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, RD2_VisualizeScheduleController.cachedRd.getState(), 'RD state should be mapped to Active');
+        System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
+        System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
+        System.assertEquals(rd.npe03__Amount__c, schedules[0].amount, 'Schedule Amount should match RD Amount');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'Schedule Period should match RD Installment Period');
+        System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'Schedule Day of Month should match');
+        System.assertEquals(startDate, schedules[0].startDate, 'Schedule Start Date should be RD Effective Date');
+        System.assertEquals(null, schedules[0].endDate, 'Schedule End Date should be undefined');
+    }
+
+    /****
+    * @description Validates that zero active schedules are returned for a RD where status is mapped to Closed
+    */
+    @IsTest
+    private static void shouldThrowAuraHandledExceptionRDStatusIsMappedClosed() {
+        Exception actualException;
+        String newStatus = 'End';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStatus(newStatus)
+            .withDayOfMonth('12')
+            .withMockId()
+            .build();
+
+        RD2_StatusMapper_TEST.Stub mapperStub = new RD2_StatusMapper_TEST.Stub()
+            .withMapping(newStatus, RD2_Constants.STATUS_CLOSED);
+        RD2_StatusMapper.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            mapperStub
+        );
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), new RD2_ScheduleService().buildNewSchedules(rd));
+        RD2_VisualizeScheduleController.cachedRd = new RD2_RecurringDonation(rd);
+
+        Test.startTest();
+        try {
+            RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        assertScheduleVisualizerException(actualException);
+    }
+
+    /***
+    * @description Verifies schedule end date is populate with RD end date
+    */
+    @isTest
+    private static void shouldSetEndDateOnScheduleWhenRDEndDateIsSet() {
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2019, 7, 31);
+        Date endDate = today.addMonths(10);
+        String dayOfMonth = '12';
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .withEndDate(endDate)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
+
+        System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
+        System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
+        System.assertEquals(startDate, schedules[0].startDate, 'Schedule Start Date should be RD Effective Date');
+        System.assertEquals(endDate, schedules[0].endDate, 'Schedule End Date should be undefined');
+    }
 
     //// Helpers
     //////////////////////////
@@ -893,7 +1002,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         for (RecurringDonationSchedule__c schedule : scheduleService.buildNewSchedules(rd)) {
             schedules.add(new RD2_VisualizeScheduleController.Schedule(
-                counter++, new RD2_ScheduleService.ActiveSchedule(schedule)
+                counter++, new RD2_ScheduleService.ActiveSchedule(schedule, rd)
             ));
         }
 

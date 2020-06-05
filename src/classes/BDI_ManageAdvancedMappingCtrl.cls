@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2020, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,20 @@ public class BDI_ManageAdvancedMappingCtrl {
                                                             'order', 'orderitem', 'pricebook2', 
                                                             'pricebookEntry', 'product2', 'task', 
                                                             'user','opportunitycontactrole','contactrole','workorder'};
+
+    /**
+     * @description Checks if the running user has system admin permissions
+     * @return Boolean
+    */
+    @AuraEnabled
+    public static Boolean isAdminUser(Id userId) {
+        List<User> runningUser = [SELECT ProfileId FROM User WHERE Id = :userId];
+        Map<Id, Boolean> userIdToIsAdmin = USER_UserService.isSysAdmin(
+                runningUser
+        );
+
+        return userIdToIsAdmin.get(userId);
+    }
 
     /*******************************************************************************************************
     * @description Name of the default Field Mapping Set
@@ -784,4 +798,4 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.npspNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
         }
     }
-}// BDI_ManageAdvancedMappingCtrl
+}

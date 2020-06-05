@@ -238,6 +238,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets End Date
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withEndDate(Date dt) {
+        valuesByFieldName.put('EndDate__c', dt);
+        return this;
+    }
+
+    /***
     * @description Sets Next Payment Date
     * @param dt Date
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -423,6 +433,13 @@ public without sharing class TEST_RecurringDonationBuilder {
         return withStatus(RD2_Constants.STATUS_ACTIVE);
     }
 
+    /***
+    * @description Sets Recurring Donation Status to Lapsed
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusLapsed() {
+        return withStatus(RD2_Constants.STATUS_LAPSED);
+    }
 
     /***
     * @description Sets Recurring Donation Status to Closed
@@ -441,6 +458,17 @@ public without sharing class TEST_RecurringDonationBuilder {
         validateMode(Mode.Enhanced);
 
         valuesByFieldName.put('Status__c', status);
+        return this;
+    }
+
+    /***
+    * @description Sets Recurring Donation Closed Reason
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withClosedReason(String closedReason) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('ClosedReason__c', closedReason);
         return this;
     }
 
@@ -482,6 +510,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     */
     public TEST_RecurringDonationBuilder withNextDonationDate(Date dt) {
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
+        return this;
+    }
+
+    /***
+    * @description Sets CommitmentId field
+    * @param commitmentId  value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCommitmentId(String commitmentId) {
+        valuesByFieldName.put('CommitmentId__c', commitmentId);
         return this;
     }
 

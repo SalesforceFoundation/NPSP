@@ -159,8 +159,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             } else {
                 state.isMetaLaunched = state.isMetaLaunched && state.isEnabled;
                 state.isMetaConfirmed = state.isMetaConfirmed && state.isMetaLaunched && hasMetaDeployCompleted();
-            }   
-            
+            }
+
             state.dryRunLimit = getDryRunLimit(state);
 
         } catch (Exception e) {
@@ -177,7 +177,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return Boolean
     */
     private static Boolean isDryRunOutdated(EnablementState state) {
-        return (isSimpleVersion) 
+        return (isSimpleVersion)
             ? false
             : batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
     }
@@ -219,8 +219,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the enhanced Recurring Donation enablement user action. Automatically set Enable confirmation
-    * when no legacy RD exists since the confirmation is not applicable on a simple enablement page version.
+    * @description Tracks the enhanced Recurring Donation enablement user action.
+    * When the org does not have any RD record, a simple enablement page version is displayed,
+    * and enablement will automatically set Enable Confirmation checkbox required
+    * for the next metadata deploy step.
     * @return void
     */
     @AuraEnabled
@@ -234,20 +236,64 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         if (isSimpleVersion) {
             state.isConfirmed = true;
             saveEnablementState(state);
-        }   
+        }
 
         try {
-            STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
-
-            if (!Test.isRunningTest()) {
-                upsert STG_Panel.stgService.stgRD;
-                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
-            }
-
-            System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
+            Boolean shouldRescheduleJobs = true;
+            enableEnhancement(shouldRescheduleJobs);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
+        }
+    }
+
+
+    /***
+    * @description Enables enhanced Recurring Donation feature from the callable API
+    * @return void
+    */
+    public static void callableApiEnableEnhancement(Boolean rescheduleBatchJobs) {
+        if (!STG_Panel.runningUserIsAdmin()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_EnablementPermissionRequired);
+        }
+
+        Boolean isCrlpEnabled = new CRLP_ApiService().isCrlpEnabled();
+        if (!isCrlpEnabled) {
+            throw new EnablementException(System.Label.CRLP_DisabledMessage);
+        }
+
+        enableEnhancement(rescheduleBatchJobs);
+
+        EnablementState state = getEnablementState();
+        state.isConfirmed = true;
+
+        if (hasMetaDeployCompleted()) {
+            state.isMetaConfirmed = true;
+            state.isMetaLaunched = true;
+        }
+
+        saveEnablementState(state);
+
+        System.enqueueJob(new EnablementQueueable(QueueableMode.DisableRollup));
+    }
+
+    /***
+    * @description Enables enhanced Recurring Donations feature.
+    * Processes the NPSP Settings telemetry type asynchronously.
+    * Reschedules scheduled jobs if they should be rescheduled.
+    * @param shouldRescheduleJobs Indicates if scheduled jobs should be rescheduled
+    * @return void
+    */
+    private static void enableEnhancement(Boolean shouldRescheduleJobs) {
+        STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
+
+        if (!Test.isRunningTest()) {
+            upsert STG_Panel.stgService.stgRD;
+            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+        }
+
+        if (shouldRescheduleJobs) {
+            System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
         }
     }
 
@@ -407,6 +453,25 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Starts the data migration batch based onthe the Callable API request
+    * @return Id Batch Job Id
+    */
+    public static Id callableApiRunMigration() {
+        if (!RD2_EnablementService.getInstance().isRecurringDonations2Enabled()) {
+            throw new EnablementException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
+        }
+
+        if (!STG_Panel.runningUserIsAdmin()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_EnablementPermissionRequired);
+        }
+
+        setMigrationEnabled(true);
+
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        return Database.executeBatch(batch, batch.batchSize);
+    }
+
+    /***
     * @description Saves the current enablement state
     * @param state Enablement state
     * @return void
@@ -455,7 +520,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
     * @description Determine if the enablement page should be in simple or full version
-    * @return Boolean 
+    * @return Boolean
     */
     private static Boolean isSimplePageCandidate() {
         Boolean noLegacyRd = [
@@ -468,6 +533,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         return noLegacyRd && noMigrationRan;
     }
+
 
     /***
     * @description Represents enhanced Recurring Donation options and status
@@ -559,13 +625,18 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             cmtRollup.description += '\nThis rollup was disabled automatically when Enhanced Recurring Donations was enabled.';
 
             List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{ cmtRollup };
-            CRLP_ApiService.RollupMetadataHandler changeHandler = new CRLP_ApiService().sendChangeEvent(rollups);
+            CRLP_EnablementService.RollupMetadataHandler changeHandler = new CRLP_ApiService()
+                .sendChangeEvent(rollups)
+                .getCallbackHandler();
 
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
             CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
         }
     }
 
-
-
+    /**
+    * @description Custom enablement exception
+    */
+    private class EnablementException extends Exception { }
+    
 }

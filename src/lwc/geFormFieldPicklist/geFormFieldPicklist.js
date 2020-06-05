@@ -1,5 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import GeLabelService from 'c/geLabelService';
+import { isEmpty } from 'c/utilCommon';
 
 export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
@@ -9,18 +11,25 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api required;
     @api value;
     @api className;
+    @api qaLocatorBase;
 
     @track _objectDescribeInfo;
     @track picklistValues;
     @track defaultRecordTypeId;
+
     _recordTypeId;
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @wire(getPicklistValues, {
         fieldApiName: '$fullFieldApiName',
         recordTypeId: '$_recordTypeId' })
     wiredPicklistValues({error, data}) {
         if(data) {
-            this.picklistValues = data.values;
+            let valueNone = {
+                label: this.CUSTOM_LABELS.commonLabelNone,
+                value: this.CUSTOM_LABELS.commonLabelNone
+            }
+            this.picklistValues = [valueNone, ...data.values];
         }
         if(error) {
             console.error(error);
@@ -94,6 +103,13 @@ export default class GeFormFieldPicklist extends LightningElement {
         if (!this.recordTypeId) {
             this.recordTypeId = this.defaultRecordTypeId;
         }
+        if (isEmpty(this.value)) {
+            // Default picklist values to --None-- if no value is loaded
+            this.value = this.CUSTOM_LABELS.commonLabelNone;
+        }
     }
 
+    get qaLocatorPicklist() {
+        return `combobox ${this.qaLocatorBase}`;
+    }
 }

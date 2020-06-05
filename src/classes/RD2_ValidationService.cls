@@ -77,6 +77,27 @@ public with sharing class RD2_ValidationService {
         } set;
     }
 
+    /**
+    * @description Contacts on provided Recurring Donations
+    */
+    private Map<Id, Contact> contactById {
+        get {
+            if (contactById == null) {
+                Set<Id> contactIds = UTIL_SObject.extractId(
+                    rds, npe03__Recurring_Donation__c.npe03__Contact__c
+                );
+
+                contactById = new Map<Id, Contact>([
+                    SELECT Name, AccountId
+                    FROM Contact
+                    WHERE Id IN :contactIds
+                ]);
+            }
+            return contactById;
+        }
+        set;
+    }
+
     /***
     * @descripton Recurring Donations that do not have any Closed Won/Lost Opportunity assigned.
     * These records can have donor information modified
@@ -91,6 +112,44 @@ public with sharing class RD2_ValidationService {
         set;
     }
 
+    /***
+    * @descripton Recurring Donations to its most recent closed won opportunity's close date.
+    */
+    private Map<Id, Date> closeWonDateByRdId {
+        get {
+            if (closeWonDateByRdId == null) {
+                closeWonDateByRdId = getMostRecentCloseWonDateByRdId();
+            }
+            return closeWonDateByRdId;
+        }
+        set;
+    }
+    /***
+    * @descripton Elevate integration service
+    */
+    private RD2_ElevateIntegrationService elevateService {
+        get {
+            if (elevateService == null) {
+                elevateService = new RD2_ElevateIntegrationService();
+            }
+            return elevateService;
+        }
+        set;
+    }
+
+    /**
+     * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
+     * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
+     * When executed from a scheduler or standard DML, the current date is always today.
+    */
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = RD2_ScheduleService.currentDate;
+            }
+            return currentDate;
+        } set;
+    }
 
     /**
     * @description Constructor for the RD2_ValidationService class
@@ -119,6 +178,7 @@ public with sharing class RD2_ValidationService {
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
+            validateStatus(rd);
         }
     }
 
@@ -127,15 +187,22 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     public void validateOnChange() {
-         for (Integer i = 0; i < rds.size(); i++) {
+        for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
+
+            if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
+                rd.addError(System.Label.RD2_ElevatePermissionRequired);
+                continue;
+            }
 
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
+            validateRecurringDonationEndDate(rd);
+            validateStatus(rd);
 
-            Boolean isValid = validateDonorChange(rd, oldRd);	            
+            Boolean isValid = validateDonorChange(rd, oldRd);
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
@@ -148,7 +215,7 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+        if (new RD2_RecurringDonation(rd).isClosed()) {
             return;
         }
 
@@ -219,6 +286,7 @@ public with sharing class RD2_ValidationService {
 
         if (noClosedOppRDIds.contains(rd.Id)
             || isOrganizationChange(accountById.get(rd.npe03__Organization__c), accountById.get(oldRd.npe03__Organization__c))
+            || isAccountAutoPopulatedOnChange(rd, oldRd)
         ) {
             return true;
         }
@@ -248,6 +316,52 @@ public with sharing class RD2_ValidationService {
         }
     }
 
+    /**
+    * @description Validate the End Date on the Recurring Donation
+    * @param rd The Recurring Donation to validate
+    * @return void
+    */
+    private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd) {
+        if (rd.EndDate__c == null) {
+            return;
+        }
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+
+        if (rdRecord.isFixedLength()
+            && rdRecord.isClosed()
+            && rd.EndDate__c > currentDate
+        ) {
+            rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
+        }
+
+        Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
+        if (mostRecentCloseWonDate == null) {
+            return;
+        }
+
+        if (rd.EndDate__c < mostRecentCloseWonDate) {
+            rd.addError(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp);
+        }
+
+    }
+
+    /**
+    * @description Validates RD status is mapped to a valid state
+    * @param rd The Recurring Donation to validate
+    * @return void
+    */
+    @TestVisible
+    private void validateStatus(npe03__Recurring_Donation__c rd) {
+        if (String.isBlank((new RD2_RecurringDonation(rd)).getState())) {
+            rd.addError(
+                String.format(
+                    System.Label.RD2_StatusMustBeMapped + ' ' + System.Label.RD2_StatusMustBeMappedSolution,
+                    new String[]{rd.Status__c})
+            );
+        }
+    }
+
     /***
     * @description Return true when both new and old account on the RD are organization accounts.
     * @param newAcct Account on the DML new RD
@@ -260,6 +374,28 @@ public with sharing class RD2_ValidationService {
             && oldAcct != null
             && newAcct.npe01__SYSTEMIsIndividual__c == false
             && oldAcct.npe01__SYSTEMIsIndividual__c == false;
+    }
+
+    /***
+    * @description Returns true when Account on RD is changed from null to the Contact's Account
+    * and the Contact on RD is not changed
+    * @param new Updated Recurring Donation record
+    * @param old Recurring Donation record containing old values
+    * @return Boolean
+    */
+    private Boolean isAccountAutoPopulatedOnChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+
+        if (rd.npe03__Contact__c == null //The Contact is not specified
+            || rd.npe03__Contact__c != oldRd.npe03__Contact__c //The Contact is changed on update
+            || oldRd.npe03__Organization__c != null //The Account existed previously
+        ) {
+            return false;
+        }
+
+        Contact rdContact = contactById.get(rd.npe03__Contact__c);
+
+        return rdContact != null
+            && rd.npe03__Organization__c == rdContact.AccountId;
     }
 
     /***
@@ -304,13 +440,14 @@ public with sharing class RD2_ValidationService {
      * @param rd The recurring donation to validate
      */
     private void validateFixedLength(npe03__Recurring_Donation__c rd) {
-        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        if (rdRecord.isOpenEnded()
             && rd.npe03__Installments__c > 1
         ) {
             rd.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
         }
 
-        if (rd.RecurringType__c != RD2_Constants.RECURRING_TYPE_FIXED) {
+        if (!rdRecord.isFixedLength()) {
             return;
         }
 
@@ -374,4 +511,31 @@ public with sharing class RD2_ValidationService {
 
         return rdIds;
     }
+
+    /***
+    * @description Get each Recurring Donation's most recent Closed Won opp close date group by Id
+    * @return map<Id, Date>
+    */
+    private map<Id, Date> getMostRecentCloseWonDateByRdId() {
+        Map<Id, Date> closeWonDateByRdId = new Map<Id, Date>();
+        for (npe03__Recurring_Donation__c rd : [
+            SELECT (
+                SELECT CloseDate
+                FROM npe03__Donations__r
+                WHERE IsClosed = true
+                    AND IsWon = true
+                ORDER BY CloseDate DESC
+                LIMIT 1
+            )
+            FROM npe03__Recurring_Donation__c
+            WHERE Id IN : rds
+        ]) {
+            if (!rd.npe03__Donations__r.isEmpty()) {
+                closeWonDateByRdId.put(rd.Id, rd.npe03__Donations__r[0].CloseDate);
+            }
+        }
+
+        return closeWonDateByRdId;
+    }
+
 }

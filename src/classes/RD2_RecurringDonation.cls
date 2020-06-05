@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2020 Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -37,7 +34,7 @@
 public inherited sharing class RD2_RecurringDonation {
 
     /**
-    * @description Recurring Donation record containing 
+    * @description Recurring Donation record containing
     * related Opportunities and Schedules in subqueries
     */
     npe03__Recurring_Donation__c rd;
@@ -47,6 +44,17 @@ public inherited sharing class RD2_RecurringDonation {
     * The Recurring Donation is considered as new if it has no related Opp
     */
     private Boolean isNew;
+
+    /**
+    * @description Indicates the converted State of the Recurring Donation from Status To State Mapping 
+    */
+    private String state {
+        get { 
+            state = RD2_StatusMapper.getInstance().getState(rd.Status__c);
+            return state;
+        }
+        set;
+    }
 
     /**
     * @description A list of the fields that have been changed by one of the revise methods.
@@ -77,20 +85,20 @@ public inherited sharing class RD2_RecurringDonation {
     * @param scheduleService RD Schedule Service
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {  
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
         return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r);
     }
 
     /**
     * @description Revises and modifies the Recurring Donation Next Donation Date.
-    * Whenever the Next Donation Date is being revised, review the status and the Next Donation Date 
-    * for a fixed-length RD in the case it should be closed. 
+    * Whenever the Next Donation Date is being revised, review the status and the Next Donation Date
+    * for a fixed-length RD in the case it should be closed.
     * If so, the next installment Opp should not be created when the last open Opp on the fixed-length RD is closed.
     * @param scheduleService RD Schedule Service
     * @param rdSchedules Existing Schedules on the Recurring Donation
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) { 
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
         return setNextDonationDate(
             scheduleService.getNextDonationDate(rd, rdSchedules)
         );
@@ -133,6 +141,21 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Revises and modifies the Recurring Donation status
+    * @param currentDate Used to determined current date
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation reviseStatus(Date currentDate) {
+        if (isFixedLength()) {
+            reviseStatusForFixedLength();
+
+        } else if (isOpenEnded()) {
+            reviseStatusForOpenEnded(currentDate);
+        }
+        return this;
+    }
+
+    /**
     * @description Revises and modifies the Recurring Donation if it is Fixed Length and is now fully completed
     * based on the Number of Planned Installments as compared to the Number of Paid Installments.
     * @return RD2_RecurringDonation This record instance
@@ -154,7 +177,24 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Sets the Number of Planned Installments to null when RecurringType is Open 
+    *@description Revises and modifies the Recurring Donation if it is Open Ended and it past the RD End Date
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation reviseStatusForOpenEnded(Date currentDate) {
+        if (isActive()
+            && isOpenEnded()
+            && rd.EndDate__c != null
+            && rd.EndDate__c < currentDate
+        ) {
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+
+            changedFields.add(npe03__Recurring_Donation__c.Status__c);
+        }
+        return this;
+    }
+
+    /**
+    * @description Sets the Number of Planned Installments to null when RecurringType is Open
     * and Number of Planned Installments = 1 (default)
     * @return RD2_RecurringDonation This record instance
     */
@@ -210,7 +250,7 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     * @description Return the Recurring Donation record
-    * @return npe03__Recurring_Donation__c 
+    * @return npe03__Recurring_Donation__c
     */
     public npe03__Recurring_Donation__c getSObject() {
         return rd;
@@ -221,7 +261,15 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isActive() {
-        return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
+        return state == RD2_Constants.STATUS_ACTIVE;
+    }
+
+    /**
+    * @description Indicates if the Recurring Donation is lapsed
+    * @return Boolean
+    */
+    public Boolean isLapsed() {
+        return state == RD2_Constants.STATUS_LAPSED;
     }
 
     /**
@@ -229,15 +277,16 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isClosed() {
-        return rd.Status__c == RD2_Constants.STATUS_CLOSED;
+        return state == RD2_Constants.STATUS_CLOSED;
     }
 
     /**
-    * @description Indicates if the Recurring Donation is open ended
+    * @description Indicates if the Recurring Donation is open ended.  Must evaluate the proxy
+    * behavior of isFixedLength() as well since RecurringType__c == 'Open' during dry run.
     * @return Boolean
     */
     public Boolean isOpenEnded() {
-        return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN;
+        return !isFixedLength() && rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN ;
     }
 
     /**
@@ -245,7 +294,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean isFixedLength() {
-        return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
+        return RD2_EnablementService.isFixedLength(rd);
     }
 
     /**
@@ -255,7 +304,7 @@ public inherited sharing class RD2_RecurringDonation {
     public Boolean isFixedLengthComplete() {
         return rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
     }
-    
+
     /**
     * @description Return number of planned installments on the Recurring Donation, default to 0 when null
     * @return Integer
@@ -274,6 +323,14 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.npe03__Total_Paid_Installments__c == null
             ? 0
             : rd.npe03__Total_Paid_Installments__c.intValue();
+    }
+
+    /**
+    * @description Return the state of the Recurring Donation.
+    * @return String 
+    */
+    public String getState() {
+        return state;
     }
 
     /**
@@ -352,4 +409,12 @@ public inherited sharing class RD2_RecurringDonation {
         }
         return false;
     }
+
+    /***
+    * @description Checks if the Recurring Donation is originated in Elevate
+    */
+    public Boolean isElevateRecord() {
+       return String.isNotBlank(rd.CommitmentId__c);
+    }
+
 }
