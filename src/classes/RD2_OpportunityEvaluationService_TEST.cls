@@ -1110,7 +1110,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     @IsTest
     private static void yearValuesShouldExcludeInstallmentsWhenRDIsClosed() {
         //set current date override
-        final Date today = START_DATE.addMonths(MONTHS_TO_DEC).addDays(-1);
+        final Date today = START_DATE.addMonths(MONTHS_TO_DEC);
         RD2_ScheduleService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -1120,10 +1120,10 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
-        for (Integer i = 0; i < MONTHS_TO_YEAR_END + 1; i++) {
+        for (Integer i = 0; i < MONTHS_TO_YEAR_END; i++) { //create closed own opps till the end of the year
             opps.add(oppBuilder
                 .withName()
-                .withCloseDate(START_DATE.addMonths(i))
+                .withCloseDate(START_DATE.addMonths(i).addDays(-2))
                 .build()
             );
         }
@@ -1144,8 +1144,8 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
             'Current Year Value should include current year Closed Won amounts when RD is Closed');
-        System.assertEquals(rd.npe03__Amount__c, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
-            'Next Year Value should include next year Closed Won amounts when RD is Closed');
+        System.assertEquals(0, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
+            'Next Year Value should not include future Open Opp');
     }
 
     /**
@@ -1254,7 +1254,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     @IsTest
     private static void fiscalYearValuesShouldExcludeInstallmentsWhenRDIsClosed() {
         //set current date override
-        final Date today = START_DATE.addMonths(1).addDays(-1);
+        final Date today = START_DATE.addMonths(1).addDays(1);
         RD2_ScheduleService.currentDate = today;
 
         setUpUseFiscalYear(true);
@@ -1267,7 +1267,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
-        for (Integer i = 0; i < MONTHS_TO_YEAR_END + 1; i++) {
+        for (Integer i = 0; i < 2; i++) {
             opps.add(oppBuilder
                 .withName()
                 .withCloseDate(START_DATE.addMonths(i))
@@ -1276,7 +1276,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         }
         opps.add(oppBuilder
             .withName()
-            .withCloseDate(START_DATE.addMonths(MONTHS_TO_YEAR_END + 1))//Open Opp in Feb next year
+            .withCloseDate(today.addDays(1))//Open Opp in the future
             .withOpenStage()
             .build()
         );
@@ -1291,8 +1291,8 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         System.assertEquals(rd.npe03__Amount__c * 2, rd.CurrentYearValue__c,
             'Current Year Value should include Sep-Oct 2019 Opps for the current fiscal year ending on Oct 31, 2019');
-        System.assertEquals(rd.npe03__Amount__c * 3, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
-            'Next Year Value should include Nov-Dec 2019 and Jan 2020 closed Opps when RD is Closed');
+        System.assertEquals(0, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
+            'Next Year Value should not include the future open Opps');
     }
 
     /**
