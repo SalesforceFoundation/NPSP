@@ -24,6 +24,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail page did not load in 1 min")
         self.selenium.location_should_contain("/lightning/r/Contact/",message="Current page is not a Contact record detail view")
+        self.selenium.wait_until_page_contains("Contact Details")
         
     def update_field_value(self,field_name,old_value,new_value):
         """Delete the old value in specified field by clicking on delete icon and update with new value"""
@@ -76,7 +77,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         id,actualstatus = self.npsp.check_status(contact1)
         self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
 
-    def verify_rollup_field_value(self,field_name,value,section):
+    def verify_rollup_field_value(self,field_name,value,section=None):
         """Verifies if the given rollup field contains given value 
         if it doesn't, then recalculates rollup and performs refresh"""
         try :

@@ -260,7 +260,7 @@ npsp_lex_locators={
         },
     'crlps':{
         'select_locator': "//select[@name ='{}']",
-        'success_toast': "//div[contains(@class,'slds-notify.slds-notify_toast,slds-theme_success')]",
+        'success_toast': "//div[@class='{}']",
         'active_setting_record': "//td[@data-label='Active']/following::tr/th//span/div//lightning-button/button[text()='{}']",
         'rollup_progress_notification': "//div/h2[contains(text(),'{}')]",
         'rollup_options':"//tr[./th//button[text()='{}']]/td//button",

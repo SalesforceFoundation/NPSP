@@ -53,7 +53,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         select_locator = npsp_lex_locators["crlps"]["select_locator"].format(
             "Target Object"
         )
-        success_toast = npsp_lex_locators["crlps"]["success_toast"]
+        toast_hide = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_success slds-hide')
+        toast_visible = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_info ')
         if self.is_setting_present(kwargs["Target Object"], kwargs["Target Field"]):
             return
         else:
@@ -63,7 +64,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains_element(select_locator)
             self.populate_crlp_form(**kwargs)
             self.selenium.click_button("Save")
-            self.selenium.wait_until_element_is_not_visible(success_toast)
+            self.selenium.wait_until_page_contains_element(toast_visible)
+            self.selenium.wait_until_page_contains_element(toast_hide)
 
     @capture_screenshot_on_error
     def clone_rollup(self, rollup_name, **kwargs):
@@ -78,7 +80,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             select_locator = npsp_lex_locators["crlps"]["select_locator"].format(
                 "Target Object"
             )
-            success_toast = npsp_lex_locators["crlps"]["success_toast"]
+            toast_hide = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_success slds-hide')
+            toast_visible = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_info ')
             self.selenium.scroll_element_into_view(locator)
             self.selenium.click_element(locator)
             self.selenium.wait_until_page_contains("Clone")
@@ -86,7 +89,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains_element(select_locator)
             self.populate_crlp_form(**kwargs)
             self.selenium.click_button("Save")
-            self.selenium.wait_until_element_is_visible(success_toast,timeout=60)
+            self.selenium.wait_until_page_contains_element(toast_visible)
+            self.selenium.wait_until_page_contains_element(toast_hide)
         elif not current_rollup:
             raise Exception("Rollup you are trying to clone doesn't exist")
         elif new_rollup:

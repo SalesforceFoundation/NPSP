@@ -309,6 +309,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             for i in locators:
                 print("inside for loop")
                 locator = i.format(field,value)
+                print(locator)
                 if self.check_if_element_exists(locator):
                     print(f"element exists {locator}")
                     actual_value=self.selenium.get_webelement(locator).text
