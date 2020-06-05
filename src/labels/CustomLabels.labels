@@ -1951,7 +1951,23 @@
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
         &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
     </labels>
-     <labels>
+    <labels>
+        <fullName>RD2_EndDateMustBeLaterThanCloseWonOpp</fullName>
+        <categories>Recurring Donations Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation End Date must be valid.</shortDescription>
+        <value>End Date must be later than the last Closed Won Opportunity&apos;s Close Date.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EndDateMustBeValidForFixedLength</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fixed Length Recurring Donation End Date must be valid</shortDescription>
+        <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormDonationSectionHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -1975,7 +1991,6 @@
         <shortDescription>Recurring Donation Entry Form header</shortDescription>
         <value>New Recurring Donation</value>
     </labels>
-
     <labels>
         <fullName>RD2_EntryFormInsertSuccessMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
@@ -1984,7 +1999,6 @@
         <shortDescription>Recurring Donation Entry Form message when record is inserted</shortDescription>
         <value>Recurring Donation &quot;{0}&quot; was created.</value>
     </labels>
-
     <labels>
         <fullName>RD2_EntryFormUpdateSuccessMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
@@ -1993,7 +2007,6 @@
         <shortDescription>Recurring Donation Entry Form message when record is updated</shortDescription>
         <value>Recurring Donation &quot;{0}&quot; was saved.</value>
     </labels>
-
     <labels>
         <fullName>RD2_EntryFormOtherSectionHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
@@ -2080,7 +2093,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The end date of the recurring donation schedule</shortDescription>
-        <value>End Date</value>
+        <value>Schedule End Date</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
