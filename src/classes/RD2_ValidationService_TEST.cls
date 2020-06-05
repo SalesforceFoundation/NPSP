@@ -891,6 +891,75 @@ private with sharing class RD2_ValidationService_TEST {
         );
     }
 
+    /***
+    * @description Verifies that RD fail to update when End Date is before the latest closed won Opp close date. 
+    */
+    @isTest
+    private static void shouldFailRDUpdateWhenEndDateIsBeforeOppClosedWonDate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Date rdEndDate = Date.today().addDays(20);
+        RD2_ScheduleService.currentDate = rdEndDate;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withCloseDate(rdEndDate.addDays(5))
+            .withClosedWonStage()
+        .build();
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.EndDate__c = rdEndDate;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(System.Label.RD2_EndDateMustBeLaterThanCloseWonOpp),
+            'RD update should fail when Rd End Date is after the opportunity closed won date: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies that Fixed RD fail to Closes when End Date is in the future. 
+    */
+    @isTest
+    private static void shouldFailFixedRDUpdateWhenEndDateIsInTheFuture() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withRecurringTypeFixed()
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.EndDate__c = today.addDays(1);
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(System.Label.RD2_EndDateMustBeValidForFixedLength),
+            'Fixed RD update should fail when Rd End Date is in the future: ' + errMessage
+        );
+    }
+
     // Helper Methods
     /////////////////////
 
