@@ -426,7 +426,7 @@ public without sharing class RD2_ScheduleService {
             return null;
         }
 
-        evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
+        evaluateScheduleEndDate(rdRecord, rdSchedules);
         
         RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//TODO cache current matcher by RD Id
             .includeCurrent(rd.npe03__Donations__r);
@@ -603,7 +603,7 @@ public without sharing class RD2_ScheduleService {
                 }
                 first1stAnd15thFound = true;
             }
-            activeSchedules.add(new ActiveSchedule(schedule));
+            activeSchedules.add(new ActiveSchedule(schedule, rd));
         }
 
         return activeSchedules;
@@ -627,12 +627,12 @@ public without sharing class RD2_ScheduleService {
         public Id scheduleId { get; set; }
         public Date startDate { get; set; }
 
-        public ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
+        public ActiveSchedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
             isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
             campaignId = rdSchedule.Campaign__c;
             campaignName = rdSchedule.Campaign__r.Name;
             dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
-            endDate = rdSchedule.EndDate__c;
+            endDate = (rdSchedule.EndDate__c != null) ? rdSchedule.EndDate__c : rd.EndDate__c;
             installmentAmount = rdSchedule.InstallmentAmount__c;
             installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
             installmentPeriod = rdSchedule.InstallmentPeriod__c;
@@ -800,29 +800,59 @@ public without sharing class RD2_ScheduleService {
     }
 
     /**
-    * @description Sets End Date on the Recurring Donation schedule for a fixed-length RD.
-    * Schedules are dynamically evaluated for the End Date
+    * @description Evaluate Recurring Donation and set End Date on the RD scheulde
     * when the Next Donation Date record is calculated, or when the Visualizer displays upcoming installments.
-    * @param rd Recurring Donation record
+    * @param rdRecord Recurring Donation record
     * @param rdSchedules Schedules on the Recurring Donation record
     * @return void
     */
-    public void evaluateScheduleEndDateForFixedLength(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
-
-        if (rdSchedules == null || rdSchedules.isEmpty() 
+    public void evaluateScheduleEndDate(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
+        if (rdSchedules == null 
+            || rdSchedules.isEmpty() 
             || rdRecord.isClosed() 
-            || !rdRecord.isFixedLength() 
         ) {
             return;
         }
 
+        if (rdRecord.isFixedLength()) {
+            evaluateScheduleEndDateForFixedLength(rdRecord, rdSchedules);
+
+        } else if (rdRecord.isOpenEnded()) {
+            evaluateScheduleEndDateForOpenEnded(rdRecord, rdSchedules);
+        }
+    }
+
+    /**
+    * @description Sets End Date on the Recurring Donation schedule for a open ended RD.
+    * Schedules are dynamically evaluated for the End Date
+    * when the Next Donation Date record is calculated, or when the Visualizer displays upcoming installments.
+    * @param rdRecord Recurring Donation record
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return void
+    */
+    public void evaluateScheduleEndDateForOpenEnded(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (schedule.EndDate__c == null) {
+                schedule.EndDate__c = rdRecord.getSObject().EndDate__c;
+            }
+        }
+    }
+
+    /**
+    * @description Sets End Date on the Recurring Donation schedule for a fixed-length RD.
+    * Schedules are dynamically evaluated for the End Date
+    * when the Next Donation Date record is calculated, or when the Visualizer displays upcoming installments.
+    * @param rdRecord Recurring Donation record
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return void
+    */
+    public void evaluateScheduleEndDateForFixedLength(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
         Integer plannedInstallments = rdRecord.getPlannedInstallments();
         Integer paidInstallments = rdRecord.getPaidInstallments();
-        Integer estimatedOpenSlots = plannedInstallments - paidInstallments + rd.npe03__Donations__r.size();
+        Integer estimatedOpenSlots = plannedInstallments - paidInstallments + rdRecord.getSobject().npe03__Donations__r.size();
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(currentDate)
-            .include(rd.npe03__Donations__r)
+            .include(rdRecord.getSobject().npe03__Donations__r)
             .match(
                 getVisualizedInstallments(currentDate, estimatedOpenSlots, rdSchedules)
             )
