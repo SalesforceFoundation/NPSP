@@ -858,7 +858,36 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         assertScheduleVisualizerException(actualException);
     }
 
+    /***
+    * @description Verifies schedule end date is populate with RD end date
+    */
+    @isTest
+    private static void shouldSetEndDateOnScheduleWhenRDEndDateIsSet() {
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2019, 7, 31);
+        Date endDate = today.addMonths(10);
+        String dayOfMonth = '12';
+        RD2_ScheduleService.currentDate = today;
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .withEndDate(endDate)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
+
+        System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
+        System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
+        System.assertEquals(startDate, schedules[0].startDate, 'Schedule Start Date should be RD Effective Date');
+        System.assertEquals(endDate, schedules[0].endDate, 'Schedule End Date should be undefined');
+    }
 
     //// Helpers
     //////////////////////////
@@ -973,7 +1002,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         for (RecurringDonationSchedule__c schedule : scheduleService.buildNewSchedules(rd)) {
             schedules.add(new RD2_VisualizeScheduleController.Schedule(
-                counter++, new RD2_ScheduleService.ActiveSchedule(schedule)
+                counter++, new RD2_ScheduleService.ActiveSchedule(schedule, rd)
             ));
         }
 

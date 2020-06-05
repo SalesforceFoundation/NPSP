@@ -358,7 +358,7 @@
         <description>The ending date, if required, for this schedule record.</description>
         <externalId>false</externalId>
         <inlineHelpText>The ending date, if required, for this schedule record.</inlineHelpText>
-        <label>End Date</label>
+        <label>Schedule End Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Date</type>

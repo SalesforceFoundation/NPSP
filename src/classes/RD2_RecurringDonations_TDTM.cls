@@ -69,6 +69,20 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         set;
     }
 
+    /**
+     * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
+     * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
+     * When executed from a scheduler or standard DML, the current date is always today.
+    */
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = RD2_ScheduleService.currentDate;
+            }
+            return currentDate;
+        } set;
+    }
+
     /***
     * @description Trigger handler on Recurring Donations when enhancement is enabled
     * @param rds Trigger.new records
@@ -93,7 +107,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        transformDataBeforeValidation(rds, triggerAction);
+        transformDataBeforeValidation(rds, oldRds, triggerAction);
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
@@ -162,7 +176,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 rdRecord
-                    .reviseStatusForFixedLength()
+                    .reviseStatus(currentDate)
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
             }
         }
@@ -173,10 +187,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * - Assign Installment Frequency to the recurring donation record if the field is null on insert
     * - Set Day of Month to be the Last_Day if the original value is "31"
     * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     @TestVisible
-    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+    private void transformDataBeforeValidation(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
         //data transformation happens in the Before context only
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
@@ -198,6 +213,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
             }
         }
+
+        adjustClosedRdEndDateAndStatus(rds, oldRds, triggerAction);
     }
 
     /***
@@ -232,6 +249,39 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 && contactById.containsKey(rd.npe03__Contact__c)
                 ) {
                 rd.npe03__Organization__c = contactById.get(rd.npe03__Contact__c).AccountId;
+            }
+        }
+    }
+
+    /***
+    * @description Evaluate End Date on Recurring Donation
+    * If the RD Status is inserted/updated to Closed and the End Date is null, auto-populate the end date to yesterday.
+    * If the Open Ended RD Status is updated to Closed but the End Date is in the future, revert the status to before update.
+    * If the RD is reopened, clear out the End Date
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    */
+    private void adjustClosedRdEndDateAndStatus(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+        for (Integer i = 0; i < rds.size(); i++) {
+            RD2_RecurringDonation newRd = new RD2_RecurringDonation(rds[i]);
+
+            if (newRd.isClosed() && rds[i].EndDate__c == null) {
+                rds[i].EndDate__c = currentDate.addDays(-1);
+            }
+
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                if (!newRd.isClosed() && (new RD2_RecurringDonation(oldRds[i]).isClosed())) {
+                    rds[i].EndDate__c = null;
+                }
+
+                if (
+                    newRd.isOpenEnded()
+                    && newRd.isClosed()
+                    && rds[i].EndDate__c != null 
+                    && rds[i].EndDate__c > currentDate
+                ) {
+                    rds[i].Status__c = oldRds[i].Status__c;
+                }
             }
         }
     }
