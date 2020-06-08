@@ -5,7 +5,6 @@ import random
 import string
 from datetime import datetime
 from datetime import timedelta
-from dateutil.relativedelta import relativedelta
 
 
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -33,7 +32,7 @@ from locators_48 import npsp_lex_locators as locators_48
 from locators_49 import npsp_lex_locators as locators_49
 locators_by_api_version = {
     48.0: locators_48,   # spring '20
-    49.0: locators_49,   # summer '20
+    47.0: locators_49,   # winter '20
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -295,10 +294,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 #                 break
 #  
 #         assert list_found, "locator not found"
-
-
-
-
     @selenium_retry
     @capture_screenshot_on_error
     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
@@ -1528,8 +1523,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clicks on the link in the actions container on top right corner of the page using Javascript"""
         locator=npsp_lex_locators["link-title"].format(title)
         self.salesforce._jsclick(locator)
-        time.sleep(1)
-
+     
     def click_more_activity_button(self): 
         """Clicks on View More button on Activity tab of the record""" 
         locator = npsp_lex_locators["record"]["activity-button"].format('showMoreButton') 
@@ -1540,7 +1534,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["button-title"].format(title)
         self.salesforce._jsclick(locator)
 
-    @capture_screenshot_on_error
     def click_show_more_actions_button(self,title):
         """Clicks on more actions dropdown and click the given title"""   
         locator=npsp_lex_locators['link-contains'].format("more actions")
@@ -1557,3 +1550,28 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         out['baseurl'] = base_url
         out['objectname'] = object_name
         return out
+
+    def check_submenu_link_exists(self,title):
+        locator=npsp_lex_locators['link-text'].format(title)
+        isPresent = False
+        if self.npsp.check_if_element_exists(locator):
+            isPresent = True
+        return isPresent
+
+    def check_metadeploy_exists(self):
+        """Check if the metadeploy link is enabled"""
+        locator=npsp_lex_locators["link-title"].format("Launch MetaDeploy")
+        self.builtin.log_to_console(locator)
+        isPresent = False
+        if self.npsp.check_if_element_exists(locator):
+            isPresent = True
+        return isPresent
+
+    def check_rd2_is_enabled(self):
+        """Verifies that Enhanced Recurring Donations is enabled on the org"""
+        enabled = False
+        self.builtin.log_to_console(self.check_submenu_link_exists("Upgrade to Enhanced Recurring Donations"))
+        self.builtin.log_to_console(self.check_metadeploy_exists())
+        if self.check_submenu_link_exists("Upgrade to Enhanced Recurring Donations") and self.check_metadeploy_exists():
+            enabled = True
+        return enabled

@@ -338,4 +338,56 @@ Enable Advanced Mapping
     Go To Page                              Custom          NPSP_Settings
     Open Main Menu                          System Tools
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry   
-    Enable Advanced Mapping If Not Enabled 
+    Enable Advanced Mapping If Not Enabled
+
+Enable RD2QA
+    [Documentation]        Enable Rd2
+    ...                    | status | expected status of batch processing Ex:'Completed' 'Errors' |
+    ${apex}=  Catenate  SEPARATOR=\n
+    ...   Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
+    ...   String shouldScheduleJobs = '%%%PARAM_1%%%';
+    ...   if (!String.isEmpty(shouldScheduleJobs)) {
+    ...         params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
+    ...   }
+    ...   String ns = ('%%%NAMESPACE%%%').replace('__','');
+    ...   Type t = Type.forName(ns, 'Callable_Api');
+    ...   Callable apiClass = (Callable)t.newInstance();
+    ...   apiClass.call('Settings.EnableEnhancedRecurringDonations', params);
+
+    ${apex2}=  Catenate  SEPARATOR=\n
+    ...   Map<String, Object> params = new Map<String, Object>();
+    ...   String ns = ('%%%NAMESPACE%%%').replace('__','');
+    ...   Type t = Type.forName(ns, 'Callable_Api');
+    ...   Callable apiClass = (Callable)t.newInstance();
+    ...   apiClass.call('RD2.ExecuteDataMigration', params);
+
+    ${apex3}=  Catenate  SEPARATOR=\n
+    ...   npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+    ...   rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
+    ...   upsert rdSettings;
+
+    Run Task       enable_crlp
+    Run Task       custom_settings_value_wait
+    ...            object=%%%NAMESPACE%%%Customizable_Rollup_Settings__c
+    ...            field=%%%NAMESPACE%%%Customizable_Rollups_Enabled__c
+    ...            value=true
+    Run Task       execute_anon
+    ...            apex= ${apex}
+    Run Task       deploy_rd2_config
+    Run Task       execute_anon
+    ...            apex= ${apex2}
+    Run Task       batch_apex_wait
+    ...            class_name=RD2_DataMigration_BATCH
+    Run Task       execute_anon
+    ...            apex= ${apex3}
+
+
+Enable RD2
+    ${ns} =  Get NPSP Namespace Prefix
+    Open NPSP Settings  Recurring Donations      Upgrade to Enhanced Recurring Donations
+    ${rd2_enabled} =  Check Rd2 Is Enabled
+    Log to console         ${ns}
+    Log to console         ${rd2_enabled}
+    Run Keyword if      "${rd2_enabled}"=="False"
+    ...                 Enable RD2QA
+

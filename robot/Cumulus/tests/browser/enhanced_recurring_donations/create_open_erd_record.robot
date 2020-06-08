@@ -8,8 +8,9 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-...             Setup Test Data
+...             Enable RD2
 Suite Teardown  Delete Records and Close Browser
+
 
 ***Keywords***
 # Setup a contact with parameters specified
@@ -40,8 +41,7 @@ Create Open Recurring Donation With Monthly Installment
 
 
     [tags]                                 W-040346                                  feature:Enhanced Recurring Donations
-    Open NPSP Settings                     Recurring Donations                       Upgrade to Enhanced Recurring Donations
-    Launch Meta Deploy
+
     Go To Page                             Listing                                   npe03__Recurring_Donation__c
     Click Object Button                    New
     Wait For Modal                         New                                       Recurring Donations
