@@ -61,7 +61,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountBDIRows,
         Data_CountBGERows,
         Data_CountGERowsBatch,
-        Data_CountFixedLengthRd,
         Data_CountGERowsLast30DaysBatch
     }
 
@@ -222,10 +221,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
                          you move forward with Data_OppPaymentsWithoutPaymentsEnabled
                 //featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1); */
-            }
-
-            when Data_CountFixedLengthRd {
-                featureManager.setPackageIntegerValue(TelemetryParameterName.DataCount_ONETIME_Use.name(), -1);
             }
         }
     }
