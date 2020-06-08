@@ -388,6 +388,6 @@ Enable RD2
     ${rd2_enabled} =  Check Rd2 Is Enabled
     Log to console         ${ns}
     Log to console         ${rd2_enabled}
-    Run Keyword if      "${rd2_enabled}"=="False"
+    Run Keyword if      "${ns}"!="NPSP"
     ...                 Enable RD2QA
 
