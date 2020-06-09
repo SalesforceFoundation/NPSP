@@ -764,6 +764,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def check_if_element_exists(self, xpath):
         elements =self.selenium.get_element_count(xpath)
         return True if elements > 0 else False
+
+    def check_if_element_displayed(self, xpath):
+        element = self.selenium.get_webelement(xpath)
+        return True if element.is_displayed() else False
     
     def select_multiple_values_from_list(self,list_name,*args): 
         """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
@@ -997,7 +1001,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['link-text'].format(text)
         self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)  
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+        time.sleep(1)
     
     def verify_expected_batch_values(self, batch_id,**kwargs):
         """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""    
@@ -1549,3 +1554,29 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         out['baseurl'] = base_url
         out['objectname'] = object_name
         return out
+    
+    def check_submenu_link_exists(self,title):
+        locator=npsp_lex_locators['link-text'].format(title)
+        isPresent = False
+        if self.npsp.check_if_element_exists(locator):
+            isPresent = True
+        return isPresent
+
+    def check_metadeploy_exists(self):
+        """Check if the metadeploy link is enabled"""
+        locator=npsp_lex_locators["erd"]["rd2_installed"]
+        isPresent = False
+        if self.npsp.check_if_element_displayed(locator):
+            isPresent = True
+        return isPresent
+
+    def check_rd2_is_enabled(self):
+        """Verifies that Enhanced Recurring Donations is enabled on the org"""
+        enabled = False
+        if self.check_submenu_link_exists("Upgrade to Enhanced Recurring Donations"):
+            self.click_link_with_text("Upgrade to Enhanced Recurring Donations")
+            time.sleep(2)
+            if self.check_metadeploy_exists():
+                enabled = True
+        return enabled
+    
