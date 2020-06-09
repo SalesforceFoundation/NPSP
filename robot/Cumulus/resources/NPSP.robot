@@ -385,10 +385,7 @@ Enable RD2
     ${ns} =  Get NPSP Namespace Prefix
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            Recurring Donations
-
     ${rd2_enabled} =  Check Rd2 Is Enabled
-    Log to console         ${ns}
-    Log to console         ${rd2_enabled}
     Run Keyword if     "${rd2_enabled}"=="False"
     ...                 Enable RD2QA
 
