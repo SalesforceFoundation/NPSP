@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { showToast } from 'c/utilTemplateBuilder';
+import { showToast } from 'c/utilCommon';
 import { isNull } from 'c/utilCommon';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';

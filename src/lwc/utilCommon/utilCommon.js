@@ -1,5 +1,7 @@
 /* eslint-disable no-void */
 /* eslint-disable @lwc/lwc/no-async-operation */
+import {ShowToastEvent} from "lightning/platformShowToastEvent";
+
 const FUNCTION = 'function';
 const OBJECT = 'object';
 
@@ -429,6 +431,28 @@ const validateJSONString = (str) => {
     }
 }
 
+/*******************************************************************************
+ * @description Creates and dispatches a ShowToastEvent
+ *
+ * @param {string} title: Title of the toast, displayed as a heading.
+ * @param {string} message: Message of the toast. It can contain placeholders in
+ * the form of {0} ... {N}. The placeholders are replaced with the links from
+ * messageData param
+ * @param {string} mode: Mode of the toast
+ * @param {array} messageData: List of values that replace the {index} placeholders
+ * in the message param
+ */
+const showToast = (title, message, variant, mode, messageData) => {
+    const event = new ShowToastEvent({
+        title: title,
+        message: message,
+        variant: variant,
+        mode: mode,
+        messageData: messageData
+    });
+    dispatchEvent(event);
+}
+
 export {
     debouncify,
     deepClone,
@@ -448,6 +472,7 @@ export {
     mutable,
     sort,
     shiftToIndex,
+    showToast,
     removeByProperty,
     format,
     hasNestedProperty,
