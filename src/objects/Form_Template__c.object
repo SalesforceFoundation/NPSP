@@ -186,17 +186,6 @@
         <type>LongTextArea</type>
         <visibleLines>5</visibleLines>
     </fields>
-    <fields>
-        <fullName>Default_Batch_Table_Columns_JSON__c</fullName>
-        <description>API names for fields included in the batch gift table for this Gift Entry template. Stored as JSON.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>API names for fields included in the batch gift table for this Gift Entry template. Stored as JSON.</inlineHelpText>
-        <label>Default Batch Table Columns JSON</label>
-        <length>55000</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>5</visibleLines>
-    </fields>
     <label>Form Template</label>
     <nameField>
         <label>Form Template Name</label>

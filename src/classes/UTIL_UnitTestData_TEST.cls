@@ -500,8 +500,7 @@ public class UTIL_UnitTestData_TEST {
         FORM_Template template = new FORM_Template('Sample Template',
                                                    'This is the description.',
                                                    '1.0',
-                                                   layout,
-                                                   new List<String> {});
+                                                   layout);
         return template;
     }
 

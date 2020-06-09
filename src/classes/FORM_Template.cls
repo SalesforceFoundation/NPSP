@@ -49,11 +49,10 @@ public with sharing class FORM_Template {
     @AuraEnabled public FORM_BatchHeaderField[] batchHeaderFields;
     /* END */
 
-    public FORM_Template(String name, String description, String version, FORM_Layout layout, String[] defaultBatchTableColumns) {
+    public FORM_Template(String name, String description, String version, FORM_Layout layout) {
         this.name = name;
         this.description = description;
         this.version = version;
         this.layout = layout;
-        this.defaultBatchTableColumns = defaultBatchTableColumns;
     }
 }

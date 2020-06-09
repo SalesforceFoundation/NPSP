@@ -38,7 +38,6 @@ import DONATION_DATE_FIELD from '@salesforce/schema/DataImport__c.Donation_Date_
 import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
-import BATCH_TABLE_COLUMNS_JSON_FIELD from '@salesforce/schema/Form_Template__c.Default_Batch_Table_Columns_JSON__c';
 
 const DEFAULT_BATCH_TABLE_HEADERS_WITH_FIELD_MAPPINGS = [
     DONATION_AMOUNT_FIELD.fieldApiName,
@@ -52,7 +51,6 @@ const SKIPPED_BATCH_TABLE_HEADER_FIELDS = [
     DONATION_AMOUNT_FIELD.fieldApiName,
     DONATION_DATE_FIELD.fieldApiName,
     DONATION_CAMPAIGN_SOURCE_FIELD.fieldApiName,
-    BATCH_TABLE_COLUMNS_JSON_FIELD.fieldApiName,
     STATUS_FIELD.fieldApiName,
     FAILURE_INFORMATION_FIELD.fieldApiName,
 ];
@@ -348,6 +346,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     buildBatchTableColumnOptions() {
         if (!this.formSections || this.formSections.length === 0) return;
+
         this.getFormFieldsFromSections(this.formSections).forEach(formField => {
             if (formField.elementType === 'widget') return;
 
@@ -1230,17 +1229,15 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 templateJSON: JSON.stringify(this.formTemplate),
                 name: this.formTemplate.name,
                 description: this.formTemplate.description,
-                formatVersion: FORMAT_VERSION,
-                defaultBatchTableColumns: JSON.stringify(this.selectedBatchTableColumnOptions)
+                formatVersion: FORMAT_VERSION
             };
 
             try {
                 const recordId = await storeFormTemplate(preppedFormTemplate);
                 if (recordId) {
-                    let toastLabel =
-                        this.mode === NEW ?
-                            this.CUSTOM_LABELS.geToastTemplateCreateSuccess
-                            : this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
+                    const toastLabel = this.mode === NEW ?
+                        this.CUSTOM_LABELS.geToastTemplateCreateSuccess :
+                        this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
 
                     const toastMessage = GeLabelService.format(toastLabel, [this.formTemplate.name]);
                     showToast(toastMessage, '', SUCCESS);

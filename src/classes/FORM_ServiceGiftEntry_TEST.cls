@@ -46,11 +46,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
-        fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0, '[]');
+        fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
         FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
-        fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1, '[]');
+        fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
         System.assertEquals(2, fs.getAllFormTemplates().size());
     }
@@ -64,11 +64,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
-        fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0, '[]');
+        fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
         FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
-        fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1, '[]');
+        fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
         Form_Template__c[] formTemplates = [SELECT Id, Name FROM Form_Template__c];
 
@@ -95,8 +95,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             template.name, 
             template.description, 
             template.version, 
-            templateJSON,
-            '[]');
+            templateJSON);
 
         giftEntryCustomSetting.Default_Gift_Entry_Template__c = storedFormTemplateId;
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
@@ -191,7 +190,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
-        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON, '[]');
+        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
 
         Form_Template__c[] formTemplates = [SELECT Id, Name, Template_JSON__c FROM Form_Template__c];
 
@@ -226,8 +225,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             template.name, 
             template.description, 
             template.version, 
-            templateJSON,
-            '[]');
+            templateJSON);
         
         giftEntrySettings.Default_Gift_Entry_Template__c = storedFormTemplateId;
         
@@ -256,8 +254,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
                 template.name,
                 template.description,
                 template.version,
-                templateJSON,
-                '[]');
+                templateJSON);
 
         Form_Template__c[] formTemplates = [
                 SELECT Id, Name, Template_JSON__c
@@ -308,8 +305,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             template.name,
             template.description,
             template.version,
-            templateJSON,
-            '[]');
+            templateJSON);
 
         // gift entry custom settings set up
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
@@ -368,8 +364,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         FORM_Template template = new FORM_Template('Sample Template',
             'This is the description.',
             '1.0',
-            layout,
-            new List<String> {});
+            layout);
 
         return template;
     }

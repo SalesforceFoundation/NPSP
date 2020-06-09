@@ -268,15 +268,13 @@ public with sharing class FORM_ServiceGiftEntry {
                                             String name, 
                                             String description,
                                             String formatVersion,
-                                            String templateJSON,
-                                            String defaultBatchTableColumns) {
+                                            String templateJSON) {
         if (templateJSON != null) {
             Form_Template__c templateObj = new Form_Template__c(Id = id, 
                                                             Name = name,
                                                             Description__c = description,
                                                             Template_JSON__c = templateJSON,
-                                                            Format_Version__c = formatVersion,
-                                                            Default_Batch_Table_Columns_JSON__c = defaultBatchTableColumns);
+                                                            Format_Version__c = formatVersion);
             upsert templateObj;
             return templateObj.Id;
         }
