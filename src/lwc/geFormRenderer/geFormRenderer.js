@@ -918,7 +918,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             );
         }
         if (dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]) {
-            this.handleDonorAccountChange(dataImport);
+            this.handleDonorAccountChange(dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]);
         }
         if (dataImport[DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName]) {
             this.handleDonorContactChange(
