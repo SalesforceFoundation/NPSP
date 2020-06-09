@@ -175,6 +175,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             // operation.
             when NPSP_Settings {
                 handleNPSPSettings();
+                handleRD2Enablement();
             }
 
             // Simple FeatureParameters based on the current organization configuration that can be processed
@@ -257,6 +258,89 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         }
     }
 
+    /**
+    * @description Evaluate the state of the RD2 enablement
+    *   - 0 => RD2 Not enabled
+    *   - 1 => RD2 enabled, but MetaDeploy step was skipped
+    *   - 2 => RD2 enabled, metaDeploy is completed, NextPaymentDate rollup still enabled
+    *   - 3 => RD2 fully Enabled
+    */
+    private void handleRD2Enablement() {
+        Boolean isRD2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
+        Boolean isMetaDeployCompleted = hasMetaDeployCompleted();
+        Boolean isNextPaymentDateRollupDisabled = hasNextPaymentDateRollupDisabled();
+
+        Integer rd2EnablementIndicator;
+
+        if (!isRD2Enabled) {
+            rd2EnablementIndicator = 0;
+
+        } else if (!isMetaDeployCompleted) {
+            rd2EnablementIndicator = 1;
+
+        } else if (!isNextPaymentDateRollupDisabled) {
+            rd2EnablementIndicator = 2;
+
+        } else {
+            rd2EnablementIndicator = 3;
+        }
+
+        featureManager.setPackageIntegerValue(
+                TelemetryParameterName.DataCount_ONETIME_Use.name(),
+                rd2EnablementIndicator
+        );
+    }
+
+    /**
+    * @description Validate if RD2 MetaDeploy is completed in the org by checking the status and Day of Month value
+    * @return Boolean  
+    */
+    private Boolean hasMetaDeployCompleted() {
+        RD2_EnablementDelegate_CTRL.EnablementState state = new RD2_EnablementDelegate_CTRL.EnablementState();
+
+        String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
+
+        if (String.isNotBlank(jsonState)) {
+            state = (RD2_EnablementDelegate_CTRL.EnablementState) JSON.deserialize(jsonState, RD2_EnablementDelegate_CTRL.EnablementState.class);
+        }
+
+        Boolean hasLastDay = false;
+        Boolean remove31st = true;
+
+        List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(
+            String.valueOf(npe03__Recurring_Donation__c.SObjectType),
+            SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c.Name
+        );
+
+        for (SelectOption option : lastDayOfMonthOptions) {
+            if (option.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                hasLastDay = true;
+            } else if (option.getValue() == '31') {
+                remove31st = false;
+            }
+        }
+
+        return state.isMetaConfirmed && state.isMetaLaunched && hasLastDay && remove31st;
+    }
+
+    /**
+    * @description Validate if Next Payment Date Rollup is disabled
+    * @return Boolean  
+    */
+    private Boolean hasNextPaymentDateRollupDisabled() {
+        List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
+        if (rdRollups == null) {
+            return true;
+        }
+
+        for (Rollup__mdt rlp : rdRollups) {
+            if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
+                return false;
+            }
+        }
+
+        return true;
+    }
     /**
      * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
      * If greater than 0, then consider AdvancedMultiCurrency to be enabled within an organization. This accounts for
