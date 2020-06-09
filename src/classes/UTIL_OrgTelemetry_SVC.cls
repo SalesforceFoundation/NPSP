@@ -266,28 +266,24 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     *   - 3 => RD2 fully Enabled
     */
     private void handleRD2Enablement() {
-        Boolean isRD2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
-        Boolean isMetaDeployCompleted = hasMetaDeployCompleted();
-        Boolean isNextPaymentDateRollupDisabled = hasNextPaymentDateRollupDisabled();
+        Integer rd2EnablementStateIndicator;
 
-        Integer rd2EnablementIndicator;
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            rd2EnablementStateIndicator = 0;
 
-        if (!isRD2Enabled) {
-            rd2EnablementIndicator = 0;
+        } else if (!hasMetaDeployCompleted()) {
+            rd2EnablementStateIndicator = 1;
 
-        } else if (!isMetaDeployCompleted) {
-            rd2EnablementIndicator = 1;
-
-        } else if (!isNextPaymentDateRollupDisabled) {
-            rd2EnablementIndicator = 2;
+        } else if (!hasNextPaymentDateRollupDisabled()) {
+            rd2EnablementStateIndicator = 2;
 
         } else {
-            rd2EnablementIndicator = 3;
+            rd2EnablementStateIndicator = 3;
         }
 
         featureManager.setPackageIntegerValue(
                 TelemetryParameterName.DataCount_ONETIME_Use.name(),
-                rd2EnablementIndicator
+                rd2EnablementStateIndicator
         );
     }
 
@@ -304,23 +300,23 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             state = (RD2_EnablementDelegate_CTRL.EnablementState) JSON.deserialize(jsonState, RD2_EnablementDelegate_CTRL.EnablementState.class);
         }
 
-        Boolean hasLastDay = false;
-        Boolean remove31st = true;
-
         List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(
             String.valueOf(npe03__Recurring_Donation__c.SObjectType),
             SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c.Name
         );
 
+        Boolean hasLastDay = false;
+        Boolean is31stRemoved = true;
+
         for (SelectOption option : lastDayOfMonthOptions) {
             if (option.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
                 hasLastDay = true;
             } else if (option.getValue() == '31') {
-                remove31st = false;
+                is31stRemoved = false;
             }
         }
 
-        return state.isMetaConfirmed && state.isMetaLaunched && hasLastDay && remove31st;
+        return state.isMetaConfirmed && state.isMetaLaunched && hasLastDay && is31stRemoved;
     }
 
     /**
