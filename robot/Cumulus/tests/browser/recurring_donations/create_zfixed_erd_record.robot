@@ -10,7 +10,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Enable RD2
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # Setup a contact with parameters specified
@@ -61,7 +61,7 @@ Create Fixed Recurring Donation With Monthly Installment
     ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
 
     Validate Field Values Under Section
-    ...                                     Recurring Donation Name=${data}[account][Name] $${amount} - Recurring
+    #...                                     Recurring Donation Name=${data}[account][Name] $${amount} - Recurring
     ...                                     Account=${data}[account][Name]
     ...                                     Amount=$100.00
     ...                                     Status=Active
