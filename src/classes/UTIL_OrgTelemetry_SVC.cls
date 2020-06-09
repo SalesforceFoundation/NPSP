@@ -271,10 +271,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             rd2EnablementStateIndicator = 0;
 
-        } else if (!hasMetaDeployCompleted()) {
+        } else if (isMetaDeployNotCompleted()) {
             rd2EnablementStateIndicator = 1;
 
-        } else if (!hasNextPaymentDateRollupDisabled()) {
+        } else if (isNextPaymentDateRollupEnabled()) {
             rd2EnablementStateIndicator = 2;
 
         } else {
@@ -291,7 +291,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     * @description Validate if RD2 MetaDeploy is completed in the org by checking the status and Day of Month value
     * @return Boolean  
     */
-    private Boolean hasMetaDeployCompleted() {
+    private Boolean isMetaDeployNotCompleted() {
         RD2_EnablementDelegate_CTRL.EnablementState state = new RD2_EnablementDelegate_CTRL.EnablementState();
 
         String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
@@ -317,26 +317,26 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             }
         }
 
-        return state.isMetaConfirmed && state.isMetaLaunched && hasLastDay && is31stRemoved;
+        return !(state.isMetaConfirmed && state.isMetaLaunched && hasLastDay && is31stRemoved);
     }
 
     /**
     * @description Validate if Next Payment Date Rollup is disabled
     * @return Boolean  
     */
-    private Boolean hasNextPaymentDateRollupDisabled() {
+    private Boolean isNextPaymentDateRollupEnabled() {
         List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
         if (rdRollups == null) {
-            return true;
+            return false;
         }
 
         for (Rollup__mdt rlp : rdRollups) {
             if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
     /**
      * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
