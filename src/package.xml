@@ -3699,6 +3699,7 @@
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>rd2EntryForm</members>
+        <members>rd2EntryFormScheduleSection</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
