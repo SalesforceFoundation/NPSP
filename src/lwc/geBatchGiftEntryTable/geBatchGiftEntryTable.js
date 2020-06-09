@@ -1,25 +1,29 @@
 import {LightningElement, api, track} from 'lwc';
-import getDataImportModel
-    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
-import getDataImportRows
-    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
-import GeFormService from 'c/geFormService';
-import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
-import FAILURE_INFORMATION_FIELD
-    from '@salesforce/schema/DataImport__c.FailureInformation__c';
-import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import {deleteRecord} from 'lightning/uiRecordApi';
-import {handleError} from 'c/utilTemplateBuilder';
+
+import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
+import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
+
+import {handleError} from 'c/utilTemplateBuilder';
+import {isNotEmpty, isEmpty} from 'c/utilCommon';
+import GeListView from 'c/geListView';
+import GeFormService from 'c/geFormService';
+
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
-import commonOpen from '@salesforce/label/c.commonOpen';
-import { isNotEmpty } from 'c/utilCommon';
 
-export default class GeBatchGiftEntryTable extends LightningElement {
+import commonOpen from '@salesforce/label/c.commonOpen';
+
+import DATAIMPORT_INFO from '@salesforce/schema/DataImport__c';
+import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
+import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+
+export default class GeBatchGiftEntryTable extends GeListView {
     @api batchId;
     @track ready = false;
 
@@ -60,10 +64,22 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api expectedCount;
     @track isLoaded = true;
 
+    fieldMappings;
+
+    constructor() {
+        super(DATAIMPORT_INFO.objectApiName);
+    }
+
     connectedCallback() {
-        if (this.batchId) {
-            this.loadBatch();
-        }
+        GeFormService.getFormTemplate()
+            .then( response => {
+                    this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
+                    if (this.batchId) {
+                        this.loadBatch();
+                    }
+                }
+            )
     }
 
     setReady() {
@@ -78,12 +94,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     this._count = dataImportModel.totalCountOfRows;
                     this._total = dataImportModel.totalRowAmount;
                     dataImportModel.dataImportRows.forEach(row => {
+                        let rowRecord = this.convertLookIdsToNames(row.record);
                             this.data.push(
-                                Object.assign(row, row.record));
+                                Object.assign(row, rowRecord));
                         }
                     );
                     this.data = [...this.data];
-                    this.hasData = this.data.length > 0 ? true : false;
+                    this.hasData = this.data.length > 0;
                     this.batchLoaded();
                 }
             )
@@ -101,7 +118,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     @api
     handleSectionsRetrieved(sections) {
-        this.initColumns(this.buildColumns(sections));
+        let columns = this.buildColumns((sections));
+        this.initColumns(columns);
     }
 
     initColumns(userDefinedColumns) {
@@ -113,30 +131,21 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     buildColumns(sections) {
-        const columns = [];
-        sections.forEach(
-            section => {
-                section.elements
-                    .filter(e => e.elementType === 'field')
-                    .forEach(
-                    element => {
-                        const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
-                        if (isNotEmpty(fieldWrapper)) {
-                            const column = {
-                                label: element.customLabel,
-                                fieldName: fieldWrapper.Source_Field_API_Name,
-                                type: GeFormService.getInputTypeFromDataType(
-                                    element.dataType
-                                ) === 'date' ? 'date-local' :
-                                    GeFormService.getInputTypeFromDataType(element.dataType)
-                            };
-                            columns.push(column);
-                        }
+        const fieldApiNames = [];
+        sections.forEach(section => {
+            section.elements
+                .filter(element => element.elementType === 'field')
+                .forEach(element => {
+                    const fieldWrapper = GeFormService.getFieldMappingWrapper(
+                        element.dataImportFieldMappingDevNames[0]
+                    );
+                    if (isNotEmpty(fieldWrapper)) {
+                        fieldApiNames.push(fieldWrapper.Source_Field_API_Name);
                     }
-                );
-            }
-        );
-        return columns;
+                });
+        });
+
+        return this.buildNameFieldColumns(fieldApiNames);
     }
 
     columnsLoaded() {
@@ -150,15 +159,31 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             row[idProperty] === dataRow[idProperty]
         );
 
+        dataRow = this.convertLookIdsToNames(dataRow);
+
         if (existingRowIndex !== -1) {
             this.data.splice(existingRowIndex, 1, dataRow);
             this.data = [...this.data];
         } else {
             this.data = [dataRow, ...this.data];
-            if (this.hasData == false) {
+            if (this.hasData === false) {
                 this.hasData = true;
             }
         }
+    }
+
+    convertLookIdsToNames(dataRow) {
+        Object.keys(dataRow).forEach(field => {
+            if (this.fieldMappings.hasOwnProperty(field)) {
+                let fieldInfo = this.objectInfo.fields[field];
+                let referenceField = this.handleReferenceTypeFields(fieldInfo).split('.')[0];
+
+                if (isNotEmpty(referenceField)) {
+                    dataRow[referenceField] = dataRow[referenceField].Name;
+                }
+            }
+        });
+        return dataRow;
     }
 
     handleRowActions(event) {
