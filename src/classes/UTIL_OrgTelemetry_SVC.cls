@@ -175,7 +175,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             // operation.
             when NPSP_Settings {
                 handleNPSPSettings();
-                handleRD2Enablement();
+                handleRD2EnablementState();
             }
 
             // Simple FeatureParameters based on the current organization configuration that can be processed
@@ -265,7 +265,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     *   - 2 => RD2 enabled, metaDeploy is completed, NextPaymentDate rollup still enabled
     *   - 3 => RD2 fully Enabled
     */
-    private void handleRD2Enablement() {
+    private void handleRD2EnablementState() {
         Integer rd2EnablementStateIndicator;
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
@@ -297,7 +297,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
 
         if (String.isNotBlank(jsonState)) {
-            state = (RD2_EnablementDelegate_CTRL.EnablementState) JSON.deserialize(jsonState, RD2_EnablementDelegate_CTRL.EnablementState.class);
+            state = (RD2_EnablementDelegate_CTRL.EnablementState) 
+                JSON.deserialize(jsonState, RD2_EnablementDelegate_CTRL.EnablementState.class);
         }
 
         List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(

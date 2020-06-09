@@ -494,7 +494,7 @@ private class UTIL_OrgTelemetry_TEST {
     /**
     * @description Verifies that DataCount_ONETIME_Use set to 0 when RD2 is not enabled in the org
     */
-    @isTest
+    @IsTest
     private static void validateDataCount_ONETIME_UseSetTo0WhenRD2NotEnabled() {
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
         telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
@@ -515,7 +515,7 @@ private class UTIL_OrgTelemetry_TEST {
     /**
     * @description Verifies that DataCount_ONETIME_Use set to 1 when RD2 is enabled but metadeploy is not completed
     */
-    @isTest
+    @IsTest
     private static void validateDataCount_ONETIME_UseSetTo1WhenMetadeployedNotCompleted() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -539,7 +539,7 @@ private class UTIL_OrgTelemetry_TEST {
     * @description Verifies that DataCount_ONETIME_Use set to 2 when RD2 is enabled, metadeploy is completed,
     *   but Next Payment Date rollup is enabled
     */
-    @isTest
+    @IsTest
     private static void validateDataCount_ONETIME_UseSetTo2WhenNextPaymentDateRollupEnabled() {
         if(!isRD2MetadataDeployed()) {
             return;
@@ -568,7 +568,7 @@ private class UTIL_OrgTelemetry_TEST {
     /**
     * @description Verifies that DataCount_ONETIME_Use set to 3 when RD2 is fully enabled
     */
-    @isTest
+    @IsTest
     private static void validateDataCount_ONETIME_UseSetTo3WhenRD2FullyEnabled() {
         if(!isRD2MetadataDeployed()) {
             return;
