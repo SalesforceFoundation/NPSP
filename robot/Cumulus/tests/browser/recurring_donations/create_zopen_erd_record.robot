@@ -86,7 +86,7 @@ Create Open Recurring Donation With Monthly Installment
     Wait Until Loading Is Complete
 
     # validate recurring donation statistics current and next year value
-    Validate Field Values Under Section     Recurring Donation Statistics
+    Validate Field Values Under Section     Statistics
     ...                                     Current Year Value=$${currentvalue}.00
     ...                                     Next Year Value=$1,200.00
 
@@ -95,8 +95,4 @@ Create Open Recurring Donation With Monthly Installment
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
     Navigate To And Validate Field Value    Stage                          contains                        Pledged
 
-    #Validate the number of opportunities on UI, Verify Opportinity got created in the backend and validate the stage on opportunity is Pledged
-    Go To Page                              Details
-    ...                                     npe03__Recurring_Donation__c
-    ...                                     object_id=${rd_id}
-    Validate Related Record Count           Opportunities                                                    1
+
