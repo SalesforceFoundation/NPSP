@@ -159,7 +159,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     static void givenABatchHasDefinedTableColumnsWhenCalledReturnsListOfFieldApiNames() {
         DataImportBatch__c dataImportBatch = new DataImportBatch__c();
         dataImportBatch.Name = 'Batch 1';
-        dataImportBatch.Batch_Table_Columns_JSON__c =
+        dataImportBatch.Batch_Table_Columns__c =
             JSON.serialize(new String[] { 'donorLink', 'matchedRecordUrl', 'status__c' });
 
         insert dataImportBatch;

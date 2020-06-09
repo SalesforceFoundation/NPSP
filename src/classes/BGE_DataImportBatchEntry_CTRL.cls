@@ -403,13 +403,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     private static String[] getGiftEntryDefinedBatchTableColumns(Id recordId) {
         DataImportBatch__c batch =
-            [SELECT Batch_Table_Columns_JSON__c FROM DataImportBatch__c WHERE Id =: recordId];
+            [SELECT Batch_Table_Columns__c FROM DataImportBatch__c WHERE Id =: recordId];
 
-        if (batch.Batch_Table_Columns_JSON__c == null) {
+        if (batch.Batch_Table_Columns__c == null) {
             return new String[] { };
         }
 
-        return (String[]) JSON.deserialize(batch.Batch_Table_Columns_JSON__c, String[].class);
+        return (String[]) JSON.deserialize(batch.Batch_Table_Columns__c, String[].class);
     }
 
     /*******************************************************************************************************
