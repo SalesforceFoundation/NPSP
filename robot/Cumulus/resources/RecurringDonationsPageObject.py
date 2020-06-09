@@ -48,7 +48,7 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
             active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format(section)
             number_fields = ['Amount','Installment Frequency']
             date_fields =  ['Effective Date']
-            self.selenium.wait_until_element_is_visible(active_schedule_card)
+            self.selenium.wait_until_element_is_visible(active_schedule_card,60)
             for label, value in kwargs.items():
                 if label in number_fields:
                     locator = npsp_lex_locators["erd"]["formatted_number"].format(label)
