@@ -144,8 +144,7 @@ public with sharing class FORM_ServiceGiftEntry {
                 Name,
                 Template_JSON__c,
                 Description__c,
-                Format_Version__c,
-                Default_Batch_Table_Columns__c
+                Format_Version__c
             FROM Form_Template__c
             WITH SECURITY_ENFORCED
             ORDER BY Name ASC
