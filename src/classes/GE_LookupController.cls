@@ -46,12 +46,16 @@ public with sharing class GE_LookupController {
      */
     @AuraEnabled(cacheable=true)
     public static List<LookupResult> doSearch(String searchValue, String sObjectType) {
-        String likeLike = '%' + searchValue + '%';
-        String queryString = 'SELECT Id, Name FROM ' + String.escapeSingleQuotes(sObjectType) + ' WHERE Name LIKE :likeLike';
+        String formattedValue = '\'' + String.escapeSingleQuotes(searchValue) + '\'';
+        String searchTemplate = 'FIND {0} IN NAME FIELDS Returning {1} LIMIT 50';
+        List<String> args = new List<String>{formattedValue, sObjectType + '(Name)'};
+        String query = String.format(searchTemplate, args);
 
         List<LookupResult> results = new List<LookupResult>();
-        for(SObject result : Database.query(queryString)) {
-            results.add(new LookupResult(result));
+        for(List<SObject> queryResults : Search.query(query)) {
+            for(SObject queryResult : queryResults) {
+                results.add(new LookupResult(queryResult));
+            }
         }
 
         return results;
