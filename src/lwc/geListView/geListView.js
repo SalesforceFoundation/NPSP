@@ -48,6 +48,12 @@ const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geListView extends LightningElement {
 
+    constructor(objectApiName, userId) {
+        super();
+
+        this.objectApiName = objectApiName;
+    }
+
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -77,7 +83,6 @@ export default class geListView extends LightningElement {
     @track orderedByInfo;
 
     columnHeadersByFieldApiName;
-    currentUserId;
     isLoaded = false;
     hasAdditionalRows = false;
 
@@ -202,7 +207,10 @@ export default class geListView extends LightningElement {
 
     handleImperativeRefresh = async () => {
         this.isLoading = true;
-        this.setDatatableColumns(this.selectedColumnHeaders);
+
+        let columns = this.buildNameFieldColumns(this.selectedColumnHeaders);
+        this.setDatatableColumns(columns);
+
         this.setDatatableActions();
         await this.getRecords(this.columns)
             .catch(error => {
@@ -260,7 +268,8 @@ export default class geListView extends LightningElement {
         this.selectedColumnHeaders = this.setSelectedColumnHeaders(columnHeaderData);
 
         // Build the columns for the datatable using the currently selected column headers
-        this.setDatatableColumns(this.selectedColumnHeaders);
+        let columns = this.buildNameFieldColumns(this.selectedColumnHeaders);
+        this.setDatatableColumns(columns);
 
         // Set the datatable actions
         this.setDatatableActions();
@@ -374,27 +383,25 @@ export default class geListView extends LightningElement {
         return options;
     }
 
-    /*******************************************************************************
-    * @description Method builds a list of options used to populate the available
-    * fields in the utilDualListbox component. utilDualListbox is used in the list
-    * settings modal.
-    *
-    * @param {list} headerFieldApiNames: List of fields from the object describe info.
-    */
-    setDatatableColumns(headerFieldApiNames) {
+    buildNameFieldColumns(fieldApiNames) {
         this.columnEntriesByName = {};
-        this.columns = [];
+        let _columns = [];
 
-        for (let i = 0; i < headerFieldApiNames.length; i++) {
-            let fieldApiName = headerFieldApiNames[i];
+        for (let i = 0; i < fieldApiNames.length; i++) {
+            let fieldApiName = fieldApiNames[i];
             const fieldDescribe = this.objectInfo.fields[fieldApiName];
+
             let columnEntry = {
                 fieldApiName: fieldDescribe.apiName,
                 label: fieldDescribe.label,
                 sortable: fieldDescribe.sortable
             };
 
-            columnEntry = this.handleReferenceTypeFields(fieldDescribe, columnEntry);
+            let referenceField = this.handleReferenceTypeFields(fieldDescribe);
+
+            if (isNotEmpty(referenceField)) {
+                columnEntry.fieldApiName = referenceField;
+            }
 
             // Special case for relationship references e.g. 'CreatedBy.Name'
             // so we can display the Name property of the reference in the table.
@@ -413,12 +420,32 @@ export default class geListView extends LightningElement {
             columnEntry.fieldName = fieldApiName;
             columnEntry.type = convertedType ? convertedType : fieldDescribe.dataType.toLowerCase();
 
-            this.handleTypesAttribute(columnEntry, fieldApiName);
+            columnEntry = this.handleTypesAttribute(columnEntry, fieldApiName);
 
-            this.columns = [...this.columns, columnEntry];
-            this.columnEntriesByName[columnEntry.fieldName] = columnEntry;
+            _columns.push(columnEntry)
         }
+
+        return _columns;
     }
+
+
+    /*******************************************************************************
+    * @description Set json datable columns once all columns are built to improve rendering performance
+    *
+    * @param {array} columnEntries: List of json columns
+    */
+    setDatatableColumns(columnEntries) {
+        let _columnEntriesByName = {};
+
+        columnEntries.forEach(column => {
+            _columnEntriesByName[column.fieldName] = column;
+        });
+
+        this.columnEntriesByName = _columnEntriesByName;
+        this.columns = columnEntries;
+    }
+
+
 
     /*******************************************************************************
     * @description Method checks to see if the provided field is a reference and
@@ -427,11 +454,12 @@ export default class geListView extends LightningElement {
     * @param {object} fieldDescribe: Field describe from the schema.
     * @param {object} columnEntry: A column header entry for lightning-datatable.
     */
-    handleReferenceTypeFields(fieldDescribe, columnEntry) {
+    handleReferenceTypeFields(fieldDescribe) {
         const isRelationshipField =
             fieldDescribe.relationshipName &&
             fieldDescribe.referenceToInfos &&
             fieldDescribe.referenceToInfos.length >= 1;
+        let fieldApiName = '';
 
         if (isRelationshipField) {
             const reference = fieldDescribe.referenceToInfos[0];
@@ -440,10 +468,10 @@ export default class geListView extends LightningElement {
             const nameFields = isUserReference ? isUserReference.nameFields : reference.nameFields;
             const nameField = nameFields.find(field => field === NAME) || nameFields[0];
 
-            columnEntry.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
+            fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
         }
 
-        return columnEntry;
+        return fieldApiName;
     }
 
     /*******************************************************************************
@@ -493,6 +521,7 @@ export default class geListView extends LightningElement {
                 target: _SELF
             }
         }
+        return columnEntry;
     }
 
     /*******************************************************************************
@@ -673,3 +702,4 @@ export default class geListView extends LightningElement {
           });
     }
 }
+
