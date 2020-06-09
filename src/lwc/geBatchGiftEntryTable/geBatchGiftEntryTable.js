@@ -172,6 +172,14 @@ export default class GeBatchGiftEntryTable extends GeListView {
         }
     }
 
+    /**
+     * @description Iterates through the properties for a data row and overrides any custom reference fields with the
+     * name value for the field instead of the id. This change is only made on the client and does not affect the
+     * field value used by BDI, which remains as the record id.
+     *
+     * @param {Object} dataRow - Each data row in the table
+     * @return Object
+     */
     convertLookIdsToNames(dataRow) {
         Object.keys(dataRow).forEach(field => {
             if (this.fieldMappings.hasOwnProperty(field)) {
@@ -280,7 +288,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
         }));
     }
 
-    /**
+    /*************************************************************************************
      * @description Internal setters used to communicate the current count and total
      *              up to the App, which needs them to keep track of whether the batch's
      *              expected totals match.

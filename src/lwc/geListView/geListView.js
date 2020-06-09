@@ -383,6 +383,13 @@ export default class geListView extends LightningElement {
         return options;
     }
 
+    /************************************************************************************************************
+     * @description Convert all reference type columns so that column values can be dynamically assigned to each
+     * column in the lightning data table
+     *
+     * @param {array} fieldApiNames: List of field api names to check if reference conversation is needed
+     * @return array
+     */
     buildNameFieldColumns(fieldApiNames) {
         this.columnEntriesByName = {};
         let _columns = [];
