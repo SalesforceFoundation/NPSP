@@ -9,28 +9,18 @@ import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
 import FIELD_PLANNED_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
-import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 
-import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
-import donationSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
-
 export default class rd2EntryFormScheduleSection extends LightningElement {
-
-    labels = Object.freeze({
-        donationSectionHeader,
-        currencyFieldLabel
-    });
 
     @api recordId;
     @track isLoading = true;
     isNew = false;
 
-    @track isMultiCurrencyEnabled = false;
     @track fields = {};
     rdObjectInfo;
     dayOfMonthPicklistValues;
@@ -46,7 +36,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
         getSetting({ parentId: null })
             .then(response => {
-                this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.dayOfMonthLastDay = response.dayOfMonthLastDay;
             })
             .catch((error) => {
@@ -95,13 +84,11 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     */
     setFields(fieldInfos) {
         this.fields.recurringType = this.extractFieldInfo(fieldInfos[FIELD_RECURRING_TYPE.fieldApiName]);
-        this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
         this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
         this.fields.period = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_PERIOD.fieldApiName]);
         this.fields.installmentFrequency = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
         this.fields.dayOfMonth = this.extractFieldInfo(fieldInfos[FIELD_DAY_OF_MONTH.fieldApiName]);
         this.fields.startDate = this.extractFieldInfo(fieldInfos[FIELD_START_DATE.fieldApiName]);
-        this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
         this.fields.plannedInstallments = this.extractFieldInfo(fieldInfos[FIELD_PLANNED_INSTALLMENTS.fieldApiName]);
     }
 
@@ -149,7 +136,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     /***
     * @description Sets Day of Month to current day for a new Recurring Donation record.
     * When no match is found, ie today is day 31 in a month, return 'Last_Day' API value.
-    * @return String Current day 
+    * @return String Current day
     */
     getCurrentDayOfMonth() {
         let currentDay = new Date().getDate().toString();

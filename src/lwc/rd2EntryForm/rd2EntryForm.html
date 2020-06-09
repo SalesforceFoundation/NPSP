@@ -51,7 +51,34 @@
                         </div>
                     </div>
 
-                    <c-rd2-entry-form-schedule-section record-id={recordId}></c-rd2-entry-form-schedule-section>
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small">{customLabels.scheduleSectionHeader}</span>
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content">
+
+                            <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                                    <lightning-input-field field-name={fields.amount.apiName} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                                    <template if:true={isMultiCurrencyEnabled}>
+                                        <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
+                                            <label for="currencyField"
+                                                   class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                            <lightning-input-field id="currencyField" field-name={fields.currency.apiName}
+                                                                   variant="label-hidden" required>
+                                            </lightning-input-field>
+                                        </div>
+                                    </template>
+                                </lightning-layout-item>
+                            </lightning-layout>
+
+                            <c-rd2-entry-form-schedule-section record-id={recordId}></c-rd2-entry-form-schedule-section>
+                        </div>
+                    </div>
 
                     <div class="slds-section slds-is-open">
                         <h3 class="slds-section__title slds-theme_shade">

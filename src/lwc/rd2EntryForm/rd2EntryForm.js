@@ -15,13 +15,18 @@ import FIELD_ACCOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03
 import FIELD_CONTACT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 import FIELD_DATE_ESTABLISHED from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Date_Established__c';
 import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
+import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
+import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
+import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 
+import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
 import newHeaderLabel from '@salesforce/label/c.RD2_EntryFormHeader';
 import editHeaderLabel from '@salesforce/label/c.commonEdit';
 import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHeader';
+import scheduleSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
 import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHeader';
 import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccessMessage';
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
@@ -36,13 +41,16 @@ export default class rd2EntryForm extends LightningElement {
         cancelButtonLabel,
         saveButtonLabel,
         donorSectionHeader,
-        otherSectionHeader
+        otherSectionHeader,
+        scheduleSectionHeader,
+        currencyFieldLabel
     });
 
     @api parentId;
     @api recordId;
 
     @track record;
+    @track isMultiCurrencyEnabled = false;
     @track contactId;
     @track accountId;
     @track fields = {};
@@ -59,7 +67,7 @@ export default class rd2EntryForm extends LightningElement {
     @track errorMessage = {};
 
     /***
-    * @description Dynamic render edit form CSS to show/hide the edit form 
+    * @description Dynamic render edit form CSS to show/hide the edit form
     */
     get cssEditForm() {
         //Note: all of these flags need to be checked before the sections are displayed.
@@ -78,6 +86,7 @@ export default class rd2EntryForm extends LightningElement {
         getSetting({ parentId: this.parentId })
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
+                this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.handleParentIdType(response.parentSObjectType);
             })
             .catch((error) => {
@@ -150,6 +159,8 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
         this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
         this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
+        this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
+        this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
     }
 
     /***
@@ -183,7 +194,7 @@ export default class rd2EntryForm extends LightningElement {
 
 
     /***
-    * @description Overrides the standard submit. 
+    * @description Overrides the standard submit.
     * Collects fields displayed on the form and any integrated LWC (for example Schedule section)
     * and submits them for the record insert or update.
     */
@@ -241,7 +252,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Contruct error wrapper from the error event 
+    * @description Contruct error wrapper from the error event
     *   error.body is the error from apex calls
     *   error.body.output.errors is for AuraHandledException messages
     *   error.body.message errors is the error from wired service
