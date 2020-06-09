@@ -24,7 +24,7 @@ import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__
 import DATA_IMPORT_BATCH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
 import DATA_IMPORT_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import DATA_IMPORT_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c';
-import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns_JSON__c';
+import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 
 const NAME = 'name';
 const ID = 'id';
