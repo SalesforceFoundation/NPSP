@@ -274,7 +274,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         } else if (isMetaDeployNotCompleted()) {
             rd2EnablementStateIndicator = 1;
 
-        } else if (isNextPaymentDateRollupEnabled()) {
+        } else if (!isNextPaymentDateRollupDisabled()) {
             rd2EnablementStateIndicator = 2;
 
         } else {
@@ -324,19 +324,19 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     * @description Validate if Next Payment Date Rollup is disabled
     * @return Boolean  
     */
-    private Boolean isNextPaymentDateRollupEnabled() {
+    private Boolean isNextPaymentDateRollupDisabled() {
         List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
         if (rdRollups == null) {
-            return false;
+            return true;
         }
 
         for (Rollup__mdt rlp : rdRollups) {
             if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
     /**
      * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
