@@ -198,9 +198,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get batchTableColumnsAccessErrorMessage() {
         if (!this.disableBatchTableColumnsSubtab) return '';
+        const geErrorFLSBody = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorFLSBody,
+            [this._batchTableLabelAccessErrorLabel]);
 
-        return GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody,
-            [this._batchTableLabelAccessErrorLabel])
+        return `${this.CUSTOM_LABELS.geErrorFLSBatchTableColumns} ${geErrorFLSBody}`;
     }
 
     /*******************************************************************************

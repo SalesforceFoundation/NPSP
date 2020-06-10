@@ -2206,6 +2206,7 @@
         <members>geErrorDonorTypeValidation</members>
         <members>geErrorDonorTypeValidationSingle</members>
         <members>geErrorExistingTemplateName</members>
+        <members>geErrorFLSBatchTableColumns</members>
         <members>geErrorFLSBody</members>
         <members>geErrorFLSHeader</members>
         <members>geErrorFieldPermission</members>

@@ -6045,6 +6045,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Check with your Salesforce admin about your object access. You must have permission to edit the following objects: {0}</value>
     </labels>
     <labels>
+        <fullName>geErrorFLSBatchTableColumns</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Additional information about why a user can't update batch table columns</shortDescription>
+        <value>You're unable to modify your Batch Table Columns.</value>
+    </labels>
+    <labels>
         <fullName>geErrorFLSHeader</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

@@ -114,6 +114,7 @@ import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
 import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
+import geErrorFLSBatchTableColumns from '@salesforce/label/c.geErrorFLSBatchTableColumns';
 import geErrorFLSBody from '@salesforce/label/c.geErrorFLSBody';
 import geErrorFLSHeader from '@salesforce/label/c.geErrorFLSHeader';
 import geErrorFieldPermission from '@salesforce/label/c.geErrorFieldPermission';
@@ -326,6 +327,7 @@ class GeLabelService {
         geErrorDonorTypeValidation,
         geErrorDonorTypeValidationSingle,
         geErrorExistingTemplateName,
+        geErrorFLSBatchTableColumns,
         geErrorFLSBody,
         geErrorFLSHeader,
         geErrorFieldPermission,
