@@ -9,6 +9,7 @@ import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name
 import GeLabelService from 'c/geLabelService';
 
 // Import schema for excluded template batch header fields
+import DI_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
 import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
@@ -131,6 +132,7 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_DEFAULTS_INFO.fieldApiName,
     DI_BATCH_GIFT_ENTRY_VERSION_INFO.fieldApiName,
     DI_BATCH_FORM_TEMPLATE_INFO.fieldApiName,
+    DI_BATCH_TABLE_COLUMNS_FIELD.fieldApiName,
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 

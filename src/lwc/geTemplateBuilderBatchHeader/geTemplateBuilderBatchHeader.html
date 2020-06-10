@@ -9,35 +9,48 @@
                 <lightning-tab label={CUSTOM_LABELS.geTabBatchTableColumns}
                                class='slds-p-around_none'>
                     <lightning-layout multiple-rows='true'>
-                        <lightning-layout-item size='12'
-                                               small-device-size='12'
-                                               medium-device-size='4'
-                                               large-device-size='3'
-                                               class='left-panel'
-                                               padding='around-large'>
-                            <p class='slds-text-body_regular slds-p-bottom_large'>
-                                {CUSTOM_LABELS.geBodyBatchTableColumnsPart1}
-                            </p>
-                            <p class='slds-text-body_regular'>
-                                <lightning-formatted-rich-text value={CUSTOM_LABELS.geBodyBatchTableColumnsPart2}>
-                                </lightning-formatted-rich-text>
-                            </p>
-                        </lightning-layout-item>
-                        <lightning-layout-item size='12'
-                                               small-device-size='12'
-                                               medium-device-size='8'
-                                               large-device-size='9'
-                                               class='right-panel'
-                                               padding='horizontal-large'>
-                            <lightning-dual-listbox name="languages"
-                                                    source-label={CUSTOM_LABELS.geLabelCustomTableSourceFields}
-                                                    selected-label={CUSTOM_LABELS.geLabelCustomTableSelectedFields}
-                                                    options={availableBatchTableColumnOptions}
-                                                    value={selectedBatchTableColumnOptions}
-                                                    onchange={handleChangeBatchTableColumnSelection}
-                                                    class='slds-p-top_small slds-p-bottom_large'>
-                            </lightning-dual-listbox>
-                        </lightning-layout-item>
+                        <template if:true={disableBatchTableColumnsSubtab}>
+                            <lightning-layout-item size='12'
+                                                   class='slds-align_absolute-center'
+                                                   padding='around-large'>
+                                <c-util-illustration title={CUSTOM_LABELS.geErrorFLSHeader}
+                                                     message={batchTableColumnsAccessErrorMessage}
+                                                     size="small"
+                                                     variant="lake-mountain">
+                                </c-util-illustration>
+                            </lightning-layout-item>
+                        </template>
+                        <template if:false={disableBatchTableColumnsSubtab}>
+                            <lightning-layout-item size='12'
+                                                   small-device-size='12'
+                                                   medium-device-size='4'
+                                                   large-device-size='3'
+                                                   class='left-panel'
+                                                   padding='around-large'>
+                                <p class='slds-text-body_regular slds-p-bottom_large'>
+                                    {CUSTOM_LABELS.geBodyBatchTableColumnsPart1}
+                                </p>
+                                <p class='slds-text-body_regular'>
+                                    <lightning-formatted-rich-text value={CUSTOM_LABELS.geBodyBatchTableColumnsPart2}>
+                                    </lightning-formatted-rich-text>
+                                </p>
+                            </lightning-layout-item>
+                            <lightning-layout-item size='12'
+                                                   small-device-size='12'
+                                                   medium-device-size='8'
+                                                   large-device-size='9'
+                                                   class='right-panel'
+                                                   padding='horizontal-large'>
+                                <lightning-dual-listbox name="languages"
+                                                        source-label={CUSTOM_LABELS.geLabelCustomTableSourceFields}
+                                                        selected-label={CUSTOM_LABELS.geLabelCustomTableSelectedFields}
+                                                        options={availableBatchTableColumnOptions}
+                                                        value={selectedBatchTableColumnOptions}
+                                                        onchange={handleChangeBatchTableColumnSelection}
+                                                        class='slds-p-top_small slds-p-bottom_large'>
+                                </lightning-dual-listbox>
+                            </lightning-layout-item>
+                        </template>
                     </lightning-layout>
                 </lightning-tab>
                 <lightning-tab label={CUSTOM_LABELS.geTabBatchHeader}

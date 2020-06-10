@@ -29,6 +29,7 @@ import {
     removeFromArray
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
+import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
 // imports used for default batch table column headers
@@ -141,6 +142,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (error) return handleError(error);
         if (data) {
             this.diBatchInfo = data;
+            this._dataImportBatchPermissionErrors =
+                this.checkSingleFieldPermission(
+                    this.diBatchInfo, DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName);
             this.dataImportObjectName = DATA_IMPORT_OBJECT.objectApiName;
         }
     }
@@ -179,6 +183,24 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get inSelectFieldsTab() {
         return this.activeTab === this.TabEnums.FORM_FIELDS_TAB ? true : false;
+    }
+
+    get disableBatchTableColumnsSubtab() {
+        if (!this._dataImportBatchPermissionErrors) return false;
+
+        this._batchTableLabelAccessErrorLabel =
+            this._dataImportBatchPermissionErrors
+                .noAccessFields
+                .find(field => field.includes(DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName));
+
+        return this._batchTableLabelAccessErrorLabel ? true : false;
+    }
+
+    get batchTableColumnsAccessErrorMessage() {
+        if (!this.disableBatchTableColumnsSubtab) return '';
+
+        return GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody,
+            [this._batchTableLabelAccessErrorLabel])
     }
 
     /*******************************************************************************
@@ -239,6 +261,32 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             handleError(error);
         }
     };
+
+    checkSingleFieldPermission(objectSchema, fieldApiName) {
+        return this.checkFieldPermissions(objectSchema, [fieldApiName]);
+    }
+
+    checkFieldPermissions(objectSchema, fieldApiNames) {
+        if (!objectSchema && !objectSchema.fields) return;
+
+        this._noReadAccessFields = [];
+        this._noEditAccessFields = [];
+
+        fieldApiNames.forEach(fieldApiName => {
+            const field = objectSchema.fields[fieldApiName];
+            if (!field) return this._noReadAccessFields.push(`${objectSchema.label}: ${fieldApiName}`);
+
+            if (field) {
+                const canEdit = field.updateable;
+                if (!canEdit) return this._noEditAccessFields.push(`${objectSchema.label}: ${fieldApiName}`);
+            }
+        });
+
+        return {
+            objectApiName: objectSchema.apiName,
+            noAccessFields: [...this._noReadAccessFields, ...this._noEditAccessFields],
+        }
+    }
 
     /*******************************************************************************
     * @description Checks for a form template record id on initial load and sets
@@ -1218,7 +1266,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.formLayout.sections = this.formSections;
             this.formTemplate.batchHeaderFields = this.batchHeaderFields;
             this.formTemplate.layout = this.formLayout;
-            this.formTemplate.defaultBatchTableColumns = this.selectedBatchTableColumnOptions;
+            if (this.disableBatchTableColumnsSubtab && this.mode === NEW) {
+                this.formTemplate.defaultBatchTableColumns = '';
+            } else {
+                this.formTemplate.defaultBatchTableColumns = this.selectedBatchTableColumnOptions;
+            }
 
             // TODO: Currently hardcoded as we're not providing a way to
             // create custom migrated field mapping sets yet.

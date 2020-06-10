@@ -23,6 +23,8 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
+    @api disableBatchTableColumnsSubtab = false;
+    @api batchTableColumnsAccessErrorMessage;
     @api batchFields;
     @api selectedBatchFields;
     @api missingRequiredFields;
