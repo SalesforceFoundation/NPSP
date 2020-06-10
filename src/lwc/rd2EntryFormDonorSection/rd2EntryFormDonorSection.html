@@ -1,0 +1,44 @@
+<template>
+
+    <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c">
+
+        <div class="slds-section slds-is-open">
+
+            <template if:false={isLoading}>
+
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                    <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                        <!-- TODO: Custom Labels Needed -->
+                        <label for="DonorTypeSelect" class="slds-form-element__label slds-no-flex">
+                            <abbr title="required" class="slds-required">*</abbr>
+                            Donor Type
+                        </label>
+                        <select class="slds-select" name="DonorTypeSelect" onchange={handleDonorTypeChange} >
+                            <option value="Organization">Organization</option>
+                            <option value="Household">Household</option>
+                        </select>
+                    </lightning-layout-item>
+
+                    <template if:true={showContactInput}>
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" >
+                            <lightning-input-field field-name={fields.contact.apiName} value={contactId}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                    <template if:true={showAccountInput}>
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                            <lightning-input-field field-name={fields.account.apiName} value={accountId}>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+                    </template>
+
+                </lightning-layout>
+
+            </template>
+
+        </div>
+
+    </lightning-record-edit-form>
+</template>
