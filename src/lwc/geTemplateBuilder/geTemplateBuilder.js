@@ -1269,7 +1269,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.formTemplate.batchHeaderFields = this.batchHeaderFields;
             this.formTemplate.layout = this.formLayout;
             if (this.disableBatchTableColumnsSubtab && this.mode === NEW) {
-                this.formTemplate.defaultBatchTableColumns = '';
+                this.formTemplate.defaultBatchTableColumns = [];
             } else {
                 this.formTemplate.defaultBatchTableColumns = this.selectedBatchTableColumnOptions;
             }
