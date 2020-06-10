@@ -43,7 +43,8 @@ Create Fixed Recurring Donation With Monthly Installment
     Click Object Button                    New
     Wait For Modal                         New                                       Recurring Donation
 
-    # Create Enhanced recurring donation of type  Fixed
+    # Create Enhanced recurring donation of type Fixed
+
     Populate Modal Form
     ...                                    Recurring Donation Name=ERD Recurring Donation Fixed
     ...                                    Amount= ${amount}
