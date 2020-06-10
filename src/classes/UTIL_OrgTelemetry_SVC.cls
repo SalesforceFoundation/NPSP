@@ -288,7 +288,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     }
 
     /**
-    * @description Validate if RD2 MetaDeploy is completed in the org by checking the status and Day of Month value
+    * @description Validate if RD2 MetaDeploy is not executed in the org by checking RD2 Enablement State and Day of Month value
     * @return Boolean  
     */
     private Boolean isMetaDeployNotCompleted() {
