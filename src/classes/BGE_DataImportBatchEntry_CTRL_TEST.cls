@@ -156,29 +156,6 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     }
 
     @isTest
-    static void givenABatchHasDefinedTableColumnsWhenCalledReturnsListOfFieldApiNames() {
-        DataImportBatch__c dataImportBatch = new DataImportBatch__c();
-        dataImportBatch.Name = 'Batch 1';
-        dataImportBatch.Batch_Table_Columns__c =
-            JSON.serialize(new String[] { 'donorLink', 'matchedRecordUrl', 'status__c' });
-
-        insert dataImportBatch;
-
-        Test.startTest();
-        String dataImportModelString = BGE_DataImportBatchEntry_CTRL.getDataImportModel(dataImportBatch.Id);
-        BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel =
-            (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-                JSON.deserialize(dataImportModelString, BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
-        Test.stopTest();
-
-        System.assert(dataImportModel.batchTableColumnSourceFieldApiNames.contains('donorLink'));
-        System.assert(dataImportModel.batchTableColumnSourceFieldApiNames.contains('matchedRecordUrl'));
-        System.assert(dataImportModel.batchTableColumnSourceFieldApiNames.contains('status__c'));
-        System.assertEquals(3, dataImportModel.batchTableColumnSourceFieldApiNames.size(),
-            'Batch Table Columns list have 3 items');
-    }
-
-    @isTest
     static void givenAccountHasMultipleOppsWhenCalledThenAssertReturnedInWrapper() {
         Account account = new Account(Name='TestAccount');
         insert account;
