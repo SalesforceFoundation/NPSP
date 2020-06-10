@@ -2,6 +2,7 @@
 
 Resource       cumulusci/robotframework/Salesforce.robot
 Library        DateTime
+Library        robot/Cumulus/resources/NPSPSettingsPageObject.py
 Library        NPSP.py
 
 *** Variables ***
@@ -391,7 +392,7 @@ Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            Recurring Donations
-    ${rd2_enabled} =  Check Rd2 Is Enabled
-    Run Keyword if     "${rd2_enabled}"=="False"
-    ...                 Enable RD2QA
+    ${rd2_enabled} =          Check Rd2 Is Enabled
+    Run Keyword if            "${rd2_enabled}"=="False"
+    ...                       Enable RD2QA
 

@@ -164,21 +164,22 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 isPresent = True
             return isPresent
 
-    @capture_screenshot_on_error
-    def launch_meta_deploy(self):
-        """Clicks on the Metadeploy link from the settings tab, waits for the new tab to open up and ensures that the new tab is loaded
-        After which the handle is switched back to the parent window"""
-    
-        title = "Launch MetaDeploy"
-        tab_title = "Enhanced Recurring Donations Metadata Updates"
-        locator=npsp_lex_locators['erd_metadeploy']['preinstall_validation_btn']
-        self.npsp.click_actions_link(title)
-        self.selenium.select_window("New")
-        self.selenium.wait_until_page_contains_element(locator,
-                                                       error=f"tab {tab_title} is not loaded")
-        title_var  = self.selenium.get_window_titles()
-        self.num_tabs=len(title_var)
-        if  self.num_tabs == 2:
-            self.selenium.select_window(title_var[0])
-        else:
-            return
+    def check_metadeploy_exists(self):
+        """Check if the rd2 metadeploy link is enabled """
+        locator=npsp_lex_locators["erd"]["rd2_installed"]
+        isPresent = False
+        if self.npsp.check_if_element_displayed(locator):
+            isPresent = True
+        return isPresent
+
+    def check_rd2_is_enabled(self):
+        """Verifies that Enhanced Recurring Donations is enabled on the org"""
+        enabled = False
+        if self.npsp.check_submenu_link_exists("Upgrade to Enhanced Recurring Donations"):
+            self.npsp.click_link_with_text("Upgrade to Enhanced Recurring Donations")
+            time.sleep(2)    #This sleep is necessary in this particular scenario
+            if self.check_metadeploy_exists():
+                enabled = True
+        return enabled
+        
+        

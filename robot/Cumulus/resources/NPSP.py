@@ -1561,22 +1561,4 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if self.npsp.check_if_element_exists(locator):
             isPresent = True
         return isPresent
-
-    def check_metadeploy_exists(self):
-        """Check if the rd2 metadeploy link is enabled """
-        locator=npsp_lex_locators["erd"]["rd2_installed"]
-        isPresent = False
-        if self.npsp.check_if_element_displayed(locator):
-            isPresent = True
-        return isPresent
-
-    def check_rd2_is_enabled(self):
-        """Verifies that Enhanced Recurring Donations is enabled on the org"""
-        enabled = False
-        if self.check_submenu_link_exists("Upgrade to Enhanced Recurring Donations"):
-            self.click_link_with_text("Upgrade to Enhanced Recurring Donations")
-            time.sleep(2)    #This sleep is necessary in this particular scenario
-            if self.check_metadeploy_exists():
-                enabled = True
-        return enabled
     
