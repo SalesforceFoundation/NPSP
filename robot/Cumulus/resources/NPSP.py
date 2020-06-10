@@ -766,6 +766,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         return True if elements > 0 else False
 
     def check_if_element_displayed(self, xpath):
+        """ Check for the visibility of an element based on the xpath sent"""
         element = self.selenium.get_webelement(xpath)
         return True if element.is_displayed() else False
     
@@ -1556,6 +1557,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         return out
     
     def check_submenu_link_exists(self,title):
+        """Checks for the presence of the submenu item under the main menu"""
         locator=npsp_lex_locators['link-text'].format(title)
         isPresent = False
         if self.npsp.check_if_element_exists(locator):

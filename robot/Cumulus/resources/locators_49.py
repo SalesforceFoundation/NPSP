@@ -258,6 +258,7 @@ npsp_lex_locators={
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
         'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
         },
+    # Enhanced Recurring Donation (erd) related element locators
     'erd':{
         'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",
         'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
