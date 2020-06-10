@@ -17,8 +17,7 @@ import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 import commonOpen from '@salesforce/label/c.commonOpen';
-import { isNotEmpty } from 'c/utilCommon';
-import { isEmpty } from 'c/util';
+import { isNotEmpty, isEmpty } from 'c/utilCommon';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
