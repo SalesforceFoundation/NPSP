@@ -1563,7 +1563,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         return isPresent
 
     def check_metadeploy_exists(self):
-        """Check if the metadeploy link is enabled"""
+        """Check if the rd2 metadeploy link is enabled """
         locator=npsp_lex_locators["erd"]["rd2_installed"]
         isPresent = False
         if self.npsp.check_if_element_displayed(locator):
