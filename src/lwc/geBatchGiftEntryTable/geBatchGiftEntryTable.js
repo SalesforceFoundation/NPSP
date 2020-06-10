@@ -52,7 +52,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             menuAlignment: 'auto'
         }
     };
-    _userDefinedBatchTableColumnNames;
     _columnsBySourceFieldApiName = {};
 
 
@@ -61,6 +60,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api expectedTotal;
     @api count;
     @api expectedCount;
+    @api userDefinedBatchTableColumnNames;
     @track isLoaded = true;
 
     @api
@@ -106,7 +106,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         );
         this.data = [...this.data];
         this.hasData = this.data.length > 0 ? true : false;
-        this._userDefinedBatchTableColumnNames = dataImportModel.batchTableColumnSourceFieldApiNames;
     }
 
     initColumns(formSections) {
@@ -122,7 +121,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getComputedColumns() {
-        if (isEmpty(this._userDefinedBatchTableColumnNames)) {
+        if (isEmpty(this.userDefinedBatchTableColumnNames)) {
             return this.getAllColumns();
         }
 
@@ -139,7 +138,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     getUserDefinedColums() {
         let userDefinedColumns = [];
-        this._userDefinedBatchTableColumnNames.forEach(columnName => {
+        this.userDefinedBatchTableColumnNames.forEach(columnName => {
             userDefinedColumns.push(this._columnsBySourceFieldApiName[columnName]);
         });
         return userDefinedColumns;
