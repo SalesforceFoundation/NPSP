@@ -317,7 +317,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             }
         }
 
-        return !(state.isMetaConfirmed && state.isMetaLaunched && hasLastDay && is31stRemoved);
+        return !(state.isMetaLaunched && hasLastDay && is31stRemoved);
     }
 
     /**

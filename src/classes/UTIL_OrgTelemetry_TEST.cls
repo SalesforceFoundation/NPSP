@@ -641,7 +641,6 @@ private class UTIL_OrgTelemetry_TEST {
     */
     private static void mockRD2EnablementState() {
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
-        expectedState.isMetaConfirmed = true;
         expectedState.isMetaLaunched = true;
         RD2_EnablementDelegate_TEST.setEnablementState(JSON.serialize(expectedState));
     }
