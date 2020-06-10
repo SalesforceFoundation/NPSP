@@ -573,8 +573,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get userDefinedBatchTableColumnNames() {
-        const batchTableColumn = validateJSONString(getFieldValue(this.batch.data, BATCH_TABLE_COLUMNS_FIELD));
-        if (batchTableColumn) return batchTableColumn;
+        const batchTableColumns = validateJSONString(
+            getFieldValue(this.batch.data, BATCH_TABLE_COLUMNS_FIELD)
+        );
+        if (batchTableColumns) return batchTableColumns;
         return [];
     }
 

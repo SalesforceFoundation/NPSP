@@ -17,7 +17,7 @@ import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 import commonOpen from '@salesforce/label/c.commonOpen';
-import { isNotEmpty, isEmpty } from 'c/utilCommon';
+import { isNotEmpty } from 'c/utilCommon';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -28,7 +28,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @track hasData;
 
     _columnsLoaded = false;
-    @track columns = [];
     _columns = [
         {label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text'},
         {label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text'},
@@ -79,7 +78,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 response => {
                     const dataImportModel = JSON.parse(response);
                     this.setTableProperties(dataImportModel);
-                    this.initColumns(sections);
+                    this.buildColumnsFromSections(sections);
                     this.batchLoaded();
                 }
             )
@@ -99,32 +98,25 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this._count = dataImportModel.totalCountOfRows;
         this._total = dataImportModel.totalRowAmount;
         dataImportModel.dataImportRows.forEach(row => {
-                this.data.push(
-                    Object.assign(row, row.record));
-            }
-        );
+            this.data.push(Object.assign(row, row.record));
+        });
         this.data = [...this.data];
         this.hasData = this.data.length > 0 ? true : false;
     }
 
-    initColumns(formSections) {
-        this.buildColumnsFromFormFields(formSections);
-        const computedColumns = this.getComputedColumns();
-
-        this.columns = [
-            ...computedColumns,
-            this._actionsColumn
-        ];
-
-        this.columnsLoaded();
+    get columns() {
+        if (!this._columnsLoaded) return [];
+        if (this._columnsLoaded) return [...this.computedColumns, this._actionsColumn];
     }
 
-    getComputedColumns() {
-        if (isEmpty(this.userDefinedBatchTableColumnNames)) {
-            return this.getAllColumns();
+    get computedColumns() {
+        const hasUserDefinedColumns =
+            this.userDefinedBatchTableColumnNames && this.userDefinedBatchTableColumnNames.length > 0;
+        if (hasUserDefinedColumns) {
+            return this.getUserDefinedColumns();
         }
 
-        return this.getUserDefinedColums();
+        return this.getAllColumns();
     }
 
     getAllColumns() {
@@ -135,7 +127,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return allColumns;
     }
 
-    getUserDefinedColums() {
+    getUserDefinedColumns() {
         let userDefinedColumns = [];
         this.userDefinedBatchTableColumnNames.forEach(columnName => {
             userDefinedColumns.push(this._columnsBySourceFieldApiName[columnName]);
@@ -143,7 +135,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return userDefinedColumns;
     }
 
-    buildColumnsFromFormFields(sections) {
+    buildColumnsFromSections(sections) {
         this.addSpecialCasedColumns();
         if (!sections) return;
 
@@ -170,6 +162,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 );
             }
         );
+
+        this.columnsLoaded();
     }
 
     /**
