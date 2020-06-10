@@ -197,11 +197,12 @@ public with sharing class RD2_NamingService {
     * @return String New name for the Recurring Donation record
     */
     private String constructName(npe03__Recurring_Donation__c rd,  Map<Id, RD2_Donor.Record> donorById) {
-        System.debug('hhRecordTypeId - ' + hhRecordTypeId);
-        System.debug('rd.npe03__Organization__c - ' + rd.npe03__Organization__c);
-        System.debug('donorById.get(rd.npe03__Organization__c) - ' + donorById.get(rd.npe03__Organization__c));
-        RD2_Donor.Record donor = rd.npe03__Contact__c != null
-                && donorById.get(rd.npe03__Organization__c).recordTypeId == hhRecordTypeId
+        Boolean useContact = rd.npe03__Organization__c == null;
+        if (!useContact) {
+            useContact = donorById.get(rd.npe03__Organization__c).recordTypeId == hhRecordTypeId;
+        }
+
+        RD2_Donor.Record donor = useContact
             ? donorById.get(rd.npe03__Contact__c)
             : donorById.get(rd.npe03__Organization__c);
 
