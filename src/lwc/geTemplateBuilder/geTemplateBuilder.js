@@ -326,6 +326,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             section.elements.map(element => {
                 const fieldMapping =
                     TemplateBuilderService.fieldMappingByDevName[element.dataImportFieldMappingDevNames[0]];
+                if (!fieldMapping) return;
+
                 elements[fieldMapping.Source_Field_API_Name] = element;
             });
         });
