@@ -78,6 +78,7 @@ Create Fixed Recurring Donation With Monthly Installment
     # Validate upcoming installments
     Validate_Upcoming_Schedules             ${installments}                                      ${date}
 
+    #Validate the number of opportunities on UI, Verify Opportinity got created in the backend and validate the stage on opportunity is Pledged
 
     @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
     Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
@@ -87,5 +88,4 @@ Create Fixed Recurring Donation With Monthly Installment
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${rd_id}
     Wait Until Loading Is Complete
-    #Validate the number of opportunities on UI, Verify Opportinity got created in the backend and validate the stage on opportunity is Pledged
     Validate Related Record Count           Opportunities                        1
