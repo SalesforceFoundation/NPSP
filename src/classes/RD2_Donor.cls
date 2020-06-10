@@ -49,7 +49,7 @@ public with sharing class RD2_Donor {
     public class Record {
         public Id recordId { get; private set; }
         public String name { get; private set; }
-        public String recordTypeId { get; private set; }
+        public Id recordTypeId { get; private set; }
 
         /***
         * @description Constructor
