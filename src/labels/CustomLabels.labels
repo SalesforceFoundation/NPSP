@@ -5928,7 +5928,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for column in batch gift entry table that links to the matched Gift.</shortDescription>
+        <shortDescription>Label for batch gift table column that links to gift (Opportunity or Payment)</shortDescription>
         <value>Donation Name</value>
     </labels>
     <labels>
@@ -5952,7 +5952,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
+        <shortDescription>Label for batch gift table column that links to the Account or Contact.</shortDescription>
         <value>Donor Name</value>
     </labels>
     <labels>
