@@ -1575,7 +1575,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         enabled = False
         if self.check_submenu_link_exists("Upgrade to Enhanced Recurring Donations"):
             self.click_link_with_text("Upgrade to Enhanced Recurring Donations")
-            time.sleep(2)
+            time.sleep(2)    #This sleep is necessary in this particular scenario
             if self.check_metadeploy_exists():
                 enabled = True
         return enabled

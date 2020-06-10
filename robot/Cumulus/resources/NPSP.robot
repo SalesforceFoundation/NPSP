@@ -341,8 +341,8 @@ Enable Advanced Mapping
     Enable Advanced Mapping If Not Enabled
 
 Enable RD2QA
-    [Documentation]        Enable Rd2
-    ...                    | status | expected status of batch processing Ex:'Completed' 'Errors' |
+    [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata
+
     ${apex}=  Catenate  SEPARATOR=\n
     ...   Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
     ...   String shouldScheduleJobs = '%%%PARAM_1%%%';
@@ -366,23 +366,29 @@ Enable RD2QA
     ...   rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
     ...   upsert rdSettings;
 
+    # Enable customizable rollups after enabling RD2
     Run Task       enable_crlp
+    # Wait for CRLP to be fully enabled before continuing with data migration
     Run Task       custom_settings_value_wait
     ...            object=%%%NAMESPACE%%%Customizable_Rollup_Settings__c
     ...            field=%%%NAMESPACE%%%Customizable_Rollups_Enabled__c
     ...            value=true
+    # Enables RD2 in Custom Settings.
     Run Task       execute_anon
     ...            apex= ${apex}
+    # Deploys the unpackaged configuration required for RD2
     Run Task       deploy_rd2_config
+    # Execute the data migration job in case there is any RD test data in the org
     Run Task       execute_anon
     ...            apex= ${apex2}
     Run Task       batch_apex_wait
     ...            class_name=RD2_DataMigration_BATCH
+    # Update enhanced Recurring Donation enablement page state
     Run Task       execute_anon
     ...            apex= ${apex3}
 
 Enable RD2
-    ${ns} =  Get NPSP Namespace Prefix
+    [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            Recurring Donations
     ${rd2_enabled} =  Check Rd2 Is Enabled
