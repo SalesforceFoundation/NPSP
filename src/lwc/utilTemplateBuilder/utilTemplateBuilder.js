@@ -252,7 +252,7 @@ const findMissingRequiredBatchFields = (batchFields, selectedBatchFields) => {
     });
 
     return missingRequiredFields;
-}
+};
 
 /*******************************************************************************
 * @description Dispatches a CustomEvent.
