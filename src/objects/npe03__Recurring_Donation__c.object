@@ -260,6 +260,16 @@
             </valueSetDefinition>
         </valueSet>
     </fields>
+        <fields>
+        <fullName>EndDate__c</fullName>
+        <description>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</inlineHelpText>
+        <label>End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
     <fields>
         <fullName>InstallmentFrequency__c</fullName>
         <description>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</description>
