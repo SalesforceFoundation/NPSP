@@ -396,12 +396,14 @@ export default class geListView extends LightningElement {
 
         for (let i = 0; i < fieldApiNames.length; i++) {
             let fieldApiName = fieldApiNames[i];
-            const fieldDescribe = this.objectInfo.fields[fieldApiName];
 
+            const fieldDescribe = this.objectInfo.fields[fieldApiName];
             let columnEntry = {
                 fieldApiName: fieldDescribe.apiName,
                 label: fieldDescribe.label,
-                sortable: fieldDescribe.sortable
+                sortable: fieldDescribe.sortable,
+                isNameField: fieldDescribe.nameField,
+                referenceTo: fieldDescribe.reference ? fieldDescribe.referenceToInfos[0] : null
             };
 
             let referenceField = this.handleReferenceTypeFields(fieldDescribe);
@@ -410,21 +412,25 @@ export default class geListView extends LightningElement {
                 columnEntry.fieldApiName = referenceField;
             }
 
-            // Special case for relationship references e.g. 'CreatedBy.Name'
-            // so we can display the Name property of the reference in the table.
+            // // Special case for relationship references e.g. 'CreatedBy.Name'
+            // // so we can display the Name property of the reference in the table.
             if (columnEntry.fieldApiName.includes(`.${NAME}`)) {
-                fieldApiName = columnEntry.fieldApiName.split('.')[0];
+               fieldApiName = columnEntry.fieldApiName.split('.')[0];
             }
 
             // Need to convert types derived from schema to types useable by lightning-datable
             const types = {
                 'double': 'number',
                 'datetime': 'date',
-                'date': 'date-local'
+                'date': 'date-local',
+                'reference': URL,
+                'string': columnEntry.isNameField ? URL : 'string'
             };
-            const convertedType = types[fieldDescribe.dataType.toLowerCase()];
 
             columnEntry.fieldName = fieldApiName;
+
+            const convertedType = types[fieldDescribe.dataType.toLowerCase()];
+
             columnEntry.type = convertedType ? convertedType : fieldDescribe.dataType.toLowerCase();
 
             columnEntry = this.handleTypesAttribute(columnEntry, fieldApiName);
@@ -518,9 +524,8 @@ export default class geListView extends LightningElement {
         }
 
         // Turn fields in the 'Name' column into URLs
-        if (fieldApiName === NAME) {
-            columnEntry.type = URL;
-            columnEntry.fieldName = URL;
+        if (columnEntry.type === URL) {
+            columnEntry.fieldName = fieldApiName + '_' + URL;
             columnEntry.typeAttributes = {
                 label: {
                     fieldName: fieldApiName
@@ -595,24 +600,40 @@ export default class geListView extends LightningElement {
     * 'LastModifiedDate' need to get parsed/reassigned so we can display more user
     * friendly values i.e. Name rather than RecordId or a formatted date.
     *
-    * @param {list} dataRecords: List of sObject records
+    * @param {array} dataRecords: List of sObject records
     */
-    setDatatableRecordsForImperativeCall(dataRecords) {
+     setDatatableRecordsForImperativeCall(dataRecords) {
         this.records = [];
-        let recordUrl = this.getRecordUrl();
 
         let records = deepClone(dataRecords);
         records.forEach(record => {
             Object.keys(record).forEach(key => {
-                if (record[key].Name) {
+                let fieldDescribe = this.objectInfo.fields[key];
+
+                if (isNotEmpty(fieldDescribe)
+                    && (fieldDescribe.nameField ||
+                        fieldDescribe.reference
+                    )) {
+
+                    let _objectApiName = fieldDescribe.nameField ? this.objectInfo.apiName :
+                        fieldDescribe.referenceToInfos[0].apiName;
+
+                    let recordUrl = this.getRecordUrl(_objectApiName);
+                    let recordId = fieldDescribe.nameField ? record.Id : record[key];
+                    let urlName = fieldDescribe.nameField ? key : fieldDescribe.relationshipName;
+
+                    record[urlName + '_' + URL] = format(recordUrl, [recordId]);
+                }
+
+                if (isNotEmpty(record[key].Name)) {
                     record[key] = record[key].Name;
                 }
             });
-
-            record[URL] = format(recordUrl, [record.Id]);
         });
 
         this.records = records;
+
+        return records;
     }
 
     /*******************************************************************************
@@ -620,14 +641,13 @@ export default class geListView extends LightningElement {
     * list view lightning-datatable. We're special casing the url for the
     * Form_Template__c object specifically to go to the Template Builder.
     */
-    getRecordUrl() {
+    getRecordUrl(objectApiName) {
         let url;
-
-        if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
+        if (objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
             const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment('GE_Gift_Entry');
             url = `/lightning/n/${giftEntryTabName}?c__view=Template_Builder&c__formTemplateRecordId={0}`;
         } else {
-            url = `/lightning/r/${this.objectApiName}/{0}/view`;
+            url = `/lightning/r/${objectApiName}/{0}/view`;
         }
 
         return url;

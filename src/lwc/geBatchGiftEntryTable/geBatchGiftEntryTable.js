@@ -93,13 +93,12 @@ export default class GeBatchGiftEntryTable extends GeListView {
                     const dataImportModel = JSON.parse(response);
                     this._count = dataImportModel.totalCountOfRows;
                     this._total = dataImportModel.totalRowAmount;
-                    dataImportModel.dataImportRows.forEach(row => {
-                        let rowRecord = this.convertLookIdsToNames(row.record);
-                            this.data.push(
-                                Object.assign(row, rowRecord));
-                        }
-                    );
-                    this.data = [...this.data];
+
+                    this.data = this.setDatatableRecordsForImperativeCall(
+                        dataImportModel.dataImportRows.map(row => {
+                            return Object.assign(row, row.record);
+                        })
+                    )
                     this.hasData = this.data.length > 0;
                     this.batchLoaded();
                 }
@@ -159,39 +158,17 @@ export default class GeBatchGiftEntryTable extends GeListView {
             row[idProperty] === dataRow[idProperty]
         );
 
-        dataRow = this.convertLookIdsToNames(dataRow);
+        let rows = this.setDatatableRecordsForImperativeCall([dataRow]);
 
         if (existingRowIndex !== -1) {
             this.data.splice(existingRowIndex, 1, dataRow);
             this.data = [...this.data];
         } else {
-            this.data = [dataRow, ...this.data];
+            this.data = [...rows, ...this.data];
             if (this.hasData === false) {
                 this.hasData = true;
             }
         }
-    }
-
-    /**
-     * @description Iterates through the properties for a data row and overrides any custom reference fields with the
-     * name value for the field instead of the id. This change is only made on the client and does not affect the
-     * field value used by BDI, which remains as the record id.
-     *
-     * @param {Object} dataRow - Each data row in the table
-     * @return Object
-     */
-    convertLookIdsToNames(dataRow) {
-        Object.keys(dataRow).forEach(field => {
-            if (this.fieldMappings.hasOwnProperty(field)) {
-                let fieldInfo = this.objectInfo.fields[field];
-                let referenceField = this.handleReferenceTypeFields(fieldInfo).split('.')[0];
-
-                if (isNotEmpty(referenceField)) {
-                    dataRow[referenceField] = dataRow[referenceField].Name;
-                }
-            }
-        });
-        return dataRow;
     }
 
     handleRowActions(event) {
