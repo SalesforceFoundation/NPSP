@@ -75,7 +75,7 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
     
     
     @capture_screenshot_on_error
-    def validate_upcoming_schedules(self, num_payments,startdate):
+    def validate_upcoming_schedules(self, num_payments,startdate,dayofmonth):
         """Takes in the parameter (number of payments) and the donation start date
         verifies that the payment schedules created on UI reflect the total number
         verifies that the next payment dates are reflected correctly for all the schedules"""
@@ -91,8 +91,8 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
                 datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
                 installment_date = self.selenium.get_webelement(datefield)
                 date_object = datetime.strptime(startdate, '%m/%d/%Y').date()
-                expected_date = (date_object+relativedelta(months=+i)).replace(day=1)
+                expected_date = (date_object+relativedelta(months=+i)).replace(day=int(dayofmonth))
                 actual_date=self.selenium.get_webelement(installment_date).text
                 formatted_actual = datetime.strptime(actual_date, '%m/%d/%Y').date()
-                assert formatted_actual == expected_date, "Expected date to be {} but found {}".format(formatted_actual, expected_date)
+                assert formatted_actual == expected_date, "Expected date to be {} but found {}".format(expected_date,formatted_actual)
                 i=i+1
