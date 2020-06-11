@@ -228,9 +228,20 @@ const findMissingRequiredFieldMappings = (TemplateBuilderService, formSections) 
 */
 const findMissingRequiredBatchFields = (batchFields, selectedBatchFields) => {
     let missingRequiredFields = [];
-    const requiredFields = batchFields.filter(batchField => { return batchField.required });
-    const selectedFieldsExists = selectedBatchFields && selectedBatchFields.length > 0;
+    const requireExpectedSelected = selectedBatchFields.find(bf => bf.apiName === DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO.fieldApiName);
 
+    const requiredFields = batchFields.filter(batchField => {
+        if(requireExpectedSelected) {
+            // if require expected totals to match is selected, require the field for expected count and total
+            if(batchField.apiName === DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO.fieldApiName) {
+                return true;
+            } else if(batchField.apiName === DI_BATCH_EXPECTED_COUNT_GIFTS_INFO.fieldApiName) {
+                return true;
+            }
+        }
+        return batchField.required;
+    });
+    const selectedFieldsExists = selectedBatchFields && selectedBatchFields.length > 0;
     requiredFields.forEach((field) => {
         if (selectedFieldsExists) {
             const alreadySelected = selectedBatchFields.find(bf => { return bf.apiName === field.apiName; });
@@ -241,7 +252,7 @@ const findMissingRequiredBatchFields = (batchFields, selectedBatchFields) => {
     });
 
     return missingRequiredFields;
-}
+};
 
 /*******************************************************************************
 * @description Dispatches a CustomEvent.
