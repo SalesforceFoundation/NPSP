@@ -85,7 +85,6 @@ Total Current Year Payments on Prior Year Pledges
 
     # Navigate to the Account page and verify the new rollupfield is appearing and is showing the right amouunt
     Go To Page                           Details                                 Account                                object_id=${data}[contact][AccountId]
-
     Wait Until Loading Is Complete
     Select Tab                                            Details
     Navigate To And Validate Field Value                  This Year Payments on Past Year Pledges                contains         $1,667
