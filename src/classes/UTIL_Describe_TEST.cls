@@ -137,11 +137,13 @@ private with sharing class UTIL_Describe_TEST {
     * @description Validate that the translated Spanish Picklist value for "Open" is returned.
     * This npe03__Open_Ended_Status__c field is translated in the RD underlying package. Due to how
     * translations are working in unit tests, this can only work if Spanish language is enabled in
-    * Translation Language Settings. However, since that condition cannot be checked for via Apex,
-    * the test is skipped if the Current Users language is not Spanish. It'll still fail unless the
-    * Spanish language is enabled though.
+    * Translation Language Settings.
+    *
+    * NOTE: This will always fail unless the Spanish language is enabled in Translation Workbench.
+    * Since it's not possible to enable a language in apex or through the scratch org definition file,
+    * this test is commented until it's possible in the future.
     */
-    @IsTest
+    // @IsTest
     private static void shouldReturnSpanishPicklist() {
 
         if (UserInfo.getLanguage() != 'es') {
