@@ -340,8 +340,11 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         // Set matching behavior
         dataImportBatch.fields[DATA_IMPORT_MATCHING_BEHAVIOR_INFO.fieldApiName] =
             this.donationMatchingBehaviors.ExactMatchOrCreate;
-        dataImportBatch.fields[DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
-            JSON.stringify(this.selectedTemplate.defaultBatchTableColumns);
+        // Set batch table column headers
+        const batchTableColumns = dataImportBatch.fields[DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName];
+        if (batchTableColumns) {
+            batchTableColumns = JSON.stringify(this.selectedTemplate.defaultBatchTableColumns);
+        }
 
         if (this.recordId) {
             dataImportBatch.fields[DATA_IMPORT_BATCH_ID_INFO.fieldApiName] = this.recordId;
