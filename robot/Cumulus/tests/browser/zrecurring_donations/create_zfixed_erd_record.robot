@@ -25,6 +25,7 @@ Setup Test Data
 &{account_fields}  Type=Organization
 ${installments}  6
 ${frequency}  1
+${day_of_month}  2
 ${amount}  100
 ${method}  Credit Card
 ${type}    Fixed
@@ -53,7 +54,7 @@ Create Fixed Recurring Donation With Monthly Installment
     Populate Lookup Field                  Account                                   ${data}[account][Name]
     Select Value From Dropdown             Recurring Type                            ${type}
     Select Value From Dropdown             Payment Method                            ${method}
-    Select Value From Dropdown             Day of Month                               1
+    Select Value From Dropdown             Day of Month                              ${day_of_month}
     Click Modal Button                     Save
     Wait Until Modal Is Closed
     Current Page Should Be                 Details                                   npe03__Recurring_Donation__c
@@ -73,12 +74,13 @@ Create Fixed Recurring Donation With Monthly Installment
      ...                                    Payment Method=${method}
      ...                                    Effective Date=${date}
      ...                                    Installment Period=Monthly
-     ...                                    Day of Month=1
+     ...                                    Day of Month=${day_of_month}
     # Validate upcoming installments
-    Validate_Upcoming_Schedules             ${installments}                                      ${date}
+    Validate_Upcoming_Schedules             ${installments}               ${date}                       ${day_of_month}
 
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend and validate the stage on opportunity is Pledged
-
+    Reload Page
+    Wait Until Loading Is Complete
     @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
     Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]

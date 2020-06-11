@@ -29,6 +29,7 @@ Setup Test Data
 &{account_fields}  Type=Organization
 ${installments}  1
 ${frequency}  1
+${day_of_month}  2
 ${amount}  100
 ${method}  Credit Card
 ${type}    Open
@@ -49,15 +50,17 @@ Create Open Recurring Donation With Monthly Installment
 
     # Create Enhanced recurring donation of type Open
     Populate Modal Form
-    ...                                    Recurring Donation Name=ERD Recurring Donation Fixed
+    ...                                    Recurring Donation Name=ERD Recurring Donation Open
     ...                                    Amount= ${amount}
     ...                                    Installment Frequency= ${frequency}
     ...                                    Number of Planned Installments= ${installments}
 
     Populate Lookup Field                  Account                                   ${data}[account][Name]
+    Select Value From Dropdown             Day of Month                              ${day_of_month}
+    Sleep                                  1
     Select Value From Dropdown             Recurring Type                            ${type}
     Select Value From Dropdown             Payment Method                            ${method}
-    Select Value From Dropdown             Day of Month                               1
+
     Click Modal Button                     Save
     Wait Until Modal Is Closed
     Current Page Should Be                 Details                                   npe03__Recurring_Donation__c
@@ -76,14 +79,14 @@ Create Open Recurring Donation With Monthly Installment
      ...                                    Payment Method=${method}
      ...                                    Effective Date=${date}
      ...                                    Installment Period=Monthly
-     ...                                    Day of Month=1
+     ...                                    Day of Month=2
     # Validate upcoming installments
-    Validate_Upcoming_Schedules             12                                      ${date}
+    Validate_Upcoming_Schedules             12                 ${date}                ${day_of_month}
 
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${rd_id}
-    Wait Until Loading Is Complete
+    Reload Page
 
     # validate recurring donation statistics current and next year value
     Validate Field Values Under Section     Statistics
