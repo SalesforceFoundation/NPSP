@@ -24,6 +24,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail page did not load in 1 min")
         self.selenium.location_should_contain("/lightning/r/Contact/",message="Current page is not a Contact record detail view")
+        self.selenium.wait_until_page_contains("Contact Details")
         
     def update_field_value(self,field_name,old_value,new_value):
         """Delete the old value in specified field by clicking on delete icon and update with new value"""
@@ -76,8 +77,24 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         id,actualstatus = self.npsp.check_status(contact1)
         self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
 
-    # def validate_field_value_under_section(self, section, fieldname, value):
-    #     section="text:"+section
-    #     self.selenium.scroll_element_into_view(section)
-    #     self.npsp.confirm_field_value(fieldname, "contains", value)
+    def verify_rollup_field_value(self,field_name,value,section=None):
+        """Verifies if the given rollup field contains given value 
+        if it doesn't, then recalculates rollup and performs refresh"""
+        try :
+            self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
+            self.builtin.log("Found rollup value on the page on initial try")
+        except Exception :
+            self.npsp.click_more_actions_button()
+            self.selenium.click_link("Recalculate Rollups")
+            self.npsp.wait_for_locator("frame", "accessibility title")
+            self.npsp.choose_frame("accessibility title")
+            self.selenium.wait_until_page_contains("The rollups batch job is calculating and may take a few moments to complete. Go back to the Contact and refresh to see updated rollup values.",timeout=60)
+            self.npsp.click_button_with_value("Back to Contact")
+            self.pageobjects.current_page_should_be("Details","Contact")
+            try :
+                self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
+                self.builtin.log("Found rollup value on the page after recalculate")
+            except Exception :
+                self.selenium.reload_page()
+                self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
 
