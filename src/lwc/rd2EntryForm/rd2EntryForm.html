@@ -33,14 +33,8 @@
                         </h3>
                         <div aria-hidden="false" class="slds-section__content">
 
-                            <c-rd2-entry-form-donor-section record-id={recordId}></c-rd2-entry-form-donor-section>
+                            <c-rd2-entry-form-donor-section record-id={recordId} parent-id={parentId}></c-rd2-entry-form-donor-section>
 
-                            <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                                    <lightning-input-field field-name={fields.dateEstablished.apiName} required>
-                                    </lightning-input-field>
-                                </lightning-layout-item>
-                            </lightning-layout>
                         </div>
                     </div>
 

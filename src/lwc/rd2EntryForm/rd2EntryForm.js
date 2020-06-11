@@ -9,7 +9,6 @@ import { getRecord } from 'lightning/uiRecordApi';
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
-import FIELD_DATE_ESTABLISHED from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Date_Established__c';
 import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
 import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
@@ -133,7 +132,6 @@ export default class rd2EntryForm extends LightningElement {
     */
     setFields(fieldInfos) {
         this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
-        this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
         this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
         this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };

@@ -9,27 +9,45 @@
                 <lightning-layout horizontal-align="spread" multiple-rows="true">
 
                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                        <!-- TODO: Custom Labels Needed -->
-                        <label for="DonorTypeSelect" class="slds-form-element__label slds-no-flex">
-                            <abbr title="required" class="slds-required">*</abbr>
-                            Donor Type
-                        </label>
-                        <select class="slds-select" name="DonorTypeSelect" onchange={handleDonorTypeChange} >
-                            <option value="Organization">Organization</option>
-                            <option value="Household">Household</option>
-                        </select>
+                        <lightning-combobox
+                                name="DonorTypeSelect"
+                                label={customLabels.donorTypeLabel}
+                                value={donorType}
+                                placeholder=""
+                                field-level-help={customLabels.donorTypeHelpText}
+                                options={donorTypeOptions}
+                                onchange={handleDonorTypeChange}
+                                required
+                        >
+                        </lightning-combobox>
                     </lightning-layout-item>
 
-                    <template if:true={showContactInput}>
+                    <template if:true={isContactDonor}>
+
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" >
-                            <lightning-input-field field-name={fields.contact.apiName} value={contactId}>
+                            <lightning-input-field field-name={fields.contact.apiName} value={contactId} required>
                             </lightning-input-field>
                         </lightning-layout-item>
-                    </template>
 
-                    <template if:true={showAccountInput}>
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                            <lightning-input-field field-name={fields.account.apiName} value={accountId}>
+                            <lightning-input-field field-name={fields.dateEstablished.apiName} required>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                    </template>
+                    <template if:false={isContactDonor}>
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                            <lightning-input-field field-name={fields.account.apiName} value={accountId} required>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                            <lightning-input-field field-name={fields.dateEstablished.apiName} required>
+                            </lightning-input-field>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" >
+                            <lightning-input-field field-name={fields.contact.apiName} value={contactId}>
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>

@@ -1,55 +1,84 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { handleError } from 'c/utilTemplateBuilder'
+import { constructErrorMessage } from 'c/rd2EntryForm'
 import { isNull } from 'c/utilCommon';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
+import getDonorType from '@salesforce/apex/RD2_entryFormController.getDonorType';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
+import FIELD_DATE_ESTABLISHED from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Date_Established__c';
 import FIELD_ACCOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 import FIELD_CONTACT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 
+import donorTypeLabel from '@salesforce/label/c.RD2_EntryFormDonorTypeLabel';
+import donorTypeHelpText from '@salesforce/label/c.RD2_EntryFormDonorTypeHelpText';
+
 export default class rd2EntryFormDonorSection extends LightningElement {
 
+    customLabels = Object.freeze({
+        donorTypeLabel,
+        donorTypeHelpText
+    });
+
+    // These are exposed to the parent component
+    @api parentId;
     @api recordId;
+
     @track isLoading = true;
     isNew = false;
 
     @track contactId;
     @track accountId;
+
     @track donorType;
-    @track showContactInput = true;
-    @track showAccountInput = true;
+    @track accountRequired = true;
+    @track contactRequired = true;
 
     @track fields = {};
     rdObjectInfo;
+    accountLabel;
+    contactLabel;
 
-    /***
+    /**
      * @description Get settings required to enable or disable fields and populate their values
      */
     connectedCallback() {
         if (isNull(this.recordId)) {
             this.isNew = true;
+
+        } else {
+            this.isNew = false;
+
+            getDonorType({recordId: this.recordId})
+                .then(response => {
+                    this.donorType = response;
+                    this.updateDonorFields(this.donorType);
+                })
+                .catch((error) => {
+                    constructErrorMessage(error);
+                });
         }
 
-        getSetting({ parentId: null })
+        getSetting({ parentId: this.parentId })
             .then(response => {
                 this.handleParentIdType(response.parentSObjectType);
             })
             .catch((error) => {
-                handleError(error);
+                constructErrorMessage(error);
             })
             .finally(() => {
                 this.isLoading = false;
             });
+
     }
 
-    /***
-     * @description Determine the parentId Sobject Type
+    /**
+     * @description Determine the parentId Sobject Type if creating a new record from an Account or Contact
      */
     handleParentIdType(parentSObjType) {
         if (isNull(parentSObjType)) {
@@ -58,13 +87,15 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
         if (parentSObjType === ACCOUNT_OBJECT.objectApiName) {
             this.accountId = this.parentId;
+            this.donorType = 'Account';
         } else if (parentSObjType === CONTACT_OBJECT.objectApiName) {
             this.contactId = this.parentId;
+            this.donorType = 'Contact';
         }
     }
 
     /**
-     * @description Retrieve Recurring Donation SObject info
+     * @description Retrieve Recurring Donation SObject info and configure fields for the UI
      */
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
     wiredRecurringDonationObjectInfo(response) {
@@ -79,21 +110,67 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
         } else if (response.error) {
             this.isLoading = false;
-            handleError(response.error);
+            constructErrorMessage(response.error);
         }
     }
 
     /**
-     *
+     * @description Set the Account Object label for the Donor Type picklist
+     */
+    @wire(getObjectInfo, { objectApiName: ACCOUNT_OBJECT })
+    wiredAccountObjectInfo(response) {
+        if (response.data) {
+            this.accountLabel = response.data.label;
+        }
+    }
+
+    /**
+     * @description Set the Contact Object label for the Donor Type picklist
+     */
+    @wire(getObjectInfo, { objectApiName: CONTACT_OBJECT })
+    wiredContactObjectInfo(response) {
+        if (response.data) {
+            this.contactLabel = response.data.label;
+        }
+    }
+
+    /**
+     * @description Donor Type picklist options
+     */
+    get donorTypeOptions() {
+        return [
+            { label: this.accountLabel, value: 'Account' },
+            { label: this.contactLabel, value: 'Contact' },
+        ];
+    }
+
+    /**
+     * @description Returns true if the DonorType is set to Contact. Used to render the UI structure properly
+     * @returns {boolean}
+     */
+    get isContactDonor() {
+        return (this.donorType === 'Contact');
+    }
+
+    /**
+     * @description Handles the page updates when the Donor Type picklist is updated
      */
     handleDonorTypeChange(event) {
         this.donorType = event.target.value;
-        if (this.donorType === 'Organization') {
-            this.showAccountInput = true;
-            this.showContactInput = true;
+        this.updateDonorFields(this.donorType);
+    }
+
+    /**
+     * @description Update the properties to configure the Donor Type fields visibility and requirement settings
+     * based on the value of the DonorType picklist.
+     */
+    updateDonorFields(donorType) {
+        if (donorType === 'Account') {
+            this.accountRequired = true;
+            this.contactRequired = false;
         } else {
-            this.showAccountInput = false;
-            this.showContactInput = true;
+            this.accountRequired = false;
+            this.contactRequired = true;
         }
     }
 
@@ -114,6 +191,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Construct field describe info from the Recurring Donation SObject info
      */
     setFields(fieldInfos) {
+        this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
         this.fields.account = this.extractFieldInfo(fieldInfos[FIELD_ACCOUNT.fieldApiName]);
         this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
     }

@@ -54,4 +54,59 @@ public with sharing class RD2_EntryFormController {
             'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY
         };
     }
+
+    /**
+    * @description Retrieve the donor type for an existing RD record
+    * @param rdId RecurringDonation.RecordId
+    * @return Account (if Org is not a Household) or Contact
+    */
+    @AuraEnabled(Cacheable=true)
+    public static String getDonorType(String recordId) {
+        if (recordId == null) {
+            return null;
+        }
+
+        npe03__Recurring_Donation__c rd =  getRecurringDonation(recordId);
+        if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
+            || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
+        ) {
+            return 'Contact';
+        }
+        return 'Account';
+    }
+
+    /**
+    * @param rdId RecurringDonation.RecordId
+     * @return Recurring Donation object
+     */
+    private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
+        Set<String> queryFields = new Set<String>{
+            'Id',
+            'npe03__Organization__c',
+            'npe03__Organization__r.RecordTypeId',
+            'npe03__Contact__r.Account.RecordTypeId'
+        };
+
+        String soql = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere('Id = :recordId')
+            .build();
+
+        return Database.query(soql);
+    }
+
+    /***
+    * @description Retrieves the record type id for the household account record type
+    */
+    @TestVisible
+    private static String hhRecordTypeId {
+        get {
+            if (hhRecordTypeId == null) {
+                hhRecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+            }
+            return hhRecordTypeId;
+        }
+        private set;
+    }
 }
