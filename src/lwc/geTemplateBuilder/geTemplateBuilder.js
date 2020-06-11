@@ -948,9 +948,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.handleAddBatchHeaderField({ detail: field.apiName });
             }
 
-            const fieldApiNames = this.missingRequiredBatchFields.map(field => field.apiName).join(', ');
+            const fieldLabels = this.missingRequiredBatchFields.map(field => field.label).join(', ');
             showToast(this.CUSTOM_LABELS.commonWarning,
-                `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldApiNames}`,
+                `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldLabels}`,
                 'warning',
                 'sticky');
         }
