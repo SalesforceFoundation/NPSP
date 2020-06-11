@@ -81,10 +81,21 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
         	List<SObject> toUpdate = new List<SObject>();
-
         	if (STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
         		toUpdate.add(STG_Panel.stgService.stgRD);
-        	}
+            }
+
+            Boolean hasUpdatePermission = UTIL_Describe.getObjectDescribe(
+                String.valueOf(npe03__Recurring_Donations_Settings__c.SObjectType)
+            ).IsUpdateable();
+
+            if (!hasUpdatePermission) {
+                throw new DmlException(
+                    String.format(
+                        System.Label.flsError,
+                        new List<String>{System.Label.stgLabelRDSettings})
+                );
+            }
 
             update toUpdate;
 
