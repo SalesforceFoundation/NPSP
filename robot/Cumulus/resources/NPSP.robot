@@ -254,6 +254,7 @@ API Create DataImport
 
 API Query Opportunity For Recurring Donation
     [Arguments]        ${id}                      &{fields}
+    Sleep               2    #sleep here is necessary for the backend to get updated
     @{object} =        Salesforce Query           Opportunity
     ...                select=Id
     ...                npe03__Recurring_Donation__c=${id}
