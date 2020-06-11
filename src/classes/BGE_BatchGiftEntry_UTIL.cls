@@ -164,7 +164,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             'NPSP_Data_Import_Batch__c',
             'PaymentImported__c',
             'PaymentImportStatus__c',
-            'Payment_Status__c',
             'Status__c'
         };
 
@@ -178,12 +177,12 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         }
 
         // Maybe create new method in UTIL_Namespace for lists
-        List<String> namespacedFields = new List<String>();
-        for(String fieldName : fields) {
+        Set<String> namespacedFields = new Set<String>();
+        for (String fieldName : fields) {
             namespacedFields.add(UTIL_Namespace.StrAllNSPrefix(fieldName));
         }
 
-        return namespacedFields;
+        return new List<String> (namespacedFields);
     }
 
      /*******************************************************************************************************
