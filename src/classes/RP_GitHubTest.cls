@@ -123,14 +123,19 @@ public with sharing class RP_GitHubTest {
 
         System.runAs(user) {
 
-            newDate = wrapper.formatDate('2017-07-17T17:50:03Z');
+          // In Api48 and with non-english languages, the result of a DateTime.Format() call is slightly different
+          // A comma may be added and "pm" may be changed to "p. m." in some non-english languages.
+          // The logic below strips out those extraneous characters.
+          newDate = wrapper.formatDate('2017-07-17T17:50:03Z');
         }
-
         Test.stopTest();
 
-        // Asserting that the new format date is returning the same date with another format
-        System.assertEquals(newDate, '7/17/2017, 5:50 pm');
+        Pattern timePattern = Pattern.compile('([50]?)([p?m?])');
+        Matcher match = timePattern.matcher(newDate);
 
+        // Asserting that the new format date is returning the same date with another format
+        System.assert(newDate.contains('5:50'), 'The formatted DateTime should contain the time: Actual=' + newDate);
+        System.assertEquals(2, match.groupCount(), 'The formatted DateTime does not include the minutes and PM indicator: Actual=' + newDate);
     }
 
 }
