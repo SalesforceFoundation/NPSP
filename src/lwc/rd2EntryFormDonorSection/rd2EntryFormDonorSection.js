@@ -30,7 +30,6 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     @api recordId;
 
     @track isLoading = true;
-    isNew = false;
 
     @track contactId;
     @track accountId;
@@ -48,12 +47,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Get settings required to enable or disable fields and populate their values
      */
     connectedCallback() {
-        if (isNull(this.recordId)) {
-            this.isNew = true;
-
-        } else {
-            this.isNew = false;
-
+        if (!isNull(this.recordId)) {
             getDonorType({recordId: this.recordId})
                 .then(response => {
                     this.donorType = response;
@@ -153,6 +147,14 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     }
 
     /**
+     * @description Returns true if the DonorType is set to Account. Used to render the UI structure properly
+     * @returns {boolean}
+     */
+    get isAccountDonor() {
+        return (this.donorType === 'Account');
+    }
+
+    /**
      * @description Handles the page updates when the Donor Type picklist is updated
      */
     handleDonorTypeChange(event) {
@@ -209,42 +211,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     }
 
     /**
-     * Resets the Donor fields as they were upon the initial load
-     */
-    @api
-    reset() {
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                field.reset();
-            });
-    }
-
-    /**
-     * Populates the Donor form fields based on provided data
-     */
-    @api
-    load(data) {
-        //TODO, what is the format of "data"?
-    }
-
-    /**
-     * Checks if values specified on fields are valid
-     * @return Boolean
-     */
-    @api
-    isValid() {
-        const donorFields = this.template.querySelectorAll('lightning-input-field');
-
-        for (const field of donorFields) {
-            if (!field.isValid()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @description Returns fields displayed on the Recurring Donation Donor section
+     * @description Returns fields displayed on the child component to the parent form
      * @return Object containing field API names and their values
      */
     @api

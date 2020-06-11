@@ -38,12 +38,12 @@
 private with sharing class RD2_EntryFormController_TEST {
 
     /***
-    * @description Verifies that Entry Form Controller gathers the correct org setting 
+    * @description Verifies that Entry Form Controller gathers the correct org setting
     */
     @isTest
     private static void shouldReturnRDSettingForEntryForm() {
         Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
-    
+
         Test.startTest();
         Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getSetting(accountId);
         Test.stopTest();
@@ -56,6 +56,54 @@ private with sharing class RD2_EntryFormController_TEST {
             'Parent Sobject type should be correctly identified when value is not null');
         System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, (String) orgSettingsByKey.get('dayOfMonthLastDay'),
             'JSON file should grab Last Day of Month Last_Day API value');
+    }
+
+    /***
+    * @description Verifies that Entry Form Controller returns the expected results for Account or Contact for Donor Type
+    */
+    @isTest
+    private static void shouldReturnAccountDonorType() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Account a = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert a;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withAccount(a.Id)
+            .withAmount(25)
+            .withDefaultValues()
+            .build();
+        insert rd;
+
+        Test.startTest();
+        String donorType = RD2_EntryFormController.getDonorType(rd.Id);
+        Test.stopTest();
+
+        System.assertEquals('Account', donorType);
+    }
+
+    /***
+    * @description Verifies that Entry Form Controller returns the expected results for Account or Contact for Donor Type
+    */
+    @isTest
+    private static void shouldReturnContactDonorType() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(c.Id)
+            .withAmount(25)
+            .withDefaultValues()
+            .build();
+        insert rd;
+
+        Test.startTest();
+        String donorType = RD2_EntryFormController.getDonorType(rd.Id);
+        Test.stopTest();
+
+        System.assertEquals('Contact', donorType);
     }
 
 }

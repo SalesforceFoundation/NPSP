@@ -23,7 +23,6 @@
                     </lightning-layout-item>
 
                     <template if:true={isContactDonor}>
-
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" >
                             <lightning-input-field field-name={fields.contact.apiName} value={contactId} required>
                             </lightning-input-field>
@@ -35,7 +34,8 @@
                         </lightning-layout-item>
 
                     </template>
-                    <template if:false={isContactDonor}>
+
+                    <template if:true={isAccountDonor}>
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
                             <lightning-input-field field-name={fields.account.apiName} value={accountId} required>
                             </lightning-input-field>
