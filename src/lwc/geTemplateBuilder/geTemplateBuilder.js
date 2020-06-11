@@ -24,7 +24,6 @@ import {
     shiftToIndex,
     sort,
     getNamespace,
-    deepClone,
     removeByProperty,
     removeFromArray
 } from 'c/utilCommon';
@@ -129,7 +128,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         STATUS_FIELD.fieldApiName,
         FAILURE_INFORMATION_FIELD.fieldApiName
     ];
-    @track selectedBatchTableColumnOptions = deepClone(this.preselectedBatchTableColumnNames);
+    @track selectedBatchTableColumnOptions = [...this.preselectedBatchTableColumnNames];
 
     @track hasTemplateInfoTabError;
     @track hasSelectFieldsTabError;
@@ -198,11 +197,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get batchTableColumnsAccessErrorMessage() {
         if (!this.disableBatchTableColumnsSubtab) return '';
-        const geErrorFLSBody = GeLabelService.format(
+
+        return GeLabelService.format(
             this.CUSTOM_LABELS.geErrorFLSBody,
             [this._batchTableLabelAccessErrorLabel]);
-
-        return `${this.CUSTOM_LABELS.geErrorFLSBatchTableColumns} ${geErrorFLSBody}`;
     }
 
     /*******************************************************************************

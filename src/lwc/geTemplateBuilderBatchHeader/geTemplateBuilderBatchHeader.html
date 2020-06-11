@@ -11,12 +11,21 @@
                     <lightning-layout multiple-rows='true'>
                         <template if:true={disableBatchTableColumnsSubtab}>
                             <lightning-layout-item size='12'
-                                                   class='slds-align_absolute-center'
+                                                   class='slds-align_absolute-center slds-p-horizontal_large'
                                                    padding='around-large'>
-                                <c-util-illustration title={CUSTOM_LABELS.geErrorFLSHeader}
-                                                     message={batchTableColumnsAccessErrorMessage}
-                                                     size="small"
-                                                     variant="lake-mountain">
+                                <c-util-illustration size='small'
+                                                     variant='lake-mountain'>
+                                    <div slot='body'>
+                                        <h3 class='slds-text-heading_medium'>
+                                            {CUSTOM_LABELS.geErrorFLSHeader}
+                                        </h3>
+                                        <p class='slds-text-body_regular slds-m-bottom_none'>
+                                            {CUSTOM_LABELS.geErrorFLSBatchTableColumns}
+                                        </p>
+                                        <p class='slds-text-body_regular fls-message-body-padding'>
+                                           {batchTableColumnsAccessErrorMessage}
+                                        </p>
+                                    </div>
                                 </c-util-illustration>
                             </lightning-layout-item>
                         </template>
@@ -41,7 +50,7 @@
                                                    large-device-size='9'
                                                    class='right-panel'
                                                    padding='horizontal-large'>
-                                <lightning-dual-listbox name="languages"
+                                <lightning-dual-listbox name={CUSTOM_LABELS.geTabBatchTableColumns}
                                                         source-label={CUSTOM_LABELS.geLabelCustomTableSourceFields}
                                                         selected-label={CUSTOM_LABELS.geLabelCustomTableSelectedFields}
                                                         options={availableBatchTableColumnOptions}
