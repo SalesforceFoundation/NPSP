@@ -2,6 +2,7 @@ from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
+import time
 from NPSP import npsp_lex_locators
 
 @pageobject("Details", "Opportunity")
@@ -31,6 +32,19 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.wait_for_locator('frame','Write Off Remaining Balance')
         self.npsp.choose_frame("Write Off Remaining Balance")
         self.selenium.wait_until_page_contains("You are preparing to write off")
+        
+    def change_related_contact_role_settings(self,name,role=None,**kwargs):
+        """Loads the related contact from opportunity, waits for the modal and updates the role and primary settings"""
+        dropdown = npsp_lex_locators['related_drop_down'].format(name)
+        edit = npsp_lex_locators['record']['dd_edit_option'].format("Edit")
+        self.selenium.wait_until_page_contains_element(dropdown)
+        self.salesforce._jsclick(dropdown)
+        self.selenium.wait_until_element_is_visible(edit)
+        self.selenium.click_element(edit)
+        self.salesforce.wait_until_modal_is_open()
+        self.npsp.select_value_from_dropdown ("Role",role)
+        self.npsp.populate_modal_form(**kwargs)
+        self.salesforce.click_modal_button("Save")
 
 
 @pageobject("Listing", "Opportunity")
