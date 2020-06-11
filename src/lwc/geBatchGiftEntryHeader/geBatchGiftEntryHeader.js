@@ -1,6 +1,5 @@
 import {LightningElement, api, wire} from 'lwc';
 import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
-import {NavigationMixin} from 'lightning/navigation';
 
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
