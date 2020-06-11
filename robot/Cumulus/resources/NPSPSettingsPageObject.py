@@ -176,6 +176,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 isPresent = True
             return isPresent
 
+    @capture_screenshot_on_error
     def check_metadeploy_exists(self):
         """Check if the rd2 metadeploy link is enabled """
         locator=npsp_lex_locators["erd"]["rd2_installed"]
@@ -184,6 +185,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             isPresent = True
         return isPresent
 
+    @capture_screenshot_on_error
     def check_rd2_is_enabled(self):
         """Verifies that Enhanced Recurring Donations is enabled on the org"""
         enabled = False
