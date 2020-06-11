@@ -444,6 +444,7 @@ public without sharing class RLLP_OppRollup_UTIL {
             newOpp.type != oldOpp.type ||
             newOpp.closeDate != oldOpp.closeDate ||
             newOpp.accountId != oldOpp.accountId ||
+            newOpp.Primary_Contact__c != oldOpp.Primary_Contact__c ||
             (newOpp.isWon && (newOpp.npe01__Membership_Start_Date__c != oldOpp.npe01__Membership_Start_Date__c || 
                               newOpp.npe01__Membership_End_Date__c != oldOpp.npe01__Membership_End_Date__c ||                                            
                               newOpp.npe01__Member_Level__c != oldOpp.npe01__Member_Level__c))){
