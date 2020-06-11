@@ -21,10 +21,10 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
-Create Crlp For Automated Soft Credit
-    [Documentation]
+Total Current Year Payments on Prior Year Pledges
+    [Documentation]       Calculates Total Current Year Payments on Prior Year opportunity Pledges
 
-    [tags]                            unstable                          W-037650                         feature:crlps
+    [tags]                            unstable                          W-037650                           feature:crlps
     # Create the required currency field and formula fields
 
     Validate And Create Required CustomField
