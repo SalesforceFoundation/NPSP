@@ -309,6 +309,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             for i in locators:
                 print("inside for loop")
                 locator = i.format(field,value)
+                print(locator)
                 if self.check_if_element_exists(locator):
                     print(f"element exists {locator}")
                     actual_value=self.selenium.get_webelement(locator).text
@@ -867,21 +868,19 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     break
                 except Exception:
                     sec= sec+30
-                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))                 
+                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
 
-    def get_npsp_settings_value(self,field_name): 
+
+    def get_npsp_settings_value(self,field_name):
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-
-
-
     def verify_payment_details(self, numpayments):
         """Gets the payment details from the UI and compares with the expected number of payments"""
-        locator = "//tbody/tr/td[2]/span/span"
+        locator = npsp_lex_locators['payments']['loc1']
         locs1 = self.selenium.get_webelements(locator)
-        locator2 = "//tbody/tr/td[3]/span/span"
+        locator2 = npsp_lex_locators['payments']['loc2']
         locs2 = self.selenium.get_webelements(locator2)
         for i, j in list(zip(locs1, locs2)):
             #loc1_vaue = self.selenium.get_webelemt(i).text
@@ -1218,7 +1217,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
-        self.selenium.click_link(value) 
+        self.npsp.click_link_with_text(value)
         
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects
@@ -1264,7 +1263,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if account_data is not None:
             # create the account based on the user input specified account type
-            acctname = self.randomString(10);
+            acctname = self.randomString(10)
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
             account_data.update( {'Name' : acctname,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
@@ -1274,8 +1273,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if contact_data is not None:
             # create the contact
-            firstname = self.randomString(10);
-            lastname = self.randomString(10);
+            firstname = self.randomString(10)
+            lastname = self.randomString(10)
             contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
             contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
             contact = self.salesforce.salesforce_get("Contact",contact_id)
@@ -1314,7 +1313,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if gau_data is not None:
             object_key =  f"{ns}General_Accounting_Unit__c"
             gauname = gau_data['Name']
-            random = self.randomString(10);
+            random = self.randomString(10)
             gau_data.update( {'name' : f"{random}{gauname}"} )
             gau_id = self.salesforce.salesforce_insert(object_key, **gau_data)
             gau = self.salesforce.salesforce_get(object_key,gau_id)
