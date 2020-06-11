@@ -345,19 +345,19 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 return true;
             })
             .reduce((accumulator, current) => {
-                let fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
-                let localFieldName = AMOUNT_FIELD.fieldApiName;
-                let currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
+                const fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
+                const localFieldName = AMOUNT_FIELD.fieldApiName;
+                const currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
                 
                 let currentAmount = current.record[currentKey];
                 if (isEmpty(currentAmount)) {
                     // amount is empty, use the percent field
-                    let fullFieldNamePercent = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
-                    let localFieldNamePercent = PERCENT_FIELD.fieldApiName;
-                    let currentKeyPercent = current.record.hasOwnProperty(fullFieldNamePercent) ?
+                    const fullFieldNamePercent = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
+                    const localFieldNamePercent = PERCENT_FIELD.fieldApiName;
+                    const currentKeyPercent = current.record.hasOwnProperty(fullFieldNamePercent) ?
                                             fullFieldNamePercent : localFieldNamePercent;
 
-                    let currentPercent = current.record[currentKeyPercent];
+                    const currentPercent = current.record[currentKeyPercent];
                     currentAmount = (currentPercent * this._totalAmount) / 100;
                 }
 
