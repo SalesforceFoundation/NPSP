@@ -6,6 +6,7 @@ npsp_lex_locators={
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
     'button-title':"//button[@title='{}']",
+    'button-with-text':'//button[contains(text(),"{}")]',
     'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
@@ -22,6 +23,7 @@ npsp_lex_locators={
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
         'activity-button':'//button[contains(@class,"{}")]',
+        'dd_edit_option': '//div[contains(@class,"branding-actions")]/ul/li/a[@title="{}"]',
         'edit_button':'//*[@title="{}"]',
         'edit_form': 'css: div.forcePageBlockItemEdit',
         'flexipage_edit_form': 'css: force-record-layout-item.slds-is-editing',
@@ -103,6 +105,7 @@ npsp_lex_locators={
     'dd_options':'//*[@id="p3"]/option[text()="{}"]',
     'related_list_items':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-grid")]/following-sibling::div[.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]',
     'span_button':'//span[text()="{}"]',
+    'related_drop_down':'//div/a[contains(@class,"slds-button")]/ancestor::li/div/a',
     'span':"//span[@title='{}']",
     'header_field_value':'//*[contains(@class, "slds-page-header__detail")][.//*[@title="{}"]]//*[text()="{}"]',
     'header_datepicker':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[@class="uiOutputDate"]',
@@ -169,6 +172,8 @@ npsp_lex_locators={
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
         'field-value':"//div[contains(@class,'slds-form-element')][./span[text()='{}']]/following-sibling::div",
         'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th",
+        'loc1':"//tbody/tr/td[2]/span/span",
+        'loc2':"//tbody/tr/td[3]/span/span",
         },
     'gaus':{
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
@@ -232,6 +237,10 @@ npsp_lex_locators={
 
     'object_manager':{
         'button':'//input[@title="{}"]',
+        'input':'//input[@id="{}"]',
+        'select_related':'//select[@id = "DomainEnumOrId"]',
+        'select_related_option':'//select[@id = "DomainEnumOrId"]/option[@value="{}"]',
+        'search_result': '//tbody/tr/td/a/span[contains(text(),"{}")]',
         },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
@@ -244,12 +253,18 @@ npsp_lex_locators={
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
-        'button':"//button[text()='Create New Field Mapping']",
         'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
         },
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
         },
+    'crlps':{
+        'select_locator': "//select[@name ='{}']",
+        'success_toast': "//div[@class='{}']",
+        'active_setting_record': "//td[@data-label='Active']/following::tr/th//span/div//lightning-button/button[text()='{}']",
+        'rollup_progress_notification': "//div/h2[contains(text(),'{}')]",
+        'rollup_options':"//tr[./th//button[text()='{}']]/td//button",
+       },
     'gift_entry':{
         'id':'//*[contains(@data-qa-locator,"{}")]',
         'button':'//*[@data-qa-locator="button {}"]/button',

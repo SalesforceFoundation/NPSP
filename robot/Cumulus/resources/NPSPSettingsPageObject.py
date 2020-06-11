@@ -137,6 +137,18 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 self.builtin.log("Advanced Mapping is already enabled")        
             
+    @capture_screenshot_on_error
+    def Enable_customizable_rollups_if_not_enabled(self):
+        """Checks if advanced mapping is Enabled and enables if not enabled"""
+        locator=npsp_lex_locators['id'].format("navigateCRLPs")
+        if self.npsp.check_if_element_exists(locator):
+            self.builtin.log("Customizable Rollups is already enabled")
+        else:
+            self.builtin.log("Customizable Rollups is not enabled by default, enabling it")
+            self.click_toggle_button("Customizable Rollups")
+            self.selenium.wait_until_page_contains_element(locator,timeout=90)
+            self.builtin.log("Customizable Rollups is enabled")  
+
     def verify_gift_entry_is_not_enabled(self):
         """Verifies that gift entry is not enabled by default 
            If already enabled, disables it"""
