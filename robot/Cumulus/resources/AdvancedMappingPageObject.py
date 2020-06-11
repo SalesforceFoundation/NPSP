@@ -22,7 +22,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
            select 'src_fld' arg in Source Field Label box
            'tgt_fld' arg in Target Field Label box"""
         self.selenium.wait_until_page_contains("Field Mappings", timeout=60)
-        btns=npsp_lex_locators['adv_mappings']['button']
+        btns=npsp_lex_locators['button-with-text'].format("Create New Field Mapping")
         self.selenium.scroll_element_into_view(btns)
         self.selenium.click_button(btns)
         mdl_open=npsp_lex_locators['adv_mappings']["modal_open"]
