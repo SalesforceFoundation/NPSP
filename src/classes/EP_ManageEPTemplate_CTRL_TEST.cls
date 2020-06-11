@@ -330,9 +330,13 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
 
         setUpPage(template.Id);
 
+        // In Api48 and with non-english languages, the result of a DateTime.Format() call is slightly different
+        // A comma may be added and "am" may be changed to "a.m." in some non-english languages.
+        // The logic below strips out those extraneous characters.
+
         EP_ManageEPTemplate_CTRL ctrl = new EP_ManageEPTemplate_CTRL(new ApexPages.StandardController(template));
         for (System.SelectOption option : ctrl.reminderTimeOptions) {
-            String optionLabel = option.getLabel();
+            String optionLabel = option.getLabel().replace('.','').replace(',','');
             System.assert(optionLabel.left(1).isNumeric(), 'The time option must always start with a number - ' + optionLabel);
             System.assert(optionLabel.contains(':'), 'The time option must always contain a colon (:) - ' + optionLabel);
             System.assert(optionLabel.right(1).isAlpha(), 'The time option must always end with a letter (AM|PM) - ' + optionLabel);
