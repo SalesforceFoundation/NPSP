@@ -242,7 +242,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
             List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(
-                getDataImportRecordsByIds(batchId, new List<Id>{dataImportId}));
+                getDataImportRecordsForDryRunByIds(new List<Id> { dataImportId }));
                 
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
 
@@ -270,7 +270,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
 
-            List<DataImport__c> allRawDataImports = getAllDataImportRecordsByBatchId(batchId);
+            List<DataImport__c> allRawDataImports = getAllDataImportRecordsForDryRunByBatchId(batchId);
             List<DataImport__c> rawDataImportsToPrepareForDryRun = new List<DataImport__c>();
             for (DataImport__c di : allRawDataImports) {
                 if (di.Status__c != BDI_DataImport_API.bdiImported) {
@@ -464,6 +464,26 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String query = getDataImportQuery(batchId, dataImportIds, null, null);
         return Database.query(query);
     }
+
+    /*******************************************************************************************************
+    * @description Returns a list of DataImport__c records by their ids, with fields needed for dry run
+    * @param dataImportIds List of Data Import Ids
+    * @return DataImport__c
+    */
+    private static List<DataImport__c> getDataImportRecordsForDryRunByIds(List<Id> dataImportIds) {
+        String query =  BDI_DataImportService.strSoqlForDataImportProcess(dataImportIds);
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of all DataImport__c records for a batch Id, with fields needed for dry run
+    * @param batchId a Data Import Batch Id
+    * @return List<DataImport__c>
+    */
+    public static List<DataImport__c> getAllDataImportRecordsForDryRunByBatchId(Id batchId) {
+        String query = BDI_DataImportService.strSoqlForBatchProcess(batchId);
+        return Database.query(query);
+    }    
 
     /*******************************************************************************************************
     * @description Builds DataImport__c query based on provided parameters
