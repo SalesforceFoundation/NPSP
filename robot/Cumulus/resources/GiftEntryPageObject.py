@@ -136,7 +136,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
 
 
     @capture_screenshot_on_error                
-    def fill_ge_form(self,**kwargs):
+    def fill_template_form(self,**kwargs):
         """"""
         self.selenium.execute_javascript("window.scrollBy(0,0)")
         for field,option in kwargs.items():
@@ -196,6 +196,62 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
             except ElementClickInterceptedException:
                 self.selenium.execute_javascript("window.scrollBy(0,100)")
                 self.salesforce._jsclick(checkbox)   
+
+    
+
+@pageobject("Form", "Gift Entry")
+class GiftEntryFormPage(BaseNPSPPage, BasePage):
+
+    def _is_current_page(self):
+        """
+        Verifies that current page is Gift Entry form page
+        """
+        self.selenium.wait_until_page_contains("Donor Information")
+
+    def verify_field_default_value(self,**kwargs):
+        """verifies that the field contains given default value
+        where key=field name and value=default value"""
+        for key,value in kwargs.items():
+            field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+            self.selenium.wait_until_page_contains_element(field)
+            time.sleep(.5)
+            element=self.selenium.get_webelement(field)
+            print(element)
+            default_value=element.get_attribute("value")
+            self.builtin.log_to_console(f'def value is {default_value}')
+            assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
+
+    def fill_gift_entry_form(self,**kwargs):
+        """Fill the gift entry form fields with specified values. 
+        Key is field name and value is value to be entered for field """
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["id"].format(key)
+            element=self.selenium.get_webelement(locator)
+            type=element.get_attribute("data-qa-locator")
+            print(f"type is {type}")
+            if 'autocomplete' in type :
+                self.salesforce._populate_field(locator,value)
+                value_locator=npsp_lex_locators["gift_entry"]["id"].format(value)
+                self.selenium.wait_until_page_contains_element(value_locator)
+                self.selenium.click_element(value_locator)
+            elif 'combobox' in type :
+                field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                self.selenium.click_element(field_locator)
+                popup=npsp_lex_locators["flexipage-popup"]
+                self.selenium.wait_until_page_contains_element(popup)
+                option=npsp_lex_locators["span_button"].format(value)
+                self.selenium.click_element(option)
+            else:
+                field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                self.salesforce._populate_field(field_locator,value)
+
+    def verify_error_for_field(self,**kwargs):
+        """Verify that the given field contains specified error message""" 
+        for key,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["field_alert"].format(key,value)
+            self.selenium.wait_until_page_contains_element(locator)           
+
+
 
 
 
