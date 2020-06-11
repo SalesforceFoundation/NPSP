@@ -364,10 +364,6 @@ Validate And Create Required CustomField
     ...                                                      &{fields}[Field_Type]
     ...                                                      &{fields}[Field_Name]
 
-
-    Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
-    Enable Advanced Mapping If Not Enabled
-
 Enable RD2QA
     [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata
 
