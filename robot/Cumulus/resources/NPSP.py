@@ -1344,13 +1344,30 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             if payment_data is not None:
                 numdays = 30
                 i = 1
+               
                 while i <= int(payment_data['NumPayments']):
                     payment_schedule_data = {}
                     numdays = numdays*2
-                    scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
-                    payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date, 'npe01__Payment_Amount__c' : payment_data['Amount'] } )
+                    
+                    if 'Scheduledate' in payment_data:
+                        scheduled_date = (datetime.strptime(payment_data['Scheduledate'] , '%Y-%m-%d').date() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                    else:
+                        scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                    
+                    payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date,'npe01__Payment_Amount__c' : payment_data['Amount'] } )
                     payment_id = self.salesforce.salesforce_insert("npe01__OppPayment__c", **payment_schedule_data)
+                    if 'Paid' in payment_data:
+                        if i<= int(payment_data['Paid']):
+                            self.builtin.log_to_console("Hello")
+                            payment_update_data = {}
+                            scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                            self.builtin.log_to_console(scheduled_date)
+                            payment_update_data.update( {'npe01__Payment_Date__c' : scheduled_date ,'npe01__Paid__c': "true"} )
+                            payment_id = self.salesforce.salesforce_update("npe01__OppPayment__c",payment_id , **payment_update_data)
+
                     i = i+1
+                
+
 
         self.builtin.set_suite_variable('${data}', data)
 

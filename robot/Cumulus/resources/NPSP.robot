@@ -344,7 +344,7 @@ Validate And Create Required CustomField
     [Documentation]        Reads key value pair arguments.
     ...                    Go to Object Manager page and load fields and relationships for the specific object
     ...                    Run keyword to create custom field based on the field type selection
-    [Arguments]       &{fields}
+    [Arguments]            &{fields}
     Load Page Object                                     Custom                           ObjectManager
     Open Fields And Relationships                        &{fields}[Object]
     Run Keyword If     '&{fields}[Field_Type]' == "Lookup"   Create Custom Field
@@ -354,4 +354,7 @@ Validate And Create Required CustomField
     Run Keyword If     '&{fields}[Field_Type]' == "Currency"   Create Custom Field
     ...                                                      &{fields}[Field_Type]
     ...                                                      &{fields}[Field_Name]
-
+    Run Keyword If     '&{fields}[Field_Type]' == "Formula"   Create Custom Field
+    ...                                                      &{fields}[Field_Type]
+    ...                                                      &{fields}[Field_Name]
+    ...                                                      formula=&{fields}[Formula]

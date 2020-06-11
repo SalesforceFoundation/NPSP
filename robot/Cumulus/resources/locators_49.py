@@ -241,11 +241,15 @@ npsp_lex_locators={
         'select_related':'//select[@id = "DomainEnumOrId"]',
         'select_related_option':'//select[@id = "DomainEnumOrId"]/option[@value="{}"]',
         'search_result': '//tbody/tr/td/a/span[contains(text(),"{}")]',
+        'formula_txtarea': '//textarea[@id = "{}"]',
+        'input_validation': '//input[@title = "Check Syntax"]',
+        'object_result': '//th/a[text()="{}"]',
+        'sidenav_option':'//a[text()="{}"]'
         },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
         'link':"//table[@class='list']/tbody/tr[./th/a[text()='{}']]/td/a[text()='{}']",
-        'cbx_status':'//table[@class="detailList"]/tbody/tr/th[./span[text()="{}"]]/following-sibling::td//img[@title="{}"]',
+        'cbx_status':'//table[@class="detailList"]/tbody/tr/th[./span[text()="{}"]]/following-sibling::td//img[@title="{}"]'
         },
     'adv_mappings':{
         'dropdown':"//tr[.//*[text()='{}']]/td[.//span[text()='Show actions']]//button",
@@ -253,7 +257,7 @@ npsp_lex_locators={
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
-        'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
+        'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]'
         },
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
@@ -264,6 +268,9 @@ npsp_lex_locators={
         'active_setting_record': "//td[@data-label='Active']/following::tr/th//span/div//lightning-button/button[text()='{}']",
         'rollup_progress_notification': "//div/h2[contains(text(),'{}')]",
         'rollup_options':"//tr[./th//button[text()='{}']]/td//button",
+        'button': '//button[text() = "{}"]',
+        'modal-button': '//footer/button[text()="Save"]',
+        'filter_group': "//lightning-button/button[text() = '{}']",
        },
     'gift_entry':{
         'id':'//*[contains(@data-qa-locator,"{}")]',
