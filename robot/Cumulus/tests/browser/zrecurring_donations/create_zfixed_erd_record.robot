@@ -38,7 +38,7 @@ Create Fixed Recurring Donation With Monthly Installment
     ...                          Verify the number of payments and that one opportunity with status pledged is created.
 
 
-    [tags]                                 W-040346                                  feature:RD2
+    [tags]                       unstable                     W-040346               feature:RD2
 
     Go To Page                             Listing                                   npe03__Recurring_Donation__c
     Click Object Button                    New
