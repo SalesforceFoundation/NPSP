@@ -29,43 +29,46 @@ Setup Test Data
 *** Test Cases ***
 
 Edit GE Template And Verify Changes
-    [Documentation]                           This test case makes edits to Default gift entry template and verifies that edits are saved 
-    ...                                       and available when a Single gift or batch gift are created. 
+    [Documentation]                  This test case makes edits to Default gift entry template and verifies that edits are saved 
+    ...                              and available when a Single gift or batch gift are created. 
  
-    [tags]                                    unstable  feature:GE          W-039559   
-                       
-    Go To Page                                Landing                       GE_Gift_Entry
-    Click Link                                Templates
-    Select Template Action                    Default Gift Entry Template   Edit
-    Current Page Should Be                    Template                      GE_Gift_Entry
-    Click Gift Entry Button                   Next: Form Fields
-    Select Object Group Field                 Account 1                     custom_acc_text 
-    Select Object Group Field                 Opportunity                   Donation Imported
+    [tags]                           unstable  feature:GE          W-039559   
+    # Edit Default template to add some default values and add a new field to form                   
+    Go To Page                       Landing                       GE_Gift_Entry
+    Click Link                       Templates
+    Select Template Action           Default Gift Entry Template   Edit
+    Current Page Should Be           Template                      GE_Gift_Entry
+    Click Gift Entry Button          Next: Form Fields
+    Select Object Group Field        Account 1                     custom_acc_text 
+    Select Object Group Field        Opportunity                   Donation Imported
     Fill Template Form                      
-    ...                                       Account 1: custom_acc_text=&{custom}
-    ...                                       Opportunity: Close Date=&{date}
-    ...                                       Payment: Check/Reference Number=&{check}
-    ...                                       Payment: Payment Method=&{method} 
-    Click Gift Entry Button                   Save & Close
-    Current Page Should Be                    Landing                       GE_Gift_Entry
-    Click Gift Entry Button                   New Single Gift
-    Current Page Should Be                    Form                          Gift Entry
-    ${ui_date} =                              Get Current Date              result_format=%b %-d, %Y
+    ...                              Account 1: custom_acc_text=&{custom}
+    ...                              Opportunity: Close Date=&{date}
+    ...                              Payment: Check/Reference Number=&{check}
+    ...                              Payment: Payment Method=&{method} 
+    Click Gift Entry Button          Save & Close
+    # Verify Default values are displayed on the Single Gift Form
+    Current Page Should Be           Landing                       GE_Gift_Entry
+    Click Gift Entry Button          New Single Gift
+    Current Page Should Be           Form                          Gift Entry
+    ${ui_date} =                     Get Current Date              result_format=%b %-d, %Y
     Verify Field Default Value
-    ...                                       Donation Date=${ui_date}
-    ...                                       Check/Reference Number=abc11233
-    ...                                       Payment Method=Check
+    ...                              Donation Date=${ui_date}
+    ...                              Check/Reference Number=abc11233
+    ...                              Payment Method=Check
+    # Verify Single Gift form throws error when a required field is not filled, correct and save 
     Fill Gift Entry Form
-    ...                                       Donor Type=Account1
-    ...                                       Existing Donor Organization Account=&{account}[Name]
-    ...                                       Donation Amount=${amount}
-    Click Button                              Save
+    ...                              Donor Type=Account1
+    ...                              Existing Donor Organization Account=&{account}[Name]
+    ...                              Donation Amount=${amount}
+    Click Button                     Save
     Verify Error For Field
-    ...                                       Account 1: custom_acc_text=Complete this field.
+    ...                              Account 1: custom_acc_text=Complete this field.
     Fill Gift Entry Form
-    ...                                       Account 1: custom_acc_text=${msg}  
-    Click Button                              Save
-    Current Page Should Be                    Details                       Opportunity
+    ...                              Account 1: custom_acc_text=${msg}  
+    Click Button                     Save
+    Current Page Should Be           Details                       Opportunity
+    ${opp_id} =                      Save Current Record ID For Deletion     Opportunity
 
 
     
