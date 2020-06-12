@@ -59,7 +59,7 @@ npsp_lex_locators={
     'id':'//*[contains(@id,"{}")]',
     'button':'//input[contains(@value,"{}")]',
     'link':'//a[.//span[text()="{}" or contains(text(),"{}")]]',
-    'link-text':'//a[text()="{}"]',
+    'link-text':'//a[contains(text(),"{}")]',
     'link-title':'//a[@title="{}"]',
     'link-contains':'//button[.//span[contains(text(),"{}")]]',
     'checkbox':{
@@ -273,6 +273,16 @@ npsp_lex_locators={
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
         'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
         'field_alert':"//*[contains(@data-qa-locator,'{}')]/div[@role='alert' and text()='{}']",
+        },
+    # Enhanced Recurring Donation (erd) related element locators
+    'erd':{
+        'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",
+        'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
+        'rd2_installed': "//c-progress-ring/following-sibling::lightning-formatted-text[text() = 'Enable Enhanced Recurring Donations']",
+        'installment_date' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr[{}]/th//span/div/lightning-formatted-date-time",
+        'formatted_number':"//lightning-formatted-text[text() = '{}']/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-number",
+        'formatted_date':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-date-time",
+        'formatted_text':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text"
         },
     
 }
