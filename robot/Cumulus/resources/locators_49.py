@@ -262,6 +262,7 @@ npsp_lex_locators={
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
         },
+	# Customizable rollups related element locators
     'crlps':{
         'select_locator': "//select[@name ='{}']",
         'success_toast': "//div[@class='{}']",
