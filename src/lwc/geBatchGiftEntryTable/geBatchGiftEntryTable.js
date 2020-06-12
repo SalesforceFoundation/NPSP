@@ -17,7 +17,7 @@ import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 import commonOpen from '@salesforce/label/c.commonOpen';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, isUndefined } from 'c/utilCommon';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -130,6 +130,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     getUserDefinedColumns() {
         let userDefinedColumns = [];
         this.userDefinedBatchTableColumnNames.forEach(columnName => {
+            if (isUndefined(this._columnsBySourceFieldApiName[columnName])) return;
             userDefinedColumns.push(this._columnsBySourceFieldApiName[columnName]);
         });
         return userDefinedColumns;
