@@ -1,7 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { showToast } from 'c/utilCommon';
-import { isNull } from 'c/utilCommon';
+import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
@@ -11,13 +10,13 @@ import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donat
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
 import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
+import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
-import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
 import newHeaderLabel from '@salesforce/label/c.RD2_EntryFormHeader';
 import editHeaderLabel from '@salesforce/label/c.commonEdit';
 import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHeader';
@@ -44,6 +43,7 @@ export default class rd2EntryForm extends LightningElement {
     @api parentId;
     @api recordId;
 
+    @track isEdit = false;
     @track record;
     @track isMultiCurrencyEnabled = false;
     @track fields = {};
@@ -105,6 +105,8 @@ export default class rd2EntryForm extends LightningElement {
 
             if (isNull(this.recordId)) {
                 this.isRecordReady = true;
+            } else {
+                this.isEdit = true;
             }
         }
 
@@ -134,6 +136,9 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
         this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
         this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
+        this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
+        this.fields.status = this.extractFieldInfo(fieldInfos[FIELD_STATUS.fieldApiName]);
+        this.fields.statusreason = this.extractFieldInfo(fieldInfos[FIELD_STATUS_REASON.fieldApiName]);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
     }
 
@@ -201,7 +206,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Handle component display when an error occurs
     */
     handleError(error) {
-        this.errorMessage = this.constructErrorMessage(error);
+        this.errorMessage = constructErrorMessage(error);
         this.hasError = true;
         this.isLoading = false;
 
@@ -225,53 +230,22 @@ export default class rd2EntryForm extends LightningElement {
             ? updateSuccessMessage.replace("{0}", recordName)
             : insertSuccessMessage.replace("{0}", recordName);
 
-        showToast(message, '', 'success');
+        showToast(message, '', 'success', []);
 
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
     }
 
-    /***
-    * @description Contruct error wrapper from the error event
-    *   error.body is the error from apex calls
-    *   error.body.output.errors is for AuraHandledException messages
-    *   error.body.message errors is the error from wired service
-    *   error.detail.output.errors is the error from record-edit-forms
-    */
-    constructErrorMessage(error) {
-        let header;
-        let message;
-
-        if (typeof error === 'string' || error instanceof String) {
-            message = error;
-
-        } else if (error.message) {
-            message = error.message;
-
-        } else if ((error.body && error.body.output)) {
-            if (Array.isArray(error.body) &&
-                !error.body.output.errors) {
-                message = error.body.map(e => e.message).join(', ');
-
-            } else if (typeof error.body.message === 'string' &&
-                !error.body.output.errors) {
-                message = error.body.message;
-
-            } else if (error.body.output &&
-                Array.isArray(error.body.output.errors)) {
-                message = error.body.output.errors.map(e => e.message).join(', ');
-            }
-
-        } else if (error.detail && error.detail.output && Array.isArray(error.detail.output.errors)) {
-            header = error.detail.message;
-            message = error.detail.output.errors.map(e => e.message).join(', ');
-
-        } else if (error.body && error.body.message) {
-            message = error.body.message;
-        }
-
-        return {
-            header: header || unknownErrorLabel,
-            detail: message || unknownErrorLabel
-        };
-    }
 }
+
+/**
+ * TODO This does not work yet. The calling code says "Type Error: handleError is not a function"
+ * @param {object} error:
+ */
+const handleError = (error) => {
+    alert('handleError');
+    rd2EntryForm.handleError(error);
+}
+
+export {
+    handleError
+};

@@ -2,6 +2,8 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
+import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
+
 const FUNCTION = 'function';
 const OBJECT = 'object';
 
@@ -431,6 +433,52 @@ const validateJSONString = (str) => {
     }
 }
 
+/***
+ * @description Contruct error wrapper from the error event
+ *   error.body is the error from apex calls
+ *   error.body.output.errors is for AuraHandledException messages
+ *   error.body.message errors is the error from wired service
+ *   error.detail.output.errors is the error from record-edit-forms
+ * @returns Object with header and detail to render in the UI
+ */
+const constructErrorMessage = (error) => {
+    let header;
+    let message;
+
+    if (typeof error === 'string' || error instanceof String) {
+        message = error;
+
+    } else if (error.message) {
+        message = error.message;
+
+    } else if ((error.body && error.body.output)) {
+        if (Array.isArray(error.body) &&
+            !error.body.output.errors) {
+            message = error.body.map(e => e.message).join(', ');
+
+        } else if (typeof error.body.message === 'string' &&
+            !error.body.output.errors) {
+            message = error.body.message;
+
+        } else if (error.body.output &&
+            Array.isArray(error.body.output.errors)) {
+            message = error.body.output.errors.map(e => e.message).join(', ');
+        }
+
+    } else if (error.detail && error.detail.output && Array.isArray(error.detail.output.errors)) {
+        header = error.detail.message;
+        message = error.detail.output.errors.map(e => e.message).join(', ');
+
+    } else if (error.body && error.body.message) {
+        message = error.body.message;
+    }
+
+    return {
+        header: header || unknownErrorLabel,
+        detail: message || unknownErrorLabel
+    };
+}
+
 /*******************************************************************************
  * @description Creates and dispatches a ShowToastEvent
  *
@@ -454,6 +502,7 @@ const showToast = (title, message, variant, mode, messageData) => {
 }
 
 export {
+    constructErrorMessage,
     debouncify,
     deepClone,
     findIndexByProperty,

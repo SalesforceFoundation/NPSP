@@ -1,7 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { fireEvent } from 'c/pubsubNoPageRef';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { constructErrorMessage } from 'c/rd2EntryForm'
+import { handleError } from 'c/rd2EntryForm'
 import { isNull } from 'c/utilCommon';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
@@ -54,7 +53,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                     this.updateDonorFields(this.donorType);
                 })
                 .catch((error) => {
-                    constructErrorMessage(error);
+                    handleError(error);
                 });
         }
 
@@ -63,7 +62,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                 this.handleParentIdType(response.parentSObjectType);
             })
             .catch((error) => {
-                constructErrorMessage(error);
+                handleError(error);
             })
             .finally(() => {
                 this.isLoading = false;
@@ -104,7 +103,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
         } else if (response.error) {
             this.isLoading = false;
-            constructErrorMessage(response.error);
+            handleError(response.error);
         }
     }
 

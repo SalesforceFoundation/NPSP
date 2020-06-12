@@ -1,7 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { fireEvent } from 'c/pubsubNoPageRef';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
-import { handleError } from 'c/utilTemplateBuilder'
+import { handleError } from 'c/rd2EntryForm'
 import { isNull } from 'c/utilCommon';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
@@ -9,7 +8,6 @@ import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
 import FIELD_PLANNED_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
-import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
@@ -84,7 +82,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     */
     setFields(fieldInfos) {
         this.fields.recurringType = this.extractFieldInfo(fieldInfos[FIELD_RECURRING_TYPE.fieldApiName]);
-        this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
         this.fields.period = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_PERIOD.fieldApiName]);
         this.fields.installmentFrequency = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
         this.fields.dayOfMonth = this.extractFieldInfo(fieldInfos[FIELD_DAY_OF_MONTH.fieldApiName]);
