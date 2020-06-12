@@ -765,6 +765,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def check_if_element_exists(self, xpath):
         elements =self.selenium.get_element_count(xpath)
         return True if elements > 0 else False
+
+    def check_if_element_displayed(self, xpath):
+        """ Check for the visibility of an element based on the xpath sent"""
+        element = self.selenium.get_webelement(xpath)
+        return True if element.is_displayed() else False
     
     def select_multiple_values_from_list(self,list_name,*args): 
         """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
@@ -996,7 +1001,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['link-text'].format(text)
         self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)  
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+        time.sleep(1)
     
     def verify_expected_batch_values(self, batch_id,**kwargs):
         """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""    
@@ -1548,3 +1554,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         out['baseurl'] = base_url
         out['objectname'] = object_name
         return out
+    
+    def check_submenu_link_exists(self,title):
+        """Checks for the presence of the submenu item under the main menu"""
+        locator=npsp_lex_locators['link-text'].format(title)
+        isPresent = False
+        if self.npsp.check_if_element_exists(locator):
+            isPresent = True
+        return isPresent
+    
