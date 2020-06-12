@@ -5529,7 +5529,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- "Donor Name" and "Donation Name" texts in this label have related custom labels. -->
         <!-- Related custom labels are geDonorColumnLabel annd geDonationColumnLabel -->
         <value>
-        The recommended fields are included.
+        We recommend including the following fields:
         &lt;/br&gt;
         &lt;ul&gt;
             &lt;li&gt; Donor Name links to the Organization Account or Contact giving the donation. &lt;/li&gt;
