@@ -2,6 +2,7 @@
 
 Resource       cumulusci/robotframework/Salesforce.robot
 Library        DateTime
+Library        robot/Cumulus/resources/NPSPSettingsPageObject.py
 Library        NPSP.py
 
 *** Variables ***
@@ -30,7 +31,7 @@ API Create Contact
     ${contact_id} =  Salesforce Insert  Contact
     ...                  FirstName=${first_name}
     ...                  LastName=${last_name}
-    ...                  &{fields}  
+    ...                  &{fields}
     &{contact} =     Salesforce Get  Contact  ${contact_id}
     [return]         &{contact}
 
@@ -60,7 +61,7 @@ API Create Campaign
     ${name} =   Generate Random String
     ${campaign_id} =  Salesforce Insert  Campaign
     ...                  Name=${name}
-    ...                  &{fields}  
+    ...                  &{fields}
     &{campaign} =     Salesforce Get  Campaign  ${campaign_id}
     [return]         &{campaign}
     
@@ -83,7 +84,7 @@ API Create Opportunity
     ...               CloseDate=${close_date}
     ...               Amount=100
     ...               Name=Test Donation
-    ...               npe01__Do_Not_Automatically_Create_Payment__c=true 
+    ...               npe01__Do_Not_Automatically_Create_Payment__c=true
     ...               &{fields}
     &{opportunity} =     Salesforce Get  Opportunity  ${opp_id} 
     [return]         &{opportunity}  
@@ -115,7 +116,7 @@ API Create Primary Affiliation
     ${opp_id} =  Salesforce Insert    npe5__Affiliation__c
     ...               npe5__Organization__c=${account_id}
     ...               npe5__Contact__c=${contact_id}
-    ...               npe5__Primary__c=true 
+    ...               npe5__Primary__c=true
     ...               &{fields}
 
 API Create Secondary Affiliation
@@ -129,7 +130,7 @@ API Create Secondary Affiliation
     ${opp_id} =  Salesforce Insert    npe5__Affiliation__c
     ...               npe5__Organization__c=${account_id}
     ...               npe5__Contact__c=${contact_id}
-    ...               npe5__Primary__c=false 
+    ...               npe5__Primary__c=false
     ...               &{fields}
 
 API Create Relationship
@@ -146,8 +147,8 @@ API Create Relationship
     ...                  npe4__Contact__c=${contact_id}
     ...                  npe4__RelatedContact__c=${relcontact_id}
     ...                  npe4__Type__c=${relation}
-    ...                  npe4__Status__c=Current    
-    ...                  &{fields}  
+    ...                  npe4__Status__c=Current
+    ...                  &{fields}
     &{relation} =     Salesforce Get  npe4__Relationship__c  ${rel_id}
     [return]         &{relation}
 
@@ -159,7 +160,7 @@ API Create Recurring Donation
     [Arguments]        &{fields}
     ${ns} =            Get Npsp Namespace Prefix
     ${recurring_id} =  Salesforce Insert  npe03__Recurring_Donation__c
-    ...                &{fields} 
+    ...                &{fields}
     &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
     [return]           &{recurringdonation}
 
@@ -190,7 +191,7 @@ API Create GAU
     ${ns} =    Get Npsp Namespace Prefix
     ${gau_id} =  Salesforce Insert  ${ns}General_Accounting_Unit__c
     ...               Name=${name}
-    ...               &{fields} 
+    ...               &{fields}
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
 
@@ -250,6 +251,15 @@ API Create DataImport
     ...                 &{fields}
     &{data_import} =    Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
     [return]            &{data_import}
+
+API Query Opportunity For Recurring Donation
+    [Arguments]        ${id}                      &{fields}
+    Sleep               2    #sleep here is necessary for the backend to get updated
+    @{object} =        Salesforce Query           Opportunity
+    ...                select=Id
+    ...                npe03__Recurring_Donation__c=${id}
+    ...                &{fields}
+    [return]           @{object}
 
 Validate Batch Process When CRLP Unchecked
     [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled
@@ -354,4 +364,59 @@ Validate And Create Required CustomField
     Run Keyword If     '&{fields}[Field_Type]' == "Currency"   Create Custom Field
     ...                                                      &{fields}[Field_Type]
     ...                                                      &{fields}[Field_Name]
+
+Enable RD2QA
+    [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata
+
+    ${apex}=  Catenate  SEPARATOR=\n
+    ...   Map<String, Object> params = new Map<String, Object>{ 'ScheduleJobs' => true };
+    ...   String shouldScheduleJobs = '%%%PARAM_1%%%';
+    ...   if (!String.isEmpty(shouldScheduleJobs)) {
+    ...         params.put('ScheduleJobs', Boolean.valueOf(shouldScheduleJobs));
+    ...   }
+    ...   String ns = ('%%%NAMESPACE%%%').replace('__','');
+    ...   Type t = Type.forName(ns, 'Callable_Api');
+    ...   Callable apiClass = (Callable)t.newInstance();
+    ...   apiClass.call('Settings.EnableEnhancedRecurringDonations', params);
+
+    ${apex2}=  Catenate  SEPARATOR=\n
+    ...   Map<String, Object> params = new Map<String, Object>();
+    ...   String ns = ('%%%NAMESPACE%%%').replace('__','');
+    ...   Type t = Type.forName(ns, 'Callable_Api');
+    ...   Callable apiClass = (Callable)t.newInstance();
+    ...   apiClass.call('RD2.ExecuteDataMigration', params);
+
+    ${apex3}=  Catenate  SEPARATOR=\n
+    ...   npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+    ...   rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
+    ...   upsert rdSettings;
+
+    # Enable customizable rollups after enabling RD2
+    Run Task       enable_crlp
+    # Wait for CRLP to be fully enabled before continuing with data migration
+    Run Task       custom_settings_value_wait
+    ...            object=%%%NAMESPACE%%%Customizable_Rollup_Settings__c
+    ...            field=%%%NAMESPACE%%%Customizable_Rollups_Enabled__c
+    ...            value=true
+    # Enables RD2 in Custom Settings.
+    Run Task       execute_anon
+    ...            apex= ${apex}
+    # Deploys the unpackaged configuration required for RD2
+    Run Task       deploy_rd2_config
+    # Execute the data migration job in case there is any RD test data in the org
+    Run Task       execute_anon
+    ...            apex= ${apex2}
+    Run Task       batch_apex_wait
+    ...            class_name=RD2_DataMigration_BATCH
+    # Update enhanced Recurring Donation enablement page state
+    Run Task       execute_anon
+    ...            apex= ${apex3}
+
+Enable RD2
+    [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
+    Go To Page                Custom         NPSP_Settings
+    Open Main Menu            Recurring Donations
+    ${rd2_enabled} =          Check Rd2 Is Enabled
+    Run Keyword if            "${rd2_enabled}"!="True"
+    ...                       Enable RD2QA
 
