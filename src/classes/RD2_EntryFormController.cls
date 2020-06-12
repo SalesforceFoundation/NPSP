@@ -41,7 +41,7 @@ public with sharing class RD2_EntryFormController {
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
-    @AuraEnabled
+    @AuraEnabled(Cacheable=true)
     public static Map<String, Object> getSetting(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
@@ -57,7 +57,7 @@ public with sharing class RD2_EntryFormController {
 
     /**
     * @description Retrieve the donor type for an existing RD record
-    * @param rdId RecurringDonation.RecordId
+    * @param recordId RecurringDonation.RecordId
     * @return Account (if Org is not a Household) or Contact
     */
     @AuraEnabled(Cacheable=true)
@@ -76,9 +76,9 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
-    * @param rdId RecurringDonation.RecordId
-     * @return Recurring Donation object
-     */
+    * @param recordId RecurringDonation.RecordId
+    * @return Recurring Donation object
+    */
     private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
         Set<String> queryFields = new Set<String>{
             'Id',
