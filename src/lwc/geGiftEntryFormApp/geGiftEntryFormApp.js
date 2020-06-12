@@ -2,9 +2,10 @@
 * @description Server / Platform  Imports
 */
 import { LightningElement, api, track, wire } from 'lwc';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
 import { isNotEmpty, validateJSONString, format, getNamespace } from 'c/utilCommon';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
@@ -31,6 +32,7 @@ import EXPECTED_COUNT_OF_GIFTS
     from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
 import EXPECTED_TOTAL_BATCH_AMOUNT
     from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -586,10 +588,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @wire(getRecord, {
         recordId: '$recordId',
-        fields: [BATCH_NAME, EXPECTED_COUNT_OF_GIFTS,
+        fields: [BATCH_ID_FIELD,
+            BATCH_NAME
+        ],
+        optionalFields: [
+            EXPECTED_COUNT_OF_GIFTS,
             EXPECTED_TOTAL_BATCH_AMOUNT,
             REQUIRE_TOTAL_MATCH,
-            BATCH_TABLE_COLUMNS_FIELD]
+            BATCH_TABLE_COLUMNS_FIELD
+        ]
     })
     batch;
 
@@ -668,6 +675,117 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     handleTotalChanged(event) {
         this.total = event.detail.value;
+    }
+
+    get batchId() {
+        return getFieldValue(this.batch.data, BATCH_ID_FIELD);
+    }
+
+    handleReceiveEvent(event) {
+        const closeModalCallback = function() {
+            closeModal();
+            unregisterModalListener();
+        }
+        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
+        const unregisterModalListener = () =>
+            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
+
+        if (event.action === 'save') {
+            let fields = {};
+            fields[BATCH_ID_FIELD.fieldApiName] = this.batchId;
+            fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
+                JSON.stringify(event.payload.values);
+
+            const recordInput = {fields};
+            const lastModifiedDate =
+                this.batch.data.lastModifiedDate;
+            const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
+            updateRecord(recordInput, clientOptions)
+                .then(closeModalCallback)
+                .catch((error) =>
+                    handleError(error)
+                );
+        } else {
+            closeModalCallback();
+        }
+    }
+
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT})
+    dataImportBatchObjectInfo;
+
+    get userCanEditBatchTableColumns() {
+        try {
+            return this.dataImportBatchObjectInfo.data.fields[
+                BATCH_TABLE_COLUMNS_FIELD.fieldApiName
+                ].updateable;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    handleSelectColumns(event) {
+        const modalContent =
+            this.userCanEditBatchTableColumns ?
+                this.buildModalConfigSelectColumns(
+                    event.detail.options,
+                    event.detail.values) :
+                this.modalConfigNoAccess;
+
+        registerListener('privateselectcolumns', this.handleReceiveEvent, this);
+
+        this.dispatchEvent(new CustomEvent('togglemodal', {
+            detail: modalContent
+        }));
+    }
+
+    buildModalConfigSelectColumns(available, selected) {
+        const modalHeader = this.CUSTOM_LABELS.geTabBatchTableColumns;
+        const modalConfig = {
+            componentProperties: {
+                name: 'selectcolumnsmodal',
+                cssClass: 'slds-m-bottom_medium slds-p-horizontal_small',
+                sourceLabel: this.CUSTOM_LABELS.geLabelCustomTableSourceFields,
+                selectedLabel: this.CUSTOM_LABELS.geLabelCustomTableSelectedFields,
+                dedicatedListenerEventName: 'privateselectcolumns',
+                options: available,
+                values: selected,
+                showModalFooter: true,
+                min: 1
+            },
+            modalProperties: {
+                cssClass: 'slds-modal_large',
+                header: modalHeader,
+                componentName: 'utilDualListbox',
+                showCloseButton: true
+            }
+        };
+        return modalConfig;
+    }
+
+    get modalConfigNoAccess() {
+        const modalHeader = this.CUSTOM_LABELS.geTabBatchTableColumns;
+        const errorFLSBody = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorFLSBody,
+            [BATCH_TABLE_COLUMNS_FIELD.fieldApiName]);
+        const message = `${this.CUSTOM_LABELS.geErrorFLSBatchTableColumns}  ${errorFLSBody}`;
+        const modalConfig = {
+            componentProperties: {
+                name: 'noaccessmodal',
+                illustrationClass: 'slds-p-around_large',
+                dedicatedListenerEventName: 'privateselectcolumns',
+                showModalFooter: false,
+                message: message,
+                title: this.CUSTOM_LABELS.geErrorFLSHeader,
+                variant: 'lake-mountain'
+            },
+            modalProperties: {
+                cssClass: 'slds-modal_large',
+                header: modalHeader,
+                componentName: 'utilIllustration',
+                showCloseButton: true
+            }
+        };
+        return modalConfig;
     }
 
 }

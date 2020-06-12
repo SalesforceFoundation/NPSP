@@ -145,22 +145,22 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 section.elements
                     .filter(e => e.elementType === 'field')
                     .forEach(
-                    element => {
-                        const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
-                        if (isNotEmpty(fieldWrapper)) {
-                            const column = {
-                                label: element.customLabel,
-                                fieldName: fieldWrapper.Source_Field_API_Name,
-                                type: GeFormService.getInputTypeFromDataType(
-                                    element.dataType
-                                ) === 'date' ? 'date-local' :
-                                    GeFormService.getInputTypeFromDataType(element.dataType)
-                            };
+                        element => {
+                            const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+                            if (isNotEmpty(fieldWrapper)) {
+                                const column = {
+                                    label: element.customLabel,
+                                    fieldName: fieldWrapper.Source_Field_API_Name,
+                                    type: GeFormService.getInputTypeFromDataType(
+                                        element.dataType
+                                    ) === 'date' ? 'date-local' :
+                                        GeFormService.getInputTypeFromDataType(element.dataType)
+                                };
 
-                            this._columnsBySourceFieldApiName[column.fieldName] = column;
+                                this._columnsBySourceFieldApiName[column.fieldName] = column;
+                            }
                         }
-                    }
-                );
+                    );
             }
         );
 
@@ -317,6 +317,22 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 value: total
             }
         }));
+    }
+
+    handleMenuItemSelect(event) {
+        if (event.detail.value === 'selectcolumns') {
+            const selectColumns = new CustomEvent('selectcolumns', {
+                detail: {
+                    options: this.getAllColumns()
+                        .map(({label, fieldName}) => ({
+                            label, value: fieldName
+                        })),
+                    values: this.computedColumns
+                        .map(({fieldName}) => fieldName)
+                }
+            });
+            this.dispatchEvent(selectColumns);
+        }
     }
 
 }
