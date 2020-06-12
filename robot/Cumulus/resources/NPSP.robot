@@ -417,6 +417,6 @@ Enable RD2
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            Recurring Donations
     ${rd2_enabled} =          Check Rd2 Is Enabled
-    Run Keyword if            "${rd2_enabled}"=="False"
+    Run Keyword if            "${rd2_enabled}"!="True"
     ...                       Enable RD2QA
 
