@@ -5534,7 +5534,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         &lt;ul&gt;
             &lt;li&gt; Donor Name—links to the Organization Account or Contact giving the donation. &lt;/li&gt;
             &lt;li&gt; Donation Name links to the Opportunity or Payment for the donation. &lt;/li&gt;
-            &lt;li&gt; Status and Failure Information give you information about batch processing. &lt;/li&gt;
+            &lt;li&gt; Status and Failure Information—information about batch processing. &lt;/li&gt;
         &lt;/ul&gt;
         </value>
     </labels>
