@@ -80,9 +80,9 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
         try {
-        	List<SObject> toUpdate = new List<SObject>();
-        	if (STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
-        		toUpdate.add(STG_Panel.stgService.stgRD);
+            List<SObject> toUpdate = new List<SObject>();
+            if (STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
+                toUpdate.add(STG_Panel.stgService.stgRD);
             }
 
             Boolean hasUpdatePermission = UTIL_Describe.getObjectDescribe(
@@ -109,7 +109,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
 
-    	return null;
+        return null;
     }
 
     /***
@@ -161,9 +161,9 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     */
     public List<SelectOption> listSORDCloseOptions {
         get {
-        	if (listSORDCloseOptions == null) {
-	            listSORDCloseOptions = getCloseOptions();
-        	}
+            if (listSORDCloseOptions == null) {
+                listSORDCloseOptions = getCloseOptions();
+            }
             return listSORDCloseOptions;
         }
         private set;
@@ -215,9 +215,9 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     */
     public List<SelectOption> installmentCreateOptions {
         get {
-        	if (installmentCreateOptions == null) {
-	            installmentCreateOptions = getCreationOptions();
-        	}
+            if (installmentCreateOptions == null) {
+                installmentCreateOptions = getCreationOptions();
+            }
             return installmentCreateOptions;
         }
         private set;

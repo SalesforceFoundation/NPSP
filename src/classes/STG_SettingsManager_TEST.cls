@@ -245,9 +245,9 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void testSettingsService() {
-    	STG_SettingsService svc = STG_SettingsService.stgService;
-    	system.assertNotEquals(null, svc);
-    	system.assertNotEquals(null, svc.stgCon);
+        STG_SettingsService svc = STG_SettingsService.stgService;
+        system.assertNotEquals(null, svc);
+        system.assertNotEquals(null, svc.stgCon);
         system.assertNotEquals(null, svc.stgHH);
         system.assertNotEquals(null, svc.stgRD);
         system.assertNotEquals(null, svc.stgRel);
@@ -267,11 +267,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void testPanelAffl() {
-    	STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
-    	system.assertEquals('idPanelAffl', panel.idPanel());
-    	STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
-    	panel.saveSettings();
-    	system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
+        STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
+        system.assertEquals('idPanelAffl', panel.idPanel());
+        STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
+        panel.saveSettings();
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
         STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = false;
         panel.saveSettings();
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
