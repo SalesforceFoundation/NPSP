@@ -1354,21 +1354,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 while i <= int(payment_data['NumPayments']):
                     payment_schedule_data = {}
                     numdays = numdays*2
-                    
+                    # Based on the number of payments parameter numpayments, populate the number of payments and associate it to the opportunity
+					# While populating the number of payments if a desired scheduled payment date is provided use it if not use the current date
                     if 'Scheduledate' in payment_data:
                         scheduled_date = (datetime.strptime(payment_data['Scheduledate'] , '%Y-%m-%d').date() + timedelta(days = numdays)).strftime('%Y-%m-%d')
                     else:
                         scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
-                    
                     payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date,'npe01__Payment_Amount__c' : payment_data['Amount'] } )
                     payment_id = self.salesforce.salesforce_insert("npe01__OppPayment__c", **payment_schedule_data)
-                    if 'Paid' in payment_data:
-                        if i<= int(payment_data['Paid']):
-                            self.builtin.log_to_console("Hello")
+					
+					# Out of the total number of payments being generated if user paid the payements for n number of payments specified in the field completedPyaments
+					# Mark the payments as paid and populate the payment date
+                    if 'CompletedPayments' in payment_data:
+                        if i<= int(payment_data['CompletedPayments']):
                             payment_update_data = {}
-                            scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
-                            self.builtin.log_to_console(scheduled_date)
-                            payment_update_data.update( {'npe01__Payment_Date__c' : scheduled_date ,'npe01__Paid__c': "true"} )
+                            payment_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                            payment_update_data.update( {'npe01__Payment_Date__c' : payment_date ,'npe01__Paid__c': "true"} )
                             payment_id = self.salesforce.salesforce_update("npe01__OppPayment__c",payment_id , **payment_update_data)
 
                     i = i+1

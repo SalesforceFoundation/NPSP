@@ -26,7 +26,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             link, error="Current page is not a customizable rollups setting view"
         )
 
-    def is_setting_present(self, object, name):
+    def _is_setting_present(self, object, name):
         """ Search for the presence of an active crlp setting record already. Return a boolean value accordingly
          """
         formatted = object + ": " + name
@@ -43,15 +43,13 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             print("crlp setting already exists")
         return isPresent
 
-    def is_filter_present(self, filtername):
+    def _is_filter_present(self, filtername):
         """ Search for the presence of an active crlp filter setting record already. Return a boolean value accordingly
 		"""
         isPresent = False
-        filter = npsp_lex_locators['crlps']['filter_group'].format(filtername)
-        self.builtin.log_to_console(filter)
+        filter = npsp_lex_locators['button-with-text'].format(filtername)
         list_ele = self.selenium.get_webelements(filter)
         p_count=len(list_ele)
-        self.builtin.log_to_console(p_count)
         if p_count == 0:
             print("Filter Group Not found")
         else:
@@ -63,32 +61,32 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
     def create_new_filter_setting(self, *args, **kwargs):
         """Creates a new filter setting by taking in all the filtering criteria(s)
 		"""
-        view_filter_locator = npsp_lex_locators['crlps']['button'].format("View Filter Groups")
-        new_filter_locator = npsp_lex_locators['crlps']['button'].format("New Filter Group")
+        view_filter_locator = npsp_lex_locators['button-with-text'].format("View Filter Groups")
+        new_filter_locator = npsp_lex_locators['button-with-text'].format("New Filter Group")
         success_toast = npsp_lex_locators['crlps']['success_toast']
-        add_filter_btn = npsp_lex_locators['crlps']['button'].format("Add")
+        add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
         self.selenium.wait_until_page_contains_element(view_filter_locator)
         view_filter_button = self.selenium.get_webelement(view_filter_locator)
         self.selenium.click_element(view_filter_button)
         self.selenium.wait_until_page_contains_element(new_filter_locator,60)
-        if self.is_filter_present(kwargs['Name']):
+        if self._is_filter_present(kwargs['Name']):
             return
         else:
             self.selenium.click_element(new_filter_locator)
             self.selenium.wait_until_page_contains_element(add_filter_btn,60)
             self.npsp.populate_modal_form(**kwargs)
-            self.add_filter(*args)
+            self._add_filter(*args)
             self.selenium.click_button("Save")
             self.selenium.wait_until_element_is_not_visible(success_toast)
 
 
     @capture_screenshot_on_error
-    def add_filter(self, *args):
-        """Gets the filter criteria and adds into the filter modal
+    def _add_filter(self, *args):
+        """This is a helper method that gets the filter criteria and adds into the filter modal
 		"""
         modal_save_btn = npsp_lex_locators['crlps']['modal-button']
         for arg in args:
-            add_filter_btn = npsp_lex_locators['crlps']['button'].format("Add")
+            add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
             self.salesforce._jsclick(add_filter_btn)
             self.npsp.populate_modal_form(**arg)
             self.salesforce._jsclick(modal_save_btn)
@@ -105,7 +103,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         )
         toast_hide = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_success slds-hide')
         toast_visible = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_info ')
-        if self.is_setting_present(kwargs["Target Object"], kwargs["Target Field"]):
+        if self._is_setting_present(kwargs["Target Object"], kwargs["Target Field"]):
             return
         else:
             self.selenium.wait_until_page_contains_element(locator)
