@@ -34,9 +34,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         search_results = npsp_lex_locators["crlps"]["active_setting_record"].format(
             formatted
         )
-        list_ele = self.selenium.get_webelements(search_results)
-        p_count = len(list_ele)
-        if p_count == 0:
+        elements = int(self.selenium.get_element_count(search_results))
+        if elements == 0:
             print("crlp setting record Not found")
         else:
             isPresent = True
@@ -48,18 +47,21 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 		"""
         isPresent = False
         filter = npsp_lex_locators['button-with-text'].format(filtername)
-        list_ele = self.selenium.get_webelements(filter)
-        p_count=len(list_ele)
-        if p_count == 0:
+        elements = int(self.selenium.get_element_count(filter))
+        if elements == 0:
             print("Filter Group Not found")
         else:
             isPresent = True
             print("Filter Group Already Exists")
         return isPresent
 
+
     @capture_screenshot_on_error
     def create_new_filter_setting(self, *args, **kwargs):
         """Creates a new filter setting by taking in all the filtering criteria(s)
+           Create New Filter Setting
+           ...            @{filterPools}        // list of filtering criteria(s)
+           ...            &{dict}               // Should contain Filter name and description fields eg: Name=Old Payments    Description=this is a test.
 		"""
         view_filter_locator = npsp_lex_locators['button-with-text'].format("View Filter Groups")
         new_filter_locator = npsp_lex_locators['button-with-text'].format("New Filter Group")

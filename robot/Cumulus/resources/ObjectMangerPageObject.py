@@ -112,7 +112,7 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.get_webelement(search_button).send_keys(field_name)
 		self.selenium.get_webelement(search_button).send_keys(Keys.ENTER)
 		time.sleep(1)
-		self.builtin.log_to_console(formula)
+		self.builtin.log(formula)
 		self.salesforce.wait_until_loading_is_complete()
 		search_results = npsp_lex_locators['object_manager']['search_result'].format(field_name)
 		count = len(self.selenium.get_webelements(search_results))

@@ -37,7 +37,7 @@ Setup Custom Fields
 
 Total Current Year Payments on Prior Year Pledges
     [Documentation]       Calculates Total Current Year Payments on Prior Year opportunity Pledges
-    ....                  Enables CRLP settings, creates the custom fields on account and payment objects required for rollup
+    ...                   Enables CRLP settings, creates the custom fields on account and payment objects required for rollup
     ...                   Creates a filter and crlp setting to rollup the amount of current year payments on a previous year opportunity
 
     [tags]                            unstable                          W-037650                           feature:crlps
@@ -86,7 +86,7 @@ Total Current Year Payments on Prior Year Pledges
 
     # Navigate to the Account page and verify the new rollupfield is appearing and is showing the right amouunt
     ${accepted_values}=  Create List           $1,667       $1,666.68
-    Go To Page                           Details                                 Account                                object_id=${data}[contact][AccountId]
+    Go To Page                           Details          Account                                               object_id=${data}[contact][AccountId]
     Wait Until Loading Is Complete
     Select Tab                                            Details
     Validate Rollup Field Contains                        This Year Payments on Past Year Pledges               ${accepted_values}
