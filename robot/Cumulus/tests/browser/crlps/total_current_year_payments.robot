@@ -51,8 +51,8 @@ Total Current Year Payments on Prior Year Pledges
     ${filterPools}=  Create List           ${dict1}       ${dict2}
 
     Create New Filter Setting
-    ...                                                   @{filterPools}
-    ...                                                   &{dict}
+    ...                                                   @{filterPools}  # Contains a list of filter metadata
+    ...                                                   &{dict}         # Contains the name of the fitler and the description to be added
     Enable Customizable Rollups
     Load Page Object                                       Custom                          CustomRollupSettings
     Navigate To Crlpsettings
@@ -84,7 +84,7 @@ Total Current Year Payments on Prior Year Pledges
     ...                                  Opportunity
     ...                                  object_id=${data}[contact_opportunity][Id]
 
-    # Navigate to the Account page and verify the new rollupfield is appearing and is showing the right amouunt
+    # Navigate to the Account page and verify that the new rollupfield is appearing and is showing the right calculated amount
     ${accepted_values}=  Create List           $1,667       $1,666.68
     Go To Page                           Details          Account                                               object_id=${data}[contact][AccountId]
     Wait Until Loading Is Complete
