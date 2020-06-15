@@ -24,6 +24,10 @@ Setup Test Data
     Set suite variable    &{contact}
     &{account} =     API Create Organization Account    Name=${faker.company()}
     Set suite variable    &{account}
+    ${org_ns} =  Get Org Namespace Prefix
+    Set suite variable    ${org_ns}
+    ${ns} =  Get NPSP Namespace Prefix
+    Set suite variable    ${ns}
 
 
 *** Test Cases ***
@@ -52,6 +56,7 @@ Edit GE Template And Verify Changes
     Click Gift Entry Button          New Single Gift
     Current Page Should Be           Form                          Gift Entry
     ${ui_date} =                     Get Current Date              result_format=%b %-d, %Y
+    ${date} =     Get Current Date    result_format=%Y-%m-%d
     Verify Field Default Value
     ...                              Donation Date=${ui_date}
     ...                              Check/Reference Number=abc11233
@@ -67,8 +72,45 @@ Edit GE Template And Verify Changes
     Fill Gift Entry Form
     ...                              Account 1: custom_acc_text=${msg}  
     Click Button                     Save
+    # Verify default values and newly added field to the form on payment and account records
     Current Page Should Be           Details                       Opportunity
     ${opp_id} =                      Save Current Record ID For Deletion     Opportunity
+    ${pay_id} =                      API Get Id             npe01__OppPayment__c        npe01__Opportunity__c=${opp_id}
+    Verify Expected Values           nonns    npe01__OppPayment__c    ${pay_id}
+    ...                              npe01__Payment_Amount__c=50.0
+    ...                              npe01__Payment_Date__c=${date}
+    ...                              npe01__Paid__c=True
+    ...                              npe01__Check_Reference_Number__c=abc11233
+    ...                              npe01__Payment_Method__c=Check
+    Verify Expected Values           nonns    Account     &{account}[Id]
+    ...                              ${org_ns}custom_acc_text__c=${msg}
+    Go To Page                       Landing                       GE_Gift_Entry
+    Click Gift Entry Button          New Batch
+    Wait Until Modal Is Open
+    Select Template                  Default Gift Entry Template
+    Fill Gift Entry Form
+    ...                              Batch Name=Automation Batch
+    ...                              Batch Description=This is a test batch created via automation script
+    Click Gift Entry Button          Next
+    Click Gift Entry Button          Save
+    Current Page Should Be           Form                          Gift Entry
+    ${batch_id} =                    Save Current Record ID For Deletion     ${ns}DataImportBatch__c
+    Verify Field Default Value
+    ...                              Donation Date=${ui_date}
+    ...                              Check/Reference Number=abc11233
+    ...                              Payment Method=Check
+    Fill Gift Entry Form
+    ...                              Donor Type=Contact1
+    ...                              Existing Donor Contact=&{contact}[Name]
+    ...                              Donation Amount=${amount}
+    Click Button                     Save & Enter New Gift
+    Verify Error For Field
+    ...                              Account 1: custom_acc_text=Complete this field.
+    Fill Gift Entry Form
+    ...                              Account 1: custom_acc_text=${msg}  
+    Click Button                     Save & Enter New Gift
+
+
 
 
     

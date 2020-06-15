@@ -67,6 +67,15 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains("Default Gift Entry Template")
             self.selenium.page_should_not_contain(template)  
         self.selenium.click_button("Cancel")
+
+    def select_template(self,template):
+        """selects the specified template while creating a new batch"""
+        field=npsp_lex_locators["adv_mappings"]["field_mapping"].format("Template")
+        self.selenium.wait_until_page_contains_element(field)
+        self.selenium.click_element(field)
+        self.selenium.wait_until_page_contains(template)
+        self.npsp.click_span_button(template)  
+        self.selenium.click_button("Next")    
     
     def get_template_record_id(self,template):
         """ Parses the current url to get the object id of the current record.
@@ -241,6 +250,9 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.wait_until_page_contains_element(popup)
                 option=npsp_lex_locators["span_button"].format(value)
                 self.selenium.click_element(option)
+            elif 'textarea' in type :
+                field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+                self.salesforce._populate_field(field_locator,value)
             else:
                 field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                 self.salesforce._populate_field(field_locator,value)

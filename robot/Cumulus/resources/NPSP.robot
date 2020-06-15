@@ -420,3 +420,11 @@ Enable RD2
     Run Keyword if            "${rd2_enabled}"!="True"
     ...                       Enable RD2QA
 
+API Get Id
+    [Documentation]         Returns the ID of a record identified by the given field_name and field_value input for a specific object
+    [Arguments]             ${obj_name}    ${field_name}     ${field_value}
+    @{records} =            Salesforce Query      ${obj_name}
+    ...                         select=Id
+    ...                         ${field_name}=${field_value}
+    &{Id} =                 Get From List  ${records}  0
+    [return]                &{Id}[Id]
