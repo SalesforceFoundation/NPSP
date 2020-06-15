@@ -55,9 +55,7 @@ public with sharing class GE_FormServiceController {
                 return GE_FormRendererService.getDefaultSGERenderWrapper();
             }
         } catch (Exception e) {
-            AuraHandledException ex = new AuraHandledException(e.getMessage());
-            ex.initCause(e);
-            throw ex;
+            throw e;
         }
     }
 }

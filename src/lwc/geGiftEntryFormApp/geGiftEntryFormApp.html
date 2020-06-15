@@ -1,38 +1,58 @@
 <template>
-    <template if:true={isBatchMode}>
-        <c-ge-batch-gift-entry-header
-                batch-id={recordId}
-                is-permission-error={isPermissionError}
-                onbatchdryrun={handleBatchDryRun}
-                onedit={handleEditBatch}
-                onprocessbatch={handleProcessBatch}>
-        </c-ge-batch-gift-entry-header>
-        <br/>
-    </template>
-
-    <c-ge-form-renderer
-            batch-id={recordId}
-            onsubmit={handleSubmit}
-            onsectionsretrieved={handleSectionsRetrieved}
-            onpermissionerror={handlePermissionErrors}
-            ontogglemodal={handleToggleModal}
-            loading-text={loadingText}>
-    </c-ge-form-renderer>
-
-    <template if:false={isPermissionError}>
+    <template if:true={isAppAccessible}>
         <template if:true={isBatchMode}>
-            <c-ge-batch-gift-entry-table
-                    title={giftsTableTitle}
-                    count={count}
-                    expected-count={expectedCountOfGifts}
-                    total={total}
-                    expected-total={expectedTotalBatchAmount}
+            <c-ge-batch-gift-entry-header
                     batch-id={recordId}
-                    onloaddata={handleLoadData}
-                    ondelete={handleDelete}
-                    oncountchanged={handleCountChanged}
-                    ontotalchanged={handleTotalChanged}>
-            </c-ge-batch-gift-entry-table>
+                    is-permission-error={isPermissionError}
+                    onbatchdryrun={handleBatchDryRun}
+                    onedit={handleEditBatch}
+                    onprocessbatch={handleProcessBatch}>
+            </c-ge-batch-gift-entry-header>
+            <br/>
+        </template>
+
+        <c-ge-form-renderer
+                batch-id={recordId}
+                onsubmit={handleSubmit}
+                onsectionsretrieved={handleSectionsRetrieved}
+                onpermissionerror={handlePermissionErrors}
+                ontogglemodal={handleToggleModal}
+                loading-text={loadingText}>
+        </c-ge-form-renderer>
+
+        <template if:false={isPermissionError}>
+            <template if:true={isBatchMode}>
+                <c-ge-batch-gift-entry-table
+                        title={giftsTableTitle}
+                        count={count}
+                        expected-count={expectedCountOfGifts}
+                        total={total}
+                        expected-total={expectedTotalBatchAmount}
+                        batch-id={recordId}
+                        onloaddata={handleLoadData}
+                        ondelete={handleDelete}
+                        oncountchanged={handleCountChanged}
+                        ontotalchanged={handleTotalChanged}>
+                </c-ge-batch-gift-entry-table>
+            </template>
         </template>
     </template>
+    <template if:false= {isAppAccessible}>
+        <c-util-page-header>
+            <h1 slot="title">
+                <span class="slds-page-header__title"
+                      title={CUSTOM_LABELS.geHeaderGiftEntry}>
+                    {CUSTOM_LABELS.geHeaderGiftEntry}
+                </span>
+            </h1>
+        </c-util-page-header>
+
+        <div class="slds-card slds-card_extension slds-p-around_large">
+            <c-util-illustration title={_appPermissionErrorHeader}
+                                 message={_appPermissionErrorBody}
+                                 size="large">
+            </c-util-illustration>
+        </div>
+    </template>
+
 </template>

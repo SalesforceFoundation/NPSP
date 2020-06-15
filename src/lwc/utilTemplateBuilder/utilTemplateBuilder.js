@@ -1,6 +1,11 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { isEmpty, isNotEmpty, deepClone } from 'c/utilCommon';
+import {
+    isEmpty,
+    isNotEmpty,
+    deepClone,
+    validateJSONString,
+} from 'c/utilCommon'
 
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
@@ -66,10 +71,14 @@ import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import getGiftEntrySettings from
         '@salesforce/apex/GE_GiftEntry_UTIL.getGiftEntrySettings';
+import { fireEvent } from 'c/pubsubNoPageRef'
 
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
+
+const EVENT_SOURCE_APPLICATION = 'Application';
+const EVENT_SOURCE_LIST_VIEW = 'List View';
 
 // cache custom labels 
 const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -301,7 +310,7 @@ const showToast = (title, message, variant, mode, messageData) => {
 */
 const handleError = (error) => {
     let message = commonUnknownError;
-
+    let showToast = true;
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
     // error.body.output.errors is for AuraHandledException messages
@@ -326,11 +335,28 @@ const handleError = (error) => {
             Array.isArray(error.detail.output.errors)) {
             message = error.detail.output.errors.map(e => e.message).join(', ');
         }
-    } else if (error.body && error.body.message) {
-        message = error.body.message;
+    } else if (error.body) {
+        if (validateJSONString(error.body.message)) {
+            let exceptionType = JSON.parse(error.body.message).exceptionType;
+            if (exceptionType === 'System.QueryException') {
+                showToast = false;
+                // inform app about query exception
+                informGiftEntryHomeApp('appPermissionsChange',
+                  'Check Your Permissions',
+                  'You don\'t have the necessary ' +
+                  'access to use this feature. Please check with ' +
+                  'your Salesforce admin.', EVENT_SOURCE_APPLICATION
+                );
+            }
+        } else {
+            message = error.body.message;
+        }
     }
 
-    showToast(commonError, message, 'error', 'sticky');
+    if (showToast) {
+        showToast(commonError, message, 'error', 'sticky');
+    }
+
 };
 
 /*******************************************************************************
@@ -505,6 +531,16 @@ const addKeyToCollectionItems = (list) => {
     });
 }
 
+
+const informGiftEntryHomeApp = (eventName, messageHeader, messageBody, source) => {
+    fireEvent(null, eventName,
+      {
+          source : source,
+          messageBody: messageBody,
+          messageHeader: messageHeader,
+      });
+}
+
 export {
     DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -524,6 +560,8 @@ export {
     ACCOUNT1,
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
+    EVENT_SOURCE_APPLICATION,
+    EVENT_SOURCE_LIST_VIEW,
     dispatch,
     showToast,
     handleError,
@@ -536,5 +574,6 @@ export {
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     getPageAccess,
-    addKeyToCollectionItems
+    addKeyToCollectionItems,
+    informGiftEntryHomeApp
 }

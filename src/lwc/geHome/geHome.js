@@ -1,9 +1,13 @@
 import { LightningElement, api, track } from 'lwc';
 import { getQueryParameters } from 'c/utilCommon';
-import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
+import {
+    dispatch,
+    getPageAccess,
+    EVENT_SOURCE_LIST_VIEW,
+    EVENT_SOURCE_APPLICATION } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
-import { registerListener } from 'c/pubsubNoPageRef'
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef'
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
@@ -11,6 +15,7 @@ const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const GIFT_ENTRY = 'Gift_Entry';
 const TEMPLATE_BUILDER = 'Template_Builder';
 const SINGLE_GIFT_ENTRY = 'Single_Gift_Entry';
+
 
 export default class geHome extends LightningElement {
 
@@ -21,29 +26,41 @@ export default class geHome extends LightningElement {
     @track formTemplateId;
     @track cloneFormTemplate;
     @track isLoading = true;
-    @track isAppAccessible = true;
+    @track hasPageAccess = true;
+    @track hasPermission = true;
     @track isListViewAccessible = true;
     _listViewPermissionErrorHeader;
     _listViewPermissionErrorBody;
+    _appPermissionErrorHeader;
+    _appPermissionErrorBody;
 
     giftEntryTabName;
 
     get isLandingPage() {
-        return this.view === GIFT_ENTRY ? true : false;
+        return this.view === GIFT_ENTRY;
     }
 
     get isTemplateBuilder() {
-        return this.view === TEMPLATE_BUILDER ? true : false;
+        return this.view === TEMPLATE_BUILDER;
     }
 
+    get isAppAccessible () {
+       return (this.hasPageAccess && this.hasPermission);
+    }
+
+
     async connectedCallback() {
-        registerListener('listViewPermissionsChange',
-          this.handleListViewPermissionsChange, this);
-        this.isAppAccessible = await getPageAccess();
+        this.hasPageAccess = await getPageAccess();
+        registerListener('appPermissionsChange', this.handleAppPermissionsChange, this);
         if (this.isAppAccessible) {
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.setGiftEntryTabName();
             this.setInitialView();
+        } else if (!this.hasPageAccess) {
+            this._appPermissionErrorHeader =
+              this.CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader;
+            this._appPermissionErrorBody =
+              this.CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody;
         }
         this.isLoading = false;
     }
@@ -124,19 +141,34 @@ export default class geHome extends LightningElement {
         dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
-    handleListViewPermissionsChange(event) {
-        this.setListViewPermissionErrors(event);
+    handleAppPermissionsChange(event) {
+        this.setAppPermissionErrors(event);
+
     }
 
     /**
      * @description Set permission (CRUD & FLS) errors for the geListView component
      * @param {object} event : Event object containing the error message
      */
-    setListViewPermissionErrors(event) {
-        this.isListViewAccessible = false;
+    setAppPermissionErrors(event) {
         if (event) {
-            this._listViewPermissionErrorBody = event.messageBody;
-            this._listViewPermissionErrorHeader = event.messageHeader;
+            if (this.view === SINGLE_GIFT_ENTRY) {
+                fireEvent(null, 'geFormAccessChange',
+                  {
+                      messageBody: event.messageBody,
+                      messageHeader: event.messageHeader,
+                  });
+            } else {
+                if (event.source === EVENT_SOURCE_APPLICATION) {
+                    this.hasPermission = false;
+                    this._appPermissionErrorHeader = event.messageHeader;
+                    this._appPermissionErrorBody = event.messageBody;
+                } else if (event.source === EVENT_SOURCE_LIST_VIEW) {
+                    this.isListViewAccessible = false;
+                    this._listViewPermissionErrorBody = event.messageBody;
+                    this._listViewPermissionErrorHeader = event.messageHeader;
+                }
+            }
         }
     }
 }

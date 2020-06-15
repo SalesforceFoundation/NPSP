@@ -179,8 +179,8 @@ public with sharing class FORM_ServiceGiftEntry {
 
             for (Form_Template__c formTemplate : allTemplates) {
                 FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
-                if (formTemplate.id != null) {
-                    deserializedFormTemplate.id = formTemplate.id;
+                if (formTemplate.Id != null) {
+                    deserializedFormTemplate.id = formTemplate.Id;
                 }
 
                 formTemplates.add(deserializedFormTemplate);
@@ -240,7 +240,7 @@ public with sharing class FORM_ServiceGiftEntry {
                 WITH SECURITY_ENFORCED
                 LIMIT 1
             ];
-        } catch (Exception ex) {
+        } catch (QueryException ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
             throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
         }
@@ -338,26 +338,13 @@ public with sharing class FORM_ServiceGiftEntry {
     * @return Boolean
     */
     @AuraEnabled
-    public static Boolean checkNameUniqueness(String name, String Id) {
-        Form_Template__c[] formTemplates;
-
-        try {
-            formTemplates = [
-                SELECT Id
-                FROM Form_Template__c
-                WHERE Name = :name
-                WITH SECURITY_ENFORCED
-            ];
-        } catch (Exception ex) {
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
-        }
-
+    public static Boolean checkNameUniqueness(String name, String id) {
+        Form_Template__c[] formTemplates = [SELECT Id FROM Form_Template__c WHERE Name = :name];
         Boolean isNameValid = formTemplates.size() > 0 ? false : true;
 
-        if (Id != null) {
+        if (id != null) {
             for (Form_Template__c formTemplate : formTemplates) {
-                if (formTemplate.Id == Id) {
+                if (formTemplate.Id == id) {
                     isNameValid = true;
                     break;
                 }

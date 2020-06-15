@@ -216,9 +216,14 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         this.donationMatchingBehaviors = await getDonationMatchingValues();
 
         if (!this.recordId) {
-            this.templates = await getAllFormTemplates();
-            this.templates = this.templates.sort();
-            this.builderTemplateComboboxOptions(this.templates);
+            try {
+                this.templates = await getAllFormTemplates();
+                this.templates = this.templates.sort();
+                this.builderTemplateComboboxOptions(this.templates);
+            } catch (error) {
+                this.handleCancel();
+                handleError(error);
+            }
             this.isLoading = false;
         }
     }
