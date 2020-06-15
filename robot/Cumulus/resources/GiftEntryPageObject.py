@@ -263,6 +263,17 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             locator=npsp_lex_locators["gift_entry"]["field_alert"].format(key,value)
             self.selenium.wait_until_page_contains_element(locator)           
 
+    def verify_gift_count(self,count):
+        """Verify that the no. of gifts on the page match with count"""
+        locator=npsp_lex_locators["gift_entry"]["count"].format("Count of Gifts",count)
+        self.selenium.wait_until_page_contains_element(locator)
+
+    def click_field_value_link(self,field_name):
+        """"""
+        value=self.npsp.return_locator_value("bge.value",field_name) 
+        self.npsp.click_link_with_text(value)   
+
+
 
 
 

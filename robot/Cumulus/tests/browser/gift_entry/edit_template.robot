@@ -5,6 +5,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -36,7 +37,7 @@ Edit GE Template And Verify Changes
     [Documentation]                  This test case makes edits to Default gift entry template and verifies that edits are saved 
     ...                              and available when a Single gift or batch gift are created. 
  
-    [tags]                           unstable  feature:GE          W-039559   
+    [tags]                             feature:GE          W-039559   
     # Edit Default template to add some default values and add a new field to form                   
     Go To Page                       Landing                       GE_Gift_Entry
     Click Link                       Templates
@@ -109,6 +110,24 @@ Edit GE Template And Verify Changes
     Fill Gift Entry Form
     ...                              Account 1: custom_acc_text=${msg}  
     Click Button                     Save & Enter New Gift
+    Verify Gift Count                1
+    Click Gift Entry Button          Process Batch
+    Click Data Import Button         NPSP Data Import    button    Begin Data Import Process
+    Wait For Batch To Process        BDI_DataImport_BATCH    Completed
+    Click Button With Value          Close
+    Current Page Should Be           Form                          Gift Entry
+    Click Field Value Link           Donation
+    Current Page Should Be           Details                       npe01__OppPayment__c
+    ${pay_id} =                      Save Current Record ID For Deletion     npe01__OppPayment__c
+    Verify Expected Values           nonns    npe01__OppPayment__c    ${pay_id}
+    ...                              npe01__Payment_Amount__c=50.0
+    ...                              npe01__Payment_Date__c=${date}
+    ...                              npe01__Paid__c=True
+    ...                              npe01__Check_Reference_Number__c=abc11233
+    ...                              npe01__Payment_Method__c=Check
+    Verify Expected Values           nonns    Account     &{contact}[AccountId]
+    ...                              ${org_ns}custom_acc_text__c=None
+
 
 
 
