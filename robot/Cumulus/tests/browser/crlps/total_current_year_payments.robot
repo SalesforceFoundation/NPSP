@@ -12,11 +12,11 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-...             Setup Custom Fields
+...             Setup Custom Fields and data
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
-Setup Custom Fields
+Setup Custom Fields and data
     Validate And Create Required CustomField
     ...                                                    Object=Account
     ...                                                    Field_Type=Currency
@@ -29,6 +29,16 @@ Setup Custom Fields
     ...                                                    Formula=YEAR( npe01__Opportunity__r.CloseDate ) < YEAR( npe01__Payment_Date__c )
 
     Enable Customizable Rollups
+
+    # This data is used to create the Filter contains Filter details and Filtering criteria metadata
+    ${dict}=         Create Dictionary     Name=Old Payments    Description=Includes payments where the Opportunity Close Date year is older than the year of the Payment.
+    ${dict1}=        Create Dictionary     Object=Payment       Field=Paid   Operator=Equals   Value=True
+    ${dict2}=        Create Dictionary     Object=Payment    Field=Is Opportunity From Prior Year     Operator=Equals   Value=True
+    ${filterPools}=                                       Create List           ${dict1}       ${dict2}
+    Set suite variable                &{dict}
+    Set suite variable                @{filterPools}
+
+
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
@@ -45,17 +55,12 @@ Total Current Year Payments on Prior Year Pledges
     # Create a Filter group and CRLP setting after checking prior records do not check if element exists
     Load Page Object                                      Custom                          CustomRollupSettings
     Navigate To Crlpsettings
-    ${dict}=         Create Dictionary     Name=Old Payments    Description=Includes payments where the Opportunity Close Date year is older than the year of the Payment.
-    ${dict1}=        Create Dictionary     Object=Payment       Field=Paid   Operator=Equals   Value=True
-    ${dict2}=        Create Dictionary     Object=Payment    Field=Is Opportunity From Prior Year     Operator=Equals   Value=True
-    ${filterPools}=  Create List           ${dict1}       ${dict2}
 
     Create New Filter Setting
     ...                                                   @{filterPools}  # Contains a list of filter metadata
     ...                                                   &{dict}         # Contains the name of the fitler and the description to be added
-    Enable Customizable Rollups
-    Load Page Object                                       Custom                          CustomRollupSettings
-    Navigate To Crlpsettings
+
+    Click Link With Text                                  Customizable Rollups
     Create New Rollup Setting
         ...                                                Target Object=Account
         ...                                                Target Field=This Year Payments on Past Year Pledges
@@ -69,7 +74,6 @@ Total Current Year Payments on Prior Year Pledges
         ...                                                Filter Group=Old Payments
         ...                                                Date Field=Payment: Payment Date
 
-
     # Create an opportunity for prior year that has 6 payments associated with a contact .
     # Ensure that Two of the payments were done the current year and one is paid last year.
     ${opp_date} =            Get Current Date    result_format=%Y-%m-%d    increment=-365 days
@@ -79,15 +83,14 @@ Total Current Year Payments on Prior Year Pledges
     ...                                          Amount=5000     CloseDate=${opp_date}    StageName=Closed Won    npe01__Do_Not_Automatically_Create_Payment__c=true
     Setupdata                contact             contact_data=${contact1_fields}          opportunity_data=${opportunity_fields}    payment_data=${payment_fields}
 
-
-    Go To Page                           Details
-    ...                                  Opportunity
-    ...                                  object_id=${data}[contact_opportunity][Id]
+    Go To Page                                   Details
+    ...                                          Opportunity
+    ...                                          object_id=${data}[contact_opportunity][Id]
 
     # Navigate to the Account page and verify that the new rollupfield is appearing and is showing the right calculated amount
-    ${accepted_values}=  Create List           $1,667       $1,666.68
-    Go To Page                           Details          Account                                               object_id=${data}[contact][AccountId]
+    ${accepted_values}=     Create List            $1,667           $1,666.68
+    Go To Page                                  Details          Account                                               object_id=${data}[contact][AccountId]
     Wait Until Loading Is Complete
-    Select Tab                                            Details
-    Validate Rollup Field Contains                        This Year Payments on Past Year Pledges               ${accepted_values}
+    Select Tab                                  Details
+    Validate Rollup Field Contains              This Year Payments on Past Year Pledges               ${accepted_values}
 
