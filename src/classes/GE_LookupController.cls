@@ -38,6 +38,7 @@ public with sharing class GE_LookupController {
 
     /**
      * Search for an SObject by its name field.
+     * Objects without Name fields (Case, Task, Event...) are not compatible with this component.
      *
      * @param searchValue   Value to search for
      * @param sObjectType   Type of SObject to Search
