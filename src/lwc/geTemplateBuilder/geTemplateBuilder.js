@@ -25,7 +25,8 @@ import {
     sort,
     getNamespace,
     removeByProperty,
-    removeFromArray
+    removeFromArray,
+    isEmpty
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
@@ -132,7 +133,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     @track hasTemplateInfoTabError;
     @track hasSelectFieldsTabError;
-    @track hasBatchHeaderTabError;
+    @track hasBatchSettingsTabError;
     @track previousSaveAttempted = false;
     @track sectionIdsByFieldMappingDeveloperNames = {};
 
@@ -480,7 +481,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.batchFieldFormElements = sort(this.batchFieldFormElements, SORTED_BY, SORT_ORDER);
 
         this.addRequiredBatchHeaderFields();
-        this.validateBatchHeaderTab();
+        this.validateBatchHeaderTab(new Set());
     }
 
     /*******************************************************************************
@@ -1161,9 +1162,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         await this.validateTemplateInfoTab(tabsWithErrors);
         this.validateSelectFieldsTab(tabsWithErrors);
-        this.validateBatchHeaderTab();
+        this.validateBatchHeaderTab(tabsWithErrors);
 
-        if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
+        if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchSettingsTabError) {
             const message = `${tabsWithErrors.size > 1 ?
                 this.CUSTOM_LABELS.geToastTemplateTabsError
                 : this.CUSTOM_LABELS.geToastTemplateTabsError}`;
@@ -1232,7 +1233,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Method checks for missing required DataImportBatch__c fields
     * and adds them proactively.
     */
-    validateBatchHeaderTab() {
+    validateBatchHeaderTab(tabsWithErrors) {
         this.missingRequiredBatchFields = findMissingRequiredBatchFields(this.batchFieldFormElements,
             this.batchHeaderFields);
 
@@ -1246,6 +1247,19 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldLabels}`,
                 'warning',
                 'sticky');
+        }
+
+        if (tabsWithErrors && !this.disableBatchTableColumnsSubtab) {
+            const isMissingBatchTableColumns =
+                isEmpty(this.selectedBatchTableColumnOptions) ||
+                (this.selectedBatchTableColumnOptions.length === 0);
+
+            if (isMissingBatchTableColumns) {
+                this.hasBatchSettingsTabError = true;
+                tabsWithErrors.add(this.TabEnums.BATCH_SETTINGS_TAB);
+            } else {
+                this.hasBatchSettingsTabError = false;
+            }
         }
     }
 

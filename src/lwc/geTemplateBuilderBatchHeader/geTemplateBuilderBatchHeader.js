@@ -4,12 +4,12 @@ import {
     handleError,
     findMissingRequiredBatchFields
 } from 'c/utilTemplateBuilder';
-import { findIndexByProperty, mutable } from 'c/utilCommon';
+import { findIndexByProperty, mutable, isFunction, isEmpty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 
 const PROP_API_NAME = 'apiName';
-const PROP_BATCH_HEADER_TAB_ERROR = 'hasBatchHeaderTabError';
+const PROP_BATCH_SETTINGS_TAB_ERROR = 'hasBatchSettingsTabError';
 const EVENT_UPDATE_VALIDITY = 'updatevalidity';
 const EVENT_BATCH_HEADER_FIELD_UPDATE = 'updatebatchheaderfield';
 const EVENT_BATCH_HEADER_FIELD_UP = 'batchheaderfieldup';
@@ -40,6 +40,21 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         return DI_BATCH_INFO && DI_BATCH_INFO.objectApiName ? DI_BATCH_INFO.objectApiName : null;
     }
 
+    get hasMissingBatchTableColumns() {
+        if (this.disableBatchTableColumnsSubtab) return false;
+
+        const isMissingBatchTableColumns =
+            isEmpty(this.selectedBatchTableColumnOptions) ||
+            this.selectedBatchTableColumnOptions.length === 0;
+
+        dispatch(this, EVENT_UPDATE_VALIDITY, {
+            property: PROP_BATCH_SETTINGS_TAB_ERROR,
+            hasError: isMissingBatchTableColumns
+        });
+
+        return isMissingBatchTableColumns;
+    }
+
     renderedCallback() {
         if (!this._isInitialized && this.isLoading === false) {
             this._isInitialized = true;
@@ -60,7 +75,6 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
     }
 
     handleChangeBatchTableColumnSelection(event) {
-        this.batchTableDualListboxValues = event.detail.value;
         const changeSelectionEvent = new CustomEvent(EVENT_BATCH_TABLE_DEFAULT_COLUMNS, {
             detail: event.detail.value
         });
@@ -93,7 +107,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
 
         if (this.missingRequiredFields && this.missingRequiredFields.length > 0) {
             dispatch(this, EVENT_UPDATE_VALIDITY, {
-                property: PROP_BATCH_HEADER_TAB_ERROR,
+                property: PROP_BATCH_SETTINGS_TAB_ERROR,
                 hasError: false
             });
             hasMissingFields = true;

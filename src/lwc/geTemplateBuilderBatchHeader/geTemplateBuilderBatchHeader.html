@@ -7,7 +7,8 @@
                                padding='around-medium'>
             <lightning-tabset variant='scoped'>
                 <lightning-tab label={CUSTOM_LABELS.geTabBatchTableColumns}
-                               class='slds-p-around_none'>
+                               class='slds-p-around_none'
+                               show-error-indicator={hasMissingBatchTableColumns}>
                     <lightning-layout multiple-rows='true'>
                         <template if:true={disableBatchTableColumnsSubtab}>
                             <lightning-layout-item size='12'
@@ -56,6 +57,7 @@
                                                         options={availableBatchTableColumnOptions}
                                                         value={selectedBatchTableColumnOptions}
                                                         onchange={handleChangeBatchTableColumnSelection}
+                                                        min='1'
                                                         class='slds-p-top_small slds-p-bottom_large'>
                                 </lightning-dual-listbox>
                             </lightning-layout-item>
