@@ -244,7 +244,6 @@ npsp_lex_locators={
         'formula_txtarea': '//textarea[@id = "{}"]',
         'input_validation': '//input[@title = "{}"]',
         'object_result': '//th/a[text()="{}"]',
-        'sidenav_option':'//a[text()="{}"]'
         },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
