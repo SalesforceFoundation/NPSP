@@ -35,6 +35,7 @@
 */
 @isTest
 private with sharing class STG_SettingsManager_TEST {
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
     /***
     * @description Installment Opportunities Auto Creation Setting API value
     */
@@ -244,9 +245,9 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void testSettingsService() {
-    	STG_SettingsService svc = STG_SettingsService.stgService;
-    	system.assertNotEquals(null, svc);
-    	system.assertNotEquals(null, svc.stgCon);
+        STG_SettingsService svc = STG_SettingsService.stgService;
+        system.assertNotEquals(null, svc);
+        system.assertNotEquals(null, svc.stgCon);
         system.assertNotEquals(null, svc.stgHH);
         system.assertNotEquals(null, svc.stgRD);
         system.assertNotEquals(null, svc.stgRel);
@@ -266,11 +267,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void testPanelAffl() {
-    	STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
-    	system.assertEquals('idPanelAffl', panel.idPanel());
-    	STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
-    	panel.saveSettings();
-    	system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
+        STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
+        system.assertEquals('idPanelAffl', panel.idPanel());
+        STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
+        panel.saveSettings();
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
         STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = false;
         panel.saveSettings();
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
@@ -1781,6 +1782,34 @@ private with sharing class STG_SettingsManager_TEST {
 
         System.assertEquals(System.Label.stgHelpEnhancedRDBatch, batchDescription, 'RD2 batch description should be displayed');
     }
+
+    /**
+    * @description Verifies that when the User without Customize Application permission 
+    *   executes the saveSettings in System mode (directly calling saveSettings Apex class),
+    *   the code will still enfore Salesforce Security on updating RD Settings custom settings.
+    */
+    @isTest
+    private static void shouldBlockUpdateRDSettingWhenUserDoesNotHaveUpdatePermission() {
+        STG_PanelRD_CTRL controller = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        System.runAs(createReadOnlyUser()) {
+            controller.saveSettings(); 
+        }
+        Test.stopTest();
+
+        Error__c error = errorGateway.getRecords()[0];
+        String expectedMessage = String.format(
+            System.Label.flsError, 
+            new List<String>{System.Label.stgLabelRDSettings}
+        );
+        
+        System.assert(error.Full_Message__c.contains(expectedMessage),
+            'User with Read Only Profile should not be abled to update RD Setting: ' + error.Full_Message__c);
+
+
+    }
+
     //Helper Methods
     /**
      * @description Builds a read only user with readonly profile
