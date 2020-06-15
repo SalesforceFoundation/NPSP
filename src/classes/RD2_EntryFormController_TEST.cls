@@ -59,7 +59,7 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies that Entry Form Controller returns the expected results for Account or Contact for Donor Type
+    * @description Verifies that Entry Form Controller returns the expected results for Account for Donor Type
     */
     @isTest
     private static void shouldReturnAccountDonorType() {
@@ -83,7 +83,7 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies that Entry Form Controller returns the expected results for Account or Contact for Donor Type
+    * @description Verifies that Entry Form Controller returns the expected results for Contact for Donor Type
     */
     @isTest
     private static void shouldReturnContactDonorType() {
