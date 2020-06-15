@@ -263,7 +263,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     *   - 0 => RD2 Not enabled
     *   - 1 => RD2 enabled, but MetaDeploy step was skipped
     *   - 2 => RD2 enabled, metaDeploy is completed, NextPaymentDate rollup still enabled
-    *   - 3 => RD2 fully Enabled
+    *   - 10 => RD2 fully Enabled
     */
     private void handleRD2EnablementState() {
         Integer rd2EnablementStateIndicator;
@@ -278,7 +278,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             rd2EnablementStateIndicator = 2;
 
         } else {
-            rd2EnablementStateIndicator = 3;
+            rd2EnablementStateIndicator = 10;
         }
 
         featureManager.setPackageIntegerValue(

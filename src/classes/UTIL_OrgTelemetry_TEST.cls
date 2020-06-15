@@ -566,7 +566,7 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
-    * @description Verifies that DataCount_ONETIME_Use set to 3 when RD2 is fully enabled
+    * @description Verifies that DataCount_ONETIME_Use set to 10 when RD2 is fully enabled
     */
     @IsTest
     private static void validateDataCount_ONETIME_UseSetTo3WhenRD2FullyEnabled() {
@@ -586,11 +586,11 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            3,
+            10,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
             ),
-            'DataCount_ONETIME_Use should have been set to 3 when RD2 is fully enabled'
+            'DataCount_ONETIME_Use should have been set to 10 when RD2 is fully enabled'
         );
     }
 
