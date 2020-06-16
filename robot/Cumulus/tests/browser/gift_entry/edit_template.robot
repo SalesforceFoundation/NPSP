@@ -15,7 +15,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Variables ***
 &{method}         Default Value=Check
 &{check}          Default Value=abc11233
-&{date}           Default Value=Today
+&{date_default}   Default Value=Today
 &{custom}         Required=checked
 ${amount}         50
 ${msg}            Automation test
@@ -30,7 +30,10 @@ Setup Test Data
     Set suite variable    ${org_ns}
     ${ns} =  Get NPSP Namespace Prefix
     Set suite variable    ${ns}
-
+    ${ui_date} =                     Get Current Date              result_format=%b %-d, %Y
+    Set suite variable    ${ui_date}
+    ${date} =     Get Current Date    result_format=%Y-%m-%d
+    Set suite variable    ${date}
 
 *** Test Cases ***
 
@@ -38,7 +41,7 @@ Edit GE Template And Verify Changes
     [Documentation]                  This test case makes edits to Default gift entry template and verifies that edits are saved 
     ...                              and available when a Single gift or batch gift are created. 
  
-    [tags]                           unstable     feature:GE          W-039559   
+    [tags]                           feature:GE          W-039559   
     # Edit Default template to add some default values and add a new field to form                   
     Go To Page                       Landing                       GE_Gift_Entry
     Click Link                       Templates
@@ -49,16 +52,14 @@ Edit GE Template And Verify Changes
     Select Object Group Field        Opportunity                   Donation Imported
     Fill Template Form                      
     ...                              Account 1: custom_acc_text=&{custom}
-    ...                              Opportunity: Close Date=&{date}
+    ...                              Opportunity: Close Date=&{date_default}
     ...                              Payment: Check/Reference Number=&{check}
     ...                              Payment: Payment Method=&{method} 
     Click Gift Entry Button          Save & Close
     # Verify Default values are displayed on the Single Gift Form
     Current Page Should Be           Landing                       GE_Gift_Entry
     Click Gift Entry Button          New Single Gift
-    Current Page Should Be           Form                          Gift Entry
-    ${ui_date} =                     Get Current Date              result_format=%b %-d, %Y
-    ${date} =     Get Current Date    result_format=%Y-%m-%d
+    Current Page Should Be           Form                          Gift Entry  
     Verify Field Default Value
     ...                              Donation Date=${ui_date}
     ...                              Check/Reference Number=abc11233
@@ -77,7 +78,7 @@ Edit GE Template And Verify Changes
     # Verify default values and newly added field to the form on payment and account records
     Current Page Should Be           Details                       Opportunity
     ${opp_id} =                      Save Current Record ID For Deletion     Opportunity
-    ${pay_id} =                      API Get Id             npe01__OppPayment__c        npe01__Opportunity__c=${opp_id}
+    ${pay_id} =                      API Get Id                    npe01__OppPayment__c        npe01__Opportunity__c=${opp_id}
     Verify Expected Values           nonns    npe01__OppPayment__c    ${pay_id}
     ...                              npe01__Payment_Amount__c=50.0
     ...                              npe01__Payment_Date__c=${date}
@@ -115,14 +116,14 @@ Edit GE Template And Verify Changes
     Click Button                     Save & Enter New Gift
     Verify Gift Count                1
     Click Gift Entry Button          Process Batch
-    Click Data Import Button         NPSP Data Import    button    Begin Data Import Process
-    Wait For Batch To Process        BDI_DataImport_BATCH    Completed
+    Click Data Import Button         NPSP Data Import              button       Begin Data Import Process
+    Wait For Batch To Process        BDI_DataImport_BATCH          Completed
     Click Button With Value          Close
     # Verify default values stored on payment and custom_account_text field doesn't have value on houshold account as its not relavent
     Current Page Should Be           Form                          Gift Entry
     Click Field Value Link           Donation
     Current Page Should Be           Details                       npe01__OppPayment__c
-    ${pay_id} =                      Save Current Record ID For Deletion     npe01__OppPayment__c
+    ${pay_id} =                      Save Current Record ID For Deletion        npe01__OppPayment__c
     Verify Expected Values           nonns    npe01__OppPayment__c    ${pay_id}
     ...                              npe01__Payment_Amount__c=50.0
     ...                              npe01__Payment_Date__c=${date}

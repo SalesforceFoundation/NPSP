@@ -146,12 +146,14 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
 
     @capture_screenshot_on_error                
     def fill_template_form(self,**kwargs):
-        """"""
+        """Add default values to template builder form fields or set fields as required. 
+        Key is field main label name and value is again another dictionary of field type and value
+        ex: Payment: Payment Method is Main Label with Default Value as field type and Chech is value"""
         self.selenium.execute_javascript("window.scrollBy(0,0)")
         for field,option in kwargs.items():
             for section,value in option.items():
                 if section=="Required":
-                    label=section+" "+field
+                    label=f'{section} {field}'
                     if value=='checked':
                         field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(label,"input")
                         self.selenium.scroll_element_into_view(field_checkbox)
@@ -165,7 +167,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         if cb_loc.is_selected():
                             self.salesforce._jsclick(field_checkbox)
                 elif section=="Default Value":
-                    key=section+" "+field
+                    key=f'{section} {field}'
                     field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                     placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
                     self.selenium.scroll_element_into_view(field_loc)
@@ -190,7 +192,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         self.salesforce._populate_field(field_loc,value) 
     
     def add_field_bundle_to_new_section(self,bundle):
-        """"""
+        """Adds the specified field bundle to the template builder form if not already added"""
         try:
             self.selenium.click_button("Add Section")
         except ElementClickInterceptedException:
@@ -225,9 +227,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains_element(field)
             time.sleep(.5)
             element=self.selenium.get_webelement(field)
-            print(element)
             default_value=element.get_attribute("value")
-            self.builtin.log_to_console(f'def value is {default_value}')
             assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
 
     def fill_gift_entry_form(self,**kwargs):
