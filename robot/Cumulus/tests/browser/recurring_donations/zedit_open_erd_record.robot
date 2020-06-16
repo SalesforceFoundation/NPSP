@@ -11,7 +11,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Enable RD2
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
