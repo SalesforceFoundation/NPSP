@@ -333,7 +333,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (modalData.action === SAVE) {
             let formSections = mutable(this.formSections);
             let formSection = formSections.find((fs) => { return fs.id === modalData.section.id });
-
+            formSection.defaultDisplayMode = modalData.section.defaultDisplayMode;
             formSection.label = modalData.section.label;
             this.formSections = formSections;
         }
