@@ -2180,6 +2180,8 @@
         <members>geButtonCancelAndClear</members>
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
+        <members>geButtonFormFieldsDisplayOptionCollapsed</members>
+        <members>geButtonFormFieldsDisplayOptionExpanded</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
         <members>geButtonMatchingNewOpportunity</members>
@@ -2237,6 +2239,7 @@
         <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
         <members>geHeaderFormFieldsModalDeleteSection</members>
+        <members>geHeaderFormFieldsModalDisplayOptionsSection</members>
         <members>geHeaderFormFieldsModalRenameSection</members>
         <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
@@ -2268,6 +2271,7 @@
         <members>geJWTUtilInvalidBase64UrlMessage</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
+        <members>geLabelDisplaySections</members>
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
