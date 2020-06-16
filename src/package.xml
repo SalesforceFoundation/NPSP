@@ -2041,6 +2041,8 @@
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
         <members>commonAdminPermissionErrorMessage</members>
+        <members>commonAdminPermissionErrorMessage</members>
+        <members>commonAdminPermissionErrorTitle</members>
         <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
         <members>commonAssistiveError</members>
@@ -2074,6 +2076,7 @@
         <members>commonOpen</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
+        <members>commonPermissionErrorMessage</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonReviewForm</members>
