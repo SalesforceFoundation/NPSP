@@ -2,7 +2,7 @@
     <c-util-expandable-section id={section.id}
                                label={section.label}
                                alternative-text={altTextLabel}
-                               is-collapsed={collapsed}
+                               is-collapsed={isCollapsed}
                                body-class="slds-m-bottom_large">
         <lightning-layout multiple-rows='true'>
             <template for:each={section.elements}
