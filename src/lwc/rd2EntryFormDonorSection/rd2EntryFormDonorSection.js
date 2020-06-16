@@ -215,6 +215,22 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     }
 
     /**
+     * @description Checks if values specified on fields are valid
+     * @return Boolean
+     */
+    @api
+    isValid() {
+        let isValid = true;
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                if (!field.reportValidity()) {
+                    isValid = false;
+                }
+            });
+        return isValid;
+    }
+
+    /**
      * @description Returns fields displayed on the child component to the parent form
      * @return Object containing field API names and their values
      */
@@ -229,5 +245,4 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
         return data;
     }
-
 }

@@ -199,7 +199,15 @@ export default class rd2EntryForm extends LightningElement {
             ...fields, ...scheduleFields, ...donorFields
         };
 
-        this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
+        let isValid = donorSection.isValid() && scheduleSection.isValid();
+
+        if (isValid) {
+            this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
+        } else {
+            this.isLoading = false;
+            this.hasError = false;
+            this.template.querySelector("[data-id='submitButton']").disabled = false;
+        }
     }
 
     /***

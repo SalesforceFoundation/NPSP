@@ -167,19 +167,19 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-     * Checks if values specified on fields are valid
+     * @description Checks if values specified on fields are valid
      * @return Boolean
      */
     @api
     isValid() {
-        const scheduleFields = this.template.querySelectorAll('lightning-input-field');
-
-        for (const field of scheduleFields) {
-            if (!field.isValid()) {
-                return false;
-            }
-        }
-        return true;
+        let isValid = true;
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                if (!field.reportValidity()) {
+                    isValid = false;
+                }
+            });
+        return isValid;
     }
 
     /**
