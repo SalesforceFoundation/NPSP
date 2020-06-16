@@ -6,7 +6,6 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
-...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -20,7 +19,7 @@ Setup Variables
 
 Setup Test Data
         #Create a Recurring Donation
-        &{contact1_fields}=   Create Dictionary                     Email=test@example.com
+        &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
         &{recurringdonation_fields} =	Create Dictionary           Name=ERD Open Recurring Donation
                     ...                                             npe03__Installment_Period__c=Yearly
                     ...                                             npe03__Amount__c=100
@@ -42,7 +41,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          Verifies the opportunity status reflects the right status after closing
 
 
-    [tags]                                 W-040346                                  feature:RD2
+    [tags]                        unstable               W-040346                                  feature:RD2
 
     Go To Page                             Details
     ...                                    npe03__Recurring_Donation__c
