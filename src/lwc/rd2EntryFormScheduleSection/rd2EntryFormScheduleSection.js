@@ -1,7 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
-// import { handleError } from 'c/rd2EntryForm'
-import { isNull } from 'c/utilCommon';
+import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
 
@@ -60,7 +59,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
         } else if (response.error) {
             this.isLoading = false;
-            // handleError(response.error);
+            const errorMessage = constructErrorMessage(error);
+            showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
         }
     }
 

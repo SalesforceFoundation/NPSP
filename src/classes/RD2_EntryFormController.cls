@@ -45,7 +45,7 @@ public with sharing class RD2_EntryFormController {
     public static Map<String, Object> getSetting(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
-            : parentId.getSObjectType().getDescribe().getName();
+            : parentId.getSobjectType().getDescribe().getName();
 
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
@@ -66,13 +66,17 @@ public with sharing class RD2_EntryFormController {
             return null;
         }
 
-        npe03__Recurring_Donation__c rd =  getRecurringDonation(recordId);
-        if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
-            || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
-        ) {
-            return 'Contact';
+        try {
+            npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+            if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
+                || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
+            ) {
+                return 'Contact';
+            }
+            return 'Account';
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
         }
-        return 'Account';
     }
 
     /**
@@ -91,6 +95,7 @@ public with sharing class RD2_EntryFormController {
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(queryFields)
             .withWhere('Id = :recordId')
+            .withLimit(1)
             .build();
 
         return Database.query(soql);
