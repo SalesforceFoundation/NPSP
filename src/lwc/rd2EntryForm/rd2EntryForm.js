@@ -185,12 +185,12 @@ export default class rd2EntryForm extends LightningElement {
         event.preventDefault();
         const fields = event.detail.fields;
 
-        const scheduleSection = this.template.querySelector('c-rd2-entry-form-schedule-section');
+        const scheduleSection = this.scheduleComponent;
         const scheduleFields = (scheduleSection === null || scheduleSection === undefined)
             ? {}
             : scheduleSection.returnValues();
 
-        const donorSection = this.template.querySelector('c-rd2-entry-form-donor-section');
+        const donorSection = this.donorComponent;
         const donorFields = (donorSection === null || donorSection === undefined)
             ? {}
             : donorSection.returnValues();
@@ -235,17 +235,20 @@ export default class rd2EntryForm extends LightningElement {
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
     }
 
-}
+    /**
+     * @description Returns the Schedule Child Component instance
+     * @returns rd2EntryFormScheduleSection component dom
+     */
+    get scheduleComponent() {
+        return this.template.querySelectorAll('[data-id="scheduleComponent"]')[0];
+    }
 
-/**
- * TODO This does not work yet. The calling code says "Type Error: handleError is not a function"
- * @param {object} error:
- */
-const handleError = (error) => {
-    alert('handleError');
-    rd2EntryForm.handleError(error);
-}
+    /**
+     * @description Returns the Donor Child Component instance
+     * @returns rd2EntryFormDonorSection component dom
+     */
+    get donorComponent() {
+        return this.template.querySelectorAll('[data-id="donorComponent"]')[0];
+    }
 
-export {
-    handleError
-};
+}
