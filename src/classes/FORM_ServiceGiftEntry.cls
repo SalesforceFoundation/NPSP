@@ -201,15 +201,24 @@ public with sharing class FORM_ServiceGiftEntry {
     @AuraEnabled
     public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
-        Form_Template__c[] templates = [
-            SELECT Id, Name
-            FROM Form_Template__c
-            WHERE Id IN :ids
-        ];
-        delete templates;
-        for (Form_Template__c template : templates) {
-            formTemplateNames.add(template.Name);
+
+        try {
+            Form_Template__c[] templates = [
+                SELECT Id, Name
+                FROM Form_Template__c
+                WHERE Id IN :ids
+                WITH SECURITY_ENFORCED
+            ];
+
+            delete templates;
+            for (Form_Template__c template : templates) {
+                formTemplateNames.add(template.Name);
+            }
+        } catch (DmlException ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
         }
+
        return formTemplateNames;
     }
 
