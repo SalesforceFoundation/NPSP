@@ -51,7 +51,6 @@ private with sharing class RD2_RecurringDonations_TEST {
         insert acc;
 
         Contact contact = UTIL_UnitTestData_TEST.getContact();
-        contact.AccountId = acc.Id;
         insert contact;
     }
 
@@ -64,6 +63,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
+        Account account = getAccount();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             new TEST_RecurringDonationBuilder()
@@ -72,7 +72,7 @@ private with sharing class RD2_RecurringDonations_TEST {
                 .withDefaultValues()
                 .build(),
             new TEST_RecurringDonationBuilder()
-                .withAccount(contact.AccountId)
+                .withAccount(account.Id)
                 .withAmount(200)
                 .withDefaultValues()
                 .build()
@@ -94,7 +94,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assert(rdName.endsWith('100 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
 
         rdName = actualRdById.get(rds[1].id).Name;
-        System.assert(rdName.startsWith(contact.Account.Name), 'Name should start with Account name');
+        System.assert(rdName.startsWith(account.Name), 'Name should start with Account name');
         System.assert(rdName.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
     }
 
@@ -106,10 +106,10 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static void shouldAutogenerateNameOnUpdateWhenAutoNamingIsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact contact = getContact();
+        Account account = getAccount();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withAccount(contact.AccountId)
+            .withAccount(account.Id)
             .withAmount(100)
             .withDefaultValues()
             .build();
@@ -127,7 +127,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assert(rd.Name.startsWith(contact.Account.Name), 'Name should start with Account name');
+        System.assert(rd.Name.startsWith(account.Name), 'Name should start with Account name');
         System.assert(rd.Name.endsWith('200 - ' + System.Label.RecurringDonationNameSuffix), 'Name should contain amount value');
     }
 
@@ -168,6 +168,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
+        Account account = getAccount();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             new TEST_RecurringDonationBuilder()
@@ -178,7 +179,7 @@ private with sharing class RD2_RecurringDonations_TEST {
                 .withName(null)
                 .build(),
             new TEST_RecurringDonationBuilder()
-                .withAccount(contact.AccountId)
+                .withAccount(account.Id)
                 .withAmount(200)
                 .withDefaultValues()
                 .build()
@@ -962,6 +963,18 @@ private with sharing class RD2_RecurringDonations_TEST {
         return [
             SELECT FirstName, LastName, AccountId, Account.Name
             FROM Contact
+            LIMIT 1
+        ];
+    }
+
+    /****
+    * @description Returns account record
+    * @return Account
+    */
+    private static Account getAccount() {
+        return [
+            SELECT Name
+            FROM Account
             LIMIT 1
         ];
     }
