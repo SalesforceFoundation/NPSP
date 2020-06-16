@@ -8,7 +8,7 @@ import {
 } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
-import { fireEvent, registerListener } from 'c/pubsubNoPageRef'
+import {  registerListener } from 'c/pubsubNoPageRef'
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
