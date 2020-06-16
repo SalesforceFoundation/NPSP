@@ -137,6 +137,18 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 self.builtin.log("Advanced Mapping is already enabled")        
             
+    @capture_screenshot_on_error
+    def Enable_customizable_rollups_if_not_enabled(self):
+        """Checks if advanced mapping is Enabled and enables if not enabled"""
+        locator=npsp_lex_locators['id'].format("navigateCRLPs")
+        if self.npsp.check_if_element_exists(locator):
+            self.builtin.log("Customizable Rollups is already enabled")
+        else:
+            self.builtin.log("Customizable Rollups is not enabled by default, enabling it")
+            self.click_toggle_button("Customizable Rollups")
+            self.selenium.wait_until_page_contains_element(locator,timeout=90)
+            self.builtin.log("Customizable Rollups is enabled")  
+
     def verify_gift_entry_is_not_enabled(self):
         """Verifies that gift entry is not enabled by default 
            If already enabled, disables it"""
@@ -163,3 +175,25 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 self.builtin.log("This Org has Customizable Rollups Enabled")
                 isPresent = True
             return isPresent
+
+    @capture_screenshot_on_error
+    def check_metadeploy_exists(self):
+        """Check if the rd2 metadeploy link is enabled """
+        locator=npsp_lex_locators["erd"]["rd2_installed"]
+        isPresent = False
+        if self.npsp.check_if_element_displayed(locator):
+            isPresent = True
+        return isPresent
+
+    @capture_screenshot_on_error
+    def check_rd2_is_enabled(self):
+        """Verifies that Enhanced Recurring Donations is enabled on the org"""
+        enabled = False
+        if self.npsp.check_submenu_link_exists("Upgrade to Enhanced Recurring Donations"):
+            self.npsp.click_link_with_text("Upgrade to Enhanced Recurring Donations")
+            time.sleep(2)    #This sleep is necessary in this particular scenario
+            if self.check_metadeploy_exists():
+                enabled = True
+        return enabled
+        
+        
