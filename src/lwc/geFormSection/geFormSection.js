@@ -1,11 +1,11 @@
 import {LightningElement, api, track} from 'lwc';
 import { getSubsetObject, isUndefined, isNotEmpty } from 'c/utilCommon';
-import { handleError } from 'c/utilTemplateBuilder';
+
+const COLLAPSED_DISPLAY_MODE = 'collapsed';
 
 export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
-    @track collapsed = false;
     @track hasCreditCardWidget = false;
 
 
@@ -20,6 +20,11 @@ export default class GeFormSection extends LightningElement {
      */
     get altTextLabel() {
         return 'Toggle ' + this.section.label;
+    }
+
+
+    get isCollapsed() {
+        return this.section.defaultDisplayMode === COLLAPSED_DISPLAY_MODE;
     }
 
     @api
