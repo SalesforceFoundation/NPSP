@@ -269,7 +269,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains_element(locator)
 
     def click_field_value_link(self,field_name):
-        """"""
+        """clicks on the link present in the given field"""
         value=self.npsp.return_locator_value("bge.value",field_name) 
         self.npsp.click_link_with_text(value)   
 

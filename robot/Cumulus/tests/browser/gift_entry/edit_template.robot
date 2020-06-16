@@ -8,6 +8,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/PaymentPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
+...             Enable Gift Entry
 ...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
@@ -37,7 +38,7 @@ Edit GE Template And Verify Changes
     [Documentation]                  This test case makes edits to Default gift entry template and verifies that edits are saved 
     ...                              and available when a Single gift or batch gift are created. 
  
-    [tags]                             feature:GE          W-039559   
+    [tags]                           unstable     feature:GE          W-039559   
     # Edit Default template to add some default values and add a new field to form                   
     Go To Page                       Landing                       GE_Gift_Entry
     Click Link                       Templates
@@ -85,6 +86,7 @@ Edit GE Template And Verify Changes
     ...                              npe01__Payment_Method__c=Check
     Verify Expected Values           nonns    Account     &{account}[Id]
     ...                              ${org_ns}custom_acc_text__c=${msg}
+    # Create a new batch and verify default values are displayed on the Batch Gift Form
     Go To Page                       Landing                       GE_Gift_Entry
     Click Gift Entry Button          New Batch
     Wait Until Modal Is Open
@@ -100,6 +102,7 @@ Edit GE Template And Verify Changes
     ...                              Donation Date=${ui_date}
     ...                              Check/Reference Number=abc11233
     ...                              Payment Method=Check
+    # Verify batch gift form throws error when a required field is not filled, correct and save
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
     ...                              Existing Donor Contact=&{contact}[Name]
@@ -115,6 +118,7 @@ Edit GE Template And Verify Changes
     Click Data Import Button         NPSP Data Import    button    Begin Data Import Process
     Wait For Batch To Process        BDI_DataImport_BATCH    Completed
     Click Button With Value          Close
+    # Verify default values stored on payment and custom_account_text field doesn't have value on houshold account as its not relavent
     Current Page Should Be           Form                          Gift Entry
     Click Field Value Link           Donation
     Current Page Should Be           Details                       npe01__OppPayment__c
