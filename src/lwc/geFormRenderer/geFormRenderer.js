@@ -184,6 +184,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
             // uses the @wire service below to retrieve the Template using the Template Id
             // stored on the Batch.
+
+            // get the form template if in batch mode so the 
+            // donationFieldTemplateLabel gets set
+            GeFormService.getFormTemplate();
             return;
         }
 
