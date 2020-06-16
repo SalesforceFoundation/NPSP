@@ -18,6 +18,8 @@ import donorTypeHelpText from '@salesforce/label/c.RD2_EntryFormDonorTypeHelpTex
 
 export default class rd2EntryFormDonorSection extends LightningElement {
 
+    DEFAULT_DONOR_TYPE = 'Contact';
+
     customLabels = Object.freeze({
         donorTypeLabel,
         donorTypeHelpText
@@ -55,6 +57,8 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                     const errorMessage = constructErrorMessage(error);
                     showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
                 });
+        } else {
+            this.donorType = this.DEFAULT_DONOR_TYPE;
         }
 
         getSetting({ parentId: this.parentId })
