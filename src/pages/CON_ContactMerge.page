@@ -402,7 +402,7 @@
                                             <apex:repeat var="col" value="{!row.values}">
                                                 <apex:outputText rendered="{!row.showRadio}">
                                                     <td class="slds-form-element__control slds-size_1-of-3 slds-cell-wrap">
-                                                        <label class="slds-radio">
+                                                        <label class="slds-radio" aria-label="{!row.fieldLabel}">
                                                             <apex:outputText rendered="{!row.selectedValue == col.objId}">
                                                                 <input type="radio" class="radio-winner-value" checked="true" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                             </apex:outputText>
