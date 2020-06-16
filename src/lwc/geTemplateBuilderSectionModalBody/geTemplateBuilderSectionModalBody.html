@@ -23,6 +23,26 @@
             <div class="slds-section slds-is-open">
                 <h3 class="slds-section__title slds-theme_shade">
                     <span class="slds-truncate slds-p-horizontal_small"
+                          title={CUSTOM_LABELS.geHeaderFormFieldsModalDisplayOptionsSection}>
+                       {CUSTOM_LABELS.geHeaderFormFieldsModalDisplayOptionsSection}
+                    </span>
+                </h3>
+                <div aria-hidden="false"
+                     class="slds-section__content">
+                    <lightning-radio-group name={CUSTOM_LABELS.geLabelDisplaySections}
+                                           label={CUSTOM_LABELS.geLabelDisplaySections}
+                                           options={displayOptions}
+                                           value={_selectedDisplayMode}
+                                           onchange={handleDisplayOptionChange}>
+                    </lightning-radio-group>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-1 slds-p-bottom_small">
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small"
                           title={CUSTOM_LABELS.geHeaderFormFieldsModalDeleteSection}>
                         {CUSTOM_LABELS.geHeaderFormFieldsModalDeleteSection}
                     </span>
