@@ -5778,6 +5778,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Collapse All</value>
     </labels>
     <labels>
+        <fullName>geButtonFormFieldsDisplayOptionCollapsed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Radial label for the Collapse section option</shortDescription>
+        <value>Collapsed: All fields hidden</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsDisplayOptionExpanded</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Radial label for the Expand section option</shortDescription>
+        <value>Expanded: All fields visible</value>
+    </labels>
+    <labels>
         <fullName>geButtonFormFieldsExpandAll</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6264,6 +6280,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Delete Section</value>
     </labels>
     <labels>
+        <fullName>geHeaderFormFieldsModalDisplayOptionsSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for section display options</shortDescription>
+        <value>Display Options</value>
+    </labels>
+    <labels>
         <fullName>geHeaderFormFieldsModalRenameSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6527,6 +6551,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for fields that aren't included as columns</shortDescription>
         <value>Available Fields</value>
+    </labels>
+    <labels>
+        <fullName>geLabelDisplaySections</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Setting text for how to display sections</shortDescription>
+        <value>Display section as</value>
     </labels>
     <labels>
         <fullName>geLabelSectionName</fullName>
