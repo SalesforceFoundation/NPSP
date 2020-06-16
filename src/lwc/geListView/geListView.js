@@ -6,7 +6,8 @@ import {
     handleError,
     generateId,
     showToast,
-    informGiftEntryHomeApp, EVENT_SOURCE_LIST_VIEW,
+    dispatchApplicationEvent,
+    EVENT_SOURCE_LIST_VIEW
 } from 'c/utilTemplateBuilder'
 import {
     format,
@@ -14,7 +15,7 @@ import {
     isNotEmpty,
     hasNestedProperty,
 } from 'c/utilCommon'
-import { fireEvent } from 'c/pubsubNoPageRef'
+
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -78,7 +79,7 @@ export default class geListView extends LightningElement {
     @track orderedByInfo;
 
     columnHeadersByFieldApiName;
-    currentUserId;
+
     isLoaded = false;
     hasAdditionalRows = false;
 
@@ -225,7 +226,7 @@ export default class geListView extends LightningElement {
 
         if (response.error) {
             // Build CRUD error and inform geHome
-            informGiftEntryHomeApp('appPermissionsChange',
+            dispatchApplicationEvent('appPermissionsChange',
               this.CUSTOM_LABELS.geErrorObjectCRUDHeader,
               GeLabelService.format(this.CUSTOM_LABELS.geErrorObjectCRUDBody,
                 [this.objectApiName]), EVENT_SOURCE_LIST_VIEW
@@ -249,7 +250,7 @@ export default class geListView extends LightningElement {
 
         if (isNotEmpty(flsErrors)) {
             // Inform geHome about the FLS error
-            informGiftEntryHomeApp('appPermissionsChange',
+            dispatchApplicationEvent('appPermissionsChange',
               this.CUSTOM_LABELS.geErrorFLSHeader,
               GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody,
                 [flsErrors]), EVENT_SOURCE_LIST_VIEW

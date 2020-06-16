@@ -4,7 +4,8 @@ import {
     dispatch,
     getPageAccess,
     EVENT_SOURCE_LIST_VIEW,
-    EVENT_SOURCE_APPLICATION } from 'c/utilTemplateBuilder';
+    EVENT_SOURCE_APPLICATION, dispatchApplicationEvent
+} from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef'
@@ -147,17 +148,18 @@ export default class geHome extends LightningElement {
     }
 
     /**
-     * @description Set permission (CRUD & FLS) errors for the geListView component
+     * @description Set permission (CRUD & FLS) errors for GEHome App
      * @param {object} event : Event object containing the error message
      */
     setAppPermissionErrors(event) {
         if (event) {
             if (this.view === SINGLE_GIFT_ENTRY) {
-                fireEvent(null, 'geFormAccessChange',
-                  {
-                      messageBody: event.messageBody,
-                      messageHeader: event.messageHeader,
-                  });
+                // Inform GE_GiftEntryFormApp about permission error
+                dispatchApplicationEvent(
+                  'geFormAccessChange',
+                  event.messageHeader,
+                  event.messageBody
+                );
             } else {
                 if (event.source === EVENT_SOURCE_APPLICATION) {
                     this.hasPermission = false;

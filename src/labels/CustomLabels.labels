@@ -4674,6 +4674,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>commonAdminPermissionErrorMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message about permissions</shortDescription>
+        <value>You must be a System Administrator to access this page.</value>
+    </labels>
+    <labels>
+        <fullName>commonAdminPermissionErrorTitle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error title about permissions</shortDescription>
+        <value>Check Your Permissions</value>
+    </labels>
+    <labels>
         <fullName>commonAmount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4920,6 +4936,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Percent</shortDescription>
         <value>Percent</value>
+    </labels>
+    <labels>
+        <fullName>commonPermissionErrorMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database level security check</shortDescription>
+        <value>You don&apos;t have the necessary access to use this feature. Please check with your Salesforce admin.</value>
     </labels>
     <labels>
         <fullName>commonReadMore</fullName>

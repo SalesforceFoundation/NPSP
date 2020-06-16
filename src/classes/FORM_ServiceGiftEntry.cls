@@ -201,24 +201,15 @@ public with sharing class FORM_ServiceGiftEntry {
     @AuraEnabled
     public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
-
-        try {
-            Form_Template__c[] templates = [
-                SELECT Id, Name
-                FROM Form_Template__c
-                WHERE Id IN :ids
-                WITH SECURITY_ENFORCED
-            ];
-
-            delete templates;
-            for (Form_Template__c template : templates) {
-                formTemplateNames.add(template.Name);
-            }
-        } catch (Exception ex) {
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+        Form_Template__c[] templates = [
+            SELECT Id, Name
+            FROM Form_Template__c
+            WHERE Id IN :ids
+        ];
+        delete templates;
+        for (Form_Template__c template : templates) {
+            formTemplateNames.add(template.Name);
         }
-        
        return formTemplateNames;
     }
 
@@ -323,8 +314,22 @@ public with sharing class FORM_ServiceGiftEntry {
                                                             Description__c = description,
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion);
-            upsert templateObj;
-            return templateObj.Id;
+
+            FORM_PermissionValidator validator = new FORM_PermissionValidator(
+                new Set<FORM_PermissionValidator.AccessLevel>{
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE
+                });
+
+            if (validator.hasObjectPermissions(
+                UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'))) {
+                upsert templateObj;
+                return templateObj.Id;
+            } else {
+                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(
+                    new QueryException(''));
+                throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+            }
         }
 
         return null;
