@@ -9,7 +9,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ObjectMangerPageObject.py
 ...             robot/Cumulus/resources/AccountPageObject.py
 ...             robot/Cumulus/resources/SchedulePaymentPageObject.py
-...             robot/Cumulus/resources/NPSP.py
+
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Custom Fields and data
