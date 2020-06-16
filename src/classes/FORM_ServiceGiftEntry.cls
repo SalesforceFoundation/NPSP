@@ -331,7 +331,14 @@ public with sharing class FORM_ServiceGiftEntry {
                 });
 
             if (validator.hasObjectPermissions(
-                UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'))) {
+                UTIL_Namespace.StrTokenNSPrefix('Form_Template__c')) &&
+                validator.hasFieldPermissions(
+                    UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('Description__c')) &&
+                validator.hasFieldPermissions(
+                    UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('Template_JSON__c'))
+                ) {
                 upsert templateObj;
                 return templateObj.Id;
             } else {

@@ -2,8 +2,8 @@
 import { format } from 'c/utilCommon';
 
 // Import custom labels
+import commonAdminPermissionErrorTitle from '@salesforce/label/c.commonAdminPermissionErrorTitle';
 import commonAmount from '@salesforce/label/c.commonAmount';
-import commonAdminPermissionErrorTitle from '@salesforce/label/c.commonAdminPermissionErrorTitle'
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
 import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';

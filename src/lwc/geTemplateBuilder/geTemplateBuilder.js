@@ -1002,7 +1002,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
                 this.navigateToLandingPage();
             } catch (error) {
-                showToast(this.CUSTOM_LABELS.commonError, this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
+                handleError(error);
                 this.isLoading = false;
             }
         }
