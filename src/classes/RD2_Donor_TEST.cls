@@ -38,18 +38,20 @@
 public with sharing class RD2_Donor_TEST {
 
     /***
-    * @description Verifies Donor Name is set correctly based on the Account data
+    * @description Verifies Donor fields are set correctly based on the Account data
     */
     @isTest
     private static void shouldSetDonorWhenAccountDataIsProvided() {
         Account acc = new Account(
             Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
-            Name = CAO_Constants.OCR_DONOR_ROLE
+            Name = CAO_Constants.OCR_DONOR_ROLE,
+            RecordTypeId = RD2_NamingService.hhRecordTypeId
         );
-        RD2_Donor.Record donor = new RD2_Donor.Record(acc.Id, acc.Name);
+        RD2_Donor.Record donor = new RD2_Donor.Record(acc.Id, acc.Name, acc.RecordTypeId);
 
         System.assertEquals(acc.Id, donor.recordId, 'Donor Id should match');
         System.assertEquals(acc.Name, donor.Name, 'Donor Name should match');
+        System.assertEquals(acc.RecordTypeId, donor.recordTypeId, 'Donor Record Type Id should match');
     }
 
     /***
@@ -117,7 +119,7 @@ public with sharing class RD2_Donor_TEST {
         */
         public GatewayMock withDonors(List<Account> accounts) {
             for (Account acc : accounts) {
-                donorById.put(acc.Id, new RD2_Donor.Record(acc.Id, acc.Name));
+                donorById.put(acc.Id, new RD2_Donor.Record(acc.Id, acc.Name, acc.RecordTypeId));
             }
             return this;
         }
