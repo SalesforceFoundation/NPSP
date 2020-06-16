@@ -56,7 +56,7 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		save_button = npsp_lex_locators['object_manager']['button'].format("Save")
 		checkbox_option = npsp_lex_locators['object_manager']['input'].format("fdtypeB")
 		formula_txtarea = npsp_lex_locators['object_manager']['formula_txtarea'].format("CalculatedFormula")
-		check_syntax = npsp_lex_locators['object_manager']['input_validation'].format("Check Syntax")
+		check_syntax = npsp_lex_locators['object_manager']['button'].format("Check Syntax")
 		
 		self.selenium.wait_until_page_contains_element(formula_locator,60)
 		self.selenium.click_element(formula_locator)

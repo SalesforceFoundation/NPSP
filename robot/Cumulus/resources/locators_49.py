@@ -242,7 +242,6 @@ npsp_lex_locators={
         'select_related_option':'//select[@id = "DomainEnumOrId"]/option[@value="{}"]',
         'search_result': '//tbody/tr/td/a/span[contains(text(),"{}")]',
         'formula_txtarea': '//textarea[@id = "{}"]',
-        'input_validation': '//input[@title = "{}"]',
         'object_result': '//th/a[text()="{}"]',
         },
     'custom_settings':{

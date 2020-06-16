@@ -35,8 +35,12 @@ Setup Custom Fields and data
     ${dict1}=        Create Dictionary     Object=Payment       Field=Paid   Operator=Equals   Value=True
     ${dict2}=        Create Dictionary     Object=Payment    Field=Is Opportunity From Prior Year     Operator=Equals   Value=True
     ${filterPools}=                                       Create List           ${dict1}       ${dict2}
-    Set suite variable                &{dict}
-    Set suite variable                @{filterPools}
+
+    # List of expected Rollup values
+    ${accepted_values}=     Create List            $1,667           $1,666.68
+    Set suite variable      &{dict}
+    Set suite variable      @{filterPools}
+    Set suite variable      @{accepted_values}
 
 
 
@@ -62,17 +66,17 @@ Total Current Year Payments on Prior Year Pledges
 
     Click Link With Text                                  Customizable Rollups
     Create New Rollup Setting
-        ...                                                Target Object=Account
-        ...                                                Target Field=This Year Payments on Past Year Pledges
-        ...                                                Description=Shows Payments made this year for pledges (Opportunities) from the prior year.
+        ...                                               Target Object=Account
+        ...                                               Target Field=This Year Payments on Past Year Pledges
+        ...                                               Description=Shows Payments made this year for pledges (Opportunities) from the prior year.
 
-        ...                                                Operation=Sum
-        ...                                                Time Frame=Years Ago
-        ...                                                Years Ago=This Year
-        ...                                                Rollup Type=Payment -> Account (Hard Credit)
+        ...                                               Operation=Sum
+        ...                                               Time Frame=Years Ago
+        ...                                               Years Ago=This Year
+        ...                                               Rollup Type=Payment -> Account (Hard Credit)
 
-        ...                                                Filter Group=Old Payments
-        ...                                                Date Field=Payment: Payment Date
+        ...                                               Filter Group=Old Payments
+        ...                                               Date Field=Payment: Payment Date
 
     # Create an opportunity for prior year that has 6 payments associated with a contact .
     # Ensure that Two of the payments were done the current year and one is paid last year.
@@ -88,9 +92,8 @@ Total Current Year Payments on Prior Year Pledges
     ...                                          object_id=${data}[contact_opportunity][Id]
 
     # Navigate to the Account page and verify that the new rollupfield is appearing and is showing the right calculated amount
-    ${accepted_values}=     Create List            $1,667           $1,666.68
     Go To Page                                  Details          Account                                               object_id=${data}[contact][AccountId]
     Wait Until Loading Is Complete
     Select Tab                                  Details
-    Validate Rollup Field Contains              This Year Payments on Past Year Pledges               ${accepted_values}
+    Validate Rollup Field Contains              This Year Payments on Past Year Pledges               @{accepted_values}
 
