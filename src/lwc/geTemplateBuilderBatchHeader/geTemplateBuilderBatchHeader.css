@@ -1,0 +1,28 @@
+@media only screen and (min-width: 30em) and (max-width: 48em) {
+    .left-panel {
+        border-bottom: 1px solid var(--lwc-colorBorder, rgb(221, 219, 218));
+    }
+    .right-panel {
+        border-left: none;
+    }
+}
+
+@media only screen and (min-width: 48em) {
+    .right-panel {
+        border-left: 1px solid var(--lwc-colorBorder, rgb(221, 219, 218));
+    }
+
+    .fls-message-body-padding {
+        padding: 0 10rem;
+    }
+}
+
+@media only screen and (min-width: 64em) {
+    .right-panel {
+        border-left: 1px solid var(--lwc-colorBorder, rgb(221, 219, 218));
+    }
+
+    .fls-message-body-padding {
+        padding: 0 22rem;
+    }
+}
