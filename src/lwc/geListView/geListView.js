@@ -611,11 +611,9 @@ export default class geListView extends LightningElement {
         records.forEach(record => {
             Object.keys(record).forEach(key => {
                 let fieldDescribe = this.objectInfo.fields[key];
+                const isReferenceField = fieldDescribe.nameField || fieldDescribe.reference;
 
-                if (isNotEmpty(fieldDescribe)
-                    && (fieldDescribe.nameField ||
-                        fieldDescribe.reference
-                    )) {
+                if ( isNotEmpty(fieldDescribe) && isReferenceField ) {
 
                     let _objectApiName = fieldDescribe.nameField ? this.objectInfo.apiName :
                         fieldDescribe.referenceToInfos[0].apiName;
