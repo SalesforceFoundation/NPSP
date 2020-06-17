@@ -74,20 +74,25 @@
                     </c-ge-template-builder-form-fields>
                 </lightning-tab>
 
-                <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
-                               label={TabEnums.BATCH_HEADER_TAB}
+                <lightning-tab value={TabEnums.BATCH_SETTINGS_TAB}
+                               label={TabEnums.BATCH_SETTINGS_TAB}
                                class="slds-p-around_none"
                                onactive={handleOnActiveTab}
-                               show-error-indicator={hasBatchHeaderTabError}>
+                               show-error-indicator={hasBatchSettingsTabError}>
                     <c-ge-template-builder-batch-header selected-batch-fields={batchHeaderFields}
                                                         batch-fields={batchFieldFormElements}
                                                         missing-required-fields={missingRequiredBatchFields}
+                                                        available-batch-table-column-options={availableBatchTableColumnOptions}
+                                                        selected-batch-table-column-options={selectedBatchTableColumnOptions}
+                                                        disable-batch-table-columns-subtab={disableBatchTableColumnsSubtab}
+                                                        batch-table-columns-access-error-message={batchTableColumnsAccessErrorMessage}
                                                         onupdatevalidity={handleUpdateValidity}
                                                         onaddbatchheaderfield={handleAddBatchHeaderField}
                                                         onremovebatchheaderfield={handleRemoveBatchHeaderField}
                                                         onbatchheaderfieldup={handleBatchHeaderFieldUp}
                                                         onbatchheaderfielddown={handleBatchHeaderFieldDown}
-                                                        onupdatebatchheaderfield={handleUpdateBatchHeaderField}>
+                                                        onupdatebatchheaderfield={handleUpdateBatchHeaderField}
+                                                        onupdatetemplatedefaultbatchtablecolumns={handleUpdateSelectedBatchTableColumns}>
                     </c-ge-template-builder-batch-header>
                 </lightning-tab>
             </lightning-tabset>
@@ -132,7 +137,7 @@
                             </lightning-progress-step>
                             <lightning-progress-step label="Batch Header"
                                                      aria-label="Batch Header"
-                                                     value={TabEnums.BATCH_HEADER_TAB}>
+                                                     value={TabEnums.BATCH_SETTINGS_TAB}>
                             </lightning-progress-step>
                         </lightning-progress-indicator>
                     </div>
@@ -153,7 +158,7 @@
                                               class="slds-float_right"
                                               onclick={handleGoToTab}
                                               variant="brand"
-                                              data-tab-value={TabEnums.BATCH_HEADER_TAB}
+                                              data-tab-value={TabEnums.BATCH_SETTINGS_TAB}
                                               data-qa-locator={qaLocatorNextBatchHeaderFields}>
                             </lightning-button>
                         </template>

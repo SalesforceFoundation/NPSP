@@ -24,6 +24,7 @@ import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__
 import DATA_IMPORT_BATCH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
 import DATA_IMPORT_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import DATA_IMPORT_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c';
+import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 
 const NAME = 'name';
 const ID = 'id';
@@ -213,13 +214,17 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     async connectedCallback() {
-        this.donationMatchingBehaviors = await getDonationMatchingValues();
+        try {
+            this.donationMatchingBehaviors = await getDonationMatchingValues();
 
-        if (!this.recordId) {
-            this.templates = await getAllFormTemplates();
-            this.templates = this.templates.sort();
-            this.builderTemplateComboboxOptions(this.templates);
-            this.isLoading = false;
+            if (!this.recordId) {
+                this.templates = await getAllFormTemplates();
+                this.templates = this.templates.sort();
+                this.builderTemplateComboboxOptions(this.templates);
+                this.isLoading = false;
+            }
+        } catch (error) {
+            handleError(error);
         }
     }
 
@@ -335,6 +340,13 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         // Set matching behavior
         dataImportBatch.fields[DATA_IMPORT_MATCHING_BEHAVIOR_INFO.fieldApiName] =
             this.donationMatchingBehaviors.ExactMatchOrCreate;
+        // Set batch table column headers
+        const hasAccessTobatchTableColumnsField =
+            this.dataImportBatchInfo.fields[DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName];
+        if (hasAccessTobatchTableColumnsField) {
+            dataImportBatch.fields[DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
+                JSON.stringify(this.selectedTemplate.defaultBatchTableColumns);
+        }
 
         if (this.recordId) {
             dataImportBatch.fields[DATA_IMPORT_BATCH_ID_INFO.fieldApiName] = this.recordId;
