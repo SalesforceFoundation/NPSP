@@ -406,7 +406,7 @@ export default class geListView extends LightningElement {
                 referenceTo: fieldDescribe.reference ? fieldDescribe.referenceToInfos[0] : null
             };
 
-            let referenceField = this.handleReferenceTypeFields(fieldDescribe);
+            let referenceField = this.getComputedReferenceFieldApiName(fieldDescribe);
 
             if (isNotEmpty(referenceField)) {
                 columnEntry.fieldApiName = referenceField;
@@ -465,9 +465,8 @@ export default class geListView extends LightningElement {
     * adjusts the relevant column entry properties as needed.
     *
     * @param {object} fieldDescribe: Field describe from the schema.
-    * @param {object} columnEntry: A column header entry for lightning-datatable.
     */
-    handleReferenceTypeFields(fieldDescribe) {
+    getComputedReferenceFieldApiName(fieldDescribe) {
         const isRelationshipField =
             fieldDescribe.relationshipName &&
             fieldDescribe.referenceToInfos &&
