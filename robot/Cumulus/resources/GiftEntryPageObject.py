@@ -258,7 +258,8 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(field_locator,value)
 
     def verify_error_for_field(self,**kwargs):
-        """Verify that the given field contains specified error message""" 
+        """Verify that the given field contains specified error message
+        Key should be field name and value should be the error message expected for field""" 
         for key,value in kwargs.items():
             locator=npsp_lex_locators["gift_entry"]["field_alert"].format(key,value)
             self.selenium.wait_until_page_contains_element(locator)           
@@ -272,18 +273,3 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         """clicks on the link present in the given field"""
         value=self.npsp.return_locator_value("bge.value",field_name) 
         self.npsp.click_link_with_text(value)   
-
-
-
-
-
-
-
-
-
-
-
-                        
-
-
-
