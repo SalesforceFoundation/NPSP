@@ -300,9 +300,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         System.assertEquals(1, rdBatch.rdDiffCount,
             'The number of Recurring Donations with an amount differing from its opportunities should be tracked correctly');
-        
-        System.assertEquals(2, rdBatch.rdFixedLengthCount,
-            'The number of fixed-length Recurring Donations should be tracked correctly');
     }
 
     /**
@@ -411,7 +408,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         rdBatch.rdAllCount = 4;
         rdBatch.rdDiffCount = 3;
-        rdBatch.rdFixedLengthCount = 5;
 
         Test.startTest();
         rdBatch.finish(null);
@@ -431,14 +427,6 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name()
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountRdsWithDiffAmount and set correctly'
-        );
-
-        System.assertEquals(
-            rdBatch.rdFixedLengthCount,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature DataCount_ONETIME_Use and set correctly'
         );
     }
 
