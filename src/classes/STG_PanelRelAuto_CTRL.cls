@@ -56,10 +56,10 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     public Boolean getHasAccess() {
         String autoCreateObjectName = Schema.SObjectType.npe4__Relationship_Auto_Create__c.getName();
 
-        return UTIL_Permissions.canRead(autoCreateObjectName) &&
-                UTIL_Permissions.canCreate(autoCreateObjectName) &&
-                UTIL_Permissions.canUpdate(autoCreateObjectName) &&
-                UTIL_Permissions.canDelete(autoCreateObjectName);
+        return UTIL_Permissions.canRead(autoCreateObjectName, false) &&
+                UTIL_Permissions.canCreate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canUpdate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canDelete(autoCreateObjectName, false);
     }
 
     /*********************************************************************************************************
