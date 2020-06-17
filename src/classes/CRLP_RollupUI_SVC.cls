@@ -368,9 +368,14 @@ public with sharing class CRLP_RollupUI_SVC {
             model.filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
 
             Map<String,String> operatorMap = getfilterRuleOperations();
-            for(Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
+            for (Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
                 CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(fr);
                 ruleItem.operationLabel = operatorMap.get(ruleItem.operationName);
+                if (ruleItem.value == 'True') {
+                    ruleItem.valueLabel = System.Label.labelBooleanTrue;
+                } else if (ruleItem.value == 'False') {
+                    ruleItem.valueLabel = System.Label.labelBooleanFalse;
+                }
                 model.filterRuleList.add(ruleItem);
             }
         }
@@ -632,6 +637,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'labelOpportunity' => Schema.SObjectType.Opportunity.getLabel(),
                 'labelPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'labelRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
+                'labelBooleanTrue' => System.Label.labelBooleanTrue,
+                'labelBooleanFalse' => System.Label.labelBooleanFalse,
                 'name' => Label.stgLabelName,
                 'namespacePrefix' => UTIL_Namespace.StrTokenNSPrefix(''),
                 'na' => Label.stgNotApplicable,
