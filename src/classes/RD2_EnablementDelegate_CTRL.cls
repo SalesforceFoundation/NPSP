@@ -333,6 +333,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         saveEnablementState(state);
 
         System.enqueueJob(new EnablementQueueable(QueueableMode.DisableRollup));
+
+        if (!Test.isRunningTest()) {
+            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+        }
     }
 
     /***
@@ -349,6 +353,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         state.isMetaConfirmed = true;
 
         saveEnablementState(state);
+
+        if (!Test.isRunningTest()) {
+            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+        }
     }
 
     /***
