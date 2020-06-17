@@ -333,7 +333,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (modalData.action === SAVE) {
             let formSections = mutable(this.formSections);
             let formSection = formSections.find((fs) => { return fs.id === modalData.section.id });
-
+            formSection.defaultDisplayMode = modalData.section.defaultDisplayMode;
             formSection.label = modalData.section.label;
             this.formSections = formSections;
         }
@@ -948,9 +948,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.handleAddBatchHeaderField({ detail: field.apiName });
             }
 
-            const fieldApiNames = this.missingRequiredBatchFields.map(field => field.apiName).join(', ');
+            const fieldLabels = this.missingRequiredBatchFields.map(field => field.label).join(', ');
             showToast(this.CUSTOM_LABELS.commonWarning,
-                `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldApiNames}`,
+                `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldLabels}`,
                 'warning',
                 'sticky');
         }
