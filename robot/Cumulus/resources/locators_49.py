@@ -95,7 +95,7 @@ npsp_lex_locators={
     'click_aff_id':'//table[contains(@class,"forceRecordLayout")]/tbody/tr/th/div/a[text()="{}"]',
     'confirm': {
         'check_value':'//div[contains(@class, "forcePageBlockItem") or contains(@class, "slds-form-element_stacked")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//*[text()="{}"]',
-#         'check_value':'//div[contains(@class, "slds-form-element_stacked")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//*[text()="{}"]',
+        'check_text_value':'//div[contains(@class, "field-label-container")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span//lightning-formatted-text',
         'check_status':'//div[contains(@class, "field-label-container")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span//lightning-formatted-text[text()="{}"]',
         'check_numbers':'//div[contains(@class, "field-label-container")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span//lightning-formatted-number[text()="{}"]',
     },
@@ -238,9 +238,11 @@ npsp_lex_locators={
     'object_manager':{
         'button':'//input[@title="{}"]',
         'input':'//input[@id="{}"]',
-        'select_related':'//select[@id = "DomainEnumOrId"]',
+        'select_related':'//select[@id = "{}"]',
         'select_related_option':'//select[@id = "DomainEnumOrId"]/option[@value="{}"]',
         'search_result': '//tbody/tr/td/a/span[contains(text(),"{}")]',
+        'formula_txtarea': '//textarea[@id = "{}"]',
+        'object_result': '//th/a[text()="{}"]',
         },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
@@ -258,12 +260,14 @@ npsp_lex_locators={
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
         },
+	# Customizable rollups related element locators
     'crlps':{
         'select_locator': "//select[@name ='{}']",
         'success_toast': "//div[@class='{}']",
         'active_setting_record': "//td[@data-label='Active']/following::tr/th//span/div//lightning-button/button[text()='{}']",
         'rollup_progress_notification': "//div/h2[contains(text(),'{}')]",
         'rollup_options':"//tr[./th//button[text()='{}']]/td//button",
+        'modal-button': '//footer/button[text()="Save"]',
        },
     'gift_entry':{
         'id':'//*[contains(@data-qa-locator,"{}")]',
