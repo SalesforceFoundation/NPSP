@@ -9,6 +9,15 @@ import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name
 import GeLabelService from 'c/geLabelService';
 
 // Import schema for excluded template batch header fields
+import DI_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
+import DI_BATCH_CREATED_BY_ID from '@salesforce/schema/DataImportBatch__c.CreatedById';
+import DI_BATCH_CREATED_DATE from '@salesforce/schema/DataImportBatch__c.CreatedDate';
+import DI_BATCH_IS_DELETED from '@salesforce/schema/DataImportBatch__c.IsDeleted';
+import DI_BATCH_LAST_MODIFIED_BY_ID from '@salesforce/schema/DataImportBatch__c.LastModifiedById';
+import DI_BATCH_LAST_MODIFIED_DATE from '@salesforce/schema/DataImportBatch__c.LastModifiedDate';
+import DI_BATCH_LAST_REFERENCED_DATE from '@salesforce/schema/DataImportBatch__c.LastReferencedDate';
+import DI_BATCH_LAST_VIEWED_DATE from '@salesforce/schema/DataImportBatch__c.LastViewedDate';
+import DI_BATCH_SYSTEM_MODSTAMP from '@salesforce/schema/DataImportBatch__c.SystemModstamp';
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
 import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
@@ -44,6 +53,7 @@ import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c';
 // Import schema info for default form field elements
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
 import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DI_ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
@@ -130,6 +140,15 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_DEFAULTS_INFO.fieldApiName,
     DI_BATCH_GIFT_ENTRY_VERSION_INFO.fieldApiName,
     DI_BATCH_FORM_TEMPLATE_INFO.fieldApiName,
+    DI_BATCH_TABLE_COLUMNS_FIELD.fieldApiName,
+    DI_BATCH_CREATED_BY_ID.fieldApiName,
+    DI_BATCH_CREATED_DATE.fieldApiName,
+    DI_BATCH_IS_DELETED.fieldApiName,
+    DI_BATCH_LAST_MODIFIED_BY_ID.fieldApiName,
+    DI_BATCH_LAST_MODIFIED_DATE.fieldApiName,
+    DI_BATCH_LAST_REFERENCED_DATE.fieldApiName,
+    DI_BATCH_LAST_VIEWED_DATE.fieldApiName,
+    DI_BATCH_SYSTEM_MODSTAMP.fieldApiName
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 
@@ -140,6 +159,7 @@ const DEFAULT_FORM_FIELDS = {
     [DI_CONTACT1_IMPORTED_INFO.fieldApiName]: DI_CONTACT1_IMPORTED_INFO.objectApiName,
     [DONATION_AMOUNT_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
     [DONATION_DATE_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
+    [DONATION_CAMPAIGN_SOURCE_FIELD.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
     [PAYMENT_CHECK_REF_NUM_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
     [PAYMENT_METHOD_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
 }
