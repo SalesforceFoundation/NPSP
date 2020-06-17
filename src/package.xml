@@ -987,6 +987,7 @@
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Batch_Table_Columns__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
         <members>DataImportBatch__c.Donation_Date_Range__c</members>
@@ -2152,6 +2153,8 @@
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
+        <members>geBodyBatchTableColumnsPart1</members>
+        <members>geBodyBatchTableColumnsPart2</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsDescLeftCol</members>
@@ -2205,6 +2208,7 @@
         <members>geErrorDonorTypeValidation</members>
         <members>geErrorDonorTypeValidationSingle</members>
         <members>geErrorExistingTemplateName</members>
+        <members>geErrorFLSBatchTableColumns</members>
         <members>geErrorFLSBody</members>
         <members>geErrorFLSHeader</members>
         <members>geErrorFieldPermission</members>
@@ -2279,6 +2283,8 @@
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
+        <members>geTabBatchSettings</members>
+        <members>geTabBatchTableColumns</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTextChargingCard</members>
