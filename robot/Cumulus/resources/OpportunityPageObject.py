@@ -45,6 +45,8 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.select_value_from_dropdown ("Role",role)
         self.npsp.populate_modal_form(**kwargs)
         self.salesforce.click_modal_button("Save")
+        
+    
 
 
 @pageobject("Listing", "Opportunity")
