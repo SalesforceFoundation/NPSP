@@ -29,7 +29,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
 
     _batchLoaded = false;
     @track data = [];
-    @track hasData;
+    @track hasData = false;
 
     _columnsLoaded = false;
     @track columns = [];
