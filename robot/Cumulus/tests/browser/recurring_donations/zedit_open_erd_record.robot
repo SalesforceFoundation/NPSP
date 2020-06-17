@@ -21,14 +21,14 @@ Setup Test Data
         #Create a Recurring Donation
         &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
         &{recurringdonation_fields} =	Create Dictionary           Name=ERD Open Recurring Donation
-                    ...                                             npe03__Installment_Period__c=Yearly
-                    ...                                             npe03__Amount__c=100
-                    ...                                             npe03__Open_Ended_Status__c=Open
-                    ...                                             npe03__Date_Established__c=2019-07-08
-                    ...                                             Status__c=Active
-                    ...                                             Day_of_Month__c=15
-                    ...                                             InstallmentFrequency__c=1
-                    ...                                             PaymentMethod__c=Check
+        ...                                                         npe03__Installment_Period__c=Yearly
+        ...                                                         npe03__Amount__c=100
+        ...                                                         npe03__Open_Ended_Status__c=Open
+        ...                                                         npe03__Date_Established__c=2019-07-08
+        ...                                                         Status__c=Active
+        ...                                                         Day_of_Month__c=15
+        ...                                                         InstallmentFrequency__c=1
+        ...                                                         PaymentMethod__c=Check
 
         Setupdata   contact         ${contact1_fields}             recurringdonation_data=${recurringdonation_fields}
 
@@ -41,7 +41,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          Verifies the opportunity status reflects the right status after closing
 
 
-    [tags]                        unstable               W-040346            feature:RD2
+    [tags]                                 unstable               W-040346            feature:RD2
 
     Go To Page                             Details
     ...                                    npe03__Recurring_Donation__c

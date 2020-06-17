@@ -63,10 +63,8 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
         message_locator = npsp_lex_locators['erd']['text_message']
         list_ele = self.selenium.get_webelements(message_locator)
         p_count = len(list_ele)
-        if p_count == 2:
-            return
-        else:
-            raise Exception("Schedule warning messages do not exist")
+        if not int(self.selenium.get_element_count(message_locator)) == 2:
+			raise Exception("Schedule warning messages do not exist")
 
     @capture_screenshot_on_error
     def validate_field_values_under_section(self, section=None, **kwargs):
