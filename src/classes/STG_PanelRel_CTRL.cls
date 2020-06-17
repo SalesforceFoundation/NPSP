@@ -33,7 +33,29 @@
 * @group Settings
 * @description The controller for the Relationships panel 
 */
-public with sharing class STG_PanelRel_CTRL extends STG_Panel { 
+public with sharing class STG_PanelRel_CTRL extends STG_Panel {
+
+    /*********************************************************************************************************
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (namespace == null || namespace == '') return 'c';
+        return namespace;
+    }
+
+    /*********************************************************************************************************
+    * @description Returns true if user has full CRUD access to Relationship_Sync_Excluded_Fields__c
+    */
+    public Boolean hasAccess {
+        get {
+            String relationshipObjectName = Schema.SObjectType.Relationship_Sync_Excluded_Fields__c.getName();
+            return UTIL_Permissions.canRead(relationshipObjectName) &&
+                UTIL_Permissions.canCreate(relationshipObjectName, false) &&
+                UTIL_Permissions.canUpdate(relationshipObjectName, false) &&
+                UTIL_Permissions.canDelete(relationshipObjectName, false);
+        }
+    }
 
     /*********************************************************************************************************
     * @description Returns the string Id of the Relationships panel. 
