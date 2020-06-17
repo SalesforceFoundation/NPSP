@@ -44,6 +44,7 @@ const EXCLUDED_COLUMN_HEADERS = [
     'SystemModstamp'
 ];
 
+
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geListView extends LightningElement {
@@ -71,6 +72,7 @@ export default class geListView extends LightningElement {
     @api sortedBy;
     @api sortedDirection;
     @api filteredBy;
+    @api target;
 
     @track objectInfo;
     @track selectedColumnHeaders;
@@ -85,6 +87,7 @@ export default class geListView extends LightningElement {
     columnHeadersByFieldApiName;
     isLoaded = false;
     hasAdditionalRows = false;
+
 
     @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
     wiredUserRecord;
@@ -529,7 +532,7 @@ export default class geListView extends LightningElement {
                 label: {
                     fieldName: fieldApiName
                 },
-                target: _SELF
+                target: isNotEmpty(this.target) ? this.target : _SELF
             }
         }
         return columnEntry;
