@@ -61,7 +61,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountBDIRows,
         Data_CountBGERows,
         Data_CountGERowsBatch,
-        Data_CountFixedLengthRd,
         Data_CountGERowsLast30DaysBatch
     }
 
@@ -176,6 +175,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             // operation.
             when NPSP_Settings {
                 handleNPSPSettings();
+                handleRD2EnablementState();
             }
 
             // Simple FeatureParameters based on the current organization configuration that can be processed
@@ -223,10 +223,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                          you move forward with Data_OppPaymentsWithoutPaymentsEnabled
                 //featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1); */
             }
-
-            when Data_CountFixedLengthRd {
-                featureManager.setPackageIntegerValue(TelemetryParameterName.DataCount_ONETIME_Use.name(), -1);
-            }
         }
     }
 
@@ -262,6 +258,86 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         }
     }
 
+    /**
+    * @description Evaluate the state of the RD2 enablement
+    *   - 0 => RD2 Not enabled
+    *   - 1 => RD2 enabled, but MetaDeploy step was skipped
+    *   - 2 => RD2 enabled, metaDeploy is completed, NextPaymentDate rollup still enabled
+    *   - 10 => RD2 fully Enabled
+    */
+    private void handleRD2EnablementState() {
+        Integer rd2EnablementStateIndicator;
+
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            rd2EnablementStateIndicator = 0;
+
+        } else if (isMetaDeployNotCompleted()) {
+            rd2EnablementStateIndicator = 1;
+
+        } else if (!isNextPaymentDateRollupDisabled()) {
+            rd2EnablementStateIndicator = 2;
+
+        } else {
+            rd2EnablementStateIndicator = 10;
+        }
+
+        featureManager.setPackageIntegerValue(
+                TelemetryParameterName.DataCount_ONETIME_Use.name(),
+                rd2EnablementStateIndicator
+        );
+    }
+
+    /**
+    * @description Validate if RD2 MetaDeploy is not executed in the org by checking RD2 Enablement State and Day of Month value
+    * @return Boolean  
+    */
+    private Boolean isMetaDeployNotCompleted() {
+        RD2_EnablementDelegate_CTRL.EnablementState state = new RD2_EnablementDelegate_CTRL.EnablementState();
+
+        String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
+
+        if (String.isNotBlank(jsonState)) {
+            state = (RD2_EnablementDelegate_CTRL.EnablementState) 
+                JSON.deserialize(jsonState, RD2_EnablementDelegate_CTRL.EnablementState.class);
+        }
+
+        List<SelectOption> lastDayOfMonthOptions = UTIL_Describe.getSelectOptions(
+            String.valueOf(npe03__Recurring_Donation__c.SObjectType),
+            SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c.Name
+        );
+
+        Boolean hasLastDay = false;
+        Boolean is31stRemoved = true;
+
+        for (SelectOption option : lastDayOfMonthOptions) {
+            if (option.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
+                hasLastDay = true;
+            } else if (option.getValue() == '31') {
+                is31stRemoved = false;
+            }
+        }
+
+        return !(state.isMetaLaunched && hasLastDay && is31stRemoved);
+    }
+
+    /**
+    * @description Validate if Next Payment Date Rollup is disabled
+    * @return Boolean  
+    */
+    private Boolean isNextPaymentDateRollupDisabled() {
+        List<Rollup__mdt> rdRollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(npe03__Recurring_Donation__c.SObjectType);
+        if (rdRollups == null) {
+            return true;
+        }
+
+        for (Rollup__mdt rlp : rdRollups) {
+            if (rlp.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
+                return false;
+            }
+        }
+
+        return true;
+    }
     /**
      * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
      * If greater than 0, then consider AdvancedMultiCurrency to be enabled within an organization. This accounts for
