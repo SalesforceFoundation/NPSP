@@ -44,6 +44,7 @@ Edit GE Template And Verify Changes
     [tags]                           unstable                      feature:GE          W-039559   
     # Edit Default template to add some default values and add a new field to form                   
     Go To Page                       Landing                       GE_Gift_Entry
+    Current Page Should Be           Landing                       GE_Gift_Entry
     Click Link                       Templates
     Select Template Action           Default Gift Entry Template   Edit
     Current Page Should Be           Template                      GE_Gift_Entry
@@ -73,8 +74,8 @@ Edit GE Template And Verify Changes
     Verify Error For Field
     ...                              Account 1: custom_acc_text=Complete this field.
     Fill Gift Entry Form
-    ...                              Account 1: custom_acc_text=${msg}  
-    Click Button With Title          Save
+    ...                              Account 1: custom_acc_text=${msg}
+    Click Special Button             Save
     # Verify default values and newly added field to the form on payment and account records
     Current Page Should Be           Details                       Opportunity
     ${opp_id} =                      Save Current Record ID For Deletion     Opportunity
@@ -113,7 +114,7 @@ Edit GE Template And Verify Changes
     ...                              Account 1: custom_acc_text=Complete this field.
     Fill Gift Entry Form
     ...                              Account 1: custom_acc_text=${msg}  
-    Click Button                     Save & Enter New Gift
+    Click Special Button             Save & Enter New Gift
     Verify Gift Count                1
     Click Gift Entry Button          Process Batch
     Click Data Import Button         NPSP Data Import              button       Begin Data Import Process

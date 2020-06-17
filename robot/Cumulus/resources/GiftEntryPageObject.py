@@ -22,8 +22,6 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-        locator=npsp_lex_locators["gift_entry"]["button"].format("New Single Gift")
-        self.selenium.wait_until_page_contains_element(locator,timeout=60)
 
     def _is_current_page(self):
         """
