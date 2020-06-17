@@ -31,6 +31,7 @@ import EXPECTED_COUNT_OF_GIFTS
     from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
 import EXPECTED_TOTAL_BATCH_AMOUNT
     from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DI_PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
@@ -571,6 +572,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return getFieldValue(this.batch.data, BATCH_NAME);
     }
 
+    get userDefinedBatchTableColumnNames() {
+        const batchTableColumns = validateJSONString(
+            getFieldValue(this.batch.data, BATCH_TABLE_COLUMNS_FIELD)
+        );
+        if (batchTableColumns) return batchTableColumns;
+        return [];
+    }
+
     get giftsTableTitle() {
         return format(geBatchGiftsHeader, [this.batchName]);
     }
@@ -578,7 +587,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @wire(getRecord, {
         recordId: '$recordId',
         fields: [BATCH_NAME, EXPECTED_COUNT_OF_GIFTS,
-            EXPECTED_TOTAL_BATCH_AMOUNT, REQUIRE_TOTAL_MATCH]
+            EXPECTED_TOTAL_BATCH_AMOUNT,
+            REQUIRE_TOTAL_MATCH,
+            BATCH_TABLE_COLUMNS_FIELD]
     })
     batch;
 
