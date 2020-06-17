@@ -11,7 +11,7 @@
                         variant: 'no-access'
                     },
                     "utilIllustration",
-                    function(component){}
+                    function(){}
                 );
             });
         }
