@@ -450,7 +450,7 @@ export default class geListView extends LightningElement {
     *
     * @param {array} columnEntries: List of json columns
     */
-    setDatatableColumns(columnEntries) {
+     setDatatableColumns(columnEntries) {
         let _columnEntriesByName = {};
 
         columnEntries.forEach(column => {
@@ -459,7 +459,7 @@ export default class geListView extends LightningElement {
 
         this.columnEntriesByName = _columnEntriesByName;
         this.columns = columnEntries;
-    }
+     }
 
 
 
