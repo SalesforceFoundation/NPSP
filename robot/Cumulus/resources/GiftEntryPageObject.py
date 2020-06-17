@@ -22,7 +22,8 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-        self.selenium.wait_until_page_contains("Templates")
+        locator=npsp_lex_locators["gift_entry"]["button"].format("New Single Gift")
+        self.selenium.wait_until_page_contains_element(locator,timeout=60)
 
     def _is_current_page(self):
         """
@@ -148,7 +149,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
     def fill_template_form(self,**kwargs):
         """Add default values to template builder form fields or set fields as required. 
         Key is field main label name and value is again another dictionary of field type and value
-        ex: Payment: Payment Method is Main Label with Default Value as field type and Chech is value"""
+        ex: Payment: Payment Method is Main Label with Default Value as field type and ChecK is value"""
         self.selenium.execute_javascript("window.scrollBy(0,0)")
         for field,option in kwargs.items():
             for section,value in option.items():

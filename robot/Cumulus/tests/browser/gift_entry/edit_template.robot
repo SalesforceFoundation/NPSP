@@ -41,7 +41,7 @@ Edit GE Template And Verify Changes
     [Documentation]                  This test case makes edits to Default gift entry template and verifies that edits are saved 
     ...                              and available when a Single gift or batch gift are created. 
  
-    [tags]                           feature:GE          W-039559   
+    [tags]                           unstable                      feature:GE          W-039559   
     # Edit Default template to add some default values and add a new field to form                   
     Go To Page                       Landing                       GE_Gift_Entry
     Click Link                       Templates
@@ -74,6 +74,7 @@ Edit GE Template And Verify Changes
     ...                              Account 1: custom_acc_text=Complete this field.
     Fill Gift Entry Form
     ...                              Account 1: custom_acc_text=${msg}  
+    Log Source
     Click Button                     Save
     # Verify default values and newly added field to the form on payment and account records
     Current Page Should Be           Details                       Opportunity
