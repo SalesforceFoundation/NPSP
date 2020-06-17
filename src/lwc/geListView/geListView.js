@@ -397,9 +397,7 @@ export default class geListView extends LightningElement {
         this.columnEntriesByName = {};
         let _columns = [];
 
-        for (let i = 0; i < fieldApiNames.length; i++) {
-            let fieldApiName = fieldApiNames[i];
-
+        for (let fieldApiName of fieldApiNames) {
             const fieldDescribe = this.objectInfo.fields[fieldApiName];
             let columnEntry = {
                 fieldApiName: fieldDescribe.apiName,
