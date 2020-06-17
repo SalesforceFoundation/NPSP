@@ -64,22 +64,14 @@ export default class GeBatchGiftEntryTable extends GeListView {
     @api expectedCount;
     @track isLoaded = true;
 
-    fieldMappings;
-
     constructor() {
         super(DATAIMPORT_INFO.objectApiName);
     }
 
     connectedCallback() {
-        GeFormService.getFormTemplate()
-            .then( response => {
-                    this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-
-                    if (this.batchId) {
-                        this.loadBatch();
-                    }
-                }
-            )
+        if (this.batchId) {
+            this.loadBatch();
+        }
     }
 
     setReady() {
