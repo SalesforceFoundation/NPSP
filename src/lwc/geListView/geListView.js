@@ -49,7 +49,7 @@ const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geListView extends LightningElement {
 
-    constructor(objectApiName, userId) {
+    constructor(objectApiName) {
         super();
 
         this.objectApiName = objectApiName;
