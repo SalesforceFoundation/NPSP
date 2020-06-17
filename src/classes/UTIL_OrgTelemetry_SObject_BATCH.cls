@@ -97,9 +97,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private Integer rdDiffCount = 0;
 
     @TestVisible
-    private Integer rdFixedLengthCount = 0;
-
-    @TestVisible
     private Integer oppsWithMultiplePaymentsCount = 0;
 
     @TestVisible
@@ -247,10 +244,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      */
     private void getRecurringDonationsCounts(npe03__Recurring_Donation__c recurringDonation, List<Opportunity> relatedOpps) {
         rdAllCount++;
-        
-        if (recurringDonation.npe03__Open_Ended_Status__c == null || recurringDonation.npe03__Open_Ended_Status__c == 'None') {
-            rdFixedLengthCount++;
-        }
 
         if (relatedOpps == null) {
             return;
@@ -375,9 +368,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         featureManager.setPackageIntegerValue(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(),
                 rdDiffCount);
-        featureManager.setPackageIntegerValue(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(),
-                rdFixedLengthCount);
     }
 
     /**
