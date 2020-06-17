@@ -1,4 +1,4 @@
-import {LightningElement, api, track} from 'lwc';
+import {api, track} from 'lwc';
 import {deleteRecord} from 'lightning/uiRecordApi';
 
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
