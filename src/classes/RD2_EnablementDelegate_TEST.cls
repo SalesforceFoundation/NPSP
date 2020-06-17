@@ -726,7 +726,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @param state
     * @return void
     */
-    private static void setEnablementState(String state) {
+    public static void setEnablementState(String state) {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 RecurringDonations2EnablementState__c = state,
@@ -799,7 +799,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     /**
      * @description Mock the Next Donation Date customizable rollup
      */
-    private static void mockCustomizableRollups() {
+    public static void mockCustomizableRollups() {
         String rollupsJSON = '[' +
             CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', null,
                 CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
