@@ -214,7 +214,7 @@ public with sharing class FORM_ServiceGiftEntry {
             for (Form_Template__c template : templates) {
                 formTemplateNames.add(template.Name);
             }
-        } catch (DmlException ex) {
+        } catch (Exception ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
             throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
         }
@@ -240,19 +240,17 @@ public with sharing class FORM_ServiceGiftEntry {
                 WITH SECURITY_ENFORCED
                 LIMIT 1
             ];
-        } catch (QueryException ex) {
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
-        }
+            template = deserializeFormTemplateFromObj(templateObj);
 
-        
-        template = deserializeFormTemplateFromObj(templateObj);
-        
-        template = checkPermissions(template,
+            template = checkPermissions(template,
                 new Set<FORM_PermissionValidator.AccessLevel>{
                     FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
                     FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                     FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+        }
 
         return template;
     }
@@ -272,20 +270,19 @@ public with sharing class FORM_ServiceGiftEntry {
                 WHERE Id =: giftEntrySettings.Default_Gift_Entry_Template__c
                 WITH SECURITY_ENFORCED
             ];
+            if (!templateObjList.isEmpty()) {
+                template = deserializeFormTemplateFromObj(templateObjList[0]);
+
+                template = checkPermissions(template,
+                    new Set<FORM_PermissionValidator.AccessLevel>{
+                        FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
+                        FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                        FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+            }
         } catch (Exception ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
             throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
         }
-
-         if (!templateObjList.isEmpty()) {
-            template = deserializeFormTemplateFromObj(templateObjList[0]);
-
-            template = checkPermissions(template,
-                new Set<FORM_PermissionValidator.AccessLevel>{
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
-            }
         return template;
     }
 

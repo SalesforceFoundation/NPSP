@@ -48,14 +48,10 @@ public with sharing class GE_FormServiceController {
      */
     @AuraEnabled(cacheable=true)
     public static FORM_RenderWrapper getFormRenderWrapper(Id templateId) {
-        try {
-            if (templateId != null) {
-                return GE_FormRendererService.getRenderWrapperById(templateId);
-            } else {
-                return GE_FormRendererService.getDefaultSGERenderWrapper();
-            }
-        } catch (Exception e) {
-            throw e;
+        if (templateId != null) {
+            return GE_FormRendererService.getRenderWrapperById(templateId);
+        } else {
+            return GE_FormRendererService.getDefaultSGERenderWrapper();
         }
     }
 }

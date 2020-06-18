@@ -154,6 +154,7 @@ class GeFormService {
                     resolve(renderWrapper);
                 })
                 .catch(err => {
+                    handleError(err);
                     reject(err);
                 });
         });

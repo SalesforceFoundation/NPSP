@@ -49,7 +49,6 @@ export default class geHome extends LightningElement {
        return (this.hasPageAccess && this.hasPermission);
     }
 
-
     async connectedCallback() {
         this.hasPageAccess = await getPageAccess();
         registerListener('appPermissionsChange', this.handleAppPermissionsChange, this);
@@ -153,23 +152,20 @@ export default class geHome extends LightningElement {
      */
     setAppPermissionErrors(event) {
         if (event) {
-            if (this.view === SINGLE_GIFT_ENTRY) {
+            if (event.source === EVENT_SOURCE_APPLICATION) {
+                this.hasPermission = false;
+                this._appPermissionErrorBody = event.messageBody;
+                this._appPermissionErrorHeader = event.messageHeader;
                 // Inform GE_GiftEntryFormApp about permission error
                 dispatchApplicationEvent(
                   'geFormAccessChange',
                   event.messageHeader,
                   event.messageBody
                 );
-            } else {
-                if (event.source === EVENT_SOURCE_APPLICATION) {
-                    this.hasPermission = false;
-                    this._appPermissionErrorHeader = event.messageHeader;
-                    this._appPermissionErrorBody = event.messageBody;
-                } else if (event.source === EVENT_SOURCE_LIST_VIEW) {
+            } else if (event.source === EVENT_SOURCE_LIST_VIEW) {
                     this.isListViewAccessible = false;
                     this._listViewPermissionErrorBody = event.messageBody;
                     this._listViewPermissionErrorHeader = event.messageHeader;
-                }
             }
         }
     }
