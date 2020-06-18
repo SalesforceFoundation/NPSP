@@ -7521,7 +7521,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your record data. When complete, you can view the results below, including detailed information for any failures.'</value>
+        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your record data. When complete, you can view the results below, including detailed information for any failures.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
