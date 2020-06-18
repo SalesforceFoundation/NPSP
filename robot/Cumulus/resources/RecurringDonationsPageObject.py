@@ -48,7 +48,9 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
         self.salesforce.wait_until_modal_is_open()
         self._populate_edit_rd_form(**kwargs)
         self.selenium.click_button("Save")
+        self.salesforce.wait_until_modal_is_closed()
 
+    @capture_screenshot_on_error
     def _populate_edit_rd_form(self, **kwargs):
         """Pass the field name and value as key, value pairs to populate the edit form"""
         for key, value in kwargs.items():
@@ -63,14 +65,16 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
         message_locator = npsp_lex_locators['erd']['text_message']
         list_ele = self.selenium.get_webelements(message_locator)
         p_count = len(list_ele)
-        if not int(self.selenium.get_element_count(message_locator)) == 2:
-			raise Exception("Schedule warning messages do not exist")
+        if p_count == 2:
+            return
+        else:
+            raise Exception("Schedule warning messages do not exist")
 
     @capture_screenshot_on_error
     def validate_field_values_under_section(self, section=None, **kwargs):
         """Based on the section name , navigates to the sections and validates the key. value pair values passed in kwargs.
          If the section is current schedule, waits for the Current schedule section card on the side bar
-        Validates the display fields in the card match with the values passed in the key value pair"""
+         Validates the display fields in the card match with the values passed in the key value pair"""
         
         if section == "Current Schedule":
             active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format(section)
