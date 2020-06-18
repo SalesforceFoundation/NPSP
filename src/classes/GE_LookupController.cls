@@ -36,8 +36,11 @@
 */
 public with sharing class GE_LookupController {
 
+    static final Integer RESULTS_LIMIT = 50;
+
     /**
      * Search for an SObject by its name field.
+     * Objects without Name fields (Case, Task, Event...) are not compatible with this component.
      *
      * @param searchValue   Value to search for
      * @param sObjectType   Type of SObject to Search
@@ -46,12 +49,16 @@ public with sharing class GE_LookupController {
      */
     @AuraEnabled(cacheable=true)
     public static List<LookupResult> doSearch(String searchValue, String sObjectType) {
-        String likeLike = '%' + searchValue + '%';
-        String queryString = 'SELECT Id, Name FROM ' + String.escapeSingleQuotes(sObjectType) + ' WHERE Name LIKE :likeLike';
+        String formattedValue = '\'' + String.escapeSingleQuotes(searchValue) + '\'';
+        String searchTemplate = 'FIND {0} IN NAME FIELDS Returning {1} LIMIT {2}';
+        List<String> args = new List<String>{formattedValue, sObjectType + '(Name)', String.valueOf(RESULTS_LIMIT)};
+        String query = String.format(searchTemplate, args);
 
         List<LookupResult> results = new List<LookupResult>();
-        for(SObject result : Database.query(queryString)) {
-            results.add(new LookupResult(result));
+        for (List<SObject> queryResults : Search.query(query)) {
+            for (SObject queryResult : queryResults) {
+                results.add(new LookupResult(queryResult));
+            }
         }
 
         return results;
