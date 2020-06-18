@@ -56,6 +56,8 @@ Edit GE Template And Verify Changes
     ...                              Opportunity: Close Date=&{date_default}
     ...                              Payment: Check/Reference Number=&{check}
     ...                              Payment: Payment Method=&{method} 
+    Click Gift Entry Button          Next: Batch Settings
+    Add Batch Table Columns          Donor Name     Donation Name       Status      Failure Information
     Click Gift Entry Button          Save & Close
     # Verify Default values are displayed on the Single Gift Form
     Current Page Should Be           Landing                       GE_Gift_Entry

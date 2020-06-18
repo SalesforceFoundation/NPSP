@@ -277,7 +277,8 @@ npsp_lex_locators={
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
         'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
         'field_alert':"//*[contains(@data-qa-locator,'{}')]/div[@role='alert' and text()='{}']",
-        'count':'//lightning-layout[.//span[text()="{}"]]//child::lightning-layout-item//strong[text()="{}"]'
+        'count':'//lightning-layout[.//span[text()="{}"]]//child::lightning-layout-item//strong[text()="{}"]',
+        'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
