@@ -122,7 +122,7 @@ Edit GE Template And Verify Changes
     Click Button With Value          Close
     # Verify default values stored on payment and custom_account_text field doesn't have value on houshold account as its not relavent
     Current Page Should Be           Form                          Gift Entry
-    Click Field Value Link           Donation
+    Click Field Value Link           Donation Name
     Current Page Should Be           Details                       npe01__OppPayment__c
     ${pay_id} =                      Save Current Record ID For Deletion        npe01__OppPayment__c
     Verify Expected Values           nonns    npe01__OppPayment__c    ${pay_id}
