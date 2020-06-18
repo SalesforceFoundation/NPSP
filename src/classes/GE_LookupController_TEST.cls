@@ -38,10 +38,14 @@
 private class GE_LookupController_TEST {
     @IsTest
     static void testSearch() {
-        insert new List<Account>{
+        List<Account> accounts = new List<Account>{
                 new Account(Name = 'Test Account'),
                 new Account(Name = 'Non-Matching Account')
         };
+        insert accounts;
+
+        // doSearch utilizes SOSL, which means results must be hardcoded in tests
+        Test.setFixedSearchResults(new List<Id>{accounts[0].Id});
 
         Test.startTest();
         List<GE_LookupController.LookupResult> results = GE_LookupController.doSearch('test', 'Account');
