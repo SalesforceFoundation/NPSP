@@ -364,14 +364,14 @@
                                             </th>
                                             <apex:repeat var="col" value="{!row.values}">
                                                 <th class="slds-form-element__control slds-size_1-of-3 slds-cell-wrap">
-                                                    <label class="slds-radio" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}">
+                                                    <label class="slds-radio">
                                                         <apex:outputText rendered="{!row.selectedValue == col.objId}">
                                                             <input type="radio" class="radio-winner-value" checked="true" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                         </apex:outputText>
                                                         <apex:outputText rendered="{!row.selectedValue != col.objId}">
                                                             <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                         </apex:outputText>
-                                                        <span class="slds-radio_faux"></span>
+                                                        <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
                                                         <span>
                                                             <apex:outputText value="{!col.objId}"/>
                                                         </span>
@@ -402,14 +402,14 @@
                                             <apex:repeat var="col" value="{!row.values}">
                                                 <apex:outputText rendered="{!row.showRadio}">
                                                     <td class="slds-form-element__control slds-size_1-of-3 slds-cell-wrap">
-                                                        <label class="slds-radio" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}">
+                                                        <label class="slds-radio">
                                                             <apex:outputText rendered="{!row.selectedValue == col.objId}">
                                                                 <input type="radio" class="radio-winner-value" checked="true" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                             </apex:outputText>
                                                             <apex:outputText rendered="{!row.selectedValue != col.objId}">
                                                                 <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                             </apex:outputText>
-                                                            <span class="slds-radio_faux"></span>
+                                                            <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
                                                             <span>
                                                                 <apex:outputText value="{!col.value}"/>
                                                             </span>
@@ -418,6 +418,7 @@
                                                 </apex:outputText>
                                                 <apex:outputText rendered="{!NOT(row.showRadio)}">
                                                     <td class="slds-size_1-of-3 slds-cell-wrap">
+                                                        <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
                                                         <apex:outputText value="{!col.value}"/>
                                                     </td>
                                                 </apex:outputText>
