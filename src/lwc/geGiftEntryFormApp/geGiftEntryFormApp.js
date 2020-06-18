@@ -764,9 +764,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     get modalConfigNoAccess() {
         const modalHeader = this.CUSTOM_LABELS.geTabBatchTableColumns;
+        const errorFieldName =
+            `${BATCH_TABLE_COLUMNS_FIELD.objectApiName}: (${BATCH_TABLE_COLUMNS_FIELD.fieldApiName})`;
         const errorFLSBody = GeLabelService.format(
-            this.CUSTOM_LABELS.geErrorFLSBody,
-            [BATCH_TABLE_COLUMNS_FIELD.fieldApiName]);
+            this.CUSTOM_LABELS.geErrorFLSBody, [errorFieldName]
+        );
         const message = `${this.CUSTOM_LABELS.geErrorFLSBatchTableColumns}  ${errorFLSBody}`;
         const modalConfig = {
             componentProperties: {
