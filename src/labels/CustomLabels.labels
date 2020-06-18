@@ -12227,22 +12227,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Power of Us Hub</value>
     </labels>
     <labels>
-        <fullName>stgRDNamingAmount</fullName>
-        <categories>Settings RDNaming</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Amount</shortDescription>
-        <value>{!Amount}</value>
-    </labels>
-    <labels>
-        <fullName>stgRDNamingCampaignName</fullName>
-        <categories>Settings RDNaming</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Recurring Donation Auto Naming Campaign Name</shortDescription>
-        <value>{!Campaign.Name}</value>
-    </labels>
-    <labels>
         <fullName>stgRDNamingDescription</fullName>
         <categories>Settings RDNaming</categories>
         <language>en_US</language>
@@ -12257,22 +12241,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Recurring Donation Auto Naming disable option</shortDescription>
         <value>Disable Auto Naming</value>
-    </labels>
-    <labels>
-        <fullName>stgRDNamingDonorName</fullName>
-        <categories>Settings RDNaming</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Recurring Donation Auto Naming Donor Name</shortDescription>
-        <value>{!DonorName}</value>
-    </labels>
-    <labels>
-        <fullName>stgRDNamingInstallmentPeriod</fullName>
-        <categories>Settings RDNaming</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Recurring Donation Auto Naming Installment Period</shortDescription>
-        <value>{!Installment Period}</value>
     </labels>
     <labels>
         <fullName>stgRDNamingOptionLabel</fullName>

@@ -2963,12 +2963,8 @@
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
-        <members>stgRDNamingAmount</members>
-        <members>stgRDNamingCampaignName</members>
         <members>stgRDNamingDescription</members>
         <members>stgRDNamingDisable</members>
-        <members>stgRDNamingDonorName</members>
-        <members>stgRDNamingInstallmentPeriod</members>
         <members>stgRDNamingOptionLabel</members>
         <members>stgReset</members>
         <members>stgSelectOne</members>
