@@ -1024,10 +1024,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     removeOptionFromBatchTableColumn(fieldMappingDeveloperName) {
         const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDeveloperName];
-        if (!fieldMapping) return;
-
-        removeFromArray(this.selectedBatchTableColumnOptions, fieldMapping.Source_Field_API_Name);
-        removeByProperty(this.availableBatchTableColumnOptions, VALUE, fieldMapping.Source_Field_API_Name);
+        if (!fieldMapping || !this.selectedBatchTableColumnOptions) return;
+        try {
+            removeFromArray(this.selectedBatchTableColumnOptions, fieldMapping.Source_Field_API_Name);
+            removeByProperty(this.availableBatchTableColumnOptions, VALUE, fieldMapping.Source_Field_API_Name);
+        } catch (err) {
+            handleError(err);
+        }
     }
 
     /*******************************************************************************
