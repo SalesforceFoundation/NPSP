@@ -80,7 +80,7 @@ export default class geListView extends LightningElement {
 
     columnHeadersByFieldApiName;
     hasAdditionalRows = false;
-    // Array of callbacks required by children that extend this component
+    // Array of callback functions required by children that extend this component
     callbacks = [];
     // Flag to set when this component has been extended and is running from a child component
     isExtended = false;
