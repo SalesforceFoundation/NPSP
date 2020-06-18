@@ -4,7 +4,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { NavigationMixin } from 'lightning/navigation';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef'
 import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
 import { isNotEmpty, validateJSONString, format, getNamespace } from 'c/utilCommon';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
@@ -89,6 +89,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     namespace;
     count;
     total;
+    isAppAccessible = true;
+    _appPermissionErrorHeader;
+    _appPermissionErrorBody;
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -101,10 +104,19 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     connectedCallback() {
+        registerListener('geFormAccessChange', this.handleGEFormAccessChange, this);
         getPaymentTransactionStatusValues()
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
             });
+    }
+
+    handleGEFormAccessChange (event) {
+        if (event) {
+            this.isAppAccessible = false;
+            this._appPermissionErrorHeader = event.messageHeader;
+            this._appPermissionErrorBody = event.messageBody;
+        }
     }
 
     /*******************************************************************************

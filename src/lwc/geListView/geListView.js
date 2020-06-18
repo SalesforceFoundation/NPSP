@@ -6,6 +6,8 @@ import {
     handleError,
     generateId,
     showToast,
+    dispatchApplicationEvent,
+    EVENT_SOURCE_LIST_VIEW
 } from 'c/utilTemplateBuilder'
 import {
     format,
@@ -13,7 +15,7 @@ import {
     isNotEmpty,
     hasNestedProperty,
 } from 'c/utilCommon'
-import { fireEvent } from 'c/pubsubNoPageRef'
+
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -77,7 +79,7 @@ export default class geListView extends LightningElement {
     @track orderedByInfo;
 
     columnHeadersByFieldApiName;
-    currentUserId;
+
     isLoaded = false;
     hasAdditionalRows = false;
 
@@ -224,10 +226,10 @@ export default class geListView extends LightningElement {
 
         if (response.error) {
             // Build CRUD error and inform geHome
-            this.informGiftEntryHomeApp('listViewPermissionsChange',
+            dispatchApplicationEvent('appPermissionsChange',
               this.CUSTOM_LABELS.geErrorObjectCRUDHeader,
               GeLabelService.format(this.CUSTOM_LABELS.geErrorObjectCRUDBody,
-                [this.objectApiName])
+                [this.objectApiName]), EVENT_SOURCE_LIST_VIEW
             );
         }
     }
@@ -248,10 +250,10 @@ export default class geListView extends LightningElement {
 
         if (isNotEmpty(flsErrors)) {
             // Inform geHome about the FLS error
-            this.informGiftEntryHomeApp('listViewPermissionsChange',
+            dispatchApplicationEvent('appPermissionsChange',
               this.CUSTOM_LABELS.geErrorFLSHeader,
               GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody,
-                [flsErrors])
+                [flsErrors]), EVENT_SOURCE_LIST_VIEW
             );
             return;
         }
@@ -663,13 +665,5 @@ export default class geListView extends LightningElement {
         };
 
         dispatch(this, EVENT_TOGGLE_MODAL, detail);
-    }
-
-    informGiftEntryHomeApp (eventName, messageHeader, messageBody) {
-        fireEvent(null, eventName,
-          {
-              messageBody: messageBody,
-              messageHeader: messageHeader,
-          });
     }
 }

@@ -58,26 +58,33 @@ public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
+    * @param selectFields
     */
     @AuraEnabled
     public static SObject[] retrieveRecords(String[] selectFields,
         String sObjectApiName, String[] whereClauses, String orderByClause, Integer limitClause) {
-
-        String queryString = new UTIL_Query()
-            .withSelectFields(selectFields)
-            .withFrom(sObjectApiName)
-            .withWhere(whereClauses)
-            .withSecurityEnforced()
-            .withOrderBy(orderByClause)
-            .withLimit(limitClause)
-            .build();
-        return Database.query(queryString);
+        String queryString;
+        SObject [] queryResult;
+        try {
+            queryString = new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(sObjectApiName)
+                .withWhere(whereClauses)
+                .withSecurityEnforced()
+                .withOrderBy(orderByClause)
+                .withLimit(limitClause)
+                .build();
+           queryResult = Database.query(queryString);
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+        }
+        return queryResult;
     }
 
     /*******************************************************************************************************
     * @description Method retrieves custom Column Header Data (Custom Setting records & Permission Data)
-    * for tables in the Gift
-    * Entry landing page.
+    * for tables in the Gift Entry landing page.
     * @param listName
     * @return {ColumnHeaderData}
     */
@@ -94,19 +101,30 @@ public with sharing class FORM_ServiceGiftEntry {
         String whereVal = '\'' + String.escapeSingleQuotes(listName) + '\'';
         String whereClauses = SObjectType.Custom_Column_Header__c.fields.List_Name__c.name + ' = ' + whereVal;
         String orderByClause = SObjectType.Custom_Column_Header__c.fields.Index__c.name + ' ASC';
-
-        String queryString = new UTIL_Query()
-            .withSelectFields(selectFields)
-            .withFrom(sObjectApiName)
-            .withWhere(whereClauses)
-            .withSecurityEnforced()
-            .withOrderBy(orderByClause)
-            .build();
-        return getColumnHeaderDataWithPermissions(Database.query(queryString), listName);
+        String queryString;
+        SObject[] queryResult;
+        try {
+            queryString = new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(sObjectApiName)
+                .withWhere(whereClauses)
+                .withSecurityEnforced()
+                .withOrderBy(orderByClause)
+                .build();
+            queryResult = Database.query(queryString);
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+        }
+        
+        return getColumnHeaderDataWithPermissions(queryResult, listName);
     }
 
     /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
+    * @param listName
+    * @param columnHeadersString
+    * @return {ColumnHeaderData}
     */
     @AuraEnabled
     public static ColumnHeaderData upsertCustomColumnHeaders(String columnHeadersString,
@@ -121,124 +139,150 @@ public with sharing class FORM_ServiceGiftEntry {
             headerIdsToKeep.add(columnHeader.Id);
         }
 
-        Custom_Column_Header__c[] headersToDelete = [
-            SELECT Id
-            FROM Custom_Column_Header__c
-            WHERE Id NOT IN :headerIdsToKeep
-            AND List_Name__c = :listName
-            WITH SECURITY_ENFORCED
-        ];
-        delete headersToDelete;
+        Custom_Column_Header__c[] headersToDelete;
+
+        try {
+            headersToDelete = [
+                SELECT Id
+                FROM Custom_Column_Header__c
+                WHERE Id NOT IN :headerIdsToKeep
+                AND List_Name__c = :listName
+                WITH SECURITY_ENFORCED
+            ];
+            delete headersToDelete;
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+        }
 
         return getColumnHeaderDataWithPermissions(columnHeaders, listName);
     }
 
     /*******************************************************************************************************
     * @description Method for retrieving all existing form templates.
+    * @return {FORM_Template[]}
     */
     @AuraEnabled
     public static FORM_Template[] getAllFormTemplates() {
         FORM_Template[] formTemplates = new FORM_Template[]{};
-        Form_Template__c[] allTemplates = [
-            SELECT Id,
-                Name,
-                Template_JSON__c,
-                Description__c,
-                Format_Version__c
-            FROM Form_Template__c
-            WITH SECURITY_ENFORCED
-            ORDER BY Name ASC
-        ];
+        try {
+            Form_Template__c[] allTemplates = [
+                SELECT Id,
+                    Name,
+                    Template_JSON__c,
+                    Description__c,
+                    Format_Version__c
+                FROM Form_Template__c
+                WITH SECURITY_ENFORCED
+                ORDER BY Name ASC
+            ];
 
-        for (Form_Template__c formTemplate : allTemplates) {
-            FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
-            if (formTemplate.id != null) {
-                deserializedFormTemplate.id = formTemplate.id;
+            for (Form_Template__c formTemplate : allTemplates) {
+                FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
+                if (formTemplate.Id != null) {
+                    deserializedFormTemplate.id = formTemplate.Id;
+                }
+
+                formTemplates.add(deserializedFormTemplate);
             }
-
-            formTemplates.add(deserializedFormTemplate);
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
         }
-
         return formTemplates;
     }
 
     /*******************************************************************************************************
     * @description Method deletes a Form_Template__c record by id.
-    *
-    * @param id: Form_Template__c record id
-    *
+    * @param ids: Form_Template__c record id
     * @return FormTemplateWrapper: Wrapper object of the list of deleted template names and the result
     * of the DML action
     */
     @AuraEnabled
     public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
-        Form_Template__c[] templates = [
+
+        try {
+            Form_Template__c[] templates = [
                 SELECT Id, Name
                 FROM Form_Template__c
                 WHERE Id IN :ids
                 WITH SECURITY_ENFORCED
             ];
-        try {
+
             delete templates;
             for (Form_Template__c template : templates) {
                 formTemplateNames.add(template.Name);
             }
-        } catch (DmlException ex) {
-            throw new AuraHandledException(ex.getDmlMessage(0));
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
         }
+
        return formTemplateNames;
     }
 
     /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.
+    * @return {FORM_Template}
     */
     @AuraEnabled
     public static FORM_Template retrieveFormTemplateById(Id templateId) {
         FORM_Template template;
+        Form_Template__c templateObj;
 
-        Form_Template__c templateObj = [
-                                SELECT Id, Name, Format_Version__c, Template_JSON__c
-                                FROM Form_Template__c 
-                                WHERE Id =: templateId
-                                WITH SECURITY_ENFORCED
-                                LIMIT 1
-                            ];
-        
-        template = deserializeFormTemplateFromObj(templateObj);
-        
-        template = checkPermissions(template,
-                new Set<FORM_PermissionValidator.AccessLevel>{
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
-
-        return template;
-    }
-    
-    /*******************************************************************************************************
-    * @description Method for retrieving the current default template.
-    */
-    public static FORM_Template retrieveDefaultSGEFormTemplate() {
-        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
-        FORM_Template template;
-        List<Form_Template__c> templateObjList = [
-                                SELECT Id, Name, Format_Version__c, Template_JSON__c
-                                FROM Form_Template__c 
-                                WHERE Id =: giftEntrySettings.Default_Gift_Entry_Template__c
-                                WITH SECURITY_ENFORCED
-                            ];
-         
-         if (!templateObjList.isEmpty()) {
-            template = deserializeFormTemplateFromObj(templateObjList[0]);
+        try {
+            templateObj = [
+                SELECT Id, Name, Format_Version__c, Template_JSON__c
+                FROM Form_Template__c
+                WHERE Id =: templateId
+                WITH SECURITY_ENFORCED
+                LIMIT 1
+            ];
+            template = deserializeFormTemplateFromObj(templateObj);
 
             template = checkPermissions(template,
                 new Set<FORM_PermissionValidator.AccessLevel>{
                     FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
                     FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                     FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+        }
+
+        return template;
+    }
+    
+    /*******************************************************************************************************
+    * @description Method for retrieving the current default template.
+    * @return {FORM_Template}
+    */
+    public static FORM_Template retrieveDefaultSGEFormTemplate() {
+        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
+        FORM_Template template;
+        List<Form_Template__c> templateObjList;
+        try {
+           templateObjList = [
+                SELECT Id, Name, Format_Version__c, Template_JSON__c
+                FROM Form_Template__c
+                WHERE Id =: giftEntrySettings.Default_Gift_Entry_Template__c
+                WITH SECURITY_ENFORCED
+            ];
+            if (!templateObjList.isEmpty()) {
+                template = deserializeFormTemplateFromObj(templateObjList[0]);
+
+                template = checkPermissions(template,
+                    new Set<FORM_PermissionValidator.AccessLevel>{
+                        FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
+                        FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                        FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
             }
+        } catch (Exception ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+        }
         return template;
     }
 
@@ -246,6 +290,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Method for validating CRUD/FLS permissions for a template
     * @param template - the template to use for CRUD/FLS validation
     * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/UPDATE/READ)
+    * @return {FORM_Template}
     */
     public static FORM_Template checkPermissions(FORM_Template template, Set<FORM_PermissionValidator.AccessLevel> accessLevels){
         
@@ -261,6 +306,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param description - the description of the template.
     * @param formatVersion - the version id/number of the template format
     * @param templateJSON - The JSON for the FormTemplate class that is being stored.
+    * @return {String}
     */
     @AuraEnabled
     public static String storeFormTemplate(String id, 
@@ -274,8 +320,29 @@ public with sharing class FORM_ServiceGiftEntry {
                                                             Description__c = description,
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion);
-            upsert templateObj;
-            return templateObj.Id;
+
+            FORM_PermissionValidator validator = new FORM_PermissionValidator(
+                new Set<FORM_PermissionValidator.AccessLevel>{
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE
+                });
+
+            if (validator.hasObjectPermissions(
+                UTIL_Namespace.StrTokenNSPrefix('Form_Template__c')) &&
+                validator.hasFieldPermissions(
+                    UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('Description__c')) &&
+                validator.hasFieldPermissions(
+                    UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('Template_JSON__c'))
+                ) {
+                upsert templateObj;
+                return templateObj.Id;
+            } else {
+                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(
+                    new QueryException(''));
+                throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
+            }
         }
 
         return null;
@@ -284,17 +351,13 @@ public with sharing class FORM_ServiceGiftEntry {
     /*******************************************************************************************************
     * @description Method checks if the provided name is in use by another existing Form Template.
     *
-    * @param String name: Name of a Form_Template__c record.
-    * @param String id: Id of a Form_Template__c record.
+    * @param name: Name of a Form_Template__c record.
+    * @param Id: Id of a Form_Template__c record.
+    * @return Boolean
     */
     @AuraEnabled
     public static Boolean checkNameUniqueness(String name, String id) {
-        Form_Template__c[] formTemplates = [
-                            SELECT Id
-                            FROM Form_Template__c
-                            WHERE Name = :name
-                            WITH SECURITY_ENFORCED
-                        ];
+        Form_Template__c[] formTemplates = [SELECT Id FROM Form_Template__c WHERE Name = :name];
         Boolean isNameValid = formTemplates.size() > 0 ? false : true;
 
         if (id != null) {
@@ -312,6 +375,7 @@ public with sharing class FORM_ServiceGiftEntry {
     /*******************************************************************************************************
     * @description Private helper method for deserializing the JSON stored in a form template record.
     * @param templateObj - The Form_Template__c object with the Template JSON.
+    * @return {FORM_Template}
     */
     private static FORM_Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
         FORM_Template template;

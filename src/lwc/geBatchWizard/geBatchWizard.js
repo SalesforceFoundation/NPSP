@@ -224,6 +224,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 this.isLoading = false;
             }
         } catch (error) {
+            this.handleCancel();
             handleError(error);
         }
     }

@@ -2,6 +2,7 @@
 import { format } from 'c/utilCommon';
 
 // Import custom labels
+import commonAdminPermissionErrorTitle from '@salesforce/label/c.commonAdminPermissionErrorTitle';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
@@ -31,6 +32,7 @@ import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import commonPercent from '@salesforce/label/c.commonPercent';
+import commonPermissionErrorMessage from '@salesforce/label/c.commonPermissionErrorMessage';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonReviewForm from '@salesforce/label/c.commonReviewForm';
@@ -220,6 +222,7 @@ class GeLabelService {
     */
     CUSTOM_LABELS = Object.freeze({
         commonAmount,
+        commonAdminPermissionErrorTitle,
         commonAssistiveError,
         commonAssistiveInfo,
         commonAssistiveSuccess,
@@ -248,6 +251,7 @@ class GeLabelService {
         commonNoItems,
         commonPaymentServices,
         commonPercent,
+        commonPermissionErrorMessage,
         commonReadMore,
         commonRequired,
         commonReviewForm,

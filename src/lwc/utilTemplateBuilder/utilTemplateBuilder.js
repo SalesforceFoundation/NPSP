@@ -1,6 +1,11 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { isEmpty, isNotEmpty, deepClone } from 'c/utilCommon';
+import {
+    isEmpty,
+    isNotEmpty,
+    deepClone,
+    validateJSONString,
+} from 'c/utilCommon'
 
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
@@ -70,21 +75,24 @@ import CONTACT_FIRST_NAME_INFO from '@salesforce/schema/Contact.FirstName';
 import CONTACT_LAST_NAME_INFO from '@salesforce/schema/Contact.LastName';
 import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name';
 
-import commonError from '@salesforce/label/c.commonError';
-import commonUnknownError from '@salesforce/label/c.commonUnknownError';
-
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import getGiftEntrySettings from
         '@salesforce/apex/GE_GiftEntry_UTIL.getGiftEntrySettings';
+import { fireEvent } from 'c/pubsubNoPageRef'
 
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
 
+const EVENT_SOURCE_APPLICATION = 'Application';
+const EVENT_SOURCE_LIST_VIEW = 'List View';
+
 // cache custom labels 
 const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
+
+const QUERY_EXCEPTION = 'System.QueryException';
 
 // relevant Donation_Donor custom validation fields
 const DONATION_DONOR_FIELDS = {
@@ -315,13 +323,13 @@ const showToast = (title, message, variant, mode, messageData) => {
 }
 
 /*******************************************************************************
-* @description Creates and dispatches an error toast.
+* @description Creates and dispatches an error toast
 *
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
-    let message = commonUnknownError;
-
+    let message = CUSTOM_LABELS.commonUnknownError;
+    let displayToast = true;
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
     // error.body.output.errors is for AuraHandledException messages
@@ -346,11 +354,27 @@ const handleError = (error) => {
             Array.isArray(error.detail.output.errors)) {
             message = error.detail.output.errors.map(e => e.message).join(', ');
         }
-    } else if (error.body && error.body.message) {
-        message = error.body.message;
+    } else if (error.body) {
+        if (validateJSONString(error.body.message)) {
+            let exceptionType = JSON.parse(error.body.message).exceptionType;
+            if (exceptionType === QUERY_EXCEPTION) {
+                displayToast = false;
+                // inform parent app (GeHome) about query exception
+                dispatchApplicationEvent('appPermissionsChange',
+                  CUSTOM_LABELS.commonAdminPermissionErrorTitle,
+                  CUSTOM_LABELS.commonPermissionErrorMessage,
+                  EVENT_SOURCE_APPLICATION
+                );
+            }
+        } else {
+            message = error.body.message;
+        }
     }
 
-    showToast(commonError, message, 'error', 'sticky');
+    if (displayToast) {
+        showToast(CUSTOM_LABELS.commonError, message, 'error', 'sticky');
+    }
+
 };
 
 /*******************************************************************************
@@ -525,6 +549,22 @@ const addKeyToCollectionItems = (list) => {
     });
 }
 
+/*******************************************************************************
+ * @description Dispatches an Application Event
+ * @param eventName
+ * @param messageHeader
+ * @param messageBody
+ * @param eventSource
+ */
+const dispatchApplicationEvent = (eventName, messageHeader, messageBody, eventSource) => {
+    fireEvent(null, eventName,
+      {
+          source : eventSource,
+          messageBody: messageBody,
+          messageHeader: messageHeader,
+      });
+}
+
 export {
     DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -544,6 +584,8 @@ export {
     ACCOUNT1,
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
+    EVENT_SOURCE_APPLICATION,
+    EVENT_SOURCE_LIST_VIEW,
     dispatch,
     showToast,
     handleError,
@@ -556,5 +598,6 @@ export {
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     getPageAccess,
-    addKeyToCollectionItems
+    addKeyToCollectionItems,
+    dispatchApplicationEvent,
 }
