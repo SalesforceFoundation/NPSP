@@ -8,7 +8,7 @@ const VARIANTS = {
     'label-inline': ['slds-form-element_horizontal', 'slds-m-around_none'],
     'label-hidden': ['slds-form-element_hidden', 'slds-m-around_none'],
     'label-stacked': ['slds-form-element_stacked'],
-}
+};
 
 export default class GeAutocomplete extends LightningElement {
     @api displayValue;
@@ -40,7 +40,6 @@ export default class GeAutocomplete extends LightningElement {
      */
     handleSelect(event) {
         this.dispatchEvent(new CustomEvent('select', event));
-        this.options = [];
     }
 
     /**

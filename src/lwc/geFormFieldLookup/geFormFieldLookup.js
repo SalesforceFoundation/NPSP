@@ -131,6 +131,23 @@ export default class GeFormFieldLookup extends LightningElement {
             displayValue: this.displayValue,
             fieldApiName: this.fieldApiName
         });
+        this.options = [];
+    }
+
+    /**
+     * When field loses focus, clear any available options so dropdown closes.
+     */
+    handleFocusOut() {
+        this.options = [];
+    }
+
+    /**
+     * When field gains focus, re-run search if no option is currently selected.
+     */
+    handleFocusIn() {
+        if(!this.value && this.displayValue && this.displayValue.length > 1) {
+            this.retrieveLookupOptions(this.displayValue, this.targetObjectApiName);
+        }
     }
 
     @api
@@ -198,7 +215,7 @@ export default class GeFormFieldLookup extends LightningElement {
             this.value = lookupResult.value || null;
             this.displayValue = lookupResult.displayValue || null;
 
-            let autocomplete = this.template.querySelector('c-ge-autocomplete');
+            const autocomplete = this.template.querySelector('c-ge-autocomplete');
             autocomplete.setValue({value: this.value, displayValue: this.displayValue});
         }
 
