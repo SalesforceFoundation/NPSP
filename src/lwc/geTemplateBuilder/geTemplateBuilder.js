@@ -22,11 +22,39 @@ import {
     findIndexByProperty,
     getQueryParameters,
     shiftToIndex,
-    sort
+    sort,
+    getNamespace,
+    removeByProperty,
+    removeFromArray,
+    isEmpty
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-import DONATION_RECORD_TYPE_NAME
-    from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+
+// imports used for default batch table column headers
+import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
+import DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_DATE_FIELD from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
+import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
+import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
+
+const DEFAULT_BATCH_TABLE_HEADERS_WITH_FIELD_MAPPINGS = [
+    DONATION_AMOUNT_FIELD.fieldApiName,
+    DONATION_DATE_FIELD.fieldApiName,
+    DONATION_CAMPAIGN_SOURCE_FIELD.fieldApiName,
+    STATUS_FIELD.fieldApiName,
+    FAILURE_INFORMATION_FIELD.fieldApiName,
+];
+
+const SKIPPED_BATCH_TABLE_HEADER_FIELDS = [
+    DONATION_AMOUNT_FIELD.fieldApiName,
+    DONATION_DATE_FIELD.fieldApiName,
+    DONATION_CAMPAIGN_SOURCE_FIELD.fieldApiName,
+    STATUS_FIELD.fieldApiName,
+    FAILURE_INFORMATION_FIELD.fieldApiName,
+];
 
 const FORMAT_VERSION = '1.0';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
@@ -47,6 +75,7 @@ const EVENT_TOGGLE_MODAL = 'togglemodal';
 const WARNING = 'warning';
 const FIELD = 'field';
 const WIDGET = 'widget';
+const VALUE = 'value';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
@@ -59,7 +88,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     TabEnums = Object.freeze({
         INFO_TAB: this.CUSTOM_LABELS.geTabTemplateInfo,
         FORM_FIELDS_TAB: this.CUSTOM_LABELS.geTabFormFields,
-        BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
+        BATCH_SETTINGS_TAB: this.CUSTOM_LABELS.geTabBatchSettings
     });
 
     @api formTemplateRecordId;
@@ -87,18 +116,45 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     @track batchFields;
     @track missingRequiredBatchFields;
     batchFieldFormElements = [];
+    _dataImportObject;
+
+    @track formFieldsBySourceApiName = {};
+    @track availableBatchTableColumnOptions = [];
+    @track preselectedBatchTableColumnNames = [
+        'donorLink',
+        'matchedRecordUrl',
+        DONATION_AMOUNT_FIELD.fieldApiName,
+        DONATION_DATE_FIELD.fieldApiName,
+        DONATION_CAMPAIGN_SOURCE_FIELD.fieldApiName,
+        STATUS_FIELD.fieldApiName,
+        FAILURE_INFORMATION_FIELD.fieldApiName
+    ];
+    @track selectedBatchTableColumnOptions = [...this.preselectedBatchTableColumnNames];
 
     @track hasTemplateInfoTabError;
     @track hasSelectFieldsTabError;
-    @track hasBatchHeaderTabError;
+    @track hasBatchSettingsTabError;
     @track previousSaveAttempted = false;
     @track sectionIdsByFieldMappingDeveloperNames = {};
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT })
     wiredBatchDataImportObject({ error, data }) {
+        if (error) return handleError(error);
         if (data) {
             this.diBatchInfo = data;
+            this._dataImportBatchPermissionErrors =
+                this.checkSingleFieldPermission(
+                    this.diBatchInfo, DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName);
+            this.dataImportObjectName = DATA_IMPORT_OBJECT.objectApiName;
+        }
+    }
 
+    // This wired method will only run after wiredBatchDataImportObject assigns the dataImportObjectName property
+    @wire(getObjectInfo, { objectApiName: '$dataImportObjectName' })
+    wiredDataImportObject({ error, data }) {
+        if (error) return handleError(error);
+        if (data) {
+            this._dataImportObject = data;
             if (this.connected) {
                 // We need to be connected before we can initialize this component.
                 this.init();
@@ -106,8 +162,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 // So if we haven't connected yet, queue it up.
                 this.needToInit = true;
             }
-        } else if (error) {
-            handleError(error);
         }
     }
 
@@ -124,15 +178,30 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get inBatchHeaderTab() {
-        return this.activeTab === this.TabEnums.BATCH_HEADER_TAB ? true : false;
+        return this.activeTab === this.TabEnums.BATCH_SETTINGS_TAB ? true : false;
     }
 
     get inSelectFieldsTab() {
         return this.activeTab === this.TabEnums.FORM_FIELDS_TAB ? true : false;
     }
 
-    get namespace() {
-        return this.currentNamespace ? `${this.currentNamespace}__` : '';
+    get disableBatchTableColumnsSubtab() {
+        if (!this._dataImportBatchPermissionErrors) return false;
+
+        this._batchTableLabelAccessErrorLabel =
+            this._dataImportBatchPermissionErrors
+                .noAccessFields
+                .find(field => field.includes(DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD.fieldApiName));
+
+        return this._batchTableLabelAccessErrorLabel ? true : false;
+    }
+
+    get batchTableColumnsAccessErrorMessage() {
+        if (!this.disableBatchTableColumnsSubtab) return '';
+
+        return GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorFLSBody,
+            [this._batchTableLabelAccessErrorLabel]);
     }
 
     /*******************************************************************************
@@ -177,41 +246,16 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
-
+            this.currentNamespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
             const queryParameters = getQueryParameters();
-            // If we have no template record id, check if there's a record id in the url
-            if (!this.formTemplateRecordId) {
-                this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
-            }
+            await this.checkForFormTemplateRecordId(queryParameters);
 
-            if (this.formTemplateRecordId) {
-                let formTemplate = await retrieveFormTemplateById({
-                    templateId: this.formTemplateRecordId
-                });
-
-                this.existingFormTemplateName = formTemplate.name;
-                this.formTemplate = formTemplate;
-                this.batchHeaderFields = formTemplate.batchHeaderFields;
-                this.formLayout = formTemplate.layout;
-                this.formSections = this.formLayout.sections;
-
-                this.catalogFieldsForTemplateEdit();
-            }
-
-            this.collectBatchHeaderFields();
-            this.addRequiredBatchHeaderFields();
-            this.validateBatchHeaderTab();
-            this.handleDefaultFormFields();
-
-            if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
-                this.activeFormSectionId = this.formSections[0].id;
-            }
-
-            // Clear out form template record id if cloning after retrieving all relevant data
-            if (queryParameters.c__clone || this.isClone) {
-                this.formTemplateRecordId = null;
-            }
+            this.buildBatchHeaderFields();
+            this.buildDefaultFormFields();
+            this.buildFormFieldsBySourceApiNameMap(this.formSections);
+            this.buildDefaultBatchTableColumnOptions();
+            this.buildBatchTableColumnOptions(this.formSections);
+            this.setInitialActiveFormSection();
 
             this.isLoading = false;
         } catch (error) {
@@ -219,13 +263,186 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
     };
 
+    checkSingleFieldPermission(objectSchema, fieldApiName) {
+        return this.checkFieldPermissions(objectSchema, [fieldApiName]);
+    }
+
+    checkFieldPermissions(objectSchema, fieldApiNames) {
+        if (!objectSchema && !objectSchema.fields) return;
+
+        this._noReadAccessFields = [];
+        this._noEditAccessFields = [];
+
+        fieldApiNames.forEach(fieldApiName => {
+            const field = objectSchema.fields[fieldApiName];
+            if (!field) return this._noReadAccessFields.push(`${objectSchema.label}: ${fieldApiName}`);
+
+            if (field) {
+                const canEdit = field.updateable;
+                if (!canEdit) return this._noEditAccessFields.push(`${objectSchema.label}: ${fieldApiName}`);
+            }
+        });
+
+        return {
+            objectApiName: objectSchema.apiName,
+            noAccessFields: [...this._noReadAccessFields, ...this._noEditAccessFields],
+        }
+    }
+
+    /*******************************************************************************
+    * @description Checks for a form template record id on initial load and sets
+    * form template properties accordingly if one is found.
+    *
+    * @param {object} queryParameters: Object containing query parameters
+    */
+    checkForFormTemplateRecordId = async (queryParameters) => {
+        if (!this.formTemplateRecordId) {
+            this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
+        }
+
+        if (this.formTemplateRecordId) {
+            let formTemplate = await retrieveFormTemplateById({
+                templateId: this.formTemplateRecordId
+            });
+
+            this.existingFormTemplateName = formTemplate.name;
+            this.formTemplate = formTemplate;
+            this.batchHeaderFields = formTemplate.batchHeaderFields;
+            this.formLayout = formTemplate.layout;
+            this.formSections = this.formLayout.sections;
+            this.selectedBatchTableColumnOptions = formTemplate.defaultBatchTableColumns;
+
+            this.catalogFieldsForTemplateEdit();
+        }
+
+        this.clearRecordIdOnClone(queryParameters);
+    }
+
+    /*******************************************************************************
+    * @description Builds a map of form fields by their source field api names.
+    */
+    buildFormFieldsBySourceApiNameMap() {
+        let elements = {};
+        this.formSections.map(section => {
+            section.elements.map(element => {
+                const fieldMapping =
+                    TemplateBuilderService.fieldMappingByDevName[element.dataImportFieldMappingDevNames[0]];
+                if (!fieldMapping) return;
+
+                elements[fieldMapping.Source_Field_API_Name] = element;
+            });
+        });
+
+        this.formFieldsBySourceApiName = elements;
+    }
+
+    setInitialActiveFormSection() {
+        if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
+            this.activeFormSectionId = this.formSections[0].id;
+        }
+    }
+
+    clearRecordIdOnClone(queryParameters) {
+        if (queryParameters.c__clone || this.isClone) {
+            this.formTemplateRecordId = null;
+        }
+    }
+
+    handleUpdateSelectedBatchTableColumns(event) {
+        this.selectedBatchTableColumnOptions = event.detail;
+    }
+
+    /*******************************************************************************
+    * @description Builds default options from a defined list of field mappings
+    * for the dual-listbox component inside the Batch Table Columns subtab of
+    * the Batch Settings tab.
+    */
+    buildDefaultBatchTableColumnOptions() {
+        let defaultBatchTableColumnOptions = [
+            { label: this.CUSTOM_LABELS.geDonorColumnLabel, value: 'donorLink' },
+            { label: this.CUSTOM_LABELS.geDonationColumnLabel, value: 'matchedRecordUrl' },
+        ];
+
+        DEFAULT_BATCH_TABLE_HEADERS_WITH_FIELD_MAPPINGS.forEach(fieldApiName => {
+            const hasFieldMappingInForm = this.formFieldsBySourceApiName[fieldApiName];
+
+            const shouldBeExcludedInEditMode =
+                this.mode === EDIT &&
+                !hasFieldMappingInForm &&
+                fieldApiName !== STATUS_FIELD.fieldApiName &&
+                fieldApiName !== FAILURE_INFORMATION_FIELD.fieldApiName;
+
+            if (shouldBeExcludedInEditMode) return;
+
+            const label = hasFieldMappingInForm ?
+                this.formFieldsBySourceApiName[fieldApiName].customLabel :
+                this._dataImportObject.fields[fieldApiName].label;
+
+            defaultBatchTableColumnOptions = [
+                ...defaultBatchTableColumnOptions,
+                {
+                    label: label,
+                    value: fieldApiName
+                }
+            ];
+        });
+
+        this.availableBatchTableColumnOptions = defaultBatchTableColumnOptions;
+    }
+
+    /*******************************************************************************
+    * @description Builds option objects from all form field elements in the form
+    * for the dual-listbox component inside the Batch Table Columns subtab of the
+    * Batch Settings tab.
+    */
+    buildBatchTableColumnOptions() {
+        if (!this.formSections || this.formSections.length === 0) return;
+
+        this.getFormFieldsFromSections(this.formSections).forEach(formField => {
+            if (formField.elementType === 'widget') return;
+
+            const fieldMapping =
+                TemplateBuilderService.fieldMappingByDevName[formField.dataImportFieldMappingDevNames[0]];
+            if (SKIPPED_BATCH_TABLE_HEADER_FIELDS.includes(fieldMapping.Source_Field_API_Name)) return;
+
+            this.availableBatchTableColumnOptions = [
+                ...this.availableBatchTableColumnOptions,
+                {
+                    label: formField.customLabel,
+                    value: fieldMapping.Source_Field_API_Name
+                }
+            ];
+        });
+    }
+
+    /*******************************************************************************
+    * @description Collects all form field elements from all form sections.
+    *
+    * @param {array} formSections: A list of form section objects
+    *
+    * @return {array} formFields: A list of form field objects
+    */
+    getFormFieldsFromSections(formSections) {
+        let formFields = [];
+        formSections.forEach(formSection => {
+            formFields = [
+                ...formFields,
+                ...formSection.elements
+                    .filter(element => element.dataImportFieldMappingDevNames.length > 0)
+                    .map(element => element)
+            ];
+        });
+
+        return formFields;
+    }
+
     /*******************************************************************************
     * @description Method builds and sorts a list of batch header fields for the
     * child component geTemplateBuilderBatchHeader. Takes into consideration
     * additionally required fields and exluded fields. List is used by the sidebar
     * for the lightning-input checkboxes.
     */
-    collectBatchHeaderFields() {
+    buildBatchHeaderFields() {
         this.batchFields = mutable(this.diBatchInfo.fields);
 
         Object.getOwnPropertyNames(this.batchFields).forEach((key) => {
@@ -262,6 +479,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         });
 
         this.batchFieldFormElements = sort(this.batchFieldFormElements, SORTED_BY, SORT_ORDER);
+
+        this.addRequiredBatchHeaderFields();
+        this.validateBatchHeaderTab(new Set());
     }
 
     /*******************************************************************************
@@ -311,8 +531,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             case this.TabEnums.FORM_FIELDS_TAB:
                 this.activeTab = this.TabEnums.FORM_FIELDS_TAB;
                 break;
-            case this.TabEnums.BATCH_HEADER_TAB:
-                this.activeTab = this.TabEnums.BATCH_HEADER_TAB;
+            case this.TabEnums.BATCH_SETTINGS_TAB:
+                this.activeTab = this.TabEnums.BATCH_SETTINGS_TAB;
                 break;
             default:
                 this.activeTab = this.TabEnums.INFO_Tab;
@@ -433,8 +653,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     handleBatchHeaderFieldUp(event) {
         let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index > 0) {
-            this.batchHeaderFields =
-                shiftToIndex(this.batchHeaderFields, index, index - 1);
+            this.batchHeaderFields = shiftToIndex(this.batchHeaderFields, index, index - 1);
         }
     }
 
@@ -449,8 +668,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     handleBatchHeaderFieldDown(event) {
         let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index < this.batchHeaderFields.length - 1) {
-            this.batchHeaderFields =
-                shiftToIndex(this.batchHeaderFields, index, index + 1);
+            this.batchHeaderFields = shiftToIndex(this.batchHeaderFields, index, index + 1);
         }
     }
 
@@ -496,7 +714,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Method creates a default section and adds default form fields
     * defined in imported constant DEFAULT_FORM_FIELDS.
     */
-    handleDefaultFormFields() {
+    buildDefaultFormFields() {
         if (this.formSections && this.formSections.length === 0) {
             let sectionId = this.handleAddFormSection({
                 detail: { label: this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName }
@@ -737,9 +955,40 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (formSection) {
             field.sectionId = sectionId;
             formSection.elements.push(field);
+
+            this.addFieldToAvailableBatchTableColumnOptions(field);
         }
 
         this.formSections = formSections;
+    }
+
+    addFieldToAvailableBatchTableColumnOptions(field) {
+        const fieldMappingDevNames = field.dataImportFieldMappingDevNames;
+
+        const isAFieldMappingField =
+            fieldMappingDevNames &&
+            fieldMappingDevNames[0] &&
+            field.elementType === 'field';
+
+        if (isAFieldMappingField) {
+            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDevNames[0]];
+            const existingOptionIndex = findIndexByProperty(
+                this.availableBatchTableColumnOptions,
+                VALUE,
+                fieldMapping.Source_Field_API_Name
+            );
+
+            const isNewOption = existingOptionIndex === -1;
+            if (isNewOption) {
+                const option = {
+                    label: field.customLabel,
+                    value: fieldMapping.Source_Field_API_Name
+                };
+                this.availableBatchTableColumnOptions = [...this.availableBatchTableColumnOptions, option];
+            } else {
+                this.availableBatchTableColumnOptions[existingOptionIndex].label = field.customLabel;
+            }
+        }
     }
 
     /*******************************************************************************
@@ -750,18 +999,57 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection ->
     * geTemplateBuilderSelectFields -> here
     */
-    handleRemoveFieldFromSection(fieldName) {
-        const sectionId = this.sectionIdsByFieldMappingDeveloperNames[fieldName];
+    handleRemoveFieldFromSection(fieldMappingDeveloperName) {
+        const sectionId = this.sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName];
 
         let formSections = mutable(this.formSections);
         let section = formSections.find(fs => fs.id === sectionId);
         const index = section.elements.findIndex((element) => {
             const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
-            return name === fieldName;
+            return name === fieldMappingDeveloperName;
         });
         section.elements.splice(index, 1);
 
         this.formSections = formSections;
+
+        this.removeOptionFromBatchTableColumn(fieldMappingDeveloperName);
+    }
+
+    /*******************************************************************************
+    * @description Removes an option from "available fields" of the Batch Table
+    * Columns dual-listbox component.
+    *
+    * @param {string} fieldMappingDeveloperName: Developer name of the options
+    * corresponding field mapping.
+    */
+    removeOptionFromBatchTableColumn(fieldMappingDeveloperName) {
+        const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDeveloperName];
+        if (!fieldMapping) return;
+
+        removeFromArray(this.selectedBatchTableColumnOptions, fieldMapping.Source_Field_API_Name);
+        removeByProperty(this.availableBatchTableColumnOptions, VALUE, fieldMapping.Source_Field_API_Name);
+    }
+
+    /*******************************************************************************
+    * @description Removes an option from "available fields" of the Batch Table
+    * Columns dual-listbox component.
+    *
+    * @param {string} fieldMappingDeveloperName: Developer name of the options
+    * corresponding field mapping.
+    */
+    updateOptionFromBatchTableColumn(formField) {
+        const fieldMapping =
+            TemplateBuilderService.fieldMappingByDevName[formField.dataImportFieldMappingDevNames[0]];
+        if (!fieldMapping) return;
+
+        const index = findIndexByProperty(
+            this.availableBatchTableColumnOptions,
+            VALUE,
+            fieldMapping.Source_Field_API_Name);
+
+        if (index !== -1) {
+            this.availableBatchTableColumnOptions[index].label = formField.customLabel;
+        }
     }
 
     /*******************************************************************************
@@ -825,6 +1113,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             return element.id === id;
         });
 
+        if (section.elements[index].elementType === 'field') {
+            this.removeOptionFromBatchTableColumn(section.elements[index].dataImportFieldMappingDevNames[0]);
+        }
+
         section.elements.splice(index, 1);
     }
 
@@ -848,6 +1140,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (element) {
             element[property] = value;
         }
+
+        this.updateOptionFromBatchTableColumn(element);
     }
 
     /*******************************************************************************
@@ -868,9 +1162,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         await this.validateTemplateInfoTab(tabsWithErrors);
         this.validateSelectFieldsTab(tabsWithErrors);
-        this.validateBatchHeaderTab();
+        this.validateBatchHeaderTab(tabsWithErrors);
 
-        if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
+        if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchSettingsTabError) {
             const message = `${tabsWithErrors.size > 1 ?
                 this.CUSTOM_LABELS.geToastTemplateTabsError
                 : this.CUSTOM_LABELS.geToastTemplateTabsError}`;
@@ -939,7 +1233,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Method checks for missing required DataImportBatch__c fields
     * and adds them proactively.
     */
-    validateBatchHeaderTab() {
+    validateBatchHeaderTab(tabsWithErrors) {
         this.missingRequiredBatchFields = findMissingRequiredBatchFields(this.batchFieldFormElements,
             this.batchHeaderFields);
 
@@ -953,6 +1247,19 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldLabels}`,
                 'warning',
                 'sticky');
+        }
+
+        if (tabsWithErrors && !this.disableBatchTableColumnsSubtab) {
+            const isMissingBatchTableColumns =
+                isEmpty(this.selectedBatchTableColumnOptions) ||
+                (this.selectedBatchTableColumnOptions.length === 0);
+
+            if (isMissingBatchTableColumns) {
+                this.hasBatchSettingsTabError = true;
+                tabsWithErrors.add(this.TabEnums.BATCH_SETTINGS_TAB);
+            } else {
+                this.hasBatchSettingsTabError = false;
+            }
         }
     }
 
@@ -969,12 +1276,17 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.isLoading = true;
 
             if (this.formSections && this.formSections.length === 0) {
-                this.handleDefaultFormFields();
+                this.buildDefaultFormFields();
             }
 
             this.formLayout.sections = this.formSections;
             this.formTemplate.batchHeaderFields = this.batchHeaderFields;
             this.formTemplate.layout = this.formLayout;
+            if (this.disableBatchTableColumnsSubtab && this.mode === NEW) {
+                this.formTemplate.defaultBatchTableColumns = [];
+            } else {
+                this.formTemplate.defaultBatchTableColumns = this.selectedBatchTableColumnOptions;
+            }
 
             // TODO: Currently hardcoded as we're not providing a way to
             // create custom migrated field mapping sets yet.
@@ -991,10 +1303,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             try {
                 const recordId = await storeFormTemplate(preppedFormTemplate);
                 if (recordId) {
-                    let toastLabel =
-                        this.mode === NEW ?
-                            this.CUSTOM_LABELS.geToastTemplateCreateSuccess
-                            : this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
+                    const toastLabel = this.mode === NEW ?
+                        this.CUSTOM_LABELS.geToastTemplateCreateSuccess :
+                        this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
 
                     const toastMessage = GeLabelService.format(toastLabel, [this.formTemplate.name]);
                     showToast(toastMessage, '', SUCCESS);
