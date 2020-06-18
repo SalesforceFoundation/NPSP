@@ -22,9 +22,8 @@
         const sfdo = new sfdoPaymentsJsSdk();
         sfdo.mount({
             id: 'payments',
-            // TODO: Replace clientId value below with the productId provided by onboarding
-            // Currently hardcoded to a specific value as needed by payment services.
             clientId: '{!productId}',
+            gatewayId: '{!gatewayIds}',
             designSystem: 'Lightning',
             styles: '' +
                 '.logo {' +
@@ -40,6 +39,12 @@
                 '}' +
                 '.fieldset.cvc {' +
                     'padding: 0;' +
+                '}' +
+                '.error-wrapper.fieldset.exp {' +
+                    'max-width: fit-content;' +
+                '}' +
+                '.error-wrapper.fieldset.cvc {' +
+                    'max-width: fit-content;' +
                 '}'
         })
         .then(() => {
@@ -77,7 +82,7 @@
                 })
                 .then(function response(resp) {
                     // Send token to lwc
-                    const token = resp.token
+                    const token = resp.token;
                     const successString = JSON.stringify({ token: token });
                     postMessage(successString);
                 })

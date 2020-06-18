@@ -54,6 +54,20 @@ public with sharing class RD2_NamingService {
     }
 
     /***
+    * @description Retrieves the record type id for the household account record type
+    */
+    @TestVisible
+    public static String hhRecordTypeId {
+        get {
+            if (hhRecordTypeId == null) {
+                hhRecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+            }
+            return hhRecordTypeId;
+        }
+        private set;
+    }
+
+    /***
     * @description Returns Donor (Account/Contact) records
     */
     @TestVisible
@@ -97,7 +111,7 @@ public with sharing class RD2_NamingService {
     * @description Autogenerates recurring donation names if Name construct fields have changed
     * @param rds New/changed Recurring Donations
     * @param oldRds Old Recurring Donations
-    * @return none
+    * @return void
     */
     public void autogenerateNamesOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
         if (!isAutomaticNamingEnabled) {
@@ -113,7 +127,7 @@ public with sharing class RD2_NamingService {
             }
         }
 
-        autogenerateNames(changedRds);
+        constructNames(changedRds);
     }
 
     /***
@@ -137,17 +151,38 @@ public with sharing class RD2_NamingService {
     }
 
     /***
-    * @description Autogenerates recurring donation names for all specified records
+    * @description Autogenerates recurring donation names for all specified records on insert
     * @param rds New Recurring Donation records
-    * @return none
+    * @return void
     */
     public void autogenerateNames(List<npe03__Recurring_Donation__c> rds) {
-        if (!isAutomaticNamingEnabled || rds == null || rds.isEmpty()) {
+        if (isAutomaticNamingEnabled) {
+            constructNames(rds);
+
+        } else if (RD2_EnablementService.isRecurringDonations2Enabled) {
+            //autogenerate names when Elevate RD Name is empty
+            List<npe03__Recurring_Donation__c> elevateRds = new List<npe03__Recurring_Donation__c>();
+            for (npe03__Recurring_Donation__c rd : rds) {
+                if (String.isNotBlank(rd.CommitmentId__c) && String.isBlank(rd.Name)) {
+                    elevateRds.add(rd);
+                }
+            }
+            constructNames(elevateRds);
+        }
+        //no special name handling for legacy RDs when auto-naming is not enabled
+    }
+
+    /***
+    * @description Autogenerates recurring donation names for all specified records
+    * @param rds New Recurring Donation records
+    * @return void
+    */
+    private void constructNames(List<npe03__Recurring_Donation__c> rds) {
+        if (rds == null || rds.isEmpty()) {
             return;
         }
 
         Map<Id, RD2_Donor.Record> donorById = donorGateway.getDonors(rds);
-
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.Name = constructName(rd, donorById);
         }
@@ -162,7 +197,12 @@ public with sharing class RD2_NamingService {
     * @return String New name for the Recurring Donation record
     */
     private String constructName(npe03__Recurring_Donation__c rd,  Map<Id, RD2_Donor.Record> donorById) {
-        RD2_Donor.Record donor = rd.npe03__Contact__c != null
+        Boolean useContact = rd.npe03__Organization__c == null;
+        if (!useContact) {
+            useContact = donorById.get(rd.npe03__Organization__c).recordTypeId == hhRecordTypeId;
+        }
+
+        RD2_Donor.Record donor = useContact
             ? donorById.get(rd.npe03__Contact__c)
             : donorById.get(rd.npe03__Organization__c);
 

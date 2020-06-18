@@ -987,6 +987,7 @@
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Batch_Table_Columns__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
         <members>DataImportBatch__c.Donation_Date_Range__c</members>
@@ -1413,6 +1414,7 @@
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
         <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
@@ -1693,6 +1695,8 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_EnablementSimpleIntro</members>
+        <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
+        <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
@@ -2046,6 +2050,7 @@
         <members>commonAssistiveWarning</members>
         <members>commonBack</members>
         <members>commonBatches</members>
+        <members>commonCVV</members>
         <members>commonCancel</members>
         <members>commonCardType</members>
         <members>commonClone</members>
@@ -2148,6 +2153,8 @@
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
+        <members>geBodyBatchTableColumnsPart1</members>
+        <members>geBodyBatchTableColumnsPart2</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsDescLeftCol</members>
@@ -2173,6 +2180,8 @@
         <members>geButtonCancelAndClear</members>
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
+        <members>geButtonFormFieldsDisplayOptionCollapsed</members>
+        <members>geButtonFormFieldsDisplayOptionExpanded</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
         <members>geButtonMatchingNewOpportunity</members>
@@ -2199,6 +2208,7 @@
         <members>geErrorDonorTypeValidation</members>
         <members>geErrorDonorTypeValidationSingle</members>
         <members>geErrorExistingTemplateName</members>
+        <members>geErrorFLSBatchTableColumns</members>
         <members>geErrorFLSBody</members>
         <members>geErrorFLSHeader</members>
         <members>geErrorFieldPermission</members>
@@ -2229,6 +2239,7 @@
         <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
         <members>geHeaderFormFieldsModalDeleteSection</members>
+        <members>geHeaderFormFieldsModalDisplayOptionsSection</members>
         <members>geHeaderFormFieldsModalRenameSection</members>
         <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
@@ -2260,6 +2271,7 @@
         <members>geJWTUtilInvalidBase64UrlMessage</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
+        <members>geLabelDisplaySections</members>
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
@@ -2271,6 +2283,8 @@
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
+        <members>geTabBatchSettings</members>
+        <members>geTabBatchTableColumns</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geTextChargingCard</members>
@@ -2279,6 +2293,7 @@
         <members>geTextListViewSortedBy</members>
         <members>geTextListViewUpdatedAgo</members>
         <members>geTextNavigateToOpportunity</members>
+        <members>geTextPaymentsSaveNotice</members>
         <members>geTextProcessing</members>
         <members>geTextSaving</members>
         <members>geTextUpdating</members>
@@ -3837,5 +3852,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>47.0</version>
+    <version>48.0</version>
 </Package>

@@ -117,6 +117,18 @@ const isEmpty = (value) => {
 };
 
 /**
+ * Check if an object is empty
+ * @param object         Object to check.
+ * @returns {boolean}   TRUE when the given object is empty.
+ */
+const isEmptyObject = (object) => {
+    for (let key in object) {
+        if (object.hasOwnProperty(key)) return false;
+    }
+    return true;
+}
+
+/**
  * Inverse of isEmpty
  * @param value         Value to check.
  * @returns {boolean}   TRUE when the given value is not undefined, null or blank string.
@@ -193,8 +205,21 @@ const format = (string, replacements) => {
  */
 const removeByProperty = (array, property, value) => {
     const index = array.findIndex(element => element[property] === value);
+    if (index === -1) return;
     array.splice(index, 1);
 };
+
+/**
+ * @description Removes an item from the given array based on a given value
+ *
+ * @param {array} array: List to remove an item from
+ * @param {any} value: Value to match and remove from array
+ */
+const removeFromArray = (array, value) => {
+    const index = array.findIndex(item => item === value);
+    if (index === -1) return;
+    array.splice(index, 1);
+}
 
 /*******************************************************************************
  * @description Loop through provided array or object properties. Recursively check
@@ -425,6 +450,7 @@ export {
     getQueryParameters,
     getSubsetObject,
     isEmpty,
+    isEmptyObject,
     isNotEmpty,
     isNumeric,
     isFunction,
@@ -436,6 +462,7 @@ export {
     sort,
     shiftToIndex,
     removeByProperty,
+    removeFromArray,
     format,
     hasNestedProperty,
     getNestedProperty,

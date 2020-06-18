@@ -59,7 +59,6 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
                     UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps,
                     UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
                     UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows,
-                    UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd,
                     UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountGERowsLast30DaysBatch
             };
 
@@ -141,8 +140,6 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
                     UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
             featureManager.setPackageIntegerValue(
                     UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
-            featureManager.setPackageIntegerValue(
-                    UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), 0);
         }
     }
 

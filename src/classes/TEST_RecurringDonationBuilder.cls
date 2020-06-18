@@ -238,6 +238,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets End Date
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withEndDate(Date dt) {
+        valuesByFieldName.put('EndDate__c', dt);
+        return this;
+    }
+
+    /***
     * @description Sets Next Payment Date
     * @param dt Date
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -421,6 +431,14 @@ public without sharing class TEST_RecurringDonationBuilder {
     */
     public TEST_RecurringDonationBuilder withStatusActive() {
         return withStatus(RD2_Constants.STATUS_ACTIVE);
+    }
+
+    /***
+    * @description Sets Recurring Donation Status to Lapsed
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withStatusLapsed() {
+        return withStatus(RD2_Constants.STATUS_LAPSED);
     }
 
     /***

@@ -309,6 +309,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             for i in locators:
                 print("inside for loop")
                 locator = i.format(field,value)
+                print(locator)
                 if self.check_if_element_exists(locator):
                     print(f"element exists {locator}")
                     actual_value=self.selenium.get_webelement(locator).text
@@ -764,6 +765,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def check_if_element_exists(self, xpath):
         elements =self.selenium.get_element_count(xpath)
         return True if elements > 0 else False
+
+    def check_if_element_displayed(self, xpath):
+        """ Check for the visibility of an element based on the xpath sent"""
+        element = self.selenium.get_webelement(xpath)
+        return True if element.is_displayed() else False
     
     def select_multiple_values_from_list(self,list_name,*args): 
         """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
@@ -867,21 +873,19 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     break
                 except Exception:
                     sec= sec+30
-                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))                 
+                    print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
 
-    def get_npsp_settings_value(self,field_name): 
+
+    def get_npsp_settings_value(self,field_name):
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-
-
-
     def verify_payment_details(self, numpayments):
         """Gets the payment details from the UI and compares with the expected number of payments"""
-        locator = "//tbody/tr/td[2]/span/span"
+        locator = npsp_lex_locators['payments']['loc1']
         locs1 = self.selenium.get_webelements(locator)
-        locator2 = "//tbody/tr/td[3]/span/span"
+        locator2 = npsp_lex_locators['payments']['loc2']
         locs2 = self.selenium.get_webelements(locator2)
         for i, j in list(zip(locs1, locs2)):
             #loc1_vaue = self.selenium.get_webelemt(i).text
@@ -997,7 +1001,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['link-text'].format(text)
         self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.driver.execute_script('arguments[0].click()', element)  
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+        time.sleep(1)
     
     def verify_expected_batch_values(self, batch_id,**kwargs):
         """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""    
@@ -1218,7 +1223,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
-        self.selenium.click_link(value) 
+        self.npsp.click_link_with_text(value)
         
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects
@@ -1264,7 +1269,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if account_data is not None:
             # create the account based on the user input specified account type
-            acctname = self.randomString(10);
+            acctname = self.randomString(10)
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
             account_data.update( {'Name' : acctname,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
@@ -1274,8 +1279,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if contact_data is not None:
             # create the contact
-            firstname = self.randomString(10);
-            lastname = self.randomString(10);
+            firstname = self.randomString(10)
+            lastname = self.randomString(10)
             contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
             contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
             contact = self.salesforce.salesforce_get("Contact",contact_id)
@@ -1314,7 +1319,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if gau_data is not None:
             object_key =  f"{ns}General_Accounting_Unit__c"
             gauname = gau_data['Name']
-            random = self.randomString(10);
+            random = self.randomString(10)
             gau_data.update( {'name' : f"{random}{gauname}"} )
             gau_id = self.salesforce.salesforce_insert(object_key, **gau_data)
             gau = self.salesforce.salesforce_get(object_key,gau_id)
@@ -1345,13 +1350,31 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             if payment_data is not None:
                 numdays = 30
                 i = 1
+               
                 while i <= int(payment_data['NumPayments']):
                     payment_schedule_data = {}
                     numdays = numdays*2
-                    scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
-                    payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date, 'npe01__Payment_Amount__c' : payment_data['Amount'] } )
+                    # Based on the number of payments parameter numpayments, populate the number of payments and associate it to the opportunity
+					# While populating the number of payments if a desired scheduled payment date is provided use it if not use the current date
+                    if 'Scheduledate' in payment_data:
+                        scheduled_date = (datetime.strptime(payment_data['Scheduledate'] , '%Y-%m-%d').date() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                    else:
+                        scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                    payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date,'npe01__Payment_Amount__c' : payment_data['Amount'] } )
                     payment_id = self.salesforce.salesforce_insert("npe01__OppPayment__c", **payment_schedule_data)
+					
+					# Out of the total number of payments being generated if user paid the payements for n number of payments specified in the field completedPyaments
+					# Mark the payments as paid and populate the payment date
+                    if 'CompletedPayments' in payment_data:
+                        if i<= int(payment_data['CompletedPayments']):
+                            payment_update_data = {}
+                            payment_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                            payment_update_data.update( {'npe01__Payment_Date__c' : payment_date ,'npe01__Paid__c': "true"} )
+                            payment_id = self.salesforce.salesforce_update("npe01__OppPayment__c",payment_id , **payment_update_data)
+
                     i = i+1
+                
+
 
         self.builtin.set_suite_variable('${data}', data)
 
@@ -1549,3 +1572,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         out['baseurl'] = base_url
         out['objectname'] = object_name
         return out
+    
+    def check_submenu_link_exists(self,title):
+        """Checks for the presence of the submenu item under the main menu"""
+        locator=npsp_lex_locators['link-text'].format(title)
+        isPresent = False
+        if self.npsp.check_if_element_exists(locator):
+            isPresent = True
+        return isPresent
+    
