@@ -49,12 +49,6 @@ const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geListView extends LightningElement {
 
-    constructor(objectApiName) {
-        super();
-
-        this.objectApiName = objectApiName;
-    }
-
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -88,9 +82,15 @@ export default class geListView extends LightningElement {
     isLoaded = false;
     hasAdditionalRows = false;
 
+    constructor(objectApiName) {
+        super();
+
+        this.objectApiName = objectApiName;
+    }
 
     @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
     wiredUserRecord;
+
 
     get recordsToDisplay() {
         if (this.actions && this.columns.length === 1) {
@@ -609,9 +609,10 @@ export default class geListView extends LightningElement {
         records.forEach(record => {
             Object.keys(record).forEach(key => {
                 let fieldDescribe = this.objectInfo.fields[key];
-                const isReferenceField = fieldDescribe.nameField || fieldDescribe.reference;
 
-                if ( isNotEmpty(fieldDescribe) && isReferenceField ) {
+                if (isNotEmpty(fieldDescribe)
+                    && (fieldDescribe.nameField ||
+                        fieldDescribe.reference)) {
 
                     let _objectApiName = fieldDescribe.nameField ? this.objectInfo.apiName :
                         fieldDescribe.referenceToInfos[0].apiName;
