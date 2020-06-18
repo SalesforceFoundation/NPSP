@@ -26,7 +26,7 @@ Create Clone and Delete Template
     ...                                       Template Name=${template}
     ...                                       Description=This is created by automation script  
     Click Gift Entry Button                   Next: Form Fields
-    Click Gift Entry Button                   Next: Batch Header
+    Click Gift Entry Button                   Next: Batch Settings
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Custom                        GE_Gift_Entry
     Click Link                                Templates
