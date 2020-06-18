@@ -12201,6 +12201,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>When you create a Recurring Donation, NPSP automatically populates the Name using the specified name format. Choose Disable Automatic Naming to turn this feature off.</value>
     </labels>
     <labels>
+        <fullName>stgRDNamingDisable</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming disable option</shortDescription>
+        <value>Disable Auto Naming</value>
+    </labels>
+    <labels>
         <fullName>stgRDNamingDonorName</fullName>
         <categories>Settings RDNaming</categories>
         <language>en_US</language>

@@ -2960,6 +2960,7 @@
         <members>stgRDNamingAmount</members>
         <members>stgRDNamingCampaignName</members>
         <members>stgRDNamingDescription</members>
+        <members>stgRDNamingDisable</members>
         <members>stgRDNamingDonorName</members>
         <members>stgRDNamingInstallmentPeriod</members>
         <members>stgRDNamingOptionLabel</members>
