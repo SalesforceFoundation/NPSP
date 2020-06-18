@@ -356,7 +356,7 @@ const handleError = (error) => {
         }
     } else if (error.body) {
         if (validateJSONString(error.body.message)) {
-            let exceptionType = JSON.parse(error.body.message).exceptionType;
+            const exceptionType = JSON.parse(error.body.message).exceptionType;
             if (exceptionType === QUERY_EXCEPTION) {
                 displayToast = false;
                 // inform parent app (GeHome) about query exception
