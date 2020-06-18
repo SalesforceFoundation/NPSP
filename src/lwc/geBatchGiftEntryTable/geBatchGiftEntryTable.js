@@ -6,7 +6,7 @@ import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBa
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 
 import {handleError} from 'c/utilTemplateBuilder';
-import {isNotEmpty, isEmpty} from 'c/utilCommon';
+import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeListView from 'c/geListView';
 import GeFormService from 'c/geFormService';
 
@@ -56,7 +56,6 @@ export default class GeBatchGiftEntryTable extends GeListView {
         }
     };
 
-
     @api title;
     @api total;
     @api expectedTotal;
@@ -66,19 +65,14 @@ export default class GeBatchGiftEntryTable extends GeListView {
 
     constructor() {
         super(DATAIMPORT_INFO.objectApiName);
-    }
-
-    connectedCallback() {
-        if (this.batchId) {
-            this.loadBatch();
-        }
+        this.callbacks.push(this.loadBatch.bind(this));
     }
 
     setReady() {
         this.ready = this._columnsLoaded && this._batchLoaded;
     }
 
-    loadBatch() {
+    loadBatch = () => {
         getDataImportModel({batchId: this.batchId})
             .then(
                 response => {

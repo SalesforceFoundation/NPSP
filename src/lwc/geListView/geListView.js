@@ -79,13 +79,19 @@ export default class geListView extends LightningElement {
     @track orderedByInfo;
 
     columnHeadersByFieldApiName;
-    isLoaded = false;
     hasAdditionalRows = false;
+    // Array of callbacks required by children that extend this component
+    callbacks = [];
+    // Flag to set when this component has been extended and is running from a child component
+    isExtended = false;
 
     constructor(objectApiName) {
         super();
 
-        this.objectApiName = objectApiName;
+        if (isNotEmpty(objectApiName)) {
+            this.isExtended = true;
+            this.objectApiName = objectApiName;
+        }
     }
 
     @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
@@ -226,10 +232,15 @@ export default class geListView extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectInfo = response.data;
-
-            if (this.isLoaded === false) {
+            if (this.isExtended) {
+                // execute child component callbacks
+                this.callbacks.forEach(callback => {
+                    if (typeof callback === 'function') {
+                        this.executeCallbackAsync(callback);
+                    }
+                });
+            } else {
                 this.init();
-                this.isLoaded = true;
             }
         }
 
@@ -241,6 +252,10 @@ export default class geListView extends LightningElement {
                 [this.objectApiName])
             );
         }
+    }
+
+    async executeCallbackAsync(callback) {
+        callback.call();
     }
 
     init = async () => {
