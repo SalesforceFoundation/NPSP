@@ -246,6 +246,30 @@ public class CRLP_RollupCMT {
         }
 
         /**
+         * @return Translated Picklist Label IF there is one
+         */
+        public String getConstantLabel() {
+            String label = this.value;
+            try {
+                if (this.value == 'True') {
+                    label = System.Label.labelBooleanTrue;
+
+                } else if (this.value == 'False') {
+                    label = System.Label.labelBooleanFalse;
+
+                } else {
+                    SObjectType objType = UTIL_Describe.getSObjectType(objectName);
+                    SObjectField fldType = UTIL_Describe.getFieldDescribe(objectName, fieldName).getSobjectField();
+                    label = UTIL_Describe.getTranslatedPicklistLabel(objType, fldType, value);
+                    if (String.isEmpty(label)) {
+                        label = this.value;
+                    }
+                }
+            } catch (Exception ex) { }
+            return label;
+        }
+
+        /**
          * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
          * instance for the Filter_Rule.
          * @return Metadata.CustomMetadata instance for deployment

@@ -371,11 +371,7 @@ public with sharing class CRLP_RollupUI_SVC {
             for (Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
                 CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(fr);
                 ruleItem.operationLabel = operatorMap.get(ruleItem.operationName);
-                if (ruleItem.value == 'True') {
-                    ruleItem.valueLabel = System.Label.labelBooleanTrue;
-                } else if (ruleItem.value == 'False') {
-                    ruleItem.valueLabel = System.Label.labelBooleanFalse;
-                }
+                ruleItem.valueLabel = ruleItem.getConstantLabel();
                 model.filterRuleList.add(ruleItem);
             }
         }
