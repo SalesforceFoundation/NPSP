@@ -128,6 +128,18 @@ global with sharing class Callable_API implements System.Callable {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
 
+            } when 'job.schedule' { 
+                // This method schedules the specified Schedulable class using the specified job name & cron expression.
+                // It should only be used for Schedulable classes that are in the NPSP Managed Package.
+                // It returns the Job ID of the Scheduled Job.
+                String scheduledJobName = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_NAME);
+                String scheduledJobCronExpression = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CRON_EXPRESSION);
+                String scheduledJobClass = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CLASS);
+                
+                Type scheduledClassType = Type.forName(scheduledJobClass);
+                Schedulable schedulableClass = (Schedulable) scheduledClassType.newInstance();
+                return System.schedule(scheduledJobName, scheduledJobCronExpression, schedulableClass);
+
             } when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
