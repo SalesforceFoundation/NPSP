@@ -13,9 +13,6 @@ Suite Setup     Run keywords
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
-Setup Variables
-    ${ns} =                      Get NPSP Namespace Prefix
-    Set Suite Variable           ${ns}
 
 Setup Test Data
         #Create a Recurring Donation
@@ -53,7 +50,7 @@ Edit An Enhanced Recurring donation record of type open
 
     ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
 
-    # Verify that no active schedules are present messages appear
+    # Verify that "no active schedules are present" messages appear
     Verify Schedule Warning Messages Present
 
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
@@ -63,4 +60,5 @@ Edit An Enhanced Recurring donation record of type open
 
     #validate the stage on opportunity is Closed Lost
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
+    Wait Until Loading Is Complete
     Navigate To And Validate Field Value    Stage                          contains                        Closed Lost
