@@ -370,8 +370,8 @@ public with sharing class CRLP_RollupUI_SVC {
             Map<String,String> operatorMap = getfilterRuleOperations();
             for (Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
                 CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(fr);
+                ruleItem.setValueLabel();
                 ruleItem.operationLabel = operatorMap.get(ruleItem.operationName);
-                ruleItem.valueLabel = ruleItem.getConstantLabel();
                 model.filterRuleList.add(ruleItem);
             }
         }
