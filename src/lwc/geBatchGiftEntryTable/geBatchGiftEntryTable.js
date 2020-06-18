@@ -6,7 +6,7 @@ import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBa
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 
 import {handleError} from 'c/utilTemplateBuilder';
-import {isNotEmpty, debouncify} from 'c/utilCommon';
+import {isNotEmpty} from 'c/utilCommon';
 import GeListView from 'c/geListView';
 import GeFormService from 'c/geFormService';
 
@@ -65,6 +65,8 @@ export default class GeBatchGiftEntryTable extends GeListView {
 
     constructor() {
         super(DATAIMPORT_INFO.objectApiName);
+        /* Add the loadBatch function as a callback for the parent component to execute once it executes the
+        objectInfo wire service */
         this.callbacks.push(this.loadBatch.bind(this));
     }
 
