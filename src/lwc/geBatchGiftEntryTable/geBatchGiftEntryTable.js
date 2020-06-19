@@ -17,6 +17,7 @@ import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 
 import commonOpen from '@salesforce/label/c.commonOpen';
+import GeLabelService from 'c/geLabelService';
 
 import DATAIMPORT_INFO from '@salesforce/schema/DataImport__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
@@ -56,7 +57,8 @@ export default class GeBatchGiftEntryTable extends GeListView {
             menuAlignment: 'auto'
         }
     };
-    _columnsBySourceFieldApiName = {};
+
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api title;
     @api total;
@@ -328,6 +330,35 @@ export default class GeBatchGiftEntryTable extends GeListView {
                 value: total
             }
         }));
+    }
+
+    handleMenuItemSelect(event) {
+        if (event.detail.value === 'selectcolumns') {
+            const selectColumns = new CustomEvent('selectcolumns', {
+                detail: {
+                    options: this.retrieveAllColumns()
+                        .map(({label, fieldName}) => ({
+                            label, value: fieldName
+                        })),
+                    values: this.computedColumns
+                        .map(({fieldName}) => fieldName)
+                }
+            });
+            this.dispatchEvent(selectColumns);
+        }
+    }
+
+    get tableMenuQaLocator() {
+        return 'button Show menu';
+    }
+
+    get selectBatchTableColumnsQaLocator() {
+        return `link ${this.CUSTOM_LABELS.geSelectBatchTableColumns}`;
+
+    }
+
+    get selectBatchTableColumns() {
+        return this.CUSTOM_LABELS.geSelectBatchTableColumns;
     }
 
 }
