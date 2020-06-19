@@ -588,7 +588,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @wire(getRecord, {
         recordId: '$recordId',
-        fields: [BATCH_ID_FIELD,
+        fields: [
+            BATCH_ID_FIELD,
             BATCH_NAME
         ],
         optionalFields: [
@@ -739,7 +740,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     buildModalConfigSelectColumns(available, selected) {
-        const modalHeader = this.CUSTOM_LABELS.geTabBatchTableColumns;
         const modalConfig = {
             componentProperties: {
                 name: 'selectcolumnsmodal',
@@ -754,7 +754,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             },
             modalProperties: {
                 cssClass: 'slds-modal_large',
-                header: modalHeader,
+                header: this.CUSTOM_LABELS.geTabBatchTableColumns,
                 componentName: 'utilDualListbox',
                 showCloseButton: true
             }
@@ -763,7 +763,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get modalConfigNoAccess() {
-        const modalHeader = this.CUSTOM_LABELS.geTabBatchTableColumns;
         const errorFieldName =
             `${BATCH_TABLE_COLUMNS_FIELD.objectApiName}: (${BATCH_TABLE_COLUMNS_FIELD.fieldApiName})`;
         const errorFLSBody = GeLabelService.format(
@@ -778,11 +777,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 showModalFooter: false,
                 message: message,
                 title: this.CUSTOM_LABELS.geErrorFLSHeader,
-                variant: 'lake-mountain'
+                variant: 'no-access'
             },
             modalProperties: {
                 cssClass: 'slds-modal_large',
-                header: modalHeader,
+                header: this.CUSTOM_LABELS.geTabBatchTableColumns,
                 componentName: 'utilIllustration',
                 showCloseButton: true
             }

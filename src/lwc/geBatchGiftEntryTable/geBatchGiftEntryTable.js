@@ -336,17 +336,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     }
 
-    get tableMenuQaLocator() {
+    get qaLocatorTableMenu() {
         return 'button Show menu';
     }
 
-    get selectBatchTableColumnsQaLocator() {
+    get qaLocatorSelectBatchTableColumns() {
         return `link ${this.CUSTOM_LABELS.geSelectBatchTableColumns}`;
 
-    }
-
-    get selectBatchTableColumns() {
-        return this.CUSTOM_LABELS.geSelectBatchTableColumns;
     }
 
 }
