@@ -162,8 +162,6 @@ private with sharing class Callable_API_TEST {
     private static void shouldScheduleJob() {
         Id scheduledJobId;
 
-        Test.startTest();
-
         Integer nextYear = Date.today().year() + 1;
         String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
 
@@ -173,6 +171,9 @@ private with sharing class Callable_API_TEST {
             'ScheduledJobCronExpression' => cronExpression, 
             'ScheduledJobClass' => 'CRLP_Account_BATCH' // Any Schedulable Apex Class can be used
         };
+        
+        Test.startTest();
+
         Object scheduledJobIdObject = callableApi.call(JOB_SCHEDULE_ACTION, args);
         scheduledJobId = (Id) scheduledJobIdObject;
 
@@ -187,5 +188,34 @@ private with sharing class Callable_API_TEST {
         System.assertEquals('JOB.SCHEDULE TEST', cronTrigger.CronJobDetail.Name);
 
         // Scheduled Job Class cannot be verified as not available on CronTrigger or CronJobDetail
+    }
+
+    /**
+     * @description Verifies error is thrown if non-existant Apex Class is used for Job.Schedule
+     */
+    @IsTest
+    private static void shouldThrowErrorForNonExistantApexClass() {
+        Test.startTest();
+
+        Integer nextYear = Date.today().year() + 1;
+        String cronExpression = '0 0 5 1 1 ? ' + nextYear; // January 1st next year at 5AM
+
+        Callable callableApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> args = new Map<String, Object>{ 
+            'ScheduledJobName' => 'JOB.SCHEDULE TEST', // Name needs to be unique
+            'ScheduledJobCronExpression' => cronExpression, 
+            'ScheduledJobClass' => 'DOES_NOT_EXIST'
+        };
+        
+        String expectedMessagePortion = ((System.Label.CallableApiJobScheduleInvalidClass).split('}')[1]).trim();
+
+        try {
+            Object scheduledJobIdObject = callableApi.call(JOB_SCHEDULE_ACTION, args);
+            System.assert(false, 'The exception was not thrown');
+        } catch(Callable_API.MalformedMethodInvocationException apiException){
+            System.assert(apiException.getMessage().contains(expectedMessagePortion), apiException.getMessage());
+        }
+
+        Test.stopTest();
     }
 }

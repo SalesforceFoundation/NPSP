@@ -137,6 +137,12 @@ global with sharing class Callable_API implements System.Callable {
                 String scheduledJobClass = paramService.getString(CallableApiParameters.PARAM_SCHEDULED_JOB_CLASS);
                 
                 Type scheduledClassType = Type.forName(scheduledJobClass);
+                if(scheduledClassType == null){
+                    throw new MalformedMethodInvocationException(
+                        String.format(System.Label.CallableApiJobScheduleInvalidClass, new List<String> { scheduledJobClass })
+                    );
+                }
+                
                 Schedulable schedulableClass = (Schedulable) scheduledClassType.newInstance();
                 return System.schedule(scheduledJobName, scheduledJobCronExpression, schedulableClass);
 
