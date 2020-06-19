@@ -288,11 +288,12 @@ tasks:
             database_url: 'sqlite:///datasets/100k/test_data.db'
             mapping: 'datasets/100k/mapping.yml'
 
-    generate_and_load_test_data:
+    generate_and_load_big_report_test_data:
         class_path: cumulusci.tasks.bulkdata.generate_and_load_data_from_yaml.GenerateAndLoadDataFromYaml
         options:
             generator_yaml: datasets/big_report_recipe.yml
-            num_records: 10
+            num_records: 7_328_874
+            batch_size: 50_000
             num_records_tablename: Account
             mapping: datasets/big_report_mapping.yml
 
@@ -312,6 +313,21 @@ tasks:
                 - Campaign
                 - DataImport__c
                 - Level__c
+
+    test_data_delete_LDV_report_perf_test:
+        description: 'WARNING: Deletes all data in the objects specified in the objects option.'
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        options:
+            objects:
+                - Opportunity
+                - npe01__OppPayment__c
+                - npe03__Recurring_Donation__c
+                - Contact
+                - Account
+                - npsp__General_Accounting_Unit__c
+                - Campaign
+            hardDelete: True
+            ignore_row_errors: True
 
     test_data_relationships:
         description: 'Runs execute anonymous to insert the default relationships'
@@ -341,7 +357,7 @@ tasks:
                     new npe4__Relationship_Lookup__c(Name = 'Employer',npe4__Male__c = 'Employee', npe4__Female__c = 'Employee', npe4__Neutral__c = 'Employee'),
                     new npe4__Relationship_Lookup__c(Name = 'Employee',npe4__Male__c = 'Employer', npe4__Female__c = 'Employer', npe4__Neutral__c = 'Employer')
                 };
-                insert defaultRelationships;
+                /* insert defaultRelationships; */
 
     config_trailhead_relationships:
         description: 'Runs Anonymous Apex to insert extra relationship values for Trailhead'
@@ -922,14 +938,17 @@ flows:
 
     load_big_report_dataset:
         steps:
-            5: 
-                flow: dev_org_namespaced
             10:
                 task: disable_tdtm_trigger_handlers
                 options:
                     namespace: npsp
             15:
                 task: generate_and_load_big_report_test_data
+
+            20: 
+                task: restore_tdtm_trigger_handlers
+                options:
+                    namespace: npsp
 
     config_managed:
         steps:
