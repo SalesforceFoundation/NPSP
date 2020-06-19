@@ -13,7 +13,8 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         """ Verify we are on the opportunity details page
             by verifying that the url contains '/view'
         """
-        self.selenium.wait_until_location_contains("/lightning/r/Opportunity/",message="Current page is not a Opportunity detail view")
+        self.selenium.wait_until_location_contains("/lightning/r/Opportunity/",timeout=60,message="Current page is not a Opportunity detail view")
+        self.selenium.wait_until_page_contains("Donation Information")
 
     def ensure_opportunity_details_are_loaded(self,objectID, value):
         """ Navigate to the page with objectid mentioned
