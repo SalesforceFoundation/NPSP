@@ -37,12 +37,44 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
             self.selenium.click_link(button_name)
         else:
             self.selenium.click_button(button_name)
-    
+
+    @capture_screenshot_on_error
+    def edit_recurring_donation(self,**kwargs):
+        """From the actions dropdown select edit action and edit the fields specified in the kwargs"""
+        locator=npsp_lex_locators['bge']['button'].format("Edit")
+        edit_button=self.selenium.get_webelement(locator)
+        self.selenium.wait_until_page_contains_element(edit_button, error="Show more actions dropdown didn't open in 30 sec")
+        self.selenium.click_element(locator)
+        self.salesforce.wait_until_modal_is_open()
+        self._populate_edit_rd_form(**kwargs)
+        self.selenium.click_button("Save")
+        self.salesforce.wait_until_modal_is_closed()
+
+    @capture_screenshot_on_error
+    def _populate_edit_rd_form(self, **kwargs):
+        """Pass the field name and value as key, value pairs to populate the edit form"""
+        for key, value in kwargs.items():
+            if key == "Status":
+                self.npsp.select_value_from_dropdown(key, value)
+            else:
+                self.npsp.populate_modal_form(**kwargs)
+
+    @capture_screenshot_on_error
+    def verify_schedule_warning_messages_present(self):
+        """Verify that the schedule warning messages are present when there are no schedules"""
+        message_locator = npsp_lex_locators['erd']['text_message']
+        list_ele = self.selenium.get_webelements(message_locator)
+        p_count = len(list_ele)
+        if p_count == 2:
+            return
+        else:
+            raise Exception("Schedule warning messages do not exist")
+
     @capture_screenshot_on_error
     def validate_field_values_under_section(self, section=None, **kwargs):
         """Based on the section name , navigates to the sections and validates the key. value pair values passed in kwargs.
          If the section is current schedule, waits for the Current schedule section card on the side bar
-        Validates the display fields in the card match with the values passed in the key value pair"""
+         Validates the display fields in the card match with the values passed in the key value pair"""
         
         if section == "Current Schedule":
             active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format(section)
