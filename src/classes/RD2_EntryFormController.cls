@@ -41,11 +41,11 @@ public with sharing class RD2_EntryFormController {
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
-    @AuraEnabled
+    @AuraEnabled(Cacheable=true)
     public static Map<String, Object> getSetting(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
-            : parentId.getSObjectType().getDescribe().getName();
+            : parentId.getSobjectType().getDescribe().getName();
 
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
@@ -53,5 +53,65 @@ public with sharing class RD2_EntryFormController {
             'parentSObjectType' => parentSObjectType,
             'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY
         };
+    }
+
+    /**
+    * @description Retrieve the donor type for an existing RD record
+    * @param recordId RecurringDonation.RecordId
+    * @return Account (if Org is not a Household) or Contact
+    */
+    @AuraEnabled(Cacheable=true)
+    public static String getDonorType(String recordId) {
+        if (recordId == null) {
+            return null;
+        }
+
+        try {
+            npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+            if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
+                || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
+            ) {
+                return 'Contact';
+            }
+            return 'Account';
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /**
+    * @param recordId RecurringDonation.RecordId
+    * @return Recurring Donation object
+    */
+    private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
+        Set<String> queryFields = new Set<String>{
+            'Id',
+            'npe03__Organization__c',
+            'npe03__Organization__r.RecordTypeId',
+            'npe03__Contact__r.Account.RecordTypeId'
+        };
+
+        String soql = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere('Id = :recordId')
+            .withLimit(1)
+            .build();
+
+        return Database.query(soql);
+    }
+
+    /***
+    * @description Retrieves the record type id for the household account record type
+    */
+    @TestVisible
+    private static String hhRecordTypeId {
+        get {
+            if (hhRecordTypeId == null) {
+                hhRecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+            }
+            return hhRecordTypeId;
+        }
+        private set;
     }
 }
