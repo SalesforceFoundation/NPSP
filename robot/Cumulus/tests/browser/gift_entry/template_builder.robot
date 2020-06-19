@@ -18,17 +18,17 @@ Create Clone and Delete Template
     ...                                       Delete Template and verify that template is not avaialable for selection while creating a batch.  
     [tags]                                    feature:GE                    W-039556   
     #Create Template                             
-    Go To Page                                Custom                        GE_Gift_Entry
+    Go To Page                                Landing                        GE_Gift_Entry
     Click Link                                Templates
     Click Gift Entry Button                   Create Template
-    Wait Until Page Contains                  Gift Entry Template Information
+    Current Page Should Be                    Template                      GE_Gift_Entry
     Enter Value In Field
     ...                                       Template Name=${template}
     ...                                       Description=This is created by automation script  
     Click Gift Entry Button                   Next: Form Fields
     Click Gift Entry Button                   Next: Batch Settings
     Click Gift Entry Button                   Save & Close
-    Current Page Should Be                    Custom                        GE_Gift_Entry
+    Current Page Should Be                    Landing                        GE_Gift_Entry
     Click Link                                Templates
     Wait Until Page Contains                  ${template}
     Store Template Record Id                  ${template}
@@ -39,7 +39,7 @@ Create Clone and Delete Template
     Wait Until Page Contains                  This name has been used by another template. Please enter a unique name.
     Enter Value In Field                      Template Name=${new_template}
     Click Gift Entry Button                   Save & Close
-    Current Page Should Be                    Custom                        GE_Gift_Entry
+    Current Page Should Be                    Landing                        GE_Gift_Entry
     Click Link                                Templates
     Wait Until Page Contains                  ${new_template}
     
