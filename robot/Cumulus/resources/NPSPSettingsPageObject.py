@@ -163,6 +163,20 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 self.builtin.log("As expected Gift Entry is Disabled")
 
+    def enable_gift_entry_if_not_enabled(self):
+        """checks to make sure advanced mapping is enabled and enables gift entry if not enabled """
+        self.enable_advanced_mapping_if_not_enabled()
+        locator=npsp_lex_locators['id'].format("enableGiftEntryToggle")
+        if self.npsp.check_if_element_exists(locator):
+            ele=self.selenium.get_webelement(locator)
+            att=ele.get_attribute("checked") 
+            if att=="true":
+                self.builtin.log("Gift Entry is already enabled.")
+            else:
+                self.click_toggle_button("Gift Entry")
+                self.wait_for_message("Gift Entry Enabled")
+
+
     def check_crlp_not_enabled_by_default(self):
         """Verifies that customizable rollups settings is not enabled by default
            By checking 'Configure Customizable Rollups' is not visible on the page"""
