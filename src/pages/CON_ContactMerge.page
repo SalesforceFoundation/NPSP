@@ -204,7 +204,7 @@
                                             </td>
                                             <td>
                                                 <apex:actionRegion >
-                                                    <apex:commandlink action="{!search}" value="{!$Label.conMergeDRSPickBtnLabel}" 
+                                                    <apex:commandlink action="{!search}" value="{!$Label.conMergeDRSPickBtnLabel}"
                                                                     styleClass="slds-button slds-button_brand">
                                                         <apex:param name="DRSID" value="{!drs.Id}" assignTo="{!drsRecordId}"/>
                                                     </apex:commandlink>  
@@ -247,7 +247,8 @@
                                 <svg aria-hidden="true" class="slds-icon slds-input__icon slds-icon-text-default" viewBox="0 0 24 24">
                                     <path  d="M22.9 20.9l-6.2-6.1c1.3-1.8 1.9-4 1.6-6.4-.6-3.9-3.8-7.1-7.8-7.4C5 .4.4 5 1 10.5c.3 4 3.5 7.3 7.4 7.8 2.4.3 4.6-.3 6.4-1.5l6.1 6.1c.3.3.7.3 1 0l.9-1c.3-.3.3-.7.1-1zM3.7 9.6c0-3.2 2.7-5.9 5.9-5.9s6 2.7 6 5.9-2.7 6-6 6-5.9-2.6-5.9-6z"/>
                                 </svg>
-                                <apex:inputText value="{!searchText}" styleClass="slds-input" html-placeholder="{!$Label.conMergeSearchPlaceholder}"/>
+                                <apex:inputText value="{!searchText}" styleClass="slds-input" html-placeholder="{!$Label.conMergeSearchPlaceholder}"
+                                                html-aria-label="{!$Label.conMergeSearchPlaceholder}"/>
                             </div>
                         </div>
                     </div>
@@ -370,7 +371,7 @@
                                                         <apex:outputText rendered="{!row.selectedValue != col.objId}">
                                                             <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                         </apex:outputText>
-                                                        <span class="slds-radio_faux"></span>
+                                                        <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
                                                         <span>
                                                             <apex:outputText value="{!col.objId}"/>
                                                         </span>
@@ -408,7 +409,7 @@
                                                             <apex:outputText rendered="{!row.selectedValue != col.objId}">
                                                                 <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                             </apex:outputText>
-                                                            <span class="slds-radio_faux"></span>
+                                                            <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
                                                             <span>
                                                                 <apex:outputText value="{!col.value}"/>
                                                             </span>
@@ -417,6 +418,7 @@
                                                 </apex:outputText>
                                                 <apex:outputText rendered="{!NOT(row.showRadio)}">
                                                     <td class="slds-size_1-of-3 slds-cell-wrap">
+                                                        <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
                                                         <apex:outputText value="{!col.value}"/>
                                                     </td>
                                                 </apex:outputText>
