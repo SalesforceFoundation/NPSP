@@ -1702,6 +1702,8 @@
         <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_EntryFormDonationSectionHeader</members>
         <members>RD2_EntryFormDonorSectionHeader</members>
+        <members>RD2_EntryFormDonorTypeHelpText</members>
+        <members>RD2_EntryFormDonorTypeLabel</members>
         <members>RD2_EntryFormHeader</members>
         <members>RD2_EntryFormInsertSuccessMessage</members>
         <members>RD2_EntryFormOtherSectionHeader</members>
@@ -3709,6 +3711,7 @@
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>rd2EntryForm</members>
+        <members>rd2EntryFormDonorSection</members>
         <members>rd2EntryFormScheduleSection</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>

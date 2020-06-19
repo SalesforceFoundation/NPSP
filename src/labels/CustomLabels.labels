@@ -1984,6 +1984,22 @@
         <value>Donor Information</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormDonorTypeHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Inline HelpText for the Donor Type picklist</shortDescription>
+        <value>Select the type of donor for this Recurring Donation. If you select Account, enter an Organization Account, and optionally a related Contact. If you select Contact, enter a Contact related to a Household Account.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorTypeLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Label for the Donor Type picklist</shortDescription>
+        <value>Donor Type</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>

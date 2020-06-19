@@ -32,24 +32,34 @@
                             <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
                         </h3>
                         <div aria-hidden="false" class="slds-section__content">
-                            <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                                    <lightning-input-field field-name={fields.contact.apiName} value={contactId}>
-                                    </lightning-input-field>
-                                </lightning-layout-item>
 
-                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                                    <lightning-input-field field-name={fields.account.apiName} value={accountId}>
-                                    </lightning-input-field>
-                                </lightning-layout-item>
+                            <c-rd2-entry-form-donor-section record-id={recordId} parent-id={parentId} data-id="donorComponent"></c-rd2-entry-form-donor-section>
 
-                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                                    <lightning-input-field field-name={fields.dateEstablished.apiName} required>
-                                    </lightning-input-field>
-                                </lightning-layout-item>
-                            </lightning-layout>
                         </div>
                     </div>
+
+                    <template if:true={isEdit}>
+                        <div class="slds-section slds-is-open">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small">Status Information</span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content">
+
+                                <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                    <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                                        <lightning-input-field field-name={fields.status.apiName} required>
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
+
+                                    <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                                        <lightning-input-field field-name={fields.statusreason.apiName}>
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+
+                            </div>
+                        </div>
+                    </template>
 
                     <div class="slds-section slds-is-open">
                         <h3 class="slds-section__title slds-theme_shade">
@@ -60,6 +70,11 @@
                             <lightning-layout horizontal-align="spread" multiple-rows="true">
                                 <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
                                     <lightning-input-field field-name={fields.amount.apiName} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                                    <lightning-input-field field-name={fields.paymentMethod.apiName}>
                                     </lightning-input-field>
                                 </lightning-layout-item>
 
@@ -76,7 +91,7 @@
                                 </lightning-layout-item>
                             </lightning-layout>
 
-                            <c-rd2-entry-form-schedule-section record-id={recordId}></c-rd2-entry-form-schedule-section>
+                            <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"></c-rd2-entry-form-schedule-section>
                         </div>
                     </div>
 
