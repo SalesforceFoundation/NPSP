@@ -424,3 +424,18 @@ Enable RD2
     Run Keyword if            "${rd2_enabled}"!="True"
     ...                       Enable RD2QA
 
+API Get Id
+    [Documentation]         Returns the ID of a record identified by the given field_name and field_value input for a specific object
+    [Arguments]             ${obj_name}    &{fields}
+    @{records} =            Salesforce Query      ${obj_name}
+    ...                         select=Id
+    ...                         &{fields}
+    &{Id} =                 Get From List  ${records}  0
+    [return]                &{Id}[Id]
+
+Enable Gift Entry
+    [Documentation]    This keyword enables advanced mapping(prerequisite) and gift entry if not already enabled.
+    Go To Page                              Custom          NPSP_Settings
+    Open Main Menu                          System Tools
+    Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
+    Enable Gift Entry If Not Enabled    
