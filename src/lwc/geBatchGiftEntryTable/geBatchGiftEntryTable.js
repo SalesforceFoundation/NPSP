@@ -18,6 +18,7 @@ import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 import commonOpen from '@salesforce/label/c.commonOpen';
 import { isNotEmpty, isUndefined } from 'c/utilCommon';
+import GeLabelService from 'c/geLabelService';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -51,7 +52,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     };
     _columnsBySourceFieldApiName = {};
-
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api title;
     @api total;
@@ -333,6 +334,19 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             });
             this.dispatchEvent(selectColumns);
         }
+    }
+
+    get tableMenuQaLocator() {
+        return 'button Show menu';
+    }
+
+    get selectBatchTableColumnsQaLocator() {
+        return `link ${this.CUSTOM_LABELS.geSelectBatchTableColumns}`;
+
+    }
+
+    get selectBatchTableColumns() {
+        return this.CUSTOM_LABELS.geSelectBatchTableColumns;
     }
 
 }

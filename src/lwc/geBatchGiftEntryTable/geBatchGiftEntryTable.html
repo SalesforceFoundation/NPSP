@@ -25,9 +25,13 @@
                                                    variant="border-filled"
                                                    icon-name="utility:settings"
                                                    menu-alignment="right"
-                                                   onselect={handleMenuItemSelect}>
-                                <lightning-menu-item value="selectcolumns"
-                                                     label="Select Batch Table Columns"></lightning-menu-item>
+                                                   onselect={handleMenuItemSelect}
+                                                   data-qa-locator={tableMenuQaLocator}>
+                                <lightning-menu-item
+                                        value="selectcolumns"
+                                        label={selectBatchTableColumns}
+                                        data-qa-locator={selectBatchTableColumnsQaLocator}>
+                                </lightning-menu-item>
                             </lightning-button-menu>
                         </div>
                     </lightning-layout-item>
