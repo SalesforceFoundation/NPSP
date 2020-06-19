@@ -281,6 +281,7 @@ npsp_lex_locators={
     'erd':{
         'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",
         'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
+        'text_message':'//span[contains(@class,"slds-text-color_error")]',
         'rd2_installed': "//c-progress-ring/following-sibling::lightning-formatted-text[text() = 'Enable Enhanced Recurring Donations']",
         'installment_date' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr[{}]/th//span/div/lightning-formatted-date-time",
         'formatted_number':"//lightning-formatted-text[text() = '{}']/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-number",
