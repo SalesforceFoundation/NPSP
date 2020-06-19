@@ -722,14 +722,12 @@ tasks:
                 - path: src/package.xml
                   xpath: /ns:Package/ns:types/ns:members
                             [../ns:name='FeatureParameterBoolean' or ../ns:name='FeatureParameterInteger']
-                            [.='PilotEnabled' or
-                            .='Org_LongestRunningBatchLast7Days']
+                            [.='Data_CountGERowsLast30DaysBatch']
 
     delete_feature_parameter_files:
         class_path: cumulusci.tasks.util.Delete
         options:
-            path: ["*/*/Org_LongestRunningBatchLast7Days.featureParameterInteger",
-                    "*/*/PilotEnabled.featureParameterBoolean"]
+            path: ["*/*/Data_CountGERowsLast30DaysBatch.featureParameterInteger"]
 
 flows:
     config_dev:
