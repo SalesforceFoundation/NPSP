@@ -100,8 +100,7 @@
     </apex:form>
 
     <script>
-        const doesNotHaveAccess = {!hasAccess} === false;
-        if (doesNotHaveAccess) {
+        if ({!NOT(hasAccess)}) {
             $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
                 $Lightning.createComponent(
                     "{!namespace}" + ":utilIllustration",
