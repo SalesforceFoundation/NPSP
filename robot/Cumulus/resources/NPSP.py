@@ -1580,4 +1580,16 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if self.npsp.check_if_element_exists(locator):
             isPresent = True
         return isPresent
+
+    def click_special_button(self,title):
+        """This keyword is similar to click button but uses set focus to button and javascript
+        In the cases where javascript is being triggered on moving away from field, 
+        click button doesn't seem to work in headless mode"""
+        locator=npsp_lex_locators['button-with-text'].format(title)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.scroll_element_into_view(locator)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+
+
     
