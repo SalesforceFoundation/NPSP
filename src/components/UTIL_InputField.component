@@ -14,7 +14,7 @@
     <!-- NOTE: When using a variable for determining readonly or field type in combination with conditionally rendering output panels, some field values do not save -->
     <apex:variable var="ftype" value="{!$ObjectType[sObjType].fields[field].type}"/>
 
-    <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label=""
+    <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label="" html-aria-label="{!$ObjectType[sObjType].fields[field].label}"
         styleClass="{!CASE(ftype,
                                 'textarea', 'slds-textarea',
                                 'picklist', 'slds-select',
