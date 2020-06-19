@@ -237,6 +237,18 @@ pre {
                 <td class="kwdoc"><p>checks value of a field in details page(section without header)</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Check If Element Displayed">
+                <td class="kwname">
+                  Check If Element Displayed
+                </td>
+                <td class="kwargs">
+                  
+                  <i>xpath</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Check for the visibility of an element based on the xpath sent</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Check If Element Exists">
                 <td class="kwname">
                   Check If Element Exists
@@ -287,6 +299,18 @@ pre {
                   
                 </td>
                 <td class="kwdoc"></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Check Submenu Link Exists">
+                <td class="kwname">
+                  Check Submenu Link Exists
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Checks for the presence of the submenu item under the main menu</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Checkbox Status">
@@ -581,7 +605,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>title</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Clicks on more actions dropdown and click the given title</p></td>
@@ -1769,7 +1795,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>value</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>verifies if actual row count matches with expected value</p></td>
@@ -2191,6 +2219,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 </pre></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.robot.API Get Id">
+                <td class="kwname">
+                  API Get Id
+                </td>
+                <td class="kwargs">
+                  
+                  <i>obj_name</i>, 
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Returns the ID of a record identified by the given field_name and field_value input for a specific object</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.robot.API Modify Allocations Setting">
                 <td class="kwname">
                   API Modify Allocations Setting
@@ -2263,6 +2305,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 </table></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.robot.API Query Opportunity For Recurring Donation">
+                <td class="kwname">
+                  API Query Opportunity For Recurring Donation
+                </td>
+                <td class="kwargs">
+                  
+                  <i>id</i>, 
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.robot.Capture Screenshot and Delete Records and Close Browser">
                 <td class="kwname">
                   Capture Screenshot and Delete Records and Close Browser
@@ -2301,6 +2357,56 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 <td>parameters to identify button</td>
 </tr>
 </table></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Enable Advanced Mapping">
+                <td class="kwname">
+                  Enable Advanced Mapping
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>This keyword enables advanced mapping if not already enabled.</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Enable Customizable Rollups">
+                <td class="kwname">
+                  Enable Customizable Rollups
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Go to NPSP Settings and check if Customizable Rollups are enabled if enabled does nothing but if disabled then enables.</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Enable Gift Entry">
+                <td class="kwname">
+                  Enable Gift Entry
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>This keyword enables advanced mapping(prerequisite) and gift entry if not already enabled.</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Enable RD2">
+                <td class="kwname">
+                  Enable RD2
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Checks if Rd2 settings are already enabled and then run the scripts to enable RD2</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Enable RD2QA">
+                <td class="kwname">
+                  Enable RD2QA
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Enables Enhanced Recurring donations (RD2) settings and deploys the metadata</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Open NPSP Settings">
@@ -2377,6 +2483,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 <td>pixels to scroll by, along the y-axis(vertical)</td>
 </tr>
 </table></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Validate And Create Required CustomField">
+                <td class="kwname">
+                  Validate And Create Required CustomField
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Reads key value pair arguments. Go to Object Manager page and load fields and relationships for the specific object Run keyword to create custom field based on the field type selection</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Validate Batch Process When CRLP Checked">
@@ -2910,6 +3028,22 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Obtains the status message displayed on the relationships section of contact details page Validates it against the expected status message Note: Pass contact1,contact2, relation in a desired pattern to format as contact1 is contact2's relation</p></td>
               </tr>
               
+              <tr class="kwrow" id="ContactPageObject.py.Verify Rollup Field Value">
+                <td class="kwname">
+                  Verify Rollup Field Value
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field_name</i>, 
+                  
+                  <i>value</i>, 
+                  
+                  <i>section=None</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies if the given rollup field contains given value if it doesn't, then recalculates rollup and performs refresh</p></td>
+              </tr>
+              
               <tr class="kwrow" id="ContactPageObject.py.Waitfor Actions Dropdown And Click Option">
                 <td class="kwname">
                   Waitfor Actions Dropdown And Click Option
@@ -3047,6 +3181,149 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>verify page contains page_name and select frame identified with page_name</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/CustomizableRollupsPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/CustomizableRollupsPageObject.py'>CustomizableRollupsPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/CustomizableRollupsPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-CustomRollupSettings">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>CustomRollupSettings</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>CustomizableRollupsPageObject.CustomRollupSettingsPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Clone Rollup">
+                <td class="kwname">
+                  Clone Rollup
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>If new rollup doesn't exist - Clone an existing rollup, enter arguments passed  and create new rollup If new rollup exists - logs that rollup already exists</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Create New Rollup Setting">
+                <td class="kwname">
+                  Create New Rollup Setting
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Wait for the Iframe to be available and switch to the Frame. Confirm that a rollup setting of the same type does not exist Click on new and create a new rollup settings record</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Is Setting Present">
+                <td class="kwname">
+                  Is Setting Present
+                </td>
+                <td class="kwargs">
+                  
+                  <i>object</i>, 
+                  
+                  <i>name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Search for the presence of an active crlp setting record already. Return a boolean value accordingly</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Navigate To Crlpsettings">
+                <td class="kwname">
+                  Navigate To Crlpsettings
+                </td>
+                <td class="kwargs">
+                  
+                  <i>filter_name=None</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Click on the Navigate CRLP Button and wait for the page to load</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Populate Crlp Form">
+                <td class="kwname">
+                  Populate Crlp Form
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Pass the field name and value as key, value pairs to populate the rollups form</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Select From List">
+                <td class="kwname">
+                  Select From List
+                </td>
+                <td class="kwargs">
+                  
+                  <i>key</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Selects the specified value from the dropdown identified with key on rollups form</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Verify Rollup Exists">
+                <td class="kwname">
+                  Verify Rollup Exists
+                </td>
+                <td class="kwargs">
+                  
+                  <i>label</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verifies if the rollup with label exists and active, if doesn't exist raises exception</p></td>
               </tr>
               
             </tbody>
@@ -3593,7 +3870,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
         
 
         
-        <div class="section" pageobject="Custom-GE_Gift_Entry">
+        <div class="section" pageobject="Form-Gift Entry">
 
           
           <div class='pageobject-header'>
@@ -3601,7 +3878,107 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
             <table class='pageobject-header'>
               <tbody>
 	        <tr class='data'>
-	          <td title='Page Type'>Custom</td>
+	          <td title='Page Type'>Form</td>
+	          <td title='Object Name'>Gift Entry</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>GiftEntryPageObject.GiftEntryFormPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Click Field Value Link">
+                <td class="kwname">
+                  Click Field Value Link
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field_name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>clicks on the link present in the given field</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Fill Gift Entry Form">
+                <td class="kwname">
+                  Fill Gift Entry Form
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Fill the gift entry form fields with specified values. Key is field name and value is value to be entered for field</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Error For Field">
+                <td class="kwname">
+                  Verify Error For Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verify that the given field contains specified error message Key should be field name and value should be the error message expected for field</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Field Default Value">
+                <td class="kwname">
+                  Verify Field Default Value
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verifies that the field contains given default value where key=field name and value=default value</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Gift Count">
+                <td class="kwname">
+                  Verify Gift Count
+                </td>
+                <td class="kwargs">
+                  
+                  <i>count</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verify that the no. of gifts on the page match with count</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Landing-GE_Gift_Entry">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Landing</td>
 	          <td title='Object Name'>GE_Gift_Entry</td>
 	        </tr>
 	        <tr class='labels'>
@@ -3613,7 +3990,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
           </div>
           
 
-          <div class='description' title='Description'><p>Documentation for library <code>GiftEntryPageObject.GiftEntryPage</code>.</p></div>
+          <div class='description' title='Description'><p>Documentation for library <code>GiftEntryPageObject.GiftEntryLandingPage</code>.</p></div>
           <table class="kwtable" title='Table of keywords'>
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
@@ -3628,18 +4005,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>clicks on Gift Entry button identified with title</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="GiftEntryPageObject.py.Enter Value In Field">
-                <td class="kwname">
-                  Enter Value In Field
-                </td>
-                <td class="kwargs">
-                  
-                  <i>**kwargs</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Enter value in specified field</p></td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Get Template Record Id">
@@ -3665,18 +4030,16 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 <p>The current page object is also returned as an object</p></td>
               </tr>
               
-              <tr class="kwrow" id="GiftEntryPageObject.py.Select Object Group Field">
+              <tr class="kwrow" id="GiftEntryPageObject.py.Select Template">
                 <td class="kwname">
-                  Select Object Group Field
+                  Select Template
                 </td>
                 <td class="kwargs">
                   
-                  <i>object_group</i>, 
-                  
-                  <i>field</i>
+                  <i>template</i>
                   
                 </td>
-                <td class="kwdoc"><p>Select the specified field under specified object group to add the field to gift entry form and verify field is added</p></td>
+                <td class="kwdoc"><p>selects the specified template while creating a new batch</p></td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Select Template Action">
@@ -3715,6 +4078,98 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Verify that a gift template is not available for selection while creating a new batch</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Template-GE_Gift_Entry">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Template</td>
+	          <td title='Object Name'>GE_Gift_Entry</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>GiftEntryPageObject.GiftEntryTemplatePage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Add Field Bundle To New Section">
+                <td class="kwname">
+                  Add Field Bundle To New Section
+                </td>
+                <td class="kwargs">
+                  
+                  <i>bundle</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Adds the specified field bundle to the template builder form if not already added</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Enter Value In Field">
+                <td class="kwname">
+                  Enter Value In Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Enter value in specified field</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Fill Template Form">
+                <td class="kwname">
+                  Fill Template Form
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Add default values to template builder form fields or set fields as required. Key is field main label name and value is again another dictionary of field type and value ex: Payment: Payment Method is Main Label with Default Value as field type and ChecK is value</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Select Object Group Field">
+                <td class="kwname">
+                  Select Object Group Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Select the specified field under specified object group to add the field to gift entry form and verify field is added</p></td>
               </tr>
               
             </tbody>
@@ -4142,6 +4597,34 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Verifies that customizable rollups settings is not enabled by default By checking 'Configure Customizable Rollups' is not visible on the page</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Check Metadeploy Exists">
+                <td class="kwname">
+                  Check Metadeploy Exists
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Check if the rd2 metadeploy link is enabled</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Check Rd2 Is Enabled">
+                <td class="kwname">
+                  Check Rd2 Is Enabled
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies that Enhanced Recurring Donations is enabled on the org</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Click Configure Advanced Mapping">
                 <td class="kwname">
                   Click Configure Advanced Mapping
@@ -4202,6 +4685,30 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Checks if advanced mapping is Enabled and enables if not enabled</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Enable Customizable Rollups If Not Enabled">
+                <td class="kwname">
+                  Enable Customizable Rollups If Not Enabled
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Checks if advanced mapping is Enabled and enables if not enabled</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Enable Gift Entry If Not Enabled">
+                <td class="kwname">
+                  Enable Gift Entry If Not Enabled
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>checks to make sure advanced mapping is enabled and enables gift entry if not enabled</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Log Current Page Object">
@@ -4307,6 +4814,111 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
         
       </div>
       
+      <div class="file" id="file-robot/Cumulus/resources/ObjectMangerPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/ObjectMangerPageObject.py'>ObjectMangerPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/ObjectMangerPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Custom-ObjectManager">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Custom</td>
+	          <td title='Object Name'>ObjectManager</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>ObjectMangerPageObject.ObjectManagerPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Create Currency Field">
+                <td class="kwname">
+                  Create Currency Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field_name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates a currency field by taking in the field name</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Create Custom Field">
+                <td class="kwname">
+                  Create Custom Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates a custom field based on type paramenter and the field_name</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Create Lookup Field">
+                <td class="kwname">
+                  Create Lookup Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field_name</i>, 
+                  
+                  <i>related</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates a Lookpup field by taking in the inputs field_name and related field</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Open Fields And Relationships">
+                <td class="kwname">
+                  Open Fields And Relationships
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>To go to object manager page for a specific object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
       <div class="file" id="file-robot/Cumulus/resources/OpportunityContactRolePageObject.py">
         <div class='file-header'>
           <h2 title='robot/Cumulus/resources/OpportunityContactRolePageObject.py'>OpportunityContactRolePageObject.py</h2>
@@ -4391,6 +5003,22 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
           <table class="kwtable" title='Table of keywords'>
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="OpportunityPageObject.py.Change Related Contact Role Settings">
+                <td class="kwname">
+                  Change Related Contact Role Settings
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>, 
+                  
+                  <i>role=None</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Loads the related contact from opportunity, waits for the modal and updates the role and primary settings</p></td>
+              </tr>
               
               <tr class="kwrow" id="OpportunityPageObject.py.Ensure Opportunity Details Are Loaded">
                 <td class="kwname">
@@ -4627,6 +5255,34 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Clicks on more actions dropdown and click the given title</p></td>
               </tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Field Values Under Section">
+                <td class="kwname">
+                  Validate Field Values Under Section
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Based on the section name , navigates to the sections and validates the key. value pair values passed in kwargs. If the section is current schedule, waits for the Current schedule section card on the side bar Validates the display fields in the card match with the values passed in the key value pair</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Upcoming Schedules">
+                <td class="kwname">
+                  Validate Upcoming Schedules
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Takes in the parameter (number of payments) and the donation start date verifies that the payment schedules created on UI reflect the total number verifies that the next payment dates are reflected correctly for all the schedules</p></td>
+              </tr>
+              
             </tbody>
           </table>
         </div> 
@@ -4840,7 +5496,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Thursday May 14, 06:39 PM - cumulusci v3.12.2
+      Generated on Wednesday June 17, 11:56 AM - cumulusci v3.13.2
     </div>
   </body>
 </html>
