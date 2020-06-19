@@ -56,6 +56,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
             menuAlignment: 'auto'
         }
     };
+    _columnsBySourceFieldApiName = {};
 
     @api title;
     @api total;
