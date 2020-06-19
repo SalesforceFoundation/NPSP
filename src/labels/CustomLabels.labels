@@ -2053,7 +2053,7 @@
         <categories>Recurring-Donations, Pause</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error message when trying to pause Closed Recurring Donation</shortDescription>
+        <shortDescription>Error message when trying to pause Closed Recurring Donation.</shortDescription>
         <value>You can&apos;t Pause a Closed Recurring Donation</value>
     </labels>
     <labels>
@@ -2078,7 +2078,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2 Pause first donation date after the pause</shortDescription>
-        <value>The first donation date after the pause period will be {0}</value>
+        <value>The first donation date after the pause period will be {0}.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -7465,7 +7465,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Description for Disable Health Check Record Batch Setting</shortDescription>
-        <value>If selected, health check only checks your NPSP configuration settings for problems.</value>
+        <value>If selected, Health Check only checks your NPSP configuration settings for problems.</value>
     </labels>
     <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
