@@ -208,22 +208,25 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                 self.salesforce._jsclick(checkbox)  
 
     def add_batch_table_columns(self,*args):
-        """Adds specified batch columns to the visible section if they are not not already added"""
+        """Adds specified batch columns to the visible section if they are not already added"""
         mylist=[]
         for i in args:
             locator=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",i)
             if self.npsp.check_if_element_exists(locator):
                 mylist.append(i)
         print(mylist)
-        for field in mylist:
-            locator = npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",field)
-            if mylist.index(field)==0:
-                self.selenium.click_element(locator)
-            else:
-                self.selenium.click_element(locator,'COMMAND')   
-        self.selenium.click_button("Move selection to Visible Fields")   
-        verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",mylist[0])
-        self.selenium.wait_until_page_does_not_contain_element(verify_field)          
+        if len(mylist)==0:
+            return
+        else:
+            for field in mylist:
+                locator = npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",field)
+                if mylist.index(field)==0:
+                    self.selenium.click_element(locator)
+                else:
+                    self.selenium.click_element(locator,'COMMAND')   
+            self.selenium.click_button("Move selection to Visible Fields")   
+            verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",mylist[0])
+            self.selenium.wait_until_page_does_not_contain_element(verify_field)          
 
 
     
