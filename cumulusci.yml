@@ -1140,6 +1140,12 @@ flows:
             5:
                 flow: config_trailhead_playground
 
+    install_regression:
+        steps:
+            3:
+                options:
+                    security_type: PUSH
+
     create_testing_user:
         description: Creates a testing User assigned a new NPSP_Standard_User profile with access to all NPSP objects & fields. Perfect for testing security with a non-system admin type User. Use with the "qa_org" flow.
         group: NPSP
