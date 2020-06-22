@@ -2,7 +2,8 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
-import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
+import getRecurringSettings from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
+import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
 
 import picklistLabelAdvanced from '@salesforce/label/c.RD2_EntryFormPeriodAdvanced';
 import customPeriodHelpText from '@salesforce/label/c.RD2_EntryFormPeriodHelpText';
@@ -73,9 +74,26 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     connectedCallback() {
         if (isNull(this.recordId)) {
             this.isNew = true;
+
+        } else {
+            getRecurringData({recordId: this.recordId})
+                .then(response => {
+                    this.customPeriod = response.Period;
+                    this.inputFieldInstallmentFrequency = response.Frequency;
+                    if (response.Period !== PERIOD_MONTHLY
+                        || (response.Period === PERIOD_MONTHLY && this.inputFieldInstallmentFrequency > 1)
+                    ) {
+                        this.customPeriod = RECURRING_PERIOD_ADVANCED;
+                    }
+                    this.updateScheduleUIFormat(this.customPeriod, response.Period);
+                })
+                .catch((error) => {
+                    const errorMessage = constructErrorMessage(error);
+                    showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
+                });
         }
 
-        getSetting({ parentId: null })
+        getRecurringSettings({ parentId: null })
             .then(response => {
                 this.dayOfMonthLastDay = response.dayOfMonthLastDay;
             })
@@ -236,14 +254,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     onHandleRecurringPeriodChange(event) {
         let recurringPeriod = event.target.value;
-        if (recurringPeriod === PERIOD_MONTHLY) {
-            this.isAdvancedMode = false;
-            this.showDayOfMonth = true;
-            this.scheduleRowColumnSize = 6;
-        } else { // RECURRING_PERIOD_ADVANCED
-            this.isAdvancedMode = true;
-            this.scheduleRowColumnSize = 3;
-        }
+        this.updateScheduleUIFormat(recurringPeriod, this.customPeriodAdvancedMode);
     }
 
     /**
@@ -253,12 +264,30 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     onHandleAdvancedPeriodChange(event) {
         let advancedPeriod = event.target.value;
-        if (advancedPeriod === PERIOD_MONTHLY) {
+        this.updateScheduleUIFormat(this.customPeriod, advancedPeriod);
+    }
+
+    updateScheduleUIFormat(customPeriod, advancedPeriod) {
+        this.customPeriod = customPeriod;
+        this.customPeriodAdvancedMode = advancedPeriod;
+
+        if (customPeriod === PERIOD_MONTHLY) {
+            this.isAdvancedMode = false;
             this.showDayOfMonth = true;
-            this.scheduleRowColumnSize = 3;
-        } else {
-            this.showDayOfMonth = false;
-            this.scheduleRowColumnSize = 4;
+            this.scheduleRowColumnSize = 6;
+
+        } else if (customPeriod === RECURRING_PERIOD_ADVANCED) {
+            this.isAdvancedMode = true;
+            this.showDayOfMonth = (this.customPeriodAdvancedMode === PERIOD_MONTHLY);
+            this.scheduleRowColumnSize = (this.showDayOfMonth ? 3 : 4);
+
+            if (advancedPeriod === PERIOD_MONTHLY) {
+                this.showDayOfMonth = true;
+                this.scheduleRowColumnSize = 3;
+            } else {
+                this.showDayOfMonth = false;
+                this.scheduleRowColumnSize = 4;
+            }
         }
     }
 

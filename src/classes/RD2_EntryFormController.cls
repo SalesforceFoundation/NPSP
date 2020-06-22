@@ -38,11 +38,11 @@ public with sharing class RD2_EntryFormController {
 
     /**
     * @description  Gather the org setting for Recurring Donation Entry Form
-    * @param parentId The parentId of the new RD
+    * @param parentId The parentId to use when creating the new RD record (if New from Acount or Contact)
     * @return Map<String, Object>
     */
     @AuraEnabled(Cacheable=true)
-    public static Map<String, Object> getSetting(Id parentId) {
+    public static Map<String, Object> getRecurringSettings(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
             : parentId.getSobjectType().getDescribe().getName();
@@ -58,25 +58,34 @@ public with sharing class RD2_EntryFormController {
     /**
     * @description Retrieve the donor type for an existing RD record
     * @param recordId RecurringDonation.RecordId
-    * @return Account (if Org is not a Household) or Contact
+    * @return Map<String, Object> of specific type of RD data
     */
     @AuraEnabled(Cacheable=true)
-    public static String getDonorType(String recordId) {
+    public static Map<String, Object> getRecurringData(String recordId) {
         if (recordId == null) {
             return null;
         }
 
+        npe03__Recurring_Donation__c rd;
+        Map<String, Object> response = new Map<String, Object>();
         try {
-            npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
-            if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
-                || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
-            ) {
-                return 'Contact';
-            }
-            return 'Account';
+            rd = getRecurringDonation(recordId);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
+
+        if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
+            || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
+        ) {
+            response.put('DonorType', 'Contact');
+        } else {
+            response.put('DonorType', 'Account');
+        }
+
+        response.put('Period', rd.npe03__Installment_Period__c);
+        response.put('Frequency', rd.InstallmentFrequency__c);
+
+        return response;
     }
 
     /**
@@ -86,6 +95,8 @@ public with sharing class RD2_EntryFormController {
     private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
         Set<String> queryFields = new Set<String>{
             'Id',
+            'npe03__Installment_Period__c',
+            'InstallmentFrequency__c',
             'npe03__Organization__c',
             'npe03__Organization__r.RecordTypeId',
             'npe03__Contact__r.Account.RecordTypeId'

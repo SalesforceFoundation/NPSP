@@ -25,7 +25,7 @@ import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHea
 import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccessMessage';
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
 
-import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
+import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 
 export default class rd2EntryForm extends LightningElement {
 

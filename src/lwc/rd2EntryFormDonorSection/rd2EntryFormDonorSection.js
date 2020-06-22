@@ -2,8 +2,8 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
-import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
-import getDonorType from '@salesforce/apex/RD2_entryFormController.getDonorType';
+import getRecurringSettings from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
+import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -48,9 +48,9 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      */
     connectedCallback() {
         if (!isNull(this.recordId)) {
-            getDonorType({recordId: this.recordId})
+            getRecurringData({recordId: this.recordId})
                 .then(response => {
-                    this.donorType = response;
+                    this.donorType = response.DonorType;
                     this.updateDonorFields(this.donorType);
                 })
                 .catch((error) => {
@@ -61,7 +61,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
             this.donorType = this.DEFAULT_DONOR_TYPE;
         }
 
-        getSetting({ parentId: this.parentId })
+        getRecurringSettings({ parentId: this.parentId })
             .then(response => {
                 this.handleParentIdType(response.parentSObjectType);
             })

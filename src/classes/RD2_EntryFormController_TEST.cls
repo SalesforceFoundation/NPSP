@@ -45,7 +45,7 @@ private with sharing class RD2_EntryFormController_TEST {
         Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
-        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getSetting(accountId);
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
         Test.stopTest();
 
         System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, ((Boolean) orgSettingsByKey.get('isAutoNamingEnabled')),
@@ -76,7 +76,8 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        String donorType = RD2_EntryFormController.getDonorType(rd.Id);
+        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
+        String donorType = (String)response.get('DonorType');
         Test.stopTest();
 
         System.assertEquals('Account', donorType);
@@ -100,7 +101,8 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        String donorType = RD2_EntryFormController.getDonorType(rd.Id);
+        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
+        String donorType = (String)response.get('DonorType');
         Test.stopTest();
 
         System.assertEquals('Contact', donorType);
