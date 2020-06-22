@@ -2029,7 +2029,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Inline Help Text for the Monthly and Advanced Picklist</shortDescription>
-        <value>TBD</value>
+        <value>Select &quot;Advanced&quot; to enter other schedule types such as weekly, yearly, or &quot;every 3 months&quot;.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormPeriodLabel</fullName>
