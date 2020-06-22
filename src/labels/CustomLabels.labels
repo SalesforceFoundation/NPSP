@@ -2016,6 +2016,70 @@
         <value>Recurring Donation &quot;{0}&quot; was created.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormPeriodAdvanced</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Picklist value for the RD2 Entry Form custom period picklist</shortDescription>
+        <value>Advanced</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Inline Help Text for the Monthly and Advanced Picklist</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Label for the Monthly and Advanced Picklist</shortDescription>
+        <value>Recurring Period</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralDaily</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Daily</shortDescription>
+        <value>Days</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralMonthly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Monthly</shortDescription>
+        <value>Months</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralWeekly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Weekly</shortDescription>
+        <value>Weeks</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralYearly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Yearly</shortDescription>
+        <value>Years</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormScheduleEveryLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show as Every</shortDescription>
+        <value>Every</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormUpdateSuccessMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>

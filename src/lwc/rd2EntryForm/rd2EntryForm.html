@@ -73,25 +73,29 @@
                                     </lightning-input-field>
                                 </lightning-layout-item>
 
+                                <template if:true={isMultiCurrencyEnabled}>
+                                    <lightning-layout-item padding="horizontal-small" size="4" small-device-size="6">
+                                            <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
+                                                <label for="currencyField"
+                                                       class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                                <lightning-input-field id="currencyField" field-name={fields.currency.apiName}
+                                                                       variant="label-hidden" required>
+                                                </lightning-input-field>
+                                            </div>
+                                    </lightning-layout-item>
+                                </template>
+
+                            </lightning-layout>
+
+                            <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"></c-rd2-entry-form-schedule-section>
+
+                            <lightning-layout horizontal-align="spread" multiple-rows="true">
                                 <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
                                     <lightning-input-field field-name={fields.paymentMethod.apiName}>
                                     </lightning-input-field>
                                 </lightning-layout-item>
-
-                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                                    <template if:true={isMultiCurrencyEnabled}>
-                                        <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
-                                            <label for="currencyField"
-                                                   class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                            <lightning-input-field id="currencyField" field-name={fields.currency.apiName}
-                                                                   variant="label-hidden" required>
-                                            </lightning-input-field>
-                                        </div>
-                                    </template>
-                                </lightning-layout-item>
                             </lightning-layout>
 
-                            <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"></c-rd2-entry-form-schedule-section>
                         </div>
                     </div>
 
