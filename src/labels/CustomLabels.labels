@@ -7447,7 +7447,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <fullName>healthLabelDataBatchNotRun</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>Error message when Data Health Check does not run</shortDescription>
         <value>Record data health checks were not run.</value>
     </labels>
@@ -7455,7 +7455,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <fullName>healthLabelDisableRecordBatch</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>Custom Setting label to disable Sobject batch</shortDescription>
         <value>Disable Record Data Health Checks</value>
     </labels>
@@ -7463,7 +7463,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <fullName>healtLabelDisableRecordBatchDescription</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>Description for Disable Health Check Record Batch Setting</shortDescription>
         <value>If selected, Health Check only checks your NPSP configuration settings for problems.</value>
     </labels>
