@@ -258,7 +258,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             this.scheduleRowColumnSize = 3;
         } else {
             this.showDayOfMonth = false;
-            this.scheduleRowColumnSize = 3;
+            this.scheduleRowColumnSize = 4;
         }
     }
 
