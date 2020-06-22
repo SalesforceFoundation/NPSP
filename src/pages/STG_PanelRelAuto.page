@@ -3,7 +3,7 @@
 
     <script>
         if(!{!hasAccess}) {
-            $Lightning.use("c:STG_PanelRelAutoApp", function() {
+            $Lightning.use("c:RD2_EnablementApp", function() {
                 $Lightning.createComponent("c:utilIllustration",
                     {   title : "{!$Label.commonAdminPermissionErrorTitle}",
                         message : "{!$Label.commonPermissionErrorMessage}",
