@@ -2,10 +2,8 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
-...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/CustomizableRollupsPageObject.py
-...             robot/Cumulus/resources/ObjectMangerPageObject.py
 Suite Setup     Run Keywords
 ...             Open Test Browser
 ...             Setup Test Data
