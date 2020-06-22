@@ -12,6 +12,7 @@ class PaymentPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         self.selenium.wait_until_location_contains("/lightning/r/npe01__OppPayment__c",message="Current page is not a payment detail view")
+        self.selenium.wait_until_page_contains("Check/Reference Number",timeout=60)
     
     
     def verify_payment_allocations(self, **kwargs):

@@ -5513,6 +5513,32 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>For more advanced gift entry options, select fields from the following Object Groups.</value>
     </labels>
     <labels>
+        <fullName>geBodyBatchTableColumnsPart1</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Batch Table Columns, part 1</shortDescription>
+        <value>The batch table appears under your gift entry form and lists the gifts included in the batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchTableColumnsPart2</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Batch Table Columns, part 2</shortDescription>
+        <!-- "Donor Name" and "Donation Name" texts in this label have related custom labels. -->
+        <!-- Related custom labels are geDonorColumnLabel annd geDonationColumnLabel -->
+        <value>
+        We recommend including the following fields:
+        &lt;/br&gt;
+        &lt;ul&gt;
+            &lt;li&gt; Donor Name—links to the Organization Account or Contact giving the donation. &lt;/li&gt;
+            &lt;li&gt; Donation Name—links to the Opportunity or Payment for the donation. &lt;/li&gt;
+            &lt;li&gt; Status and Failure Information—information about batch processing. &lt;/li&gt;
+        &lt;/ul&gt;
+        </value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchFieldBundleInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5742,8 +5768,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button to continue and configure the batch header</shortDescription>
-        <value>Next: Batch Header</value>
+        <shortDescription>Button to continue and configure the batch settings</shortDescription>
+        <value>Next: Batch Settings</value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavFormFields</fullName>
@@ -5918,8 +5944,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for column in batch gift entry table that links to the matched Gift.</shortDescription>
-        <value>Donation</value>
+        <shortDescription>Label for batch gift table column that links to gift (Opportunity or Payment)</shortDescription>
+        <value>Donation Name</value>
     </labels>
     <labels>
         <fullName>geErrorAmountDoesNotMatch</fullName>
@@ -5942,8 +5968,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
-        <value>Donor</value>
+        <shortDescription>Label for batch gift table column that links to the Account or Contact.</shortDescription>
+        <value>Donor Name</value>
     </labels>
     <labels>
         <fullName>geEnableGiftEntrySuccess</fullName>
@@ -6033,6 +6059,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Body of full page error when insufficient access to all objects on the form</shortDescription>
         <value>Check with your Salesforce admin about your object access. You must have permission to edit the following objects: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFLSBatchTableColumns</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Additional information about why a user can't update batch table columns</shortDescription>
+        <value>You're unable to modify your Batch Table Columns.</value>
     </labels>
     <labels>
         <fullName>geErrorFLSHeader</fullName>
@@ -6629,6 +6663,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for Batch Header navigation subtab</shortDescription>
         <value>Batch Header</value>
+    </labels>
+    <labels>
+        <fullName>geTabBatchSettings</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Batch Settings tab</shortDescription>
+        <value>Batch Settings</value>
+    </labels>
+    <labels>
+        <fullName>geTabBatchTableColumns</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Batch Table Columns</shortDescription>
+        <value>Batch Table Columns</value>
     </labels>
     <labels>
         <fullName>geTabFormFields</fullName>
