@@ -1,12 +1,12 @@
-import {api, track} from 'lwc';
-import {deleteRecord} from 'lightning/uiRecordApi';
+import { api, track } from 'lwc';
+import { deleteRecord } from 'lightning/uiRecordApi';
 
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 
-import {handleError} from 'c/utilTemplateBuilder';
-import {isNotEmpty} from 'c/utilCommon';
+import { handleError } from 'c/utilTemplateBuilder';
+import { isNotEmpty, isUndefined } from 'c/utilCommon';
 import GeListView from 'c/geListView';
 import GeFormService from 'c/geFormService';
 
@@ -25,6 +25,8 @@ import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c
 
 export default class GeBatchGiftEntryTable extends GeListView {
     @api batchId;
+    @api userDefinedBatchTableColumnNames;
+    @track columnsByFieldApiName = {};
     @track ready = false;
 
     _batchLoaded = false;
@@ -32,25 +34,24 @@ export default class GeBatchGiftEntryTable extends GeListView {
     @track hasData = false;
 
     _columnsLoaded = false;
-    @track columns = [];
     _columns = [
-        {label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text'},
-        {label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text'},
+        { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
+        { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
         {
             label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
-            typeAttributes: {label: {fieldName: 'donorName'}}
+            typeAttributes: { label: { fieldName: 'donorName' } }
         },
         {
             label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
-            typeAttributes: {label: {fieldName: 'matchedRecordLabel'}}
+            typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
         }
     ];
     _actionsColumn = {
         type: 'action',
         typeAttributes: {
             rowActions: [
-                {label: commonOpen, name: 'open'},
-                {label: bgeActionDelete, name: 'delete'}
+                { label: commonOpen, name: 'open' },
+                { label: bgeActionDelete, name: 'delete' }
             ],
             menuAlignment: 'auto'
         }
@@ -75,7 +76,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
     }
 
     loadBatch = () => {
-        getDataImportModel({batchId: this.batchId})
+        getDataImportModel({ batchId: this.batchId })
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
@@ -105,16 +106,40 @@ export default class GeBatchGiftEntryTable extends GeListView {
 
     @api
     handleSectionsRetrieved(sections) {
-        let columns = this.buildColumns((sections));
-        this.initColumns(columns);
+        if (!this._columnsLoaded) {
+            this.buildColumns(sections);
+        }
     }
 
-    initColumns(userDefinedColumns) {
-        this.columns = [
-            ...this._columns,
-            ...userDefinedColumns,
-            this._actionsColumn];
-        this.columnsLoaded();
+    get computedColumns() {
+        if (!this._columnsLoaded) return [];
+
+        const hasUserDefinedColumns =
+            this.userDefinedBatchTableColumnNames &&
+            this.userDefinedBatchTableColumnNames.length > 0;
+
+        if (hasUserDefinedColumns) {
+            return [...this.retrieveUserDefinedColumns(), this._actionsColumn];
+        }
+
+        return [...this.retrieveAllColumns(), this._actionsColumn]
+    }
+
+    retrieveAllColumns() {
+        let allColumns = [];
+        for (const columnValue in this.columnsByFieldApiName) {
+            allColumns.push(this.columnsByFieldApiName[columnValue]);
+        }
+        return allColumns;
+    }
+
+    retrieveUserDefinedColumns() {
+        let userDefinedColumns = [];
+        this.userDefinedBatchTableColumnNames.forEach(columnName => {
+            if (isUndefined(this.columnsByFieldApiName[columnName])) return;
+            userDefinedColumns.push(this.columnsByFieldApiName[columnName]);
+        });
+        return userDefinedColumns;
     }
 
     buildColumns(sections) {
@@ -132,7 +157,37 @@ export default class GeBatchGiftEntryTable extends GeListView {
                 });
         });
 
-        return this.buildNameFieldColumns(fieldApiNames);
+        this.buildColumnsByFieldApiNamesMap(fieldApiNames);
+        this.columnsLoaded();
+    }
+
+    /**
+    * @description Builds a map of all possible columns based on form fields
+    *              in the gift entry form. This map is used to return the relevant
+    *              columns based on the user defined list of table headers or
+    *              all columns if a user defined list couldn't be found.
+    */
+    buildColumnsByFieldApiNamesMap(fieldApiNames) {
+        const columns = this.buildNameFieldColumns(fieldApiNames);
+        columns.forEach(column => {
+            this.columnsByFieldApiName[column.fieldApiName] = column;
+        });
+        this.addSpecialCasedColumns();
+    }
+
+    /**
+    * @description Adds special cased columns to the map of columns. These
+    *              four special cased fields are the Donor, Donation, Status,
+    *              Failure Information fields. Donor and Donation are derived
+    *              fields and constructed in the BGE_DataImportBatchEntry_CTRL
+    *              class. Status and Failure Information are fields on the
+    *              DataImport__c object.
+    */
+    addSpecialCasedColumns() {
+        this.columnsByFieldApiName[this._columns[0].fieldName] = this._columns[0];
+        this.columnsByFieldApiName[this._columns[1].fieldName] = this._columns[1];
+        this.columnsByFieldApiName[this._columns[2].fieldName] = this._columns[2];
+        this.columnsByFieldApiName[this._columns[3].fieldName] = this._columns[3];
     }
 
     columnsLoaded() {
@@ -168,8 +223,8 @@ export default class GeBatchGiftEntryTable extends GeListView {
                 deleteRecord(event.detail.row.Id).then(() => {
                     this.deleteDIRow(event.detail.row);
                 }).catch(error => {
-                        handleError(error);
-                    }
+                    handleError(error);
+                }
                 );
                 break;
         }
@@ -197,13 +252,13 @@ export default class GeBatchGiftEntryTable extends GeListView {
             this.isLoading = false;
         }.bind(event.target);
 
-        getDataImportRows({batchId: this.batchId, offset: this.data.length})
+        getDataImportRows({ batchId: this.batchId, offset: this.data.length })
             .then(rows => {
                 rows.forEach(row => {
-                        this.data.push(
-                            Object.assign(row, row.record)
-                        );
-                    }
+                    this.data.push(
+                        Object.assign(row, row.record)
+                    );
+                }
                 );
                 this.data = [...this.data];
                 if (this.data.length >= this.count) {
