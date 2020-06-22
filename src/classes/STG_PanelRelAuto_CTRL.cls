@@ -53,6 +53,10 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description Check if the running user has full access to the npe4__Relationship_Auto_Create__c sObject
+    * @return Boolean
+    */
     public Boolean getHasAccess() {
         String autoCreateObjectName = Schema.SObjectType.npe4__Relationship_Auto_Create__c.getName();
 
