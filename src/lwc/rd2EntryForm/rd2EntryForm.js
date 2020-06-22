@@ -105,8 +105,6 @@ export default class rd2EntryForm extends LightningElement {
 
             if (isNull(this.recordId)) {
                 this.isRecordReady = true;
-            } else {
-                this.isEdit = true;
             }
         }
 
@@ -163,6 +161,7 @@ export default class rd2EntryForm extends LightningElement {
             this.record = response.data;
             this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
             this.isRecordReady = true;
+            this.isEdit = true;
         }
 
         if (response.error) {
