@@ -2080,6 +2080,14 @@
         <value>Every</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormStatusSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Status Information section header</shortDescription>
+        <value>Status Information</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormUpdateSuccessMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>

@@ -1715,6 +1715,7 @@
         <members>RD2_EntryFormPeriodPluralWeekly</members>
         <members>RD2_EntryFormPeriodPluralYearly</members>
         <members>RD2_EntryFormScheduleEveryLabel</members>
+        <members>RD2_EntryFormStatusSectionHeader</members>
         <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>

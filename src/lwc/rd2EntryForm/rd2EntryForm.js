@@ -22,6 +22,7 @@ import editHeaderLabel from '@salesforce/label/c.commonEdit';
 import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHeader';
 import scheduleSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
 import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHeader';
+import statusSectionHeader from '@salesforce/label/c.RD2_EntryFormStatusSectionHeader';
 import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccessMessage';
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
 
@@ -37,6 +38,7 @@ export default class rd2EntryForm extends LightningElement {
         donorSectionHeader,
         otherSectionHeader,
         scheduleSectionHeader,
+        statusSectionHeader,
         currencyFieldLabel
     });
 

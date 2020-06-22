@@ -6,20 +6,6 @@
 
             <template if:false={isLoading}>
 
-                <!--
-                If the viewport is divided into 12 parts, size indicates the relative space the container occupies
-
-                If you specify the size and small-device-size attributes, the size attribute applies to small mobile phones,
-                and the small-device-size applies to smart phones. The device sizing attributes are additive and apply to
-                devices of the specified size and larger. For example, if you set medium-device-size=10 and don't set
-                large-device-size, then the medium-device-size setting applies to tablets, desktops, and larger devices.
-                You'd also have to set size to apply to devices smaller than tablets.
-                -->
-                <!--
-                -- large-Device-Size: Larger than a smart phone
-                -- Size: Smart Phone and smaller
-                -->
-
                 <lightning-layout horizontal-align="spread" multiple-rows="true">
 
                     <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
@@ -52,18 +38,6 @@
                         >
                         </lightning-combobox>
                     </lightning-layout-item>
-
-                    <!--FULL SIZE-->
-                    <!--Second Row (Monthly Default): Day of Month, Effective Date //// large=6 -->
-                    <!--Second Row (Advanced Non-Monthly): Frequency, Period, Effective Date //// large=4 -->
-                    <!--Second Row (Advanced Monthly): Frequency, Period, Day of Month, Effective Date //// large=3 -->
-
-                    <!--MOBILE-->
-                    <!--Second Row (Monthly Default): Day of Month, Effective Date //// Size=6 -->
-                    <!--Second Row (Advanced Non-Monthly): Frequency, Period, Effective Date //// Size=6 -->
-                    <!--Third Row (Advanced Non-Monthly): Effective Date -->
-                    <!--Second Row (Advanced Monthly): Frequency, Period, Day of Month, Effective Date -->
-                    <!--Third Row (Advanced Monthly): Day of Month, Effective Date -->
 
                     <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}>
                         <template if:true={isAdvancedMode}>
