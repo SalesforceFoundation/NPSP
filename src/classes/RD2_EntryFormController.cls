@@ -60,7 +60,7 @@ public with sharing class RD2_EntryFormController {
     * @param recordId RecurringDonation.RecordId
     * @return Map<String, Object> of specific type of RD data
     */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled
     public static Map<String, Object> getRecurringData(String recordId) {
         if (recordId == null) {
             return null;
