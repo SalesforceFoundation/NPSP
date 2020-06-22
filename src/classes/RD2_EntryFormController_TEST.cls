@@ -72,15 +72,19 @@ private with sharing class RD2_EntryFormController_TEST {
             .withAccount(a.Id)
             .withAmount(25)
             .withDefaultValues()
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1')
             .build();
         insert rd;
 
         Test.startTest();
         Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
         String donorType = (String)response.get('DonorType');
+        String period = (String)response.get('Period');
         Test.stopTest();
 
         System.assertEquals('Account', donorType);
+        System.assertEquals('Monthly', period);
     }
 
     /***
@@ -97,15 +101,22 @@ private with sharing class RD2_EntryFormController_TEST {
             .withContact(c.Id)
             .withAmount(25)
             .withDefaultValues()
+            .withInstallmentPeriodWeekly()
+            .withDayOfMonth('1')
+            .withInstallmentFrequency(2)
             .build();
         insert rd;
 
         Test.startTest();
         Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
         String donorType = (String)response.get('DonorType');
+        String period = (String)response.get('Period');
+        Integer frequency = Integer.valueOf(response.get('Frequency'));
         Test.stopTest();
 
         System.assertEquals('Contact', donorType);
+        System.assertEquals('Weekly', period);
+        System.assertEquals(2, frequency);
     }
 
 }
