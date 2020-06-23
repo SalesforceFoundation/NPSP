@@ -180,18 +180,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDoNotChargeCardState, this);
 
-        // get the form template before we return in batch mode
-        // so the donationFieldTemplateLabel gets set
-        const formTemplatePromise = GeFormService.getFormTemplate();
+        GeFormService.getFormTemplate().then(response => {
+            if (this.batchId) {
+                // When the form is being used for Batch Gift Entry, the Form Template JSON
+                // uses the @wire service below to retrieve the Template using the Template Id
+                // stored on the Batch.
+                return;
+            }
 
-        if (this.batchId) {
-            // When the form is being used for Batch Gift Entry, the Form Template JSON
-            // uses the @wire service below to retrieve the Template using the Template Id
-            // stored on the Batch.
-            return;
-        }
-
-        formTemplatePromise.then(response => {
             // check if there is a record id in the url
             this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
             this.donorApiName = getQueryParameters().c__apiName;
