@@ -134,16 +134,16 @@ private with sharing class ALLO_Allocations_TEST {
         Account acc = new Account(Name='Account-pmtAlloPercentCheck');
         insert acc;
         Opportunity opp = new Opportunity(
-            Name = 'Opp-pmtAlloPercentCheck', 
-            Amount = 100, 
-            AccountID = acc.Id, 
-            CloseDate = System.today(), 
+            Name = 'Opp-pmtAlloPercentCheck',
+            Amount = 100,
+            AccountID = acc.Id,
+            CloseDate = System.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
         insert opp;
 
         List<General_Accounting_Unit__c> gauForInsert = new List<General_Accounting_Unit__c>();
-        
+
         General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name='GAU-1');
         gauForInsert.add(gau1);
         General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU-2');
@@ -172,18 +172,18 @@ private with sharing class ALLO_Allocations_TEST {
         // Make sure the percent value carried through to the Payment Allocation
         System.assertEquals(34, queryAllo[0].Percent__c, 'The allocation percentage should be 34%.');
         System.assertEquals(2.62, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
-    
+
         queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
 
         System.assertEquals(33, queryAllo[0].Percent__c, 'The allocation percentage should be 33%.');
         System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
 
-        // This Allocation did not have a Percent set, but it should now    
+        // This Allocation did not have a Percent set, but it should now
         queryAllo = getAllocationsOrderByPercent(pmt.Id, gau3.Id);
 
         System.assertEquals(33, queryAllo[0].Percent__c, 'The allocation percentage should be 33%.');
         System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
-    
+
         queryAllo = getAllocationsOrderByPercent(pmt.Id, defaultGau.Id);
         System.assertEquals(queryAllo.size(), 0, 'This payment should be fully allocated without the Default GAU');
 
@@ -208,16 +208,16 @@ private with sharing class ALLO_Allocations_TEST {
         Account acc = new Account(Name='Account-pmtAlloPercentCheck');
         insert acc;
         Opportunity opp = new Opportunity(
-            Name = 'Opp-pmtAlloPercentCheck', 
-            Amount = 100.01, 
-            AccountID = acc.Id, 
-            CloseDate = System.today(), 
+            Name = 'Opp-pmtAlloPercentCheck',
+            Amount = 100.01,
+            AccountID = acc.Id,
+            CloseDate = System.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
         insert opp;
 
         List<General_Accounting_Unit__c> gauForInsert = new List<General_Accounting_Unit__c>();
-        
+
         General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name='GAU-1');
         gauForInsert.add(gau1);
         General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU-2');
@@ -243,7 +243,7 @@ private with sharing class ALLO_Allocations_TEST {
         // Make sure the percent value carried through to the Payment Allocation
         System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
         System.assertEquals(50, queryAllo[0].Amount__c, 'The amount of the allocation should be calculated based on the parent Opportunity allocation.');
-    
+
         queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
 
         System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
@@ -663,7 +663,7 @@ private with sharing class ALLO_Allocations_TEST {
             .withScheduleTypeMultiplyValue()
             .withOpenEndedStatusOpen()
             .build();
-            
+
         // this initial creation of the RD with default allocations set up, which get copied to the opp
         // will be what we soql limit profile in this test (and thus the startTest/stopTest).
         Test.startTest();
@@ -1089,6 +1089,228 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Tests that Allocations are updated and preserved when changing a Payment from a
+    * non zero to a zero amount, and that default allocation is removed
+    ********************************************************************************************************/
+    @isTest
+    private static void changePaymentAmountFromNonZeroToZeroshouldResizePercentAllocations() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id,
+            Payment_Allocations_Enabled__c = true
+        ));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 10, null, null);
+
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>();
+
+        for (Opportunity opp :opps) {
+            pmts.add(
+                new npe01__OppPayment__c(
+                    npe01__Opportunity__c = opp.Id,
+                    npe01__Payment_Amount__c = 10.00,
+                    npe01__Scheduled_Date__c = System.today()
+                )
+            );
+        }
+
+        insert pmts;
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            createPmtAllocation(gau1.Id, pmts[0].Id, null, 50)
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            createPmtAllocation(gau2.Id, pmts[0].Id, 0, null)
+        );
+
+        insert newAllos;
+
+        Map<Id, Allocation__c> allosByGAU = getPaymentAllocationsByGAU(pmts[0].Id);
+
+        System.assertEquals(3, allosByGAU.size(), '# of Allocations Before Pmt Amount Changes');
+
+        Allocation__c defAlloc = allosByGAU.get(defaultGAU.Id);
+        System.assertEquals (5, defAlloc.Amount__c, 'Default Allocation Amount');
+
+        Test.startTest();
+
+        for (npe01__OppPayment__c pmt : pmts) {
+            pmt.npe01__Payment_Amount__c = 0;
+        }
+
+        update pmts;
+
+        Test.stopTest();
+
+        allosByGAU = getPaymentAllocationsByGAU(pmts[0].Id);
+
+        System.assertEquals(2, allosByGAU.size(), '# of Allocations');
+
+        Allocation__c alloc0 = allosByGAU.get(gau1.Id);
+        Allocation__c alloc1 = allosByGAU.get(gau2.Id);
+
+        System.assertEquals(0, alloc0.Amount__c, 'Allocation 0 Amount');
+        System.assertEquals(50, alloc0.Percent__c, 'Allocation 0 Percent');
+        System.assertEquals(0, alloc1.Amount__c, 'Allocation 1 Amount');
+        System.assertEquals(null, alloc1.Percent__c, 'Allocation 1 Percent');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that Default Allocation is removed if Payment Amount changes from non zero to zero
+    *              and only Default Allocation was present
+    ********************************************************************************************************/
+    @isTest
+    private static void changePaymentAmountFromNonZeroToZeroshouldRemoveDefaultAllocation() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id,
+            Payment_Allocations_Enabled__c = true
+        ));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 10, null, null);
+
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>();
+
+        for (Opportunity opp :opps) {
+            pmts.add(
+                new npe01__OppPayment__c(
+                    npe01__Opportunity__c = opp.Id,
+                    npe01__Payment_Amount__c = 10.00,
+                    npe01__Scheduled_Date__c = System.today()
+                )
+            );
+        }
+
+        insert pmts;
+
+        Map<Id, Allocation__c> allosByGAU = getPaymentAllocationsByGAU(pmts[0].Id);
+
+        System.assertEquals(1, allosByGAU.size(), '# of Allocations Before Pmt Amount Changes');
+
+        Allocation__c defAlloc = allosByGAU.get(defaultGAU.Id);
+        System.assertEquals (10, defAlloc.Amount__c, 'Default Allocation Amount');
+
+        Test.startTest();
+
+        for (npe01__OppPayment__c pmt : pmts) {
+            pmt.npe01__Payment_Amount__c = 0;
+        }
+
+        update pmts;
+
+        Test.stopTest();
+
+        allosByGAU = getPaymentAllocationsByGAU(pmts[0].Id);
+
+        System.assertEquals(0, allosByGAU.size(), '# of Allocations');
+    }
+
+
+    /**
+    * @description Tests that the default Allocation is created with a zero amount when default
+    * Allocations are created and the Payment Amount is 0 via ALLO_ALLOCATION_TDTM trigger
+    */
+    @isTest
+    private static void defaultAllocationsForZeroAmountPaymentShouldRemainOnCreate() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        insert defaultGau;
+
+        General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
+        insert otherGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id,
+            Payment_Allocations_Enabled__c = true
+        ));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 10, null, null);
+
+        for (Opportunity opp : opps) {
+            // We will create the payment after Opportunity Allocations are set.
+            opp.npe01__Do_Not_Automatically_Create_Payment__c = true;
+        }
+
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>();
+
+        for (Opportunity opp :opps) {
+            pmts.add(
+                new npe01__OppPayment__c(
+                    npe01__Opportunity__c = opp.Id,
+                    npe01__Payment_Amount__c = 0.00,
+                    npe01__Scheduled_Date__c = System.today()
+                )
+            );
+        }
+
+        Test.startTest();
+
+        insert pmts;
+
+        Test.stopTest();
+
+        list<Allocation__c>  allos = [SELECT    Id,
+                                                Amount__c,
+                                                General_Accounting_Unit__c,
+                                                Payment__c
+                                      FROM Allocation__c
+                                      WHERE Payment__c = :pmts[0].Id];
+        System.assertEquals(1, allos.size(), 'One allocation should be present.');
+        System.assertEquals(0, allos[0].Amount__c, 'Allocation Amount');
+        System.assertEquals(defaultGau.Id, allos[0].General_Accounting_Unit__c, 'Allocation should be for the default');
+        System.assertEquals(pmts[0].Id, allos[0].Payment__c, 'Payment');
+    }
+
+    /*******************************************************************************************************
     * @description Tests that an error is generated if Opportunity Amount is 0 and a non zero fixed
     * Amount Allocation is added
     ********************************************************************************************************/
@@ -1141,10 +1363,107 @@ private with sharing class ALLO_Allocations_TEST {
         Test.stopTest();
     }
 
+    /**
+     * @description Tests that an error is generated if Payment Amount is 0 and a non zero fixed
+     * Amount Allocation is added
+     */
+    @isTest
+    private static void generateErrorForNonZeroFixedAmountAllocationIfPaymentAmountIsZero() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
 
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'GAU 2');
+        gaus.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'GAU 3');
+        gaus.add(gau3);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id,
+            Payment_Allocations_Enabled__c = true
+        ));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(),20, null, null);
+
+        for (Opportunity opp : opps) {
+            // We will create the payment after Opportunity Allocations are set.
+            opp.npe01__Do_Not_Automatically_Create_Payment__c = true;
+        }
+
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>();
+
+        for (Opportunity opp :opps) {
+            pmts.add(
+                new npe01__OppPayment__c(
+                    npe01__Opportunity__c = opp.Id,
+                    npe01__Payment_Amount__c = 20,
+                    npe01__Scheduled_Date__c = System.today()
+                )
+            );
+        }
+
+        insert pmts;
+
+        Test.startTest();
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Percentaage Allocation for 50% to GAU 1
+        newAllos.add(
+            createPmtAllocation(gau1.Id, pmts[0].Id, null, 50)
+        );
+
+        // Fix Amount Allocation for $0 to GAU 2
+        newAllos.add(
+            createPmtAllocation(gau2.Id, pmts[0].Id, 10, null)
+        );
+
+        insert newAllos;
+
+        for (npe01__OppPayment__c pmt :pmts) {
+            pmt.npe01__Payment_Amount__c = 0;
+        }
+
+        try{
+            update pmts;
+            System.assert(false, 'Expected an exception due to Payment being Overallocated.');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(Label.alloExceedsPmtAmount), 'Expected Exception Text: ' + Label.alloExceedsPmtAmount + '; Actual: ' + e.getMessage());
+        }
+
+        Test.stopTest();
+    }
 
     // Helpers
     ////////////
+
+    /**
+     * @description Gets a List of Allocations associated with a particular Payment
+     *              and builds a map by GAU of them.  Assumes only one allocation per
+     *              Payment and GAU, since it is a test
+     * @param  paymentId Payment Id to retrieve Allocations for
+     * @return Allocations By GAU Id
+     */
+    private static Map<Id, Allocation__c> getPaymentAllocationsByGAU(Id paymentId) {
+        List<Allocation__c> allocs = Database.query(getPaymentAllocationsQuery(paymentId).build());
+        Map<Id, Allocation__c> allocsByGAU = new Map<Id, Allocation__c>();
+
+        for (Allocation__c alloc : allocs) {
+            allocsByGAU.put(alloc.General_Accounting_Unit__c, alloc);
+        }
+        return allocsByGAU;
+    }
 
     /*********************************************************************************************************
     * @description Get all Allocations ordered by Amount
@@ -1201,6 +1520,16 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Build query to retrieve Allocation by payment Id
+    * @param paymentId A npe01__OppPayment__c Id
+    * @return UTIL_Query Allocation SOQL
+    **********************************************************************************************************/
+    private static UTIL_Query getPaymentAllocationsQuery(Id paymentId) {
+        return getAllocationsQuery()
+            .withWhere(String.format('Payment__c = \'\'{0}\'\'', new String[] { paymentId }));
+    }
+
+    /*********************************************************************************************************
     * @description Build query to retrieve Allocation by payment Id and GAU
     * @param paymentId A npe01__OppPayment__c Id
     * @param gauId A General_Accounting_Unit__c Id
@@ -1233,6 +1562,8 @@ private with sharing class ALLO_Allocations_TEST {
             .withFrom('Allocation__c');
     }
 
+
+
     /*********************************************************************************************************
     * @description Return a new opportunity allocation with the provided parameters
     * @param gauId A General_Accounting_Unit__c Id
@@ -1243,7 +1574,24 @@ private with sharing class ALLO_Allocations_TEST {
     **********************************************************************************************************/
     private static Allocation__c createOppAllocation(Id gauId, Id oppId, Decimal amt, Double percent) {
         return new Allocation__c(
-            Opportunity__c = oppId, 
+            Opportunity__c = oppId,
+            General_Accounting_Unit__c = gauId,
+            Percent__c = percent,
+            Amount__c = amt
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Return a new payment allocation with the provided parameters
+    * @param gauId A General_Accounting_Unit__c Id
+    * @param pmtId A Payment Id
+    * @param amt An Allocation amount
+    * @param percent An Allocation percent
+    * @return Allocation__c Allocation record with provided parameters filled in
+    **********************************************************************************************************/
+    private static Allocation__c createPmtAllocation(Id gauId, Id pmtId, Decimal amt, Double percent) {
+        return new Allocation__c(
+            Payment__c = pmtId,
             General_Accounting_Unit__c = gauId,
             Percent__c = percent,
             Amount__c = amt
