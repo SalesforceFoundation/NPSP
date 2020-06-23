@@ -29,7 +29,7 @@ Setup Test Data
 
 Calculate CRLPs for Total Gifts On Multiple Opportunities
     [Documentation]             This test case is aimed at validating that the customizable rollup "Total Gifts" is active by default when the CRLP setting is turned
-    ...                         And veifies that the rollup is actually happening
+    ...                         And verifies that the rollup is actually happening
     [tags]                      unstable     feature:Customizable Rollups      W-041873
 
 
