@@ -45,7 +45,7 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     */
     public String getNamespace() {
         String namespace = UTIL_Namespace.getNamespace();
-        if (namespace == null || namespace == '') return 'c';
+        if (String.isBlank(namespace)) return 'c';
         return namespace;
     }
 
