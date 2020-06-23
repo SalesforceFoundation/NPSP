@@ -22,7 +22,7 @@ Setup Test Data
 &{contact1_fields}        Email=rollup@example.com
 &{opportunity1_fields}    Type=Donation   Name=Auto Payment test $100 Donation1   Amount=100   StageName=Closed Won
 &{opportunity2_fields}    Type=Donation   Name=Auto Payment test $100 Donation2   Amount=100   StageName=Closed Won
-&{opportunity3_fields}    Type=Donation   Name=Auto Payment test $100 Donation2   Amount=100   StageName=Closed Won
+&{opportunity3_fields}    Type=Donation   Name=Auto Payment test $100 Donation3   Amount=100   StageName=Closed Won
 
 
 *** Test Cases ***
