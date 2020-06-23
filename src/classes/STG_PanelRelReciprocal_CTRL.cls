@@ -45,7 +45,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     */
     public String getNamespace() {
         String namespace = UTIL_Namespace.getNamespace();
-        if (namespace == null || namespace == '') return 'c';
+        if (String.isEmpty(namespace)) return 'c';
         return namespace;
     }
 
@@ -54,7 +54,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     */
     public Boolean getHasAccess() {
         String relationshipObjectName = Schema.SObjectType.npe4__Relationship_Lookup__c.getName();
-        return UTIL_Permissions.canRead(relationshipObjectName) &&
+        return UTIL_Permissions.canRead(relationshipObjectName, false) &&
             UTIL_Permissions.canCreate(relationshipObjectName, false) &&
             UTIL_Permissions.canUpdate(relationshipObjectName, false) &&
             UTIL_Permissions.canDelete(relationshipObjectName, false);
