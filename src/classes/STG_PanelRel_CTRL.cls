@@ -54,7 +54,7 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     */
     public Boolean getHasAccess() {
         String relationshipObjectName = Schema.SObjectType.Relationship_Sync_Excluded_Fields__c.getName();
-        return UTIL_Permissions.canRead(relationshipObjectName) &&
+        return UTIL_Permissions.canRead(relationshipObjectName, false) &&
             UTIL_Permissions.canCreate(relationshipObjectName, false) &&
             UTIL_Permissions.canUpdate(relationshipObjectName, false) &&
             UTIL_Permissions.canDelete(relationshipObjectName, false);
