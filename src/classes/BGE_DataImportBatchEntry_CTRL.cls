@@ -59,9 +59,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     @AuraEnabled
     public static String deleteDataImportRow(Id batchId, Id dataImportId) {
+        Boolean canDelete = UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
+        if(!canDelete) {
+            throw new AuraHandledException('' /* Label.commonPermissionErrorMessage */);
+        }
+        
         try {
             delete new DataImport__c(Id = dataImportId);
-
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
             return JSON.serialize(dataImportModel);
         } catch (Exception ex) {
@@ -159,7 +163,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     'WHERE npe01__Written_Off__c = false) ' +
                 'FROM Opportunity ' +
                 'WHERE ' + relationshipField + ' = :donorId ' +
-                'AND IsClosed = false';
+                'AND IsClosed = false ' +
+                'WITH SECURITY_ENFORCED';
 
         try {
             List<OpportunityWrapper> opportunityWrappers = new List<OpportunityWrapper>();
@@ -167,7 +172,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 opportunityWrappers.add(new OpportunityWrapper(opportunity));
             }
             return JSON.serialize(opportunityWrappers);
-        } catch (Exception ex){
+        } catch (QueryException ex) {
+            // could be thrown for insufficient access rights on cross-reference id, or malformed query too
+            throw new AuraHandledException('' /* Label.commonPermissionErrorMessage */);
+        } catch (Exception ex) {
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
         }
     }
