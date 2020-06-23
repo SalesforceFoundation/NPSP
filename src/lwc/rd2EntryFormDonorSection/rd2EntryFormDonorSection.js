@@ -15,6 +15,9 @@ import FIELD_CONTACT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03
 
 import donorTypeLabel from '@salesforce/label/c.RD2_EntryFormDonorTypeLabel';
 import donorTypeHelpText from '@salesforce/label/c.RD2_EntryFormDonorTypeHelpText';
+import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
+import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
+
 
 export default class rd2EntryFormDonorSection extends LightningElement {
 
@@ -22,7 +25,9 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
     customLabels = Object.freeze({
         donorTypeLabel,
-        donorTypeHelpText
+        donorTypeHelpText,
+        flsErrorHeader,
+        flsErrorDetail
     });
 
     // These are exposed to the parent component
@@ -197,9 +202,13 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Construct field describe info from the Recurring Donation SObject info
      */
     setFields(fieldInfos) {
-        this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
-        this.fields.account = this.extractFieldInfo(fieldInfos[FIELD_ACCOUNT.fieldApiName]);
-        this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
+        try {
+            this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
+            this.fields.account = this.extractFieldInfo(fieldInfos[FIELD_ACCOUNT.fieldApiName]);
+            this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
+        } catch (error) {
+            showToast(this.customLabels.flsErrorHeader, this.customLabels.flsErrorDetail, 'error', 'sticky', []);
+        }
     }
 
     /**

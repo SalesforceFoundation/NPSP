@@ -1706,6 +1706,7 @@
         <members>RD2_EntryFormDonorTypeLabel</members>
         <members>RD2_EntryFormHeader</members>
         <members>RD2_EntryFormInsertSuccessMessage</members>
+        <members>RD2_EntryFormMissingPermissions</members>
         <members>RD2_EntryFormOtherSectionHeader</members>
         <members>RD2_EntryFormPeriodAdvanced</members>
         <members>RD2_EntryFormPeriodHelpText</members>

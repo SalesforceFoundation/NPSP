@@ -13,6 +13,8 @@ import periodPluralMonths from '@salesforce/label/c.RD2_EntryFormPeriodPluralMon
 import periodPluralWeeks from '@salesforce/label/c.RD2_EntryFormPeriodPluralWeekly';
 import periodPluralYears from '@salesforce/label/c.RD2_EntryFormPeriodPluralYearly';
 import fieldLabelEvery from '@salesforce/label/c.RD2_EntryFormScheduleEveryLabel';
+import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
+import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
@@ -41,7 +43,9 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         periodPluralDays,
         periodPluralMonths,
         periodPluralWeeks,
-        periodPluralYears
+        periodPluralYears,
+        flsErrorHeader,
+        flsErrorDetail
     });
 
     isNew = false;
@@ -63,6 +67,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
     rdObjectInfo;
     dayOfMonthLastDay;
+
+    @track disablePeriodPicklistField;
+    @track disableInstallmentFrequencyField;
+
     @track advancedPeriodPicklistValues;
 
     @track recurringTypeColumnSize = 6;
@@ -76,6 +84,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             this.isNew = true;
 
         } else {
+            /**
+             * @description Retrieve the RD Schedule related fields from apex to configure the custom picklist values
+             * and field visibility rules accordingly.
+             */
             getRecurringData({recordId: this.recordId})
                 .then(response => {
                     this.customPeriod = response.Period;
@@ -85,7 +97,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                     ) {
                         this.customPeriod = RECURRING_PERIOD_ADVANCED;
                     }
-                    this.updateScheduleUIFormat(this.customPeriod, response.Period);
+                    this.updateScheduleFieldVisibility(this.customPeriod, response.Period);
                 })
                 .catch((error) => {
                     const errorMessage = constructErrorMessage(error);
@@ -93,9 +105,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                 });
         }
 
+        /**
+         * @description Retrieve special RD settings and permissions from Apex that cannot be retrieved effecively here.
+         */
         getRecurringSettings({ parentId: null })
             .then(response => {
                 this.dayOfMonthLastDay = response.dayOfMonthLastDay;
+                this.disablePeriodPicklistField = this.shouldDisableField(response.InstallmentPeriodPermissions);
+                this.disableInstallmentFrequencyField = this.shouldDisableField(response.InstallmentFrequencyPermissions);
             })
             .catch((error) => {
                 // handleError(error);
@@ -151,12 +168,17 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     * @description Construct field describe info from the Recurring Donation SObject info
     */
     setFields(fieldInfos) {
-        this.fields.recurringType = this.extractFieldInfo(fieldInfos[FIELD_RECURRING_TYPE.fieldApiName]);
-        this.fields.period = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_PERIOD.fieldApiName]);
-        this.fields.installmentFrequency = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
-        this.fields.dayOfMonth = this.extractFieldInfo(fieldInfos[FIELD_DAY_OF_MONTH.fieldApiName]);
-        this.fields.startDate = this.extractFieldInfo(fieldInfos[FIELD_START_DATE.fieldApiName]);
-        this.fields.plannedInstallments = this.extractFieldInfo(fieldInfos[FIELD_PLANNED_INSTALLMENTS.fieldApiName]);
+        try {
+            this.fields.recurringType = this.extractFieldInfo(fieldInfos[FIELD_RECURRING_TYPE.fieldApiName]);
+            this.fields.period = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_PERIOD.fieldApiName]);
+            this.fields.installmentFrequency = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
+            this.fields.dayOfMonth = this.extractFieldInfo(fieldInfos[FIELD_DAY_OF_MONTH.fieldApiName]);
+            this.fields.startDate = this.extractFieldInfo(fieldInfos[FIELD_START_DATE.fieldApiName]);
+            this.fields.plannedInstallments = this.extractFieldInfo(fieldInfos[FIELD_PLANNED_INSTALLMENTS.fieldApiName]);
+        } catch (error) {
+            showToast(this.customLabels.flsErrorHeader, this.customLabels.flsErrorDetail, 'error', 'sticky', []);
+        }
+
     }
 
     /**
@@ -172,19 +194,20 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /***
-    * @description Set Installment Frequency to 1 for a new Recurring Donation record
-    */
-    get defaultInstallmentFrequency() {
-        return (this.isNew) ? '1' : undefined;
-    }
-
-    /***
     * @description Set today's day as default Day of Month value for a new Recurring Donation record
     */
     get defaultDayOfMonth() {
         return (this.isNew && this.dayOfMonthPicklistValues)
             ? this.getCurrentDayOfMonth()
             : undefined;
+    }
+
+    /**
+     * @description Returns a boolean to disable entry a field based on the FLS
+     * @returns True to disable entry into the field
+     */
+    shouldDisableField(fieldPerms) {
+        return (this.isNew ? !fieldPerms.Createable : !fieldPerms.Updateable);
     }
 
     /***
@@ -254,7 +277,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     onHandleRecurringPeriodChange(event) {
         let recurringPeriod = event.target.value;
-        this.updateScheduleUIFormat(recurringPeriod, this.customPeriodAdvancedMode);
+        this.updateScheduleFieldVisibility(recurringPeriod, this.customPeriodAdvancedMode);
     }
 
     /**
@@ -264,10 +287,16 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     onHandleAdvancedPeriodChange(event) {
         let advancedPeriod = event.target.value;
-        this.updateScheduleUIFormat(this.customPeriod, advancedPeriod);
+        this.updateScheduleFieldVisibility(this.customPeriod, advancedPeriod);
     }
 
-    updateScheduleUIFormat(customPeriod, advancedPeriod) {
+    /**
+     * @description Set the various properties to control field visibility, how many fields appear in each row
+     * and other rules based on the selected InstallmentPeriod value.
+     * @param customPeriod Monthly or Advanced
+     * @param advancedPeriod Monthly, Weekly, Daily, Yearly or 1st and 15th
+     */
+    updateScheduleFieldVisibility(customPeriod, advancedPeriod) {
         this.customPeriod = customPeriod;
         this.customPeriodAdvancedMode = advancedPeriod;
 

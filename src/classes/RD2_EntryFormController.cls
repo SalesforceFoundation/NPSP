@@ -47,11 +47,28 @@ public with sharing class RD2_EntryFormController {
             ? null
             : parentId.getSobjectType().getDescribe().getName();
 
+        DescribeFieldResult dfrPeriod = UTIL_Describe.getFieldDescribe(
+            'npe03__Recurring_Donation__c', 'npe03__Installment_Period__c'
+        );
+        DescribeFieldResult dfrFrequency = UTIL_Describe.getFieldDescribe(
+            'npe03__Recurring_Donation__c', UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')
+        );
+
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
             'parentSObjectType' => parentSObjectType,
-            'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY
+            'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY,
+            'InstallmentPeriodPermissions' => new Map<String, Boolean> {
+                    'Createable' => dfrPeriod.isCreateable(),
+                    'Updateable' => dfrPeriod.isUpdateable(),
+                    'Visible' => dfrPeriod.isAccessible()
+                },
+            'InstallmentFrequencyPermissions' => new Map<String, Boolean> {
+                    'Createable' => dfrFrequency.isCreateable(),
+                    'Updateable' => dfrFrequency.isUpdateable(),
+                    'Visible' => dfrFrequency.isAccessible()
+                }
         };
     }
 

@@ -25,6 +25,8 @@ import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHea
 import statusSectionHeader from '@salesforce/label/c.RD2_EntryFormStatusSectionHeader';
 import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccessMessage';
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
+import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
+import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 
@@ -39,7 +41,9 @@ export default class rd2EntryForm extends LightningElement {
         otherSectionHeader,
         scheduleSectionHeader,
         statusSectionHeader,
-        currencyFieldLabel
+        currencyFieldLabel,
+        flsErrorHeader,
+        flsErrorDetail
     });
 
     @api parentId;
@@ -133,13 +137,19 @@ export default class rd2EntryForm extends LightningElement {
     * @description Construct field describe info from the Recurring Donation SObject info
     */
     setFields(fieldInfos) {
-        this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
-        this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
-        this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
-        this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
-        this.fields.status = this.extractFieldInfo(fieldInfos[FIELD_STATUS.fieldApiName]);
-        this.fields.statusreason = this.extractFieldInfo(fieldInfos[FIELD_STATUS_REASON.fieldApiName]);
-        this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
+        try {
+            this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
+            this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
+            this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
+            this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
+            this.fields.status = this.extractFieldInfo(fieldInfos[FIELD_STATUS.fieldApiName]);
+            this.fields.statusreason = this.extractFieldInfo(fieldInfos[FIELD_STATUS_REASON.fieldApiName]);
+            this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
+        } catch (error) {
+            showToast(this.customLabels.flsErrorHeader, this.customLabels.flsErrorDetail, 'error', 'sticky', []);
+            this.hasError = true;
+        }
+
     }
 
     /***

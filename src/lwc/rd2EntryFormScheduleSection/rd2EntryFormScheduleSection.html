@@ -33,8 +33,8 @@
                                 options={customPeriodOptions}
                                 onchange={onHandleRecurringPeriodChange}
                                 field-level-help={customLabels.customPeriodHelpText}
+                                disabled={disablePeriodPicklistField}
                                 required
-                                tabindex="0"
                         >
                         </lightning-combobox>
                     </lightning-layout-item>
@@ -45,13 +45,14 @@
                                              name="installmentFrequency"
                                              class="advanced-mode-fields"
                                              value={inputFieldInstallmentFrequency}
-                                             required
                                              type="number"
                                              field-level-help={fields.installmentFrequency.inlineHelpText}
                                              step="1"
                                              min="1"
                                              max="20"
-                                             >
+                                             disabled={disableInstallmentFrequencyField}
+                                             required
+                            >
                             </lightning-input>
                         </template>
                     </lightning-layout-item>
@@ -67,6 +68,7 @@
                                 field-level-help={fields.period.inlineHelpText}
                                 options={advancedPeriodOptions}
                                 onchange={onHandleAdvancedPeriodChange}
+                                disabled={disablePeriodPicklistField}
                                 required>
                             </lightning-combobox>
                         </template>

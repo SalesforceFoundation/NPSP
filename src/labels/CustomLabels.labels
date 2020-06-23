@@ -2016,6 +2016,14 @@
         <value>Recurring Donation &quot;{0}&quot; was created.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormMissingPermissions</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Field Permissions Error</shortDescription>
+        <value>You are missing read and/or edit access to one or more required Recurring Donation fields. Please check with your system administrator.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormPeriodAdvanced</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
