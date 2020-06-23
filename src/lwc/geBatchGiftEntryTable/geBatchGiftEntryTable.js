@@ -68,7 +68,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
         super(DATAIMPORT_INFO.objectApiName);
         /* Add the loadBatch function as a callback for the parent component to execute once it executes the
         objectInfo wire service */
-        this.callbacks.push(this.loadBatch.bind(this));
+        this.callbacks.push(this.loadBatch);
     }
 
     setReady() {
