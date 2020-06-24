@@ -1088,10 +1088,10 @@ private with sharing class ALLO_Allocations_TEST {
         System.assertEquals (null, allos[0].Percent__c, 'Allocation 0 - Percent');
     }
 
-    /*******************************************************************************************************
+    /**
     * @description Tests that Allocations are updated and preserved when changing a Payment from a
     * non zero to a zero amount, and that default allocation is removed
-    ********************************************************************************************************/
+    */
     @isTest
     private static void changePaymentAmountFromNonZeroToZeroshouldResizePercentAllocations() {
         List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
@@ -1179,10 +1179,10 @@ private with sharing class ALLO_Allocations_TEST {
         System.assertEquals(null, alloc1.Percent__c, 'Allocation 1 Percent');
     }
 
-    /*******************************************************************************************************
-    * @description Tests that Default Allocation is removed if Payment Amount changes from non zero to zero
-    *              and only Default Allocation was present
-    ********************************************************************************************************/
+    /**
+     * @description Tests that Default Allocation is removed if Payment Amount changes from non zero to zero
+     *              and only Default Allocation was present
+     */
     @isTest
     private static void changePaymentAmountFromNonZeroToZeroshouldRemoveDefaultAllocation() {
         List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
@@ -1250,9 +1250,9 @@ private with sharing class ALLO_Allocations_TEST {
 
 
     /**
-    * @description Tests that the default Allocation is created with a zero amount when default
-    * Allocations are created and the Payment Amount is 0 via ALLO_ALLOCATION_TDTM trigger
-    */
+     * @description Tests that the default Allocation is created with a zero amount when default
+     * Allocations are created and the Payment Amount is 0 via ALLO_ALLOCATION_TDTM trigger
+     */
     @isTest
     private static void defaultAllocationsForZeroAmountPaymentShouldRemainOnCreate() {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
@@ -1519,11 +1519,11 @@ private with sharing class ALLO_Allocations_TEST {
             .withWhere(String.format('Opportunity__c = \'\'{0}\'\'', new String[] { oppId }));
     }
 
-    /*********************************************************************************************************
-    * @description Build query to retrieve Allocation by payment Id
-    * @param paymentId A npe01__OppPayment__c Id
-    * @return UTIL_Query Allocation SOQL
-    **********************************************************************************************************/
+    /**
+     * @description Build query to retrieve Allocation by payment Id
+     * @param paymentId A npe01__OppPayment__c Id
+     * @return UTIL_Query Allocation SOQL
+     */
     private static UTIL_Query getPaymentAllocationsQuery(Id paymentId) {
         return getAllocationsQuery()
             .withWhere(String.format('Payment__c = \'\'{0}\'\'', new String[] { paymentId }));
@@ -1581,14 +1581,14 @@ private with sharing class ALLO_Allocations_TEST {
         );
     }
 
-    /*********************************************************************************************************
-    * @description Return a new payment allocation with the provided parameters
-    * @param gauId A General_Accounting_Unit__c Id
-    * @param pmtId A Payment Id
-    * @param amt An Allocation amount
-    * @param percent An Allocation percent
-    * @return Allocation__c Allocation record with provided parameters filled in
-    **********************************************************************************************************/
+    /**
+     * @description Return a new payment allocation with the provided parameters
+     * @param gauId A General_Accounting_Unit__c Id
+     * @param pmtId A Payment Id
+     * @param amt An Allocation amount
+     * @param percent An Allocation percent
+     * @return Allocation__c Allocation record with provided parameters filled in
+     */
     private static Allocation__c createPmtAllocation(Id gauId, Id pmtId, Decimal amt, Double percent) {
         return new Allocation__c(
             Payment__c = pmtId,
@@ -1597,5 +1597,4 @@ private with sharing class ALLO_Allocations_TEST {
             Amount__c = amt
         );
     }
-
 }
