@@ -51,7 +51,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL_TEST {
 
     @IsTest
     static void shouldReturnFalseIfUserHasNoAccess() {
-       User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
+       User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
         System.runAs(adminUser) {
             STG_PanelRelReciprocal_CTRL controller = new STG_PanelRelReciprocal_CTRL();
