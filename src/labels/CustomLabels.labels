@@ -1968,6 +1968,14 @@
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Custom Field section header</shortDescription>
+        <value>Custom Fields</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormDonationSectionHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>

@@ -37,6 +37,15 @@
 public with sharing class RD2_EntryFormController {
 
     /**
+    * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
+    */
+    private static Set<String> excludedCustomFields = new Set<String> {
+        'Name',
+        'Id',
+        'CurrencyIsoCode'
+    };
+
+    /**
     * @description  Gather the org setting for Recurring Donation Entry Form
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
@@ -51,7 +60,8 @@ public with sharing class RD2_EntryFormController {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
             'parentSObjectType' => parentSObjectType,
-            'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY
+            'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY,
+            'customFieldSets' => getCustomFields()
         };
     }
 
@@ -113,5 +123,44 @@ public with sharing class RD2_EntryFormController {
             return hhRecordTypeId;
         }
         private set;
+    }
+
+    /***
+    * @description Retrieve RD2_Entry_Form_Custom_Fields Fieldset and eliminate any packaged and already displayed fields
+    * @return List<CustomField>
+    */
+    private static List<CustomField> getCustomFields () {
+        List<CustomField> fields = new List<CustomField>();
+        List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.getMap().get('RD2_Entry_Form_Custom_Fields').getFields();
+
+        for (Schema.FieldSetMember field : fieldSetFields) {
+            if (field.getFieldPath().startsWith('npsp__')
+                || field.getFieldPath().startsWith('npe03__')
+                || excludedCustomFields.contains(field.getFieldPath())) {
+                continue;
+            }
+
+            fields.add(new CustomField(field.getFieldPath(), field.getDbRequired() || field.getRequired()));
+        }
+
+        return fields;
+    }
+
+    /***
+    * @description Wrapper class for custom field info
+    */
+    public class CustomField {
+        @AuraEnabled public String apiName;
+        @AuraEnabled public Boolean required;
+
+        /***
+        * @description Constructor for the CustomField class
+        * @param apiName Api name of the field
+        * @param required Indicate if the field is required 
+        */
+        public CustomField(String apiName, Boolean required) {
+            this.apiName = apiName;
+            this.required = required;
+        }
     }
 }
