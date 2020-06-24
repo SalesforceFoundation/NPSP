@@ -34,6 +34,32 @@
 * @description Determines the Elevate Payment Integration Services status and permissions
 */
 public with sharing class PS_IntegrationServiceConfig {
+    
+    // Names of Payment Service configuration sets
+    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
+    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
+
+     // Properties used to configure headers in
+    // HTTP Requests to Elevate payment services
+    @TestVisible static final String API_KEY = 'apiKey';
+    @TestVisible static final String BASE_URL = 'baseURL';
+
+    // Note that the casing difference between "sfdo.merchantids" and "sfdo.gatewayIds" is intentional
+    @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
+    @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
+    @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
+    @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
+    @TestVisible static final String PRODUCTID = 'productId';
+
+
+    @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
+        ELEVATE_SDK,
+        PRODUCTID,
+        BASE_URL,
+        API_KEY,
+        SFDO_MERCHANTIDS,
+        SFDO_GATEWAYIDS
+    };
 
     /**
     * @description Determines if the Elevate integration service is configured and enabled.
@@ -65,13 +91,91 @@ public with sharing class PS_IntegrationServiceConfig {
     * @description Determines if the current user has the appropriate permissions to modify Elevate records
     * @return Boolean
     */
-    public Boolean hasIntegrationPermissions() {
+    public Boolean hasIntegrationPermissions_old() {
         // If the integration service is not enabled, user does not have the integration permissions
         if (!isEnabled) {
             return false;
         }
 
         return false;//TODO: hard-coded until the full implementation
+    }
+
+    public Boolean hasIntegrationPermissions() {
+        Payment_Services_Configuration__c lastModifiedRecord = new Configuration().LastModifiedRecord;
+        return lastModifiedRecord != null 
+                ? lastModifiedRecord.LastModifiedById == UserInfo.getUserId() 
+                : false;
+    }
+
+
+
+    /**
+    * @description Inner class responsible for retrieving Payment Services configuration from
+    *              application storage and building and exposing a set of key-value
+    *              configuration pairs.
+    */
+    @TestVisible
+    private class Configuration {
+        public Configuration() {}
+
+        public Map<String, String> keyValueMap {
+            get {
+                if (keyValueMap == null) {
+                    keyValueMap = new Map<String, String>();
+                    String makanaKey;
+                    for (Payment_Services_Configuration__c configRecord :
+                            getConfigRecordsByName(
+                                    new List<String>{
+                                            PAYMENTS_SERVICE_NAME, MAKANA_SERVICE_NAME
+                                    }
+                            )) {
+                        if (configRecord.Service__c == PAYMENTS_SERVICE_NAME) {
+                            keyValueMap.put(configRecord.Key__c, configRecord.Value__c);
+                        } else if (configRecord.Key__c == API_KEY &&
+                                configRecord.Service__c == MAKANA_SERVICE_NAME) {
+                            makanaKey = configRecord.Value__c;
+                        }
+                    }
+
+                    // If the payments service config does not have an Api key
+                    // and makana does, use the makana Api key
+                    if (makanaKey != null && keyValueMap.get(API_KEY) == null) {
+                        keyValueMap.put(API_KEY, makanaKey);
+                    }
+                }
+                return keyValueMap;
+            }
+            private set;
+        }
+
+        public Payment_Services_Configuration__c lastModifiedRecord {
+            get {
+                List<Payment_Services_Configuration__c> lastModifiedRecords = getLastModifiedConfigRecord();
+                lastModifiedRecord = lastModifiedRecords.isEmpty() ? null : lastModifiedRecords[0];
+                return lastModifiedRecord;
+            }
+            private set;
+        }
+
+        private List<Payment_Services_Configuration__c> getConfigRecordsByName(List<String>
+                serviceNames) {
+            return [
+                    SELECT Key__c, Value__c, Service__c
+                    FROM Payment_Services_Configuration__c
+                    WHERE Service__c IN :serviceNames
+            ];
+        }
+
+        private List<Payment_Services_Configuration__c> getLastModifiedConfigRecord() {
+            return [
+                    SELECT Key__c, Value__c, Service__c, 
+                    LastModifiedById, LastModifiedDate
+                    FROM Payment_Services_Configuration__c
+                    ORDER BY LastModifiedDate DESC
+                    LIMIT 1
+            ];
+        }
+
     }
 
 }

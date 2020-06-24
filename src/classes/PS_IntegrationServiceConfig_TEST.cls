@@ -71,4 +71,27 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
             }
         }
     }
+
+    @IsTest
+    private static void shouldHaveIntegrationPermissions() {
+        List<Payment_Services_Configuration__c> requiredConfigs = new
+                List<Payment_Services_Configuration__c>();
+
+        for (Integer i = 0; i < GE_PaymentServices.REQUIRED_CONFIG_KEYS.size(); i++) {
+            requiredConfigs.add(new Payment_Services_Configuration__c(
+                    Service__c = GE_PaymentServices.PAYMENTS_SERVICE_NAME,
+                    Key__c = GE_PaymentServices.REQUIRED_CONFIG_KEYS.get(i),
+                    Value__c = String.valueOf(i)
+            ));
+        }
+        insert requiredConfigs;
+    }
+
+    @IsTest
+    private static void shouldNotHaveIntegrationPermissions() {
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
+        System.assert(!hasIntegrationPermissions, 'The user should not have integration ' +
+                                                    'permissions without configuration keys.');
+    }
 }
