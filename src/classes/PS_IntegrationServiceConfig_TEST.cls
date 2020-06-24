@@ -77,7 +77,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         List<Payment_Services_Configuration__c> requiredConfigs = new
                 List<Payment_Services_Configuration__c>();
 
-        for (Integer i = 0; i < GE_PaymentServices.REQUIRED_CONFIG_KEYS.size(); i++) {
+        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
             requiredConfigs.add(new Payment_Services_Configuration__c(
                     Service__c = GE_PaymentServices.PAYMENTS_SERVICE_NAME,
                     Key__c = GE_PaymentServices.REQUIRED_CONFIG_KEYS.get(i),
@@ -85,6 +85,10 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
             ));
         }
         insert requiredConfigs;
+
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
+        System.assert(hasIntegrationPermissions, 'The user should have integration permissions.');
     }
 
     @IsTest

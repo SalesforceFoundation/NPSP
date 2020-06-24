@@ -91,17 +91,8 @@ public with sharing class PS_IntegrationServiceConfig {
     * @description Determines if the current user has the appropriate permissions to modify Elevate records
     * @return Boolean
     */
-    public Boolean hasIntegrationPermissions_old() {
-        // If the integration service is not enabled, user does not have the integration permissions
-        if (!isEnabled) {
-            return false;
-        }
-
-        return false;//TODO: hard-coded until the full implementation
-    }
-
     public Boolean hasIntegrationPermissions() {
-        Payment_Services_Configuration__c lastModifiedRecord = new Configuration().LastModifiedRecord;
+        Payment_Services_Configuration__c lastModifiedRecord = new Configuration().lastModifiedRecord;
         return lastModifiedRecord != null 
                 ? lastModifiedRecord.LastModifiedById == UserInfo.getUserId() 
                 : false;
