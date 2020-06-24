@@ -46,3 +46,4 @@ datasets/dev_org/test_data.db
 # LWC
 /src/lwc/jsconfig.json
 /src/lwc/.eslintrc.json
+/node_modules
