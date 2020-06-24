@@ -16,19 +16,17 @@
                     </lightning-layout-item>
 
                     <template if:true={showNumPlannedInstallments}>
-                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={recurringTypeColumnSize}
-                                               flexibility="shrink">
+                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={recurringTypeColumnSize}>
                             <lightning-input-field field-name={fields.plannedInstallments.apiName} required>
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>
 
-                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
-                                           flexibility="shrink">
+                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}>
                         <lightning-combobox
                                 name="CustomPeriodSelect"
                                 label={customLabels.fieldLabelPeriod}
-                                class="advanced-mode-fields"
+                                class="advanced-mode-fields rd2-entry-custom-field-padding"
                                 value={customPeriod}
                                 options={customPeriodOptions}
                                 onchange={onHandleRecurringPeriodChange}
@@ -43,7 +41,7 @@
                         <template if:true={isAdvancedMode}>
                             <lightning-input label={customLabels.fieldLabelEvery}
                                              name="installmentFrequency"
-                                             class="advanced-mode-fields"
+                                             class="advanced-mode-fields rd2-entry-custom-field-padding"
                                              value={inputFieldInstallmentFrequency}
                                              type="number"
                                              field-level-help={fields.installmentFrequency.inlineHelpText}
@@ -61,7 +59,7 @@
                         <template if:true={isAdvancedMode}>
                             <lightning-combobox
                                 name="advancedPeriodSelect"
-                                class="advanced-mode-fields"
+                                class="advanced-mode-fields rd2-entry-custom-field-padding"
                                 label={fields.period.label}
                                 value={customPeriodAdvancedMode}
                                 placeholder=""
