@@ -53,7 +53,7 @@ public with sharing class STG_PanelRel_CTRL_TEST {
     static void shouldReturnFalseIfUserHasNoAccess() {
        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
-        System.runAs(adminUser) {
+        System.runAs(standardUser) {
             STG_PanelRel_CTRL controller = new STG_PanelRel_CTRL();
             Boolean hasAccess = controller.getHasAccess();
 
