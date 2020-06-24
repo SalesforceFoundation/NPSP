@@ -302,7 +302,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         if (this.formTemplateRecordId) {
             let formTemplate = await retrieveFormTemplateById({
-                templateId: this.formTemplateRecordId
+                templateId: this.formTemplateRecordId,
+                isFormRenderMode: false
             });
 
             this.existingFormTemplateName = formTemplate.name;

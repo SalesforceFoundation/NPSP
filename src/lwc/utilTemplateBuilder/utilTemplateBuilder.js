@@ -93,6 +93,8 @@ const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 
 const QUERY_EXCEPTION = 'System.QueryException';
+const PERMISSION_EXCEPTION = 'FORM_ServiceGiftEntry.PermissionException';
+const INSUFFICIENT_RECORD_ACCESS_ERROR_CODE = 'INSUFFICIENT_ACCESS_OR_READONLY';
 
 // relevant Donation_Donor custom validation fields
 const DONATION_DONOR_FIELDS = {
@@ -323,12 +325,14 @@ const showToast = (title, message, variant, mode, messageData) => {
 }
 
 /*******************************************************************************
-* @description Creates and dispatches an error toast
+* @description Creates and dispatches an error toast or dispatches an application
+ * event to be handle the error gracefully
 *
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
     let message = CUSTOM_LABELS.commonUnknownError;
+    let errorToastTitle = CUSTOM_LABELS.commonError;
     let displayToast = true;
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
@@ -348,8 +352,13 @@ const handleError = (error) => {
 
         } else if (error.body.output &&
             Array.isArray(error.body.output.errors)) {
-            message = error.body.output.errors.map(e => e.message).join(', ');
-
+            let errorCode = error.body.output.errors.map(e => e.errorCode).join(',');
+            if(errorCode === INSUFFICIENT_RECORD_ACCESS_ERROR_CODE) {
+                message = CUSTOM_LABELS.commonPermissionErrorMessage;
+                errorToastTitle = CUSTOM_LABELS.commonAdminPermissionErrorTitle;
+            } else {
+                message = error.body.output.errors.map(e => e.message).join(', ');
+            }
         } else if (error.detail.output &&
             Array.isArray(error.detail.output.errors)) {
             message = error.detail.output.errors.map(e => e.message).join(', ');
@@ -357,9 +366,22 @@ const handleError = (error) => {
     } else if (error.body) {
         if (validateJSONString(error.body.message)) {
             const exceptionType = JSON.parse(error.body.message).exceptionType;
-            if (exceptionType === QUERY_EXCEPTION) {
+            if (exceptionType === QUERY_EXCEPTION ||
+                exceptionType === PERMISSION_EXCEPTION) {
                 displayToast = false;
                 // inform parent app (GeHome) about query exception
+                dispatchApplicationEvent('appPermissionsChange',
+                  CUSTOM_LABELS.commonAdminPermissionErrorTitle,
+                  CUSTOM_LABELS.commonPermissionErrorMessage,
+                  EVENT_SOURCE_APPLICATION
+                );
+            } else {
+                message = JSON.parse(error.body.message).errorMessage;
+            }
+        } else if (error.body.exceptionType) {
+            if (error.body.exceptionType === PERMISSION_EXCEPTION) {
+                displayToast = false;
+                // inform parent app (GeHome) about permission exception
                 dispatchApplicationEvent('appPermissionsChange',
                   CUSTOM_LABELS.commonAdminPermissionErrorTitle,
                   CUSTOM_LABELS.commonPermissionErrorMessage,
@@ -372,7 +394,7 @@ const handleError = (error) => {
     }
 
     if (displayToast) {
-        showToast(CUSTOM_LABELS.commonError, message, 'error', 'sticky');
+        showToast(errorToastTitle, message, 'error', 'sticky');
     }
 
 };

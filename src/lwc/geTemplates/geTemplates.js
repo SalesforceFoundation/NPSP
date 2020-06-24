@@ -6,6 +6,7 @@ import { deleteRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
+import checkFormTemplateObjectAndFieldPermissions from '@salesforce/apex/FORM_ServiceGiftEntry.checkFormTemplateObjectAndFieldPermissions';
 
 const SUCCESS = 'success';
 const IS_LOADING = 'isLoading';
@@ -202,11 +203,18 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
-    * @description Handles onclick event from 'Create Template' button and navigates
-    * to the Template Builder.
-    */
-    handleNewFormTemplate() {
-        this.navigateToTemplateBuilder();
+     * @description Handles onclick event from 'Create Template' button and navigates
+     * to the Template Builder.
+     */
+    async handleNewFormTemplate () {
+        try {
+            const hasTemplateAccess = await checkFormTemplateObjectAndFieldPermissions();
+            if (hasTemplateAccess) {
+                this.navigateToTemplateBuilder();
+            }
+        } catch (error) {
+            handleError(error);
+        }
     }
 
     /*******************************************************************************

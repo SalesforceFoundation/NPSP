@@ -225,14 +225,21 @@ public with sharing class FORM_ServiceGiftEntry {
     /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.
+     * @param isFormRenderMode - Flag to inform method of the context it is been called in
+     * (Template Builder Mode or Form Render Mode)
     * @return {FORM_Template}
     */
     @AuraEnabled
-    public static FORM_Template retrieveFormTemplateById(Id templateId) {
+    public static FORM_Template retrieveFormTemplateById(Id templateId, Boolean isFormRenderMode) {
         FORM_Template template;
         Form_Template__c templateObj;
 
         try {
+            // Check for FLS/CRUD permissions on Form_Template__c if we are not rendering a form (BGE/SGE)
+            if (!isFormRenderMode) {
+                checkFormTemplateObjectAndFieldPermissions();
+            }
+
             templateObj = [
                 SELECT Id, Name, Format_Version__c, Template_JSON__c
                 FROM Form_Template__c
@@ -240,13 +247,16 @@ public with sharing class FORM_ServiceGiftEntry {
                 WITH SECURITY_ENFORCED
                 LIMIT 1
             ];
-            template = deserializeFormTemplateFromObj(templateObj);
 
-            template = checkPermissions(template,
-                new Set<FORM_PermissionValidator.AccessLevel>{
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+            System.debug(templateObj);
+
+            template = deserializeFormTemplateFromObj(templateObj);
+            System.debug(template);
+            template = checkPermissions(template, new Set<FORM_PermissionValidator.AccessLevel>{
+                FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
+                FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE
+            });
         } catch (Exception ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
             throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
@@ -320,29 +330,8 @@ public with sharing class FORM_ServiceGiftEntry {
                                                             Description__c = description,
                                                             Template_JSON__c = templateJSON,
                                                             Format_Version__c = formatVersion);
-
-            FORM_PermissionValidator validator = new FORM_PermissionValidator(
-                new Set<FORM_PermissionValidator.AccessLevel>{
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE
-                });
-
-            if (validator.hasObjectPermissions(
-                UTIL_Namespace.StrTokenNSPrefix('Form_Template__c')) &&
-                validator.hasFieldPermissions(
-                    UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'),
-                    UTIL_Namespace.StrTokenNSPrefix('Description__c')) &&
-                validator.hasFieldPermissions(
-                    UTIL_Namespace.StrTokenNSPrefix('Form_Template__c'),
-                    UTIL_Namespace.StrTokenNSPrefix('Template_JSON__c'))
-                ) {
-                upsert templateObj;
-                return templateObj.Id;
-            } else {
-                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(
-                    new QueryException(''));
-                throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
-            }
+            upsert templateObj;
+            return templateObj.Id;
         }
 
         return null;
@@ -470,6 +459,39 @@ public with sharing class FORM_ServiceGiftEntry {
         }
         return defaultFields;
     }
+
+    /**
+     * @description Method checks for required CRUD/FLS on the Form Template Object and fields
+     * Read, Create and Update for the Object, Read for the fields
+     * This method is called when creating/editing/cloning a template
+     * @return Boolean
+     */
+    @AuraEnabled
+    public static Boolean checkFormTemplateObjectAndFieldPermissions () {
+        String objectName = UTIL_Namespace.StrTokenNSPrefix('Form_Template__c');
+        Set<FORM_PermissionValidator.AccessLevel> accessLevels =   new Set<FORM_PermissionValidator.AccessLevel>{
+            FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
+            FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+            FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE
+        };
+        FORM_PermissionValidator validator = new FORM_PermissionValidator(accessLevels);
+        Boolean hasObjectAccess = validator.hasObjectPermissions(objectName);
+        accessLevels =   new Set<FORM_PermissionValidator.AccessLevel>{
+            FORM_PermissionValidator.AccessLevel.VALIDATE_READ
+        };
+        validator = new FORM_PermissionValidator(accessLevels);
+        Boolean hasFieldAccess = validator.hasFieldPermissions(
+            objectName, UTIL_Namespace.StrTokenNSPrefix('Description__c')) &&
+            validator.hasFieldPermissions(objectName, UTIL_Namespace.StrTokenNSPrefix('Template_JSON__c'));
+
+        if (hasFieldAccess && hasObjectAccess){
+            return true;
+        } else {
+            throw new PermissionException(System.Label.commonPermissionErrorMessage);
+        }
+    }
+
+    public class PermissionException extends Exception {}
 
     /**
      * Inner class representation of the Custom Column Headers with permission data

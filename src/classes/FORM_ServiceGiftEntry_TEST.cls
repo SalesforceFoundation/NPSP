@@ -336,6 +336,107 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
     }
 
+    @IsTest
+    static void shouldGetDonationMatchingValues () {
+        Map<String, String> retrievedDonationMatchingMap = FORM_ServiceGiftEntry.getDonationMatchingValues();
+        System.assertNotEquals(null, retrievedDonationMatchingMap);
+        System.assertEquals(6, retrievedDonationMatchingMap.size());
+    }
+
+    @IsTest
+    static void shouldRetrieveTemplateByIdInFormRenderModeIfUserHasAccess () {
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        Form_Template__c templateObj = createFormTemplate();
+        insert templateObj;
+        Form_Template__c[] formTemplates = [
+            SELECT Id, Name, Template_JSON__c
+            FROM Form_Template__c
+        ];
+        System.runAs(adminUser) {
+            FORM_Template template = FORM_ServiceGiftEntry.retrieveFormTemplateById(
+                formTemplates[0].Id, true);
+            System.assertNotEquals(null, template);
+        }
+    }
+
+    @IsTest
+    static void shouldRetrieveTemplateByIdInFormRenderModeIfUserHasNoAccess () {
+
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
+
+        Form_Template__c templateObj = createFormTemplate();
+        insert templateObj;
+        FORM_Template template;
+        String exceptionType;
+
+        Form_Template__c[] formTemplates = [
+            SELECT Id, Name, Template_JSON__c
+            FROM Form_Template__c
+        ];
+
+        System.runAs(standardUser) {
+            try {
+                template = FORM_ServiceGiftEntry.retrieveFormTemplateById(
+                    formTemplates[0].Id, true);
+            } catch (Exception ex) {
+                ERR_ExceptionData exceptionData = (ERR_ExceptionData)JSON.deserialize(
+                    ex.getMessage(), ERR_ExceptionData.class);
+                exceptionType = exceptionData.exceptionType;
+            }
+            System.assertEquals(QueryException.class.getName(), exceptionType);
+            System.assertEquals(null, template);
+        }
+    }
+
+    @IsTest
+    static void shouldRetrieveTemplateByIdInTemplateBuilderModeIfUserHasAccess () {
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        Form_Template__c templateObj = createFormTemplate();
+        insert templateObj;
+        Form_Template__c[] formTemplates = [
+            SELECT Id
+            FROM Form_Template__c
+        ];
+        System.runAs(adminUser) {
+            FORM_Template template = FORM_ServiceGiftEntry.retrieveFormTemplateById(
+                formTemplates[0].Id, false);
+            System.assertNotEquals(null, template);
+        }
+    }
+
+    @IsTest
+    static void shouldRetrieveTemplateByIdInTemplateBuilderModeIfUserHasNoAccess () {
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
+
+        Form_Template__c templateObj = createFormTemplate();
+        insert templateObj;
+        String exceptionType;
+        String errorMessage;
+
+        FORM_Template template;
+        Form_Template__c[] formTemplates = [
+            SELECT Id, Name, Template_JSON__c
+            FROM Form_Template__c
+        ];
+
+        System.runAs(standardUser) {
+            try {
+                template = FORM_ServiceGiftEntry.retrieveFormTemplateById(
+                    formTemplates[0].Id, false);
+            } catch (Exception ex) {
+                ERR_ExceptionData exceptionData = (ERR_ExceptionData)JSON.deserialize(
+                    ex.getMessage(), ERR_ExceptionData.class);
+                exceptionType = exceptionData.exceptionType;
+                errorMessage = exceptionData.errorMessage;
+            }
+            System.assertEquals(FORM_ServiceGiftEntry.PermissionException.class.getName(), exceptionType);
+            System.assertEquals(System.Label.commonPermissionErrorMessage, errorMessage);
+            System.assertEquals(null, template);
+        }
+    }
+
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
         
@@ -369,28 +470,13 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         return template;
     }
 
-    //Utility method for creating sample column headers.
-    public static Custom_Column_Header__c[] createSampleColumnHeaders () {
-        
-        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
-        columnHeader.Name = 'sampleColumnHeader';
-        columnHeader.List_Name__c = 'Sample List';
-        columnHeader.Index__c = 0;
-        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
-
-        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
-        columnHeader2.Name = 'sampleColumnHeader2';
-        columnHeader2.List_Name__c = 'Sample List 2';
-        columnHeader2.Index__c = 0;
-        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
-
-        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
-        columnHeader3.Name = 'sampleColumnHeader3';
-        columnHeader3.List_Name__c = 'Sample List 2';
-        columnHeader3.Index__c = 1;
-        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
-
-        return new Custom_Column_Header__c[] { columnHeader, columnHeader2, columnHeader3 };
+    private static Form_Template__c createFormTemplate () {
+        Form_Template__c templateObj = new Form_Template__c(
+            Name = 'Test Template',
+            Description__c = 'Sample Template',
+            Template_JSON__c = JSON.serialize(createSampleTemplate()),
+            Format_Version__c = '1.0');
+        return templateObj;
     }
 
     /**********************************************************************************************
