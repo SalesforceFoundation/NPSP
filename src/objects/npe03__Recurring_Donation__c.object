@@ -8,9 +8,9 @@
         <label>NPSP Recurring Donation Compact Layout</label>
     </compactLayouts>
     <fieldSets>
-        <description>Fields to be displayed on RD2 Entry Form Custom Fields Section</description>
+        <description>Fields to be displayed on Recurring Donations Entry Form Custom Fields Section</description>
         <fullName>RD2_Entry_Form_Custom_Fields</fullName>
-        <label>RD2 Entry Form Custom Fields</label>
+        <label>Recurring Donations Entry Form Custom Fields</label>
     </fieldSets>
     <fields>
         <fullName>Always_Use_Last_Day_Of_Month__c</fullName>
