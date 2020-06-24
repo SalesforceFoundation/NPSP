@@ -361,7 +361,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     }
 
     @IsTest
-    static void shouldRetrieveTemplateByIdInFormRenderModeIfUserHasNoAccess () {
+    static void shouldNotRetrieveTemplateByIdInFormRenderModeIfUserHasNoAccess () {
 
         User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
@@ -407,7 +407,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     }
 
     @IsTest
-    static void shouldRetrieveTemplateByIdInTemplateBuilderModeIfUserHasNoAccess () {
+    static void shouldNotRetrieveTemplateByIdInTemplateBuilderModeIfUserHasNoAccess () {
         User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
         Form_Template__c templateObj = createFormTemplate();
