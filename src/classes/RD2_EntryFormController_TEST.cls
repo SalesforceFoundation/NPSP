@@ -106,4 +106,23 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals('Contact', donorType);
     }
 
+    /***
+    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields 
+    */
+    @isTest
+    private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
+        Test.startTest();
+        List<RD2_EntryFormController.CustomField> customFields = RD2_entryFormController.getCustomFieldSectionFields();
+        Test.stopTest();
+
+        for (RD2_EntryFormController.CustomField field : customFields) {
+            System.assert(!RD2_EntryFormController.excludedCustomFields.contains(field.apiName),
+                'Excluded fields should not be return:' + field.apiName);
+            System.assert(!field.apiName.startsWith('npsp__'),
+                'NPSP package field should not be return:' + field.apiName);
+                System.assert(!field.apiName.startsWith('npe03__'),
+                'NPSP package field should not be return:' + field.apiName);
+        }
+    }
+
 }
