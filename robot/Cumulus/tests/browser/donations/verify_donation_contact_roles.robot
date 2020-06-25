@@ -10,7 +10,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 
@@ -52,21 +52,21 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     ...                                                            ${data}[contact2][FirstName] ${data}[contact2][LastName]=Household Member
 
     Go To Page                             Details
-    ...                                    Contact
+    ...                                    Account
     ...                                    object_id=${data}[contact1][AccountId]
 
     Select Tab                             Details
 
     # Perform the below Validations
-
     Navigate To And Validate Field Value         Total Gifts               contains          $150.00    Membership Information
     Navigate To And Validate Field Value         Total Number of Gifts     contains          2          Membership Information
 
     # Run the batch process to obtain all the soft credits
     Run Donations Batch Process
 
+    # Navigate to the contact details page of the non primary contact and perform the below validations
     Go To Page                             Details
-    ...                                    Contact
+    ...                                    Account
     ...                                    object_id=${data}[contact1][Id]
 
     Navigate To And Validate Field Value     Total Gifts              contains     $100.00  Soft Credit Total
