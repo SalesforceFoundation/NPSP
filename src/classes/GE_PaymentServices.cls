@@ -39,31 +39,6 @@ public with sharing class GE_PaymentServices {
 
     PurchaseCallBody purchaseCallBody;
 
-    // Names of Payment Service configuration sets
-    //@TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
-    //@TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
-
-    // Properties used to configure headers in
-    // HTTP Requests to Elevate payment services
-    //@TestVisible static final String API_KEY = 'apiKey';
-    //@TestVisible static final String BASE_URL = 'baseURL';
-    //@TestVisible static final String JWT_TOKEN = 'jwttoken';
-    // Note that the casing difference between "sfdo.merchantids" and "sfdo.gatewayIds" is intentional
-    //@TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
-    //@TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
-    //@TestVisible static final String SFDO_USERNAME = 'sfdo.username';
-    //@TestVisible static final String ELEVATE_SDK = 'elevateSDK';
-    //@TestVisible static final String PRODUCTID = 'productId';
-
-    /*@TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String>{
-            ELEVATE_SDK,
-            PRODUCTID,
-            BASE_URL,
-            API_KEY,
-            SFDO_MERCHANTIDS,
-            SFDO_GATEWAYIDS
-    };*/
-
     @TestVisible Map<String, String> config;
 
     public enum ElevateEndpoints { TOKENIZE, PURCHASE }
