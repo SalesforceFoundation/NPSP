@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { isNull } from 'c/utilCommon';
 
 import getRecurringSettings from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
@@ -35,6 +35,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     @api recordId;
 
     @track isLoading = true;
+    isRecordReady = false;
 
     @track contactId;
     @track accountId;
@@ -59,8 +60,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                     this.updateDonorFields(this.donorType);
                 })
                 .catch((error) => {
-                    const errorMessage = constructErrorMessage(error);
-                    showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
+                    this.dispatchEvent(new CustomEvent('errorevent', { detail: error }));
                 });
         } else {
             this.donorType = this.DEFAULT_DONOR_TYPE;
@@ -74,9 +74,17 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                 // handleError(error);
             })
             .finally(() => {
-                this.isLoading = false;
+                this.isLoading = !this.isEverythingLoaded();
             });
 
+    }
+
+    /**
+     * @description Set isLoading to false only after all wired actions have fully completed
+     * @returns True (All Done) or False (Still Loading)
+     */
+    isEverythingLoaded() {
+        return (this.isRecordReady === true && this.rdObjectInfo !== null);
     }
 
     /**
@@ -108,12 +116,10 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                 this.rdObjectInfo.fields,
                 this.rdObjectInfo.apiName
             );
-            this.isLoading = false;
+            this.isLoading = !this.isEverythingLoaded();
 
         } else if (response.error) {
-            this.isLoading = false;
-            const errorMessage = constructErrorMessage(error);
-            showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
+            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: response.error }}));
         }
     }
 
@@ -206,8 +212,14 @@ export default class rd2EntryFormDonorSection extends LightningElement {
             this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
             this.fields.account = this.extractFieldInfo(fieldInfos[FIELD_ACCOUNT.fieldApiName]);
             this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
+            this.isRecordReady = true;
+            this.isLoading = !this.isEverythingLoaded();
         } catch (error) {
-            showToast(this.customLabels.flsErrorHeader, this.customLabels.flsErrorDetail, 'error', 'sticky', []);
+            const permissionsError = {
+                header: this.customLabels.flsErrorHeader,
+                detail: this.customLabels.flsErrorDetail
+            }
+            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: permissionsError }}));
         }
     }
 

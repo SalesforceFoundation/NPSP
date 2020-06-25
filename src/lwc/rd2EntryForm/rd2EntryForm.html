@@ -25,117 +25,109 @@
                 </c-util-page-level-message>
             </template>
 
-            <template if:true={isFormReady}>
+            <div class={cssEditForm}>
 
-                <div class={cssEditForm}>
-                    <template if:true={hasError}>
-                        <c-util-page-level-message title={errorMessage.header} subtitle={errorMessage.detail}
-                            subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" variant="error">
-                        </c-util-page-level-message>
-                    </template>
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
+                    </h3>
+                    <div aria-hidden="false" class="slds-section__content">
 
-                    <div class="slds-section slds-is-open">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
-                        </h3>
-                        <div aria-hidden="false" class="slds-section__content">
+                        <c-rd2-entry-form-donor-section record-id={recordId}
+                                                        parent-id={parentId}
+                                                        data-id="donorComponent"
+                                                        onerrorevent={handleChildComponentError}>
+                        </c-rd2-entry-form-donor-section>
 
-                            <c-rd2-entry-form-donor-section record-id={recordId}
-                                                            parent-id={parentId}
-                                                            data-id="donorComponent"
-                                                            onerrorevent={handleChildComponentError}>
-                            </c-rd2-entry-form-donor-section>
-
-                        </div>
-                    </div>
-
-                    <template if:true={isEdit}>
-                        <div class="slds-section slds-is-open">
-                            <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small">{customLabels.statusSectionHeader}</span>
-                            </h3>
-                            <div aria-hidden="false" class="slds-section__content">
-
-                                <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                    <lightning-layout-item padding="horizontal-small" size="6">
-                                        <lightning-input-field field-name={fields.status.apiName} required>
-                                        </lightning-input-field>
-                                    </lightning-layout-item>
-
-                                    <lightning-layout-item padding="horizontal-small" size="6">
-                                        <lightning-input-field field-name={fields.statusreason.apiName}>
-                                        </lightning-input-field>
-                                    </lightning-layout-item>
-                                </lightning-layout>
-
-                            </div>
-                        </div>
-                    </template>
-
-                    <div class="slds-section slds-is-open">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">{customLabels.scheduleSectionHeader}</span>
-                        </h3>
-                        <div aria-hidden="false" class="slds-section__content">
-
-                            <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6">
-                                    <lightning-input-field field-name={fields.amount.apiName} required>
-                                    </lightning-input-field>
-                                </lightning-layout-item>
-
-                                <template if:true={isMultiCurrencyEnabled}>
-                                    <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6">
-                                            <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
-                                                <label for="currencyField"
-                                                       class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                                <lightning-input-field id="currencyField" field-name={fields.currency.apiName}
-                                                                       variant="label-hidden" required>
-                                                </lightning-input-field>
-                                            </div>
-                                    </lightning-layout-item>
-                                </template>
-
-                            </lightning-layout>
-
-                            <c-rd2-entry-form-schedule-section record-id={recordId}
-                                                               data-id="scheduleComponent"
-                                                               onerrorevent={handleChildComponentError}>
-                            </c-rd2-entry-form-schedule-section>
-
-                            <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
-                                    <lightning-input-field field-name={fields.paymentMethod.apiName}>
-                                    </lightning-input-field>
-                                </lightning-layout-item>
-                            </lightning-layout>
-
-                        </div>
-                    </div>
-
-                    <div class="slds-section slds-is-open">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">{customLabels.otherSectionHeader}</span>
-                        </h3>
-                        <div aria-hidden="false" class="slds-section__content">
-                            <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                <template if:false={isAutoNamingEnabled}>
-                                    <lightning-layout-item padding="horizontal-small" size="12">
-                                        <lightning-input-field class="name-field-class" field-name={fields.name.apiName}
-                                            required>
-                                        </lightning-input-field>
-                                    </lightning-layout-item>
-                                </template>
-
-                                <lightning-layout-item padding="horizontal-small" size="12">
-                                    <lightning-input-field field-name={fields.campaign.apiName}>
-                                    </lightning-input-field>
-                                </lightning-layout-item>
-                            </lightning-layout>
-                        </div>
                     </div>
                 </div>
-            </template>
+
+                <template if:true={isEdit}>
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small">{customLabels.statusSectionHeader}</span>
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content">
+
+                            <lightning-layout horizontal-align="spread" multiple-rows="true" if:true={isFormReady}>
+                                <lightning-layout-item padding="horizontal-small" size="6">
+                                    <lightning-input-field field-name={fields.status.apiName} required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+
+                                <lightning-layout-item padding="horizontal-small" size="6">
+                                    <lightning-input-field field-name={fields.statusreason.apiName}>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                            </lightning-layout>
+
+                        </div>
+                    </div>
+                </template>
+
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">{customLabels.scheduleSectionHeader}</span>
+                    </h3>
+                    <div aria-hidden="false" class="slds-section__content">
+
+                        <lightning-layout horizontal-align="spread" multiple-rows="true" if:true={isFormReady}>
+                            <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6">
+                                <lightning-input-field field-name={fields.amount.apiName} required>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+
+                            <template if:true={isMultiCurrencyEnabled}>
+                                <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6">
+                                        <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
+                                            <label for="currencyField"
+                                                   class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                            <lightning-input-field id="currencyField" field-name={fields.currency.apiName}
+                                                                   variant="label-hidden" required>
+                                            </lightning-input-field>
+                                        </div>
+                                </lightning-layout-item>
+                            </template>
+
+                        </lightning-layout>
+
+                        <c-rd2-entry-form-schedule-section record-id={recordId}
+                                                           data-id="scheduleComponent"
+                                                           onerrorevent={handleChildComponentError}>
+                        </c-rd2-entry-form-schedule-section>
+
+                        <lightning-layout horizontal-align="spread" multiple-rows="true" if:true={isFormReady}>
+                            <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                                <lightning-input-field field-name={fields.paymentMethod.apiName}>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                        </lightning-layout>
+
+                    </div>
+                </div>
+
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">{customLabels.otherSectionHeader}</span>
+                    </h3>
+                    <div aria-hidden="false" class="slds-section__content">
+                        <lightning-layout horizontal-align="spread" multiple-rows="true" if:true={isFormReady}>
+                            <template if:false={isAutoNamingEnabled}>
+                                <lightning-layout-item padding="horizontal-small" size="12">
+                                    <lightning-input-field class="name-field-class" field-name={fields.name.apiName}
+                                        required>
+                                    </lightning-input-field>
+                                </lightning-layout-item>
+                            </template>
+
+                            <lightning-layout-item padding="horizontal-small" size="12">
+                                <lightning-input-field field-name={fields.campaign.apiName}>
+                                </lightning-input-field>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                </div>
+            </div>
         </div>
         <footer class="slds-modal__footer slds-clearfix">
             <div class="slds-float_right">

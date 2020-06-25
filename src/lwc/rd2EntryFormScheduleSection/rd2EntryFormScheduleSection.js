@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
-import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { isNull } from 'c/utilCommon';
 
 import getRecurringSettings from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
@@ -49,6 +49,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     });
 
     isNew = false;
+    isRecordReady = false;
+    hasError = false;
 
     @api recordId;
     @track isLoading = true;
@@ -100,8 +102,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                     this.updateScheduleFieldVisibility(this.customPeriod, response.Period);
                 })
                 .catch((error) => {
-                    const errorMessage = constructErrorMessage(error);
-                    showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
+                    this.hasError = true;
+                    this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: error }}));
                 });
         }
 
@@ -137,9 +139,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             this.isLoading = !this.isEverythingLoaded();
 
         } else if (response.error) {
-            this.isLoading = false;
-            const errorMessage = constructErrorMessage(error);
-            showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
+            this.hasError = true;
+            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: response.error }}));
         }
     }
 
@@ -148,7 +149,9 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @returns True (All Done) or False (Still Loading)
      */
     isEverythingLoaded() {
-        return (this.installmentPeriodPicklistValues && this.dayOfMonthPicklistValues && this.rdObjectInfo);
+        return (this.installmentPeriodPicklistValues && this.dayOfMonthPicklistValues && this.isRecordReady
+            && this.rdObjectInfo
+            && !this.hasError);
     }
 
     /**
@@ -175,8 +178,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             this.fields.dayOfMonth = this.extractFieldInfo(fieldInfos[FIELD_DAY_OF_MONTH.fieldApiName]);
             this.fields.startDate = this.extractFieldInfo(fieldInfos[FIELD_START_DATE.fieldApiName]);
             this.fields.plannedInstallments = this.extractFieldInfo(fieldInfos[FIELD_PLANNED_INSTALLMENTS.fieldApiName]);
+            this.isRecordReady = true;
         } catch (error) {
-            showToast(this.customLabels.flsErrorHeader, this.customLabels.flsErrorDetail, 'error', 'sticky', []);
+            this.hasError = true;
+            const permissionsError = {
+                header: this.customLabels.flsErrorHeader,
+                detail: this.customLabels.flsErrorDetail
+            }
+            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: permissionsError }}));
         }
 
     }

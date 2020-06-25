@@ -59,7 +59,8 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isAutoNamingEnabled;
     @track isLoading = true;
-    @track isRecordReady = false;
+
+    isRecordReady = false;
     isSettingReady = false;
 
     @track hasError = false;
@@ -73,7 +74,7 @@ export default class rd2EntryForm extends LightningElement {
         //If the isSettingReady is not checked, then the form on an error resets all fields
         //including the Schedule section LWC fields.
         //TODO: check why and how this expression can be simplifed.
-        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
+        return (!this.isLoading && this.isSettingReady && this.isRecordReady && !this.hasError)
             ? ''
             : 'slds-hide';
     }
@@ -86,12 +87,12 @@ export default class rd2EntryForm extends LightningElement {
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
+                this.isSettingReady = true;
             })
             .catch((error) => {
-                this.handleError(error);
+                this.handleError(error, true);
             })
             .finally(() => {
-                this.isSettingReady = true;
                 this.isLoading = false;
             });
     }
@@ -109,14 +110,11 @@ export default class rd2EntryForm extends LightningElement {
                 rdObjectInfo.apiName
             );
 
-            if (isNull(this.recordId)) {
-                this.isRecordReady = true;
-            }
+            this.isRecordReady = true;
         }
 
         if (response.error) {
-            this.isRecordReady = true;
-            this.handleError(response.error);
+            this.handleError(response.error, true);
         }
     }
 
@@ -146,8 +144,11 @@ export default class rd2EntryForm extends LightningElement {
             this.fields.statusreason = this.extractFieldInfo(fieldInfos[FIELD_STATUS_REASON.fieldApiName]);
             this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
         } catch (error) {
-            showToast(this.customLabels.flsErrorHeader, this.customLabels.flsErrorDetail, 'error', 'sticky', []);
-            this.hasError = true;
+            const permissionsError = {
+                header: this.customLabels.flsErrorHeader,
+                detail: this.customLabels.flsErrorDetail
+            }
+            this.handleError(permissionsError, true);
         }
 
     }
@@ -174,11 +175,9 @@ export default class rd2EntryForm extends LightningElement {
             this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
             this.isRecordReady = true;
             this.isEdit = true;
-        }
 
-        if (response.error) {
-            this.isRecordReady = true;
-            this.handleError(response.error);
+        } else if (response.error) {
+            this.handleError(response.error, true);
         }
     }
 
@@ -223,14 +222,34 @@ export default class rd2EntryForm extends LightningElement {
 
     /***
     * @description Handle component display when an error occurs
+    * @param error: Error Event
+    * @param disableSaveButton: true to disable the Save button on the page; defaults to false
     */
-    handleError(error) {
-        this.errorMessage = constructErrorMessage(error);
+    handleError(error, disableSaveButton) {
+        this.errorMessage = (!error || (!error.detail && !error.header)) ? constructErrorMessage(error) : error;
         this.hasError = true;
-        this.isLoading = false;
 
-        this.template.querySelector("[data-id='submitButton']").disabled = false;
+        const disableBtn = !!(disableSaveButton && disableSaveButton === true);
+        this.isLoading = disableBtn;
+
+        this.template.querySelector("[data-id='submitButton']").disabled = disableBtn;
         this.template.querySelector(".slds-modal__header").scrollIntoView();
+    }
+
+    /***
+     * @description Handle component display when a save error occurs
+     */
+    handleSaveError(error) {
+        this.handleError(error, false);
+    }
+
+    /**
+     * @description Handle a child-to-parent component error event
+     * @param event (error construct)
+     */
+    handleChildComponentError(event) {
+        let error = event.detail && event.detail.value ? event.detail.value : event.detail;
+        this.handleError(error, true);
     }
 
     /***
@@ -252,6 +271,14 @@ export default class rd2EntryForm extends LightningElement {
         showToast(message, '', 'success', []);
 
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
+    }
+
+    /**
+    * @description Returns true when all required data for the form is ready
+    * @returns {boolean|boolean}
+    */
+    get isFormReady() {
+        return (!this.isLoading && this.fields && this.isSettingReady);
     }
 
     /**
