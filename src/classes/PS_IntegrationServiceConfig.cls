@@ -52,7 +52,6 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String ELEVATE_SDK = 'elevateSDK';
     public static final String PRODUCTID = 'productId';
 
-
     @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
         ELEVATE_SDK,
         PRODUCTID,
