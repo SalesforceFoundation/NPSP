@@ -115,9 +115,12 @@ public with sharing class PS_IntegrationServiceConfig {
     * @description Inner class responsible for retrieving Payment Services configuration from
     *              application storage and building and exposing a set of key-value
     *              configuration pairs.
+    *              We use 'without sharing' to ensure that the query against 
+    *              Payment_Services_Configuration__c always works regardless of what permissions 
+    *              the current user has
     */
     @TestVisible
-    public class Configuration {
+    public without sharing class Configuration {
         public Configuration() {}
 
         public Map<String, String> keyValueMap {
