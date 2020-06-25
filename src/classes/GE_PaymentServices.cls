@@ -40,29 +40,29 @@ public with sharing class GE_PaymentServices {
     PurchaseCallBody purchaseCallBody;
 
     // Names of Payment Service configuration sets
-    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
-    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
+    //@TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
+    //@TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
 
     // Properties used to configure headers in
     // HTTP Requests to Elevate payment services
-    @TestVisible static final String API_KEY = 'apiKey';
-    @TestVisible static final String BASE_URL = 'baseURL';
-    @TestVisible static final String JWT_TOKEN = 'jwttoken';
+    //@TestVisible static final String API_KEY = 'apiKey';
+    //@TestVisible static final String BASE_URL = 'baseURL';
+    //@TestVisible static final String JWT_TOKEN = 'jwttoken';
     // Note that the casing difference between "sfdo.merchantids" and "sfdo.gatewayIds" is intentional
-    @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
-    @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
-    @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
-    @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
-    @TestVisible static final String PRODUCTID = 'productId';
+    //@TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
+    //@TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
+    //@TestVisible static final String SFDO_USERNAME = 'sfdo.username';
+    //@TestVisible static final String ELEVATE_SDK = 'elevateSDK';
+    //@TestVisible static final String PRODUCTID = 'productId';
 
-    @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String>{
+    /*@TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String>{
             ELEVATE_SDK,
             PRODUCTID,
             BASE_URL,
             API_KEY,
             SFDO_MERCHANTIDS,
             SFDO_GATEWAYIDS
-    };
+    };*/
 
     @TestVisible Map<String, String> config;
 
@@ -92,7 +92,7 @@ public with sharing class GE_PaymentServices {
     }
 
     public GE_PaymentServices() {
-        config = new Configuration().keyValueMap;
+        config = new PS_IntegrationServiceConfig.Configuration().keyValueMap;
     }
 
     @AuraEnabled(cacheable=true)
@@ -110,8 +110,8 @@ public with sharing class GE_PaymentServices {
                 (Map<String, Object>) JSON.deserializeUntyped(jsonString);
         this.purchaseCallBody = new PurchaseCallBody(
                 UserInfo.getDefaultCurrency(),
-                config.get(SFDO_MERCHANTIDS),
-                config.get(SFDO_GATEWAYIDS)
+                config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS),
+                config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS)
         ).applyAll(requestBodyParameters);
     }
 
@@ -126,10 +126,10 @@ public with sharing class GE_PaymentServices {
         request.setEndpoint(getEndpointRoot() + getEndpoint(ElevateEndpoints.PURCHASE));
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader(JWT_TOKEN, getJwt());
-        request.setHeader(SFDO_USERNAME, UserInfo.getUserName());
-        if (config.get(SFDO_MERCHANTIDS) != null) {
-            request.setHeader(SFDO_MERCHANTIDS, config.get(SFDO_MERCHANTIDS));
+        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt());
+        request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
+        if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
+            request.setHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS, config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
         }
 
         // Set the body as a JSON object...
@@ -143,29 +143,29 @@ public with sharing class GE_PaymentServices {
     }
 
     public String getEndpointRoot() {
-        return config.get(BASE_URL);
+        return config.get(PS_IntegrationServiceConfig.BASE_URL);
     }
 
     public String getJwt() {
-        JWTPayload jwtPayload = new JWTPayload(config.get(PRODUCTID));
+        JWTPayload jwtPayload = new JWTPayload(config.get(PS_IntegrationServiceConfig.PRODUCTID));
         String jwt = UTIL_Jwt.getSignedJWTFromString(
                 jwtPayload.getAsString(),
-                config.get(API_KEY)
+                config.get(PS_IntegrationServiceConfig.API_KEY)
         );
 
         return jwt;
     }
 
     public String getElevateSDKURL() {
-        return config.get(ELEVATE_SDK);
+        return config.get(PS_IntegrationServiceConfig.ELEVATE_SDK);
     }
 
     public String getProductId() {
-        return config.get(PRODUCTID);
+        return config.get(PS_IntegrationServiceConfig.PRODUCTID);
     }
 
     public String getGatewayIds() {
-        return config.get(SFDO_GATEWAYIDS);
+        return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
     }
 
     /*******************************************************************************************************
@@ -300,7 +300,7 @@ public with sharing class GE_PaymentServices {
     *              application storage and building and exposing a set of key-value
     *              configuration pairs.
     */
-    @TestVisible
+    /*@TestVisible
     private class Configuration {
         public Configuration() {}
 
@@ -342,7 +342,7 @@ public with sharing class GE_PaymentServices {
                     WHERE Service__c IN :serviceNames
             ];
         }
-    }
+    }*/
 
     /**
      * @description Checks whether an org is a customer of Elevate Payment Services.
@@ -353,7 +353,8 @@ public with sharing class GE_PaymentServices {
     */
     public static Boolean isElevateCustomer {
         get {
-            return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
+            PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+            return ps.isIntegrationEnabled();
         }
     }
 

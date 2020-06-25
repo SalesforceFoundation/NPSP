@@ -41,15 +41,16 @@ public with sharing class PS_IntegrationServiceConfig {
 
      // Properties used to configure headers in
     // HTTP Requests to Elevate payment services
-    @TestVisible static final String API_KEY = 'apiKey';
-    @TestVisible static final String BASE_URL = 'baseURL';
+    @TestVisible public static final String API_KEY = 'apiKey';
+    @TestVisible public static final String BASE_URL = 'baseURL';
+    @TestVisible public static final String JWT_TOKEN = 'jwttoken';
 
     // Note that the casing difference between "sfdo.merchantids" and "sfdo.gatewayIds" is intentional
-    @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
-    @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
-    @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
-    @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
-    @TestVisible static final String PRODUCTID = 'productId';
+    @TestVisible public static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
+    @TestVisible public static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
+    @TestVisible public static final String SFDO_USERNAME = 'sfdo.username';
+    @TestVisible public static final String ELEVATE_SDK = 'elevateSDK';
+    @TestVisible public static final String PRODUCTID = 'productId';
 
 
     @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
@@ -67,12 +68,22 @@ public with sharing class PS_IntegrationServiceConfig {
     * is at least a single record in the protected Payment Services Configuration object
     * @return Boolean
     */
-    private Boolean isEnabled {
+    private Boolean isEnabled_old {
         get {
             if (isEnabled == null) {
                 //Integer configCount = Database.countQuery('SELECT Count() FROM Payment_Services_Configuration__c');
                 Integer configCount = 0;//TODO: hard-coded, disable the integration service until full implementation
                 isEnabled = configCount > 0;
+            }
+            return isEnabled;
+        }
+        set;
+    }
+
+    private Boolean isEnabled {
+        get {
+            if (isEnabled == null) {
+                return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
             }
             return isEnabled;
         }
@@ -106,7 +117,7 @@ public with sharing class PS_IntegrationServiceConfig {
     *              configuration pairs.
     */
     @TestVisible
-    private class Configuration {
+    public class Configuration {
         public Configuration() {}
 
         public Map<String, String> keyValueMap {

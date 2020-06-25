@@ -53,10 +53,10 @@ public class GE_PaymentServices_TEST {
     // Key-Values by service name
     private static final Map<String, List<Map<String, String>>> testConfig =
             new Map<String, List<Map<String, String>>>{
-                    GE_PaymentServices.PAYMENTS_SERVICE_NAME =>
+                PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
                             new List<Map<String, String>>{
                                     new Map<String, String>{
-                                            'key' => GE_PaymentServices.SFDO_MERCHANTIDS,
+                                            'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
                                             'value' => testMerchantId
                                     },
                                     new Map<String, String>{
@@ -64,7 +64,7 @@ public class GE_PaymentServices_TEST {
                                             'value' => 'Payments.Purchase'
                                     },
                                     new Map<String, String>{
-                                            'key' => GE_PaymentServices.API_KEY,
+                                            'key' => PS_IntegrationServiceConfig.API_KEY,
                                             'value' => testApiKey
                                     }
                             }
@@ -163,8 +163,8 @@ public class GE_PaymentServices_TEST {
         // Verify that the config properties of the class are
         // the same as those of the inserted config records
         System.assertEquals(testMerchantId,
-                service.config.get(GE_PaymentServices.SFDO_MERCHANTIDS));
-        System.assertEquals(testApiKey, service.config.get(GE_PaymentServices.API_KEY));
+                service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
+        System.assertEquals(testApiKey, service.config.get(PS_IntegrationServiceConfig.API_KEY));
     }
 
     /**
@@ -179,17 +179,17 @@ public class GE_PaymentServices_TEST {
         // Set payments Api key to null and set an Api key for makana
         PS_IntegrationService.setConfiguration(
                 new Map<String, List<Map<String, String>>>{
-                        GE_PaymentServices.PAYMENTS_SERVICE_NAME =>
+                        PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
                                 new List<Map<String, String>>{
                                         new Map<String, String>{
-                                                'key' => GE_PaymentServices.API_KEY,
+                                                'key' => PS_IntegrationServiceConfig.API_KEY,
                                                 'value' => null
                                         }
                                 },
-                        GE_PaymentServices.MAKANA_SERVICE_NAME =>
+                        PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME =>
                                 new List<Map<String, String>>{
                                         new Map<String, String>{
-                                                'key' => GE_PaymentServices.API_KEY,
+                                                'key' => PS_IntegrationServiceConfig.API_KEY,
                                                 'value' => testMakanaApiKey
                                         }
                                 }
@@ -202,9 +202,9 @@ public class GE_PaymentServices_TEST {
 
         // Verify apiKey matches makana, while the rest match payments
         System.assertEquals(testMakanaApiKey,
-                service.config.get(GE_PaymentServices.API_KEY));
+                service.config.get(PS_IntegrationServiceConfig.API_KEY));
         System.assertEquals(testMerchantId,
-                service.config.get(GE_PaymentServices.SFDO_MERCHANTIDS));
+                service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
     }
 
     @IsTest
@@ -212,10 +212,10 @@ public class GE_PaymentServices_TEST {
         List<Payment_Services_Configuration__c> requiredConfigs = new
                 List<Payment_Services_Configuration__c>();
 
-        for (Integer i = 0; i < GE_PaymentServices.REQUIRED_CONFIG_KEYS.size(); i++) {
+        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
             requiredConfigs.add(new Payment_Services_Configuration__c(
-                    Service__c = GE_PaymentServices.PAYMENTS_SERVICE_NAME,
-                    Key__c = GE_PaymentServices.REQUIRED_CONFIG_KEYS.get(i),
+                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                    Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
                     Value__c = String.valueOf(i)
             ));
         }
