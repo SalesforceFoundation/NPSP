@@ -2316,7 +2316,7 @@
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
-        <members>healtLabelDisableRecordBatchDescription</members>
+        <members>healthLabelDisableRecordBatchDescription</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
