@@ -42,8 +42,8 @@ Create Donation from a Contact and Delete Opportunity
 
 
     Go To Page                           Details
-    ...                                  Contact
-    ...                                  object_id=${data}[contact][Id]
+    ...                                  Account
+    ...                                  object_id=${data}[contact][AccountId]
 
     Select Tab                           Details
 
