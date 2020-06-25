@@ -272,55 +272,6 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
-    * @description Inner class responsible for retrieving Payment Services configuration from
-    *              application storage and building and exposing a set of key-value
-    *              configuration pairs.
-    */
-    /*@TestVisible
-    private class Configuration {
-        public Configuration() {}
-
-        public Map<String, String> keyValueMap {
-            get {
-                if (keyValueMap == null) {
-                    keyValueMap = new Map<String, String>();
-                    String makanaKey;
-                    for (Payment_Services_Configuration__c configRecord :
-                            getConfigRecordsByName(
-                                    new List<String>{
-                                            PAYMENTS_SERVICE_NAME, MAKANA_SERVICE_NAME
-                                    }
-                            )) {
-                        if (configRecord.Service__c == PAYMENTS_SERVICE_NAME) {
-                            keyValueMap.put(configRecord.Key__c, configRecord.Value__c);
-                        } else if (configRecord.Key__c == API_KEY &&
-                                configRecord.Service__c == MAKANA_SERVICE_NAME) {
-                            makanaKey = configRecord.Value__c;
-                        }
-                    }
-
-                    // If the payments service config does not have an Api key
-                    // and makana does, use the makana Api key
-                    if (makanaKey != null && keyValueMap.get(API_KEY) == null) {
-                        keyValueMap.put(API_KEY, makanaKey);
-                    }
-                }
-                return keyValueMap;
-            }
-            private set;
-        }
-
-        private List<Payment_Services_Configuration__c> getConfigRecordsByName(List<String>
-                serviceNames) {
-            return [
-                    SELECT Key__c, Value__c, Service__c
-                    FROM Payment_Services_Configuration__c
-                    WHERE Service__c IN :serviceNames
-            ];
-        }
-    }*/
-
-    /**
      * @description Checks whether an org is a customer of Elevate Payment Services.
      *              After onboarding within Elevate, these configuration key-value
      *              pairs should exist in the org.  If this required set of keys is not
