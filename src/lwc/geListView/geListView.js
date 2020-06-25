@@ -639,8 +639,10 @@ export default class geListView extends LightningElement {
                     record[urlName + '_' + URL] = format(recordUrl, [recordId]);
                 }
 
-                if (isNotEmpty(record[key].Name)) {
-                    record[key] = record[key].Name;
+                if (isNotEmpty(record[key])) {
+                    if (isNotEmpty(record[key].Name)) {
+                        record[key] = record[key].Name;
+                    }
                 }
             });
         });
