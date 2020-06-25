@@ -339,7 +339,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
                         .map(({label, fieldName}) => ({
                             label, value: fieldName
                         })),
-                    values: this.computedColumns()
+                    values: this.computedColumns
                         .map(({fieldName}) => fieldName)
                 }
             });
