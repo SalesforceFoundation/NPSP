@@ -540,13 +540,14 @@ export default class geListView extends LightningElement {
 
         // Turn fields in the 'Name' column into URLs
         if (columnEntry.type === URL) {
-            columnEntry.fieldName = fieldApiName + '_' + URL;
             columnEntry.typeAttributes = {
                 label: {
                     fieldName: fieldApiName
                 },
                 target: isNotEmpty(this.target) ? this.target : _SELF
             }
+            fieldApiName = fieldApiName.replace('__r', '');
+            columnEntry.fieldName = fieldApiName + '_' + URL;
         }
         return columnEntry;
     }
@@ -636,6 +637,7 @@ export default class geListView extends LightningElement {
                     let recordId = fieldDescribe.nameField ? record.Id : record[key];
                     let urlName = fieldDescribe.nameField ? key : fieldDescribe.relationshipName;
 
+                    urlName = urlName.replace('__r', '');
                     record[urlName + '_' + URL] = format(recordUrl, [recordId]);
                 }
 
