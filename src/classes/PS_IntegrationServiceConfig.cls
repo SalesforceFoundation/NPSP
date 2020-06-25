@@ -41,16 +41,16 @@ public with sharing class PS_IntegrationServiceConfig {
 
      // Properties used to configure headers in
     // HTTP Requests to Elevate payment services
-    @TestVisible public static final String API_KEY = 'apiKey';
-    @TestVisible public static final String BASE_URL = 'baseURL';
-    @TestVisible public static final String JWT_TOKEN = 'jwttoken';
+    public static final String API_KEY = 'apiKey';
+    public static final String BASE_URL = 'baseURL';
+    public static final String JWT_TOKEN = 'jwttoken';
 
     // Note that the casing difference between "sfdo.merchantids" and "sfdo.gatewayIds" is intentional
-    @TestVisible public static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
-    @TestVisible public static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
-    @TestVisible public static final String SFDO_USERNAME = 'sfdo.username';
-    @TestVisible public static final String ELEVATE_SDK = 'elevateSDK';
-    @TestVisible public static final String PRODUCTID = 'productId';
+    public static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
+    public static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
+    public static final String SFDO_USERNAME = 'sfdo.username';
+    public static final String ELEVATE_SDK = 'elevateSDK';
+    public static final String PRODUCTID = 'productId';
 
 
     @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
