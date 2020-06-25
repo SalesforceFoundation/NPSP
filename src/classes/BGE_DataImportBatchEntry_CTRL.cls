@@ -61,7 +61,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String deleteDataImportRow(Id batchId, Id dataImportId) {
         Boolean canDelete = UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
         if(!canDelete) {
-            throw new AuraHandledException('' /* Label.commonPermissionErrorMessage */);
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
         }
         
         try {
@@ -174,7 +174,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             return JSON.serialize(opportunityWrappers);
         } catch (QueryException ex) {
             // could be thrown for insufficient access rights on cross-reference id, or malformed query too
-            throw new AuraHandledException('' /* Label.commonPermissionErrorMessage */);
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
         } catch (Exception ex) {
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
         }
