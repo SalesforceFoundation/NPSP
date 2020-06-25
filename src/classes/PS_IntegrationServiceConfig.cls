@@ -67,18 +67,6 @@ public with sharing class PS_IntegrationServiceConfig {
     * is at least a single record in the protected Payment Services Configuration object
     * @return Boolean
     */
-    private Boolean isEnabled_old {
-        get {
-            if (isEnabled == null) {
-                //Integer configCount = Database.countQuery('SELECT Count() FROM Payment_Services_Configuration__c');
-                Integer configCount = 0;//TODO: hard-coded, disable the integration service until full implementation
-                isEnabled = configCount > 0;
-            }
-            return isEnabled;
-        }
-        set;
-    }
-
     private Boolean isEnabled {
         get {
             if (isEnabled == null) {
