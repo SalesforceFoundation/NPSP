@@ -715,6 +715,8 @@ tasks:
                 Update u;
 
     remove_feature_parameters_from_XML:
+        description: Remove the following Feature Parameter(s) from the Package.xml to allow for deployment into persistent Sandbox orgs that have reached the max of 25: Data_CountGERowsLast30DaysBatch
+        group: npsp
         class_path: cumulusci.tasks.metadata.modify.RemoveElementsXPath
         options:
             output_style: salesforce
@@ -725,6 +727,8 @@ tasks:
                             [.='Data_CountGERowsLast30DaysBatch']
 
     delete_feature_parameter_files:
+        description: Remove the following Feature Parameter(s) from the src folder to allow for deployment into persistent Sandbox orgs that have reached the max of 25: Data_CountGERowsLast30DaysBatch
+        group: npsp
         class_path: cumulusci.tasks.util.Delete
         options:
             path: ["*/*/Data_CountGERowsLast30DaysBatch.featureParameterInteger"]
