@@ -1,5 +1,5 @@
-<!--
-    Copyright (c) 2019, Salesforce.org
+/*
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,33 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-	@author Salesforce.org
-	@date 2019
-	@group Recurring Donations
-	@description Harness app for the Enhanced Recurring Donations Lightning Component.
--->
-<aura:application access="GLOBAL" extends="ltng:outApp">
-  <aura:dependency resource="c:RD2_EnablementDelegate" />
-  <aura:dependency resource="c:RD2_EnablementDelegateSimple" />
-  <aura:dependency resource="c:rd2StatusMappingSettings" />
-  <aura:dependency resource="c:utilIllustration" />
-</aura:application>
+*/
+@IsTest
+private class STG_PanelRelAuto_CTRL_TEST {
+
+    @IsTest
+    static void userHasAccess() {
+       User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+
+        System.runAs(adminUser) {
+            STG_PanelRelAuto_CTRL controller = new STG_PanelRelAuto_CTRL();
+            Boolean hasAccess = controller.getHasAccess();
+
+            System.assertEquals(true, hasAccess, 'The access check should return true if the user has ' +
+                    'access to the Relationship_Auto_Create__c custom setting object');
+        }
+    }
+
+    @IsTest
+    static void userHasNoAccess() {
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Standard User');
+
+        System.runAs(standardUser) {
+            STG_PanelRelAuto_CTRL controller = new STG_PanelRelAuto_CTRL();
+            Boolean hasAccess = controller.getHasAccess();
+
+            System.assertEquals(false, hasAccess, 'The access check should return false if the user does NOT have ' +
+                    'access to the Relationship_Auto_Create__c custom setting object');
+        }
+    }
+}
