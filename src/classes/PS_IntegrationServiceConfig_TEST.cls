@@ -126,8 +126,4 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                         'all required configuration keys present.');
     }
 
-    @IsTest
-    private static void shouldNotHaveIntegrationEnabled() {
-
-    }
 }
