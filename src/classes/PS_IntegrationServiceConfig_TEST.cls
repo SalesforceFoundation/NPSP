@@ -119,7 +119,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                         'all required configuration keys are present.');
 
         // Now delete a required configuration key and validate that
-        // GE_PaymentServices.isElevateCustomer is false
+        // Payment_Services_Configuration__c.isIntegrationEnabled is false
         delete [SELECT Id FROM Payment_Services_Configuration__c LIMIT 1];
         System.assertEquals(false, ps.isIntegrationEnabled(),
                 'The org should not have Integration Enabled without ' +
