@@ -104,7 +104,8 @@ public with sharing class GE_PaymentServices {
         request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt());
         request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
         if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
-            request.setHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS, config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
+            request.setHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS, 
+            config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
         }
 
         // Set the body as a JSON object...
