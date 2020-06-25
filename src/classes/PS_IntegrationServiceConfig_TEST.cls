@@ -79,8 +79,8 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
             requiredConfigs.add(new Payment_Services_Configuration__c(
-                    Service__c = GE_PaymentServices.PAYMENTS_SERVICE_NAME,
-                    Key__c = GE_PaymentServices.REQUIRED_CONFIG_KEYS.get(i),
+                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                    Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
                     Value__c = String.valueOf(i)
             ));
         }
@@ -97,5 +97,37 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
         System.assert(!hasIntegrationPermissions, 'The user should not have integration ' +
                                                     'permissions without configuration keys.');
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationEnabledWhenAllConfigurationKeysExist() {
+        List<Payment_Services_Configuration__c> requiredConfigs = new
+        List<Payment_Services_Configuration__c>();
+
+        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
+            requiredConfigs.add(new Payment_Services_Configuration__c(
+                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                    Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
+                    Value__c = String.valueOf(i)
+            ));
+        }
+        insert requiredConfigs;
+
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        System.assert(ps.isIntegrationEnabled(),
+                'The org should have Integration Enabled when ' +
+                        'all required configuration keys are present.');
+
+        // Now delete a required configuration key and validate that
+        // GE_PaymentServices.isElevateCustomer is false
+        delete [SELECT Id FROM Payment_Services_Configuration__c LIMIT 1];
+        System.assertEquals(false, ps.isIntegrationEnabled(),
+                'The org should not have Integration Enabled without ' +
+                        'all required configuration keys present.');
+    }
+
+    @IsTest
+    private static void shouldNotHaveIntegrationEnabled() {
+
     }
 }
