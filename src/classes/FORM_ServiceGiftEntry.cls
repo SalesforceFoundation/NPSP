@@ -170,7 +170,6 @@ public with sharing class FORM_ServiceGiftEntry {
                 SELECT Id,
                     Name,
                     Template_JSON__c,
-                    Description__c,
                     Format_Version__c
                 FROM Form_Template__c
                 WITH SECURITY_ENFORCED
@@ -247,11 +246,7 @@ public with sharing class FORM_ServiceGiftEntry {
                 WITH SECURITY_ENFORCED
                 LIMIT 1
             ];
-
-            System.debug(templateObj);
-
             template = deserializeFormTemplateFromObj(templateObj);
-            System.debug(template);
             template = checkPermissions(template, new Set<FORM_PermissionValidator.AccessLevel>{
                 FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
