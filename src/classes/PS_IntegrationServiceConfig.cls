@@ -142,8 +142,10 @@ public with sharing class PS_IntegrationServiceConfig {
 
         public Payment_Services_Configuration__c lastModifiedRecord {
             get {
-                List<Payment_Services_Configuration__c> lastModifiedRecords = getLastModifiedConfigRecord();
-                lastModifiedRecord = lastModifiedRecords.isEmpty() ? null : lastModifiedRecords[0];
+                if (lastModifiedRecord == null) {
+                    List<Payment_Services_Configuration__c> lastModifiedRecords = getLastModifiedConfigRecord();
+                    lastModifiedRecord = lastModifiedRecords.isEmpty() ? null : lastModifiedRecords[0];
+                }
                 return lastModifiedRecord;
             }
             private set;
