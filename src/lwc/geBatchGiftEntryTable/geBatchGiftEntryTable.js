@@ -1,84 +1,94 @@
-import {LightningElement, api, track} from 'lwc';
-import getDataImportModel
-    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
-import getDataImportRows
-    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
-import GeFormService from 'c/geFormService';
-import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
-import FAILURE_INFORMATION_FIELD
-    from '@salesforce/schema/DataImport__c.FailureInformation__c';
-import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
-import {deleteRecord} from 'lightning/uiRecordApi';
-import {handleError} from 'c/utilTemplateBuilder';
+import { api, track } from 'lwc';
+import { deleteRecord } from 'lightning/uiRecordApi';
+
+import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
+import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
+
+import { handleError } from 'c/utilTemplateBuilder';
+import { isNotEmpty, isUndefined } from 'c/utilCommon';
+import GeListView from 'c/geListView';
+import GeFormService from 'c/geFormService';
+
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
-import commonOpen from '@salesforce/label/c.commonOpen';
-import { isNotEmpty, isUndefined } from 'c/utilCommon';
 
-export default class GeBatchGiftEntryTable extends LightningElement {
+import commonOpen from '@salesforce/label/c.commonOpen';
+
+import DATAIMPORT_INFO from '@salesforce/schema/DataImport__c';
+import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
+import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+
+export default class GeBatchGiftEntryTable extends GeListView {
     @api batchId;
+    @api userDefinedBatchTableColumnNames;
+    @track columnsByFieldApiName = {};
     @track ready = false;
 
     _batchLoaded = false;
     @track data = [];
-    @track hasData;
+    @track hasData = false;
 
     _columnsLoaded = false;
     _columns = [
-        {label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text'},
-        {label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text'},
+        { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
+        { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
         {
             label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
-            typeAttributes: {label: {fieldName: 'donorName'}}
+            typeAttributes: { label: { fieldName: 'donorName' } }
         },
         {
             label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
-            typeAttributes: {label: {fieldName: 'matchedRecordLabel'}}
+            typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
         }
     ];
     _actionsColumn = {
         type: 'action',
         typeAttributes: {
             rowActions: [
-                {label: commonOpen, name: 'open'},
-                {label: bgeActionDelete, name: 'delete'}
+                { label: commonOpen, name: 'open' },
+                { label: bgeActionDelete, name: 'delete' }
             ],
             menuAlignment: 'auto'
         }
     };
-    _columnsBySourceFieldApiName = {};
-
 
     @api title;
     @api total;
     @api expectedTotal;
     @api count;
     @api expectedCount;
-    @api userDefinedBatchTableColumnNames;
     @track isLoaded = true;
 
-    @api
-    handleSectionsRetrieved(sections) {
-        if (!this._batchLoaded) {
-            this.loadBatch(sections);
-        }
+    constructor() {
+        super(DATAIMPORT_INFO.objectApiName);
+        /* Add the loadBatch function as a callback for the parent component to execute once it executes the
+        objectInfo wire service */
+        this.callbacks.push(this.loadBatch);
     }
 
     setReady() {
         this.ready = this._columnsLoaded && this._batchLoaded;
     }
 
-    loadBatch(sections) {
-        getDataImportModel({batchId: this.batchId})
+    loadBatch = () => {
+        getDataImportModel({ batchId: this.batchId })
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
-                    this.setTableProperties(dataImportModel);
-                    this.buildColumnsFromSections(sections);
+                    this._count = dataImportModel.totalCountOfRows;
+                    this._total = dataImportModel.totalRowAmount;
+
+                    this.data = this.setDatatableRecordsForImperativeCall(
+                        dataImportModel.dataImportRows.map(row => {
+                            return Object.assign(row, row.record);
+                        })
+                    )
+                    this.hasData = this.data.length > 0;
                     this.batchLoaded();
                 }
             )
@@ -94,92 +104,90 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.setReady();
     }
 
-    setTableProperties(dataImportModel) {
-        this._count = dataImportModel.totalCountOfRows;
-        this._total = dataImportModel.totalRowAmount;
-        dataImportModel.dataImportRows.forEach(row => {
-            this.data.push(Object.assign(row, row.record));
-        });
-        this.data = [...this.data];
-        this.hasData = this.data.length > 0 ? true : false;
-    }
-
-    get columns() {
-        if (!this._columnsLoaded) return [];
-        if (this._columnsLoaded) return [...this.computedColumns, this._actionsColumn];
+    @api
+    handleSectionsRetrieved(sections) {
+        if (!this._columnsLoaded) {
+            this.buildColumns(sections);
+        }
     }
 
     get computedColumns() {
+        if (!this._columnsLoaded) return [];
+
         const hasUserDefinedColumns =
-            this.userDefinedBatchTableColumnNames && this.userDefinedBatchTableColumnNames.length > 0;
+            this.userDefinedBatchTableColumnNames &&
+            this.userDefinedBatchTableColumnNames.length > 0;
+
         if (hasUserDefinedColumns) {
-            return this.getUserDefinedColumns();
+            return [...this.retrieveUserDefinedColumns(), this._actionsColumn];
         }
 
-        return this.getAllColumns();
+        return [...this.retrieveAllColumns(), this._actionsColumn]
     }
 
-    getAllColumns() {
+    retrieveAllColumns() {
         let allColumns = [];
-        for (const columnValue in this._columnsBySourceFieldApiName) {
-            allColumns.push(this._columnsBySourceFieldApiName[columnValue]);
+        for (const columnValue in this.columnsByFieldApiName) {
+            allColumns.push(this.columnsByFieldApiName[columnValue]);
         }
         return allColumns;
     }
 
-    getUserDefinedColumns() {
+    retrieveUserDefinedColumns() {
         let userDefinedColumns = [];
         this.userDefinedBatchTableColumnNames.forEach(columnName => {
-            if (isUndefined(this._columnsBySourceFieldApiName[columnName])) return;
-            userDefinedColumns.push(this._columnsBySourceFieldApiName[columnName]);
+            if (isUndefined(this.columnsByFieldApiName[columnName])) return;
+            userDefinedColumns.push(this.columnsByFieldApiName[columnName]);
         });
         return userDefinedColumns;
     }
 
-    buildColumnsFromSections(sections) {
-        this.addSpecialCasedColumns();
-        if (!sections) return;
-
-        sections.forEach(
-            section => {
-                section.elements
-                    .filter(e => e.elementType === 'field')
-                    .forEach(
-                    element => {
-                        const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
-                        if (isNotEmpty(fieldWrapper)) {
-                            const column = {
-                                label: element.customLabel,
-                                fieldName: fieldWrapper.Source_Field_API_Name,
-                                type: GeFormService.getInputTypeFromDataType(
-                                    element.dataType
-                                ) === 'date' ? 'date-local' :
-                                    GeFormService.getInputTypeFromDataType(element.dataType)
-                            };
-
-                            this._columnsBySourceFieldApiName[column.fieldName] = column;
-                        }
+    buildColumns(sections) {
+        const fieldApiNames = [];
+        sections.forEach(section => {
+            section.elements
+                .filter(element => element.elementType === 'field')
+                .forEach(element => {
+                    const fieldWrapper = GeFormService.getFieldMappingWrapper(
+                        element.dataImportFieldMappingDevNames[0]
+                    );
+                    if (isNotEmpty(fieldWrapper)) {
+                        fieldApiNames.push(fieldWrapper.Source_Field_API_Name);
                     }
-                );
-            }
-        );
+                });
+        });
 
+        this.buildColumnsByFieldApiNamesMap(fieldApiNames);
         this.columnsLoaded();
     }
 
     /**
-     * @description Adds special cased columns to the map of columns. These
-     *              four special cased fields are the Donor, Donation, Status,
-     *              Failure Information fields. Donor and Donation are derived
-     *              fields and constructed in the BGE_DataImportBatchEntry_CTRL
-     *              class. Status and Failure Information are fields on the
-     *              DataImport__c object.
-     */
+    * @description Builds a map of all possible columns based on form fields
+    *              in the gift entry form. This map is used to return the relevant
+    *              columns based on the user defined list of table headers or
+    *              all columns if a user defined list couldn't be found.
+    */
+    buildColumnsByFieldApiNamesMap(fieldApiNames) {
+        const columns = this.buildNameFieldColumns(fieldApiNames);
+        columns.forEach(column => {
+            this.columnsByFieldApiName[column.fieldApiName] = column;
+        });
+        this.addSpecialCasedColumns();
+    }
+
+    /**
+    * @description Adds special cased columns to the map of columns. These
+    *              four special cased fields are the Donor, Donation, Status,
+    *              Failure Information fields. Donor and Donation are derived
+    *              fields and constructed in the BGE_DataImportBatchEntry_CTRL
+    *              class. Status and Failure Information are fields on the
+    *              DataImport__c object.
+    */
     addSpecialCasedColumns() {
-        this._columnsBySourceFieldApiName[this._columns[0].fieldName] = this._columns[0];
-        this._columnsBySourceFieldApiName[this._columns[1].fieldName] = this._columns[1];
-        this._columnsBySourceFieldApiName[this._columns[2].fieldName] = this._columns[2];
-        this._columnsBySourceFieldApiName[this._columns[3].fieldName] = this._columns[3];
+        this.columnsByFieldApiName[this._columns[0].fieldName] = this._columns[0];
+        this.columnsByFieldApiName[this._columns[1].fieldName] = this._columns[1];
+        this.columnsByFieldApiName[this._columns[2].fieldName] = this._columns[2];
+        this.columnsByFieldApiName[this._columns[3].fieldName] = this._columns[3];
     }
 
     columnsLoaded() {
@@ -193,12 +201,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             row[idProperty] === dataRow[idProperty]
         );
 
+        let rows = this.setDatatableRecordsForImperativeCall([dataRow]);
+
         if (existingRowIndex !== -1) {
             this.data.splice(existingRowIndex, 1, dataRow);
             this.data = [...this.data];
         } else {
-            this.data = [dataRow, ...this.data];
-            if (this.hasData == false) {
+            this.data = [...rows, ...this.data];
+            if (this.hasData === false) {
                 this.hasData = true;
             }
         }
@@ -213,8 +223,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 deleteRecord(event.detail.row.Id).then(() => {
                     this.deleteDIRow(event.detail.row);
                 }).catch(error => {
-                        handleError(error);
-                    }
+                    handleError(error);
+                }
                 );
                 break;
         }
@@ -242,13 +252,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             this.isLoading = false;
         }.bind(event.target);
 
-        getDataImportRows({batchId: this.batchId, offset: this.data.length})
+        getDataImportRows({ batchId: this.batchId, offset: this.data.length })
             .then(rows => {
                 rows.forEach(row => {
-                        this.data.push(
-                            Object.assign(row, row.record)
-                        );
-                    }
+                    this.data.push(
+                        Object.assign(row, row.record)
+                    );
+                }
                 );
                 this.data = [...this.data];
                 if (this.data.length >= this.count) {
@@ -298,7 +308,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }));
     }
 
-    /**
+    /*************************************************************************************
      * @description Internal setters used to communicate the current count and total
      *              up to the App, which needs them to keep track of whether the batch's
      *              expected totals match.
