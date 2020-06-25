@@ -2,7 +2,6 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { isNull } from 'c/utilCommon';
 
-import getRecurringSettings from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
@@ -33,6 +32,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     // These are exposed to the parent component
     @api parentId;
     @api recordId;
+    @api parentSObjectType
 
     @track isLoading = true;
     isRecordReady = false;
@@ -50,7 +50,8 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     contactLabel;
 
     /**
-     * @description Get settings required to enable or disable fields and populate their values
+     * @description If editing an existing record retrieve the Donor Type from the record so it can defaul the custom
+     * picklis field accordingly.
      */
     connectedCallback() {
         if (!isNull(this.recordId)) {
@@ -64,19 +65,8 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                 });
         } else {
             this.donorType = this.DEFAULT_DONOR_TYPE;
+            this.handleParentIdType(this.parentSObjectType);
         }
-
-        getRecurringSettings({ parentId: this.parentId })
-            .then(response => {
-                this.handleParentIdType(response.parentSObjectType);
-            })
-            .catch((error) => {
-                // handleError(error);
-            })
-            .finally(() => {
-                this.isLoading = !this.isEverythingLoaded();
-            });
-
     }
 
     /**

@@ -54,8 +54,8 @@ private with sharing class RD2_EntryFormController_TEST {
             'Multi Currency Org should be detect in the configuration.');
         System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
             'Parent Sobject type should be correctly identified when value is not null');
-        System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, (String) orgSettingsByKey.get('dayOfMonthLastDay'),
-            'JSON file should grab Last Day of Month Last_Day API value');
+        System.assertEquals(true, ((Map<String,Boolean>)orgSettingsByKey.get('InstallmentPeriodPermissions')).get('Createable'),
+            'Installment_Period__c.IsCreatable should return true');
     }
 
     /***

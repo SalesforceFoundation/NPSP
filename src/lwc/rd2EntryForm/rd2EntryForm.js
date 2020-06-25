@@ -53,6 +53,7 @@ export default class rd2EntryForm extends LightningElement {
     @track record;
     @track isMultiCurrencyEnabled = false;
     @track fields = {};
+    @track rdSettings = {};
     fieldInfos;
 
     @track header = newHeaderLabel;
@@ -88,6 +89,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.isSettingReady = true;
+                this.rdSettings = response;
             })
             .catch((error) => {
                 this.handleError(error, true);

@@ -24,9 +24,11 @@ import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Don
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 
-const RD_TYPE_FIXED = 'Fixed';
 const RECURRING_PERIOD_ADVANCED = 'Advanced';
 
+// Constants from RD2_Constants class
+const RECURRING_TYPE_FIXED = 'Fixed';
+const LAST_DAY_OF_MONTH = 'Last_Day';
 const PERIOD_MONTHLY = 'Monthly';
 const PERIOD_YEARLY = 'Yearly';
 const PERIOD_WEEKLY = 'Weekly';
@@ -68,7 +70,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     @track inputFieldInstallmentFrequency = 1;
 
     rdObjectInfo;
-    dayOfMonthLastDay;
 
     @track disablePeriodPicklistField;
     @track disableInstallmentFrequencyField;
@@ -112,7 +113,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
          */
         getRecurringSettings({ parentId: null })
             .then(response => {
-                this.dayOfMonthLastDay = response.dayOfMonthLastDay;
                 this.disablePeriodPicklistField = this.shouldDisableField(response.InstallmentPeriodPermissions);
                 this.disableInstallmentFrequencyField = this.shouldDisableField(response.InstallmentFrequencyPermissions);
             })
@@ -261,7 +261,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
         return (matchingPicklistValue)
             ? matchingPicklistValue.value
-            : this.dayOfMonthLastDay;
+            : LAST_DAY_OF_MONTH;
     }
 
     /**
@@ -270,7 +270,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     onHandleRecurringTypeChange(event) {
         let recurringType = event.target.value;
-        if (recurringType === RD_TYPE_FIXED) {
+        if (recurringType === RECURRING_TYPE_FIXED) {
             this.showNumPlannedInstallments = true;
             this.recurringTypeColumnSize = 4;
         } else {

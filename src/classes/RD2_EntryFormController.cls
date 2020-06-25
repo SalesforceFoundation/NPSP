@@ -58,7 +58,6 @@ public with sharing class RD2_EntryFormController {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
             'parentSObjectType' => parentSObjectType,
-            'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY,
             'InstallmentPeriodPermissions' => new Map<String, Boolean> {
                     'Createable' => dfrPeriod.isCreateable(),
                     'Updateable' => dfrPeriod.isUpdateable(),
