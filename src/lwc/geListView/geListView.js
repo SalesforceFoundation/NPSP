@@ -539,7 +539,6 @@ export default class geListView extends LightningElement {
 
         // Turn fields in the 'Name' column into URLs
         if (columnEntry.type === URL) {
-            columnEntry.fieldName = fieldApiName + '_' + URL;
             columnEntry.typeAttributes = {
                 label: {
                     fieldName: fieldApiName
