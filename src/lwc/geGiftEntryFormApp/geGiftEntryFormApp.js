@@ -682,6 +682,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return getFieldValue(this.batch.data, BATCH_ID_FIELD);
     }
 
+    /*******************************************************************************
+    * @description Receives a custom event from another component. Currently handles
+    * a save event from the batch gift entry table's customizable column header
+    * modal.
+    *
+    * @param {object} event: custom event object
+    */
     handleReceiveEvent(event) {
         const closeModalCallback = function() {
             closeModal();
