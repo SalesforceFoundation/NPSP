@@ -1969,6 +1969,14 @@
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Custom Field section header</shortDescription>
+        <value>Custom Fields</value>
+    </labels>
+    <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2039,6 +2047,38 @@
         <protected>true</protected>
         <shortDescription>Message displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseClosedRDErrorMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when trying to pause Closed Recurring Donation.</shortDescription>
+        <value>You can&apos;t Pause a Closed Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseDescription</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Pause description</shortDescription>
+        <value>Select installments from the list below. You can pause for up to 12 consecutive installments.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseHeader</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause Header</shortDescription>
+        <value>Pause {0}</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseFirstDonationDateDynamicText</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause first donation date after the pause</shortDescription>
+        <value>The first donation date after the pause period will be {0}.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -7404,6 +7444,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Contact Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelDataBatchNotRun</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when Data Health Check does not run</shortDescription>
+        <value>Record data health checks were not run.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelDisableRecordBatch</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Setting label to disable Sobject batch</shortDescription>
+        <value>Disable Record Data Health Checks</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelDisableRecordBatchDescription</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Disable Health Check Record Batch Setting</shortDescription>
+        <value>If selected, Health Check only checks your NPSP configuration settings for problems.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -7457,7 +7521,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your Account-related data. When complete, you can view the results below, including detailed information for any failures.</value>
+        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your record data. When complete, you can view the results below, including detailed information for any failures.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
@@ -12161,6 +12225,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
         <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingDescription</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming Description</shortDescription>
+        <value>When you create a Recurring Donation, NPSP automatically populates the Name using the specified name format. Choose Disable Automatic Naming to turn this feature off.</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingDisable</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming disable option</shortDescription>
+        <value>Disable Auto Naming</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingOptionLabel</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming Option Label</shortDescription>
+        <value>Recurring Donation Name Format</value>
     </labels>
     <labels>
         <fullName>stgReset</fullName>
