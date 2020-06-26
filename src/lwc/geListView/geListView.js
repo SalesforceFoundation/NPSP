@@ -415,6 +415,7 @@ export default class geListView extends LightningElement {
         for (let fieldApiName of fieldApiNames) {
             const fieldDescribe = this.objectInfo.fields[fieldApiName];
             let columnEntry = {
+                fieldName: fieldDescribe.apiName,
                 fieldApiName: fieldDescribe.apiName,
                 label: fieldDescribe.label,
                 sortable: fieldDescribe.sortable,
@@ -442,8 +443,6 @@ export default class geListView extends LightningElement {
                 'reference': URL,
                 'string': columnEntry.isNameField ? URL : 'string'
             };
-
-            columnEntry.fieldName = fieldApiName;
 
             const convertedType = types[fieldDescribe.dataType.toLowerCase()];
 
