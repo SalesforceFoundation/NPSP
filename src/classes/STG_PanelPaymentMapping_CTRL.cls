@@ -69,6 +69,19 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
+    * @description Check if the running user has full access to the npe4__Relationship_Auto_Create__c sObject
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String autoCreateObjectName = Schema.SObjectType.npe01__Payment_Field_Mapping_Settings__c.getName();
+
+        return UTIL_Permissions.canRead(autoCreateObjectName, false) &&
+                UTIL_Permissions.canCreate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canUpdate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canDelete(autoCreateObjectName, false);
+    }
+
+    /*********************************************************************************************************
     * @description Initializes the targetfields SelectOption list for the selected object
     */
     public list<SelectOption> getTargetFields(){
