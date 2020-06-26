@@ -180,7 +180,7 @@ export default class rd2EntryForm extends LightningElement {
 
     /***
     * @description Overrides the standard submit.
-    * Collects and validate fields displayed on the form and any integrated LWC
+    * Collects and validates fields displayed on the form and any integrated LWC
     * and submits them for the record insert or update.
     */
     handleSubmit(event) {

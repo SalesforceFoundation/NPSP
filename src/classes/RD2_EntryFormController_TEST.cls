@@ -57,7 +57,7 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, (String) orgSettingsByKey.get('dayOfMonthLastDay'),
             'JSON file should grab Last Day of Month Last_Day API value');
         System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
-            'A list of Custom Fields should be return');
+            'A list of Custom Fields should be returned');
     }
 
     /***
