@@ -1700,6 +1700,7 @@
         <members>RD2_EnablementSimpleIntro</members>
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
+        <members>RD2_EntryFormCustomFieldsSectionHeader</members>
         <members>RD2_EntryFormDonationSectionHeader</members>
         <members>RD2_EntryFormDonorSectionHeader</members>
         <members>RD2_EntryFormDonorTypeHelpText</members>
@@ -1717,6 +1718,10 @@
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
+        <members>RD2_PauseClosedRDErrorMessage</members>
+        <members>RD2_PauseDescription</members>
+        <members>RD2_PauseFirstDonationDateDynamicText</members>
+        <members>RD2_PauseHeader</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -2322,6 +2327,7 @@
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>healthLabelDisableRecordBatchDescription</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -2386,6 +2392,8 @@
         <members>healthLabelAllTestsPassed</members>
         <members>healthLabelAutoRelValid</members>
         <members>healthLabelContactData</members>
+        <members>healthLabelDataBatchNotRun</members>
+        <members>healthLabelDisableRecordBatch</members>
         <members>healthLabelErrorRecipientValid</members>
         <members>healthLabelFailed</members>
         <members>healthLabelFiscalYearsValid</members>
@@ -2967,6 +2975,9 @@
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
+        <members>stgRDNamingDescription</members>
+        <members>stgRDNamingDisable</members>
+        <members>stgRDNamingOptionLabel</members>
         <members>stgReset</members>
         <members>stgSelectOne</members>
         <members>stgStatusDisabled</members>
