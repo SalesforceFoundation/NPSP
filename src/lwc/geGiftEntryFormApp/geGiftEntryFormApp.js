@@ -695,7 +695,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             let fields = {};
             fields[BATCH_ID_FIELD.fieldApiName] = this.batchId;
             fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
-                JSON.stringify(event.payload.values);
+                JSON.stringify(
+                    this.sanitizeColumnFieldValues(event.payload.values)
+                );
 
             const recordInput = {fields};
             const lastModifiedDate =
@@ -709,6 +711,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } else {
             closeModalCallback();
         }
+    }
+
+    sanitizeColumnFieldValues(values) {
+        let fieldNames = Object.values(values);
+        for (let i = 0; i < fieldNames.length; i++) {
+            fieldNames[i] = fieldNames[i].replace('_url', '__c');
+        }
+        return fieldNames;
     }
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT})
