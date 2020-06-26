@@ -29,6 +29,7 @@ import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions'
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
+import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -71,11 +72,10 @@ export default class rd2EntryForm extends LightningElement {
     * @description Dynamic render edit form CSS to show/hide the edit form
     */
     get cssEditForm() {
-        //Note: all of these flags need to be checked before the sections are displayed.
-        //If the isSettingReady is not checked, then the form on an error resets all fields
-        //including the Schedule section LWC fields.
-        //TODO: check why and how this expression can be simplifed.
-        return (!this.isLoading && this.isSettingReady && this.isRecordReady && !this.hasError)
+        // Note: all of these flags need to be checked before the sections are displayed.
+        // If the isSettingReady is not checked, then the form on an error resets all fields
+        // including the Schedule section LWC fields.
+        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
     }
@@ -97,6 +97,20 @@ export default class rd2EntryForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
             });
+
+        /*
+        * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
+        */
+        checkRequiredFieldPermissions()
+            .then(response => {
+                if (response === false) {
+                    this.hasError = true;
+                    this.errorMessage = {
+                        header: this.customLabels.flsErrorHeader,
+                        detail: this.customLabels.flsErrorDetail
+                    };
+                }
+            })
     }
 
     /***

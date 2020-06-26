@@ -105,6 +105,36 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
+     * @description Validate that the current user has Read access to a specific set of required fields. If this returns
+     * false, the custom UI will display a warning message at the top of the page.
+     * @return True if the User has Read access to all required fields in the UI
+     */
+    @AuraEnabled(Cacheable=True)
+    public static Boolean checkRequiredFieldPermissions() {
+        Set<String> requiredFields = new Set<String>{
+            'npe03__Amount__c',
+            'npe03__Contact__c',
+            'npe03__Installment_Period__c',
+            'npe03__Date_Established__c',
+            UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Day_of_Month__c'),
+            UTIL_Namespace.StrTokenNSPrefix('StartDate__c')
+        };
+
+        Boolean isMissingRequiredPermissions = true;
+
+        for (String fld : requiredFields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+            if (!dfr.isAccessible()) {
+                isMissingRequiredPermissions = false;
+                break;
+            }
+        }
+
+        return isMissingRequiredPermissions;
+    }
+
+    /**
     * @param recordId RecurringDonation.RecordId
     * @return Recurring Donation object
     */
