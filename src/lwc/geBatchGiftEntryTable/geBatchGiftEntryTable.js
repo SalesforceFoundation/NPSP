@@ -172,7 +172,12 @@ export default class GeBatchGiftEntryTable extends GeListView {
     buildColumnsByFieldApiNamesMap(fieldApiNames) {
         const columns = this.buildNameFieldColumns(fieldApiNames);
         columns.forEach(column => {
-            this.columnsByFieldApiName[column.fieldApiName] = column;
+            if (column.type === 'url') {
+                const correctedFieldApiName = column.typeAttributes.label.fieldName.replace('__r', '__c');
+                this.columnsByFieldApiName[correctedFieldApiName] = column;
+            } else {
+                this.columnsByFieldApiName[column.fieldApiName] = column;
+            }
         });
         this.addSpecialCasedColumns();
     }
