@@ -520,6 +520,7 @@
         <members>STG_PanelRelAuto_CTRL</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
         <members>STG_PanelRel_CTRL</members>
+        <members>STG_PanelRel_CTRL_TEST</members>
         <members>STG_PanelRenameHouseholds_CTRL</members>
         <members>STG_PanelSchedule_CTRL</members>
         <members>STG_PanelTDTM_CTRL</members>
@@ -2080,6 +2081,7 @@
         <members>commonOpen</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
+        <members>commonPermissionErrorMessage</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonReviewForm</members>
