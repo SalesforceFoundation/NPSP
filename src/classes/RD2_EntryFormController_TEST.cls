@@ -56,6 +56,8 @@ private with sharing class RD2_EntryFormController_TEST {
             'Parent Sobject type should be correctly identified when value is not null');
         System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, (String) orgSettingsByKey.get('dayOfMonthLastDay'),
             'JSON file should grab Last Day of Month Last_Day API value');
+        System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
+            'A list of Custom Fields should be return');
     }
 
     /***

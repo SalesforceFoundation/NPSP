@@ -136,13 +136,15 @@ public with sharing class RD2_EntryFormController {
         List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
 
         for (Schema.FieldSetMember field : fieldSetFields) {
-            if (field.getFieldPath().startsWith('npsp__')
+            if (!UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+                || field.getFieldPath().startsWith('npsp__')
                 || field.getFieldPath().startsWith('npe03__')
-                || excludedCustomFields.contains(field.getFieldPath())) {
+                || excludedCustomFields.contains(field.getFieldPath()))
+            {
                 continue;
             }
 
-            fields.add(new CustomField(field.getFieldPath(), field.getDbRequired() || field.getRequired()));
+            fields.add(new CustomField(field));
         }
 
         return fields;
@@ -160,9 +162,9 @@ public with sharing class RD2_EntryFormController {
         * @param apiName Api name of the field
         * @param required Indicate if the field is required 
         */
-        public CustomField(String apiName, Boolean required) {
-            this.apiName = apiName;
-            this.required = required;
+        public CustomField(Schema.FieldSetMember field) {
+            this.apiName = field.getFieldPath();
+            this.required = field.getDbRequired() || field.getRequired();
         }
     }
 }

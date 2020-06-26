@@ -8,7 +8,7 @@
         <label>NPSP Recurring Donation Compact Layout</label>
     </compactLayouts>
     <fieldSets>
-        <description>Fields to be displayed on Recurring Donations Entry Form Custom Fields Section</description>
+        <description>Fields to be displayed on Enhanced Recurring Donations Entry Form in the Custom Fields section</description>
         <fullName>RD2_Entry_Form_Custom_Fields</fullName>
         <label>Recurring Donations Entry Form Custom Fields</label>
     </fieldSets>
