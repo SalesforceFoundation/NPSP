@@ -52,12 +52,12 @@
                         <div aria-hidden="false" class="slds-section__content">
 
                             <lightning-layout horizontal-align="spread" multiple-rows="true" if:true={isFormReady}>
-                                <lightning-layout-item padding="horizontal-small" size="6">
+                                <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.status}>
                                     <lightning-input-field field-name={fields.status.apiName} required>
                                     </lightning-input-field>
                                 </lightning-layout-item>
 
-                                <lightning-layout-item padding="horizontal-small" size="6">
+                                <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.statusreason}>
                                     <lightning-input-field field-name={fields.statusreason.apiName}>
                                     </lightning-input-field>
                                 </lightning-layout-item>
@@ -74,13 +74,13 @@
                     <div aria-hidden="false" class="slds-section__content">
 
                         <lightning-layout horizontal-align="spread" multiple-rows="true" if:true={isFormReady}>
-                            <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6">
+                            <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6" if:true={fields.amount}>
                                 <lightning-input-field field-name={fields.amount.apiName} required>
                                 </lightning-input-field>
                             </lightning-layout-item>
 
                             <template if:true={isMultiCurrencyEnabled}>
-                                <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6">
+                                <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6" if:true={fields.amount}>
                                         <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
                                             <label for="currencyField"
                                                    class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
@@ -100,7 +100,7 @@
                         </c-rd2-entry-form-schedule-section>
 
                         <lightning-layout horizontal-align="spread" multiple-rows="true" if:true={isFormReady}>
-                            <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6">
+                            <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.paymentmethod}>
                                 <lightning-input-field field-name={fields.paymentMethod.apiName}>
                                 </lightning-input-field>
                             </lightning-layout-item>
@@ -123,7 +123,7 @@
                                 </lightning-layout-item>
                             </template>
 
-                            <lightning-layout-item padding="horizontal-small" size="12">
+                            <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.campaign}>
                                 <lightning-input-field field-name={fields.campaign.apiName}>
                                 </lightning-input-field>
                             </lightning-layout-item>

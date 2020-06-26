@@ -137,34 +137,30 @@ export default class rd2EntryForm extends LightningElement {
     * @description Construct field describe info from the Recurring Donation SObject info
     */
     setFields(fieldInfos) {
-        try {
-            this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
-            this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
-            this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
-            this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
-            this.fields.status = this.extractFieldInfo(fieldInfos[FIELD_STATUS.fieldApiName]);
-            this.fields.statusreason = this.extractFieldInfo(fieldInfos[FIELD_STATUS_REASON.fieldApiName]);
-            this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
-        } catch (error) {
-            const permissionsError = {
-                header: this.customLabels.flsErrorHeader,
-                detail: this.customLabels.flsErrorDetail
-            }
-            this.handleError(permissionsError, true);
-        }
-
+        this.fields.campaign = this.extractFieldInfo(fieldInfos, FIELD_CAMPAIGN.fieldApiName);
+        this.fields.name = this.extractFieldInfo(fieldInfos, FIELD_NAME.fieldApiName);
+        this.fields.amount = this.extractFieldInfo(fieldInfos, FIELD_AMOUNT.fieldApiName);
+        this.fields.paymentMethod = this.extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
+        this.fields.status = this.extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
+        this.fields.statusreason = this.extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
+        this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
     }
 
     /***
-    * @description Method converts field describe info into a object that is easily accessible from the front end
+    * @description Method converts field describe info into a object that is easily accessible from the front end.
+    * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
+    * (i.e, the field isn't accessible).
     */
-    extractFieldInfo(field) {
-        return {
-            apiName: field.apiName,
-            label: field.label,
-            inlineHelpText: field.inlineHelpText,
-            dataType: field.dataType
-        };
+    extractFieldInfo(fieldInfos, fldApiName) {
+        try {
+            const field = fieldInfos[fldApiName];
+            return {
+                apiName: field.apiName,
+                label: field.label,
+                inlineHelpText: field.inlineHelpText,
+                dataType: field.dataType
+            };
+        } catch (error) { }
     }
 
     /***

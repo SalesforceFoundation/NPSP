@@ -14,9 +14,6 @@ import FIELD_CONTACT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03
 
 import donorTypeLabel from '@salesforce/label/c.RD2_EntryFormDonorTypeLabel';
 import donorTypeHelpText from '@salesforce/label/c.RD2_EntryFormDonorTypeHelpText';
-import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
-import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
-
 
 export default class rd2EntryFormDonorSection extends LightningElement {
 
@@ -24,9 +21,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
     customLabels = Object.freeze({
         donorTypeLabel,
-        donorTypeHelpText,
-        flsErrorHeader,
-        flsErrorDetail
+        donorTypeHelpText
     });
 
     // These are exposed to the parent component
@@ -198,31 +193,28 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Construct field describe info from the Recurring Donation SObject info
      */
     setFields(fieldInfos) {
-        try {
-            this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
-            this.fields.account = this.extractFieldInfo(fieldInfos[FIELD_ACCOUNT.fieldApiName]);
-            this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
-            this.isRecordReady = true;
-            this.isLoading = !this.isEverythingLoaded();
-        } catch (error) {
-            const permissionsError = {
-                header: this.customLabels.flsErrorHeader,
-                detail: this.customLabels.flsErrorDetail
-            }
-            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: permissionsError }}));
-        }
+        this.fields.dateEstablished = this.extractFieldInfo(fieldInfos, FIELD_DATE_ESTABLISHED.fieldApiName);
+        this.fields.account = this.extractFieldInfo(fieldInfos, FIELD_ACCOUNT.fieldApiName);
+        this.fields.contact = this.extractFieldInfo(fieldInfos, FIELD_CONTACT.fieldApiName);
+        this.isRecordReady = true;
+        this.isLoading = !this.isEverythingLoaded();
     }
 
     /**
      * @description Converts field describe info into a object that is easily accessible from the front end
+     * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
+     * (i.e, the field isn't accessible).
      */
-    extractFieldInfo(field) {
-        return {
-            apiName: field.apiName,
-            label: field.label,
-            inlineHelpText: field.inlineHelpText,
-            dataType: field.dataType
-        };
+    extractFieldInfo(fieldInfos, fldApiName) {
+        try {
+            const field = fieldInfos[fldApiName];
+            return {
+                apiName: field.apiName,
+                label: field.label,
+                inlineHelpText: field.inlineHelpText,
+                dataType: field.dataType
+            };
+        } catch (error) { }
     }
 
     /**

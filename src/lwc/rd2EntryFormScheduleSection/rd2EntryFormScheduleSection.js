@@ -13,8 +13,6 @@ import periodPluralMonths from '@salesforce/label/c.RD2_EntryFormPeriodPluralMon
 import periodPluralWeeks from '@salesforce/label/c.RD2_EntryFormPeriodPluralWeekly';
 import periodPluralYears from '@salesforce/label/c.RD2_EntryFormPeriodPluralYearly';
 import fieldLabelEvery from '@salesforce/label/c.RD2_EntryFormScheduleEveryLabel';
-import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
-import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
@@ -45,9 +43,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         periodPluralDays,
         periodPluralMonths,
         periodPluralWeeks,
-        periodPluralYears,
-        flsErrorHeader,
-        flsErrorDetail
+        periodPluralYears
     });
 
     isNew = false;
@@ -70,9 +66,13 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     @track inputFieldInstallmentFrequency = 1;
 
     rdObjectInfo;
+    defaultDayOfMonthValue;
+    defaultInstallmentPeriodValue;
 
     @track disablePeriodPicklistField;
     @track disableInstallmentFrequencyField;
+    @track hidePeriodPicklistField;
+    @track hideInstallmentFrequencyField;
 
     @track advancedPeriodPicklistValues;
 
@@ -114,7 +114,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         getRecurringSettings({ parentId: null })
             .then(response => {
                 this.disablePeriodPicklistField = this.shouldDisableField(response.InstallmentPeriodPermissions);
+                this.hidePeriodPicklistField = this.shouldHideField(response.InstallmentPeriodPermissions);
+
                 this.disableInstallmentFrequencyField = this.shouldDisableField(response.InstallmentFrequencyPermissions);
+                this.hideInstallmentFrequencyField = this.shouldHideField(response.InstallmentFrequencyPermissions);
             })
             .catch((error) => {
                 // handleError(error);
@@ -150,8 +153,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     isEverythingLoaded() {
         return (this.installmentPeriodPicklistValues && this.dayOfMonthPicklistValues && this.isRecordReady
-            && this.rdObjectInfo
-            && !this.hasError);
+            && this.rdObjectInfo && !this.hasError);
     }
 
     /**
@@ -168,47 +170,56 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-    * @description Construct field describe info from the Recurring Donation SObject info
-    */
+     * @description Construct field describe info from the Recurring Donation SObject info
+     */
     setFields(fieldInfos) {
-        try {
-            this.fields.recurringType = this.extractFieldInfo(fieldInfos[FIELD_RECURRING_TYPE.fieldApiName]);
-            this.fields.period = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_PERIOD.fieldApiName]);
-            this.fields.installmentFrequency = this.extractFieldInfo(fieldInfos[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
-            this.fields.dayOfMonth = this.extractFieldInfo(fieldInfos[FIELD_DAY_OF_MONTH.fieldApiName]);
-            this.fields.startDate = this.extractFieldInfo(fieldInfos[FIELD_START_DATE.fieldApiName]);
-            this.fields.plannedInstallments = this.extractFieldInfo(fieldInfos[FIELD_PLANNED_INSTALLMENTS.fieldApiName]);
-            this.isRecordReady = true;
-        } catch (error) {
-            this.hasError = true;
-            const permissionsError = {
-                header: this.customLabels.flsErrorHeader,
-                detail: this.customLabels.flsErrorDetail
-            }
-            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: permissionsError }}));
-        }
-
+        this.fields.recurringType = this.extractFieldInfo(fieldInfos, FIELD_RECURRING_TYPE.fieldApiName);
+        this.fields.period = this.extractFieldInfo(fieldInfos, FIELD_INSTALLMENT_PERIOD.fieldApiName);
+        this.fields.installmentFrequency = this.extractFieldInfo(fieldInfos, FIELD_INSTALLMENT_FREQUENCY.fieldApiName);
+        this.fields.dayOfMonth = this.extractFieldInfo(fieldInfos, FIELD_DAY_OF_MONTH.fieldApiName);
+        this.fields.startDate = this.extractFieldInfo(fieldInfos, FIELD_START_DATE.fieldApiName);
+        this.fields.plannedInstallments = this.extractFieldInfo(fieldInfos, FIELD_PLANNED_INSTALLMENTS.fieldApiName);
+        this.isRecordReady = true;
     }
 
     /**
-    * @description Converts field describe info into a object that is easily accessible from the front end
-    */
-    extractFieldInfo(field) {
-        return {
-            apiName: field.apiName,
-            label: field.label,
-            inlineHelpText: field.inlineHelpText,
-            dataType: field.dataType
-        };
+     * @description Converts field describe info into a object that is easily accessible from the front end
+     * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
+     * (i.e, the field isn't accessible).
+     */
+    extractFieldInfo(fieldInfos, fldApiName) {
+        try {
+            const field = fieldInfos[fldApiName];
+            return {
+                apiName: field.apiName,
+                label: field.label,
+                inlineHelpText: field.inlineHelpText,
+                dataType: field.dataType
+            };
+        } catch (error) { }
     }
 
     /***
-    * @description Set today's day as default Day of Month value for a new Recurring Donation record
-    */
+     * @description Set today's day as default Day of Month value for a new Recurring Donation record, unless
+     * the picklist itself has a default value.
+     */
     get defaultDayOfMonth() {
         return (this.isNew && this.dayOfMonthPicklistValues)
-            ? this.getCurrentDayOfMonth()
+            ? (this.defaultDayOfMonthValue ? this.defaultDayOfMonthValue : this.getCurrentDayOfMonth())
             : undefined;
+    }
+
+    /**
+     * @description If the default Installment Period is not monthly (the hard-coded default in this UI), then update
+     * the custom picklist field default values accordingly as well as the visibility rules for the fields.
+     */
+    setDefaultInstallmentPeriod() {
+        if (!this.isNew || !this.defaultInstallmentPeriodValue) {
+            return;
+        }
+        if (this.defaultInstallmentPeriodValue !== PERIOD_MONTHLY) {
+            this.updateScheduleFieldVisibility(RECURRING_PERIOD_ADVANCED, this.defaultInstallmentPeriodValue);
+        }
     }
 
     /**
@@ -219,6 +230,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         return (this.isNew ? !fieldPerms.Createable : !fieldPerms.Updateable);
     }
 
+    /**
+     * @description Returns a boolean to hide entry a field based on the FLS
+     * @returns True to hide the field entirely in the UI
+     */
+    shouldHideField(fieldPerms) {
+        return !fieldPerms.Visible;
+    }
+
     /***
     * @description Retrieve Recurring Donation Day of Month picklist values
     */
@@ -226,11 +245,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     wiredDayOfMonthPicklistValues({ error, data }) {
         if (data) {
             this.dayOfMonthPicklistValues = data.values;
-            this.isLoading = !this.isEverythingLoaded();
+            if (data.defaultValue && data.defaultValue.value) {
+                this.defaultDayOfMonthValue = data.defaultValue.value;
+            }
+        } else if (error) {
+            // Day of Month field likely not visible
+            this.dayOfMonthPicklistValues = {};
         }
-        if (error) {
-            // handleError(error);
-        }
+        this.isLoading = !this.isEverythingLoaded();
     }
 
     /***
@@ -240,11 +262,15 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     wiredInstallmentPeriodPicklistValues({ error, data }) {
         if (data) {
             this.installmentPeriodPicklistValues = data.values;
-            this.isLoading = !this.isEverythingLoaded();
+            if (data.defaultValue && data.defaultValue.value) {
+                this.defaultInstallmentPeriodValue = data.defaultValue.value;
+                this.setDefaultInstallmentPeriod();
+            }
+        } else if (error) {
+            // Installment Period field likely not visible
+            this.installmentPeriodPicklistValues = {};
         }
-        if (error) {
-            // handleError(error);
-        }
+        this.isLoading = !this.isEverythingLoaded();
     }
 
     /***

@@ -9,7 +9,7 @@
                 <lightning-layout horizontal-align="spread" multiple-rows="true">
 
                     <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
-                                           flexibility="shrink">
+                                           flexibility="shrink" if:true={fields.recurringType}>
                         <lightning-input-field field-name={fields.recurringType.apiName}
                                                onchange={onHandleRecurringTypeChange}
                                                required>
@@ -17,13 +17,15 @@
                     </lightning-layout-item>
 
                     <template if:true={showNumPlannedInstallments}>
-                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={recurringTypeColumnSize}>
+                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={recurringTypeColumnSize}
+                                               if:true={fields.plannedInstallments}>
                             <lightning-input-field field-name={fields.plannedInstallments.apiName} required>
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>
 
-                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}>
+                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
+                                           if:false={hidePeriodPicklistField}>
                         <lightning-combobox
                                 name="CustomPeriodSelect"
                                 label={customLabels.fieldLabelPeriod}
@@ -38,7 +40,8 @@
                         </lightning-combobox>
                     </lightning-layout-item>
 
-                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}>
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                           if:false={hideInstallmentFrequencyField}>
                         <template if:true={isAdvancedMode}>
                             <lightning-input label={customLabels.fieldLabelEvery}
                                              name="installmentFrequency"
@@ -56,7 +59,8 @@
                         </template>
                     </lightning-layout-item>
 
-                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}>
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                           if:false={hidePeriodPicklistField}>
                         <template if:true={isAdvancedMode}>
                             <lightning-combobox
                                 name="advancedPeriodSelect"
@@ -74,13 +78,15 @@
                     </lightning-layout-item>
 
                     <template if:true={showDayOfMonth}>
-                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}>
+                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                               if:true={fields.dayOfMonth}>
                             <lightning-input-field field-name={fields.dayOfMonth.apiName} value={defaultDayOfMonth} required>
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>
 
-                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}>
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                                           if:true={fields.startDate}>
                         <lightning-input-field field-name={fields.startDate.apiName} required>
                         </lightning-input-field>
                     </lightning-layout-item>
