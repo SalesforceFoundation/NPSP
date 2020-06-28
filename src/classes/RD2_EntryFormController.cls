@@ -37,8 +37,8 @@
 public with sharing class RD2_EntryFormController {
 
     /**
-    * @description  Gather the org setting for Recurring Donation Entry Form
-    * @param parentId The parentId to use when creating the new RD record (if New from Acount or Contact)
+    * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
+    * @param parentId The parentId to use when creating the new RD record (if New from Account or Contact)
     * @return Map<String, Object>
     */
     @AuraEnabled(Cacheable=true)
@@ -47,27 +47,12 @@ public with sharing class RD2_EntryFormController {
             ? null
             : parentId.getSobjectType().getDescribe().getName();
 
-        DescribeFieldResult dfrPeriod = UTIL_Describe.getFieldDescribe(
-            'npe03__Recurring_Donation__c', 'npe03__Installment_Period__c'
-        );
-        DescribeFieldResult dfrFrequency = UTIL_Describe.getFieldDescribe(
-            'npe03__Recurring_Donation__c', UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')
-        );
-
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
             'parentSObjectType' => parentSObjectType,
-            'InstallmentPeriodPermissions' => new Map<String, Boolean> {
-                    'Createable' => dfrPeriod.isCreateable(),
-                    'Updateable' => dfrPeriod.isUpdateable(),
-                    'Visible' => dfrPeriod.isAccessible()
-                },
-            'InstallmentFrequencyPermissions' => new Map<String, Boolean> {
-                    'Createable' => dfrFrequency.isCreateable(),
-                    'Updateable' => dfrFrequency.isUpdateable(),
-                    'Visible' => dfrFrequency.isAccessible()
-                }
+            'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
+            'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c'))
         };
     }
 
@@ -170,5 +155,19 @@ public with sharing class RD2_EntryFormController {
             return hhRecordTypeId;
         }
         private set;
+    }
+
+    /**
+     * @description Builld a map of field permissions to return the the LWC page to assign with rendering custom picklist fields
+     * @param fieldApiName Field ApiName
+     * @return Map<String, Object> of field permissions
+     */
+    private static Map<String, Boolean> getFieldPermissionsMap(String fieldApiName) {
+        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fieldApiName);
+        return new Map<String, Boolean>{
+            'Createable' => dfr.isCreateable(),
+            'Updateable' => dfr.isUpdateable(),
+            'Visible' => dfr.isAccessible()
+        };
     }
 }

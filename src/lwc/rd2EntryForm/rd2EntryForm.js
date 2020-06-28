@@ -156,7 +156,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.amount = this.extractFieldInfo(fieldInfos, FIELD_AMOUNT.fieldApiName);
         this.fields.paymentMethod = this.extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
         this.fields.status = this.extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
-        this.fields.statusreason = this.extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
+        this.fields.statusReason = this.extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
     }
 
@@ -238,7 +238,7 @@ export default class rd2EntryForm extends LightningElement {
     * @param disableSaveButton: true to disable the Save button on the page; defaults to false
     */
     handleError(error, disableSaveButton) {
-        this.errorMessage = (!error || (!error.detail && !error.header)) ? constructErrorMessage(error) : error;
+        this.errorMessage = (!error || !(error.detail && error.header)) ? constructErrorMessage(error) : error;
         this.hasError = true;
 
         const disableBtn = !!(disableSaveButton && disableSaveButton === true);

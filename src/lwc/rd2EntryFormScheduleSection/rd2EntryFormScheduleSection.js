@@ -442,12 +442,21 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     @api
     isValid() {
         let isValid = true;
+
         this.template.querySelectorAll('lightning-input-field')
             .forEach(field => {
                 if (!field.reportValidity()) {
                     isValid = false;
                 }
             });
+
+        this.template.querySelectorAll('.advanced-mode-fields')
+            .forEach(field => {
+                if (!field.reportValidity()) {
+                    isValid = false;
+                }
+            });
+
         return isValid;
     }
 
