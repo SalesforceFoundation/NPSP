@@ -136,11 +136,11 @@ public with sharing class RD2_EntryFormController {
         List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
 
         for (Schema.FieldSetMember field : fieldSetFields) {
-            if (!UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+            if (excludedCustomFields.contains(field.getFieldPath())
                 || field.getFieldPath().startsWith('npsp__')
                 || field.getFieldPath().startsWith('npe03__')
-                || excludedCustomFields.contains(field.getFieldPath()))
-            {
+                ||!UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+            ) {
                 continue;
             }
 
