@@ -121,7 +121,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Recurring_Donation_Naming__c</fullName>
+        <fullName>RecurringDonationNaming__c</fullName>
         <description>The format to use for Recurring Donation naming.</description>
         <externalId>false</externalId>
         <inlineHelpText>The format to use for Recurring Donation naming.</inlineHelpText>
