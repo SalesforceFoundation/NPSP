@@ -34,6 +34,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
     @track data = [];
     @track hasData = false;
 
+    _formElementsByFieldApiName = {};
     _columnsLoaded = false;
     _columns = [
         { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
@@ -154,6 +155,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
                         element.dataImportFieldMappingDevNames[0]
                     );
                     if (isNotEmpty(fieldWrapper)) {
+                        this._formElementsByFieldApiName[fieldWrapper.Source_Field_API_Name] = element;
                         fieldApiNames.push(fieldWrapper.Source_Field_API_Name);
                     }
                 });
@@ -172,14 +174,19 @@ export default class GeBatchGiftEntryTable extends GeListView {
     buildColumnsByFieldApiNamesMap(fieldApiNames) {
         const columns = this.buildNameFieldColumns(fieldApiNames);
         columns.forEach(column => {
+            let computedApiName = column.fieldApiName;
             if (column.type === 'url') {
-                const correctedFieldApiName = column.typeAttributes.label.fieldName.replace('__r', '__c');
-                this.columnsByFieldApiName[correctedFieldApiName] = column;
-            } else {
-                this.columnsByFieldApiName[column.fieldApiName] = column;
+                computedApiName = column.typeAttributes.label.fieldName.replace('__r', '__c');
             }
+            column.label = this.getFormElementCustomLabel(computedApiName);
+            this.columnsByFieldApiName[computedApiName] = column;
         });
         this.addSpecialCasedColumns();
+    }
+
+    getFormElementCustomLabel(fieldApiName) {
+        const formElement = this._formElementsByFieldApiName[fieldApiName];
+        if (formElement) return formElement.customLabel;
     }
 
     /**
