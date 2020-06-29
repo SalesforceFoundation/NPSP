@@ -38,7 +38,9 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         target=npsp_lex_locators['adv_mappings']['field_mapping'].format("targetFieldLabel")
         self.selenium.click_element(target)
         self.selenium.wait_until_page_contains_element(dd, error="Target field dropdown did not open")
-        self.selenium.click_element(npsp_lex_locators['span'].format(tgt_fld))
+        tgt_ele=npsp_lex_locators['span'].format(tgt_fld)
+        element = self.selenium.driver.find_element_by_xpath(tgt_ele)
+        self.selenium.driver.execute_script('arguments[0].click()', element) 
         self.selenium.click_button("Save")
         self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15, 
                                                                error="New Field Mapping Modal did not close in 15 seconds")
@@ -88,6 +90,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains("Delete", timeout=60)
         self.selenium.click_link("Delete")
         self.selenium.wait_until_page_contains("Success", timeout=180)
+        self.selenium.wait_until_page_contains("Back to Object Group", timeout=60)
         self.selenium.wait_until_page_does_not_contain_element(deleted, timeout=60)
     
     @capture_screenshot_on_error    
@@ -99,3 +102,14 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         else :
             self.builtin.log(f"the locator {locator} for element you are trying to delete is not found on page") 
             self.selenium.capture_page_screenshot()   
+
+    @capture_screenshot_on_error    
+    def create_mapping_if_doesnt_exist(self,src_fld,tgt_fld):
+        """Checks if mapping with fld_label exists and if exists deletes the mapping. If not then does nothing"""
+        name=src_fld.split(' (')
+        locator=npsp_lex_locators['adv_mappings']['field-label'].format(name[0])
+        if not self.npsp.check_if_element_exists(locator):
+            self.create_new_field_mapping(src_fld,tgt_fld)
+        else :
+            self.builtin.log(f"Field mapping already exists, skipping creation") 
+  

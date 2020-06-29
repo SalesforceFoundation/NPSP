@@ -361,13 +361,16 @@ Validate And Create Required CustomField
     ...                                                      &{fields}[Field_Type]
     ...                                                      &{fields}[Field_Name]
     ...                                                      &{fields}[Related_To]
-    Run Keyword If     '&{fields}[Field_Type]' == "Currency"   Create Custom Field
+    Run Keyword If     '&{fields}[Field_Type]' == "Currency"  Create Custom Field
     ...                                                      &{fields}[Field_Type]
     ...                                                      &{fields}[Field_Name]
-    Run Keyword If     '&{fields}[Field_Type]' == "Formula"   Create Custom Field
+    Run Keyword If     '&{fields}[Field_Type]' == "Formula"  Create Custom Field
     ...                                                      &{fields}[Field_Type]
     ...                                                      &{fields}[Field_Name]
     ...                                                      formula=&{fields}[Formula]
+    Run Keyword If     '&{fields}[Field_Type]' == "Text"     Create Custom Field
+    ...                                                      &{fields}[Field_Type]
+    ...                                                      &{fields}[Field_Name]
 
 Enable RD2QA
     [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata

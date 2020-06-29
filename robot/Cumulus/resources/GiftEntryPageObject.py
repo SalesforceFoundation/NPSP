@@ -21,7 +21,8 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
-        self.salesforce.wait_until_loading_is_complete()
+        locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")                                           
+        self.selenium.wait_until_page_contains_element(locator)
 
     def _is_current_page(self):
         """
@@ -143,6 +144,36 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains(label)
 
 
+    def verify_template_builder(self,check,field):
+        """"""
+        field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
+        self.selenium.wait_until_page_contains("Field Bundles")
+        if check.lower()=='contains':
+            self.selenium.page_should_contain_element(field_checkbox)
+        elif check.lower()=='does not contain':
+            self.selenium.page_should_not_contain_element(field_checkbox)
+    
+    @capture_screenshot_on_error
+    def unselect_object_group_field(self,object_group,field):
+        """Unselects the specified field under specified object group 
+           to remove the field from gift entry template"""
+        locator=npsp_lex_locators["gift_entry"]["form_object_dropdown"].format(object_group)
+        self.salesforce._jsclick(locator)
+        element=self.selenium.get_webelement(locator)
+        status=element.get_attribute("aria-expanded")
+        if status=="false":
+            time.sleep(2)       
+        field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")  
+        check=self.selenium.get_webelement(field_checkbox)
+        if check.is_selected():
+            try:
+                self.salesforce._jsclick(field_checkbox)
+            except ElementClickInterceptedException:
+                self.selenium.execute_javascript("window.scrollBy(0,0)")
+                self.salesforce._jsclick(field_checkbox)
+        label=": "+field    
+        self.selenium.wait_until_page_does_not_contain(label)
+    
     @capture_screenshot_on_error                
     def fill_template_form(self,**kwargs):
         """Add default values to template builder form fields or set fields as required. 
@@ -224,22 +255,19 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
-
-
-            
-
-
-
-    
+  
 
 @pageobject("Form", "Gift Entry")
 class GiftEntryFormPage(BaseNPSPPage, BasePage):
 
-    def _is_current_page(self):
+    def _is_current_page(self,title=None):
         """
         Verifies that current page is Gift Entry form page
         """
-        self.selenium.wait_until_page_contains("Donor Information")
+        if title is not None:
+            self.selenium.wait_until_page_contains(title)
+        else:
+            self.selenium.wait_until_page_contains("Donor Information")
 
     def verify_field_default_value(self,**kwargs):
         """verifies that the field contains given default value
