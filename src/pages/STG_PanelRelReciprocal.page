@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
 
         <apex:outputPanel rendered="{!NOT(hasAccess)}">
-            <div id='utilIllustration' />
+            <div id='stgPanelRelReciprocalUtilIllustration' />
         </apex:outputPanel>
 
         <apex:outputPanel rendered="{!hasAccess}">
@@ -140,7 +140,7 @@
                         variant: "no-access",
                         illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
                     },
-                    "utilIllustration",
+                    "stgPanelRelReciprocalUtilIllustration",
                     function () { }
                 );
             });
