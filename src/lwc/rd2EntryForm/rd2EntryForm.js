@@ -188,11 +188,7 @@ export default class rd2EntryForm extends LightningElement {
         this.hasError = false;
         this.template.querySelector("[data-id='submitButton']").disabled = true;
 
-        event.preventDefault();
-
-        const allFields = {
-            ...event.detail.fields, ...this.getAllSectionsInputValues()
-        };
+        const allFields = this.getAllSectionsInputValues();
 
         if (this.isSectionInputsValid()) {
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
@@ -219,7 +215,7 @@ export default class rd2EntryForm extends LightningElement {
             ? {}
             : this.customFieldsComponent.returnValues();
 
-        return {...scheduleFields, ...donorFields, ...extrafields};
+        return {...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues()};
     }
 
     /***
@@ -238,7 +234,9 @@ export default class rd2EntryForm extends LightningElement {
             ? true
             : this.customFieldsComponent.isValid();
 
-        return isDonorSectionValid && isScheduleSectionValid && isCustomFieldSectionValid;
+        const isEntryFormValid = this.isValid();
+
+        return isDonorSectionValid && isScheduleSectionValid && isCustomFieldSectionValid && isEntryFormValid;
     }
 
     /***
@@ -296,6 +294,36 @@ export default class rd2EntryForm extends LightningElement {
      */
     get customFieldsComponent() {
         return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];
+    }
+
+    /**
+     * @description Checks if values specified on fields are valid
+     * @return Boolean
+     */
+    isValid() {
+        let isValid = true;
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                if (!field.reportValidity()) {
+                    isValid = false;
+                }
+            });
+        return isValid;
+    }
+
+    /**
+     * @description Returns fields displayed on the parent form
+     * @return Object containing field API names and their values
+     */
+    returnValues() {
+        let data = {};
+
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                data[field.fieldName] = field.value;
+            });
+
+        return data;
     }
 
 }
