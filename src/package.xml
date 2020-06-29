@@ -519,6 +519,7 @@
         <members>STG_PanelRD_CTRL</members>
         <members>STG_PanelRelAuto_CTRL</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
+        <members>STG_PanelRelReciprocal_CTRL_TEST</members>
         <members>STG_PanelRel_CTRL</members>
         <members>STG_PanelRel_CTRL_TEST</members>
         <members>STG_PanelRenameHouseholds_CTRL</members>
