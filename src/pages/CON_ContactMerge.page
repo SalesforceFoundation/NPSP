@@ -360,7 +360,7 @@
                                             <th headers="blank" class="slds-size_1-of-12" scope="row">{!$Label.conMergeSelectAll}</th>
                                             <apex:repeat var="col" value="{!row.values}">
                                                 <td headers="contact-row-element-id" class="slds-size_1-of-3 slds-cell-wrap">
-                                                    <span class="slds-text-heading_small kill-white-space">
+                                                    <span class="slds-text-body_regular">
                                                         <apex:commandLink action="{!selectDefaultRecord}" value="{!$Label.conMergeSelectAll}"><apex:param name="recordId" value="{!col.objId}"/></apex:commandLink>
                                                     </span>
                                                 </td>
@@ -383,7 +383,7 @@
                                                             <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                         </apex:outputText>
                                                         <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]}"></span>
-                                                        <span>
+                                                        <span class="slds-text-body_regular">
                                                             <apex:outputText value="{!col.objId}"/>
                                                         </span>
                                                         <span class="slds-assistive-text">{!$Label.conMergeWinnerAsstText}</span>
