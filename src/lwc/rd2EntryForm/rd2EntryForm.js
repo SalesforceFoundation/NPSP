@@ -286,14 +286,6 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-    * @description Returns true when all required data for the form is ready
-    * @returns {boolean|boolean}
-    */
-    get isFormReady() {
-        return (!this.isLoading && this.fields && this.isSettingReady);
-    }
-
-    /**
      * @description Returns the Schedule Child Component instance
      * @returns rd2EntryFormScheduleSection component dom
      */
