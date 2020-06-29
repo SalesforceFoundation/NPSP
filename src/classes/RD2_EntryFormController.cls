@@ -41,9 +41,18 @@ public with sharing class RD2_EntryFormController {
     */
     @TestVisible
     private static Set<String> excludedCustomFields = new Set<String> {
-        'Name',
+        'CreatedById',
+        'CreatedDate',
+        'CurrencyIsoCode',
         'Id',
-        'CurrencyIsoCode'
+        'IsDeleted',
+        'LastModifiedById',
+        'LastModifiedDate',
+        'LastReferencedDate',
+        'LastViewedDate',
+        'Name',
+        'OwnerId',
+        'SystemModStamp'
     };
 
     /**
