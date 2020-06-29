@@ -42,6 +42,15 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelRelAuto'; }
 
     /*********************************************************************************************************
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) return 'c';
+        return namespace;
+    }
+
+    /*********************************************************************************************************
     * @description temporary ac used by the page for creating a new ac.
     */
     public npe4__Relationship_Auto_Create__c acNew {

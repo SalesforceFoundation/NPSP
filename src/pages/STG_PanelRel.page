@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelationships}" />
 
         <apex:outputPanel rendered="{!NOT(hasAccess)}">
-            <div id='utilIllustration' />
+            <div id='stgPanelRelUtilIllustration' />
         </apex:outputPanel>
 
         <apex:outputPanel rendered="{!hasAccess}">
@@ -111,7 +111,7 @@
                         variant: "no-access",
                         illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
                     },
-                    "utilIllustration",
+                    "stgPanelRelUtilIllustration",
                     function () { }
                 );
             });
