@@ -51,7 +51,7 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, ((Boolean) orgSettingsByKey.get('isAutoNamingEnabled')),
             'Recurring Donation Auto Naming setting should be returned accordingly');
         System.assertEquals(UserInfo.isMultiCurrencyOrganization(), (Boolean) orgSettingsByKey.get('isMultiCurrencyEnabled'),
-            'Multi Currency Org should be detect in the configuration.');
+            'Multi Currency Org should be detected in the configuration.');
         System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
             'Parent Sobject type should be correctly identified when value is not null');
         System.assertEquals(true, ((Map<String,Boolean>)orgSettingsByKey.get('InstallmentPeriodPermissions')).get('Createable'),

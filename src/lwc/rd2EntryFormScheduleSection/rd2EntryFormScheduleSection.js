@@ -223,7 +223,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-     * @description Returns a boolean to disable entry a field based on the FLS
+     * @description Returns a boolean to disable entry into a field based on the FLS
      * @returns True to disable entry into the field
      */
     shouldDisableField(fieldPerms) {
@@ -231,7 +231,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-     * @description Returns a boolean to hide entry a field based on the FLS
+     * @description Returns a boolean to hide a field based on the FLS
      * @returns True to hide the field entirely in the UI
      */
     shouldHideField(fieldPerms) {

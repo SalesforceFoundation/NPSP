@@ -45,8 +45,8 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     contactLabel;
 
     /**
-     * @description If editing an existing record retrieve the Donor Type from the record so it can defaul the custom
-     * picklis field accordingly.
+     * @description If editing an existing record retrieve the Donor Type from the record so it can default the custom
+     * picklist field accordingly.
      */
     connectedCallback() {
         if (!isNull(this.recordId)) {

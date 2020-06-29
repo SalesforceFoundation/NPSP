@@ -69,12 +69,10 @@ export default class rd2EntryForm extends LightningElement {
     @track errorMessage = {};
 
     /***
-    * @description Dynamic render edit form CSS to show/hide the edit form
+    * @description Dynamically render the new/edit form via CSS to show/hide based on the status of
+    * callouts to retrieve RD settings and other required data.
     */
     get cssEditForm() {
-        // Note: all of these flags need to be checked before the sections are displayed.
-        // If the isSettingReady is not checked, then the form on an error resets all fields
-        // including the Schedule section LWC fields.
         return (!this.isLoading && this.isSettingReady && this.isRecordReady)
             ? ''
             : 'slds-hide';

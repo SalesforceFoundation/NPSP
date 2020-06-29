@@ -158,7 +158,9 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
-     * @description Builld a map of field permissions to return the the LWC page to assign with rendering custom picklist fields
+     * @description Build a map of field permissions for use by LWC so it can validate access permission
+     * for custom picklist fields without a return trip to server. Fields using lightning-input-field do not
+     * require this additional check.
      * @param fieldApiName Field ApiName
      * @return Map<String, Object> of field permissions
      */
