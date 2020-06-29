@@ -42,12 +42,12 @@ Create Donation from a Contact and Delete Opportunity
 
 
     Go To Page                           Details
-    ...                                  Contact
+    ...                                  Account
     ...                                  object_id=${data}[contact][AccountId]
 
     Select Tab                           Details
 
     # Perform Validations
-    Navigate To And Validate Field Value   Total Gifts            contains         $0.00    Membership Information
-    Navigate To And Validate Field Value   Total Number of Gifts  contains           0      Membership Information
+    Navigate To And Validate Field Value   Total Gifts            contains         $0.00    Donation Totals
+    Navigate To And Validate Field Value   Total Number of Gifts  contains           0      Donation Totals
 
