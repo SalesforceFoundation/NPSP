@@ -123,7 +123,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(locator, value)   
 
     @capture_screenshot_on_error
-    def select_object_group_field(self,object_group,field):
+    def object_group_field_action(self,action,object_group,field):
         """Select the specified field under specified object group 
            to add the field to gift entry form and verify field is added"""
         locator=npsp_lex_locators["gift_entry"]["form_object_dropdown"].format(object_group)
@@ -134,14 +134,25 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
             time.sleep(2)       
         field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")  
         check=self.selenium.get_webelement(field_checkbox)
-        if not check.is_selected():
-            try:
-                self.salesforce._jsclick(field_checkbox)
-            except ElementClickInterceptedException:
-                self.selenium.execute_javascript("window.scrollBy(0,0)")
-                self.salesforce._jsclick(field_checkbox)
-        label=": "+field    
-        self.selenium.wait_until_page_contains(label)
+        if action.lower()=='select':
+            if not check.is_selected():
+                try:
+                    self.salesforce._jsclick(field_checkbox)
+                except ElementClickInterceptedException:
+                    self.selenium.execute_javascript("window.scrollBy(0,0)")
+                    self.salesforce._jsclick(field_checkbox)
+            label=": "+field    
+            self.selenium.wait_until_page_contains(label)
+        elif action.lower()=='unselect':
+            if check.is_selected():
+                try:
+                    self.salesforce._jsclick(field_checkbox)
+                except ElementClickInterceptedException:
+                    self.selenium.execute_javascript("window.scrollBy(0,0)")
+                    self.salesforce._jsclick(field_checkbox)
+            label=": "+field    
+            self.selenium.wait_until_page_does_not_contain(label)
+
 
 
     def verify_template_builder(self,check,field):

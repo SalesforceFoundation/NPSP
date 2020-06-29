@@ -5,10 +5,10 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/AdvancedMappingPageObject.py
-# ...             robot/Cumulus/resources/ObjectMangerPageObject.py
+...             robot/Cumulus/resources/ObjectMangerPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-# ...             Setup Test Data
+...             Setup Test Data
 ...             Enable Gift Entry
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
@@ -22,10 +22,12 @@ Setup Test Data
     ...                                                    Field_Type=Text
     ...                                                    Field_Name=Test Mapping
     Validate And Create Required CustomField
-    ...                                                    Object=NPSP Data Imports
+    ...                                                    Object=NPSP Data Import
     ...                                                    Field_Type=Text
     ...                                                    Field_Name=Opportunity Test
-        
+    ${ns} =  Get NPSP Namespace Prefix
+    Set suite variable    ${ns}
+
 *** Test Cases ***
 
 Verify Mapped Field Is Available For Batch Template
@@ -46,7 +48,7 @@ Verify Mapped Field Is Available For Batch Template
     ...                                       Template Name=${template}
     ...                                       Description=This is created by automation script  
     Click Gift Entry Button                   Next: Form Fields
-    Select Object Group Field                 Opportunity                     Test Mapping
+    Object Group Field Action                 select                          Opportunity                     Test Mapping
     Click Gift Entry Button                   Next: Batch Settings
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing                         GE_Gift_Entry
@@ -63,7 +65,6 @@ Verify Mapped Field Is Available For Batch Template
     Click Gift Entry Button                   Next
     Click Gift Entry Button                   Save
     Current Page Should Be                    Form                           Gift Entry         title=Gift Entry Form
-    ${ns} =  Get NPSP Namespace Prefix
     ${batch_id} =                             Save Current Record ID For Deletion     ${ns}DataImportBatch__c
     Wait Until Page Contains                  Test Mapping
     
@@ -73,7 +74,7 @@ Verify Mapped Field Is Available For Batch Template
     Select Template Action                    ${template}                    Edit
     Click Gift Entry Button                   Next: Form Fields
     Verify Template Builder                   contain                        Test Mapping
-    Unselect Object Group Field               Opportunity                    Test Mapping
+    Object Group Field Action                 unselect                       Opportunity                    Test Mapping
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing                        GE_Gift_Entry
     Go To Page                                Custom                         NPSP_Settings
