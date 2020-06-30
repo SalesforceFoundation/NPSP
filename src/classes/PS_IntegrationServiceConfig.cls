@@ -71,7 +71,6 @@ public with sharing class PS_IntegrationServiceConfig {
         get {
             if (isEnabled == null) {
                 return psConfig.keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
-                //return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
             }
             return isEnabled;
         }
