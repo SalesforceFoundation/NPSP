@@ -3754,6 +3754,7 @@
         <members>Level__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
         <members>Trigger_Handler__c.All</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt.All</members>
         <name>ListView</name>
     </types>
     <types>
