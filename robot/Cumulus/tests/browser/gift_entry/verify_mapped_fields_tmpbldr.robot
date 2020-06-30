@@ -41,7 +41,7 @@ Verify Mapped Field Is Available For Batch Template
     Create Mapping If Doesnt Exist            Opportunity Test (Opportunity_Test__c)    Test Mapping (Test_Mapping__c)
     Reload Page
     #Create new template with new field                            
-    Go To Page                                Landing                         GE_Gift_Entry
+    Go To Page                                Landing                         GE_Gift_Entry         tab=Batches
     Click Link                                Templates
     Click Gift Entry Button                   Create Template
     Current Page Should Be                    Template                        GE_Gift_Entry
@@ -49,7 +49,7 @@ Verify Mapped Field Is Available For Batch Template
     ...                                       Template Name=${template}
     ...                                       Description=This is created by automation script  
     Click Gift Entry Button                   Next: Form Fields
-    Object Group Field Action                 select                          Opportunity                     Test Mapping
+    Object Group Field Action                 select                          Opportunity           Test Mapping
     Click Gift Entry Button                   Next: Batch Settings
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing                         GE_Gift_Entry
@@ -66,16 +66,16 @@ Verify Mapped Field Is Available For Batch Template
     ...                                       Batch Description=This is a test batch created via automation script
     Click Gift Entry Button                   Next
     Click Gift Entry Button                   Save
-    Current Page Should Be                    Form                           Gift Entry         title=Gift Entry Form
+    Current Page Should Be                    Form                            Gift Entry            title=Gift Entry Form
     ${batch_id} =                             Save Current Record ID For Deletion     ${ns}DataImportBatch__c
     Wait Until Page Contains                  Test Mapping
     #Remove field from template
-    Go To Page                                Landing                        GE_Gift_Entry
+    Go To Page                                Landing                        GE_Gift_Entry          tab=Batches
     Click Link                                Templates
     Select Template Action                    ${template}                    Edit
     Click Gift Entry Button                   Next: Form Fields
     Verify Template Builder                   contain                        Test Mapping
-    Object Group Field Action                 unselect                       Opportunity                    Test Mapping
+    Object Group Field Action                 unselect                       Opportunity            Test Mapping
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing                        GE_Gift_Entry
     #Remove field mapping
@@ -87,7 +87,7 @@ Verify Mapped Field Is Available For Batch Template
     Delete Field Mapping                      Opportunity Test
     Reload Page
     #Verify field is not available for selection while creating template
-    Go To Page                                Landing                        GE_Gift_Entry
+    Go To Page                                Landing                        GE_Gift_Entry          tab=Batches
     Click Link                                Templates
     Click Gift Entry Button                   Create Template
     Current Page Should Be                    Template                       GE_Gift_Entry

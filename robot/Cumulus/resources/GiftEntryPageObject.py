@@ -14,15 +14,17 @@ OID_REGEX = r"^(%2F)?([a-zA-Z0-9]{15,18})$"
 class GiftEntryLandingPage(BaseNPSPPage, BasePage):
 
     
-    def _go_to_page(self):
+    def _go_to_page(self,tab=None):
         """Go to Gift Entry page and wait until page contains batches table"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
         object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
-        locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")                                           
-        self.selenium.wait_until_page_contains_element(locator)
+        self.salesforce.wait_until_loading_is_complete()
+        if tab is not None:
+            locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")                                           
+            self.selenium.wait_until_page_contains_element(locator)
 
     def _is_current_page(self):
         """

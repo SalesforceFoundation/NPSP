@@ -43,8 +43,7 @@ Edit GE Template And Verify Changes
  
     [tags]                           unstable                      feature:GE          W-039559   
     # Edit Default template to add some default values and add a new field to form                   
-    Go To Page                       Landing                       GE_Gift_Entry
-    Current Page Should Be           Landing                       GE_Gift_Entry
+    Go To Page                       Landing                       GE_Gift_Entry                 tab=Batches
     Click Link                       Templates
     Select Template Action           Default Gift Entry Template   Edit
     Current Page Should Be           Template                      GE_Gift_Entry
@@ -91,7 +90,7 @@ Edit GE Template And Verify Changes
     Verify Expected Values           nonns    Account     &{account}[Id]
     ...                              ${org_ns}custom_acc_text__c=${msg}
     # Create a new batch and verify default values are displayed on the Batch Gift Form
-    Go To Page                       Landing                       GE_Gift_Entry
+    Go To Page                       Landing                       GE_Gift_Entry               tab=Batches
     Click Gift Entry Button          New Batch
     Wait Until Modal Is Open
     Select Template                  Default Gift Entry Template
