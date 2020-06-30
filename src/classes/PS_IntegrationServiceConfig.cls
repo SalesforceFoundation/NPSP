@@ -39,7 +39,7 @@ public with sharing class PS_IntegrationServiceConfig {
     @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
     @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
 
-     // Properties used to configure headers in
+    // Properties used to configure headers in
     // HTTP Requests to Elevate payment services
     public static final String API_KEY = 'apiKey';
     public static final String BASE_URL = 'baseURL';
@@ -90,11 +90,25 @@ public with sharing class PS_IntegrationServiceConfig {
     * @description Determines if the current user has the appropriate permissions to modify Elevate records
     * @return Boolean
     */
+    private Boolean hasPermissions {
+        get {
+            if (hasPermissions == null) {
+                Payment_Services_Configuration__c lastModifiedRecord = psConfig.lastModifiedRecord;
+                return lastModifiedRecord != null 
+                    ? lastModifiedRecord.LastModifiedById == UserInfo.getUserId() 
+                    : false;
+            }
+            return hasPermissions;
+        }
+        set;
+    }
+
+    /**
+    * @description Determines if the current user has the appropriate permissions to modify Elevate records
+    * @return Boolean
+    */
     public Boolean hasIntegrationPermissions() {
-        Payment_Services_Configuration__c lastModifiedRecord = new Configuration().lastModifiedRecord;
-        return lastModifiedRecord != null 
-                ? lastModifiedRecord.LastModifiedById == UserInfo.getUserId() 
-                : false;
+        return hasPermissions;
     }
 
     /**
@@ -121,10 +135,13 @@ public with sharing class PS_IntegrationServiceConfig {
     @TestVisible
     public without sharing class Configuration {
         public Configuration() {}
+        List<Payment_Services_Configuration__c> lastModifiedRecords;
+        List<Payment_Services_Configuration__c> configRecords;
 
         public Map<String, String> keyValueMap {
             get {
                 if (keyValueMap == null) {
+                    system.debug('reading config values');
                     keyValueMap = new Map<String, String>();
                     String makanaKey;
                     for (Payment_Services_Configuration__c configRecord :
@@ -155,6 +172,7 @@ public with sharing class PS_IntegrationServiceConfig {
         public Payment_Services_Configuration__c lastModifiedRecord {
             get {
                 if (lastModifiedRecord == null) {
+                    system.debug('reading last records');
                     List<Payment_Services_Configuration__c> lastModifiedRecords = getLastModifiedConfigRecord();
                     lastModifiedRecord = lastModifiedRecords.isEmpty() ? null : lastModifiedRecords[0];
                 }
