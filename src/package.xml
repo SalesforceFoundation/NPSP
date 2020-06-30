@@ -2468,6 +2468,8 @@
         <members>labelListViewNext</members>
         <members>labelListViewPageInfo</members>
         <members>labelListViewPrevious</members>
+        <members>labelBooleanTrue</members>
+        <members>labelBooleanFalse</members>
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblAddressOverride</members>
