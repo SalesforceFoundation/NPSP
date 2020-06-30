@@ -147,6 +147,6 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 			elif type.lower() == 'currency':
 				self.create_currency_field(kwargs['Field_Name'])
 			elif type.lower() == 'text':
-    		self.create_text_field(kwargs['Field_Name'])
+    				self.create_text_field(kwargs['Field_Name'])
 			elif type.lower() == 'formula':
 				self.create_formula_field(kwargs['Field_Name'],kwargs['Formula'])
