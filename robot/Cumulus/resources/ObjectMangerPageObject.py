@@ -147,5 +147,7 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 				self.create_lookup_field(field_name,related_to)
 			elif type.lower() == 'currency':
 				self.create_currency_field(field_name)
+			elif type.lower() == 'text':
+    				self.create_text_field(field_name)
 			elif type.lower() == 'formula':
 				self.create_formula_field(field_name,formula)
