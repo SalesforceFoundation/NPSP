@@ -14,17 +14,20 @@ OID_REGEX = r"^(%2F)?([a-zA-Z0-9]{15,18})$"
 class GiftEntryLandingPage(BaseNPSPPage, BasePage):
 
     
-    def _go_to_page(self,tab=None):
-        """Go to Gift Entry page and wait until page contains batches table"""
+    def _go_to_page(self,default=None):
+        """Go to Gift Entry page and waits for error msg if default=error 
+        otherwise waits until page contains batches table"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
         object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-        if tab is not None:
+        if default=='error':
+            self.selenium.wait_until_page_contains("Enable Advanced Mapping and Gift Entry") 
+        else:
             locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")                                           
-            self.selenium.wait_until_page_contains_element(locator)
+            self.selenium.wait_until_page_contains_element(locator)  
 
     def _is_current_page(self):
         """
@@ -125,7 +128,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(locator, value)   
 
     @capture_screenshot_on_error
-    def object_group_field_action(self,action,object_group,field):
+    def perform_action_on_object_field(self,action,object_group,field):
         """If action is 'select' then selects the specified field under specified object group to add the field to gift entry form and verify field is added
         If action is 'unselect'then Unselects the specified field under specified object group to remove the field from gift entry template"""
         locator=npsp_lex_locators["gift_entry"]["form_object_dropdown"].format(object_group)

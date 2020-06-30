@@ -105,10 +105,11 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
 
     @capture_screenshot_on_error    
     def create_mapping_if_doesnt_exist(self,src_fld,tgt_fld):
-        """Checks if mapping with fld_label exists and if exists deletes the mapping. If not then does nothing"""
+        """Checks if mapping with src_fld exists and creates if it doesn't exist."""
         name=src_fld.split(' (')
         locator=npsp_lex_locators['adv_mappings']['field-label'].format(name[0])
         if not self.npsp.check_if_element_exists(locator):
+            self.builtin.log(f"Field mapping doesn't exist, so creating")
             self.create_new_field_mapping(src_fld,tgt_fld)
         else :
             self.builtin.log(f"Field mapping already exists, skipping creation") 
