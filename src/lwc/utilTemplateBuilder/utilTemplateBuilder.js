@@ -621,6 +621,7 @@ export {
     handleError,
     generateId,
     inputTypeByDescribeType,
+    informGiftEntryHomeApp,
     lightningInputTypeByDataType,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,

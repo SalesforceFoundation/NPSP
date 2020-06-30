@@ -10,7 +10,7 @@ import {
     generateRecordInputForCreate
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { handleError, addKeyToCollectionItems } from 'c/utilTemplateBuilder';
+import { handleError, addKeyToCollectionItems, informGiftEntryHomeApp } from 'c/utilTemplateBuilder';
 import { getNestedProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
@@ -51,7 +51,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     @track missingRequiredFieldsMessage;
 
     dataImportBatchFieldInfos;
-    dataImportBatchCreateDefaults;
     dataImportBatchInfo;
     dataImportBatchRecord;
     templatesById = {};
@@ -136,7 +135,10 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     wiredDataImportBatchInfo(response) {
         if (response.data) {
             this.dataImportBatchInfo = response.data;
-
+            if (!(this.dataImportBatchInfo.updateable && this.dataImportBatchInfo.createable)) {
+                this.handleCancel();
+                informGiftEntryHomeApp();
+            }
             this.dataImportBatchFieldInfos =
                 this.buildFieldDescribesForWiredMethod(
                     this.dataImportBatchInfo.fields,
@@ -205,14 +207,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
-    wiredDataImportBatchRecordCreateDefaults(response) {
-        if (response.data) {
-            this.dataImportBatchCreateDefaults = response.data;
-        } else if (response.error) {
-            this.handleCancel();
-            handleError(response.error);
-        }
-    }
+    dataImportBatchCreateDefaults;
 
 
     setValuesForSelectedBatchHeaderFields(allFields) {
