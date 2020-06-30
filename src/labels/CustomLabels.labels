@@ -8097,6 +8097,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>First</value>
     </labels>
     <labels>
+        <fullName>labelBooleanFalse</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Translatable label for False</shortDescription>
+        <value>False</value>
+    </labels>
+    <labels>
+        <fullName>labelBooleanTrue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Translatable label for True</shortDescription>
+        <value>True</value>
+    </labels>
+    <labels>
         <fullName>labelListViewLast</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>
