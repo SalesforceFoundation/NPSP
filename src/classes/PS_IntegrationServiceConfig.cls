@@ -134,8 +134,6 @@ public with sharing class PS_IntegrationServiceConfig {
     @TestVisible
     public without sharing class Configuration {
         public Configuration() {}
-        List<Payment_Services_Configuration__c> lastModifiedRecords;
-        List<Payment_Services_Configuration__c> configRecords;
 
         /* @description returns a map of key value pairs from the configuration object
         */
