@@ -178,7 +178,7 @@ public class GE_PaymentServices_TEST {
 
         // Set payments Api key to null and set an Api key for makana
         PS_IntegrationService.setConfiguration(
-                new Map<String, List<Map<String, String>>>{
+                new Map<String, List<Map<String, String>>> {
                         PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
                                 new List<Map<String, String>> {
                                         new Map<String, String> {
