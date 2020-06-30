@@ -52,9 +52,9 @@ public class GE_PaymentServices_TEST {
 
     // Key-Values by service name
     private static final Map<String, List<Map<String, String>>> testConfig =
-            new Map<String, List<Map<String, String>>>{
+            new Map<String, List<Map<String, String>>> {
                 PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
-                            new List<Map<String, String>>{
+                            new List<Map<String, String>> {
                                     new Map<String, String>{
                                             'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
                                             'value' => testMerchantId
@@ -227,6 +227,7 @@ public class GE_PaymentServices_TEST {
 
     }
 
+    @IsTest
     private static void shouldNotBeAnElevateCustomer() {
         System.assertEquals(false, GE_PaymentServices.isElevateCustomer,
                 'The org should not be considered an Elevate customer without ' +
