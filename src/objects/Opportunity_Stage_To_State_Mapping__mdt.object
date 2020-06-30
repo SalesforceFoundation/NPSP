@@ -42,4 +42,12 @@
     <label>Opportunity Stage To State Mapping</label>
     <pluralLabel>Opportunity Stage To State Mappings</pluralLabel>
     <visibility>Public</visibility>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>MasterLabel</columns>
+        <columns>Opportunity_Stage__c</columns>
+        <columns>Opportunity_State__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
 </CustomObject>
