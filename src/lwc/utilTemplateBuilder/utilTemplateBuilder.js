@@ -1,84 +1,128 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import {
+    deepClone,
     isEmpty,
     isNotEmpty,
-    deepClone,
     validateJSONString,
 } from 'c/utilCommon'
-
 // Import schema for additionally required fields for the template batch header
-import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
-
+import DI_BATCH_NAME_FIELD_INFO
+    from '@salesforce/schema/DataImportBatch__c.Name'
 // Import custom label service
-import GeLabelService from 'c/geLabelService';
-
+import GeLabelService from 'c/geLabelService'
 // Import schema for excluded template batch header fields
-import DI_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
-import DI_BATCH_CREATED_BY_ID from '@salesforce/schema/DataImportBatch__c.CreatedById';
-import DI_BATCH_CREATED_DATE from '@salesforce/schema/DataImportBatch__c.CreatedDate';
-import DI_BATCH_IS_DELETED from '@salesforce/schema/DataImportBatch__c.IsDeleted';
-import DI_BATCH_LAST_MODIFIED_BY_ID from '@salesforce/schema/DataImportBatch__c.LastModifiedById';
-import DI_BATCH_LAST_MODIFIED_DATE from '@salesforce/schema/DataImportBatch__c.LastModifiedDate';
-import DI_BATCH_LAST_REFERENCED_DATE from '@salesforce/schema/DataImportBatch__c.LastReferencedDate';
-import DI_BATCH_LAST_VIEWED_DATE from '@salesforce/schema/DataImportBatch__c.LastViewedDate';
-import DI_BATCH_SYSTEM_MODSTAMP from '@salesforce/schema/DataImportBatch__c.SystemModstamp';
-import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
-import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
-import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
-import DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Implementing_Class__c'
-import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c'
-import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
-import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
-import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
-import DI_BATCH_ACCOUNT_CUSTOM_ID_INFO from '@salesforce/schema/DataImportBatch__c.Account_Custom_Unique_ID__c';
-import DI_BATCH_ACTIVE_FIELDS_INFO from '@salesforce/schema/DataImportBatch__c.Active_Fields__c';
-import DI_BATCH_CONTACT_CUSTOM_ID_INFO from '@salesforce/schema/DataImportBatch__c.Contact_Custom_Unique_ID__c';
-import DI_BATCH_GIFT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
-import DI_BATCH_LAST_PROCESSED_ON_INFO from '@salesforce/schema/DataImportBatch__c.Last_Processed_On__c';
-import DI_BATCH_PROCESS_USING_SCHEDULED_JOB_INFO from '@salesforce/schema/DataImportBatch__c.Process_Using_Scheduled_Job__c';
-import DI_BATCH_RECORDS_FAILED_INFO from '@salesforce/schema/DataImportBatch__c.Records_Failed__c';
-import DI_BATCH_RECORDS_SUCCESSFULLY_PROCESSED_INFO from '@salesforce/schema/DataImportBatch__c.Records_Successfully_Processed__c';
-import DI_BATCH_CONTACT_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Contact_Matching_Rule__c';
-import DI_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Description__c';
-import DI_BATCH_EXPECTED_COUNT_GIFTS_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
-import DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
-import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
-import DI_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
-import DI_BATCH_GIFT_ENTRY_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
-import DI_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
-import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
-import GIFT_ENTRY_FEATURE_GATE_INFO from '@salesforce/schema/Gift_Entry_Settings__c.Enable_Gift_Entry__c';
-
+import DI_BATCH_TABLE_COLUMNS_FIELD
+    from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c'
+import DI_BATCH_CREATED_BY_ID
+    from '@salesforce/schema/DataImportBatch__c.CreatedById'
+import DI_BATCH_CREATED_DATE
+    from '@salesforce/schema/DataImportBatch__c.CreatedDate'
+import DI_BATCH_IS_DELETED
+    from '@salesforce/schema/DataImportBatch__c.IsDeleted'
+import DI_BATCH_LAST_MODIFIED_BY_ID
+    from '@salesforce/schema/DataImportBatch__c.LastModifiedById'
+import DI_BATCH_LAST_MODIFIED_DATE
+    from '@salesforce/schema/DataImportBatch__c.LastModifiedDate'
+import DI_BATCH_LAST_REFERENCED_DATE
+    from '@salesforce/schema/DataImportBatch__c.LastReferencedDate'
+import DI_BATCH_LAST_VIEWED_DATE
+    from '@salesforce/schema/DataImportBatch__c.LastViewedDate'
+import DI_BATCH_SYSTEM_MODSTAMP
+    from '@salesforce/schema/DataImportBatch__c.SystemModstamp'
+import DI_BATCH_PROCESS_SIZE_INFO
+    from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c'
+import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO
+    from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
+import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO
+    from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
+import DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO
+    from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Implementing_Class__c'
+import DI_BATCH_DONATION_MATCHING_RULE_INFO
+    from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c'
+import DI_BATCH_DONATION_DATE_RANGE_INFO
+    from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
+import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO
+    from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
+import DI_BATCH_OWNER_ID_INFO
+    from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import DI_BATCH_ACCOUNT_CUSTOM_ID_INFO
+    from '@salesforce/schema/DataImportBatch__c.Account_Custom_Unique_ID__c'
+import DI_BATCH_ACTIVE_FIELDS_INFO
+    from '@salesforce/schema/DataImportBatch__c.Active_Fields__c'
+import DI_BATCH_CONTACT_CUSTOM_ID_INFO
+    from '@salesforce/schema/DataImportBatch__c.Contact_Custom_Unique_ID__c'
+import DI_BATCH_GIFT_BATCH_INFO
+    from '@salesforce/schema/DataImportBatch__c.GiftBatch__c'
+import DI_BATCH_LAST_PROCESSED_ON_INFO
+    from '@salesforce/schema/DataImportBatch__c.Last_Processed_On__c'
+import DI_BATCH_PROCESS_USING_SCHEDULED_JOB_INFO
+    from '@salesforce/schema/DataImportBatch__c.Process_Using_Scheduled_Job__c'
+import DI_BATCH_RECORDS_FAILED_INFO
+    from '@salesforce/schema/DataImportBatch__c.Records_Failed__c'
+import DI_BATCH_RECORDS_SUCCESSFULLY_PROCESSED_INFO
+    from '@salesforce/schema/DataImportBatch__c.Records_Successfully_Processed__c'
+import DI_BATCH_CONTACT_MATCHING_RULE_INFO
+    from '@salesforce/schema/DataImportBatch__c.Contact_Matching_Rule__c'
+import DI_BATCH_DESCRIPTION_INFO
+    from '@salesforce/schema/DataImportBatch__c.Batch_Description__c'
+import DI_BATCH_EXPECTED_COUNT_GIFTS_INFO
+    from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c'
+import DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO
+    from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c'
+import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO
+    from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c'
+import DI_BATCH_DEFAULTS_INFO
+    from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c'
+import DI_BATCH_GIFT_ENTRY_VERSION_INFO
+    from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c'
+import DI_BATCH_FORM_TEMPLATE_INFO
+    from '@salesforce/schema/DataImportBatch__c.Form_Template__c'
+import FIELD_MAPPING_METHOD_FIELD_INFO
+    from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c'
+import GIFT_ENTRY_FEATURE_GATE_INFO
+    from '@salesforce/schema/Gift_Entry_Settings__c.Enable_Gift_Entry__c'
 // Import schema for default form field element objects
-import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
-import OPPORTUNITY_INFO from '@salesforce/schema/Opportunity';
-import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c';
-
+import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c'
+import OPPORTUNITY_INFO from '@salesforce/schema/Opportunity'
+import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c'
 // Import schema info for default form field elements
-import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
-import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
-import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
-import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
-import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method__c';
-import DI_ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
-import DI_CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
-import DI_DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import DONATION_AMOUNT_INFO
+    from '@salesforce/schema/DataImport__c.Donation_Amount__c'
+import DONATION_DATE_INFO
+    from '@salesforce/schema/DataImport__c.Donation_Date__c'
+import DONATION_CAMPAIGN_SOURCE_FIELD
+    from '@salesforce/schema/DataImport__c.DonationCampaignImported__c'
+import PAYMENT_CHECK_REF_NUM_INFO
+    from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c'
+import PAYMENT_METHOD_INFO
+    from '@salesforce/schema/DataImport__c.Payment_Method__c'
+import DI_ACCOUNT1_IMPORTED_INFO
+    from '@salesforce/schema/DataImport__c.Account1Imported__c'
+import DI_CONTACT1_IMPORTED_INFO
+    from '@salesforce/schema/DataImport__c.Contact1Imported__c'
+import DI_DONATION_DONOR_INFO
+    from '@salesforce/schema/DataImport__c.Donation_Donor__c'
 // Additional schema needed for donation donor validation
-import DI_ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
-import DI_CONTACT1_LAST_NAME_INFO from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
+import DI_ACCOUNT1_NAME_INFO
+    from '@salesforce/schema/DataImport__c.Account1_Name__c'
+import DI_CONTACT1_LAST_NAME_INFO
+    from '@salesforce/schema/DataImport__c.Contact1_Lastname__c'
 
-import CONTACT_INFO from '@salesforce/schema/Contact';
-import ACCOUNT_INFO from '@salesforce/schema/Account';
+import CONTACT_INFO from '@salesforce/schema/Contact'
+import ACCOUNT_INFO from '@salesforce/schema/Account'
 
-import CONTACT_FIRST_NAME_INFO from '@salesforce/schema/Contact.FirstName';
-import CONTACT_LAST_NAME_INFO from '@salesforce/schema/Contact.LastName';
-import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name';
+import CONTACT_FIRST_NAME_INFO from '@salesforce/schema/Contact.FirstName'
+import CONTACT_LAST_NAME_INFO from '@salesforce/schema/Contact.LastName'
+import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name'
 
-import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
-import getGiftEntrySettings from
-        '@salesforce/apex/GE_GiftEntry_UTIL.getGiftEntrySettings';
+import getDataImportSettings
+    from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings'
+import getGiftEntrySettings
+    from '@salesforce/apex/GE_GiftEntry_UTIL.getGiftEntrySettings'
 import { fireEvent } from 'c/pubsubNoPageRef'
+import getNamespaceWrapper
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper'
 
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
@@ -93,7 +137,6 @@ const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 
 const QUERY_EXCEPTION = 'System.QueryException';
-const PERMISSION_EXCEPTION = 'FORM_ServiceGiftEntry.PermissionException';
 const INSUFFICIENT_RECORD_ACCESS_READ_ONLY_ERROR_CODE = 'INSUFFICIENT_ACCESS_OR_READONLY';
 const INSUFFICIENT_RECORD_ACCESS_ERROR_CODE = 'INSUFFICIENT_ACCESS';
 
@@ -216,6 +259,18 @@ const lightningInputTypeByDataType = {
     'combobox': 'lightning-combobox'
 }
 
+
+/*******************************************************************************
+ * @description Retrieves the current namespace in an org
+ *
+ * @return {object} promise: Promise from the imperative apex call
+ * getNamespaceWrapper.
+ */
+const retrieveNamespaceWrapper = async () => {
+    const nsWrapper = await getNamespaceWrapper();
+    return nsWrapper.data;
+}
+
 /*******************************************************************************
 * @description Collects all the missing required field mappings. Currently only
 * checks 'requiredness' of the source (DataImport__c).
@@ -335,6 +390,11 @@ const handleError = (error) => {
     let message = CUSTOM_LABELS.commonUnknownError;
     let errorToastTitle = CUSTOM_LABELS.commonError;
     let displayToast = true;
+    let PERMISSION_EXCEPTION = 'FORM_ServiceGiftEntry.PermissionException';
+    const namespace = retrieveNamespaceWrapper().currentNamespace;
+    if(isNotEmpty(namespace)) {
+        PERMISSION_EXCEPTION = `${namespace}.${PERMISSION_EXCEPTION}`;
+    }
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
     // error.body.output.errors is for AuraHandledException messages
@@ -631,4 +691,5 @@ export {
     getPageAccess,
     addKeyToCollectionItems,
     dispatchApplicationEvent,
+    retrieveNamespaceWrapper
 }

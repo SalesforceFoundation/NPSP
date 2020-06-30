@@ -1,6 +1,6 @@
 import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getFieldMappingSet';
-import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
-import { handleError } from 'c/utilTemplateBuilder';
+
+import { handleError, retrieveNamespaceWrapper } from 'c/utilTemplateBuilder'
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
@@ -21,7 +21,7 @@ class GeTemplateBuilderService {
         }
 
         if (this.namespaceWrapper === null || refresh === true) {
-            await this.handleGetNamespaceWrapper();
+            this.namespaceWrapper = retrieveNamespaceWrapper();
         }
     }
 
@@ -63,26 +63,6 @@ class GeTemplateBuilderService {
         });
     }
 
-    /*******************************************************************************
-    * @description Method makes an imperative apex call and populates the
-    * namespaceWrapper property.
-    *
-    * @return {object} promise: Promise from the imperative apex call
-    * getNamespaceWrapper.
-    */
-    handleGetNamespaceWrapper = () => {
-        return new Promise((resolve, reject) => {
-            getNamespaceWrapper()
-                .then(data => {
-                    this.namespaceWrapper = data;
-                    resolve(data);
-                })
-                .catch(error => {
-                    handleError(error);
-                    reject(error);
-                })
-        });
-    }
 
     /*******************************************************************************
     * @description Method checks if running in non-namespaced or non-npsp namespaced
