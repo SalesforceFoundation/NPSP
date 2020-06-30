@@ -471,9 +471,6 @@ public with sharing class FORM_ServiceGiftEntry {
         };
         FORM_PermissionValidator validator = new FORM_PermissionValidator(accessLevels);
         Boolean hasObjectAccess = validator.hasObjectPermissions(objectName);
-        accessLevels =   new Set<FORM_PermissionValidator.AccessLevel>{
-            FORM_PermissionValidator.AccessLevel.VALIDATE_READ
-        };
         validator = new FORM_PermissionValidator(accessLevels);
         Boolean hasFieldAccess = validator.hasFieldPermissions(
             objectName, UTIL_Namespace.StrTokenNSPrefix('Description__c')) &&
