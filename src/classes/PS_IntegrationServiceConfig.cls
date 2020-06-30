@@ -141,7 +141,6 @@ public with sharing class PS_IntegrationServiceConfig {
         public Map<String, String> keyValueMap {
             get {
                 if (keyValueMap == null) {
-                    system.debug('reading config values');
                     keyValueMap = new Map<String, String>();
                     String makanaKey;
                     for (Payment_Services_Configuration__c configRecord :
@@ -172,7 +171,6 @@ public with sharing class PS_IntegrationServiceConfig {
         public Payment_Services_Configuration__c lastModifiedRecord {
             get {
                 if (lastModifiedRecord == null) {
-                    system.debug('reading last records');
                     List<Payment_Services_Configuration__c> lastModifiedRecords = getLastModifiedConfigRecord();
                     lastModifiedRecord = lastModifiedRecords.isEmpty() ? null : lastModifiedRecords[0];
                 }
