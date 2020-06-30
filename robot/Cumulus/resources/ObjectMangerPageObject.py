@@ -106,6 +106,7 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 	def create_custom_field(self, **kwargs):
 		"""Ensure that the custom field does not exist prior and Creates a custom field based on type paramenter and the field_name
 		   IF the custom field exists it will not create the custom field and exits out of object manager
+		   The Field_Type is the mandatory field to be present in the kwargs
 		 """
 		search_button = npsp_lex_locators['object_manager']['input'].format("globalQuickfind")
 		self.selenium.wait_until_page_contains_element(search_button,60)
