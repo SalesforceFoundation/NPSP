@@ -180,15 +180,15 @@ public class GE_PaymentServices_TEST {
         PS_IntegrationService.setConfiguration(
                 new Map<String, List<Map<String, String>>>{
                         PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
-                                new List<Map<String, String>>{
-                                        new Map<String, String>{
+                                new List<Map<String, String>> {
+                                        new Map<String, String> {
                                                 'key' => PS_IntegrationServiceConfig.API_KEY,
                                                 'value' => null
                                         }
                                 },
                         PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME =>
-                                new List<Map<String, String>>{
-                                        new Map<String, String>{
+                                new List<Map<String, String>> {
+                                        new Map<String, String> {
                                                 'key' => PS_IntegrationServiceConfig.API_KEY,
                                                 'value' => testMakanaApiKey
                                         }
