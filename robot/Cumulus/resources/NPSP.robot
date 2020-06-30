@@ -356,21 +356,21 @@ Validate And Create Required CustomField
     ...                    Run keyword to create custom field based on the field type selection
     [Arguments]            &{fields}
     Load Page Object                                     Custom                           ObjectManager
-    Open Fields And Relationships                        &{fields}[Object]
-    Run Keyword If     '&{fields}[Field_Type]' == "Lookup"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    ...                                                      &{fields}[Related_To]
-    Run Keyword If     '&{fields}[Field_Type]' == "Currency"  Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    Run Keyword If     '&{fields}[Field_Type]' == "Formula"  Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
+    Open Fields And Relationships                        ${fields}[Object]
+    Run Keyword If     '${fields}[Field_Type]' == "Lookup"   Create Custom Field
+    ...                                                      ${fields}[Field_Type]
+    ...                                                      ${fields}[Field_Name]
+    ...                                                      ${fields}[Related_To]
+    Run Keyword If     '${fields}[Field_Type]' == "Currency"  Create Custom Field
+    ...                                                      ${fields}[Field_Type]
+    ...                                                      ${fields}[Field_Name]
+    Run Keyword If     '${fields}[Field_Type]' == "Formula"  Create Custom Field
+    ...                                                      ${fields}[Field_Type]
+    ...                                                      ${fields}[Field_Name]
     ...                                                      formula=&{fields}[Formula]
-    Run Keyword If     '&{fields}[Field_Type]' == "Text"     Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
+    Run Keyword If     '${fields}[Field_Type]' == "Text"     Create Custom Field
+    ...                                                      ${fields}[Field_Type]
+    ...                                                      ${fields}[Field_Name]
 
 Enable RD2QA
     [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata

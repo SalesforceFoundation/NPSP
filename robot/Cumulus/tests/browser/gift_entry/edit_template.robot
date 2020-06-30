@@ -49,8 +49,8 @@ Edit GE Template And Verify Changes
     Select Template Action           Default Gift Entry Template   Edit
     Current Page Should Be           Template                      GE_Gift_Entry
     Click Gift Entry Button          Next: Form Fields
-    Select Object Group Field        Account 1                     custom_acc_text 
-    Select Object Group Field        Opportunity                   Donation Imported
+    Object Group Field Action        select                        Account 1                     custom_acc_text 
+    Object Group Field Action        select                        Opportunity                   Donation Imported
     Fill Template Form                      
     ...                              Account 1: custom_acc_text=&{custom}
     ...                              Opportunity: Close Date=&{date_default}

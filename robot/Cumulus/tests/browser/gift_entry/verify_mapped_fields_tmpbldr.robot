@@ -31,15 +31,16 @@ Setup Test Data
 *** Test Cases ***
 
 Verify Mapped Field Is Available For Batch Template
-    # [Documentation]                           Create a Template and verify template shows up in gift entry landing page. 
-    # ...                                       Clone the template and verify that template name has to be unique.
-    # ...                                       Delete Template and verify that template is not avaialable for selection while creating a batch.  
-    [tags]                                    feature:GE                    W-039562   
+    [Documentation]                           Create a custom field on opportunity and npsp data import objects. Create advanced mapping to these fields.
+    ...                                       Verify that the mapped field is available for selection while creating a new template and once selected, its avialble on newly created batch gift form
+    ...                                       Remove field from template, delete mapping and verify that the new field is not avaialable for selection while creating template.  
+    [tags]                                    unstable      feature:GE                    W-039562   
+    #Create field mapping
     Click Configure Advanced Mapping
     View Field Mappings Of The Object         Opportunity
     Create Mapping If Doesnt Exist            Opportunity Test (Opportunity_Test__c)    Test Mapping (Test_Mapping__c)
     Reload Page
-    #Create Template                             
+    #Create new template with new field                            
     Go To Page                                Landing                         GE_Gift_Entry
     Click Link                                Templates
     Click Gift Entry Button                   Create Template
@@ -55,6 +56,7 @@ Verify Mapped Field Is Available For Batch Template
     Click Link                                Templates
     Wait Until Page Contains                  ${template}
     Store Template Record Id                  ${template}
+    #Verify field is displayed on newly created batch with new template
     Click Gift Entry Button                   New Batch
     Wait Until Modal Is Open
     Select Template                           ${template}
@@ -67,8 +69,7 @@ Verify Mapped Field Is Available For Batch Template
     Current Page Should Be                    Form                           Gift Entry         title=Gift Entry Form
     ${batch_id} =                             Save Current Record ID For Deletion     ${ns}DataImportBatch__c
     Wait Until Page Contains                  Test Mapping
-    
-    #Remove field from template and 
+    #Remove field from template
     Go To Page                                Landing                        GE_Gift_Entry
     Click Link                                Templates
     Select Template Action                    ${template}                    Edit
@@ -77,6 +78,7 @@ Verify Mapped Field Is Available For Batch Template
     Object Group Field Action                 unselect                       Opportunity                    Test Mapping
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Landing                        GE_Gift_Entry
+    #Remove field mapping
     Go To Page                                Custom                         NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Advanced Mapping for Data Import & Gift Entry  
@@ -84,6 +86,7 @@ Verify Mapped Field Is Available For Batch Template
     View Field Mappings Of The Object         Opportunity
     Delete Field Mapping                      Opportunity Test
     Reload Page
+    #Verify field is not available for selection while creating template
     Go To Page                                Landing                        GE_Gift_Entry
     Click Link                                Templates
     Click Gift Entry Button                   Create Template
