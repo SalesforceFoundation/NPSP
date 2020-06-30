@@ -137,6 +137,8 @@ public with sharing class PS_IntegrationServiceConfig {
         List<Payment_Services_Configuration__c> lastModifiedRecords;
         List<Payment_Services_Configuration__c> configRecords;
 
+        /* @description returns a map of key value pairs from the configuration object
+        */
         public Map<String, String> keyValueMap {
             get {
                 if (keyValueMap == null) {
@@ -167,6 +169,8 @@ public with sharing class PS_IntegrationServiceConfig {
             private set;
         }
 
+        /* @description Returns the last modified configuration record
+        */
         public Payment_Services_Configuration__c lastModifiedRecord {
             get {
                 if (lastModifiedRecord == null) {
