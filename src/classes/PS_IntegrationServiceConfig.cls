@@ -70,7 +70,8 @@ public with sharing class PS_IntegrationServiceConfig {
     private Boolean isEnabled {
         get {
             if (isEnabled == null) {
-                return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
+                return psConfig.keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
+                //return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
             }
             return isEnabled;
         }
@@ -96,7 +97,18 @@ public with sharing class PS_IntegrationServiceConfig {
                 : false;
     }
 
-
+    /**
+    * @description Returns the same instance of the Configuration inner class
+    * @return Configuration 
+    */
+    private static Configuration psConfig {
+        get {
+            if (psConfig == null) {
+                psConfig = new Configuration();
+            }
+            return psConfig;
+        } set;
+    }
 
     /**
     * @description Inner class responsible for retrieving Payment Services configuration from

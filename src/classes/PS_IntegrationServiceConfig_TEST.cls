@@ -100,7 +100,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     }
 
     @IsTest
-    private static void shouldHaveIntegrationEnabledWhenAllConfigurationKeysExist() {
+    private static void shouldHaveIntegrationEnabled() {
         List<Payment_Services_Configuration__c> requiredConfigs = new
         List<Payment_Services_Configuration__c>();
 
@@ -118,9 +118,11 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                 'The org should have Integration Enabled when ' +
                         'all required configuration keys are present.');
 
-        // Now delete a required configuration key and validate that
-        // Payment_Services_Configuration__c.isIntegrationEnabled is false
-        delete [SELECT Id FROM Payment_Services_Configuration__c LIMIT 1];
+    }
+
+    @IsTest
+    private static void shouldNotHaveIntegrationEnabled() {
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
         System.assertEquals(false, ps.isIntegrationEnabled(),
                 'The org should not have Integration Enabled without ' +
                         'all required configuration keys present.');
