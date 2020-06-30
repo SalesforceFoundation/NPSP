@@ -412,7 +412,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
         return JSON.stringify({
             amount: getCurrencyLowestCommonDenominator(this.dataImportRecord[DONATION_AMOUNT__C]),
-            email: 'test@test.test',
             firstName: firstName,
             lastName: lastName,
             metadata: metadata,
