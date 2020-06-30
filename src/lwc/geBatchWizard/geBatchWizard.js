@@ -51,6 +51,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     @track missingRequiredFieldsMessage;
 
     dataImportBatchFieldInfos;
+    dataImportBatchCreateDefaults;
     dataImportBatchInfo;
     dataImportBatchRecord;
     templatesById = {};
@@ -140,6 +141,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 this.buildFieldDescribesForWiredMethod(
                     this.dataImportBatchInfo.fields,
                     this.dataImportBatchInfo.apiName);
+        } else if (response.error) {
+            handleError(response.error);
         }
     }
 
@@ -202,7 +205,15 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
-    dataImportBatchCreateDefaults;
+    wiredDataImportBatchRecordCreateDefaults(response) {
+        if (response.data) {
+            this.dataImportBatchCreateDefaults = response.data;
+        } else if (response.error) {
+            this.handleCancel();
+            handleError(response.error);
+        }
+    }
+
 
     setValuesForSelectedBatchHeaderFields(allFields) {
         this.selectedBatchHeaderFields.map(batchHeaderField => {

@@ -94,7 +94,8 @@ const ADVANCED_MAPPING = 'Data Import Field Mapping';
 
 const QUERY_EXCEPTION = 'System.QueryException';
 const PERMISSION_EXCEPTION = 'FORM_ServiceGiftEntry.PermissionException';
-const INSUFFICIENT_RECORD_ACCESS_ERROR_CODE = 'INSUFFICIENT_ACCESS_OR_READONLY';
+const INSUFFICIENT_RECORD_ACCESS_READ_ONLY_ERROR_CODE = 'INSUFFICIENT_ACCESS_OR_READONLY';
+const INSUFFICIENT_RECORD_ACCESS_ERROR_CODE = 'INSUFFICIENT_ACCESS';
 
 // relevant Donation_Donor custom validation fields
 const DONATION_DONOR_FIELDS = {
@@ -353,7 +354,7 @@ const handleError = (error) => {
         } else if (error.body.output &&
             Array.isArray(error.body.output.errors)) {
             let errorCode = error.body.output.errors.map(e => e.errorCode).join(',');
-            if(errorCode === INSUFFICIENT_RECORD_ACCESS_ERROR_CODE) {
+            if(errorCode === INSUFFICIENT_RECORD_ACCESS_READ_ONLY_ERROR_CODE) {
                 message = CUSTOM_LABELS.commonPermissionErrorMessage;
                 errorToastTitle = CUSTOM_LABELS.commonAdminPermissionErrorTitle;
             } else {
@@ -370,11 +371,7 @@ const handleError = (error) => {
                 exceptionType === PERMISSION_EXCEPTION) {
                 displayToast = false;
                 // inform parent app (GeHome) about query exception
-                dispatchApplicationEvent('appPermissionsChange',
-                  CUSTOM_LABELS.commonAdminPermissionErrorTitle,
-                  CUSTOM_LABELS.commonPermissionErrorMessage,
-                  EVENT_SOURCE_APPLICATION
-                );
+                informGiftEntryHomeApp();
             } else {
                 message = JSON.parse(error.body.message).errorMessage;
             }
@@ -382,14 +379,17 @@ const handleError = (error) => {
             if (error.body.exceptionType === PERMISSION_EXCEPTION) {
                 displayToast = false;
                 // inform parent app (GeHome) about permission exception
-                dispatchApplicationEvent('appPermissionsChange',
-                  CUSTOM_LABELS.commonAdminPermissionErrorTitle,
-                  CUSTOM_LABELS.commonPermissionErrorMessage,
-                  EVENT_SOURCE_APPLICATION
-                );
+                informGiftEntryHomeApp();
             }
         } else {
-            message = error.body.message;
+            if (error.body.errorCode) {
+                if (error.body.errorCode === INSUFFICIENT_RECORD_ACCESS_ERROR_CODE) {
+                    displayToast = false;
+                    informGiftEntryHomeApp();
+                }
+            } else {
+                message = error.body.message;
+            }
         }
     }
 
@@ -585,6 +585,14 @@ const dispatchApplicationEvent = (eventName, messageHeader, messageBody, eventSo
           messageBody: messageBody,
           messageHeader: messageHeader,
       });
+}
+
+const informGiftEntryHomeApp = () => {
+    dispatchApplicationEvent('appPermissionsChange',
+      CUSTOM_LABELS.commonAdminPermissionErrorTitle,
+      CUSTOM_LABELS.commonPermissionErrorMessage,
+      EVENT_SOURCE_APPLICATION
+    );
 }
 
 export {
