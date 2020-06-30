@@ -373,7 +373,7 @@ public class CRLP_RollupAccount_TEST {
         hardCreditAcctOppCount++;
 
         // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
-        Date oldCloseDate = closeDate.addDays(-1);
+        Date oldCloseDate = closeDate.addDays(-2);
         opps.add(new Opportunity (
                 Name = 'Test Not Include' + c.FirstName + ' ' + c.LastName,
                 Amount = 50000,
