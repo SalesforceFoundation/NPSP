@@ -135,6 +135,10 @@ public with sharing class PS_IntegrationServiceConfig {
     public without sharing class Configuration {
         public Configuration() {}
 
+        // use a class variable to enable caching and 
+        // avoid querying the config object multiple times
+        List<Payment_Services_Configuration__c> lastModifiedRecords;
+
         /* @description returns a map of key value pairs from the configuration object
         */
         public Map<String, String> keyValueMap {
@@ -144,7 +148,7 @@ public with sharing class PS_IntegrationServiceConfig {
                     String makanaKey;
                     for (Payment_Services_Configuration__c configRecord :
                             getConfigRecordsByName(
-                                    new List<String>{
+                                    new List<String> {
                                             PAYMENTS_SERVICE_NAME, MAKANA_SERVICE_NAME
                                     }
                             )) {
@@ -171,8 +175,8 @@ public with sharing class PS_IntegrationServiceConfig {
         */
         public Payment_Services_Configuration__c lastModifiedRecord {
             get {
-                if (lastModifiedRecord == null) {
-                    List<Payment_Services_Configuration__c> lastModifiedRecords = getLastModifiedConfigRecord();
+                if (lastModifiedRecords == null) {
+                    lastModifiedRecords = getLastModifiedConfigRecord();
                     lastModifiedRecord = lastModifiedRecords.isEmpty() ? null : lastModifiedRecords[0];
                 }
                 return lastModifiedRecord;
