@@ -55,15 +55,15 @@ public class GE_PaymentServices_TEST {
             new Map<String, List<Map<String, String>>> {
                 PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
                             new List<Map<String, String>> {
-                                    new Map<String, String>{
+                                    new Map<String, String> {
                                             'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
                                             'value' => testMerchantId
                                     },
-                                    new Map<String, String>{
+                                    new Map<String, String> {
                                             'key' => 'sfdo.roles',
                                             'value' => 'Payments.Purchase'
                                     },
-                                    new Map<String, String>{
+                                    new Map<String, String> {
                                             'key' => PS_IntegrationServiceConfig.API_KEY,
                                             'value' => testApiKey
                                     }
