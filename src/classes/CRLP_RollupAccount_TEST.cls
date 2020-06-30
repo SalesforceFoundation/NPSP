@@ -69,7 +69,7 @@ public class CRLP_RollupAccount_TEST {
         String filterGroupId3 = CMT_UnitTestData_TEST.getNewRecordId();
 
         DateTime dt = DateTime.now().addMonths(-100).addDays(-1);
-        String dtValue = dt.format('yyyy-MM-dd', UserInfo.getTimezone().toString());
+        String dtValue = dt.format('yyyy-MM-dd', 'GMT');
 
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
@@ -373,7 +373,7 @@ public class CRLP_RollupAccount_TEST {
         hardCreditAcctOppCount++;
 
         // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
-        Date oldCloseDate = closeDate.addDays(-2);
+        Date oldCloseDate = closeDate.addDays(-1);
         opps.add(new Opportunity (
                 Name = 'Test Not Include' + c.FirstName + ' ' + c.LastName,
                 Amount = 50000,
