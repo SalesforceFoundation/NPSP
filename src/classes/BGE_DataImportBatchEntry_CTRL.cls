@@ -68,6 +68,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             delete new DataImport__c(Id = dataImportId);
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
             return JSON.serialize(dataImportModel);
+        } catch (DmlException ex) {
+            throw new AuraHandledException(Label.commonPermissionErrorMessage);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -173,7 +175,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             }
             return JSON.serialize(opportunityWrappers);
         } catch (QueryException ex) {
-            // could be thrown for insufficient access rights on cross-reference id, or malformed query too
             throw new AuraHandledException(Label.commonPermissionErrorMessage);
         } catch (Exception ex) {
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
