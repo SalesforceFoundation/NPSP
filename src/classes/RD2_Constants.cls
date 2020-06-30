@@ -115,9 +115,4 @@ public inherited sharing class RD2_Constants {
     * @description Contains default value for the Next Donation Date Match Range Days field
     */
     public static final Integer DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS = 3;
-
-    public static final String RD_NAMING_DISABLE = 'Disable Auto Naming';
-    public static final String RD_NAMING_OPTION_1 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - \"Recurring\"';
-    public static final String RD_NAMING_OPTION_2 = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} Recurring Donation - {!npe03__Amount__c}';
-    public static final String RD_NAMING_OPTION_3 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} {!npe03__Installment_Period__c}';
 }
