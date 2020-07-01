@@ -40,6 +40,13 @@ public with sharing class RD2_NamingService {
     public static final Integer MAX_NAME_LENGTH = 80;
 
     /***
+    * @description RD Naming format options 
+    */
+    public static final String RD_NAMING_OPTION_1 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - \"Recurring\"';
+    public static final String RD_NAMING_OPTION_2 = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} Recurring Donation - {!npe03__Amount__c}';
+    public static final String RD_NAMING_OPTION_3 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} {!npe03__Installment_Period__c}';
+
+    /***
     * @description Checks if the Recurring Donation automatic naming is turned on
     */
     @TestVisible
