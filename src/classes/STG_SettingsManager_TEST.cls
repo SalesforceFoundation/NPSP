@@ -780,6 +780,100 @@ private with sharing class STG_SettingsManager_TEST {
             'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
+    /***
+    * @description Verifies that RD Naming Options include all options for selection 
+    */
+    @isTest
+    private static void shouldHaveAllRDNamingFormatOptionsForSelection() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        Set<String> rdNamingApiValues = new Set<String>();
+
+        Test.startTest();
+        for (SelectOption option : panel.rdNamingOptions) {
+            rdNamingApiValues.add(option.getValue());
+        }
+        Test.stopTest();
+
+        List<String> expectedApiValues = new List<String> {
+            '',
+            RD2_NamingService.RD_NAMING_OPTION_1,
+            RD2_NamingService.RD_NAMING_OPTION_2,
+            RD2_NamingService.RD_NAMING_OPTION_3
+        };
+
+        for (String exptectedValue : expectedApiValues) {
+            System.assert(rdNamingApiValues.contains(exptectedValue),
+                exptectedValue + ' should be include as one of the rd naming option');
+        }
+    }
+
+    /**
+    * @description Verifies that when RD Auto Naming is off, Disable label should be displayed 
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenAutoNamingIsOff() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = false;
+
+        Test.startTest();
+        String displayedFormat = panel.displayedRDNamingFormat;
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgRDNamingDisable, displayedFormat, 'RD naming Disable Label should be displayed.' + displayedFormat);
+    }
+
+    /**
+    * @desctiption Verifies that when RD setting has Option 1 as stored format, the label version should be displayed
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenRDSettingNameFormatOption1() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = true;
+        STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_1;
+
+        Test.startTest();
+        String convertedLabel = panel.displayedRDNamingFormat;
+        Test.stopTest();
+
+        String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_1.replace('Recurring', System.Label.RecurringDonationNameSuffix);
+        System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+    }
+
+    /**
+    * @desctiption Verifies that when RD setting has Option 2 as stored format, the label version should be displayed
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenRDSettingNameFormatOption2() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = true;
+        STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_2;
+
+        Test.startTest();
+        String convertedLabel = panel.displayedRDNamingFormat;
+        Test.stopTest();
+
+        String expectedLabel =
+            RD2_NamingService.RD_NAMING_OPTION_2.replace('Recurring Donation', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'));
+        System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+    }
+
+    /**
+    * @desctiption Verifies that when RD setting has Option 3 as stored format, the label version should be displayed
+    */
+    @isTest
+    private static void shouldHaveCorrectRDNamingFormatBeingDisplayedWhenRDSettingNameFormatOption3() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = true;
+        STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_3;
+
+        Test.startTest();
+        String convertedLabel = panel.displayedRDNamingFormat;
+        Test.stopTest();
+
+        String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_3;
+        System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+    }
+
     /**
     * @description Should prevent read only user to delete opportunity naming settings
     * as they do not have delete permission

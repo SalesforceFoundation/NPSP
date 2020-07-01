@@ -333,6 +333,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     /***
     * @description Convert rdNamingOption from api version to label version
     */
+    @TestVisible
     private String convertToRDNamingLabel(String rdNamingOption) {
         if (String.isBlank(rdNamingOption)) {
             return System.Label.stgRDNamingDisable;
