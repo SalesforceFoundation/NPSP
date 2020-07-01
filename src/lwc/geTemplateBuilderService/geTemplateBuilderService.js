@@ -1,7 +1,7 @@
 import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getFieldMappingSet';
 
-import { handleError, retrieveNamespaceWrapper } from 'c/utilTemplateBuilder'
-import { mutable } from 'c/utilCommon';
+import { handleError } from 'c/utilTemplateBuilder'
+import { mutable, retrieveNamespaceWrapper } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';

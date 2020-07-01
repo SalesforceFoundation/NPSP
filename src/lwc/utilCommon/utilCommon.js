@@ -1,5 +1,8 @@
 /* eslint-disable no-void */
 /* eslint-disable @lwc/lwc/no-async-operation */
+import getNamespaceWrapper
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper'
+
 const FUNCTION = 'function';
 const OBJECT = 'object';
 
@@ -442,6 +445,17 @@ const validateJSONString = (str) => {
     }
 }
 
+/*******************************************************************************
+ * @description Retrieves the current namespace in an org
+ *
+ * @return {object} promise: Promise from the imperative apex call
+ * getNamespaceWrapper.
+ */
+const retrieveNamespaceWrapper = async () => {
+    return await getNamespaceWrapper();
+}
+
+
 export {
     debouncify,
     deepClone,
@@ -469,5 +483,6 @@ export {
     getLikeMatchByKey,
     arraysMatch,
     getValueFromDotNotationString,
-    validateJSONString
+    validateJSONString,
+    retrieveNamespaceWrapper
 };

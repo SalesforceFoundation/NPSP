@@ -5,6 +5,7 @@ import {
     isEmpty,
     isNotEmpty,
     validateJSONString,
+    retrieveNamespaceWrapper
 } from 'c/utilCommon'
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO
@@ -121,8 +122,6 @@ import getDataImportSettings
 import getGiftEntrySettings
     from '@salesforce/apex/GE_GiftEntry_UTIL.getGiftEntrySettings'
 import { fireEvent } from 'c/pubsubNoPageRef'
-import getNamespaceWrapper
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper'
 
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
@@ -266,9 +265,8 @@ const lightningInputTypeByDataType = {
  * @return {object} promise: Promise from the imperative apex call
  * getNamespaceWrapper.
  */
-const retrieveNamespaceWrapper = async () => {
-    const nsWrapper = await getNamespaceWrapper();
-    return nsWrapper.data;
+const getNamespaceWrapper = async () => {
+    return retrieveNamespaceWrapper();
 }
 
 /*******************************************************************************
@@ -391,9 +389,9 @@ const handleError = (error) => {
     let errorToastTitle = CUSTOM_LABELS.commonError;
     let displayToast = true;
     let PERMISSION_EXCEPTION = 'FORM_ServiceGiftEntry.PermissionException';
-    const namespace = retrieveNamespaceWrapper().currentNamespace;
-    if(isNotEmpty(namespace)) {
-        PERMISSION_EXCEPTION = `${namespace}.${PERMISSION_EXCEPTION}`;
+    const namespaceWrapper = getNamespaceWrapper();
+    if (isNotEmpty(namespaceWrapper.currentNamespace)) {
+        PERMISSION_EXCEPTION = `${namespaceWrapper.currentNamespace}.${PERMISSION_EXCEPTION}`;
     }
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
@@ -690,6 +688,5 @@ export {
     setRecordValuesOnTemplate,
     getPageAccess,
     addKeyToCollectionItems,
-    dispatchApplicationEvent,
-    retrieveNamespaceWrapper
+    dispatchApplicationEvent
 }
