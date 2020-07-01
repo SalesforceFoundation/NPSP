@@ -14,7 +14,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
-    Validate And Create Required CustomField
+    Create Customfield In Object Manager
     ...                                                    Object=Contact
     ...                                                    Field_Type=Currency
     ...                                                    Field_Name=Total Gifts Three Years Ago
