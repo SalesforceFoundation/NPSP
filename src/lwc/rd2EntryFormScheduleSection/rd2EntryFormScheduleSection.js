@@ -101,6 +101,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                         this.customPeriod = RECURRING_PERIOD_ADVANCED;
                     }
                     this.updateScheduleFieldVisibility(this.customPeriod, response.Period);
+                    this.updatePlannedInstallmentsVisibility(response.RecurringType);
                 })
                 .catch((error) => {
                     this.hasError = true;
@@ -296,13 +297,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     onHandleRecurringTypeChange(event) {
         let recurringType = event.target.value;
-        if (recurringType === RECURRING_TYPE_FIXED) {
-            this.showNumPlannedInstallments = true;
-            this.recurringTypeColumnSize = 4;
-        } else {
-            this.showNumPlannedInstallments = false;
-            this.recurringTypeColumnSize = 6;
-        }
+        this.updatePlannedInstallmentsVisibility(recurringType);
     }
 
     /**
@@ -352,6 +347,20 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                 this.showDayOfMonth = false;
                 this.scheduleRowColumnSize = 4;
             }
+        }
+    }
+
+    /**
+     * @description Update the visibility of the Planned Installments field based on the Recurring Type
+     * @param recurringType
+     */
+    updatePlannedInstallmentsVisibility(recurringType) {
+        if (recurringType === RECURRING_TYPE_FIXED) {
+            this.showNumPlannedInstallments = true;
+            this.recurringTypeColumnSize = 4;
+        } else {
+            this.showNumPlannedInstallments = false;
+            this.recurringTypeColumnSize = 6;
         }
     }
 

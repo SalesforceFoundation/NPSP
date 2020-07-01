@@ -85,6 +85,8 @@ public with sharing class RD2_EntryFormController {
 
         response.put('Period', rd.npe03__Installment_Period__c);
         response.put('Frequency', rd.InstallmentFrequency__c);
+        response.put('RecurringType', rd.RecurringType__c);
+        response.put('NumInstallments', rd.npe03__Installments__c);
 
         return response;
     }
@@ -126,11 +128,13 @@ public with sharing class RD2_EntryFormController {
     private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
         Set<String> queryFields = new Set<String>{
             'Id',
+            'RecurringType__c',
             'npe03__Installment_Period__c',
             'InstallmentFrequency__c',
             'npe03__Organization__c',
             'npe03__Organization__r.RecordTypeId',
-            'npe03__Contact__r.Account.RecordTypeId'
+            'npe03__Contact__r.Account.RecordTypeId',
+            'npe03__Installments__c'
         };
 
         String soql = new UTIL_Query()
