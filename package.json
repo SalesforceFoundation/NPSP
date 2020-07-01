@@ -1,0 +1,15 @@
+{
+    "name": "NPSP",
+    "scripts": {
+        "lint": "npm run lint:lwc",
+        "lint:lwc": "eslint src/lwc",
+        "test": "npm run test:unit",
+        "test:unit": "sfdx-lwc-jest",
+        "test:unit:watch": "sfdx-lwc-jest --watch",
+        "test:unit:debug": "sfdx-lwc-jest --debug",
+        "test:unit:coverage": "sfdx-lwc-jest --coverage"
+    },
+    "devDependencies": {
+        "@salesforce/sfdx-lwc-jest": "^0.7.1"
+    }
+}
