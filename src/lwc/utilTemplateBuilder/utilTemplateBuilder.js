@@ -384,12 +384,12 @@ const showToast = (title, message, variant, mode, messageData) => {
 *
 * @param {object} error: Event holding error details
 */
-const handleError = (error) => {
+const handleError = async (error) => {
     let message = CUSTOM_LABELS.commonUnknownError;
     let errorToastTitle = CUSTOM_LABELS.commonError;
     let displayToast = true;
     let PERMISSION_EXCEPTION = 'FORM_ServiceGiftEntry.PermissionException';
-    const namespaceWrapper = getNamespaceWrapper();
+    const namespaceWrapper = await getNamespaceWrapper();
     if (isNotEmpty(namespaceWrapper.currentNamespace)) {
         PERMISSION_EXCEPTION = `${namespaceWrapper.currentNamespace}.${PERMISSION_EXCEPTION}`;
     }

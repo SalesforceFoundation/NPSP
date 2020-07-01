@@ -21,7 +21,7 @@ class GeTemplateBuilderService {
         }
 
         if (this.namespaceWrapper === null || refresh === true) {
-            this.namespaceWrapper = retrieveNamespaceWrapper();
+            this.namespaceWrapper = await retrieveNamespaceWrapper();
         }
     }
 
