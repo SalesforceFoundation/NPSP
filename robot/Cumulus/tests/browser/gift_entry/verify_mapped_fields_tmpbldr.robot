@@ -17,11 +17,11 @@ ${TEMPLATE}       AM Template
 
 *** Keywords ***
 Setup Test Data
-    Validate And Create Required CustomField
+    Create Customfield In Object Manager
     ...                                                    Object=Opportunity
     ...                                                    Field_Type=Text
     ...                                                    Field_Name=Test Mapping
-    Validate And Create Required CustomField
+    Create Customfield In Object Manager
     ...                                                    Object=NPSP Data Import
     ...                                                    Field_Type=Text
     ...                                                    Field_Name=Opportunity Test
