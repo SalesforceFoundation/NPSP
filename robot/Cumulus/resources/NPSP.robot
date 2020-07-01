@@ -350,24 +350,20 @@ Enable Advanced Mapping
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
     Enable Advanced Mapping If Not Enabled
 
-Validate And Create Required CustomField
+Create Customfield In Object Manager
     [Documentation]        Reads key value pair arguments.
-    ...                    Go to Object Manager page and load fields and relationships for the specific object
-    ...                    Run keyword to create custom field based on the field type selection
+    ...                    Navigates to Object Manager page and load fields and relationships for the specific object
+    ...                    Runs keyword to create custom field
+    ...                    Example key,value pairs
+    ...                            Object=Payment
+    ...                            Field_Type=Formula
+    ...                            Field_Name=Is Opportunity From Prior Year
+    ...                            Formula=YEAR( npe01__Opportunity__r.CloseDate ) < YEAR( npe01__Payment_Date__c )
     [Arguments]            &{fields}
     Load Page Object                                     Custom                           ObjectManager
     Open Fields And Relationships                        &{fields}[Object]
-    Run Keyword If     '&{fields}[Field_Type]' == "Lookup"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    ...                                                      &{fields}[Related_To]
-    Run Keyword If     '&{fields}[Field_Type]' == "Currency"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    Run Keyword If     '&{fields}[Field_Type]' == "Formula"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    ...                                                      formula=&{fields}[Formula]
+    Create Custom Field                                  &{fields}
+
 
 Enable RD2QA
     [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata
