@@ -1436,6 +1436,7 @@
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.RecurringDonationNameFormat__c</members>
         <members>npe03__Recurring_Donations_Settings__c.StatusMappingDeploymentId__c</members>
         <members>npe03__Recurring_Donations_Settings__c.UseFiscalYearForRecurringDonationValue__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
@@ -3779,6 +3780,7 @@
         <members>Level__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
         <members>Trigger_Handler__c.All</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt.All</members>
         <name>ListView</name>
     </types>
     <types>
