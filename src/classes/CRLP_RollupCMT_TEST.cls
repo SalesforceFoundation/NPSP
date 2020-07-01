@@ -36,7 +36,7 @@
 
 @isTest(IsParallel=true)
 public with sharing class CRLP_RollupCMT_TEST {
-    
+
     /********************************************************************************************************
      * @description Verifies that similar rollups are not marked as different
      */
@@ -101,7 +101,7 @@ public with sharing class CRLP_RollupCMT_TEST {
         System.assertEquals(true, newRollup13.isDifferent(existingRollup), 'Different Rollups are marked as different for isDeleted');
         System.assertEquals(true, newRollup14.isDifferent(existingRollup), 'Different Rollups are marked as different for intValue');
     }
-    
+
     /********************************************************************************************************
      * @description Verifies that similar filter groups are not marked as different
      */
@@ -127,7 +127,7 @@ public with sharing class CRLP_RollupCMT_TEST {
 
         System.assertEquals(true, newFilterGroup.isDifferent(existingFilterGroup), 'Different Filter Groups are marked as different');
     }
-    
+
     /********************************************************************************************************
      * @description Verifies that account hard credit rollups are returned as account hard credit
      */
@@ -137,7 +137,7 @@ public with sharing class CRLP_RollupCMT_TEST {
         CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
         CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
 
-        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, returnType, 
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, returnType,
           'Account Hard Credit should be identified.');
     }
 
@@ -153,7 +153,7 @@ public with sharing class CRLP_RollupCMT_TEST {
         newRollup.detailObject = 'Opportunity';
         CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
 
-        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, returnType, 
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, returnType,
           'Account Soft Credit should be identified.');
     }
 
@@ -169,7 +169,7 @@ public with sharing class CRLP_RollupCMT_TEST {
         newRollup.amountObject = partialSoftCredit;
         CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
 
-        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, returnType, 
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, returnType,
           'Contact Soft Credit should be identified.');
     }
 
@@ -185,7 +185,7 @@ public with sharing class CRLP_RollupCMT_TEST {
 
         CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
 
-        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.GAU, returnType, 
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.GAU, returnType,
           'GAU should be identified.');
     }
 
@@ -201,8 +201,27 @@ public with sharing class CRLP_RollupCMT_TEST {
 
         CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
 
-        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.RecurringDonations, returnType, 
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.RecurringDonations, returnType,
           'RecurringDonations should be identified.');
+    }
+
+    /**
+     * @description Validate that the setValueLabel() method in the FilterRule class properly handles converting
+     * a picklist api name to its expected label - in either English or Spanish.
+     */
+    @IsTest
+    private static void shouldConvertPicklistApiNamesIntoLabels() {
+        CRLP_RollupCMT.FilterRule rule = new CRLP_RollupCMT.FilterRule('Test', 'Test');
+        rule.objectName = RecurringDonationSchedule__c.SObjectType.getDescribe().getName();
+        rule.fieldName = RecurringDonationSchedule__c.DayOfMonth__c.getDescribe().getName();
+        rule.value = '1;Last_Day';
+        rule.setValueLabel();
+
+        String expected = '1;\nLast Day Of Month';
+        if (UserInfo.getLanguage() == 'es') {
+            expected = '1;\nÚltimo día del mes';
+        }
+        System.assertEquals(expected, rule.valueLabel, 'The value label should have been set from the Api Name');
     }
 
     /********************************************************************************************************
@@ -211,7 +230,7 @@ public with sharing class CRLP_RollupCMT_TEST {
 
 
     /********************************************************************************************************
-     * @description provides a sample Rollup object for Test 
+     * @description provides a sample Rollup object for Test
      */
     public static CRLP_RollupCMT.Rollup generateRollup(String name) {
 
@@ -244,7 +263,7 @@ public with sharing class CRLP_RollupCMT_TEST {
         CRLP_RollupCMT.FilterGroup newFilterGroup = new CRLP_RollupCMT.FilterGroup(name);
         newFilterGroup.recordName = 'filterGroup' + name;
         newFilterGroup.label = name;
-        
+
         CRLP_RollupCMT.FilterRule rule1 = new CRLP_RollupCMT.FilterRule(newFilterGroup.recordName, 'rule1');
         rule1.objectName = 'Opportunity';
         rule1.fieldName = 'Won';
