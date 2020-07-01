@@ -53,7 +53,7 @@ public with sharing class RD2_NamingService_TEST {
             .build();
 
         String name = rd.Name;
-        
+
         RD2_NamingService service = new RD2_NamingService();
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
@@ -71,7 +71,7 @@ public with sharing class RD2_NamingService_TEST {
             .build();
 
         String name = rd.Name;
-        
+
         RD2_NamingService service = buildAutomaticNamingService();
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -79,7 +79,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies generated Recurring Donation Name is constructed using 
+    * @description Verifies generated Recurring Donation Name is constructed using
     * Account Name, Amount and the suffix.
     */
     @isTest
@@ -90,7 +90,7 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.25)
             .withCurrencyIsoCode(currencyCode)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -98,7 +98,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies generated Recurring Donation Name is constructed using 
+    * @description Verifies generated Recurring Donation Name is constructed using
     * Account Name, Amount and the suffix.
     */
     @isTest
@@ -167,7 +167,7 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.25)
             .withCurrencyIsoCode(CURRENCY_CAD)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -186,7 +186,7 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.00)
             .withCurrencyIsoCode(currencyCode)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -194,7 +194,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies donor name is abbreviated if total name construct is longer 
+    * @description Verifies donor name is abbreviated if total name construct is longer
     * than max name length on Recurring Donations (80 chars)
     */
     @isTest
@@ -211,7 +211,7 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.00)
             .withCurrencyIsoCode(currencyCode)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -329,7 +329,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should not mark Recurring Donation record as changed 
+    * @description Should not mark Recurring Donation record as changed
     * when no field used in the name construct has changed
     */
     @isTest
@@ -348,7 +348,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies name is auto-generated only for Recurring Donation records 
+    * @description Verifies name is auto-generated only for Recurring Donation records
     * having name construct fields changed
     */
     @isTest
@@ -372,11 +372,11 @@ public with sharing class RD2_NamingService_TEST {
         oldRds[0].Id = rds[0].Id;
         oldRds[1].Id = rds[1].Id;
         oldRds[1].npe03__Amount__c = 180;
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNamesOnChange(rds, oldRds);
 
-        System.assertEquals(unchangedName, rds[0].Name, 
+        System.assertEquals(unchangedName, rds[0].Name,
             'RD Name should not change when construct key fields are unchanged');
 
         System.assertEquals(getExpectedName(accOrg, '200', currencyCode), rds[1].Name,
@@ -492,8 +492,8 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds naming service instance with specified Accounts and Contacts as donors
-    * @param accounts Recurring Donation Accounts to be returned from the Mock Donor gateway 
-    * @param contacts Recurring Donation Contacts to be returned from the Mock Donor gateway 
+    * @param accounts Recurring Donation Accounts to be returned from the Mock Donor gateway
+    * @param contacts Recurring Donation Contacts to be returned from the Mock Donor gateway
     * @return RD2_NamingService Instance of the Recurring Donation Naming Service
     */
     private static RD2_NamingService buildAutomaticNamingService(List<Account> accounts, List<Contact> contacts) {
@@ -520,7 +520,7 @@ public with sharing class RD2_NamingService_TEST {
     * @description Enables Automatic Naming Enabled for tests
     * @return none
     */
-    public static void enableAutomaticNaming() {        
+    public static void enableAutomaticNaming() {
         RD2_NamingService.isAutomaticNamingEnabled = true;
 
         /*
@@ -556,6 +556,14 @@ public with sharing class RD2_NamingService_TEST {
     * @return Account Mock Account record
     */
     private static Account getHHAccountMock() {
+
+        Id hhRecordTypeId = [SELECT Id FROM RecordType WHERE DeveloperName = 'HH_Account'].Id;
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (
+                npe01__HH_Account_RecordTypeID__c = hhRecordTypeId
+            )
+        );
+
         return new Account(
             Name = 'Donor Company',
             Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),

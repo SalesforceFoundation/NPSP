@@ -39,6 +39,19 @@ public with sharing class RD2_NamingService {
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
     public static final Integer MAX_NAME_LENGTH = 80;
 
+    // Supporting Naming Tokens that can be used in the RD Name
+    private static final Map<String, String> namingTokens = new Map<String, String>{
+        '$RECURRING_NAME_SUFFIX$' => System.Label.RecurringDonationNameSuffix,
+        '$RECURRING_OBJECT_NAME$' => UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c')
+    };
+
+    /***
+    * @description RD Naming format options
+    */
+    public static final String RD_NAMING_OPTION_1 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - $RECURRING_NAME_SUFFIX$';
+    public static final String RD_NAMING_OPTION_2 = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} $RECURRING_OBJECT_NAME$ - {!npe03__Amount__c}';
+    public static final String RD_NAMING_OPTION_3 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} {!npe03__Installment_Period__c}';
+
     /***
     * @description RD Naming format options 
     */
@@ -75,6 +88,32 @@ public with sharing class RD2_NamingService {
     }
 
     /***
+    * @description Determines if multi-currency is enabled for the org
+    */
+    private static Boolean isMultiCurrencyEnabled {
+        get {
+            if (isMultiCurrencyEnabled == null) {
+                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+            }
+            return isMultiCurrencyEnabled;
+        }
+        set;
+    }
+
+    /***
+    * @description Currency symbol for the user default currency
+    */
+    private static String userDefaultCurrencySymbol {
+        get {
+            if (userDefaultCurrencySymbol == null) {
+                userDefaultCurrencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
+            }
+            return userDefaultCurrencySymbol;
+        }
+        set;
+    }
+
+    /***
     * @description Returns Donor (Account/Contact) records
     */
     @TestVisible
@@ -89,36 +128,9 @@ public with sharing class RD2_NamingService {
     }
 
     /***
-    * @description Determines if multi-currency is enabled for the org
-    */
-    private Boolean isMultiCurrencyEnabled {
-        get {
-            if (isMultiCurrencyEnabled == null) {
-                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
-            }
-            return isMultiCurrencyEnabled;
-        }
-        set;
-    }
-
-    /***
-    * @description Currency symbol for the user default currency
-    */
-    private String userDefaultCurrencySymbol {
-        get {
-            if (userDefaultCurrencySymbol == null) {
-                userDefaultCurrencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
-            }
-            return userDefaultCurrencySymbol;
-        }
-        set;
-    }
-
-    /***
     * @description Autogenerates recurring donation names if Name construct fields have changed
     * @param rds New/changed Recurring Donations
     * @param oldRds Old Recurring Donations
-    * @return void
     */
     public void autogenerateNamesOnChange(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
         if (!isAutomaticNamingEnabled) {
@@ -167,7 +179,7 @@ public with sharing class RD2_NamingService {
             constructNames(rds);
 
         } else if (RD2_EnablementService.isRecurringDonations2Enabled) {
-            //autogenerate names when Elevate RD Name is empty
+            // autogenerate names when Elevate RD Name is empty
             List<npe03__Recurring_Donation__c> elevateRds = new List<npe03__Recurring_Donation__c>();
             for (npe03__Recurring_Donation__c rd : rds) {
                 if (String.isNotBlank(rd.CommitmentId__c) && String.isBlank(rd.Name)) {
@@ -203,51 +215,169 @@ public with sharing class RD2_NamingService {
     * @param donorById Account/Contact donor record by Id
     * @return String New name for the Recurring Donation record
     */
-    private String constructName(npe03__Recurring_Donation__c rd,  Map<Id, RD2_Donor.Record> donorById) {
-        Boolean useContact = rd.npe03__Organization__c == null;
-        if (!useContact) {
-            useContact = donorById.get(rd.npe03__Organization__c).recordTypeId == hhRecordTypeId;
-        }
+    private String constructName(npe03__Recurring_Donation__c rd, Map<Id, RD2_Donor.Record> donorById) {
 
-        RD2_Donor.Record donor = useContact
-            ? donorById.get(rd.npe03__Contact__c)
-            : donorById.get(rd.npe03__Organization__c);
+        RecurringDonationNameBuilder nameBuilder = new RecurringDonationNameBuilder(rd)
+            .withDonorsById(donorById)
+            .withNameFormat(getCurrentNamingFormat());
 
-        String nameSuffix = ' ' + formatAmount(rd) + ' - ' + System.Label.RecurringDonationNameSuffix;
-
-        String donorName = donor == null
-            ? ''
-            : donor.Name.abbreviate(MAX_NAME_LENGTH - nameSuffix.length());
-
-        return donorName + nameSuffix;
+        return nameBuilder.build();
     }
 
-    /***
-    * @description Formats amount used to construct the name
-    * @param rd Recurring Donation record
-    * @return String Formatted amount
-    */
-    private String formatAmount(npe03__Recurring_Donation__c rd) {
-        String formattedAmount = rd.npe03__Amount__c == null ? '' : rd.npe03__Amount__c.format();
+    /**
+     * @return The currently configured RD naming format string
+     */
+    private String getCurrentNamingFormat() {
 
-        if (formattedAmount.endsWith('.00')) {
-            formattedAmount = formattedAmount.removeEnd('.00');
-        } else if (formattedAmount.endsWith('.0')) {
-            formattedAmount = formattedAmount.removeEnd('.0');
+        String format = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonationNameFormat__c;
+        if (format == null && isAutomaticNamingEnabled) {
+            format = RD_NAMING_OPTION_1; // the default format
         }
 
-        String currencySymbol = userDefaultCurrencySymbol;
-        if (isMultiCurrencyEnabled) {
-            String code = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
-            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(code);
+        return format;
+    }
+
+    private class RecurringDonationNameBuilder {
+
+        private npe03__Recurring_Donation__c rd;
+        private String nameFormat;
+        private Map<Id, RD2_Donor.Record> donorById;
+
+        private String rdName;
+
+        public RecurringDonationNameBuilder(npe03__Recurring_Donation__c rd) {
+            this.rd = rd;
         }
 
-        if (String.isNotBlank(currencySymbol) && currencySymbol.length() > 1) {
-            formattedAmount = currencySymbol + ' ' + formattedAmount;
-        } else {
-            formattedAmount = currencySymbol + formattedAmount;
+        public RecurringDonationNameBuilder withNameFormat(String nameFormat) {
+            this.nameFormat = nameFormat;
+            return this;
         }
 
-        return formattedAmount;
+        public RecurringDonationNameBuilder withDonorsById(Map<Id, RD2_Donor.Record> donorById) {
+            this.donorById = donorById;
+            return this;
+        }
+
+        public String build() {
+            rdName = this.nameFormat;
+
+            rdName = replaceTokenValues();
+            rdName = replaceFieldValues();
+
+            return rdName;
+        }
+
+        private String replaceFieldValues() {
+
+            Set<String> fields = getFieldNamesFromSpec();
+            Map<String, String> fieldReplacements = new Map<String, String>();
+
+            for (String fld : fields) {
+                if (fld == 'npe03__Donor_Name__c') {
+                    // Do this one last outside of the loop of all possible fields to support truncation
+                } else if (fld == 'npe03__Amount__c') {
+                    fieldReplacements.put(fld, formatAmount());
+                } else {
+                    String fldValue = String.valueOf(rd.get(fld));
+                    fieldReplacements.put(fld, fldValue);
+                }
+            }
+
+            for (String fld : fieldReplacements.keySet()) {
+                String token = '{!' + fld + '}';
+                while (rdName.containsIgnoreCase(token)) {
+                    rdName = rdName.replace(token, fieldReplacements.get(fld));
+                }
+            }
+
+            // Handle the donor name last to allow for abbreviating it.
+            if (fields.contains('npe03__Donor_Name__c')) {
+                String token = '{!npe03__Donor_Name__c}';
+                Integer maxNameLength = MAX_NAME_LENGTH - (rdName.length() - token.length());
+                String donorName = (maxNameLength > 0 ? getDonorName().abbreviate(maxNameLength) : '');
+                rdName = rdName.replace(token, donorName);
+            }
+
+            return rdName;
+        }
+
+        private String replaceTokenValues() {
+            for (String token : namingTokens.keySet()) {
+                rdName = rdName.replace(token, namingTokens.get(token));
+            }
+            return rdName;
+        }
+
+        /**
+         * @return The correct donor (contact or account) name to use in the name
+         */
+        private String getDonorName() {
+            Boolean useContact = rd.npe03__Organization__c == null;
+            if (!useContact) {
+                useContact = donorById.get(rd.npe03__Organization__c).recordTypeId == hhRecordTypeId;
+            }
+
+            RD2_Donor.Record donor = useContact
+                ? donorById.get(rd.npe03__Contact__c)
+                : donorById.get(rd.npe03__Organization__c);
+
+            return (donor != null) ? donor.name : '';
+        }
+
+        /***
+        * @description Formats amount used to construct the name
+        * @param rd Recurring Donation record
+        * @return String Formatted amount
+        */
+        private String formatAmount() {
+            String formattedAmount = rd.npe03__Amount__c == null ? '' : rd.npe03__Amount__c.format();
+
+            if (formattedAmount.endsWith('.00')) {
+                formattedAmount = formattedAmount.removeEnd('.00');
+            } else if (formattedAmount.endsWith('.0')) {
+                formattedAmount = formattedAmount.removeEnd('.0');
+            }
+
+            String currencySymbol = userDefaultCurrencySymbol;
+            if (isMultiCurrencyEnabled) {
+                String code = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
+                currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(code);
+            }
+
+            if (String.isNotBlank(currencySymbol) && currencySymbol.length() > 1) {
+                formattedAmount = currencySymbol + ' ' + formattedAmount;
+            } else {
+                formattedAmount = currencySymbol + formattedAmount;
+            }
+
+            return formattedAmount;
+        }
+
+        /**
+        * @description Parses out field names from an RD naming spec and returns them as a set of strings
+        * @param format An RD naming spec.
+        * @return Set<String> The field names from the spec, without the curly brackets
+        */
+        private Set<String> getFieldNamesFromSpec() {
+            Set<String> fields = new Set<String>();
+
+            if (String.isBlank(nameFormat)) {
+                return fields;
+            }
+
+            final String fldStartToken = '{!';
+            final String fldEndToken = '}';
+
+            Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
+            Matcher MyMatcher = MyPattern.matcher(nameFormat);
+            while (MyMatcher.find()) {
+                // get the fieldname without the {}'s
+                String strField = nameFormat.substring(MyMatcher.start() + fldStartToken.length(), MyMatcher.end()-fldEndToken.length());
+                fields.add(strField.trim());
+            }
+            return fields;
+        }
+
     }
 }
