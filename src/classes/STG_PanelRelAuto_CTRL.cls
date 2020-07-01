@@ -37,8 +37,18 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description Returns the string Id of the Autocreate Relationships panel.
+    * @return String
     */
     public override string idPanel() { return 'idPanelRelAuto'; }
+
+    /*********************************************************************************************************
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) return 'c';
+        return namespace;
+    }
 
     /*********************************************************************************************************
     * @description temporary ac used by the page for creating a new ac.
@@ -50,6 +60,19 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
             return acNew;
         }
         private set;
+    }
+
+    /*********************************************************************************************************
+    * @description Check if the running user has full access to the npe4__Relationship_Auto_Create__c sObject
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String autoCreateObjectName = Schema.SObjectType.npe4__Relationship_Auto_Create__c.getName();
+
+        return UTIL_Permissions.canRead(autoCreateObjectName, false) &&
+                UTIL_Permissions.canCreate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canUpdate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canDelete(autoCreateObjectName, false);
     }
 
     /*********************************************************************************************************
