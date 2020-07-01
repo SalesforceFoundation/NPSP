@@ -39,24 +39,19 @@ public with sharing class RD2_NamingService {
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
     public static final Integer MAX_NAME_LENGTH = 80;
 
-    // Supporting Naming Tokens that can be used in the RD Name
+    /**
+    * @description Support special Naming Tokens that can be used in the RD Name
+    */
     private static final Map<String, String> namingTokens = new Map<String, String>{
         '$RECURRING_NAME_SUFFIX$' => System.Label.RecurringDonationNameSuffix,
         '$RECURRING_OBJECT_NAME$' => UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c')
     };
 
     /***
-    * @description RD Naming format options
+    * @description Supported RD Naming format options
     */
     public static final String RD_NAMING_OPTION_1 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - $RECURRING_NAME_SUFFIX$';
     public static final String RD_NAMING_OPTION_2 = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} $RECURRING_OBJECT_NAME$ - {!npe03__Amount__c}';
-    public static final String RD_NAMING_OPTION_3 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} {!npe03__Installment_Period__c}';
-
-    /***
-    * @description RD Naming format options 
-    */
-    public static final String RD_NAMING_OPTION_1 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - \"Recurring\"';
-    public static final String RD_NAMING_OPTION_2 = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} Recurring Donation - {!npe03__Amount__c}';
     public static final String RD_NAMING_OPTION_3 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} {!npe03__Installment_Period__c}';
 
     /***
@@ -237,6 +232,9 @@ public with sharing class RD2_NamingService {
         return format;
     }
 
+    /**
+     * @description Build out the Recurring Donation name based on the define naming format
+     */
     private class RecurringDonationNameBuilder {
 
         private npe03__Recurring_Donation__c rd;
@@ -245,29 +243,49 @@ public with sharing class RD2_NamingService {
 
         private String rdName;
 
+        /**
+         * @description Constructor
+         * @param rd Recurring Donation
+         */
         public RecurringDonationNameBuilder(npe03__Recurring_Donation__c rd) {
             this.rd = rd;
         }
 
+        /**
+         * @param nameFormat The RD Naming format to use
+         * @return current instance
+         */
         public RecurringDonationNameBuilder withNameFormat(String nameFormat) {
             this.nameFormat = nameFormat;
             return this;
         }
 
+        /**
+         * @param donorById Map of Donor Account or Contact information by RD Id
+         * @return current instance
+         */
         public RecurringDonationNameBuilder withDonorsById(Map<Id, RD2_Donor.Record> donorById) {
             this.donorById = donorById;
             return this;
         }
 
+        /**
+         * @description Generate the RD name
+         * @return Recurring Donations Name
+         */
         public String build() {
             rdName = this.nameFormat;
 
             rdName = replaceTokenValues();
             rdName = replaceFieldValues();
+            rdName = replaceDonorName();
 
             return rdName;
         }
 
+        /**
+         * @return Replace instances of field tokens with field values, except for the Donor_Name__c field
+         */
         private String replaceFieldValues() {
 
             Set<String> fields = getFieldNamesFromSpec();
@@ -291,17 +309,30 @@ public with sharing class RD2_NamingService {
                 }
             }
 
-            // Handle the donor name last to allow for abbreviating it.
-            if (fields.contains('npe03__Donor_Name__c')) {
-                String token = '{!npe03__Donor_Name__c}';
-                Integer maxNameLength = MAX_NAME_LENGTH - (rdName.length() - token.length());
-                String donorName = (maxNameLength > 0 ? getDonorName().abbreviate(maxNameLength) : '');
-                rdName = rdName.replace(token, donorName);
+            return rdName;
+        }
+
+        /**
+         * @return The DonorName replacement in the naming format requires special handling to allow for
+         * abbreviating it based on the total length of the name relative to the max size of the Name field
+         */
+        private String replaceDonorName() {
+            String token = '{!npe03__Donor_Name__c}';
+
+            if (!rdName.contains(token)) {
+                return rdName;
             }
+
+            Integer maxNameLength = MAX_NAME_LENGTH - (rdName.length() - token.length());
+            String donorName = (maxNameLength > 0 ? getDonorName().abbreviate(maxNameLength) : '');
+            rdName = rdName.replace(token, donorName);
 
             return rdName;
         }
 
+        /**
+         * @return Replace instances of special tokens with their values
+         */
         private String replaceTokenValues() {
             for (String token : namingTokens.keySet()) {
                 rdName = rdName.replace(token, namingTokens.get(token));
@@ -327,7 +358,6 @@ public with sharing class RD2_NamingService {
 
         /***
         * @description Formats amount used to construct the name
-        * @param rd Recurring Donation record
         * @return String Formatted amount
         */
         private String formatAmount() {
@@ -356,7 +386,7 @@ public with sharing class RD2_NamingService {
 
         /**
         * @description Parses out field names from an RD naming spec and returns them as a set of strings
-        * @param format An RD naming spec.
+        * @param format A naming spec.
         * @return Set<String> The field names from the spec, without the curly brackets
         */
         private Set<String> getFieldNamesFromSpec() {
