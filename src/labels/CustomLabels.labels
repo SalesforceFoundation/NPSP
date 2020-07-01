@@ -4926,7 +4926,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Page-level error for database level security check</shortDescription>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
         <value>You don&apos;t have the necessary access to use this feature. Please check with your Salesforce administrator</value>
     </labels>
     <labels>
