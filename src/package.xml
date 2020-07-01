@@ -519,6 +519,7 @@
         <members>STG_PanelRDHealthCheck_TEST</members>
         <members>STG_PanelRD_CTRL</members>
         <members>STG_PanelRelAuto_CTRL</members>
+        <members>STG_PanelRelAuto_CTRL_TEST</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
         <members>STG_PanelRelReciprocal_CTRL_TEST</members>
         <members>STG_PanelRel_CTRL</members>
@@ -2321,7 +2322,6 @@
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
-        <members>healthLabelDisableRecordBatchDescription</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -2388,6 +2388,7 @@
         <members>healthLabelContactData</members>
         <members>healthLabelDataBatchNotRun</members>
         <members>healthLabelDisableRecordBatch</members>
+        <members>healthLabelDisableRecordBatchDescription</members>
         <members>healthLabelErrorRecipientValid</members>
         <members>healthLabelFailed</members>
         <members>healthLabelFiscalYearsValid</members>
