@@ -81,6 +81,10 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
             List<SObject> toUpdate = new List<SObject>();
+            
+            STG_Panel.stgService.stgRD.EnableAutomaticNaming__c =
+                String.isNotBlank(STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c);
+
             if (STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
                 toUpdate.add(STG_Panel.stgService.stgRD);
             }
@@ -267,6 +271,80 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
 
         } else if (installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()) {
             return System.Label.stgInstallmentOppDisableAll;
+        }
+
+        return '';
+    }
+
+    /***
+    * @description The current RD naming format being stored on the RD Setting Name Format
+    */
+    public String displayedRDNamingFormat {
+        get {
+           if (!STG_Panel.stgService.stgRD.EnableAutomaticNaming__c) {
+            STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = '';
+
+           } else if (String.isBlank(STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c)) {
+            STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_1;
+            }
+
+            displayedRDNamingFormat = convertToRDNamingLabel(STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c);
+
+            return displayedRDNamingFormat;
+        }
+        set;
+    }
+
+    /***
+    * @description Return a list of picklist value to be selected for RD Auto naming format
+    */
+    public List<SelectOption> rdNamingOptions {
+        get {
+            if (rdNamingOptions == null) {
+                rdNamingOptions = getRdNamingOptions();
+            }
+            return rdNamingOptions;
+        }
+        set;
+    }
+
+    /***
+    * @description Generate a list of RD naming format options for selection
+    */
+    private List<SelectOption> getRdNamingOptions() {
+        List<SelectOption> options = new List<SelectOption>{
+            new SelectOption(
+                '',
+                System.Label.stgRDNamingDisable),
+            new SelectOption(
+                RD2_NamingService.RD_NAMING_OPTION_1,
+                RD2_NamingService.RD_NAMING_OPTION_1.replace('Recurring', System.Label.RecurringDonationNameSuffix)),
+            new SelectOption(
+                RD2_NamingService.RD_NAMING_OPTION_2,
+                RD2_NamingService.RD_NAMING_OPTION_2.replace('Recurring Donation', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'))),
+            new SelectOption(
+                RD2_NamingService.RD_NAMING_OPTION_3,
+                RD2_NamingService.RD_NAMING_OPTION_3)
+        };
+
+        return options;
+    }
+
+    /***
+    * @description Convert rdNamingOption from api version to label version
+    */
+    private String convertToRDNamingLabel(String rdNamingOption) {
+        if (String.isBlank(rdNamingOption)) {
+            return System.Label.stgRDNamingDisable;
+
+        } else if (rdNamingOption == RD2_NamingService.RD_NAMING_OPTION_1) {
+            return RD2_NamingService.RD_NAMING_OPTION_1.replace('Recurring', System.Label.RecurringDonationNameSuffix);
+
+        } else if (rdNamingOption == RD2_NamingService.RD_NAMING_OPTION_2) {
+            return RD2_NamingService.RD_NAMING_OPTION_2.replace('Recurring Donation', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'));
+
+        } else if (rdNamingOption == RD2_NamingService.RD_NAMING_OPTION_3) {
+            return RD2_NamingService.RD_NAMING_OPTION_3;
         }
 
         return '';
