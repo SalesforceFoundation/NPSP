@@ -2291,6 +2291,7 @@
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geSearchPlaceholder</members>
+        <members>geSelectBatchTableColumns</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
         <members>geTabBatchSettings</members>
@@ -2465,13 +2466,13 @@
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
         <members>isARequiredField</members>
+        <members>labelBooleanFalse</members>
+        <members>labelBooleanTrue</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
         <members>labelListViewPageInfo</members>
         <members>labelListViewPrevious</members>
-        <members>labelBooleanTrue</members>
-        <members>labelBooleanFalse</members>
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblAddressOverride</members>

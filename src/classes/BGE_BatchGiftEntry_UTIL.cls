@@ -130,9 +130,18 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                         // Add the Name fields on the related object(s) for all Lookup fields,
                         // used as display value(s) for Lookup fields loaded in the Form UI
                         if (fieldMapping.Source_Field_Data_Type == 'REFERENCE') {
+                            DescribeFieldResult sourceSObjectField =
+                                    UTIL_Describe.getFieldDescribe(
+                                            String.valueOf(DataImport__c.SObjectType),
+                                            String.valueOf(fieldMapping.Source_Field_API_Name)
+                                    );
+                            List<SObjectType> sObjectTypes = sourceSObjectField
+                                    .getReferenceTo();
+
                             String relatedObjNameField = String.join(new List<String>{
                                     fieldMapping.Source_Field_API_Name.replace('__c', '__r'),
-                                    'Name'
+                                    UTIL_Describe.getNameField(String.valueOf
+                                            (sObjectTypes[0]))
                             }, '.'
                             ).toLowerCase();
                             if (!fieldApiNames.contains(relatedObjNameField)) {
