@@ -37,8 +37,28 @@
 public with sharing class RD2_EntryFormController {
 
     /**
-    * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId to use when creating the new RD record (if New from Account or Contact)
+    * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
+    */
+    @TestVisible
+    private static Set<String> excludedCustomFields = new Set<String> {
+        'CreatedById',
+        'CreatedDate',
+        'CurrencyIsoCode',
+        'Id',
+        'IsDeleted',
+        'LastModifiedById',
+        'LastModifiedDate',
+        'LastReferencedDate',
+        'LastViewedDate',
+        'Name',
+        'OwnerId',
+        'SystemModStamp'
+    };
+
+    /**
+    * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
+    * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
     @AuraEnabled(Cacheable=true)
@@ -52,7 +72,8 @@ public with sharing class RD2_EntryFormController {
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
             'parentSObjectType' => parentSObjectType,
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
-            'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c'))
+            'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
+            'customFieldSets' => getCustomFieldSectionFields()
         };
     }
 
@@ -175,5 +196,47 @@ public with sharing class RD2_EntryFormController {
             'Updateable' => dfr.isUpdateable(),
             'Visible' => dfr.isAccessible()
         };
+    }
+
+    /***
+    * @description Retrieve RD2_Entry_Form_Custom_Fields Fieldset and eliminate any packaged and already displayed fields
+    * @return List<CustomField>
+    */
+    @TestVisible
+    private static List<CustomField> getCustomFieldSectionFields () {
+        List<CustomField> fields = new List<CustomField>();
+        List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
+
+        for (Schema.FieldSetMember field : fieldSetFields) {
+            if (excludedCustomFields.contains(field.getFieldPath())
+                || field.getFieldPath().startsWith('npsp__')
+                || field.getFieldPath().startsWith('npe03__')
+                ||!UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+            ) {
+                continue;
+            }
+
+            fields.add(new CustomField(field));
+        }
+
+        return fields;
+    }
+
+    /***
+    * @description Wrapper class for custom field info
+    */
+    public class CustomField {
+        @AuraEnabled public String apiName;
+        @AuraEnabled public Boolean required;
+
+        /***
+        * @description Constructor for the CustomField class
+        * @param apiName Api name of the field
+        * @param required Indicate if the field is required 
+        */
+        public CustomField(Schema.FieldSetMember field) {
+            this.apiName = field.getFieldPath();
+            this.required = field.getDbRequired() || field.getRequired();
+        }
     }
 }

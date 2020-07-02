@@ -23,6 +23,7 @@ import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHea
 import scheduleSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
 import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHeader';
 import statusSectionHeader from '@salesforce/label/c.RD2_EntryFormStatusSectionHeader';
+import customFieldsSectionHeader from '@salesforce/label/c.RD2_EntryFormCustomFieldsSectionHeader';
 import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccessMessage';
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
@@ -42,6 +43,7 @@ export default class rd2EntryForm extends LightningElement {
         otherSectionHeader,
         scheduleSectionHeader,
         statusSectionHeader,
+        customFieldsSectionHeader,
         currencyFieldLabel,
         flsErrorHeader,
         flsErrorDetail
@@ -55,12 +57,14 @@ export default class rd2EntryForm extends LightningElement {
     @track isMultiCurrencyEnabled = false;
     @track fields = {};
     @track rdSettings = {};
+    @track customFields = {};
     fieldInfos;
 
     @track header = newHeaderLabel;
 
     @track isAutoNamingEnabled;
     @track isLoading = true;
+    @track hasCustomFields = false;
 
     isRecordReady = false;
     isSettingReady = false;
@@ -88,6 +92,8 @@ export default class rd2EntryForm extends LightningElement {
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.isSettingReady = true;
                 this.rdSettings = response;
+                this.customFields = response.customFieldSets;
+                this.hasCustomFields = Object.keys(this.customFields).length !== 0;
             })
             .catch((error) => {
                 this.handleError(error, true);
@@ -194,7 +200,7 @@ export default class rd2EntryForm extends LightningElement {
 
     /***
     * @description Overrides the standard submit.
-    * Collects fields displayed on the form and any integrated LWC (for example Schedule section)
+    * Collects and validates fields displayed on the form and any integrated LWC
     * and submits them for the record insert or update.
     */
     handleSubmit(event) {
@@ -202,32 +208,55 @@ export default class rd2EntryForm extends LightningElement {
         this.hasError = false;
         this.template.querySelector("[data-id='submitButton']").disabled = true;
 
-        event.preventDefault();
-        const fields = event.detail.fields;
+        const allFields = this.getAllSectionsInputValues();
 
-        const scheduleSection = this.scheduleComponent;
-        const scheduleFields = (scheduleSection === null || scheduleSection === undefined)
-            ? {}
-            : scheduleSection.returnValues();
-
-        const donorSection = this.donorComponent;
-        const donorFields = (donorSection === null || donorSection === undefined)
-            ? {}
-            : donorSection.returnValues();
-
-        const allFields = {
-            ...fields, ...scheduleFields, ...donorFields
-        };
-
-        let isValid = donorSection.isValid() && scheduleSection.isValid();
-
-        if (isValid) {
+        if (this.isSectionInputsValid()) {
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
         } else {
             this.isLoading = false;
             this.hasError = false;
             this.template.querySelector("[data-id='submitButton']").disabled = false;
         }
+    }
+
+    /***
+    * @description Collects fields displayed on the form and any integrated LWC
+    */
+    getAllSectionsInputValues() {
+        const donorFields = (isNull(this.donorComponent))
+            ? {}
+            : this.donorComponent.returnValues();
+    
+        const scheduleFields = (isNull(this.scheduleComponent))
+            ? {}
+            : this.scheduleComponent.returnValues();
+
+        const extrafields = (isNull(this.customFieldsComponent))
+            ? {}
+            : this.customFieldsComponent.returnValues();
+
+        return {...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues()};
+    }
+
+    /***
+    * @description Validate all fields on the integrated LWC sections 
+    */
+    isSectionInputsValid() {
+        const isDonorSectionValid = (isNull(this.donorComponent))
+            ? true
+            : this.donorComponent.isValid();
+    
+        const isScheduleSectionValid = (isNull(this.scheduleComponent))
+            ? true
+            : this.scheduleComponent.isValid();
+
+        const isCustomFieldSectionValid = (isNull(this.customFieldsComponent))
+            ? true
+            : this.customFieldsComponent.isValid();
+
+        const isEntryFormValid = this.isValid();
+
+        return isDonorSectionValid && isScheduleSectionValid && isCustomFieldSectionValid && isEntryFormValid;
     }
 
     /***
@@ -297,6 +326,44 @@ export default class rd2EntryForm extends LightningElement {
      */
     get donorComponent() {
         return this.template.querySelectorAll('[data-id="donorComponent"]')[0];
+    }
+
+    /**
+     * @description Returns the Custom Field Child Component instance
+     * @returns rd2EntryFormCustomFieldsSection component dom
+     */
+    get customFieldsComponent() {
+        return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];
+    }
+
+    /**
+     * @description Checks if values specified on fields are valid
+     * @return Boolean
+     */
+    isValid() {
+        let isValid = true;
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                if (!field.reportValidity()) {
+                    isValid = false;
+                }
+            });
+        return isValid;
+    }
+
+    /**
+     * @description Returns fields displayed on the parent form
+     * @return Object containing field API names and their values
+     */
+    returnValues() {
+        let data = {};
+
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                data[field.fieldName] = field.value;
+            });
+
+        return data;
     }
 
 }

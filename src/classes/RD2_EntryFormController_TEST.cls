@@ -56,6 +56,8 @@ private with sharing class RD2_EntryFormController_TEST {
             'Parent Sobject type should be correctly identified when value is not null');
         System.assertEquals(true, ((Map<String,Boolean>)orgSettingsByKey.get('InstallmentPeriodPermissions')).get('Createable'),
             'Installment_Period__c.IsCreatable should return true');
+        System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
+            'A list of Custom Fields should be returned');
     }
 
     /***
@@ -150,4 +152,23 @@ private with sharing class RD2_EntryFormController_TEST {
             System.assert(!hasPerms, 'Should determine that the Standard User is missing permissions');
         }
     }
+    /***
+    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields 
+    */
+    @isTest
+    private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
+        Test.startTest();
+        List<RD2_EntryFormController.CustomField> customFields = RD2_entryFormController.getCustomFieldSectionFields();
+        Test.stopTest();
+
+        for (RD2_EntryFormController.CustomField field : customFields) {
+            System.assert(!RD2_EntryFormController.excludedCustomFields.contains(field.apiName),
+                'Excluded fields should not be return:' + field.apiName);
+            System.assert(!field.apiName.startsWith('npsp__'),
+                'NPSP package field should not be return:' + field.apiName);
+                System.assert(!field.apiName.startsWith('npe03__'),
+                'NPSP package field should not be return:' + field.apiName);
+        }
+    }
+
 }
