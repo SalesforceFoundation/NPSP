@@ -22,17 +22,17 @@ ${msg}            Automation test
 
 *** Keywords ***
 Setup Test Data
-    &{contact} =     API Create Contact                 FirstName=${faker.first_name()}    LastName=${faker.last_name()}
+    &{contact} =    API Create Contact                 FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     Set suite variable    &{contact}
-    &{account} =     API Create Organization Account    Name=${faker.company()}
+    &{account} =    API Create Organization Account    Name=${faker.company()}
     Set suite variable    &{account}
-    ${org_ns} =  Get Org Namespace Prefix
+    ${org_ns} =     Get Org Namespace Prefix
     Set suite variable    ${org_ns}
-    ${ns} =  Get NPSP Namespace Prefix
+    ${ns} =         Get NPSP Namespace Prefix
     Set suite variable    ${ns}
-    ${ui_date} =                     Get Current Date              result_format=%b %-d, %Y
+    ${ui_date} =    Get Current Date                   result_format=%b %-d, %Y
     Set suite variable    ${ui_date}
-    ${date} =     Get Current Date    result_format=%Y-%m-%d
+    ${date} =       Get Current Date                   result_format=%Y-%m-%d
     Set suite variable    ${date}
 
 *** Test Cases ***
@@ -43,14 +43,13 @@ Edit GE Template And Verify Changes
  
     [tags]                           unstable                      feature:GE          W-039559   
     # Edit Default template to add some default values and add a new field to form                   
-    Go To Page                       Landing                       GE_Gift_Entry
-    Current Page Should Be           Landing                       GE_Gift_Entry
+    Go To Page                       Landing                       GE_Gift_Entry                 
     Click Link                       Templates
     Select Template Action           Default Gift Entry Template   Edit
     Current Page Should Be           Template                      GE_Gift_Entry
     Click Gift Entry Button          Next: Form Fields
-    Select Object Group Field        Account 1                     custom_acc_text 
-    Select Object Group Field        Opportunity                   Donation Imported
+    Perform Action On Object Field   select                        Account 1                     custom_acc_text 
+    Perform Action On Object Field   select                        Opportunity                   Donation Imported
     Fill Template Form                      
     ...                              Account 1: custom_acc_text=&{custom}
     ...                              Opportunity: Close Date=&{date_default}
@@ -91,7 +90,7 @@ Edit GE Template And Verify Changes
     Verify Expected Values           nonns    Account     &{account}[Id]
     ...                              ${org_ns}custom_acc_text__c=${msg}
     # Create a new batch and verify default values are displayed on the Batch Gift Form
-    Go To Page                       Landing                       GE_Gift_Entry
+    Go To Page                       Landing                       GE_Gift_Entry               
     Click Gift Entry Button          New Batch
     Wait Until Modal Is Open
     Select Template                  Default Gift Entry Template
