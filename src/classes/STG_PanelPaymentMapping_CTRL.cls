@@ -41,6 +41,15 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelPaymentMapping'; }
 
     /*********************************************************************************************************
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    */
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) return 'c';
+        return namespace;
+    }
+
+    /*********************************************************************************************************
     * @description Map of Field names to DisplayTypes
     */
     map<string, Schema.Displaytype> mapFieldTypes = new map<string, Schema.Displaytype>();
@@ -66,6 +75,19 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         pfmNew = null;
         isEditMode = false;
         return null;
+    }
+
+    /*********************************************************************************************************
+    * @description Check if the running user has full access to the npe4__Relationship_Auto_Create__c sObject
+    * @return Boolean
+    */
+    public Boolean getHasAccess() {
+        String autoCreateObjectName = Schema.SObjectType.npe01__Payment_Field_Mapping_Settings__c.getName();
+
+        return UTIL_Permissions.canRead(autoCreateObjectName, false) &&
+                UTIL_Permissions.canCreate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canUpdate(autoCreateObjectName, false) &&
+                UTIL_Permissions.canDelete(autoCreateObjectName, false);
     }
 
     /*********************************************************************************************************

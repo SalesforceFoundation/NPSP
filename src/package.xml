@@ -510,6 +510,7 @@
         <members>STG_PanelOpps_CTRL</members>
         <members>STG_PanelOpps_TEST</members>
         <members>STG_PanelPaymentMapping_CTRL</members>
+        <members>STG_PanelPaymentMapping_CTRL_TEST</members>
         <members>STG_PanelPrimaryContactRoleMerge_CTRL</members>
         <members>STG_PanelRDBatch_CTRL</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
