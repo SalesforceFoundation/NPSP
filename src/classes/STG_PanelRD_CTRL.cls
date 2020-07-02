@@ -81,9 +81,10 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
             List<SObject> toUpdate = new List<SObject>();
-            
-            STG_Panel.stgService.stgRD.EnableAutomaticNaming__c =
-                String.isNotBlank(STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c);
+
+            STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = selectedRDNamingFormat;
+            STG_Panel.stgService.stgRD.EnableAutomaticNaming__c = 
+                String.isNotBlank(selectedRDNamingFormat);
 
             if (STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
                 toUpdate.add(STG_Panel.stgService.stgRD);
@@ -281,19 +282,16 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     */
     public String displayedRDNamingFormat {
         get {
-           if (!STG_Panel.stgService.stgRD.EnableAutomaticNaming__c) {
-            STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = '';
-
-           } else if (String.isBlank(STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c)) {
-            STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c = RD2_NamingService.RD_NAMING_OPTION_1;
-            }
-
-            displayedRDNamingFormat = convertToRDNamingLabel(STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c);
-
+            displayedRDNamingFormat = convertToRDNamingLabel(getCurrentRDNamingSetting());
             return displayedRDNamingFormat;
         }
         set;
     }
+
+    /**
+    * @description currently selected RD naming format 
+    */
+    public String selectedRDNamingFormat {get;set;}
 
     /***
     * @description Return a list of picklist value to be selected for RD Auto naming format
@@ -306,6 +304,27 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             return rdNamingOptions;
         }
         set;
+    }
+
+    /**
+    * @description Evaluate and assign the current RD Naming format setting api
+    * @return String
+    */
+    private String getCurrentRDNamingSetting () {
+        String currentFormat;
+        if (!STG_Panel.stgService.stgRD.EnableAutomaticNaming__c) {
+            currentFormat = '';
+
+        } else if (String.isBlank(STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c)) {
+            currentFormat = RD2_NamingService.RD_NAMING_OPTION_1;
+
+        } else {
+            currentFormat = STG_Panel.stgService.stgRD.RecurringDonationNameFormat__c;
+        }
+
+        selectedRDNamingFormat = currentFormat;
+
+        return currentFormat;
     }
 
     /***

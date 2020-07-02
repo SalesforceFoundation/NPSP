@@ -817,9 +817,11 @@ private with sharing class STG_SettingsManager_TEST {
 
         Test.startTest();
         String displayedFormat = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
         Test.stopTest();
 
-        System.assertEquals(System.Label.stgRDNamingDisable, displayedFormat, 'RD naming Disable Label should be displayed.' + displayedFormat);
+        System.assertEquals(System.Label.stgRDNamingDisable, displayedFormat, 'RD naming Disable Label should be displayed. ' + displayedFormat);
+        System.assertEquals('', selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
     }
 
     /**
@@ -833,10 +835,13 @@ private with sharing class STG_SettingsManager_TEST {
 
         Test.startTest();
         String convertedLabel = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
         Test.stopTest();
 
         String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_1.replace('Recurring', System.Label.RecurringDonationNameSuffix);
+
         System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+        System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_1, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
     }
 
     /**
@@ -850,11 +855,14 @@ private with sharing class STG_SettingsManager_TEST {
 
         Test.startTest();
         String convertedLabel = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
         Test.stopTest();
 
         String expectedLabel =
             RD2_NamingService.RD_NAMING_OPTION_2.replace('Recurring Donation', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'));
+
         System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+        System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_2, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
     }
 
     /**
@@ -868,10 +876,13 @@ private with sharing class STG_SettingsManager_TEST {
 
         Test.startTest();
         String convertedLabel = panel.displayedRDNamingFormat;
+        String selectedFormat = panel.selectedRDNamingFormat;
         Test.stopTest();
 
         String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_3;
+
         System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
+        System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_3, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
     }
 
     /**

@@ -125,7 +125,7 @@
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.RecurringDonationNameFormat__c.Label}" for="rdNaming" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!displayedRDNamingFormat}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:selectList value="{!stgService.stgRD.RecurringDonationNameFormat__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="rdNaming" html-aria-describedby="{!$Component.rdNamingHelp}" styleClass="slds-select" >
+                    <apex:selectList value="{!selectedRDNamingFormat}" size="1" multiselect="false" rendered="{!isEditMode}" id="rdNaming" html-aria-describedby="{!$Component.rdNamingHelp}" styleClass="slds-select" >
                         <apex:selectOptions value="{!rdNamingOptions}" />
                     </apex:selectList>
                     <apex:outputPanel id="rdNamingHelp" layout="block">
