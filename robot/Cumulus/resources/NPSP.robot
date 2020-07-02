@@ -361,7 +361,7 @@ Create Customfield In Object Manager
     ...                            Formula=YEAR( npe01__Opportunity__r.CloseDate ) < YEAR( npe01__Payment_Date__c )
     [Arguments]            &{fields}
     Load Page Object                                     Custom                           ObjectManager
-    Open Fields And Relationships                        &{fields}[Object]
+    Open Fields And Relationships                        ${fields}[Object]
     Create Custom Field                                  &{fields}
 
 
