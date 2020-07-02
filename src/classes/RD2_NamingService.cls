@@ -225,7 +225,7 @@ public with sharing class RD2_NamingService {
     private String getCurrentNamingFormat() {
 
         String format = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonationNameFormat__c;
-        if (format == null && isAutomaticNamingEnabled) {
+        if (format == null) {
             format = RD_NAMING_OPTION_1; // the default format
         }
 
@@ -292,10 +292,25 @@ public with sharing class RD2_NamingService {
             Map<String, String> fieldReplacements = new Map<String, String>();
 
             for (String fld : fields) {
+                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+
                 if (fld == 'npe03__Donor_Name__c') {
                     // Do this one last outside of the loop of all possible fields to support truncation
-                } else if (fld == 'npe03__Amount__c') {
-                    fieldReplacements.put(fld, formatAmount());
+
+                } else if (dfr.getType() == DisplayType.CURRENCY) {
+                    Object fldValue = rd.get(fld);
+                    Double amtValue = 0;
+                    if (fldValue != null) {
+                        amtValue = (Double)fldValue;
+                    }
+                    fieldReplacements.put(fld, formatAmount(amtValue));
+
+                } else if (dfr.getType() == DisplayType.PICKLIST) {
+                    String fldValue = String.valueOf(rd.get(fld));
+                    fldValue = UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
+                        dfr.getSobjectField(), fldValue);
+                    fieldReplacements.put(fld, fldValue);
+
                 } else {
                     String fldValue = String.valueOf(rd.get(fld));
                     fieldReplacements.put(fld, fldValue);
@@ -305,7 +320,8 @@ public with sharing class RD2_NamingService {
             for (String fld : fieldReplacements.keySet()) {
                 String token = '{!' + fld + '}';
                 while (rdName.containsIgnoreCase(token)) {
-                    rdName = rdName.replace(token, fieldReplacements.get(fld));
+                    String val = fieldReplacements.get(fld);
+                    rdName = rdName.replace(token, (val != null ? val : ''));
                 }
             }
 
@@ -358,10 +374,11 @@ public with sharing class RD2_NamingService {
 
         /***
         * @description Formats amount used to construct the name
+        * @param amtValue Current value to format
         * @return String Formatted amount
         */
-        private String formatAmount() {
-            String formattedAmount = rd.npe03__Amount__c == null ? '' : rd.npe03__Amount__c.format();
+        private String formatAmount(Double amtValue) {
+            String formattedAmount = amtValue.format();
 
             if (formattedAmount.endsWith('.00')) {
                 formattedAmount = formattedAmount.removeEnd('.00');
