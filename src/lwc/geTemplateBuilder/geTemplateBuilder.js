@@ -248,6 +248,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         try {
             this.currentNamespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
             const queryParameters = getQueryParameters();
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             await this.checkForFormTemplateRecordId(queryParameters);
 
             this.buildBatchHeaderFields();
