@@ -250,7 +250,7 @@ npsp_lex_locators={
         'cbx_status':'//table[@class="detailList"]/tbody/tr/th[./span[text()="{}"]]/following-sibling::td//img[@title="{}"]',
         },
     'adv_mappings':{
-        'dropdown':"//tr[.//*[text()='{}']]/td[.//span[text()='Show actions']]//button",
+        'dropdown':"//tr[./th//*[text()='{}']]/td[.//span[text()='Show actions']]//button",
         'modal_open':'//div[contains(@class,"slds-backdrop_open")]',
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
