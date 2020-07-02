@@ -155,6 +155,37 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         System.assertEquals(1, updatedDataImports.size(), 'Updated Data Imports should return only 1 row');
     }
 
+    /*********************************************************************************************************
+     * @description Test attempting to delete a DI row when used does not have permission by mocking UTIL_Permissions
+     */
+    @isTest
+    static void testDeleteDataImportRowNoPermissions() {
+
+        Id batchId = createDataImportBatch();
+        List<DataImport__c> dataImports = createDataImports(2, batchId);
+
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock();
+        utilPermissionsMockInstance.canDeleteDataImport = false;
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
+                UTIL_Permissions.class,
+                utilPermissionsMockInstance);
+        UTIL_Permissions.setInstance(utilPermissionsMock);
+
+        Boolean exceptionCaught = false;
+
+        Test.startTest();
+
+        try {
+            BGE_DataImportBatchEntry_CTRL.deleteDataImportRow(batchId, dataImports[0].Id);
+        } catch (AuraHandledException ex) {
+            exceptionCaught = true;
+        }
+
+        Test.stopTest();
+
+       System.assert(exceptionCaught, 'Expected to catch an AuraHandledException.');
+    }
+
     @isTest
     static void givenAccountHasMultipleOppsWhenCalledThenAssertReturnedInWrapper() {
         Account account = new Account(Name='TestAccount');
@@ -635,5 +666,26 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
                 FROM npe01__OppPayment__c
                 WHERE npe01__Opportunity__c = :oppId
         ];
+    }
+
+    /**
+    * @description StubProvider implementation used to modify Data Import Permissions in a test context
+    */
+    private class UTIL_PermissionsMock implements StubProvider {
+
+        public Boolean canDeleteDataImport = true;
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            if (stubbedMethodName == 'canDelete' && listOfArgs.size() == 1) {
+                Schema.SObjectType sObjectType = (Schema.SObjectType)listOfArgs[0];
+                if(sObjectType == DataImport__c.SObjectType) {
+                    return canDeleteDataImport;
+                }
+            }
+            return true;
+        }
     }
 }
