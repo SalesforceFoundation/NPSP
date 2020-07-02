@@ -47,6 +47,24 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.click_element(next_button)
 		self.selenium.click_element(save_button)
 		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90, message="Fields And Relationships page did not load in 1 min")
+
+	@capture_screenshot_on_error
+	def create_text_field(self,field_name):
+		"""Creates a text field by taking in the field name"""
+		text_locator=npsp_lex_locators['object_manager']['input'].format("dtypeS")
+		next_button=npsp_lex_locators['object_manager']['button'].format("Next")
+		save_button=npsp_lex_locators['object_manager']['button'].format("Save")
+		self.selenium.wait_until_page_contains_element(text_locator,timeout=60)
+		self.selenium.click_element(text_locator)
+		time.sleep(1)
+		self.selenium.click_element(next_button)
+		self.salesforce.populate_field('Field Label', field_name)
+		self.salesforce.populate_field('Length', '255')
+		self.salesforce.populate_field('Description', "This is a custom field generated during automation")
+		self.selenium.click_element(next_button)
+		self.selenium.click_element(next_button)
+		self.selenium.click_element(save_button)
+		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90, message="Fields And Relationships page did not load in 1 min")
 		
 	@capture_screenshot_on_error
 	def create_formula_field(self,field_name,formula):
@@ -130,3 +148,5 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 				self.create_currency_field(kwargs['Field_Name'])
 			elif type.lower() == 'formula':
 				self.create_formula_field(kwargs['Field_Name'],kwargs['Formula'])
+			elif type.lower() == 'text':
+				self.create_text_field(kwargs['Field_Name'])
