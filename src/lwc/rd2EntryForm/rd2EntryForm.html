@@ -116,6 +116,18 @@
                             </lightning-layout>
                         </div>
                     </div>
+                    <template if:true={hasCustomFields}>
+                        <div class="slds-section slds-is-open">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small">{customLabels.customFieldsSectionHeader}</span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content">
+
+                                <c-rd2-entry-form-custom-fields-section record-id={recordId} fields={customFields} data-id="customFieldsComponent"></c-rd2-entry-form-custom-fields-section>
+
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </template>
         </div>
@@ -125,7 +137,7 @@
                     variant="neutral" class="slds-m-right_small" onclick={handleCancel}>
                 </lightning-button>
                 <lightning-button label={customLabels.saveButtonLabel} title={customLabels.saveButtonLabel}
-                    variant="brand" type="submit" data-id="submitButton">
+                    variant="brand" onclick={handleSubmit} data-id="submitButton">
                 </lightning-button>
             </div>
         </footer>

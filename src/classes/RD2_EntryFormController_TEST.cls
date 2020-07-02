@@ -56,6 +56,8 @@ private with sharing class RD2_EntryFormController_TEST {
             'Parent Sobject type should be correctly identified when value is not null');
         System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, (String) orgSettingsByKey.get('dayOfMonthLastDay'),
             'JSON file should grab Last Day of Month Last_Day API value');
+        System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
+            'A list of Custom Fields should be returned');
     }
 
     /***
@@ -104,6 +106,25 @@ private with sharing class RD2_EntryFormController_TEST {
         Test.stopTest();
 
         System.assertEquals('Contact', donorType);
+    }
+
+    /***
+    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields 
+    */
+    @isTest
+    private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
+        Test.startTest();
+        List<RD2_EntryFormController.CustomField> customFields = RD2_entryFormController.getCustomFieldSectionFields();
+        Test.stopTest();
+
+        for (RD2_EntryFormController.CustomField field : customFields) {
+            System.assert(!RD2_EntryFormController.excludedCustomFields.contains(field.apiName),
+                'Excluded fields should not be return:' + field.apiName);
+            System.assert(!field.apiName.startsWith('npsp__'),
+                'NPSP package field should not be return:' + field.apiName);
+                System.assert(!field.apiName.startsWith('npe03__'),
+                'NPSP package field should not be return:' + field.apiName);
+        }
     }
 
 }
