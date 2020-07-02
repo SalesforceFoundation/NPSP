@@ -37,6 +37,7 @@
 public with sharing class RD2_EntryFormController {
 
     /**
+    * @param parentId The parentId to use when creating the new RD record (if New from Account or Contact)
     * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
     */
     @TestVisible
@@ -56,12 +57,12 @@ public with sharing class RD2_EntryFormController {
     };
 
     /**
-    * @description  Gather the org setting for Recurring Donation Entry Form
+    * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
     @AuraEnabled(Cacheable=true)
-    public static Map<String, Object> getSetting(Id parentId) {
+    public static Map<String, Object> getRecurringSettings(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
             : parentId.getSobjectType().getDescribe().getName();
@@ -70,7 +71,8 @@ public with sharing class RD2_EntryFormController {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
             'parentSObjectType' => parentSObjectType,
-            'dayOfMonthLastDay' => RD2_Constants.DAY_OF_MONTH_LAST_DAY,
+            'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
+            'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
             'customFieldSets' => getCustomFieldSectionFields()
         };
     }
@@ -78,25 +80,66 @@ public with sharing class RD2_EntryFormController {
     /**
     * @description Retrieve the donor type for an existing RD record
     * @param recordId RecurringDonation.RecordId
-    * @return Account (if Org is not a Household) or Contact
+    * @return Map<String, Object> of specific type of RD data
     */
-    @AuraEnabled(Cacheable=true)
-    public static String getDonorType(String recordId) {
+    @AuraEnabled
+    public static Map<String, Object> getRecurringData(String recordId) {
         if (recordId == null) {
             return null;
         }
 
+        npe03__Recurring_Donation__c rd;
+        Map<String, Object> response = new Map<String, Object>();
         try {
-            npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
-            if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
-                || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
-            ) {
-                return 'Contact';
-            }
-            return 'Account';
+            rd = getRecurringDonation(recordId);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
+
+        if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
+            || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
+        ) {
+            response.put('DonorType', 'Contact');
+        } else {
+            response.put('DonorType', 'Account');
+        }
+
+        response.put('Period', rd.npe03__Installment_Period__c);
+        response.put('Frequency', rd.InstallmentFrequency__c);
+        response.put('RecurringType', rd.RecurringType__c);
+        response.put('NumInstallments', rd.npe03__Installments__c);
+
+        return response;
+    }
+
+    /**
+     * @description Validate that the current user has Read access to a specific set of required fields. If this returns
+     * false, the custom UI will display a warning message at the top of the page.
+     * @return True if the User has Read access to all required fields in the UI
+     */
+    @AuraEnabled(Cacheable=True)
+    public static Boolean checkRequiredFieldPermissions() {
+        Set<String> requiredFields = new Set<String>{
+            'npe03__Amount__c',
+            'npe03__Contact__c',
+            'npe03__Installment_Period__c',
+            'npe03__Date_Established__c',
+            UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Day_of_Month__c'),
+            UTIL_Namespace.StrTokenNSPrefix('StartDate__c')
+        };
+
+        Boolean isMissingRequiredPermissions = true;
+
+        for (String fld : requiredFields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+            if (!dfr.isAccessible()) {
+                isMissingRequiredPermissions = false;
+                break;
+            }
+        }
+
+        return isMissingRequiredPermissions;
     }
 
     /**
@@ -106,9 +149,13 @@ public with sharing class RD2_EntryFormController {
     private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
         Set<String> queryFields = new Set<String>{
             'Id',
+            'RecurringType__c',
+            'npe03__Installment_Period__c',
+            'InstallmentFrequency__c',
             'npe03__Organization__c',
             'npe03__Organization__r.RecordTypeId',
-            'npe03__Contact__r.Account.RecordTypeId'
+            'npe03__Contact__r.Account.RecordTypeId',
+            'npe03__Installments__c'
         };
 
         String soql = new UTIL_Query()
@@ -133,6 +180,22 @@ public with sharing class RD2_EntryFormController {
             return hhRecordTypeId;
         }
         private set;
+    }
+
+    /**
+     * @description Build a map of field permissions for use by LWC so it can validate access permission
+     * for custom picklist fields without a return trip to server. Fields using lightning-input-field do not
+     * require this additional check.
+     * @param fieldApiName Field ApiName
+     * @return Map<String, Object> of field permissions
+     */
+    private static Map<String, Boolean> getFieldPermissionsMap(String fieldApiName) {
+        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fieldApiName);
+        return new Map<String, Boolean>{
+            'Createable' => dfr.isCreateable(),
+            'Updateable' => dfr.isUpdateable(),
+            'Visible' => dfr.isAccessible()
+        };
     }
 
     /***

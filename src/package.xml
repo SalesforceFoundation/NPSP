@@ -1711,7 +1711,17 @@
         <members>RD2_EntryFormDonorTypeLabel</members>
         <members>RD2_EntryFormHeader</members>
         <members>RD2_EntryFormInsertSuccessMessage</members>
+        <members>RD2_EntryFormMissingPermissions</members>
         <members>RD2_EntryFormOtherSectionHeader</members>
+        <members>RD2_EntryFormPeriodAdvanced</members>
+        <members>RD2_EntryFormPeriodHelpText</members>
+        <members>RD2_EntryFormPeriodLabel</members>
+        <members>RD2_EntryFormPeriodPluralDaily</members>
+        <members>RD2_EntryFormPeriodPluralMonthly</members>
+        <members>RD2_EntryFormPeriodPluralWeekly</members>
+        <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormScheduleEveryLabel</members>
+        <members>RD2_EntryFormStatusSectionHeader</members>
         <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
