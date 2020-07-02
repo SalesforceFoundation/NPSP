@@ -3740,6 +3740,7 @@
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>rd2EntryForm</members>
+        <members>rd2EntryFormCustomFieldsSection</members>
         <members>rd2EntryFormDonorSection</members>
         <members>rd2EntryFormScheduleSection</members>
         <members>rd2StatusMappingSettings</members>
