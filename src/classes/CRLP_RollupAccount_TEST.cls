@@ -68,7 +68,7 @@ public class CRLP_RollupAccount_TEST {
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId3 = CMT_UnitTestData_TEST.getNewRecordId();
 
-        DateTime dt = DateTime.now().addMonths(-100).addDays(-2);
+        DateTime dt = DateTime.now().addMonths(-100).addDays(-1);
         String dtValue = dt.format('yyyy-MM-dd', 'GMT');
 
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
@@ -311,7 +311,7 @@ public class CRLP_RollupAccount_TEST {
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         List<Opportunity> opps = new List<Opportunity>();
-        final Date closeDate = Date.Today().addMonths(-100);
+        final Date closeDate = Date.Today().addMonths(-100).addDays(1);
         final Decimal maxAmt = 1000;
         final Decimal baseAmt = 100;
         final Integer cnt = 100;
