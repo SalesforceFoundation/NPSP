@@ -82,6 +82,21 @@ private class HH_Container_TEST {
         Test.stopTest();
     }
 
+    @IsTest
+    static void shouldNotReturnContactsWithoutReadAccess () {
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
+        initTestData();
+        String permsExceptionMessage;
+        System.runAs(standardUser) {
+            try {
+                HH_Container_LCTRL.getContacts(hhA.Id);
+            } catch (Exception ex) {
+                permsExceptionMessage = ex.getMessage();
+            }
+            System.assertNotEquals(null, permsExceptionMessage);
+        }
+    }
+
     /*********************************************************************************************************
     @description
         Test getContacts() method when Household Naming Settings is invalid
