@@ -1781,6 +1781,8 @@
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
+        <members>UTIL_InputFormFormFieldAltLabelLookup</members>
+        <members>UTIL_InputFormFormFieldAltLabelDate</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
