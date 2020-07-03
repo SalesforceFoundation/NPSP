@@ -1951,7 +1951,6 @@
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
         &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
     </labels>
-
     <labels>
         <fullName>RD2_EndDateMustBeLaterThanCloseWonOpp</fullName>
         <categories>Recurring Donations Error</categories>
@@ -1975,6 +1974,150 @@
         <protected>true</protected>
         <shortDescription>Recurring Donation Entry Form Custom Field section header</shortDescription>
         <value>Custom Fields</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonationSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Donation Information section header</shortDescription>
+        <value>Donation Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Donor Information section header</shortDescription>
+        <value>Donor Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorTypeHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Inline HelpText for the Donor Type picklist</shortDescription>
+        <value>Select the type of donor for this Recurring Donation. If you select Account, enter an Organization Account, and optionally a related Contact. If you select Contact, enter a Contact related to a Household Account.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorTypeLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Label for the Donor Type picklist</shortDescription>
+        <value>Donor Type</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form header</shortDescription>
+        <value>New Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormInsertSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is inserted</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was created.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormMissingPermissions</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Field Permissions Error</shortDescription>
+        <value>You don&apos;t have the required Recurring Donations field permissions. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodAdvanced</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Picklist value for the RD2 Entry Form custom period picklist</shortDescription>
+        <value>Advanced</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Inline Help Text for the Monthly and Advanced Picklist</shortDescription>
+        <value>Select Advanced to enter other schedule types such as weekly, yearly, every 6 months, etc.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Label for the Monthly and Advanced Picklist</shortDescription>
+        <value>Recurring Period</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralDaily</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Daily</shortDescription>
+        <value>Days</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralMonthly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Monthly</shortDescription>
+        <value>Months</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralWeekly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Weekly</shortDescription>
+        <value>Weeks</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralYearly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Yearly</shortDescription>
+        <value>Years</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormScheduleEveryLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show as Every</shortDescription>
+        <value>Every</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormStatusSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Status Information section header</shortDescription>
+        <value>Status Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormUpdateSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is updated</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was saved.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
+        <value>Other Information</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
@@ -8230,6 +8373,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>lblCountry</shortDescription>
         <value>Country</value>
+    </labels>
+     <labels>
+        <fullName>lblCurrency</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Override CurrencyIsoCode label</shortDescription>
+        <value>Currency</value>
     </labels>
     <labels>
         <fullName>lblDeleteContact</fullName>
