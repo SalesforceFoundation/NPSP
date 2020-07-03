@@ -2579,6 +2579,22 @@
         <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
     </labels>
     <labels>
+        <fullName>UTIL_InputFormFormFieldAltLabelDate</fullName>
+        <categories>Alt Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt Text for the Date Picker icon</shortDescription>
+        <value>Date Picker</value>
+    </labels>
+    <labels>
+        <fullName>UTIL_InputFormFormFieldAltLabelLookup</fullName>
+        <categories>Alt Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt Text for the Lookup icon</shortDescription>
+        <value>Lookup</value>
+    </labels>
+    <labels>
         <fullName>Zip_Not_Found</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
