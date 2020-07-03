@@ -136,8 +136,13 @@ export default class GeFormField extends LightningElement {
             return event.detail.checked.toString();
         } else if(this.isRichText) {
             return event.target.value;
-        } else if(this.isLookup && event.detail.value && event.detail.value[0] && event.detail.value[0].length > 1) {
-            return event.detail.value[0];
+        } else if(this.isLookup && event.detail.value) {
+            const val = event.detail.value;
+            if(typeof val === 'string') {
+                return val; // compatibility stuff so we can swap formFieldLookup / lightning-input-field
+            } else if(Array.isArray(val)) {
+                return val[0] ? val[0] : null;
+            }
         }
 
         return event.detail.value;
