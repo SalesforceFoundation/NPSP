@@ -62,15 +62,14 @@ export default class GeFormField extends LightningElement {
                     GeFormService.getObjectMappingWrapperByImportedFieldName(this.fieldApiName)
                         .DeveloperName :
                     this.objectMappingDevName;
-
-            const detail = {
+            const lookupDetail = {
                 ...event.detail,
+                fieldApiName: this.element.fieldApiName,
+                value: this.value,
                 objectMappingDevName: objMappingDevName
             };
-
-            const selectRecordEvent = new CustomEvent(
-                'lookuprecordselect',
-                { detail: detail });
+            console.log(JSON.parse(JSON.stringify(lookupDetail)));
+            const selectRecordEvent = new CustomEvent('lookuprecordselect', { detail: lookupDetail });
             this.dispatchEvent(selectRecordEvent);
         }
 
@@ -137,6 +136,8 @@ export default class GeFormField extends LightningElement {
             return event.detail.checked.toString();
         } else if(this.isRichText) {
             return event.target.value;
+        } else if(this.isLookup && event.detail.value && event.detail.value[0] && event.detail.value[0].length > 1) {
+            return event.detail.value[0];
         }
 
         return event.detail.value;
