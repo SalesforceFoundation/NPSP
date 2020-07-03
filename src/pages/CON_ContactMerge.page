@@ -278,7 +278,9 @@
                                 <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
                                     <thead>
                                         <tr>
-                                            <th></th>
+                                            <th class="slds-text-heading_label" scope="col">
+                                                <apex:outputText value="{!$Label.mtchSelectCbxTitle}"/>
+                                            </th>
                                             <th class="slds-text-heading_label" scope="col">Name</th>
                                             <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}" var="field">
                                                 <th class="slds-text-heading_label" scope="col">
@@ -344,9 +346,6 @@
                                                     <span class="slds-text-heading_small">
                                                         <apex:outputText value="{!col.value}"/>
                                                     </span>
-                                                    <span class="slds-text-body_small kill-white-space">
-                                                        (<apex:commandLink action="{!selectDefaultRecord}" value="{!$Label.conMergeSelectAll}"><apex:param name="recordId" value="{!col.objId}"/></apex:commandLink>)
-                                                    </span>
                                                 </th>
                                             </apex:repeat>
                                         </tr>
@@ -356,14 +355,26 @@
                             <tbody>
                                 <!-- master row(s) -->
                                 <apex:repeat var="row" value="{!fieldRows}">
+                                    <apex:outputPanel rendered="{!row.styleClass == 'header'}">
+                                        <tr>
+                                            <th headers="blank" class="slds-size_1-of-12" scope="row">{!$Label.conMergeSelectAll}</th>
+                                            <apex:repeat var="col" value="{!row.values}">
+                                                <td headers="contact-row-element-id" class="slds-size_1-of-3 slds-cell-wrap">
+                                                    <span class="slds-text-body_regular">
+                                                        <apex:commandLink action="{!selectDefaultRecord}" value="{!$Label.conMergeSelectAll}"><apex:param name="recordId" value="{!col.objId}"/></apex:commandLink>
+                                                    </span>
+                                                </td>
+                                            </apex:repeat>
+                                        </tr>
+                                    </apex:outputPanel>
                                     <apex:outputPanel rendered="{!row.fieldName == '$MASTER$'}">
                                         <tr>
-                                            <th class="slds-size_1-of-12">
+                                            <th class="slds-size_1-of-12" scope="row">
                                                 <apex:inputHidden id="winner" value="{!row.selectedValue}"/>
                                                 <apex:outputText value="{!row.fieldLabel}"/>
                                             </th>
                                             <apex:repeat var="col" value="{!row.values}">
-                                                <th class="slds-form-element__control slds-size_1-of-3 slds-cell-wrap">
+                                                <td class="slds-form-element__control slds-size_1-of-3 slds-cell-wrap">
                                                     <label class="slds-radio">
                                                         <apex:outputText rendered="{!row.selectedValue == col.objId}">
                                                             <input type="radio" class="radio-winner-value" checked="true" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
@@ -371,31 +382,29 @@
                                                         <apex:outputText rendered="{!row.selectedValue != col.objId}">
                                                             <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                         </apex:outputText>
-                                                        <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
-                                                        <span>
+                                                        <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]}"></span>
+                                                        <span class="slds-text-body_regular">
                                                             <apex:outputText value="{!col.objId}"/>
                                                         </span>
                                                         <span class="slds-assistive-text">{!$Label.conMergeWinnerAsstText}</span>
                                                     </label>
-                                                </th>
+                                                </td>
                                             </apex:repeat>
                                         </tr>
                                     </apex:outputPanel>
                                 </apex:repeat>
-                            </tbody>
-                            <tbody>
                                 <!-- normal and separator rows go here -->
                                 <apex:repeat var="row" value="{!fieldRows}">
                                     <apex:outputText rendered="{!row.styleClass == 'separator'}">
                                         <tr>
-                                            <th colspan="5" class="slds-theme_shade slds-text-heading_label">
+                                            <th colspan="4" class="slds-theme_shade slds-text-heading_label" scope="row">
                                                 <apex:outputText value="{!row.fieldLabel}"/>
                                             </th>
                                         </tr>
                                     </apex:outputText>
                                     <apex:outputText rendered="{!row.styleClass != 'separator' && row.styleClass != 'header' && row.fieldName != '$MASTER$'}">
                                         <tr>
-                                            <th class="slds-size_1-of-12">
+                                            <th headers="blank" class="slds-size_1-of-12" scope="row">
                                                 <apex:inputHidden id="winner" value="{!row.selectedValue}" rendered="{!row.showRadio}"/>
                                                 <apex:outputText value="{!row.fieldLabel}"/>
                                             </th>
@@ -409,7 +418,7 @@
                                                             <apex:outputText rendered="{!row.selectedValue != col.objId}">
                                                                 <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                             </apex:outputText>
-                                                            <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
+                                                            <span class="slds-radio_faux" aria-label="{!row.fieldLabel}"></span>
                                                             <span>
                                                                 <apex:outputText value="{!col.value}"/>
                                                             </span>
@@ -418,8 +427,10 @@
                                                 </apex:outputText>
                                                 <apex:outputText rendered="{!NOT(row.showRadio)}">
                                                     <td class="slds-size_1-of-3 slds-cell-wrap">
-                                                        <span class="slds-radio_faux" aria-label="{!ariaNameMap[col.objId]} {!row.fieldLabel}"></span>
-                                                        <apex:outputText value="{!col.value}"/>
+                                                        <span class="slds-radio_faux" aria-label="{!row.fieldLabel}"></span>
+                                                        <span>
+                                                            <apex:outputText value="{!col.value}"/>
+                                                        </span>
                                                     </td>
                                                 </apex:outputText>
                                             </apex:repeat>
