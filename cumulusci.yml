@@ -1153,7 +1153,7 @@ flows:
                 task: update_admin_profile
                 options:
                     namespace_inject: $project_config.project__package__namespace
-                    profile_name: NPSP_Standard_User
+                    # profile_name: NPSP_Standard_User
                     package_xml: lib/npsp_standard_user_profile.xml
             3:
                 task: execute_anon
