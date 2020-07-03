@@ -405,6 +405,8 @@
         <members>RD2_EnablementDelegate_TEST</members>
         <members>RD2_EnablementService</members>
         <members>RD2_EnablementService_TEST</members>
+        <members>RD2_EntryFormController</members>
+        <members>RD2_EntryFormController_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
@@ -811,6 +813,7 @@
         <members>RD2_EnablementDelegate</members>
         <members>RD2_EnablementDelegateSimple</members>
         <members>RD2_EnhancementEnabledEvent</members>
+        <members>RD2_EntryForm</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -1703,6 +1706,24 @@
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>
+        <members>RD2_EntryFormDonationSectionHeader</members>
+        <members>RD2_EntryFormDonorSectionHeader</members>
+        <members>RD2_EntryFormDonorTypeHelpText</members>
+        <members>RD2_EntryFormDonorTypeLabel</members>
+        <members>RD2_EntryFormHeader</members>
+        <members>RD2_EntryFormInsertSuccessMessage</members>
+        <members>RD2_EntryFormMissingPermissions</members>
+        <members>RD2_EntryFormOtherSectionHeader</members>
+        <members>RD2_EntryFormPeriodAdvanced</members>
+        <members>RD2_EntryFormPeriodHelpText</members>
+        <members>RD2_EntryFormPeriodLabel</members>
+        <members>RD2_EntryFormPeriodPluralDaily</members>
+        <members>RD2_EntryFormPeriodPluralMonthly</members>
+        <members>RD2_EntryFormPeriodPluralWeekly</members>
+        <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormScheduleEveryLabel</members>
+        <members>RD2_EntryFormStatusSectionHeader</members>
+        <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
@@ -2485,6 +2506,7 @@
         <members>lblCity</members>
         <members>lblCloned</members>
         <members>lblCountry</members>
+        <members>lblCurrency</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
         <members>lblDeprecated</members>
@@ -3621,6 +3643,7 @@
         <members>Opportunity.BDE_Entry_FS_v2</members>
         <members>Opportunity.BDE_List_FS_v2</members>
         <members>npe01__OppPayment__c.Payment_WizardFS</members>
+        <members>npe03__Recurring_Donation__c.RD2_Entry_Form_Custom_Fields</members>
         <name>FieldSet</name>
     </types>
     <types>
@@ -3720,6 +3743,10 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2EntryForm</members>
+        <members>rd2EntryFormCustomFieldsSection</members>
+        <members>rd2EntryFormDonorSection</members>
+        <members>rd2EntryFormScheduleSection</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>

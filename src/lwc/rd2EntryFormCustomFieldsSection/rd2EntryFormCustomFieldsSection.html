@@ -1,0 +1,14 @@
+<template>
+    <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c">
+        <div class="slds-section slds-is-open">
+            <lightning-layout horizontal-align="spread" multiple-rows="true">
+                <template for:each={fields} for:item="field">
+                    <lightning-layout-item key={field.apiName} padding="horizontal-small" size="12" small-device-size="6">
+                        <lightning-input-field field-name={field.apiName} required={field.required}>
+                        </lightning-input-field>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </div>
+    </lightning-record-edit-form>
+</template>
