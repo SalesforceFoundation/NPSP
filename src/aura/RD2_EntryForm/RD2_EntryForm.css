@@ -1,0 +1,15 @@
+/**
+* @description Remove entry form extra padding
+*/
+.THIS.custom-modal .modal-body {
+    padding: 0;
+}
+
+/**
+* @description Override modal size to mimic the standard modal size
+*/
+.THIS.custom-modal .slds-modal__container {
+    max-width: 52.5rem;
+    min-width: 20rem;
+
+}
