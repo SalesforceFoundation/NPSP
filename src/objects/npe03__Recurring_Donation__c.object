@@ -7,6 +7,11 @@
         <fields>npe03__Installment_Period__c</fields>
         <label>NPSP Recurring Donation Compact Layout</label>
     </compactLayouts>
+    <fieldSets>
+        <description>Fields to be displayed on Enhanced Recurring Donations Entry Form in the Custom Fields section</description>
+        <fullName>RD2_Entry_Form_Custom_Fields</fullName>
+        <label>Recurring Donations Entry Form Custom Fields</label>
+    </fieldSets>
     <fields>
         <fullName>Always_Use_Last_Day_Of_Month__c</fullName>
         <defaultValue>false</defaultValue>
