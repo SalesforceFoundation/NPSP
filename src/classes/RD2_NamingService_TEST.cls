@@ -522,8 +522,13 @@ public with sharing class RD2_NamingService_TEST {
      * @param account Account object
      * @return Formatted RD name
      */
-    private static String getExpectedName(String nameFormat, String period, String amount, String currencyCode, Contact contact, Account account) {
-        String contactName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
+    public static String getExpectedName(String nameFormat, String period, String amount, String currencyCode, Contact contact, Account account) {
+        String donorName;
+        if (contact != null) {
+            donorName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
+        } else if (account != null) {
+            donorName = account.Name;
+        }
 
         period = UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
             npe03__Recurring_Donation__c.npe03__Installment_Period__c, period);
@@ -535,10 +540,10 @@ public with sharing class RD2_NamingService_TEST {
             expectedName = getDefaultExpectedName(contact, amount, currencyCode);
 
         } else if (nameFormat == RD2_NamingService.RD_NAMING_OPTION_2) {
-            expectedName = contactName + ' ' + period + ' ' + objectLabel + ' - ' + getCurrencySymbol(currencyCode) + amount;
+            expectedName = donorName + ' ' + period + ' ' + objectLabel + ' - ' + getCurrencySymbol(currencyCode) + amount;
 
         } else if (nameFormat == RD2_NamingService.RD_NAMING_OPTION_3) {
-            expectedName = contactName + ' ' + getCurrencySymbol(currencyCode) + amount + ' ' + period;
+            expectedName = donorName + ' ' + getCurrencySymbol(currencyCode) + amount + ' ' + period;
         }
 
         return expectedName;

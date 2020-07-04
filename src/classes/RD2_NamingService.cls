@@ -155,6 +155,7 @@ public with sharing class RD2_NamingService {
         Boolean hasChanged = rd.npe03__Organization__c != oldRd.npe03__Organization__c
             || rd.npe03__Contact__c != oldRd.npe03__Contact__c
             || rd.npe03__Amount__c != oldRd.npe03__Amount__c
+            || rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c
             || rd.Name == System.Label.npo02.NameReplacementText;
 
         if (!hasChanged && isMultiCurrencyEnabled) {
@@ -403,7 +404,6 @@ public with sharing class RD2_NamingService {
 
         /**
         * @description Parses out field names from an RD naming spec and returns them as a set of strings
-        * @param format A naming spec.
         * @return Set<String> The field names from the spec, without the curly brackets
         */
         private Set<String> getFieldNamesFromSpec() {
