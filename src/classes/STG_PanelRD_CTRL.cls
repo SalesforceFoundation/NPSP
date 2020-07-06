@@ -337,36 +337,31 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
                 System.Label.stgRDNamingDisable),
             new SelectOption(
                 RD2_NamingService.RD_NAMING_OPTION_1,
-                RD2_NamingService.RD_NAMING_OPTION_1.replace('Recurring', System.Label.RecurringDonationNameSuffix)),
+                convertToRDNamingLabel(RD2_NamingService.RD_NAMING_OPTION_1)),
             new SelectOption(
                 RD2_NamingService.RD_NAMING_OPTION_2,
-                RD2_NamingService.RD_NAMING_OPTION_2.replace('Recurring Donation', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'))),
+                convertToRDNamingLabel(RD2_NamingService.RD_NAMING_OPTION_2)),
             new SelectOption(
                 RD2_NamingService.RD_NAMING_OPTION_3,
-                RD2_NamingService.RD_NAMING_OPTION_3)
+                convertToRDNamingLabel(RD2_NamingService.RD_NAMING_OPTION_3))
         };
 
         return options;
     }
 
-    /***
-    * @description Convert rdNamingOption from api version to label version
+     /**
+    * @description Replace the naming format token into labels
+    * @return String
     */
-    @TestVisible
-    private String convertToRDNamingLabel(String rdNamingOption) {
-        if (String.isBlank(rdNamingOption)) {
+    public static String convertToRDNamingLabel(String apiFormat) {
+        if (String.isBlank(apiFormat)) {
             return System.Label.stgRDNamingDisable;
-
-        } else if (rdNamingOption == RD2_NamingService.RD_NAMING_OPTION_1) {
-            return RD2_NamingService.RD_NAMING_OPTION_1.replace('Recurring', System.Label.RecurringDonationNameSuffix);
-
-        } else if (rdNamingOption == RD2_NamingService.RD_NAMING_OPTION_2) {
-            return RD2_NamingService.RD_NAMING_OPTION_2.replace('Recurring Donation', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'));
-
-        } else if (rdNamingOption == RD2_NamingService.RD_NAMING_OPTION_3) {
-            return RD2_NamingService.RD_NAMING_OPTION_3;
         }
 
-        return '';
+        for (String token : RD2_NamingService.namingTokens.keySet()) {
+            apiFormat = apiFormat.replace(token, RD2_NamingService.namingTokens.get(token));
+        }
+
+        return apiFormat;
     }
 }

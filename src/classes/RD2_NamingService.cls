@@ -39,11 +39,19 @@ public with sharing class RD2_NamingService {
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
     public static final Integer MAX_NAME_LENGTH = 80;
 
+    /**
+    * @description Support special Naming Tokens that can be used in the RD Name
+    */
+    public static final Map<String, String> namingTokens = new Map<String, String>{
+        '$RECURRING_NAME_SUFFIX$' => System.Label.RecurringDonationNameSuffix,
+        '$RECURRING_OBJECT_NAME$' => UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c')
+    };
+
     /***
     * @description RD Naming format options 
     */
-    public static final String RD_NAMING_OPTION_1 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - \"Recurring\"';
-    public static final String RD_NAMING_OPTION_2 = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} Recurring Donation - {!npe03__Amount__c}';
+    public static final String RD_NAMING_OPTION_1 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - $RECURRING_NAME_SUFFIX$';
+    public static final String RD_NAMING_OPTION_2 = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} $RECURRING_OBJECT_NAME$ - {!npe03__Amount__c}';
     public static final String RD_NAMING_OPTION_3 = '{!npe03__Donor_Name__c} {!npe03__Amount__c} {!npe03__Installment_Period__c}';
 
     /***
