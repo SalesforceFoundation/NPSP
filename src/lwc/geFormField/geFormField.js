@@ -396,7 +396,7 @@ export default class GeFormField extends LightningElement {
 
         if (this.isLookup) {
             let inputField = this.template.querySelector('[data-id="inputComponent"]');
-            inputField.clearCustomValidity();
+            // inputField.clearCustomValidity();
         } else {
             this.setCustomValidity('');
         }
