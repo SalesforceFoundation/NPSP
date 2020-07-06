@@ -163,6 +163,11 @@
         <label><!-- Calculate Donation Rollups with Batch --></label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
+    <fields>
+        <help><!--The status of the batch, for example, Open or Completed.--></help>
+        <label><!--Status--></label>
+        <name>Status__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
