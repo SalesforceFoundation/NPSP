@@ -8,7 +8,6 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
     dispatch,
     handleError,
-    showToast,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     generateId,
@@ -23,6 +22,7 @@ import {
     getQueryParameters,
     shiftToIndex,
     sort,
+    showToast,
     getNamespace,
     removeByProperty,
     removeFromArray,

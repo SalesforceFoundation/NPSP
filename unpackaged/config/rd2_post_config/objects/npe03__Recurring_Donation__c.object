@@ -8,6 +8,20 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
     </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>lightningcomponent</type>
+        <content>%%%NAMESPACE%%%RD2_EntryForm</content>
+        <formFactor>Large</formFactor>
+        <comment>Custom Recurring Donation Entry Form</comment>
+     </actionOverrides>
+     <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>lightningcomponent</type>
+        <content>%%%NAMESPACE%%%RD2_EntryForm</content>
+        <formFactor>Large</formFactor>
+        <comment>Custom Recurring Donation Entry Form</comment>
+     </actionOverrides>
     <compactLayoutAssignment>Enhanced_Recurring_Donations</compactLayoutAssignment>
     <compactLayouts>
         <fullName>Enhanced_Recurring_Donations</fullName>
