@@ -430,6 +430,36 @@
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <description>The status of the batch, for example, Open or Completed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status of the batch, for example, Open or Completed.</inlineHelpText>
+        <label>Status</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Open</fullName>
+                    <default>false</default>
+                    <label>Open</label>
+                </value>
+                <value>
+                    <fullName>Completed</fullName>
+                    <default>false</default>
+                    <label>Completed</label>
+                </value>
+                <value>
+                    <fullName>Failed - Needs Review</fullName>
+                    <default>false</default>
+                    <label>Failed - Needs Review</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>
         <fullName>All</fullName>
