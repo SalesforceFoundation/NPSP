@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2017, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 
@@ -42,34 +42,46 @@ public with sharing class USER_UserService {
     public static final String OBJECT_TYPE_USER = 'User';
 
     /*********************************************************************************************************
-    * @description Determines if a User in the List is a System Administrator based on ProfileId.
-    * @param updatedUsers The User records of the deactivated System Administrators.
-    * @return A Map containing the UserId and Boolean value based on the User's ProfileId.
+    * @description Determines if the Users in the List are "System Administrator" based on assigned permissions;
+    * where a SystemAdmin is defined as a User with Customize Application, Modify All Data, and Author Apex.
+    * @param users The User record(s) to check
+    * @return A Map containing the UserId and Boolean value for HasSystemAdmin Permission
     **********************************************************************************************************/
-    public static Map<Id, Boolean> isSysAdmin(List<User> updatedUsers) {
-        Map<Id, Boolean> userIdToIsSysAdmin = new Map<Id, Boolean>();
+    public static Map<Id, Boolean> isSysAdmin(List<User> users) {
+        Map<Id, Boolean> usersWithAdminPermission = new Map<Id, Boolean>();
 
-        Map<Id, Profile> sysAdminProfiles = new Map<Id, Profile>([SELECT Id
-                , PermissionsCustomizeApplication
-                , PermissionsModifyAllData
-                , PermissionsAuthorApex
-                FROM Profile
-                WHERE PermissionsCustomizeApplication = TRUE
-                AND PermissionsModifyAllData = TRUE
-                AND PermissionsAuthorApex = TRUE]);
-
-        if (updatedUsers != null && !updatedUsers.isEmpty()) {
-            for (User currentUser : updatedUsers) {
-                userIdToIsSysAdmin.put(currentUser.Id, sysAdminProfiles.containsKey(currentUser.ProfileId) ? true : false);
-            }
+        if (users == null || users.isEmpty()) {
+            return usersWithAdminPermission;
         }
 
-        return userIdToIsSysAdmin;
+        List<PermissionSetAssignment> permissions = [
+            SELECT Id, AssigneeId
+            FROM PermissionSetAssignment
+            WHERE AssigneeId IN :users
+            AND PermissionSetId IN (
+                SELECT Id
+                FROM PermissionSet
+                WHERE PermissionsCustomizeApplication = TRUE
+                AND PermissionsModifyAllData = TRUE
+                AND PermissionsAuthorApex = TRUE)
+        ];
+        for (User currentUser : users) {
+            Boolean isAdminUser = false;
+            for (PermissionSetAssignment pma : permissions) {
+                if (pma.AssigneeId == currentUser.Id) {
+                    isAdminUser = true;
+                    break;
+                }
+            }
+            usersWithAdminPermission.put(currentUser.Id, isAdminUser);
+        }
+
+        return usersWithAdminPermission;
     }
 
     /*********************************************************************************************************
     * @description Returns user Customize Application permission
-    * @return Boolean True if the user has Customize Application permission at profile level or 
+    * @return Boolean True if the user has Customize Application permission at profile level or
     * an assigned custom permission set
     **********************************************************************************************************/
     public static Boolean isCustomizeApplicationUser() {
@@ -82,9 +94,9 @@ public with sharing class USER_UserService {
             AND PermissionSetId IN (
                 SELECT Id
                 FROM PermissionSet
-                WHERE PermissionsCustomizeApplication = true)
+                WHERE PermissionsCustomizeApplication = TRUE)
         ];
-        
+
         return !permissions.isEmpty();
     }
 
@@ -184,7 +196,7 @@ public with sharing class USER_UserService {
     private static void logInActiveSysAdminError() {
         Error__c inActiveError = new Error__c(Error_Type__c = ERROR_TYPE_SCHEDULED_APEX,
                                                 Object_Type__c = OBJECT_TYPE_USER,
-                                                Datetime__c = System.now(), 
+                                                Datetime__c = System.now(),
                                                 Full_Message__c = Label.InactiveScheduledJobsOwnerErrMsg);
 
         Database.insert(inActiveError, true);
