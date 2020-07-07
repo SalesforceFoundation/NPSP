@@ -42,7 +42,7 @@ public with sharing class RD2_NamingService {
     /**
     * @description Support special Naming Tokens that can be used in the RD Name
     */
-    private static final Map<String, String> namingTokens = new Map<String, String>{
+    public static final Map<String, String> namingTokens = new Map<String, String>{
         '$RECURRING_NAME_SUFFIX$' => System.Label.RecurringDonationNameSuffix,
         '$RECURRING_OBJECT_NAME$' => UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c')
     };
