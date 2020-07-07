@@ -483,6 +483,20 @@ public with sharing class RD2_NamingService_TEST {
             'The Account name should be queried and incorporated into the name');
     }
 
+    /**
+     * @description Validate that the NameFormat parser service properly identifies only {!field} format fields in the string
+     */
+    @IsTest
+    private static void shouldParseNameFormatProperly() {
+
+        String nameFormat1 = '{!Field1} {!Field2} {NotAField} $!NotAField {!Field3} !NotAField} [!NotAField]'; // Should parse into 3 fields
+
+        RD2_NamingService.NameFormatter nameFormatter = new RD2_NamingService.NameFormatter();
+        nameFormatter.nameFormat = nameFormat1;
+
+        System.assertEquals(3, nameFormatter.fields.size(), 'This should parse out 3 individual fields');
+    }
+
 
     // Helpers
     //////////////////

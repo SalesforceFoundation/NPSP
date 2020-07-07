@@ -213,33 +213,19 @@ public with sharing class RD2_NamingService {
     */
     private String constructName(npe03__Recurring_Donation__c rd, Map<Id, RD2_Donor.Record> donorById) {
 
-        RecurringDonationNameBuilder nameBuilder = new RecurringDonationNameBuilder(rd)
-            .withDonorsById(donorById)
-            .withNameFormat(getCurrentNamingFormat());
+        NameBuilder nameBuilder = new NameBuilder(rd, new NameFormatter())
+            .withDonorsById(donorById);
 
         return nameBuilder.build();
     }
 
     /**
-     * @return The currently configured RD naming format string
+     * @description Build out the Recurring Donation name based on the defined naming format
      */
-    private String getCurrentNamingFormat() {
-
-        String format = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonationNameFormat__c;
-        if (format == null) {
-            format = RD_NAMING_OPTION_1; // the default format
-        }
-
-        return format;
-    }
-
-    /**
-     * @description Build out the Recurring Donation name based on the define naming format
-     */
-    private class RecurringDonationNameBuilder {
+    private class NameBuilder {
 
         private npe03__Recurring_Donation__c rd;
-        private String nameFormat;
+        private NameFormatter nameFormatter;
         private Map<Id, RD2_Donor.Record> donorById;
 
         private String rdName;
@@ -247,25 +233,18 @@ public with sharing class RD2_NamingService {
         /**
          * @description Constructor
          * @param rd Recurring Donation
+         * @param nameFormatter Recurring Donation Name Formatter
          */
-        public RecurringDonationNameBuilder(npe03__Recurring_Donation__c rd) {
+        public NameBuilder(npe03__Recurring_Donation__c rd, NameFormatter nameFormatter) {
             this.rd = rd;
-        }
-
-        /**
-         * @param nameFormat The RD Naming format to use
-         * @return current instance
-         */
-        public RecurringDonationNameBuilder withNameFormat(String nameFormat) {
-            this.nameFormat = nameFormat;
-            return this;
+            this.nameFormatter = nameFormatter;
         }
 
         /**
          * @param donorById Map of Donor Account or Contact information by RD Id
          * @return current instance
          */
-        public RecurringDonationNameBuilder withDonorsById(Map<Id, RD2_Donor.Record> donorById) {
+        public NameBuilder withDonorsById(Map<Id, RD2_Donor.Record> donorById) {
             this.donorById = donorById;
             return this;
         }
@@ -275,7 +254,7 @@ public with sharing class RD2_NamingService {
          * @return Recurring Donations Name
          */
         public String build() {
-            this.rdName = this.nameFormat;
+            this.rdName = this.nameFormatter.nameFormat;
 
             replaceTokenValues();
             replaceFieldValues();
@@ -289,7 +268,7 @@ public with sharing class RD2_NamingService {
          */
         private void replaceFieldValues() {
 
-            Set<String> fields = getFieldNamesFromSpec();
+            Set<String> fields = nameFormatter.fields;
             Map<String, String> fieldReplacements = new Map<String, String>();
 
             for (String fld : fields) {
@@ -397,12 +376,63 @@ public with sharing class RD2_NamingService {
 
             return formattedAmount;
         }
+    }
+
+    /**
+     * Retrieves RD name format.
+     * Parses the RD name format to obtain fields to be used to construct a name for each individual RD.
+     */
+    @TestVisible
+    private class NameFormatter {
 
         /**
-        * @description Parses out field names from an RD naming spec and returns them as a set of strings
-        * @return Set<String> The field names from the spec, without the curly brackets
+         * @description Contains Recurring Donation name format
+         * @return String The RD name format
+         */
+        @TestVisible
+        public String nameFormat {
+            get {
+                if (String.isBlank(nameFormat)) {
+                    nameFormat = getConfiguredFormat();
+                }
+                return nameFormat;
+            }
+            private set;
+        }
+
+        /**
+         * @description Contains field names that should be used to construct the Recurring Donation name
+         * @return Set<String> Fields comprising the RD name format
+         */
+        public Set<String> fields {
+            get {
+                if (fields == null) {
+                    fields = parseFormat();
+                }
+                return fields;
+            }
+            private set;
+        }
+
+        /**
+         * @description Retrieves the configured name format (if any)
+         * @return String The RD naming format
+         */
+        private String getConfiguredFormat() {
+
+            String nameFormat = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonationNameFormat__c;
+            if (String.isBlank(nameFormat)) {
+                nameFormat = RD_NAMING_OPTION_1; // the default format
+            }
+
+            return nameFormat;
+        }
+
+        /**
+        * @description Parses out field names from an RD naming settings
+        * @return Set<String> The field names from the RD name format settings, without the curly brackets
         */
-        private Set<String> getFieldNamesFromSpec() {
+        private Set<String> parseFormat() {
             Set<String> fields = new Set<String>();
 
             if (String.isBlank(nameFormat)) {
@@ -412,15 +442,19 @@ public with sharing class RD2_NamingService {
             final String fldStartToken = '{!';
             final String fldEndToken = '}';
 
-            Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
-            Matcher MyMatcher = MyPattern.matcher(nameFormat);
-            while (MyMatcher.find()) {
+            Pattern fieldPattern = Pattern.compile('\\{![^\\{!]*\\}');
+            Matcher fieldMatcher = fieldPattern.matcher(nameFormat);
+
+            while (fieldMatcher.find()) {
                 // get the fieldname without the {}'s
-                String strField = nameFormat.substring(MyMatcher.start() + fldStartToken.length(), MyMatcher.end()-fldEndToken.length());
-                fields.add(strField.trim());
+                String field = nameFormat.substring(
+                    fieldMatcher.start() + fldStartToken.length(),
+                    fieldMatcher.end() - fldEndToken.length()
+                );
+                fields.add(field.trim());
             }
+
             return fields;
         }
-
     }
 }
