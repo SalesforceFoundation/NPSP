@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Mr.</masterLabel>
+        <translation>Mr.</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Ms.</masterLabel>
+        <translation>Ms.</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Mrs.</masterLabel>
+        <translation>Mrs.</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Dr.</masterLabel>
+        <translation>Dr.</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Prof.</masterLabel>
+        <translation>Prof.</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Mx.</masterLabel>
+        <translation>Mx.</translation>
+    </valueTranslation>
+</StandardValueSetTranslation>

@@ -1,118 +1,122 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Unité comptable générale</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Unités comptables générales</value>
-    </caseValues>
-    <fields>
-        <help>Les unités comptables générales actives sont disponibles à la sélection pour les allocations. Les unités inactives ne peuvent pas recevoir de nouvelles allocations.</help>
-        <label>Actif</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>La moyenne de toutes les allocations de cette unité comptable générale, présentes ou passées. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Allocation moyenne</label>
-        <name>Average_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>Informations supplémentaires sur cette unité comptable générale.</help>
-        <label>Descriptif</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>La première date de fermeture de l’opportunité d’une allocation associée à cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Première date d’allocation</label>
-        <name>First_Allocation_Date__c</name>
-    </fields>
-    <fields>
-        <help>L’allocation la plus élevée de cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Allocation la plus élevée</label>
-        <name>Largest_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>La dernière date de fermeture de l’opportunité d’une allocation associée avec cette unité comptable générale.</help>
-        <label>Date de la dernière allocation</label>
-        <name>Last_Allocation_Date__c</name>
-    </fields>
-    <fields>
-        <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée au cours des derniers N jours. La valeur de N peut être modifiée dans la configuration.</help>
-        <label>Nombre d’allocations N derniers jours</label>
-        <name>Number_of_Allocations_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Nombre total d’allocations d’opportunités Clôturées/Gagnées au cours de la dernière année. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Nombre d’allocations de l’année dernière</label>
-        <name>Number_of_Allocations_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Nombre total d’allocations provenant d’opportunités Clôturées/Gagnées au cours de cette année. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Nombre d’allocations cette année</label>
-        <name>Number_of_Allocations_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Nombre total d’allocations d’opportunités Clôturées/Gagnées deux ans auparavant. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Nombre d’allocations il y a deux ans</label>
-        <name>Number_of_Allocations_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>L’allocation la plus faible de cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Allocation la plus faible</label>
-        <name>Smallest_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>Somme des allocations d’opportunités Clôturées/Gagnées au cours des derniers N jours. (La valeur de N peut être modifiée dans les paramètres NPSP, sous Dons, Allocations UCG). NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Allocations totales des N derniers jours</label>
-        <name>Total_Allocations_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Somme des allocations d’opportunités à une étape Clôturée/Gagnée au cours de l’année dernière.</help>
-        <label>Allocations totales de l’année dernière</label>
-        <name>Total_Allocations_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Somme des allocations d’opportunités Clôturées/Gagnées au cours de cette année. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Allocations totales de cette année</label>
-        <name>Total_Allocations_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Somme des allocations d’opportunités Clôturées/Gagnées il y a deux ans. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Allocations totales il y a deux ans</label>
-        <name>Total_Allocations_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>Somme de toutes les allocations d’opportunités Clôturées/Gagnées. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Total des allocations</label>
-        <name>Total_Allocations__c</name>
-    </fields>
-    <fields>
-        <help>Nombre total d’allocations d’opportunités Clôturées/Gagnées. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
-        <label>Nombre total d’allocations</label>
-        <name>Total_Number_of_Allocations__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>General Accounting Unit Layout</layout>
-        <sections>
-            <label>Informations d’allocation</label>
-            <section>Allocation Information</section>
-        </sections>
-        <sections>
-            <label>Totaux d’allocation</label>
-            <section>Allocation Totals</section>
-        </sections>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom de l’unité comptable générale</nameFieldLabel>
-    <startsWith>Vowel</startsWith>
-    <webLinks>
-        <label>Recalculer des cumuls</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+  <fields>
+    <name>Active__c</name>
+    <help>Les unités comptables générales actives sont disponibles à la sélection pour les allocations. Les unités inactives ne peuvent pas recevoir de nouvelles allocations.</help>
+    <label>Actif</label>
+  </fields>
+  <fields>
+    <name>Average_Allocation__c</name>
+    <help>La moyenne de toutes les allocations de cette unité comptable générale, présentes ou passées. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocation moyenne</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <help>Informations supplémentaires sur cette unité comptable générale.</help>
+    <label>Descriptif</label>
+  </fields>
+  <fields>
+    <name>First_Allocation_Date__c</name>
+    <help>La première date de fermeture de l’opportunité d’une allocation associée à cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Première date d’allocation</label>
+  </fields>
+  <fields>
+    <name>Largest_Allocation__c</name>
+    <help>L’allocation la plus élevée de cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocation la plus élevée</label>
+  </fields>
+  <fields>
+    <name>Last_Allocation_Date__c</name>
+    <help>La dernière date de fermeture de l’opportunité d’une allocation associée avec cette unité comptable générale.</help>
+    <label>Date de la dernière allocation</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Last_N_Days__c</name>
+    <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée au cours des derniers N jours. La valeur de N peut être modifiée dans la configuration.</help>
+    <label>Nombre d’allocations N derniers jours</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Last_Year__c</name>
+    <help>Nombre total d’allocations d’opportunités Clôturées/Gagnées au cours de la dernière année. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Nombre d’allocations de l’année dernière</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_This_Year__c</name>
+    <help>Nombre total d’allocations provenant d’opportunités Clôturées/Gagnées au cours de cette année. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Nombre d’allocations cette année</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Two_Years_Ago__c</name>
+    <help>Nombre total d’allocations d’opportunités Clôturées/Gagnées deux ans auparavant. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Nombre d’allocations il y a deux ans</label>
+  </fields>
+  <fields>
+    <name>Smallest_Allocation__c</name>
+    <help>L’allocation la plus faible de cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocation la plus faible</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Last_N_Days__c</name>
+    <help>Somme des allocations d’opportunités Clôturées/Gagnées au cours des derniers N jours. (La valeur de N peut être modifiée dans les paramètres NPSP, sous Dons, Allocations UCG). NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocations totales des N derniers jours</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Last_Year__c</name>
+    <help>Somme des allocations d’opportunités à une étape Clôturée/Gagnée au cours de l’année dernière.</help>
+    <label>Allocations totales de l’année dernière</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_This_Year__c</name>
+    <help>Somme des allocations d’opportunités Clôturées/Gagnées au cours de cette année. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocations totales de cette année</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Two_Years_Ago__c</name>
+    <help>Somme des allocations d’opportunités Clôturées/Gagnées il y a deux ans. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocations totales il y a deux ans</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations__c</name>
+    <help>Somme de toutes les allocations d’opportunités Clôturées/Gagnées. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Total des allocations</label>
+  </fields>
+  <fields>
+    <name>Total_Number_of_Allocations__c</name>
+    <help>Nombre total d’allocations d’opportunités Clôturées/Gagnées. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Nombre total d’allocations</label>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Recalculer des cumuls</label>
+  </webLinks>
+  <layouts>
+    <layout>General Accounting Unit Layout</layout>
+    <sections>
+      <label>Informations d’allocation</label>
+      <section>Allocation Information</section>
+    </sections>
+    <sections>
+      <label>Totaux d’allocation</label>
+      <section>Allocation Totals</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom de l’unité comptable générale</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom de l’unité comptable générale</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Unité comptable générale</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Unités comptables générales</value>
+  </caseValues>
 </CustomObjectTranslation>

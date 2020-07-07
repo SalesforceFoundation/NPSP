@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <layouts>
+    <layout>___NAMESPACE___General Accounting Unit Layout</layout>
+    <sections>
+      <label>Información de asignación</label>
+      <section>Allocation Information</section>
+    </sections>
+    <sections>
+      <label>Totales de asignación</label>
+      <section>Allocation Totals</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre de unidad de contabilidad general</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de unidad de contabilidad general</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Unidad de contabilidad general</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Unidades de contabilidad general</value>
+  </caseValues>
+</CustomObjectTranslation>

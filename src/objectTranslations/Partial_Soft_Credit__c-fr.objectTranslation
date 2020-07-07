@@ -1,57 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Crédit indirect partiel</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Crédits indirects partiels</value>
-    </caseValues>
-    <fields>
-        <help>Le montant du crédit indirect.</help>
-        <label>Montant</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>Le nom complet du contact qui reçoit ce crédit indirect (lecture seule).</help>
-        <label>Nom du contact</label>
-        <name>Contact_Name__c</name>
-    </fields>
-    <fields>
-        <help>Le rôle de contact d’opportunité auquel ce crédit indirect s’applique.</help>
-        <label>ID du rôle de contact</label>
-        <name>Contact_Role_ID__c</name>
-    </fields>
-    <fields>
-        <help>Le contact recevant ce crédit indirect.</help>
-        <label>Contact</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Crédits indirects partiels</relationshipLabel>
-    </fields>
-    <fields>
-        <help>L’opportunité à laquelle ce crédit indirect s’applique.</help>
-        <label>Opportunité</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Crédits indirects partiels</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Le rôle de ce crédit indirect.</help>
-        <label>Nom de rôle</label>
-        <name>Role_Name__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Partial Soft Credit Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du crédit indirect partiel</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
-    <webLinks>
-        <label>Gérer des crédits indirects</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>Le montant du crédit indirect.</help>
+    <label>Montant</label>
+  </fields>
+  <fields>
+    <name>Contact_Name__c</name>
+    <help>Le nom complet du contact qui reçoit ce crédit indirect (lecture seule).</help>
+    <label>Nom du contact</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_ID__c</name>
+    <help>Le rôle de contact d’opportunité auquel ce crédit indirect s’applique.</help>
+    <label>ID du rôle de contact</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <help>Le contact recevant ce crédit indirect.</help>
+    <relationshipLabel>Crédits indirects partiels</relationshipLabel>
+    <label>Contact</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>L’opportunité à laquelle ce crédit indirect s’applique.</help>
+    <relationshipLabel>Crédits indirects partiels</relationshipLabel>
+    <label>Opportunité</label>
+  </fields>
+  <fields>
+    <name>Role_Name__c</name>
+    <help>Le rôle de ce crédit indirect.</help>
+    <label>Nom de rôle</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>Gérer des crédits indirects</label>
+  </webLinks>
+  <layouts>
+    <layout>Partial Soft Credit Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom du crédit indirect partiel</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du crédit indirect partiel</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Crédit indirect partiel</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Crédits indirects partiels</value>
+  </caseValues>
 </CustomObjectTranslation>

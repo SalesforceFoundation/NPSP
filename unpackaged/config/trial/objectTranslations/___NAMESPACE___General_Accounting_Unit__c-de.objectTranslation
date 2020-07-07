@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <layouts>
+    <layout>___NAMESPACE___General Accounting Unit Layout</layout>
+    <sections>
+      <label>[Allocation Information]o'介引户ה]</label>
+      <section>Allocation Information</section>
+    </sections>
+    <sections>
+      <label>[Allocation Totals]o'介引户]</label>
+      <section>Allocation Totals</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[General Accounting Unit Name]o'介引户הаí]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[General Accounting Unit Name]o'介引户הаí]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[General Accounting Unit]gr''介引户ה]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[General Accounting Units]gr''介引户הа]</value>
+  </caseValues>
+</CustomObjectTranslation>

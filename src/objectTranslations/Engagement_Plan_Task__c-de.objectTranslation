@@ -1,158 +1,131 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Aufgabe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Aufgaben</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Aufgabe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Aufgaben</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Aufgabe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Aufgaben</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Aufgabe</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Aufgaben</value>
-    </caseValues>
-    <fields>
-        <help>Nachschlageassistent zu dem Benutzer, dem Sie die Aufgabe zuweisen wollen. Wenn dieses Feld leer gelassen wird, weist NPSP die Aufgabe basierend auf dem Standard-Empfänger der Engagementplan-Vorlage zu.</help>
-        <label>Zugewiesen zu</label>
-        <name>Assigned_To__c</name>
-        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
-    </fields>
-    <fields>
-        <help>Zum Eingeben weitere Informationen zu der Aufgabe.</help>
-        <label>Kommentare</label>
-        <name>Comments__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der Tage nach dem Erstellungsdatum des Engagementplans, an dem diese Aufgabe fällig ist. Bei abhängigen Aufgaben die Anzahl der Tage nach dem Fälligkeitsdatum der übergeordneten Aufgabe, an dem diese Aufgabe fällig ist.</help>
-        <label>Tage nach</label>
-        <name>Days_After__c</name>
-    </fields>
-    <fields>
-        <help>Die Vorlage für diese Engagementplan-Aufgabe.</help>
-        <label>Engagementplan-Vorlage</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Engagementplan-Aufgaben</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Gibt an, dass diese Engagementplan-Aufgabe von einer übergeordneten Aufgabe abhängt.</help>
-        <label>Übergeordnete Aufgabe</label>
-        <name>Parent_Task__c</name>
-        <relationshipLabel>Engagementplan-Aufgaben</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Die Priorität dieser Aufgabe.</help>
-        <label>Priorität</label>
-        <name>Priority__c</name>
-        <picklistValues>
-            <masterLabel>High</masterLabel>
-            <translation>Hoch</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Low</masterLabel>
-            <translation>Gering</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Medium</masterLabel>
-            <translation>Mittel</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Die Uhrzeit am Fälligkeitstermin, zu der eine Erinnerung angezeigt wird.</help>
-        <label>Erinnerungszeit</label>
-        <name>Reminder_Time__c</name>
-    </fields>
-    <fields>
-        <help>Legt eine Erinnerung für die Aufgabe fest.</help>
-        <label>Erinnerung</label>
-        <name>Reminder__c</name>
-    </fields>
-    <fields>
-        <help>Legt fest, ob nach der Aktivierung der Aufgabe eine E-Mail an den Benutzer im Feld &quot;Zugewiesen zu&quot; gesendet wird. Abhängige Aufgaben werden aktiviert, sobald die übergeordnete Aufgabe abgeschlossen ist.</help>
-        <label>E-Mail senden</label>
-        <name>Send_Email__c</name>
-    </fields>
-    <fields>
-        <help>Der Status einer Aufgabe. Abhängige Aufgaben erhalten den Status &quot;Auf übergeordnete Aufgabe warten&quot;, bis die übergeordnete Aufgabe abgeschlossen ist.</help>
-        <label>Status</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation>Abgeschlossen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deferred</masterLabel>
-            <translation>Zurückgestellt</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In Progress</masterLabel>
-            <translation>In Bearbeitung</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Started</masterLabel>
-            <translation>Nicht gestartet</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Waiting on someone else</masterLabel>
-            <translation>Auf jemand anderen warten</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Der Typ der Aufgabe.</help>
-        <label>Typ</label>
-        <name>Type__c</name>
-        <picklistValues>
-            <masterLabel>Call</masterLabel>
-            <translation>Anruf</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email</masterLabel>
-            <translation>E-Mails</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Meeting</masterLabel>
-            <translation>Besprechung</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Other</masterLabel>
-            <translation>Sonstige</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Engagement Plan Task Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Betreff</nameFieldLabel>
+  <fields>
+    <name>Assigned_To__c</name>
+    <help>[Lookup to the User you'd like to assign the task to. If you leave this field blank, NPSP assigns the task based on the Engagement Plan Template's Default Assignee.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذ]</help>
+    <label>[Assigned To]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Comments__c</name>
+    <help>[Use this to enter additional information about the Task.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Comments]o'介]</label>
+  </fields>
+  <fields>
+    <name>Days_After__c</name>
+    <help>[The number of days after the Engagement Plan creation date that this Task is due. For dependent Tasks, the number of days after the parent Task's due date that this Task is due.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяř]</help>
+    <label>[Days After]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <help>[The Template for this Engagement Plan Task.]o'介引户הаí先ร简а]</help>
+    <relationshipLabel>[Engagement Plan Tasks]o'介引户ה]</relationshipLabel>
+    <label>[Engagement Plan Template]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Parent_Task__c</name>
+    <help>[Indicates that this Engagement Plan Task is dependent on a Parent Task.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <relationshipLabel>[Engagement Plan Tasks]o'介引户ה]</relationshipLabel>
+    <label>[Parent Task]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Priority__c</name>
+    <help>[The priority of this Task.]o'介引户הа]</help>
+    <label>[Priority]o'介]</label>
+    <picklistValues>
+      <masterLabel>High</masterLabel>
+      <translation>[High]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Medium</masterLabel>
+      <translation>[Medium]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Low</masterLabel>
+      <translation>[Low]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Reminder_Time__c</name>
+    <help>[The time on the Due Date that a reminder appears.]o'介引户הаí先ร简аน取]</help>
+    <label>[Reminder Time]o'介]</label>
+  </fields>
+  <fields>
+    <name>Reminder__c</name>
+    <help>[Sets a reminder for the Task.]o'介引户הаí]</help>
+    <label>[Reminder]o'介]</label>
+  </fields>
+  <fields>
+    <name>Send_Email__c</name>
+    <help>[Determines if an email is sent to the user in the Task's Assigned To field when the Task becomes active. Dependent Tasks are active when their Parent Task is completed.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะ]</help>
+    <label>[Send Email]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>[The Status of a Task. Dependent Tasks are set to "Waiting on Parent Task" until their Parent Task is completed.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Status]o']</label>
+    <picklistValues>
+      <masterLabel>Not Started</masterLabel>
+      <translation>[Not Started]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In Progress</masterLabel>
+      <translation>[In Progress]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Completed</masterLabel>
+      <translation>[Completed]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Waiting on someone else</masterLabel>
+      <translation>[Waiting on someone else]o'介引户ה]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deferred</masterLabel>
+      <translation>[Deferred]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>[The type of Task.]o'介引户]</help>
+    <label>[Type]o'介引]</label>
+    <picklistValues>
+      <masterLabel>Call</masterLabel>
+      <translation>[Call]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Meeting</masterLabel>
+      <translation>[Meeting]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Other</masterLabel>
+      <translation>[Other]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email</masterLabel>
+      <translation>[Email]o'介引户]</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Task Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Subject]o']</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Subject]o']</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plan Task]gr''介引户ה]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plan Tasks]gr''介引户ה]</value>
+  </caseValues>
 </CustomObjectTranslation>

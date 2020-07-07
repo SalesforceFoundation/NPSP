@@ -1,81 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Batch</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Batch</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Batch</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Batches</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- BatchDetailView --></label>
-        <name>BatchDetailView</name>
-    </fieldSets>
-    <fields>
-        <label>Batch-Status</label>
-        <name>Batch_Status__c</name>
-        <picklistValues>
-            <masterLabel>Complete</masterLabel>
-            <translation>Abgeleistet</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In Progress</masterLabel>
-            <translation>In Bearbeitung</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Beschreibung</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Anzahl der Elemente</label>
-        <name>Number_of_Items__c</name>
-    </fields>
-    <fields>
-        <help>API-Name des Objekts, von dem dies ein Batch ist.</help>
-        <label>Objektname</label>
-        <name>Object_Name__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Batch Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Batch-Name</nameFieldLabel>
+  <fields>
+    <name>Batch_Status__c</name>
+    <label>[Batch Status]o'介引]</label>
+    <picklistValues>
+      <masterLabel>In Progress</masterLabel>
+      <translation>[In Progress]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Complete</masterLabel>
+      <translation>[Complete]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>[Description]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Items__c</name>
+    <label>[Number of Items]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Object_Name__c</name>
+    <help>[API Name of the object of which this is a batch.]o'介引户הаí先ร简аน取]</help>
+    <label>[Object Name]o'介引]</label>
+  </fields>
+  <layouts>
+    <layout>Batch Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Batch Name]o'介引]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Batch Name]o'介引]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Batch]gr''介引户]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Batches]gr'']</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>%%%NAMESPACE%%%Opportunity__c</name>
+    <relationshipLabel>[Deliverables]o'介引]</relationshipLabel>
+    <label>[Opportunity]o'介引]</label>
+  </fields>
+  <layouts>
+    <layout>Deliverable</layout>
+    <sections>
+      <label>[Grant Deliverable Requirements]o'介引户הаí先]</label>
+      <section>Grant Deliverable Requirements</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Deliverable Name]o'介引]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Deliverable Name]o'介引]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Deliverable]gr''介引]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Deliverables]gr''介引]</value>
+  </caseValues>
+</CustomObjectTranslation>

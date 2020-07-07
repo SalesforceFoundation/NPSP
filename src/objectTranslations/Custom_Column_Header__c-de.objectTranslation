@@ -2,17 +2,17 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Field_Api_Name__c</name>
-    <help>Der API-Name des Felds, das in der Listenansicht angezeigt wird.</help>
-    <label>Feld-API-Name</label>
+    <help>[The API name of the field displayed in the list view.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Field API Name]o'介引]</label>
   </fields>
   <fields>
     <name>Index__c</name>
-    <help>Die Position des Felds in der Listenansicht.</help>
-    <label>Index</label>
+    <help>[The position of the field in the list view.]o'介引户הаí先ร简а]</help>
+    <label>[Index]o'介引户]</label>
   </fields>
   <fields>
     <name>List_Name__c</name>
-    <help>Die Listenansicht (z. B. Batches oder Vorlagen, die dieses Feld anzeigt.</help>
-    <label>Listenname</label>
+    <help>[The list view (e.g. Batches or Templates) that displays this field.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[List Name]o'介]</label>
   </fields>
 </CustomObjectTranslation>

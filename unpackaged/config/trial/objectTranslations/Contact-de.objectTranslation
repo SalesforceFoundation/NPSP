@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Gender__c</name>
+    <label>[Gender]o']</label>
+    <picklistValues>
+      <masterLabel>Male</masterLabel>
+      <translation>[Male]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Female</masterLabel>
+      <translation>[Female]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Non-Binary</masterLabel>
+      <translation>[Non-Binary]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Prefer Not To Say</masterLabel>
+      <translation>[Prefer Not To Say]o'介引户]</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Relationships_Viewer</name>
+    <label>[Relationships Viewer]o'介引户ה]</label>
+  </webLinks>
+  <webLinks>
+    <name>Copy_Address_to_Household</name>
+    <label>[Copy Address to Household]o'介引户הа]</label>
+  </webLinks>
+  <layouts>
+    <layout>Contact Lightning Layout</layout>
+    <sections>
+      <label>[Contact Details]o'介引]</label>
+      <section>Contact Details</section>
+    </sections>
+    <sections>
+      <label>[Household Address]o'介引户]</label>
+      <section>Household Address</section>
+    </sections>
+    <sections>
+      <label>[Donation Information]o'介引户ה]</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>[Donation Totals]o'介引]</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>[Soft Credit Total]o'介引户]</label>
+      <section>Soft Credit Total</section>
+    </sections>
+    <sections>
+      <label>[Household Donation Info]o'介引户ה]</label>
+      <section>Household Donation Info</section>
+    </sections>
+    <sections>
+      <label>[Membership Information]o'介引户ה]</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>[Misc]o'介引]</label>
+      <section>Misc</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

@@ -1,33 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Payment Wizard FS --></label>
-        <name>Payment_WizardFS</name>
-    </fieldSets>
-    <fields>
-        <help>Bestätigungsdatum</help>
-        <label>Zahlungsbestätigungsdatum</label>
-        <name>Payment_Acknowledged_Date__c</name>
-    </fields>
-    <fields>
-        <help>Status der Bestätigung dieser Zahlung</help>
-        <label>Zahlungsbestätigungsstatus</label>
-        <name>Payment_Acknowledgment_Status__c</name>
-        <picklistValues>
-            <masterLabel>Acknowledged</masterLabel>
-            <translation>Bestätigt</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>Nicht bestätigen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>Zu bestätigen</translation>
-        </picklistValues>
-    </fields>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Authorized_Date__c</name>
+    <help>[The date and time the transaction was authorized.]o'介引户הаí先ร简аน取]</help>
+    <label>[Authorized Date]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Authorized_UTC_Timestamp__c</name>
+    <help>[The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Authorized UTC Timestamp]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Month__c</name>
+    <help>[The expiration month of the card used for this transaction.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Card Expiration Month]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Year__c</name>
+    <help>[The expiration year of the card used for this transaction.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Card Expiration Year]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Card_Last_4__c</name>
+    <help>[The last four digits of the card used for this transaction.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Card Last 4]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Card_Network__c</name>
+    <help>[The card network of the card used for this transaction.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Card Network]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Original_Payment_ID__c</name>
+    <help>[For refunds only. Shows the ID of the original payment transaction from Elevate.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Elevate Original Payment ID]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_Date__c</name>
+    <help>[The date and time the transaction was created.]o'介引户הаí先ร简аน]</help>
+    <label>[Elevate Payment Created Date]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
+    <help>[The exact date and time (down to the millisecond) from Elevate that the transaction was created.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Elevate Payment Created  UTC Timestamp]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_ID__c</name>
+    <help>[The unique ID for this transaction from Elevate.]o'介引户הаí先ร简аน取]</help>
+    <label>[Elevate Payment ID]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Gateway_ID__c</name>
+    <help>[The ID of the payment gateway that processed this transaction.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Gateway ID]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Gateway_Payment_ID__c</name>
+    <help>[The unique ID for this transaction from the payment gateway.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Gateway Payment ID]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Origin_ID__c</name>
+    <help>[The ID for the system where the transaction was initiated.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Origin ID]o'介]</label>
+  </fields>
+  <fields>
+    <name>Origin_Name__c</name>
+    <help>[The name of the system where the transaction was initiated.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Origin Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Origin_Type__c</name>
+    <help>[The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Origin Type]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledged_Date__c</name>
+    <help>[Date of acknowledgment]o'介引户ה]</help>
+    <label>[Payment Acknowledged Date]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledgment_Status__c</name>
+    <help>[Status of Acknowledgment of this payment.]o'介引户הаí先ร简а]</help>
+    <label>[Payment Acknowledgment Status]o'介引户הаí]</label>
+    <picklistValues>
+      <masterLabel>To Be Acknowledged</masterLabel>
+      <translation>[To Be Acknowledged]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Acknowledged</masterLabel>
+      <translation>[Acknowledged]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Acknowledge</masterLabel>
+      <translation>[Do Not Acknowledge]o'介引户]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>[Indicates the type of transaction.]o'介引户הаí先ร]</help>
+    <label>[Type]o'介引]</label>
+  </fields>
+</CustomObjectTranslation>

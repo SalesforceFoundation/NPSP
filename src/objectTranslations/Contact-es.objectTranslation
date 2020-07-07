@@ -1,201 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
-    <fields>
-        <help>El estado de verificación de la dirección vigente. Si requiere verificación, navegue al registro de dirección actual y seleccione Verificar dirección. Consulte la documentación de Power of Us Hub para más información sobre la verificación de direcciones.</help>
-        <label>Estado de verificación de dirección</label>
-        <name>Address_Verification_Status__c</name>
-    </fields>
-    <fields>
-        <help>Consulta del lote en el que se creó este contacto.</help>
-        <label>Lote</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Contactos</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Consulta del registro de la dirección actual para este contacto. NPSP rellena el campo de dirección postal del contacto con la con la calle, la ciudad, el estado o provincia y el código postal procedentes del registro de la dirección actual.</help>
-        <label>Dirección actual</label>
-        <name>Current_Address__c</name>
-        <relationshipLabel>Contactos (Dirección actual)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indica que el contacto ha fallecido. Cuando se selecciona, NPSP excluye al contacto de la nomenclatura del hogar (a no ser que este contacto sea el único del hogar) y listas telefónicas y correo electrónico estándar.</help>
-        <label>Fallecido</label>
-        <name>Deceased__c</name>
-    </fields>
-    <fields>
-        <help>Indica que el contacto no desea que su organización lo llame o le envíe mensajes de correo electrónico. Cuando se selecciona, NPSP excluye este contacto de los reconocimientos de oportunidades.</help>
-        <label>No contactar</label>
-        <name>Do_Not_Contact__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, NPSP excluye este contacto del saludo formal del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
-        <label>Excluir del saludo formal de hogar</label>
-        <name>Exclude_from_Household_Formal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, NPSP excluye este contacto del saludo informal del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
-        <label>Excluir del saludo informal de hogar</label>
-        <name>Exclude_from_Household_Informal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, NPSP excluye este contacto del nombre del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
-        <label>Excluir del nombre de hogar</label>
-        <name>Exclude_from_Household_Name__c</name>
-    </fields>
-    <fields>
-        <help>El importe del primer crédito blando de este contacto.</help>
-        <label>Importe del primer crédito blando</label>
-        <name>First_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>La fecha del primer crédito blando de este contacto.</help>
-        <label>Fecha del primer crédito blando</label>
-        <name>First_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>Contiene el Id. del registro del hogar (ya sea la cuenta del hogar o el objeto Hogar) con el que este contacto está asociado en estos momentos (solo lectura).</help>
-        <label>Id. de Hogar</label>
-        <name>HHId__c</name>
-    </fields>
-    <fields>
-        <help>El importe más gran del crédito blando de este contacto.</help>
-        <label>Importe más grande de crédito blando</label>
-        <name>Largest_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>La fecha del crédito blando más grande de este contacto.</help>
-        <label>Fecha del crédito blando más grande</label>
-        <name>Largest_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>El importe del último crédito blando de este contacto.</help>
-        <label>Importe del último crédito blando</label>
-        <name>Last_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>La fecha del último crédito blando de este contacto.</help>
-        <label>Fecha del último crédito blando</label>
-        <name>Last_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>El número de créditos blandos atribuidos a este contacto que se cerraron en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
-        <label>Número créd. blandos en últimos N días</label>
-        <name>Number_of_Soft_Credits_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>El número de créditos blandos atribuidos a este contacto en el año de calendario anterior.</help>
-        <label>Número de créditos blandos el año pasado</label>
-        <name>Number_of_Soft_Credits_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>El número de créditos blandos atribuidos a este contacto este año de calendario.</help>
-        <label>Número de créditos blandos este año</label>
-        <name>Number_of_Soft_Credits_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>El número de créditos blandos atribuidos a este contacto hace dos años de calendario.</help>
-        <label>Número de créditos blandos hace dos años</label>
-        <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>El número total de créditos blandos atribuidos a este contacto.</help>
-        <label>Número de créditos blandos</label>
-        <name>Number_of_Soft_Credits__c</name>
-    </fields>
-    <fields>
-        <help>La cuenta está marcada como principal en la lista de afiliaciones de organizaciones de este contacto.</help>
-        <label>Afiliación principal</label>
-        <name>Primary_Affiliation__c</name>
-        <relationshipLabel>No utilizar. Utilizar las afiliaciones de la organización</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indica si este contacto está designado como el contacto principal en su cuenta (solo lectura).</help>
-        <label>Contacto principal</label>
-        <name>Primary_Contact__c</name>
-    </fields>
-    <fields>
-        <help>El importe total de créditos blandos atribuidos a este contacto en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
-        <label>Créditos blandos en últimos N días</label>
-        <name>Soft_Credit_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, NPSP no sincronizará la dirección de este contacto con la predeterminada del hogar o la dirección de temporada. Utilice esta opción para mantener una dirección postal separada para este contacto en particular.</help>
-        <label>Sustituir dirección</label>
-        <name>is_Address_Override__c</name>
-    </fields>
-    <layouts>
-        <layout>Contact Layout</layout>
-        <sections>
-            <label>Detalle del contacto</label>
-            <section>Contact Details</section>
-        </sections>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Totales de donaciones</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Dirección de hogar</label>
-            <section>Household Address</section>
-        </sections>
-        <sections>
-            <label>Información de donaciones de hogar</label>
-            <section>Household Donation Info</section>
-        </sections>
-        <sections>
-            <label>Información de afiliaciones</label>
-            <section>Membership Information</section>
-        </sections>
-        <sections>
-            <label>Miscelánea</label>
-            <section>Misc</section>
-        </sections>
-        <sections>
-            <label>Totales de créditos blandos</label>
-            <section>Soft Credit Totals</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>Nueva afiliación</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nueva donación recurrente</label>
-        <name>New_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nueva relación</label>
-        <name>New_Relationship</name>
-    </quickActions>
-    <quickActions>
-        <label>Actualización rápida</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Combinar contactos</label>
-        <name>Merge_Contacts</name>
-    </webLinks>
-    <webLinks>
-        <label>Nuevo regalo</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>Volver a calcular totales</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Address_Verification_Status__c</name>
+    <help>El estado de verificación de la dirección vigente. Si requiere verificación, navegue al registro de dirección actual y seleccione Verificar dirección. Consulte la documentación de Power of Us Hub para más información sobre la verificación de direcciones.</help>
+    <label>Estado de verificación de dirección</label>
+  </fields>
+  <fields>
+    <name>Batch__c</name>
+    <help>Consulta del lote en el que se creó este contacto.</help>
+    <relationshipLabel>Contactos</relationshipLabel>
+    <label>Lote</label>
+  </fields>
+  <fields>
+    <name>Current_Address__c</name>
+    <help>Consulta del registro de la dirección actual para este contacto. NPSP rellena el campo de dirección postal del contacto con la con la calle, la ciudad, el estado o provincia y el código postal procedentes del registro de la dirección actual.</help>
+    <relationshipLabel>Contactos (Dirección actual)</relationshipLabel>
+    <label>Dirección actual</label>
+  </fields>
+  <fields>
+    <name>Deceased__c</name>
+    <help>Indica que el contacto ha fallecido. Cuando se selecciona, NPSP excluye al contacto de la nomenclatura del hogar (a no ser que este contacto sea el único del hogar) y listas telefónicas y correo electrónico estándar.</help>
+    <label>Fallecido</label>
+  </fields>
+  <fields>
+    <name>Do_Not_Contact__c</name>
+    <help>Indica que el contacto no desea que su organización lo llame o le envíe mensajes de correo electrónico. Cuando se selecciona, NPSP excluye este contacto de los reconocimientos de oportunidades.</help>
+    <label>No contactar</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Formal_Greeting__c</name>
+    <help>Cuando se selecciona, NPSP excluye este contacto del saludo formal del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
+    <label>Excluir del saludo formal de hogar</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Informal_Greeting__c</name>
+    <help>Cuando se selecciona, NPSP excluye este contacto del saludo informal del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
+    <label>Excluir del saludo informal de hogar</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Name__c</name>
+    <help>Cuando se selecciona, NPSP excluye este contacto del nombre del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
+    <label>Excluir del nombre de hogar</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Amount__c</name>
+    <help>El importe del primer crédito blando de este contacto.</help>
+    <label>Importe del primer crédito blando</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Date__c</name>
+    <help>La fecha del primer crédito blando de este contacto.</help>
+    <label>Fecha del primer crédito blando</label>
+  </fields>
+  <fields>
+    <name>HHId__c</name>
+    <help>Contiene el Id. del registro del hogar (ya sea la cuenta del hogar o el objeto Hogar) con el que este contacto está asociado en estos momentos (solo lectura).</help>
+    <label>Id. de Hogar</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Amount__c</name>
+    <help>El importe más gran del crédito blando de este contacto.</help>
+    <label>Importe más grande de crédito blando</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Date__c</name>
+    <help>La fecha del crédito blando más grande de este contacto.</help>
+    <label>Fecha del crédito blando más grande</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Amount__c</name>
+    <help>El importe del último crédito blando de este contacto.</help>
+    <label>Importe del último crédito blando</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Date__c</name>
+    <help>La fecha del último crédito blando de este contacto.</help>
+    <label>Fecha del último crédito blando</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+    <help>El número de créditos blandos atribuidos a este contacto que se cerraron en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
+    <label>Número créd. blandos en últimos N días</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_Year__c</name>
+    <help>El número de créditos blandos atribuidos a este contacto en el año de calendario anterior.</help>
+    <label>Número de créditos blandos el año pasado</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_This_Year__c</name>
+    <help>El número de créditos blandos atribuidos a este contacto este año de calendario.</help>
+    <label>Número de créditos blandos este año</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    <help>El número de créditos blandos atribuidos a este contacto hace dos años de calendario.</help>
+    <label>Número de créditos blandos hace dos años</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits__c</name>
+    <help>El número total de créditos blandos atribuidos a este contacto.</help>
+    <label>Número de créditos blandos</label>
+  </fields>
+  <fields>
+    <name>Primary_Affiliation__c</name>
+    <help>La cuenta está marcada como principal en la lista de afiliaciones de organizaciones de este contacto.</help>
+    <relationshipLabel>No utilizar. Utilizar las afiliaciones de la organización</relationshipLabel>
+    <label>Afiliación principal</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact__c</name>
+    <help>Indica si este contacto está designado como el contacto principal en su cuenta (solo lectura).</help>
+    <label>Contacto principal</label>
+  </fields>
+  <fields>
+    <name>Soft_Credit_Last_N_Days__c</name>
+    <help>El importe total de créditos blandos atribuidos a este contacto en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
+    <label>Créditos blandos en últimos N días</label>
+  </fields>
+  <fields>
+    <name>is_Address_Override__c</name>
+    <help>Cuando se selecciona, NPSP no sincronizará la dirección de este contacto con la predeterminada del hogar o la dirección de temporada. Utilice esta opción para mantener una dirección postal separada para este contacto en particular.</help>
+    <label>Sustituir dirección</label>
+  </fields>
+  <webLinks>
+    <name>Merge_Contacts</name>
+    <label>Combinar contactos</label>
+  </webLinks>
+  <webLinks>
+    <name>New_Gift</name>
+    <label>Nuevo regalo</label>
+  </webLinks>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Volver a calcular totales</label>
+  </webLinks>
+  <layouts>
+    <layout>Contact Layout</layout>
+    <sections>
+      <label>Detalle del contacto</label>
+      <section>Contact Details</section>
+    </sections>
+    <sections>
+      <label>Dirección de hogar</label>
+      <section>Household Address</section>
+    </sections>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totales de donaciones</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Totales de créditos blandos</label>
+      <section>Soft Credit Totals</section>
+    </sections>
+    <sections>
+      <label>Información de donaciones de hogar</label>
+      <section>Household Donation Info</section>
+    </sections>
+    <sections>
+      <label>Información de afiliaciones</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Miscelánea</label>
+      <section>Misc</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

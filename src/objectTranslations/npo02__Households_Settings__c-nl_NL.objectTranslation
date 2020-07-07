@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donors. We raden aan &apos;Overeenkomende Donor&apos; te gebruiken.</help>
-        <label>Overeenkomende Donorrol</label>
-        <name>Matched_Donor_Role__c</name>
-    </fields>
-    <fields>
-        <help>Aantal records per te verwerken batch bij instellen van seizoensadres als postadres.</help>
-        <label>Batchgrootte van seizoensadres</label>
-        <name>Seasonal_Addresses_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Vink aan om Omrekeningskoersen met Datum te gebruiken wanneer Geavanceerd valutabeheer ingeschakeld is in deze Organisatie. Indien niet aangevinkt en indien ACM ingeschakeld is, gebruiken alle NPSP-totaliseringen de standaardwisselkoers voor de valuta.</help>
-        <label>Gebruik Omrekeningskoersen met Datum</label>
-        <name>Use_Dated_Conversion_Rates__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Matched_Donor_Role__c</name>
+    <help>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donors. We raden aan 'Overeenkomende Donor' te gebruiken.</help>
+    <label>Overeenkomende Donorrol</label>
+  </fields>
+  <fields>
+    <name>Use_Dated_Conversion_Rates__c</name>
+    <help>Vink aan om Omrekeningskoersen met Datum te gebruiken wanneer Geavanceerd valutabeheer ingeschakeld is in deze Organisatie. Indien niet aangevinkt en indien ACM ingeschakeld is, gebruiken alle NPSP-totaliseringen de standaardwisselkoers voor de valuta.</help>
+    <label>Gebruik Omrekeningskoersen met Datum</label>
+  </fields>
+  <fields>
+    <name>Seasonal_Addresses_Batch_Size__c</name>
+    <help>Aantal records per te verwerken batch bij instellen van seizoensadres als postadres.</help>
+    <label>Batchgrootte van seizoensadres</label>
+  </fields>
+</CustomObjectTranslation>

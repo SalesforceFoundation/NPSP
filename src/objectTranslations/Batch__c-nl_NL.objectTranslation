@@ -1,49 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Batch</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Batches</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- BatchDetailView --></label>
-        <name>BatchDetailView</name>
-    </fieldSets>
-    <fields>
-        <label>Batchstatus</label>
-        <name>Batch_Status__c</name>
-        <picklistValues>
-            <masterLabel>Complete</masterLabel>
-            <translation>Voltooid</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In Progress</masterLabel>
-            <translation>In uitvoering</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Beschrijving</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Aantal Items</label>
-        <name>Number_of_Items__c</name>
-    </fields>
-    <fields>
-        <help>API-naam van het object waarvan dit een batch is.</help>
-        <label>Objectnaam</label>
-        <name>Object_Name__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Batch Layout</layout>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Batchnaam</nameFieldLabel>
+  <fields>
+    <name>Batch_Status__c</name>
+    <label>Batchstatus</label>
+    <picklistValues>
+      <masterLabel>In Progress</masterLabel>
+      <translation>In uitvoering</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Complete</masterLabel>
+      <translation>Voltooid</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>Beschrijving</label>
+  </fields>
+  <fields>
+    <name>Number_of_Items__c</name>
+    <label>Aantal Items</label>
+  </fields>
+  <fields>
+    <name>Object_Name__c</name>
+    <help>API-naam van het object waarvan dit een batch is.</help>
+    <label>Objectnaam</label>
+  </fields>
+  <layouts>
+    <layout>Batch Layout</layout>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Batchnaam</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Batchnaam</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Batch</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Batches</value>
+  </caseValues>
 </CustomObjectTranslation>

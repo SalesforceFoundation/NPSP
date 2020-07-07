@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Nur zur Systemverwendung: Namespace für paketübergreifende Funktionalität.</help>
-        <label>GEM-Namespace</label>
-        <name>Advancement_Namespace__c</name>
-    </fields>
-    <fields>
-        <help>Bei Auswahl erstellt NPSP autom. ein Kampagnenmitglied, wenn Sie eine Opp. erstellen, der ein Hauptansprechpartner und eine Primäre Kampagnenquelle zugeordnet ist, oder wenn Sie diese Opp. mit der Phase &quot;Geschl./Gew.&quot; aktualisieren.</help>
-        <label>Autom. Verwaltung d. Kampagnenmitglieder</label>
-        <name>Automatic_Campaign_Member_Management__c</name>
-    </fields>
-    <fields>
-        <help>Der Stand‘status, den NPSP bei Kampagnenmitgl. für Opp. m. d. Status &quot;Offen&quot; o. &quot;Geschl./Verloren&quot;, denen ein Hauptansprechp. u. eine prim. Kampagnenquelle zugeordnet ist, verwenden soll. Erfolgt kein Eintrag, verw. NPSP den 1. Status &quot;Nicht geantwortet&quot;.</help>
-        <label>Kamp.mitgl.status &quot;Nicht geantwortet&quot;</label>
-        <name>Campaign_Member_Non_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>Der Stand‘status, den NPSP bei Kampagnenmitgl. für Opp. m. d. Status &quot;Geschl./Gew.&quot;, denen ein Hauptansprechp. u. eine prim. Kampagnenquelle zugeordnet ist, verwenden soll. Erfolgt kein Eintrag, verw. NPSP den 1. Status &quot;Nicht geantwortet&quot;.</help>
-        <label>Kampagnenmitgliederstatus &quot;Geantwortet&quot;</label>
-        <name>Campaign_Member_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>Die Standard-Kontaktrolle, die automatisch dem Hauptansprechpartner der Opportunity zugewiesen wird, wenn der Account der Opportunity KEIN Haushalt-, Eins-zu-Eins- oder Einzelperson-Account ist.</help>
-        <label>Kontaktrolle für Organisations-Opp‘ies</label>
-        <name>Contact_Role_for_Organizational_Opps__c</name>
-    </fields>
-    <fields>
-        <help>Hiermit werden mehrere Regeln und Automatisierungen zu Zahlungen und Opportunities aktiviert, um sicherzustellen, dass die Verrechnungsdaten vollständig und konsistent sind.</help>
-        <label>Verrechnungsdatenkonsistenz durchsetzen</label>
-        <name>Enforce_Accounting_Data_Consistency__c</name>
-    </fields>
-    <fields>
-        <help>Wenn Sie hier etwas eingeben, erstellt NPSP automatisch einen Kontaktrollendatensatz für Opportunities mit einem Begünstigtenkontakt.</help>
-        <label>Kontaktrolle für Begünstigten-Opport.</label>
-        <name>Honoree_Opportunity_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>Wenn dieses Kontrollkästchen ausgewählt ist, wird die Adressverwaltung für Haushalt-Accounts deaktiviert.</help>
-        <label>Haushalt-Account-Adressen deaktiviert</label>
-        <name>Household_Account_Addresses_Disabled__c</name>
-    </fields>
-    <fields>
-        <help>Hiermit wird die maximale Anzahl an Zahlungen festgelegt, die beim Planen von Zahlungen für eine Opportunity zulässig sind.</help>
-        <label>Maximale Zahlungen</label>
-        <name>Max_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Wenn Sie hier etwas eingeben, erstellt NPSP automatisch einen Kontaktrollendatensatz für Opportunities mit einem Benachrichtigungsempfänger-Kontakt.</help>
-        <label>Kontaktr. für Opport. mit Benachr.empf.</label>
-        <name>Notification_Recipient_Opp_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>NPSP erst. autom. Zahlungsdatens. f. Opp. aller Datens‘typen. Wählen Sie belieb. Datens‘typen aus, zu denen nicht autom. Zahlungsdatens. erstellt werden sollen. Zum Ausw. von mehr als nur einem Datens‘typ zusätzl. auf die Strg- o. d. CMD-Taste klicken.</help>
-        <label>Ausgeschlossene Opp-Datensatztypen</label>
-        <name>Opp_RecTypes_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>NPSP erst. autom. Zahlungsdatens. für Opp. mit e-m belieb. Wert in d. Auswahlliste &quot;Typ&quot;. belieb. Typen ausw., zu denen nicht autom. Zahlungsdatens. erst. werden sollen. Zum Ausw. v. mehr als einem Typ zusätzl. auf die Strg- oder die CMD-Taste drücken.</help>
-        <label>Ausgeschlossene Opportunity-Typen</label>
-        <name>Opp_Types_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Wenn dieses Kontrollkästchen ausgewählt ist, wird die Adressverwaltung für Nicht-Haushalt-Accounts wie etwa Organisations-Accounts aktiviert.</help>
-        <label>Organisatorische Account-Adressen aktiv</label>
-        <name>Organizational_Account_Addresses_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>NPSP setzt automatisch die Phase einer Opportunity auf diesen Wert, wenn der empfangene Zahlungsbetrag dem Opportunity-Betrag entspricht. Wenn keine Phase ausgewählt ist, ändert sich die Opportunity-Phase nicht, wenn die Zahlungen abgeschlossen sind.</help>
-        <label>Opportunity-Phase für vollständ. Zahlung</label>
-        <name>Payments_Auto_Close_Stage_Name__c</name>
-    </fields>
-    <fields>
-        <help>Wenn diese Option aktiviert ist, aktualisieren Änderungen an einem einzelnen Adressfeld eines Kontakts oder Accounts die vorhandene Adresse, anstatt eine neue Adresse zu erstellen.</help>
-        <label>Einfache Adressänd. als Aktualisierung</label>
-        <name>Simple_Address_Change_Treated_as_Update__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Advancement_Namespace__c</name>
+    <help>[For system use only: Namespace for cross package functionality.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[GEM Namespace]o'介]</label>
+  </fields>
+  <fields>
+    <name>Automatic_Campaign_Member_Management__c</name>
+    <help>[When selected, NPSP automatically creates a Campaign Member record when you create an Opportunity that has a Primary Contact and a Primary Campaign Source, or when you update that Opportunity to a Closed/Won stage.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介น]</help>
+    <label>[Automatic Campaign Member Management]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Non_Responded_Status__c</name>
+    <help>[The default status you want NPSP to use on Campaign Members for Open or Closed/Lost Opportunities that have a Primary Contact and a Primary Campaign Source associated with them. If you leave this blank, NPSP uses the first non-Responded status.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبč]</help>
+    <label>[Campaign Member Non Responded Status]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Responded_Status__c</name>
+    <help>[The default status you want NPSP to use on Campaign Members for Closed/Won Opportunities that have a Primary Contact and a Primary Campaign Source associated with them. If you leave this blank, NPSP uses the first Responded status.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωt]</help>
+    <label>[Campaign Member Responded Status]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+    <help>[The default Contact Role automatically assigned to the Opportunity's Primary Contact when the Opportunity's Account is NOT a Household, One-to-One, or Individual Account.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะя]</help>
+    <label>[Contact Role for Organizational Opps]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Enforce_Accounting_Data_Consistency__c</name>
+    <help>[Enables multiple rules and automations on payments and opportunities to ensure that accounting data is complete and consistent.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Enforce Accounting Data Consistency]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+    <help>[If you populate this setting, NPSP automatically creates a Contact Role record for Opportunities with an Honoree Contact.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Honoree Opportunity Contact Role]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Household_Account_Addresses_Disabled__c</name>
+    <help>[When selected, disables Address management for Household Accounts.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Household Account Addresses Disabled]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Max_Payments__c</name>
+    <help>[Determines the maximum number of Payments allowed when scheduling Payments for an Opportunity.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Max Payments]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Opp_Contact_Role__c</name>
+    <help>[If you populate this setting, NPSP automatically creates a Contact Role record for Opportunities with a notification recipient Contact.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Notification Recipient Opp Contact Role]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+    <help>[NPSP automatically creates Payment records for Opportunities of all record types. Select any record types here that you don't want Payment records automatically created for. Control or Command click to select more than one record type.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Excluded Opp Record Types]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+    <help>[NPSP automatically creates Payment records for Opportunities with any value in the Type picklist. Select any Types here that you don't want Payment records automatically created for. Control or Command click to select more than one Type.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Excluded Opp Types]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+    <help>[When selected, enables Address management for non-Household Accounts such as Organizational Accounts.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Organizational Account Addresses Enabled]o'介引户הаí先ร简а]</label>
+  </fields>
+  <fields>
+    <name>Payments_Auto_Close_Stage_Name__c</name>
+    <help>[NPSP automatically sets an Opportunity's stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won't change when payments are complete.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นş]</help>
+    <label>[Opportunity Stage for When Fully Paid]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
+    <help>[If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Simple Address Change Treated as Update]o'介引户הаí先ร简]</label>
+  </fields>
+</CustomObjectTranslation>

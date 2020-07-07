@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Mr.</masterLabel>
+        <translation>[Mr.]g'介]</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Ms.</masterLabel>
+        <translation>[Ms.]g'介]</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Mrs.</masterLabel>
+        <translation>[Mrs.]g'介引]</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Dr.</masterLabel>
+        <translation>[Dr.]g'介]</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Prof.</masterLabel>
+        <translation>[Prof.]g'介引户]</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Mx.</masterLabel>
+        <translation>[Mx.]g'介]</translation>
+    </valueTranslation>
+</StandardValueSetTranslation>

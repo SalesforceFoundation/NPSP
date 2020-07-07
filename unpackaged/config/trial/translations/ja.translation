@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <name>Nonprofit_Success_Pack</name>
+        <label>Nonprofit Success Pack</label>
+    </customApplications>
+    <quickActions>
+        <name>Contact.New_Open_Recurring_Donation</name>
+        <label>進行中の新規継続支援</label>
+    </quickActions>
+</Translations>

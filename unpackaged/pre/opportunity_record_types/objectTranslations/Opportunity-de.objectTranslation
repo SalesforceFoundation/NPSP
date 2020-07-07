@@ -2,6 +2,6 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <recordTypes>
     <name>NPSP_Default</name>
-    <label>NPSP Standard</label>
+    <label>[NPSP Default]o'介引]</label>
   </recordTypes>
 </CustomObjectTranslation>

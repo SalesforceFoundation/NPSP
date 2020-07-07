@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <nameFieldLabel>[Engagement Plan Template Name]o'介引户הаí]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Engagement Plan Template Name]o'介引户הаí]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plan Template]gr''介引户הа]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plan Templates]gr''介引户הа]</value>
+  </caseValues>
+</CustomObjectTranslation>

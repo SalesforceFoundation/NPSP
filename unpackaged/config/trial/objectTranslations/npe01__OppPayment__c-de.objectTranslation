@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Payment_Status__c</name>
+    <label>[Payment Status]o'介引]</label>
+  </fields>
+  <webLinks>
+    <name>Schedule_Payments</name>
+    <label>[Schedule Payments]o'介引户]</label>
+  </webLinks>
+  <webLinks>
+    <name>Writeoff_Payments</name>
+    <label>[Write Off Payments]o'介引户]</label>
+  </webLinks>
+</CustomObjectTranslation>

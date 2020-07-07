@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>%%%NAMESPACE%%%Household_Account__c</name>
+    <help>[Lookup to the Account associated with this Address.]o'介引户הаí先ร简аน取정]</help>
+    <relationshipLabel>[Addresses]o'介]</relationshipLabel>
+    <label>[Account]o']</label>
+  </fields>
+  <layouts>
+    <layout>___NAMESPACE___Address Layout</layout>
+    <sections>
+      <label>[Seasonal Information]o'介引户ה]</label>
+      <section>Seasonal Information</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Address ID]o'介引]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Address ID]o'介引]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Address]gr'']</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Addresses]gr''介]</value>
+  </caseValues>
+</CustomObjectTranslation>

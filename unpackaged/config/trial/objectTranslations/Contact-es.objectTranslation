@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Gender__c</name>
+    <label>Género</label>
+    <picklistValues>
+      <masterLabel>Male</masterLabel>
+      <translation>Hombre</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Female</masterLabel>
+      <translation>Mujer</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Non-Binary</masterLabel>
+      <translation>No binario</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Prefer Not To Say</masterLabel>
+      <translation>Prefiere no decirlo</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Relationships_Viewer</name>
+    <label>Visor de relaciones</label>
+  </webLinks>
+  <webLinks>
+    <name>Copy_Address_to_Household</name>
+    <label>Copiar dirección a domicilio</label>
+  </webLinks>
+  <layouts>
+    <layout>Contact Lightning Layout</layout>
+    <sections>
+      <label>Detalles de contacto</label>
+      <section>Contact Details</section>
+    </sections>
+    <sections>
+      <label>Dirección de domicilio</label>
+      <section>Household Address</section>
+    </sections>
+    <sections>
+      <label>Información de donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totales de donación</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Total de crédito blando</label>
+      <section>Soft Credit Total</section>
+    </sections>
+    <sections>
+      <label>Información de donación de domicilio</label>
+      <section>Household Donation Info</section>
+    </sections>
+    <sections>
+      <label>Información de afiliación</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Miscelánea</label>
+      <section>Misc</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

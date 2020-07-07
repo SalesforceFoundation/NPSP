@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Utilisation par le système uniquement : Espace de nom pour la fonctionnalité de package croisé.</help>
-        <label>Espace de noms GEM</label>
-        <name>Advancement_Namespace__c</name>
-    </fields>
-    <fields>
-        <help>Si coché, NPSP crée autom. un enreg. de membre de campagne quand vous créez une opp. ayant un contact principal et une source de campagne principale, ou quand vous mettez à jour cette opp. vers une étape Clôturée/Gagnée.</help>
-        <label>Gestion autom. de membre de campagne</label>
-        <name>Automatic_Campaign_Member_Management__c</name>
-    </fields>
-    <fields>
-        <help>Le statut par défaut que NPSP utilise sur les membres de campagne pour les opp. Ouvertes ou Clôturées/Perdues auxquelles sont associés un contact principal et une source de campagne principal. Si vide, NPSP utilise le premier statut « Sans réponse ».</help>
-        <label>Statut « Sans réponse » membre campagne</label>
-        <name>Campaign_Member_Non_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>Le statut par défaut que NPSP utilise sur les membres de campagne pour des opp.Clôturées/Gagnées ayant un contact principal et une source de campagne principale associée. Si vide, NPSP utilise le premier statut « A répondu ».</help>
-        <label>Statut « Répondu » de membre de campagne</label>
-        <name>Campaign_Member_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>Le rôle de contact par défaut assigné automatiquement au contact Opportunité principal de l’opportunité lorsque le compte opportunité n’est PAS un compte de foyer, un-à-un ou individuel.</help>
-        <label>Rôle de contact pour opportunités org.</label>
-        <name>Contact_Role_for_Organizational_Opps__c</name>
-    </fields>
-    <fields>
-        <help>Active plusieurs règles et automatisations sur les paiements et les opportunités pour garantir que les données comptables sont complètes et cohérentes.</help>
-        <label>Appliquer cohérence données comptables</label>
-        <name>Enforce_Accounting_Data_Consistency__c</name>
-    </fields>
-    <fields>
-        <help>Si vous activez ce paramètre, NPSP crée automatiquement un enregistrement de rôle de contact avec un contact honoraire.</help>
-        <label>Rôle honoraire de contact d’opportunité</label>
-        <name>Honoree_Opportunity_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, la gestion des adresses est désactivée pour les comptes de foyer.</help>
-        <label>Adresses de compte de foyer désactivées</label>
-        <name>Household_Account_Addresses_Disabled__c</name>
-    </fields>
-    <fields>
-        <help>Détermine le nombre maximal de paiements autorisés lors de la planification de paiements pour une opportunité.</help>
-        <label>Nombre maximum de paiements</label>
-        <name>Max_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Si vous activez ce paramètre, NPSP crée automatiquement un enregistrement de rôle de contact pour les opportunités avec un contact destinataire de notification.</help>
-        <label>Rôle contact opp. destinataire notif.</label>
-        <name>Notification_Recipient_Opp_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>NPSP crée autom. des enreg. de paiement pour les opp. de tous types. Sélectionnez les types d’enreg. pour lesquels vous ne souhaitez pas de création autom. d’enreg. de paiements. Pour sélectionner plusieurs types d’enreg., cliquez sur Ctrl ou Commande.</help>
-        <label>Types d’enregistrement d’opp. exclus</label>
-        <name>Opp_RecTypes_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>NPSP crée autom. des enreg.de paiement pour les opp. avec les valeurs de la liste Type. Sélectionnez les types pour lesquels vous ne souhaitez pas de création autom. d’enreg. de paiements. Pour sélect. plusieurs types, cliquez sur Ctrl ou Commande.</help>
-        <label>Types d’opportunités exclus</label>
-        <name>Opp_Types_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, la gestion des adresses est activée pour les comptes non foyer, comme les comptes d’organisations.</help>
-        <label>Adresses de compte d’org. activées</label>
-        <name>Organizational_Account_Addresses_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>NPSP définit automatiquement une étape d’opportunité à cette valeur lorsque le montant de paiement reçu est égal au montant de l’opportunité. Si aucune étape n&apos;est sélectionnée, l’étape Opportunité ne changera pas une fois les paiements terminés.</help>
-        <label>Étape d’opp. après paiement complet</label>
-        <name>Payments_Auto_Close_Stage_Name__c</name>
-    </fields>
-    <fields>
-        <help>Si cette option est activée, les modifications d’un seul champ d’adresse d’un contact ou d’un compte mettent à jour l’adresse existante, au lieu de créer une nouvelle adresse.</help>
-        <label>Simple modif. d’adresse traitée en m à j</label>
-        <name>Simple_Address_Change_Treated_as_Update__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Advancement_Namespace__c</name>
+    <help>Utilisation par le système uniquement : Espace de nom pour la fonctionnalité de package croisé.</help>
+    <label>Espace de noms GEM</label>
+  </fields>
+  <fields>
+    <name>Automatic_Campaign_Member_Management__c</name>
+    <help>Si coché, NPSP crée autom. un enreg. de membre de campagne quand vous créez une opp. ayant un contact principal et une source de campagne principale, ou quand vous mettez à jour cette opp. vers une étape Clôturée/Gagnée.</help>
+    <label>Gestion autom. de membre de campagne</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Non_Responded_Status__c</name>
+    <help>Le statut par défaut que NPSP utilise sur les membres de campagne pour les opp. Ouvertes ou Clôturées/Perdues auxquelles sont associés un contact principal et une source de campagne principal. Si vide, NPSP utilise le premier statut « Sans réponse ».</help>
+    <label>Statut « Sans réponse » membre campagne</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Responded_Status__c</name>
+    <help>Le statut par défaut que NPSP utilise sur les membres de campagne pour des opp.Clôturées/Gagnées ayant un contact principal et une source de campagne principale associée. Si vide, NPSP utilise le premier statut « A répondu ».</help>
+    <label>Statut « Répondu » de membre de campagne</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+    <help>Le rôle de contact par défaut assigné automatiquement au contact Opportunité principal de l’opportunité lorsque le compte opportunité n’est PAS un compte de foyer, un-à-un ou individuel.</help>
+    <label>Rôle de contact pour opportunités org.</label>
+  </fields>
+  <fields>
+    <name>Enforce_Accounting_Data_Consistency__c</name>
+    <help>Active plusieurs règles et automatisations sur les paiements et les opportunités pour garantir que les données comptables sont complètes et cohérentes.</help>
+    <label>Appliquer cohérence données comptables</label>
+  </fields>
+  <fields>
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+    <help>Si vous activez ce paramètre, NPSP crée automatiquement un enregistrement de rôle de contact avec un contact honoraire.</help>
+    <label>Rôle honoraire de contact d’opportunité</label>
+  </fields>
+  <fields>
+    <name>Household_Account_Addresses_Disabled__c</name>
+    <help>Lorsque cette option est sélectionnée, la gestion des adresses est désactivée pour les comptes de foyer.</help>
+    <label>Adresses de compte de foyer désactivées</label>
+  </fields>
+  <fields>
+    <name>Max_Payments__c</name>
+    <help>Détermine le nombre maximal de paiements autorisés lors de la planification de paiements pour une opportunité.</help>
+    <label>Nombre maximum de paiements</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Opp_Contact_Role__c</name>
+    <help>Si vous activez ce paramètre, NPSP crée automatiquement un enregistrement de rôle de contact pour les opportunités avec un contact destinataire de notification.</help>
+    <label>Rôle contact opp. destinataire notif.</label>
+  </fields>
+  <fields>
+    <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+    <help>NPSP crée autom. des enreg. de paiement pour les opp. de tous types. Sélectionnez les types d’enreg. pour lesquels vous ne souhaitez pas de création autom. d’enreg. de paiements. Pour sélectionner plusieurs types d’enreg., cliquez sur Ctrl ou Commande.</help>
+    <label>Types d’enregistrement d’opp. exclus</label>
+  </fields>
+  <fields>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+    <help>NPSP crée autom. des enreg.de paiement pour les opp. avec les valeurs de la liste Type. Sélectionnez les types pour lesquels vous ne souhaitez pas de création autom. d’enreg. de paiements. Pour sélect. plusieurs types, cliquez sur Ctrl ou Commande.</help>
+    <label>Types d’opportunités exclus</label>
+  </fields>
+  <fields>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+    <help>Lorsque cette option est sélectionnée, la gestion des adresses est activée pour les comptes non foyer, comme les comptes d’organisations.</help>
+    <label>Adresses de compte d’org. activées</label>
+  </fields>
+  <fields>
+    <name>Payments_Auto_Close_Stage_Name__c</name>
+    <help>NPSP définit automatiquement une étape d’opportunité à cette valeur lorsque le montant de paiement reçu est égal au montant de l’opportunité. Si aucune étape n'est sélectionnée, l’étape Opportunité ne changera pas une fois les paiements terminés.</help>
+    <label>Étape d’opp. après paiement complet</label>
+  </fields>
+  <fields>
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
+    <help>Si cette option est activée, les modifications d’un seul champ d’adresse d’un contact ou d’un compte mettent à jour l’adresse existante, au lieu de créer une nouvelle adresse.</help>
+    <label>Simple modif. d’adresse traitée en m à j</label>
+  </fields>
+</CustomObjectTranslation>

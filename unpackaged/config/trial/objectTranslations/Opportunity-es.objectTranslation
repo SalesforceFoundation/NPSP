@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <recordTypes>
+    <name>Donation</name>
+    <label>Donación</label>
+    <description>Donación recibida</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Grant</name>
+    <label>Beca</label>
+    <description>Beca recibida</description>
+  </recordTypes>
+  <recordTypes>
+    <name>InKindGift</name>
+    <label>Regalo en especie</label>
+    <description>Bienes o servicios recibidos como en especie</description>
+  </recordTypes>
+  <recordTypes>
+    <name>MajorGift</name>
+    <label>Regalo importante</label>
+    <description>Donación de gran calibre de un donante importante</description>
+  </recordTypes>
+  <recordTypes>
+    <name>MatchingGift</name>
+    <label>Regalo que iguala</label>
+    <description>Donación complementaria procedente del empleador de un donante u otra organización</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Membership</name>
+    <label>Afiliación</label>
+    <description>Un tipo de registro de afiliación</description>
+  </recordTypes>
+  <layouts>
+    <layout>___NAMESPACE___Major Gift Layout</layout>
+    <sections>
+      <label>Información de donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información de regalo importante</label>
+      <section>Major Gift Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Donation Layout</layout>
+    <sections>
+      <label>Información de donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Información del tributo</label>
+      <section>Tribute Information</section>
+    </sections>
+    <sections>
+      <label>Información de regalo coincidente</label>
+      <section>Matching Gift Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Membership Layout</layout>
+    <sections>
+      <label>Campos</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Información del miembro</label>
+      <section>Member Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Grant Layout</layout>
+    <sections>
+      <label>Información de donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información de la beca</label>
+      <section>Grant Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
+    <sections>
+      <label>Información de donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información del regalo en especie</label>
+      <section>In-Kind Information</section>
+    </sections>
+    <sections>
+      <label>Información del tributo</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Matching Gift Layout</layout>
+    <sections>
+      <label>Información de donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>
