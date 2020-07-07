@@ -275,19 +275,19 @@ public with sharing class RD2_NamingService {
          * @return Recurring Donations Name
          */
         public String build() {
-            rdName = this.nameFormat;
+            this.rdName = this.nameFormat;
 
-            rdName = replaceTokenValues();
-            rdName = replaceFieldValues();
-            rdName = replaceDonorName();
+            replaceTokenValues();
+            replaceFieldValues();
+            replaceDonorName();
 
             return rdName;
         }
 
         /**
-         * @return Replace instances of field tokens with field values, except for the Donor_Name__c field
+         * @description Replace instances of field tokens with field values, except for the Donor_Name__c field
          */
-        private String replaceFieldValues() {
+        private void replaceFieldValues() {
 
             Set<String> fields = getFieldNamesFromSpec();
             Map<String, String> fieldReplacements = new Map<String, String>();
@@ -325,15 +325,13 @@ public with sharing class RD2_NamingService {
                     rdName = rdName.replace(token, (val != null ? val : ''));
                 }
             }
-
-            return rdName;
         }
 
         /**
-         * @return The DonorName replacement in the naming format requires special handling to allow for
+         * @description The DonorName replacement in the naming format requires special handling to allow for
          * abbreviating it based on the total length of the name relative to the max size of the Name field
          */
-        private String replaceDonorName() {
+        private void replaceDonorName() {
             String token = '{!npe03__Donor_Name__c}';
 
             if (!rdName.contains(token)) {
@@ -343,22 +341,20 @@ public with sharing class RD2_NamingService {
             Integer maxNameLength = MAX_NAME_LENGTH - (rdName.length() - token.length());
             String donorName = (maxNameLength > 0 ? getDonorName().abbreviate(maxNameLength) : '');
             rdName = rdName.replace(token, donorName);
-
-            return rdName;
         }
 
         /**
-         * @return Replace instances of special tokens with their values
+         * @description Replace instances of special tokens with their values
          */
-        private String replaceTokenValues() {
+        private void replaceTokenValues() {
             for (String token : namingTokens.keySet()) {
                 rdName = rdName.replace(token, namingTokens.get(token));
             }
-            return rdName;
         }
 
         /**
-         * @return The correct donor (contact or account) name to use in the name
+         * @description The correct donor (contact or account) name to use in the name
+         * @return The donor (or org) name to use for the Donor_Name__c field replacment.
          */
         private String getDonorName() {
             Boolean useContact = rd.npe03__Organization__c == null;
