@@ -335,7 +335,7 @@ public with sharing class RD2_NamingService {
             String token = '{!npe03__Donor_Name__c}';
 
             if (!rdName.contains(token)) {
-                return rdName;
+                return;
             }
 
             Integer maxNameLength = MAX_NAME_LENGTH - (rdName.length() - token.length());
