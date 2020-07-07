@@ -213,7 +213,7 @@ public with sharing class RD2_NamingService {
     */
     private String constructName(npe03__Recurring_Donation__c rd, Map<Id, RD2_Donor.Record> donorById) {
 
-        NameBuilder nameBuilder = new NameBuilder(rd, new NameFormatter())
+        NameBuilder nameBuilder = new NameBuilder(rd, nameFormatter)
             .withDonorsById(donorById);
 
         return nameBuilder.build();
@@ -376,6 +376,18 @@ public with sharing class RD2_NamingService {
 
             return formattedAmount;
         }
+    }
+
+    /**
+    * @description Instantiate only a single instance of the NameFormatter wrapper
+    */
+    private NameFormatter nameFormatter {
+        get {
+            if (nameFormatter == null) {
+                nameFormatter = new NameFormatter();
+            }
+            return nameFormatter;
+        } private set;
     }
 
     /**
