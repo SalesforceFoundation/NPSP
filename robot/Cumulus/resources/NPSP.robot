@@ -51,6 +51,22 @@ API Modify Contact
     &{contact} =  Get From List  ${records}  0
     [return]         &{contact}
 
+API Modify Recurring Donation
+    [Documentation]  This keyword is used to update an existing recurring donation record by passing id and
+    ...              This keyword returns the recurring donation dictonary after the update, when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | Recurring Donation ID   |
+
+    [Arguments]             ${rd_id}      &{fields}
+    Salesforce Update       npe03__Recurring_Donation__c     ${rd_id}
+    ...                     &{fields}
+    @{records} =  Salesforce Query      npe03__Recurring_Donation__c
+    ...              select=StartDate__c,npe03__Amount__c
+    ...              Id=${rd_id}
+    &{rd} =          Get From List  ${records}  0
+    [return]         &{rd}
+
 API Create Campaign
     [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name 
     ...              as random strings and no additional info. This keyword returns the campaign dictonary when called
