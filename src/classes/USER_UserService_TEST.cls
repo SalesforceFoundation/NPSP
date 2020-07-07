@@ -319,17 +319,17 @@ public with sharing class USER_UserService_TEST {
     */
     private static void assignCustomizeApplicationPermissionSet(Id userId) {
 
-        final Set<String> requiredPerms = new Set<String>{
+        final Set<String> permissions = new Set<String>{
             /** The required permission **/
-            'PermissionsCustomizeApplication',
+            'CustomizeApplication',
 
             /** Dependent Permissions **/
-            'PermissionsManageCustomPermissions',
-            'PermissionsViewRoles',
-            'PermissionsViewSetup'
+            'ManageCustomPermissions',
+            'ViewRoles',
+            'ViewSetup'
         };
 
-        PermissionSet permission = buildPermissionSet(requiredPerms);
+        PermissionSet permission = buildPermissionSet(permissions);
         insert permission;
 
         insert new PermissionSetAssignment(
@@ -344,53 +344,53 @@ public with sharing class USER_UserService_TEST {
     */
     private static void assignSystemAdminLevelPermissionSet(Id userId) {
 
-        final Set<String> requiredPerms = new Set<String>{
+        final Set<String> permissions = new Set<String>{
             /** The 3 required permissions **/
-            'PermissionsCustomizeApplication',
-            'PermissionsModifyAllData',
-            'PermissionsAuthorApex',
+            'CustomizeApplication',
+            'ModifyAllData',
+            'AuthorApex',
 
             /** Dependent Permissions **/
-            'PermissionsAssignTopics',
-            'PermissionsConnectOrgToEnvironmentHub',
-            'PermissionsConvertLeads',
-            'PermissionsCreateCustomizeDashboards',
-            'PermissionsCreateCustomizeFilters',
-            'PermissionsCreateCustomizeReports',
-            'PermissionsCreateDashboardFolders',
-            'PermissionsCreateReportFolders',
-            'PermissionsCreateTopics',
-            'PermissionsDeleteTopics',
-            'PermissionsEditEvent',
-            'PermissionsEditMyDashboards',
-            'PermissionsEditMyReports',
-            'PermissionsEditPublicDocuments',
-            'PermissionsEditPublicFilters',
-            'PermissionsEditPublicTemplates',
-            'PermissionsEditTask',
-            'PermissionsEditTopics',
-            'PermissionsImportLeads',
-            'PermissionsManageCategories',
-            'PermissionsManageCustomPermissions',
-            'PermissionsManageDashbdsInPubFolders',
-            'PermissionsManageNetworks',
-            'PermissionsManageReportsInPubFolders',
-            'PermissionsModifyMetadata',
-            'PermissionsRunReports',
-            'PermissionsSolutionImport',
-            'PermissionsTransferAnyEntity',
-            'PermissionsTransferAnyLead',
-            'PermissionsUseTeamReassignWizards',
-            'PermissionsViewAllData',
-            'PermissionsViewDataLeakageEvents',
-            'PermissionsViewEventLogFiles',
-            'PermissionsViewPublicDashboards',
-            'PermissionsViewPublicReports',
-            'PermissionsViewRoles',
-            'PermissionsViewSetup'
+            'AssignTopics',
+            'ConnectOrgToEnvironmentHub',
+            'ConvertLeads',
+            'CreateCustomizeDashboards',
+            'CreateCustomizeFilters',
+            'CreateCustomizeReports',
+            'CreateDashboardFolders',
+            'CreateReportFolders',
+            'CreateTopics',
+            'DeleteTopics',
+            'EditEvent',
+            'EditMyDashboards',
+            'EditMyReports',
+            'EditPublicDocuments',
+            'EditPublicFilters',
+            'EditPublicTemplates',
+            'EditTask',
+            'EditTopics',
+            'ImportLeads',
+            'ManageCategories',
+            'ManageCustomPermissions',
+            'ManageDashbdsInPubFolders',
+            'ManageNetworks',
+            'ManageReportsInPubFolders',
+            'ModifyMetadata',
+            'RunReports',
+            'SolutionImport',
+            'TransferAnyEntity',
+            'TransferAnyLead',
+            'UseTeamReassignWizards',
+            'ViewAllData',
+            'ViewDataLeakageEvents',
+            'ViewEventLogFiles',
+            'ViewPublicDashboards',
+            'ViewPublicReports',
+            'ViewRoles',
+            'ViewSetup'
         };
 
-        PermissionSet permission = buildPermissionSet(requiredPerms);
+        PermissionSet permission = buildPermissionSet(permissions);
         insert permission;
 
         insert new PermissionSetAssignment(
@@ -406,22 +406,20 @@ public with sharing class USER_UserService_TEST {
      */
     private static PermissionSet buildPermissionSet(Set<String> permissions) {
 
-        final String permissionManageTranslations = 'PermissionsManageTranslation';
+        final String permissionManageTranslations = 'ManageTranslation';
         final Boolean hasTranslationPerm =
-            PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey(permissionManageTranslations);
+            PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey('Permissions' + permissionManageTranslations);
 
         if (hasTranslationPerm) {
             permissions.add(permissionManageTranslations);
         }
 
-        // Create a permission set with CustomizeApplication, ModifyAllData and AuthorApex set ensuring
-        // other flags on which these settings depends are set as well
         PermissionSet permission = new PermissionSet(
             Name = 'X' + UTIL_UnitTestData_TEST.getUniqueString(),
             Label = 'Permission Set Test'
         );
         for (String perm : permissions) {
-            permission.put(perm, true);
+            permission.put('Permissions' + perm, true);
         }
 
         return permission;
