@@ -838,7 +838,7 @@ private with sharing class STG_SettingsManager_TEST {
         String selectedFormat = panel.selectedRDNamingFormat;
         Test.stopTest();
 
-        String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_1.replace('Recurring', System.Label.RecurringDonationNameSuffix);
+        String expectedLabel = RD2_NamingService.RD_NAMING_OPTION_1.replace('$RECURRING_NAME_SUFFIX$', System.Label.RecurringDonationNameSuffix);
 
         System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
         System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_1, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
@@ -859,7 +859,7 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         String expectedLabel =
-            RD2_NamingService.RD_NAMING_OPTION_2.replace('Recurring Donation', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'));
+            RD2_NamingService.RD_NAMING_OPTION_2.replace('$RECURRING_OBJECT_NAME$', UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c'));
 
         System.assertEquals(expectedLabel, convertedLabel, 'RD Naming format should be converted to Label');
         System.assertEquals(RD2_NamingService.RD_NAMING_OPTION_2, selectedFormat, 'Correct api value should be selected. ' + selectedFormat);
