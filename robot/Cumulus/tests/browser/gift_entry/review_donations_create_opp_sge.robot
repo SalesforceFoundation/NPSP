@@ -30,13 +30,12 @@ Setup Test Data
     Set suite variable   ${ns}
 
 *** Test Cases ***
-
 Review Donation And Create Opportunity For SGE
     [Documentation]                      Create an organization account with open opportunity (with payment record) via API. Go to SGE form
     ...                                  select the donor as account and the account created. Verify review donations modal but select to create alternative opportunity.
     ...                                  Enter details and save. Verify that new opportunity and payment are created with right info 
     [tags]                               unstable      feature:GE                    W-039564   
-                               
+    #verify Review Donations link is available and create a new opportunity using SGE form                           
     Go To Page                           Landing                       GE_Gift_Entry         
     Click Gift Entry Button              New Single Gift
     Current Page Should Be               Form                          Gift Entry
@@ -51,6 +50,7 @@ Review Donation And Create Opportunity For SGE
     ...                                  Donation Date=Today
     ...                                  Donation Amount=150
     Click Button                         Save
+    #verify new opportunity and its payment are created with correct info
     Current Page Should Be               Details                        Opportunity
     ${newopp_id}                         Save Current Record ID For Deletion     Opportunity
     Verify Expected Values               nonns                          Opportunity    ${newopp_id}
@@ -65,6 +65,7 @@ Review Donation And Create Opportunity For SGE
     ...                                  npe01__Payment_Amount__c=150.0
     ...                                  npe01__Payment_Date__c=${date}
     ...                                  npe01__Paid__c=True
+    #verify account has two opportunities listed
     Go To Page                           Details                        Account         object_id=${account}[Id]
     Select Tab                           Related
     Verify Occurence                     Opportunities                  2
