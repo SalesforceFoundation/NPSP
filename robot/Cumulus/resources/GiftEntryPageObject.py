@@ -288,7 +288,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 value_locator=npsp_lex_locators["gift_entry"]["id"].format(value)
                 self.selenium.wait_until_page_contains_element(value_locator)
                 self.selenium.click_element(value_locator)
-            elif 'combobox' in type 
+            elif 'combobox' in type :
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["flexipage-popup"]
                 self.selenium.wait_until_page_contains_element(popup)

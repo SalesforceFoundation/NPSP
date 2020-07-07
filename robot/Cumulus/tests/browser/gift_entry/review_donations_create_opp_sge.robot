@@ -6,6 +6,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 ...             robot/Cumulus/resources/PaymentPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Enable Gift Entry
@@ -64,4 +65,7 @@ Review Donation And Create Opportunity For SGE
     ...                                  npe01__Payment_Amount__c=150.0
     ...                                  npe01__Payment_Date__c=${date}
     ...                                  npe01__Paid__c=True
+    Go To Page                           Details                        Account         object_id=${account}[Id]
+    Select Tab                           Related
+    Verify Occurence                     Opportunities                  2
 
