@@ -268,10 +268,9 @@ public with sharing class RD2_NamingService {
          */
         private void replaceFieldValues() {
 
-            Set<String> fields = nameFormatter.fields;
             Map<String, String> fieldReplacements = new Map<String, String>();
 
-            for (String fld : fields) {
+            for (String fld : nameFormatter.fields) {
                 DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
 
                 if (fld == 'npe03__Donor_Name__c') {
