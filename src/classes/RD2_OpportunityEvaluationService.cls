@@ -97,7 +97,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Beggining of the current calendar or fiscal year, whichever is earlier.
+     * @description Beginning of the current calendar or fiscal year, whichever is earlier.
      * The start date is offset by the Next Donation Date match days before the year start date
      * so past Opportunities matching future projected installments are returned.
     */
@@ -417,7 +417,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Activate or deactive RD2 triggers
+     * @description Activate or deactivate RD2 triggers
      * @param isActive Indicates if triggers are active
      * @return void
      */
@@ -527,16 +527,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return String RD Schedule subquery used in the Recurring Donation SOQL
      */
     public String getScheduleSubQuery() {
-        return '(SELECT Id, InstallmentAmount__c, ' +
-            'Campaign__c, ' +
-            'Campaign__r.Name, ' +
-            'InstallmentFrequency__c, ' +
-            'InstallmentPeriod__c, ' +
-            'DayOfMonth__c, ' +
-            'PaymentMethod__c, ' +
-            'StartDate__c, ' +
-            'EndDate__c ' +
-            'FROM RecurringDonationSchedules__r)';
+        //Use strings defined by Schedule Service as the source of truth for fields needed.
+        return new UTIL_Query()
+            .withSelectFields(RD2_ScheduleService.scheduleSelectStrings)
+            .withFrom('RecurringDonationSchedules__r')
+            .build();
     }
 
     /**

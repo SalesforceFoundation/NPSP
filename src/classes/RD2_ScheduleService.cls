@@ -65,6 +65,26 @@ public without sharing class RD2_ScheduleService {
         } set;
     }
 
+    public static Set<String> scheduleSelectStrings {
+        get {
+            return new Set<String> {
+                'Id',
+                'Campaign__c',
+                'Campaign__r.Name',
+                'DayOfMonth__c',
+                'EndDate__c',
+                'InstallmentAmount__c',
+                'InstallmentFrequency__c',
+                'InstallmentPeriod__c',
+                'IsPause__c',
+                'PaymentMethod__c',
+                'RecurringDonation__c',
+                'StartDate__c'
+            };
+        }
+        private set;
+    }
+
     /***
     * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
@@ -258,7 +278,9 @@ public without sharing class RD2_ScheduleService {
                 break;
             }
 
-            installments.add(inst);
+            if (!inst.skipInstallment) {
+                installments.add(inst);
+            }
             referenceDate = inst.nextDonationDate.addDays(1);
         }
 
@@ -288,7 +310,9 @@ public without sharing class RD2_ScheduleService {
                 break;
             }
 
-            installments.add(inst);
+            if (!inst.skipInstallment) {
+                installments.add(inst);
+            }
             referenceDate = inst.nextDonationDate.addDays(1);
         }
 
@@ -333,6 +357,7 @@ public without sharing class RD2_ScheduleService {
         public Decimal  installmentAmount {get; set;}
         public String   paymentMethod {get; set;}
         public Id       scheduleId {get; set;}
+        public Boolean  skipInstallment {get; set;}
 
         Installment(RecurringDonationSchedule__c rdSchedule) {
             campaignId =            rdSchedule.Campaign__c;
@@ -343,6 +368,7 @@ public without sharing class RD2_ScheduleService {
             installmentAmount =     rdSchedule.InstallmentAmount__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
             scheduleId =            rdSchedule.Id;
+            skipInstallment =       false;
         }
     }
 
@@ -360,16 +386,21 @@ public without sharing class RD2_ScheduleService {
         Installment nextInstallment;
         Installment previousInstallment;
 
-        List <RecurringDonationSchedule__c> filteredSchedules = new List<RecurringDonationSchedule__c>();
+        List <RecurringDonationSchedule__c> filteredInstallmentSchedules = new List<RecurringDonationSchedule__c>();
+        List <RecurringDonationSchedule__c> filteredPauseSchedules = new List<RecurringDonationSchedule__c>();
         for (RecurringDonationSchedule__c schedule : schedules) {
-            if (isActive(schedule, referenceDate)) {
-                filteredSchedules.add(schedule);
-            }
+//            System.debug('%%% schedule %%% ' + schedule);
+//            if (isActive(schedule, referenceDate) && (!schedule.isSet('IsPause__c') || !schedule.IsPause__c)) {
+                filteredInstallmentSchedules.add(schedule);
+//            }
+//            if (isActive(schedule, referenceDate) && (schedule.isSet('IsPause__c') && schedule.IsPause__c)) {
+//                filteredPauseSchedules.add(schedule);
+//            }
         }
 
-        for (RecurringDonationSchedule__c schedule : filteredSchedules) {
+        for (RecurringDonationSchedule__c schedule : filteredInstallmentSchedules) {
             Date nextDonationDate = getNextDonationDateGreaterThan(schedule, referenceDate);
-
+            System.debug('%%% nextDonationDate %%% ' + nextDonationDate);
             if (nextDonationDate == null) {
                 continue;
             }
@@ -380,8 +411,18 @@ public without sharing class RD2_ScheduleService {
                     nextInstallment.nextDonationDate = nextDonationDate;
             }
 
+            if (filteredPauseSchedules.size() > 0) {
+                for (RecurringDonationSchedule__c pause : filteredPauseSchedules) {
+                    if (nextInstallment != null && nextInstallment.nextDonationDate >= pause.StartDate__c && nextInstallment.nextDonationDate <= pause.EndDate__c) {
+                        nextInstallment.skipInstallment = true;
+                    }
+                }
+            }
+
             previousInstallment = nextInstallment;
         }
+        System.debug('%%% previousInstallment %%% ' + previousInstallment);
+        System.debug('%%% nextInstallment %%% ' + nextInstallment);
 
         return nextInstallment;
     }
@@ -603,7 +644,9 @@ public without sharing class RD2_ScheduleService {
                 }
                 first1stAnd15thFound = true;
             }
-            activeSchedules.add(new ActiveSchedule(schedule, rd));
+            if (!schedule.IsPause__c) {
+                activeSchedules.add(new ActiveSchedule(schedule, rd));
+            }
         }
 
         return activeSchedules;
@@ -725,23 +768,10 @@ public without sharing class RD2_ScheduleService {
     * @return String
     */
     private String getExistingScheduleQueryString() {
-
-        Set<String> selectFields = new Set<String> {
-            'Campaign__c',
-            'Campaign__r.Name',
-            'DayOfMonth__c',
-            'EndDate__c',
-            'InstallmentAmount__c',
-            'InstallmentFrequency__c',
-            'InstallmentPeriod__c',
-            'PaymentMethod__c',
-            'RecurringDonation__c',
-            'StartDate__c'
-        };
         String orderString = 'StartDate__c';
 
         Util_Query theQuery = new UTIL_Query()
-            .withSelectFields(selectFields)
+            .withSelectFields(scheduleSelectStrings)
             .withFrom(RecurringDonationSchedule__c.SObjectType)
             .withWhere('RecurringDonation__c IN :rds')
             .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')

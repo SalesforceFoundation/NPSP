@@ -442,6 +442,15 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>IsPause__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Set true if schedule represents a pause.</description>
+        <externalId>false</externalId>
+        <label>IsPause</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>PaymentMethod__c</fullName>
         <description>The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record.</description>
         <externalId>false</externalId>
