@@ -3,6 +3,9 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Enable Gift Entry
@@ -28,17 +31,17 @@ Setup Test Data
 *** Test Cases ***
 
 Review Donation And Create Opportunity For SGE
-    # [Documentation]                         Create a custom field on opportunity and npsp data import objects. Create advanced mapping to these fields.
-    # ...                                     Verify that the mapped field is available for selection while creating a new template and once selected, its avialble on newly created batch gift form
-    # ...                                     Remove field from template, delete mapping and verify that the new field is not avaialable for selection while creating template.  
-    [tags]                               unstable      feature:GE                    W-   
+    [Documentation]                      Create an organization account with open opportunity (with payment record) via API. Go to SGE form
+    ...                                  select the donor as account and the account created. Verify review donations modal but select to create alternative opportunity.
+    ...                                  Enter details and save. Verify that new opportunity and payment are created with right info 
+    [tags]                               unstable      feature:GE                    W-039564   
                                
     Go To Page                           Landing                       GE_Gift_Entry         
     Click Gift Entry Button              New Single Gift
     Current Page Should Be               Form                          Gift Entry
     Fill Gift Entry Form
     ...                                  Donor Type=Account1
-    ...                                  Existing Donor Contact=&{Contact}[Name]
+    ...                                  Existing Donor Organization=${account}[Name]
     Click Button                         Review Donations
     Wait Until Modal Is Open
     Click Button                         Alternatively, create a new Opportunity.
@@ -49,15 +52,15 @@ Review Donation And Create Opportunity For SGE
     Click Button                         Save
     Current Page Should Be               Details                        Opportunity
     ${newopp_id}                         Save Current Record ID For Deletion     Opportunity
-    Verify Expected Values               nonns    Opportunity    ${newopp_id}
+    Verify Expected Values               nonns                          Opportunity    ${newopp_id}
     ...                                  Amount=150.0
     ...                                  CloseDate=${date}
     ...                                  StageName=Closed Won
     Select Tab                           Related
-    Click Related Table Item Link        Payments      Paid
-    Current Page Should Be               Details       Payments
+    Click Related Table Item Link        Payments                       Paid
+    Current Page Should Be               Details                        npe01__OppPayment__c
     ${pay_id}                            Save Current Record ID For Deletion     npe01__OppPayment__c
-    Verify Expected Values               nonns    npe01__OppPayment__c    ${pay_id}
+    Verify Expected Values               nonns                          npe01__OppPayment__c    ${pay_id}
     ...                                  npe01__Payment_Amount__c=150.0
     ...                                  npe01__Payment_Date__c=${date}
     ...                                  npe01__Paid__c=True
