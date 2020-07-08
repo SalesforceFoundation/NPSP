@@ -199,7 +199,6 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static DataImport__c upsertDataImport(DataImport__c dataImport) {
         try {
-
             upsert dataImport Id;
 
             return dataImport;
