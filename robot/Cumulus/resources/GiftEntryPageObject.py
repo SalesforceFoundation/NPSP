@@ -27,7 +27,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains("Enable Advanced Mapping and Gift Entry") 
         else:
             locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")                                           
-            self.selenium.wait_until_page_contains_element(locator)  
+            self.selenium.wait_until_page_contains_element(locator,timeout=60,error="Gift Entry page with Batches table did not load in 1 min")  
 
     def _is_current_page(self):
         """
@@ -280,8 +280,8 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         Key is field name and value is value to be entered for field """
         for key,value in kwargs.items():
             locator=npsp_lex_locators["gift_entry"]["id"].format(key)
-            element=self.selenium.get_webelement(locator)
-            type=element.get_attribute("data-qa-locator")
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+            field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             print(f"type is {type}")
             if 'autocomplete' in type :
                 self.salesforce._populate_field(locator,value)
@@ -289,7 +289,6 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.wait_until_page_contains_element(value_locator)
                 self.selenium.click_element(value_locator)
             elif 'combobox' in type :
-                field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["flexipage-popup"]
                 self.selenium.wait_until_page_contains_element(popup)
@@ -298,8 +297,13 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
                 self.salesforce._populate_field(field_locator,value)
+            elif 'datetime' in type :
+                locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")  
+                self.selenium.click_element(field_locator)
+                self.selenium.wait_until_page_contains_element(locator)  
+                self.selenium.click_button(value)    
+                self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
             else:
-                field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                 self.salesforce._populate_field(field_locator,value)
 
     def verify_error_for_field(self,**kwargs):
