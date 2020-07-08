@@ -14,31 +14,31 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
-        ${EFFECTIVE_DATE_INITIAL} =           Get Current Date      result_format=%-m/%-d/%Y
-        ${DATE}=                              Get current date      result_format=%Y-%m-%d %H:%M:%S.%f      increment=30 days
-        ${DATE_TO_UPDATE} =                   Convert Date          ${DATE}                         result_format=%Y-%m-%d
-        ${EFFECTIVE_MODIFIED_DATE}=           Get current date      result_format=%-d/%-m/%Y      increment=0 days
-        ${CURRDATE}=                          Get Current Date      result_format=datetime
-        ${CURRENTVALUE} =                     Evaluate              (${CURRDATE.month-1}) * 100
-        ${CURRENTVALUE_EDITED}=               Evaluate              (${CURRDATE.month}*100) + 150
-        Set Suite Variable  ${CURRENTVALUE}
-        Set Suite Variable  ${DATE}
-        Set Suite Variable  ${EFFECTIVE_MODIFIED_DATE}
-        Set Suite Variable  ${CURRENTVALUE_EDITED}
-        Set Suite Variable  ${EFFECTIVE_DATE_INITIAL}
-        Set Suite Variable  ${DATE_TO_UPDATE}
+     ${EFFECTIVE_DATE_INITIAL} =           Get Current Date      result_format=%-m/%-d/%Y
+     ${DATE}=                              Get current date      result_format=%Y-%m-%d %H:%M:%S.%f      increment=30 days
+     ${DATE_TO_UPDATE} =                   Convert Date          ${DATE}                         result_format=%Y-%m-%d
+     ${EFFECTIVE_MODIFIED_DATE}=           Get current date      result_format=%-d/%-m/%Y      increment=0 days
+     ${CURRDATE}=                          Get Current Date      result_format=datetime
+     ${CURRENTVALUE} =                     Evaluate              (${CURRDATE.month-1}) * 100
+     ${CURRENTVALUE_EDITED}=               Evaluate              (${CURRDATE.month}*100) + 150
+     Set Suite Variable  ${CURRENTVALUE}
+     Set Suite Variable  ${DATE}
+     Set Suite Variable  ${EFFECTIVE_MODIFIED_DATE}
+     Set Suite Variable  ${CURRENTVALUE_EDITED}
+     Set Suite Variable  ${EFFECTIVE_DATE_INITIAL}
+     Set Suite Variable  ${DATE_TO_UPDATE}
 
-        &{contact1_fields}=              Create Dictionary          Email=rd2tester@example.com
-        &{recurringdonation_fields} =	 Create Dictionary          Name=ERDTest1
-        ...                                                         npe03__Installment_Period__c=Monthly
-        ...                                                         npe03__Amount__c=100
-        ...                                                         npe03__Open_Ended_Status__c=${TYPE}
-        ...                                                         Status__c=Active
-        ...                                                         Day_of_Month__c=${DAY_OF_MONTH}
-        ...                                                         InstallmentFrequency__c=${FREQUENCY}
-        ...                                                         PaymentMethod__c=${METHOD}
+     &{contact1_fields}=              Create Dictionary          Email=rd2tester@example.com
+     &{recurringdonation_fields} =	 Create Dictionary          Name=ERDTest1
+     ...                                                         npe03__Installment_Period__c=Monthly
+     ...                                                         npe03__Amount__c=100
+     ...                                                         npe03__Open_Ended_Status__c=${TYPE}
+     ...                                                         Status__c=Active
+     ...                                                         Day_of_Month__c=${DAY_OF_MONTH}
+     ...                                                         InstallmentFrequency__c=${FREQUENCY}
+     ...                                                         PaymentMethod__c=${METHOD}
 
-        Setupdata   contact             ${contact1_fields}          recurringdonation_data=${recurringdonation_fields}
+     Setupdata   contact             ${contact1_fields}          recurringdonation_data=${recurringdonation_fields}
 
 
 *** Variables ***
