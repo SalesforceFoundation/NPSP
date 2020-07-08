@@ -96,7 +96,6 @@ Edit An Enhanced Recurring donation record of type open
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
-    Wait Until Loading Is Complete
 
     # Verify that Future schedule section shows up and the values reflect the changes
     Validate Field Values Under Section     Future Schedule
@@ -110,7 +109,6 @@ Edit An Enhanced Recurring donation record of type open
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
 
-    Wait Until Loading Is Complete
     Validate Field Values Under Section     Statistics
     ...                                     Current Year Value=$${currentvalue_edited}.00
     ...                                     Next Year Value=$1,800.00
