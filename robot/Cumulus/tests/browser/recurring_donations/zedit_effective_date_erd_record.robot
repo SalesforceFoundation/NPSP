@@ -55,20 +55,15 @@ Edit An Enhanced Recurring donation record of type open
      ...                          is edited and effective date is updated to next month , Verifies that future schedule is shown
      ...                          with the right values reflected. Verifies the current year and future year schedules are updated
      ...                          Verifies the opportunity status
-
-
     [tags]                                   unstable               W-041167            feature:RD2
 
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
-
     ${rd_id}                                 Save Current Record ID For Deletion       npe03__Recurring_Donation__c
     Validate Field Values Under Section
-
     ...                                      Amount=$100.00
     ...                                      Status=Active
-
     # Validate the fields under Current Schedule card
     Validate Field Values Under Section      Current Schedule
     ...                                      Amount=$100.00
@@ -76,27 +71,22 @@ Edit An Enhanced Recurring donation record of type open
     ...                                      Effective Date=${effective_date_initial}
     ...                                      Installment Period=Monthly
     ...                                      Day of Month=15
-
     # validate recurring donation statistics current and next year value
     Validate Field Values Under Section      Statistics
     ...                                      Current Year Value=$${currentvalue}.00
     ...                                      Next Year Value=$1,200.00
-
     #Query the opportunity ID associated with the recurring donation. Navigate to the opportunity and validate the status
     @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${RD_ID}
     Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
     Navigate To And Validate Field Value    Stage                          contains                        Pledged
-
     #Using backend API update the recurring donation record and modify the startDate field to next month's date
     API Modify Recurring Donation           ${data}[contact_rd][Id]
     ...                                     npe03__Amount__c=${amount_to_update}
     ...                                     StartDate__c=${date_to_update}
-
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
-
     # Verify that Future schedule section shows up and the values reflect the changes
     Validate Field Values Under Section     Future Schedule
     ...                                     Amount=$150.00
@@ -104,15 +94,12 @@ Edit An Enhanced Recurring donation record of type open
     ...                                     Effective Date=${effective_modified_date}
     ...                                     Installment Period=Monthly
     ...                                     Day of Month=15
-
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
-
     Validate Field Values Under Section     Statistics
     ...                                     Current Year Value=$${currentvalue_edited}.00
     ...                                     Next Year Value=$1,800.00
-
     @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
     Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
