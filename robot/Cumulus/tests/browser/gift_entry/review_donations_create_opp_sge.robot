@@ -3,7 +3,6 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
-...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 ...             robot/Cumulus/resources/PaymentPageObject.py
 ...             robot/Cumulus/resources/AccountPageObject.py
@@ -16,18 +15,15 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Keywords ***
 Setup Test Data
     &{account} =         API Create Organization Account    Name=${faker.company()}
-    Set suite variable   &{account}
+    Set suite variable   &{ACCOUNT}
     ${date} =            Get Current Date         result_format=%Y-%m-%d
-    Set suite variable   ${date}
+    Set suite variable   ${DATE}
     &{opportunity} =     API Create Opportunity   ${account}[Id]              Donation  
     ...                  StageName=Prospecting    
     ...                  Amount=150    
     ...                  CloseDate=${date}    
     ...                  npe01__Do_Not_Automatically_Create_Payment__c=false    
     ...                  Name=${account}[Name] Donation
-    Set suite variable   &{opportunity}
-    ${ns} =              Get NPSP Namespace Prefix
-    Set suite variable   ${ns}
 
 *** Test Cases ***
 Review Donation And Create Opportunity For SGE
@@ -41,7 +37,7 @@ Review Donation And Create Opportunity For SGE
     Current Page Should Be               Form                          Gift Entry
     Fill Gift Entry Form
     ...                                  Donor Type=Account1
-    ...                                  Existing Donor Organization=${account}[Name]
+    ...                                  Existing Donor Organization=${ACCOUNT}[Name]
     Click Button                         Review Donations
     Wait Until Modal Is Open
     Click Button                         Alternatively, create a new Opportunity.
@@ -55,7 +51,7 @@ Review Donation And Create Opportunity For SGE
     ${newopp_id}                         Save Current Record ID For Deletion     Opportunity
     Verify Expected Values               nonns                          Opportunity    ${newopp_id}
     ...                                  Amount=150.0
-    ...                                  CloseDate=${date}
+    ...                                  CloseDate=${DATE}
     ...                                  StageName=Closed Won
     Select Tab                           Related
     Click Related Table Item Link        Payments                       Paid
@@ -63,10 +59,10 @@ Review Donation And Create Opportunity For SGE
     ${pay_id}                            Save Current Record ID For Deletion     npe01__OppPayment__c
     Verify Expected Values               nonns                          npe01__OppPayment__c    ${pay_id}
     ...                                  npe01__Payment_Amount__c=150.0
-    ...                                  npe01__Payment_Date__c=${date}
+    ...                                  npe01__Payment_Date__c=${DATE}
     ...                                  npe01__Paid__c=True
     #verify account has two opportunities listed
-    Go To Page                           Details                        Account         object_id=${account}[Id]
+    Go To Page                           Details                        Account         object_id=${ACCOUNT}[Id]
     Select Tab                           Related
     Verify Occurence                     Opportunities                  2
 

@@ -27,7 +27,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains("Enable Advanced Mapping and Gift Entry") 
         else:
             locator=npsp_lex_locators["gift_entry"]["id"].format("datatable Batches")                                           
-            self.selenium.wait_until_page_contains_element(locator)  
+            self.selenium.wait_until_page_contains_element(locator,timeout=60,error="Gift Entry page with Batches table did not load in 1 min")  
 
     def _is_current_page(self):
         """
@@ -280,7 +280,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         Key is field name and value is value to be entered for field """
         for key,value in kwargs.items():
             locator=npsp_lex_locators["gift_entry"]["id"].format(key)
-            type=self.selenium.get_webelement(locator).get_attribute("data-qa-locator")
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
             field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             print(f"type is {type}")
             if 'autocomplete' in type :
