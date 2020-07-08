@@ -65,15 +65,11 @@ public with sharing class USER_UserService {
                 AND PermissionsModifyAllData = TRUE
                 AND PermissionsAuthorApex = TRUE)
         ];
+
+        Set<Id> assigneeIds = UTIL_SObject.extractId(permissions, PermissionSetAssignment.AssigneeId);
+
         for (User currentUser : users) {
-            Boolean isAdminUser = false;
-            for (PermissionSetAssignment pma : permissions) {
-                if (pma.AssigneeId == currentUser.Id) {
-                    isAdminUser = true;
-                    break;
-                }
-            }
-            usersWithAdminPermission.put(currentUser.Id, isAdminUser);
+            usersWithAdminPermission.put(currentUser.Id, assigneeIds.contains(currentUser.Id));
         }
 
         return usersWithAdminPermission;
