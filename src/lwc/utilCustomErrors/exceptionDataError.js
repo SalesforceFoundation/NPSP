@@ -13,12 +13,13 @@ class ExceptionDataError extends Error {
 
         if (isNotEmpty(apexException.body)) {
             const apexExceptionWrapper = validateJSONString(apexException.body.message);
-            this.stackTrace = validateJSONString(apexException.body.stackTrace);
+
+            this.stackTrace = apexException.body.stackTrace;
             this.exceptionType = apexExceptionWrapper.exceptionType;
             this.isUserDefinedException = apexException.body.isUserDefinedException;
-            this.DMLErrorMessageMapping = apexExceptionWrapper.DMLErrorMessageMapping;;
-            this.DMLErrorFieldNameMapping = apexExceptionWrapper.DMLErrorFieldNameMapping;;
-
+            this.DMLErrorMessageMapping = apexExceptionWrapper.DMLErrorMessageMapping;
+            this.DMLErrorFieldNameMapping = apexExceptionWrapper.DMLErrorFieldNameMapping;
+            this.errorMessage = apexExceptionWrapper.errorMessage;
         } else {
             this.message = apexException;
         }
