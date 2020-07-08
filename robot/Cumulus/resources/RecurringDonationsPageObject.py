@@ -103,7 +103,9 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
         else:
             for label, value in kwargs.items():
                 self.npsp.navigate_to_and_validate_field_value(label, "contains", value, section)
-       
+    
+    
+    
     @capture_screenshot_on_error
     def validate_upcoming_schedules(self, num_payments,startdate,dayofmonth):
         """Takes in the parameter (number of payments) and the donation start date
@@ -117,14 +119,12 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
         assert count == int(num_payments), "Expected installments to be {} but found {}".format(num_payments, count)
         if count == int(num_payments):
             i = 1
-            month_count = 0
-            while i <= count:
+            while i < count:
                 datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
                 installment_date = self.selenium.get_webelement(datefield)
                 date_object = datetime.strptime(startdate, '%m/%d/%Y').date()
-                expected_date = (date_object+relativedelta(months=+month_count)).replace(day=int(dayofmonth))
+                expected_date = (date_object+relativedelta(months=+i)).replace(day=int(dayofmonth))
                 actual_date=self.selenium.get_webelement(installment_date).text
                 formatted_actual = datetime.strptime(actual_date, '%m/%d/%Y').date()
                 assert formatted_actual == expected_date, "Expected date to be {} but found {}".format(expected_date,formatted_actual)
                 i=i+1
-                month_count=month_count+1

@@ -11,7 +11,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Enable RD2
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
@@ -87,9 +87,6 @@ Edit An Enhanced Recurring donation record of type open
     Validate Field Values Under Section      Statistics
     ...                                      Current Year Value=$${currentvalue}.00
     ...                                      Next Year Value=$1,200.00
-
-    Scroll Page To Location                  0    0
-    Validate Upcoming Schedules              12                 ${effective_date_initial}               15
 
     #Query the opportunity ID associated with the recurring donation. Navigate to the opportunity and validate the status
     @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
