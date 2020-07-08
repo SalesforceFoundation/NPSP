@@ -130,7 +130,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 model.donationMatchingRule = recordDetails.Donation_Matching_Rule__c.split(';');
                 model.postProcessClass = recordDetails.Post_Process_Implementing_Class__c;
                 model.runOpportunityRollupsWhileProcessing = recordDetails.Run_Opportunity_Rollups_while_Processing__c;
-                model.status = recordDetails.Status__c;
+                model.batchStatus = recordDetails.Batch_Status__c;
                 model.expectedCount = (Integer)recordDetails.Expected_Count_of_Gifts__c;
                 model.expectedTotal = recordDetails.Expected_Total_Batch_Amount__c;
 
@@ -466,7 +466,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'donationMatchingRuleLabel' => Schema.DataImportBatch__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
             'postProcessClassLabel' => Schema.DataImportBatch__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
             'runOpportunityRollupsWhileProcessingLabel' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel(),
-            'statusLabel' => Schema.DataImportBatch__c.Status__c.getDescribe().getLabel()
+            'batchStatusLabel' => Schema.DataImportBatch__c.Batch_Status__c.getDescribe().getLabel()
         };
         labels.putAll(getMatchingValues());
         return labels;
@@ -516,7 +516,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             dataImportBatch.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
             dataImportBatch.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
             dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
-            dataImportBatch.Status__c = recordDetails.status;
+            dataImportBatch.Batch_Status__c = recordDetails.batchStatus;
             dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
             dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
             dataImportBatch.Active_Fields__c = recordDetails.activeFields;
@@ -558,7 +558,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String namespacePrefix;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
-        @AuraEnabled public String status;
+        @AuraEnabled public String batchStatus;
         @AuraEnabled public Integer recordCount;
 
         public BGEDetailsModel() {

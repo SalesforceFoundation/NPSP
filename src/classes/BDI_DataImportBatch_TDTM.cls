@@ -61,7 +61,7 @@ public class BDI_DataImportBatch_TDTM extends TDTM_Runnable {
      */
     private void handleBefore(List<DataImportBatch__c> batches) {
         for (DataImportBatch__c b : batches) {
-            b.Status__c = STATUS_OPEN;
+            b.Batch_Status__c = STATUS_OPEN;
         }
     }
 }

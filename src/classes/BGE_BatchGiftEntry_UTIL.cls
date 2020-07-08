@@ -248,7 +248,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             'Process_Using_Scheduled_Job__c',
             'RequireTotalMatch__c',
             'Run_Opportunity_Rollups_while_Processing__c',
-            'Status__c'
+            'Batch_Status__c'
         };
     }
 

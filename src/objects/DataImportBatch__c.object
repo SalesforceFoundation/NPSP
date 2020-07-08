@@ -431,11 +431,11 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Status__c</fullName>
-        <description>The status of the batch, for example, Open or Completed.</description>
+        <fullName>Batch_Status__c</fullName>
+        <description>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status of the batch, for example, Open or Completed.</inlineHelpText>
-        <label>Status</label>
+        <inlineHelpText>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</inlineHelpText>
+        <label>Batch Status</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>

@@ -996,6 +996,7 @@
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Batch_Status__c</members>
         <members>DataImportBatch__c.Batch_Table_Columns__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
@@ -1014,7 +1015,6 @@
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
-        <members>DataImportBatch__c.Status__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
