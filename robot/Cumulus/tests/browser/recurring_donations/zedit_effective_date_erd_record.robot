@@ -6,51 +6,47 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
-...             DateTime
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
 ...             Enable RD2
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
-
 Setup Test Data
-
-        ${effective_date_initial} =           Get Current Date      result_format=%-m/%-d/%Y
-        ${date} =           Get Current Date
-        ${DATE}=            Add Time To Date      ${date}  30 days      result_format=%Y-%m-%d %H:%M:%S.%f
-        ${date_to_update} =   Convert Date                   ${DATE}                         result_format=%Y-%m-%d
-        ${effective_modified_date}=        Add Time To Date      ${date}  0 days     result_format=%-m/%-d/%Y
-        ${currdate}=        Get Current Date  result_format=datetime
-        ${currentvalue} =   Evaluate          (${currdate.month-1}) * 100
-        ${currentvalue_edited}=   Evaluate    (${currdate.month}*100) + 150
-        Set Suite Variable  ${currentvalue}
+        ${EFFECTIVE_DATE_INITIAL} =           Get Current Date      result_format=%-m/%-d/%Y
+        ${DATE}=                              Get current date      result_format=%Y-%m-%d %H:%M:%S.%f      increment=30 days
+        ${DATE_TO_UPDATE} =                   Convert Date          ${DATE}                         result_format=%Y-%m-%d
+        ${EFFECTIVE_MODIFIED_DATE}=           Get current date      result_format=%-d/%-m/%Y      increment=0 days
+        ${CURRDATE}=                          Get Current Date      result_format=datetime
+        ${CURRENTVALUE} =                     Evaluate              (${CURRDATE.month-1}) * 100
+        ${CURRENTVALUE_EDITED}=               Evaluate              (${CURRDATE.month}*100) + 150
+        Set Suite Variable  ${CURRENTVALUE}
         Set Suite Variable  ${DATE}
-        Set Suite Variable  ${effective_modified_date}
-        Set Suite Variable  ${currentvalue_edited}
-        Set Suite Variable  ${effective_date_initial}
-        Set Suite Variable  ${date_to_update}
+        Set Suite Variable  ${EFFECTIVE_MODIFIED_DATE}
+        Set Suite Variable  ${CURRENTVALUE_EDITED}
+        Set Suite Variable  ${EFFECTIVE_DATE_INITIAL}
+        Set Suite Variable  ${DATE_TO_UPDATE}
 
-        &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
-        &{recurringdonation_fields} =	Create Dictionary           Name=ERDTest1
+        &{contact1_fields}=              Create Dictionary          Email=rd2tester@example.com
+        &{recurringdonation_fields} =	 Create Dictionary          Name=ERDTest1
         ...                                                         npe03__Installment_Period__c=Monthly
         ...                                                         npe03__Amount__c=100
-        ...                                                         npe03__Open_Ended_Status__c=${type}
+        ...                                                         npe03__Open_Ended_Status__c=${TYPE}
         ...                                                         Status__c=Active
-        ...                                                         Day_of_Month__c=15
-        ...                                                         InstallmentFrequency__c=${frequency}
-        ...                                                         PaymentMethod__c=${method}
+        ...                                                         Day_of_Month__c=${DAY_OF_MONTH}
+        ...                                                         InstallmentFrequency__c=${FREQUENCY}
+        ...                                                         PaymentMethod__c=${METHOD}
 
-        Setupdata   contact         ${contact1_fields}             recurringdonation_data=${recurringdonation_fields}
+        Setupdata   contact             ${contact1_fields}          recurringdonation_data=${recurringdonation_fields}
 
 
 *** Variables ***
-${frequency}  1
-${day_of_month}  15
-${amount_to_update}  150
-${method}  Credit Card
-${type}    Open
+${FREQUENCY}  1
+${DAY_OF_MONTH}  15
+${AMOUNT_TO_UPDATE}  150
+${METHOD}  Credit Card
+${TYPE}    Open
 
 *** Test Cases ***
 
@@ -66,10 +62,8 @@ Edit An Enhanced Recurring donation record of type open
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
-    Wait Until Loading Is Complete
 
     ${rd_id}                                 Save Current Record ID For Deletion       npe03__Recurring_Donation__c
-
     Validate Field Values Under Section
 
     ...                                      Amount=$100.00
@@ -89,7 +83,7 @@ Edit An Enhanced Recurring donation record of type open
     ...                                      Next Year Value=$1,200.00
 
     #Query the opportunity ID associated with the recurring donation. Navigate to the opportunity and validate the status
-    @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
+    @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${RD_ID}
     Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
     Navigate To And Validate Field Value    Stage                          contains                        Pledged
