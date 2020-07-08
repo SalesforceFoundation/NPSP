@@ -231,6 +231,8 @@ export default class GeFormField extends LightningElement {
             // If the displayed value of the picklist is '--None--' treat the value as blank.
             fieldAndValue[this.formElementName] =
                 (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
+        } else if (this.isLookup) {
+
         } else {
             fieldAndValue[this.formElementName] = this.value;
         }
@@ -459,9 +461,10 @@ export default class GeFormField extends LightningElement {
      * @param value A form field value
      */
     loadLookUp(data, value) {
-        const lookup = this.template.querySelector('c-ge-form-field-lookup');
-
-        let displayValue;
+        const lookup = this.template.querySelector('lightning-input-field');
+        lookup.reset();
+        lookup.value = value;
+        /* let displayValue;
         const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
 
         if (data[relationshipFieldName] &&
@@ -478,6 +481,7 @@ export default class GeFormField extends LightningElement {
         }
 
         lookup.setSelected({value, displayValue});
+         */
     }
 
     @api
@@ -485,7 +489,7 @@ export default class GeFormField extends LightningElement {
         this.value = this._defaultValue;
 
         if (this.isLookup) {
-            const lookup = this.template.querySelector('c-ge-form-field-lookup');
+            const lookup = this.template.querySelector('lightning-input-field');
             lookup.reset();
             if (this.fieldApiName === 'RecordTypeId') {
                 // Using setTimeout here ensures that this recordTypeId
