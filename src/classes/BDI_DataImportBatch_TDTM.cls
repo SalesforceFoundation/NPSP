@@ -36,6 +36,7 @@
 */
 public class BDI_DataImportBatch_TDTM extends TDTM_Runnable {
     
+    @TestVisible
     private static final String STATUS_OPEN = 'Open';
 
     /*******************************************************************************************************************
