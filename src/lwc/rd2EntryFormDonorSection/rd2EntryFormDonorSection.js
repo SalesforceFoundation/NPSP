@@ -1,9 +1,8 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { isNull } from 'c/utilCommon';
 
-import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
-import getDonorType from '@salesforce/apex/RD2_entryFormController.getDonorType';
+import getRecurringData from '@salesforce/apex/RD2_entryFormController.getRecurringData';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -28,8 +27,10 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     // These are exposed to the parent component
     @api parentId;
     @api recordId;
+    @api parentSObjectType
 
     @track isLoading = true;
+    isRecordReady = false;
 
     @track contactId;
     @track accountId;
@@ -44,34 +45,31 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     contactLabel;
 
     /**
-     * @description Get settings required to enable or disable fields and populate their values
+     * @description If editing an existing record retrieve the Donor Type from the record so it can default the custom
+     * picklist field accordingly.
      */
     connectedCallback() {
         if (!isNull(this.recordId)) {
-            getDonorType({recordId: this.recordId})
+            getRecurringData({recordId: this.recordId})
                 .then(response => {
-                    this.donorType = response;
+                    this.donorType = response.DonorType;
                     this.updateDonorFields(this.donorType);
                 })
                 .catch((error) => {
-                    const errorMessage = constructErrorMessage(error);
-                    showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
+                    this.dispatchEvent(new CustomEvent('errorevent', { detail: error }));
                 });
         } else {
             this.donorType = this.DEFAULT_DONOR_TYPE;
+            this.handleParentIdType(this.parentSObjectType);
         }
+    }
 
-        getSetting({ parentId: this.parentId })
-            .then(response => {
-                this.handleParentIdType(response.parentSObjectType);
-            })
-            .catch((error) => {
-                // handleError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-            });
-
+    /**
+     * @description Set isLoading to false only after all wired actions have fully completed
+     * @returns True (All Done) or False (Still Loading)
+     */
+    isEverythingLoaded() {
+        return (this.isRecordReady === true && this.rdObjectInfo !== null);
     }
 
     /**
@@ -103,12 +101,10 @@ export default class rd2EntryFormDonorSection extends LightningElement {
                 this.rdObjectInfo.fields,
                 this.rdObjectInfo.apiName
             );
-            this.isLoading = false;
+            this.isLoading = !this.isEverythingLoaded();
 
         } else if (response.error) {
-            this.isLoading = false;
-            const errorMessage = constructErrorMessage(error);
-            showToast(errorMessage.header, errorMessage.detail, 'error', '', []);
+            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: response.error }}));
         }
     }
 
@@ -197,21 +193,28 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Construct field describe info from the Recurring Donation SObject info
      */
     setFields(fieldInfos) {
-        this.fields.dateEstablished = this.extractFieldInfo(fieldInfos[FIELD_DATE_ESTABLISHED.fieldApiName]);
-        this.fields.account = this.extractFieldInfo(fieldInfos[FIELD_ACCOUNT.fieldApiName]);
-        this.fields.contact = this.extractFieldInfo(fieldInfos[FIELD_CONTACT.fieldApiName]);
+        this.fields.dateEstablished = this.extractFieldInfo(fieldInfos, FIELD_DATE_ESTABLISHED.fieldApiName);
+        this.fields.account = this.extractFieldInfo(fieldInfos, FIELD_ACCOUNT.fieldApiName);
+        this.fields.contact = this.extractFieldInfo(fieldInfos, FIELD_CONTACT.fieldApiName);
+        this.isRecordReady = true;
+        this.isLoading = !this.isEverythingLoaded();
     }
 
     /**
      * @description Converts field describe info into a object that is easily accessible from the front end
+     * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
+     * (i.e, the field isn't accessible).
      */
-    extractFieldInfo(field) {
-        return {
-            apiName: field.apiName,
-            label: field.label,
-            inlineHelpText: field.inlineHelpText,
-            dataType: field.dataType
-        };
+    extractFieldInfo(fieldInfos, fldApiName) {
+        try {
+            const field = fieldInfos[fldApiName];
+            return {
+                apiName: field.apiName,
+                label: field.label,
+                inlineHelpText: field.inlineHelpText,
+                dataType: field.dataType
+            };
+        } catch (error) { }
     }
 
     /**

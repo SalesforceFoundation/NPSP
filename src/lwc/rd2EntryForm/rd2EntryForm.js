@@ -22,10 +22,15 @@ import editHeaderLabel from '@salesforce/label/c.commonEdit';
 import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHeader';
 import scheduleSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
 import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHeader';
+import statusSectionHeader from '@salesforce/label/c.RD2_EntryFormStatusSectionHeader';
+import customFieldsSectionHeader from '@salesforce/label/c.RD2_EntryFormCustomFieldsSectionHeader';
 import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccessMessage';
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
+import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
+import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
-import getSetting from '@salesforce/apex/RD2_entryFormController.getSetting';
+import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
+import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -37,7 +42,11 @@ export default class rd2EntryForm extends LightningElement {
         donorSectionHeader,
         otherSectionHeader,
         scheduleSectionHeader,
-        currencyFieldLabel
+        statusSectionHeader,
+        customFieldsSectionHeader,
+        currencyFieldLabel,
+        flsErrorHeader,
+        flsErrorDetail
     });
 
     @api parentId;
@@ -47,26 +56,27 @@ export default class rd2EntryForm extends LightningElement {
     @track record;
     @track isMultiCurrencyEnabled = false;
     @track fields = {};
+    @track rdSettings = {};
+    @track customFields = {};
     fieldInfos;
 
     @track header = newHeaderLabel;
 
     @track isAutoNamingEnabled;
     @track isLoading = true;
-    @track isRecordReady = false;
+    @track hasCustomFields = false;
+
+    isRecordReady = false;
     isSettingReady = false;
 
     @track hasError = false;
     @track errorMessage = {};
 
     /***
-    * @description Dynamic render edit form CSS to show/hide the edit form
+    * @description Dynamically render the new/edit form via CSS to show/hide based on the status of
+    * callouts to retrieve RD settings and other required data.
     */
     get cssEditForm() {
-        //Note: all of these flags need to be checked before the sections are displayed.
-        //If the isSettingReady is not checked, then the form on an error resets all fields
-        //including the Schedule section LWC fields.
-        //TODO: check why and how this expression can be simplifed.
         return (!this.isLoading && this.isSettingReady && this.isRecordReady)
             ? ''
             : 'slds-hide';
@@ -80,14 +90,31 @@ export default class rd2EntryForm extends LightningElement {
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
+                this.isSettingReady = true;
+                this.rdSettings = response;
+                this.customFields = response.customFieldSets;
+                this.hasCustomFields = Object.keys(this.customFields).length !== 0;
             })
             .catch((error) => {
-                this.handleError(error);
+                this.handleError(error, true);
             })
             .finally(() => {
-                this.isSettingReady = true;
                 this.isLoading = false;
             });
+
+        /*
+        * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
+        */
+        checkRequiredFieldPermissions()
+            .then(response => {
+                if (response === false) {
+                    this.hasError = true;
+                    this.errorMessage = {
+                        header: this.customLabels.flsErrorHeader,
+                        detail: this.customLabels.flsErrorDetail
+                    };
+                }
+            })
     }
 
     /***
@@ -103,16 +130,11 @@ export default class rd2EntryForm extends LightningElement {
                 rdObjectInfo.apiName
             );
 
-            if (isNull(this.recordId)) {
-                this.isRecordReady = true;
-            } else {
-                this.isEdit = true;
-            }
+            this.isRecordReady = true;
         }
 
         if (response.error) {
-            this.isRecordReady = true;
-            this.handleError(response.error);
+            this.handleError(response.error, true);
         }
     }
 
@@ -133,25 +155,30 @@ export default class rd2EntryForm extends LightningElement {
     * @description Construct field describe info from the Recurring Donation SObject info
     */
     setFields(fieldInfos) {
-        this.fields.name = this.extractFieldInfo(fieldInfos[FIELD_NAME.fieldApiName]);
-        this.fields.campaign = this.extractFieldInfo(fieldInfos[FIELD_CAMPAIGN.fieldApiName]);
-        this.fields.amount = this.extractFieldInfo(fieldInfos[FIELD_AMOUNT.fieldApiName]);
-        this.fields.paymentMethod = this.extractFieldInfo(fieldInfos[FIELD_PAYMENT_METHOD.fieldApiName]);
-        this.fields.status = this.extractFieldInfo(fieldInfos[FIELD_STATUS.fieldApiName]);
-        this.fields.statusreason = this.extractFieldInfo(fieldInfos[FIELD_STATUS_REASON.fieldApiName]);
+        this.fields.campaign = this.extractFieldInfo(fieldInfos, FIELD_CAMPAIGN.fieldApiName);
+        this.fields.name = this.extractFieldInfo(fieldInfos, FIELD_NAME.fieldApiName);
+        this.fields.amount = this.extractFieldInfo(fieldInfos, FIELD_AMOUNT.fieldApiName);
+        this.fields.paymentMethod = this.extractFieldInfo(fieldInfos, FIELD_PAYMENT_METHOD.fieldApiName);
+        this.fields.status = this.extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
+        this.fields.statusReason = this.extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
     }
 
     /***
-    * @description Method converts field describe info into a object that is easily accessible from the front end
+    * @description Method converts field describe info into a object that is easily accessible from the front end.
+    * Ignore errors to allow the UI to simply not render the layout-item if the field info doesn't exist
+    * (i.e, the field isn't accessible).
     */
-    extractFieldInfo(field) {
-        return {
-            apiName: field.apiName,
-            label: field.label,
-            inlineHelpText: field.inlineHelpText,
-            dataType: field.dataType
-        };
+    extractFieldInfo(fieldInfos, fldApiName) {
+        try {
+            const field = fieldInfos[fldApiName];
+            return {
+                apiName: field.apiName,
+                label: field.label,
+                inlineHelpText: field.inlineHelpText,
+                dataType: field.dataType
+            };
+        } catch (error) { }
     }
 
     /***
@@ -163,18 +190,17 @@ export default class rd2EntryForm extends LightningElement {
             this.record = response.data;
             this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
             this.isRecordReady = true;
-        }
+            this.isEdit = true;
 
-        if (response.error) {
-            this.isRecordReady = true;
-            this.handleError(response.error);
+        } else if (response.error) {
+            this.handleError(response.error, true);
         }
     }
 
 
     /***
     * @description Overrides the standard submit.
-    * Collects fields displayed on the form and any integrated LWC (for example Schedule section)
+    * Collects and validates fields displayed on the form and any integrated LWC
     * and submits them for the record insert or update.
     */
     handleSubmit(event) {
@@ -182,26 +208,9 @@ export default class rd2EntryForm extends LightningElement {
         this.hasError = false;
         this.template.querySelector("[data-id='submitButton']").disabled = true;
 
-        event.preventDefault();
-        const fields = event.detail.fields;
+        const allFields = this.getAllSectionsInputValues();
 
-        const scheduleSection = this.scheduleComponent;
-        const scheduleFields = (scheduleSection === null || scheduleSection === undefined)
-            ? {}
-            : scheduleSection.returnValues();
-
-        const donorSection = this.donorComponent;
-        const donorFields = (donorSection === null || donorSection === undefined)
-            ? {}
-            : donorSection.returnValues();
-
-        const allFields = {
-            ...fields, ...scheduleFields, ...donorFields
-        };
-
-        let isValid = donorSection.isValid() && scheduleSection.isValid();
-
-        if (isValid) {
+        if (this.isSectionInputsValid()) {
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
         } else {
             this.isLoading = false;
@@ -211,15 +220,75 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Handle component display when an error occurs
+    * @description Collects fields displayed on the form and any integrated LWC
     */
-    handleError(error) {
-        this.errorMessage = constructErrorMessage(error);
-        this.hasError = true;
-        this.isLoading = false;
+    getAllSectionsInputValues() {
+        const donorFields = (isNull(this.donorComponent))
+            ? {}
+            : this.donorComponent.returnValues();
+    
+        const scheduleFields = (isNull(this.scheduleComponent))
+            ? {}
+            : this.scheduleComponent.returnValues();
 
-        this.template.querySelector("[data-id='submitButton']").disabled = false;
+        const extrafields = (isNull(this.customFieldsComponent))
+            ? {}
+            : this.customFieldsComponent.returnValues();
+
+        return {...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues()};
+    }
+
+    /***
+    * @description Validate all fields on the integrated LWC sections 
+    */
+    isSectionInputsValid() {
+        const isDonorSectionValid = (isNull(this.donorComponent))
+            ? true
+            : this.donorComponent.isValid();
+    
+        const isScheduleSectionValid = (isNull(this.scheduleComponent))
+            ? true
+            : this.scheduleComponent.isValid();
+
+        const isCustomFieldSectionValid = (isNull(this.customFieldsComponent))
+            ? true
+            : this.customFieldsComponent.isValid();
+
+        const isEntryFormValid = this.isValid();
+
+        return isDonorSectionValid && isScheduleSectionValid && isCustomFieldSectionValid && isEntryFormValid;
+    }
+
+    /***
+    * @description Handle component display when an error occurs
+    * @param error: Error Event
+    * @param disableSaveButton: true to disable the Save button on the page; defaults to false
+    */
+    handleError(error, disableSaveButton) {
+        this.errorMessage = (!error || !(error.detail && error.header)) ? constructErrorMessage(error) : error;
+        this.hasError = true;
+
+        const disableBtn = !!(disableSaveButton && disableSaveButton === true);
+        this.isLoading = disableBtn;
+
+        this.template.querySelector("[data-id='submitButton']").disabled = disableBtn;
         this.template.querySelector(".slds-modal__header").scrollIntoView();
+    }
+
+    /***
+     * @description Handle component display when a save error occurs
+     */
+    handleSaveError(error) {
+        this.handleError(error, false);
+    }
+
+    /**
+     * @description Handle a child-to-parent component error event
+     * @param event (error construct)
+     */
+    handleChildComponentError(event) {
+        let error = event.detail && event.detail.value ? event.detail.value : event.detail;
+        this.handleError(error, true);
     }
 
     /***
@@ -257,6 +326,44 @@ export default class rd2EntryForm extends LightningElement {
      */
     get donorComponent() {
         return this.template.querySelectorAll('[data-id="donorComponent"]')[0];
+    }
+
+    /**
+     * @description Returns the Custom Field Child Component instance
+     * @returns rd2EntryFormCustomFieldsSection component dom
+     */
+    get customFieldsComponent() {
+        return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];
+    }
+
+    /**
+     * @description Checks if values specified on fields are valid
+     * @return Boolean
+     */
+    isValid() {
+        let isValid = true;
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                if (!field.reportValidity()) {
+                    isValid = false;
+                }
+            });
+        return isValid;
+    }
+
+    /**
+     * @description Returns fields displayed on the parent form
+     * @return Object containing field API names and their values
+     */
+    returnValues() {
+        let data = {};
+
+        this.template.querySelectorAll('lightning-input-field')
+            .forEach(field => {
+                data[field.fieldName] = field.value;
+            });
+
+        return data;
     }
 
 }

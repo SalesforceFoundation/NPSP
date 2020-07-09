@@ -2,6 +2,7 @@
     <aura:dependency resource="c:rd2EntryForm" />
     <aura:dependency resource="c:rd2EntryFormScheduleSection" />
     <aura:dependency resource="c:rd2EntryFormDonorSection" />
+    <aura:dependency resource="c:rd2EntryFormCustomFieldsSection" />
 
     <aura:attribute name="parentId" type="Id" description="Reference to the parent Id if open from related list" />
 
