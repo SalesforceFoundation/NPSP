@@ -332,12 +332,12 @@ public with sharing class RD2_NamingService {
 
         /**
          * @description The correct donor (contact or account) name to use in the name
-         * @return The donor (or org) name to use for the Donor_Name__c field replacment.
+         * @return The donor (or org) name to use for the Donor_Name__c field replacement.
          */
         private String getDonorName() {
             Boolean useContact = rd.npe03__Organization__c == null;
             if (!useContact) {
-                useContact = donorById.get(rd.npe03__Organization__c).recordTypeId == hhRecordTypeId;
+                useContact = rd.npe03__Contact__c != null && donorById.get(rd.npe03__Organization__c).recordTypeId == hhRecordTypeId;
             }
 
             RD2_Donor.Record donor = useContact
