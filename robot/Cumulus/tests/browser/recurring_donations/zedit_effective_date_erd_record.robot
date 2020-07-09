@@ -17,7 +17,7 @@ Setup Test Data
      ${EFFECTIVE_DATE_INITIAL} =           Get Current Date      result_format=%-m/%-d/%Y
      ${DATE}=                              Get current date      result_format=%Y-%m-%d %H:%M:%S.%f      increment=30 days
      ${DATE_TO_UPDATE} =                   Convert Date          ${DATE}                                 result_format=%Y-%m-%d
-     ${EFFECTIVE_MODIFIED_DATE}=           Get current date      result_format=%-d/%-m/%Y                increment=0 days
+     ${EFFECTIVE_MODIFIED_DATE}=           Get current date      result_format=%-d/%-m/%Y                increment=30 days
      ${CURRDATE}=                          Get Current Date      result_format=datetime
      ${CURRENTVALUE} =                     Evaluate              (${CURRDATE.month-1}) * 100
      ${CURRENTVALUE_EDITED}=               Evaluate              (${CURRDATE.month}*100) + 150
