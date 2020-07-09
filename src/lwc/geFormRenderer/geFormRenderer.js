@@ -1167,27 +1167,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @wire(getOpenDonations, { donorId: '$selectedDonorId', donorType: '$selectedDonorType' })
     wiredOpenDonations({ error, data }) {
-        if (data) {
-            if (isNotEmpty(data)) {
-                let donorOpportunities = JSON.parse(data);
+        if (error) return handleError(error);
+        if (isNotEmpty(data)) {
+            let donorOpportunities = JSON.parse(data);
 
-                if (arraysMatch(this.opportunities, donorOpportunities) === false) {
-                    this.opportunities = donorOpportunities;
+            if (arraysMatch(this.opportunities, donorOpportunities) === false) {
+                this.opportunities = donorOpportunities;
 
-                    if (this.hasPreviouslySelectedDonation) {
-                        const reviewDonationsComponent = this.template.querySelector('c-ge-review-donations');
+                if (this.hasPreviouslySelectedDonation) {
+                    const reviewDonationsComponent = this.template.querySelector('c-ge-review-donations');
+                    if (reviewDonationsComponent) {
                         reviewDonationsComponent.resetDonationType();
-                        this.selectedDonation = undefined;
-                        this.resetDonationAndPaymentImportedFields();
                     }
+                    this.selectedDonation = undefined;
+                    this.resetDonationAndPaymentImportedFields();
                 }
-            } else {
-                this.opportunities = [];
             }
-        }
-
-        if (error) {
-            handleError(error);
+        } else {
+            this.opportunities = [];
         }
     }
 
