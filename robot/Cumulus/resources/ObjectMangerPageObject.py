@@ -47,6 +47,24 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 		self.selenium.click_element(next_button)
 		self.selenium.click_element(save_button)
 		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90, message="Fields And Relationships page did not load in 1 min")
+
+	@capture_screenshot_on_error
+	def create_text_field(self,field_name):
+		"""Creates a text field by taking in the field name"""
+		text_locator=npsp_lex_locators['object_manager']['input'].format("dtypeS")
+		next_button=npsp_lex_locators['object_manager']['button'].format("Next")
+		save_button=npsp_lex_locators['object_manager']['button'].format("Save")
+		self.selenium.wait_until_page_contains_element(text_locator,timeout=60)
+		self.selenium.click_element(text_locator)
+		time.sleep(1)
+		self.selenium.click_element(next_button)
+		self.salesforce.populate_field('Field Label', field_name)
+		self.salesforce.populate_field('Length', '255')
+		self.salesforce.populate_field('Description', "This is a custom field generated during automation")
+		self.selenium.click_element(next_button)
+		self.selenium.click_element(next_button)
+		self.selenium.click_element(save_button)
+		self.selenium.wait_until_location_contains("FieldsAndRelationships/view", timeout=90, message="Fields And Relationships page did not load in 1 min")
 		
 	@capture_screenshot_on_error
 	def create_formula_field(self,field_name,formula):
@@ -103,31 +121,32 @@ class ObjectManagerPage(BaseNPSPPage, BasePage):
 												   message="Detail page did not load in 1 min")
 	
 	@capture_screenshot_on_error
-	def create_custom_field(self, type, field_name, related_to=None, formula=None):
+	def create_custom_field(self, **kwargs):
 		"""Ensure that the custom field does not exist prior and Creates a custom field based on type paramenter and the field_name
 		   IF the custom field exists it will not create the custom field and exits out of object manager
+		   The Field_Type is the mandatory field to be present in the kwargs
 		 """
 		search_button = npsp_lex_locators['object_manager']['input'].format("globalQuickfind")
 		self.selenium.wait_until_page_contains_element(search_button,60)
-		self.selenium.get_webelement(search_button).send_keys(field_name)
+		self.selenium.get_webelement(search_button).send_keys(kwargs['Field_Name'])
 		self.selenium.get_webelement(search_button).send_keys(Keys.ENTER)
 		time.sleep(1)
-		self.builtin.log(formula)
 		self.salesforce.wait_until_loading_is_complete()
-		search_results = npsp_lex_locators['object_manager']['search_result'].format(field_name)
+		search_results = npsp_lex_locators['object_manager']['search_result'].format(kwargs['Field_Name'])
 		count = len(self.selenium.get_webelements(search_results))
-		if count == 1:
-			return
-		else:
+		if not count == 1:
 			locator = npsp_lex_locators['button-with-text'].format("New")
 			self.selenium.wait_until_page_contains_element(locator,60)
 			self.selenium.get_webelement(locator).click()
 			self.salesforce.wait_until_loading_is_complete()
 			self.npsp.wait_for_locator('frame_new', 'vfFrameId', 'vfFrameId')
 			self.npsp.choose_frame('vfFrameId')
+			type = kwargs['Field_Type']
 			if type.lower() == 'lookup':
-				self.create_lookup_field(field_name,related_to)
+				self.create_lookup_field(kwargs['Field_Name'],kwargs['Related_To'])
 			elif type.lower() == 'currency':
-				self.create_currency_field(field_name)
+				self.create_currency_field(kwargs['Field_Name'])
 			elif type.lower() == 'formula':
-				self.create_formula_field(field_name,formula)
+				self.create_formula_field(kwargs['Field_Name'],kwargs['Formula'])
+			elif type.lower() == 'text':
+				self.create_text_field(kwargs['Field_Name'])
