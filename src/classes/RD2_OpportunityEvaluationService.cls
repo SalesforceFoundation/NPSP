@@ -70,6 +70,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /**
     * @description Indicates the trigger action responsible for the call to RD2_OpportunityEvaluationService
     */
+    @TestVisible
     private TDTM_Runnable.Action triggerAction;
 
     /***

@@ -227,6 +227,33 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+     * @description Verify that the Recurring Donations are not recognized as "New" during RD update
+     */
+    @IsTest
+    private static void shouldNotDetermineRecurringDonationIsNewOnUpdate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+
+        // New Opp - Is New RD
+        npe03__Recurring_Donation__c rdNew = getRecurringDonationBuilder()
+            .withDayOfMonth('20')
+            .withCalculateNextDonationDate()
+            .build();
+        rdNew = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.buildNewSchedules(rdNew));
+
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew };
+        evalService.triggerAction = TDTM_Runnable.Action.AfterInsert;
+
+        System.assertEquals(true, evalService.isNewOpportunityCandidate(rdNew),
+            'RD having Schedules and no related Opp should be eligible for an Installment Opp after RD insert');
+
+        evalService.triggerAction = TDTM_Runnable.Action.AfterUpdate;
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rdNew),
+            'RD having Schedules and no related Opp should not be eligible for an Installment Opp after RD update');
+    }
+
+    /**
      * @description Verifies open Opportunities are marked as Closed Lost when RD is closed and
      * Recurring Donation settings Open Opportunity Behaviour is set to mark open Opps as Closed Lost
      */
