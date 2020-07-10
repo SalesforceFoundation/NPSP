@@ -146,8 +146,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
     /***
     * @description Data Transformation Actions for Before Insert and Update Trigger Actions:
-    * - If RecurringType is Open and number of plannned installments = 1, set number of plannned installments to null
-    * - If RecurringType is Fixed and number of paid installments is >= number of plannned installments, then close RD
+    * - If RecurringType is Open and number of planned installments = 1, set number of planned installments to null
+    * - If RecurringType is Fixed and number of paid installments is >= number of planned installments, then close RD
     * - Update the Next Donation Date on both Before Insert and Update trigger actions
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
@@ -380,7 +380,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         RD2_QueueableService.EvaluateInstallmentOpportunities service =
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, isScheduleChangedById);
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, triggerAction, isScheduleChangedById);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);

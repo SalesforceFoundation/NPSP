@@ -42,6 +42,7 @@ public class RD2_QueueableService {
      */
     public class EvaluateInstallmentOpportunities implements Queueable {
         Set<Id> rdIds;
+        TDTM_Runnable.Action triggerAction;
 
         /**
         * @description Contains Map of Recurring Donation Ids to Boolean
@@ -59,18 +60,22 @@ public class RD2_QueueableService {
         /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
+         * @param triggerAction - the trigger action responsible for the call
          */
-        public EvaluateInstallmentOpportunities(Set<Id> rdIds) {
+        public EvaluateInstallmentOpportunities(Set<Id> rdIds, TDTM_Runnable.Action triggerAction) {
             this.rdIds = rdIds;
+            this.triggerAction = triggerAction;
         }
 
         /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
+         * @param triggerAction - the trigger action responsible for the call
          * @param isScheduleChangedById - map of RD Ids to Boolean indicating changed schedule
          */
-        public EvaluateInstallmentOpportunities(Set<Id> rdIds, Map<Id, Boolean> isScheduleChangedById) {
+        public EvaluateInstallmentOpportunities(Set<Id> rdIds, TDTM_Runnable.Action triggerAction, Map<Id, Boolean> isScheduleChangedById) {
             this.rdIds = rdIds;
+            this.triggerAction = triggerAction;
             this.isScheduleChangedById = isScheduleChangedById;
         }
 
@@ -93,6 +98,7 @@ public class RD2_QueueableService {
         public void executeOppEvaluationService() {
             new RD2_OpportunityEvaluationService()
                 .withRds(rdIds)
+                .withTriggerAction(triggerAction)
                 .withIsScheduleChangedById(isScheduleChangedById)
                 .evaluateOpportunities();
         }
