@@ -53,7 +53,7 @@ public with sharing class RD2_NamingService_TEST {
             .build();
 
         String name = rd.Name;
-        
+
         RD2_NamingService service = new RD2_NamingService();
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
@@ -71,7 +71,7 @@ public with sharing class RD2_NamingService_TEST {
             .build();
 
         String name = rd.Name;
-        
+
         RD2_NamingService service = buildAutomaticNamingService();
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -79,7 +79,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies generated Recurring Donation Name is constructed using 
+    * @description Verifies generated Recurring Donation Name is constructed using
     * Account Name, Amount and the suffix.
     */
     @isTest
@@ -90,15 +90,72 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.25)
             .withCurrencyIsoCode(currencyCode)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(getExpectedName(accOrg, '100.25', currencyCode), rd.Name, 'The name should match.');
+        System.assertEquals(getDefaultExpectedName(accOrg, '100.25', currencyCode), rd.Name, 'The name should match.');
     }
 
     /***
-    * @description Verifies generated Recurring Donation Name is constructed using 
+    * @description Verifies generated Recurring Donation Name is constructed using
+    * Contact Name, Amount and the suffix; using Name Format 1
+    */
+    @isTest
+    private static void shouldAutogenerateFormat1NameUsingProvidedContactAndAmount() {
+        alternateNamingFormatTest(RD2_NamingService.RD_NAMING_OPTION_1);
+    }
+
+    /***
+    * @description Verifies generated Recurring Donation Name is constructed using
+    * Contact Name, Amount and the suffix; using Name Format 2
+    */
+    @isTest
+    private static void shouldAutogenerateFormat2NameUsingProvidedContactAndAmount() {
+        alternateNamingFormatTest(RD2_NamingService.RD_NAMING_OPTION_2);
+    }
+
+    /***
+    * @description Verifies generated Recurring Donation Name is constructed using
+    * Contact Name, Amount and the suffix; using Name Format 3.
+    */
+    @isTest
+    private static void shouldAutogenerateFormat3NameUsingProvidedContactAndAmount() {
+        alternateNamingFormatTest(RD2_NamingService.RD_NAMING_OPTION_3);
+    }
+
+    /***
+    * @description Verifies generated Recurring Donation Name is constructed using the specified naming format
+    */
+    private static void alternateNamingFormatTest(String nameFormat) {
+        String currencyCode = UserInfo.getDefaultCurrency();
+        Contact contact = getContactMock();
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withContact(contact.Id)
+            .withAmount(100.25)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1')
+            .withCurrencyIsoCode(currencyCode)
+            .build();
+
+        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        rdSettings.RecurringDonationNameFormat__c = nameFormat;
+
+        RD2_NamingService service = buildAutomaticNamingService(new List<Account>(), new List<Contact>{ contact });
+        service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
+
+        System.assertEquals(getExpectedName(nameFormat,
+                RD2_Constants.INSTALLMENT_PERIOD_MONTHLY,
+                '100.25',
+                currencyCode,
+                contact, null
+            ),
+            rd.Name, 'The RD name should match.');
+    }
+
+    /***
+    * @description Verifies generated Recurring Donation Name is constructed using
     * Account Name, Amount and the suffix.
     */
     @isTest
@@ -122,7 +179,7 @@ public with sharing class RD2_NamingService_TEST {
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(getExpectedName(accOrg, '100.25', currencyCode), rd.Name, 'The name should match.');
+        System.assertEquals(getDefaultExpectedName(accOrg, '100.25', currencyCode), rd.Name, 'The name should match.');
     }
 
     /***
@@ -150,7 +207,7 @@ public with sharing class RD2_NamingService_TEST {
 
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(getExpectedName(contact, '100.25', currencyCode), rd.Name, 'The name should match.');
+        System.assertEquals(getDefaultExpectedName(contact, '100.25', currencyCode), rd.Name, 'The name should match.');
     }
 
     /***
@@ -167,7 +224,7 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.25)
             .withCurrencyIsoCode(CURRENCY_CAD)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -186,15 +243,15 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.00)
             .withCurrencyIsoCode(currencyCode)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(getExpectedName(accOrg, '100', currencyCode), rd.Name, 'The amount format should match.');
+        System.assertEquals(getDefaultExpectedName(accOrg, '100', currencyCode), rd.Name, 'The amount format should match.');
     }
 
     /***
-    * @description Verifies donor name is abbreviated if total name construct is longer 
+    * @description Verifies donor name is abbreviated if total name construct is longer
     * than max name length on Recurring Donations (80 chars)
     */
     @isTest
@@ -211,7 +268,7 @@ public with sharing class RD2_NamingService_TEST {
             .withAmount(100.00)
             .withCurrencyIsoCode(currencyCode)
             .build();
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNames(new List<npe03__Recurring_Donation__c>{ rd });
 
@@ -329,7 +386,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Should not mark Recurring Donation record as changed 
+    * @description Should not mark Recurring Donation record as changed
     * when no field used in the name construct has changed
     */
     @isTest
@@ -348,7 +405,7 @@ public with sharing class RD2_NamingService_TEST {
     }
 
     /***
-    * @description Verifies name is auto-generated only for Recurring Donation records 
+    * @description Verifies name is auto-generated only for Recurring Donation records
     * having name construct fields changed
     */
     @isTest
@@ -372,14 +429,14 @@ public with sharing class RD2_NamingService_TEST {
         oldRds[0].Id = rds[0].Id;
         oldRds[1].Id = rds[1].Id;
         oldRds[1].npe03__Amount__c = 180;
-        
+
         RD2_NamingService service = buildAutomaticNamingService(accOrg);
         service.autogenerateNamesOnChange(rds, oldRds);
 
-        System.assertEquals(unchangedName, rds[0].Name, 
+        System.assertEquals(unchangedName, rds[0].Name,
             'RD Name should not change when construct key fields are unchanged');
 
-        System.assertEquals(getExpectedName(accOrg, '200', currencyCode), rds[1].Name,
+        System.assertEquals(getDefaultExpectedName(accOrg, '200', currencyCode), rds[1].Name,
             'RD Name should change when construct key fields are changed');
     }
 
@@ -418,12 +475,26 @@ public with sharing class RD2_NamingService_TEST {
         RD2_NamingService service = buildAutomaticNamingService();
         service.autogenerateNames(rds);
 
-        System.assertEquals(getExpectedName(accOrg, '100', currencyCode), rds[0].Name,
+        System.assertEquals(getDefaultExpectedName(accOrg, '100', currencyCode), rds[0].Name,
             'The Account name should be queried and incorporated into the name');
-        System.assertEquals(getExpectedName(contact, '200', currencyCode), rds[1].Name,
+        System.assertEquals(getDefaultExpectedName(contact, '200', currencyCode), rds[1].Name,
             'The Contact name should be queried and incorporated into the name');
-        System.assertEquals(getExpectedName(accOrg, '300', currencyCode), rds[2].Name,
+        System.assertEquals(getDefaultExpectedName(accOrg, '300', currencyCode), rds[2].Name,
             'The Account name should be queried and incorporated into the name');
+    }
+
+    /**
+     * @description Validate that the NameFormat parser service properly identifies only {!field} format fields in the string
+     */
+    @IsTest
+    private static void shouldParseNameFormatProperly() {
+
+        String nameFormat1 = '{!Field1} {!Field2} {NotAField} $!NotAField {!Field3} !NotAField} [!NotAField]'; // Should parse into 3 fields
+
+        RD2_NamingService.NameFormatter nameFormatter = new RD2_NamingService.NameFormatter();
+        nameFormatter.nameFormat = nameFormat1;
+
+        System.assertEquals(3, nameFormatter.fields.size(), 'This should parse out 3 individual fields');
     }
 
 
@@ -438,7 +509,7 @@ public with sharing class RD2_NamingService_TEST {
     * @param currencyCode Currency ISO code on the record
     * @return String Expected Recurring Donation name
     */
-    public static String getExpectedName(Account acc, String amount, String currencyCode) {
+    public static String getDefaultExpectedName(Account acc, String amount, String currencyCode) {
         return acc.Name + ' ' + getCurrencySymbol(currencyCode) + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
     }
 
@@ -449,10 +520,47 @@ public with sharing class RD2_NamingService_TEST {
     * @param currencyCode Currency ISO code on the record
     * @return String Expected Recurring Donation name
     */
-    public static String getExpectedName(Contact contact, String amount, String currencyCode) {
+    public static String getDefaultExpectedName(Contact contact, String amount, String currencyCode) {
         String contactName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
 
         return contactName + ' ' + getCurrencySymbol(currencyCode) + amount + ' - ' + System.Label.RecurringDonationNameSuffix;
+    }
+
+    /**
+     * @description Retrieve the expected name in the correct format based on one of the 3 supported naming formats
+     * @param nameFormat format to use
+     * @param period Installment Period (api name)
+     * @param amount Amount
+     * @param currencyCode CurrencyCode (or null)
+     * @param contact Contact object
+     * @param account Account object
+     * @return Formatted RD name
+     */
+    public static String getExpectedName(String nameFormat, String period, String amount, String currencyCode, Contact contact, Account account) {
+        String donorName;
+        if (contact != null) {
+            donorName = (String.isBlank(contact.FirstName) ? '' : (contact.FirstName + ' ')) + contact.LastName;
+        } else if (account != null) {
+            donorName = account.Name;
+        }
+
+        period = UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
+            npe03__Recurring_Donation__c.npe03__Installment_Period__c, period);
+
+        String objectLabel = UTIL_Describe.getObjectLabel('npe03__Recurring_Donation__c');
+
+        String expectedName;
+        if (nameFormat == RD2_NamingService.RD_NAMING_OPTION_1) {
+            expectedName = getDefaultExpectedName(contact, amount, currencyCode);
+
+        } else if (nameFormat == RD2_NamingService.RD_NAMING_OPTION_2) {
+            expectedName = donorName + ' ' + period + ' ' + objectLabel + ' - ' + getCurrencySymbol(currencyCode) + amount;
+
+        } else if (nameFormat == RD2_NamingService.RD_NAMING_OPTION_3) {
+            expectedName = donorName + ' ' + getCurrencySymbol(currencyCode) + amount + ' ' + period;
+        }
+
+        return expectedName;
     }
 
     /***
@@ -492,8 +600,8 @@ public with sharing class RD2_NamingService_TEST {
 
     /***
     * @description Builds naming service instance with specified Accounts and Contacts as donors
-    * @param accounts Recurring Donation Accounts to be returned from the Mock Donor gateway 
-    * @param contacts Recurring Donation Contacts to be returned from the Mock Donor gateway 
+    * @param accounts Recurring Donation Accounts to be returned from the Mock Donor gateway
+    * @param contacts Recurring Donation Contacts to be returned from the Mock Donor gateway
     * @return RD2_NamingService Instance of the Recurring Donation Naming Service
     */
     private static RD2_NamingService buildAutomaticNamingService(List<Account> accounts, List<Contact> contacts) {
@@ -520,7 +628,7 @@ public with sharing class RD2_NamingService_TEST {
     * @description Enables Automatic Naming Enabled for tests
     * @return none
     */
-    public static void enableAutomaticNaming() {        
+    public static void enableAutomaticNaming() {
         RD2_NamingService.isAutomaticNamingEnabled = true;
 
         /*
@@ -556,6 +664,14 @@ public with sharing class RD2_NamingService_TEST {
     * @return Account Mock Account record
     */
     private static Account getHHAccountMock() {
+
+        Id hhRecordTypeId = [SELECT Id FROM RecordType WHERE DeveloperName = 'HH_Account'].Id;
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (
+                npe01__HH_Account_RecordTypeID__c = hhRecordTypeId
+            )
+        );
+
         return new Account(
             Name = 'Donor Company',
             Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
