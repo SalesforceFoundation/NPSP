@@ -35,7 +35,7 @@
 * @description Trigger Handler for the DataImport SObject
 */
 public class BDI_DataImport_TDTM extends TDTM_Runnable {
-    
+  
     /*******************************************************************************************************************
      * @description Trigger Handler on DataImport
      * @param newSObjects the list of records from trigger new.
@@ -47,9 +47,66 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert
+              || triggerAction == TDTM_Runnable.Action.AfterUpdate
+              || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+            updateBatchStatus(newSObjects);
+        }
 
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+          updateBatchStatus(oldSObjects);
+        }
 
         return null;
     }
+
+    /**
+     * @description Update the batch status based on the data import statuses
+     * when all DIs are Imported -> then the Batch Status is Completed
+     * when any DI status is blank or Dry Run Validated or Dry Run error -> then the Batch Status is Open
+     * when any DI is Failed -> then the Batch Status is Failed - needs review
+     * 
+     */
+    private void updateBatchStatus(List<DataImport__c> diRecords) {
+      Set<Id> batchIdSet = new Set<Id>();
+
+      // build a set of parent ids(batch ids)
+      for (DataImport__c di : diRecords) {
+        if (di.npsp__NPSP_Data_Import_Batch__c != null) {
+          batchIdSet.add(di.npsp__NPSP_Data_Import_Batch__c);
+        }
+        batchIdSet.add(di.npsp__NPSP_Data_Import_Batch__c);
+      }
+
+      Map<Id, DataImportStatus> batchDiStatusCompositionMap = new Map<Id, DataImportStatus>();
+
+      for(DataImport__c di : diRecords) {
+        
+      }
+
+    }
+
+    /**
+    * @description inner class to store the status composition 
+    * of the di records in a batch
+    */
+    private class DataImportStatus {
+      Boolean hasBlank { get; set; }
+      Boolean hasDryRunValidated { get; set; }
+      Boolean hasDryRunError { get; set; }
+      Boolean hasImported { get; set; }
+      Boolean hasFailed { get; set; }
+    
+      // default constructor
+      DataImportStatus() {
+        hasBlank = false;
+        hasDryRunValidated = false;
+        hasDryRunError = false;
+        hasImported = false;
+        hasFailed = false;
+      }
+
+    }
+
 
 }
