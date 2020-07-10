@@ -293,6 +293,29 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+     * @description
+     * @param sourceFieldName A Lookup field on the NPSP DataImport object.
+     * @return The Name field used by the referenceTo object for the DataImport
+     *          source field argument.
+     */
+    public static String getReferenceObjectNameField(String sObjectName, String fieldName) {
+        DescribeFieldResult sourceSObjectField = getFieldDescribe(
+                String.valueOf(sObjectName),
+                String.valueOf(fieldName)
+        );
+
+        List<SObjectType> sObjectTypes = sourceSObjectField.getReferenceTo();
+
+        String relatedObjNameField = String.join(new List<String>{
+                fieldName.replace('__c', '__r'),
+                UTIL_Describe.getNameField(
+                        String.valueOf(sObjectTypes[0]))
+        }, '.');
+
+        return relatedObjNameField;
+    }
+
+    /*******************************************************************************************************
     * @description Gives field type name - ID, STRING, TEXTAREA, DATE, DATETIME, BOOLEAN, REFERENCE,
     * PICKLIST, MULTIPICKLIST, CURRENCY, DOUBLE, INTEGER, PERCENT, PHONE, EMAIL
     * @param objectName the name of the object to look up

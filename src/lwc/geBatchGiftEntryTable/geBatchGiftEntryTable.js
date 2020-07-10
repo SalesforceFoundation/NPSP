@@ -168,26 +168,20 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.addSpecialCasedColumns();
         if (!sections) return;
 
-        sections.forEach(
-            section => {
-                section.elements
-                    .filter(e => e.elementType === 'field')
-                    .forEach(
-                        element => {
-                            const fieldWrapper =
-                                GeFormService.getFieldMappingWrapper(
-                                    element.dataImportFieldMappingDevNames[0]);
-                            //todo: test all field types - multi select, URL, etc
-                            if (isNotEmpty(fieldWrapper)) {
-                                const column = this.getColumn(element, fieldWrapper);
-                                this._columnsBySourceFieldApiName[column.fieldName] = column;
-                            }
-                        }
-                    );
-            }
-        );
+        sections.forEach(section => {
+            section.elements.filter(e => e.elementType === 'field')
+                .forEach(fieldElement => {
+                    const fieldWrapper =
+                        GeFormService.getFieldMappingWrapper(
+                            fieldElement.dataImportFieldMappingDevNames[0]);
 
-        console.log('this._columnsBySourceFieldApiName: ', JSON.parse(JSON.stringify(this._columnsBySourceFieldApiName)));
+                    if (isNotEmpty(fieldWrapper)) {
+                        const column = this.getColumn(fieldElement, fieldWrapper);
+                        this._columnsBySourceFieldApiName[column.fieldName] = column;
+                    }
+                });
+        });
+
         this.columnsLoaded();
     }
 
