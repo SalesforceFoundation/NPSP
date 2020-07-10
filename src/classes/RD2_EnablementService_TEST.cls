@@ -193,7 +193,7 @@ public with sharing class RD2_EnablementService_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100', null), rd.Name, 'Name should match');
+        System.assertEquals(RD2_NamingService_TEST.getDefaultExpectedName(contact, '100', null), rd.Name, 'Name should match');
     }
 
     /****
