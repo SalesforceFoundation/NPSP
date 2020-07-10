@@ -292,7 +292,7 @@ public with sharing class UTIL_Query {
     */
     private String buildSecurityEnforcedClause() {
         if (!isSecurityEnforced) {
-            return '';
+           return '';
         }
 
         return ' WITH SECURITY_ENFORCED ';
