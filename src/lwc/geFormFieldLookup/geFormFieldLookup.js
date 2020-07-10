@@ -2,6 +2,7 @@ import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
+import doSearchRecordType from '@salesforce/apex/GE_LookupController.doSearchRecordType';
 import { isNotEmpty } from 'c/utilCommon';
 import { handleError } from 'c/utilTemplateBuilder';
 
@@ -204,7 +205,12 @@ export default class GeFormFieldLookup extends LightningElement {
      * @returns {Promise<void>}
      */
     retrieveLookupOptions = async (searchValue, sObjectType) => {
-        this.options = await doSearch({searchValue, sObjectType});
+        if(sObjectType === 'RecordType') {
+            // if searching RecordTypes, set WHERE SObjectType clause to filter results.
+            this.options = await doSearchRecordType({searchValue, sObjectType: this.targetObjectApiName});
+        } else {
+            this.options = await doSearch({searchValue, sObjectType});
+        }
     };
 
     @api
