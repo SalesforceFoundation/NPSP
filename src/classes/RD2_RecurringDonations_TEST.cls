@@ -155,7 +155,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         insert rd;
         Test.stopTest();
 
-        String expectedName = RD2_NamingService_TEST.getExpectedName(contact, '100', UserInfo.getDefaultCurrency());
+        String expectedName = RD2_NamingService_TEST.getDefaultExpectedName(contact, '100', UserInfo.getDefaultCurrency());
         System.assertEquals(expectedName, rdGateway.getRecord(rd.Id).Name, 'Elevate RD Name should be auto-generated');
     }
 
@@ -196,7 +196,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         );
         System.assertEquals(rds.size(), actualRdById.size(), 'Number of RDs should match');
 
-        String expectedName = RD2_NamingService_TEST.getExpectedName(contact, '100', UserInfo.getDefaultCurrency());
+        String expectedName = RD2_NamingService_TEST.getDefaultExpectedName(contact, '100', UserInfo.getDefaultCurrency());
         System.assertEquals(expectedName, actualRdById.get(rds[0].id).Name, 'Elevate RD Name should be auto-generated');
 
         System.assertEquals(rds[1].Name, actualRdById.get(rds[1].id).Name, 'Non-Elevate RD Name should be unchanged');
@@ -802,7 +802,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         String errMessage = '';
         try {
             //simulate trigger execution before insert
-            //since the RD cannot be inserted since metadata deploy has not be run 
+            //since the RD cannot be inserted since metadata deploy has not be run
             //to deploy Last_Day value for the restricted Day of Month picklist field
             RD2_RecurringDonations_TDTM tdtm = new RD2_RecurringDonations_TDTM();
             TDTM_Runnable.Action triggerAction = TDTM_Runnable.Action.BeforeInsert;
@@ -818,12 +818,12 @@ private with sharing class RD2_RecurringDonations_TEST {
         }
 
         System.assert(String.isBlank(errMessage), 'No error should be generated: ' + errMessage);
-        System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, rd.Day_of_Month__c, 
+        System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, rd.Day_of_Month__c,
             'Day of Month field should be set to the Last_Day value');
     }
 
     /***
-    * @description Verifies that Rd End Date should be auto-populate when RD is closed without an End Date 
+    * @description Verifies that Rd End Date should be auto-populate when RD is closed without an End Date
     */
     @isTest
     private static void shouldAutoPopulateEndDateToRDWhenRdIsUpdatedToClosed() {
@@ -846,7 +846,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies that Rd Status should be revert from Closed when RD End Date is in the future 
+    * @description Verifies that Rd Status should be revert from Closed when RD End Date is in the future
     */
     @isTest
     private static void shouldLeaveRdStatusNotClosedWhenEndDateIsInTheFuture() {
