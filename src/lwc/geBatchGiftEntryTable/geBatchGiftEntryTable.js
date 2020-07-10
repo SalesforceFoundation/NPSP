@@ -28,6 +28,18 @@ import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
 
+const columnTypeByDescribeType = {
+    'DATE': 'date-local',
+    'DATETIME': 'date',
+    'EMAIL': 'email',
+    'DOUBLE': 'number',
+    'INTEGER': 'number',
+    'LONG': 'number',
+    'PERCENT': 'number',
+    'STRING': 'text',
+    'PICKLIST': 'text'
+};
+
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
     @track ready = false;
@@ -162,30 +174,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     .filter(e => e.elementType === 'field')
                     .forEach(
                         element => {
-                            const fieldWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+                            const fieldWrapper =
+                                GeFormService.getFieldMappingWrapper(
+                                    element.dataImportFieldMappingDevNames[0]);
+                            //todo: test all field types - multi select, URL, etc
                             if (isNotEmpty(fieldWrapper)) {
-                                let column = {
-                                    label: element.customLabel,
-                                    fieldName: element.dataType === 'REFERENCE' ?
-                                        `${fieldWrapper.Source_Field_API_Name}${URL_SUFFIX}`
-                                        : fieldWrapper.Source_Field_API_Name,
-                                    type: GeFormService.getInputTypeFromDataType(
-                                        element.dataType
-                                    ) === 'date' ? 'date-local' :
-                                        GeFormService.getInputTypeFromDataType(element.dataType)
-                                };
-
-                                if (element.dataType === 'REFERENCE') {
-                                    column.type = 'url';
-                                    column.target = '_blank';
-                                    column.typeAttributes = {
-                                        label: {
-                                            fieldName:
-                                                `${fieldWrapper.Source_Field_API_Name}${URL_LABEL_SUFFIX}`
-                                        }
-                                    };
-                                }
-
+                                const column = this.getColumn(element, fieldWrapper);
                                 this._columnsBySourceFieldApiName[column.fieldName] = column;
                             }
                         }
@@ -193,6 +187,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             }
         );
 
+        console.log('this._columnsBySourceFieldApiName: ', JSON.parse(JSON.stringify(this._columnsBySourceFieldApiName)));
         this.columnsLoaded();
     }
 
@@ -421,5 +416,35 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_OBJECT})
     dataImportObjectInfo;
+
+    getColumnTypeFromFieldType(dataType) {
+        return columnTypeByDescribeType[dataType] || dataType.toLowerCase();
+    }
+
+    getColumnFieldName(element, fieldWrapper) {
+        return element.dataType === 'REFERENCE' ?
+            `${fieldWrapper.Source_Field_API_Name}${URL_SUFFIX}`
+            : fieldWrapper.Source_Field_API_Name;
+    }
+
+    getColumn(element, fieldWrapper) {
+        let column = {
+            label: element.customLabel,
+            fieldName: this.getColumnFieldName(element, fieldWrapper),
+            type: this.getColumnTypeFromFieldType(element.dataType)
+        };
+
+        if (element.dataType === 'REFERENCE') {
+            column.type = 'url';
+            column.target = '_blank';
+            column.typeAttributes = {
+                label: {
+                    fieldName:
+                        `${fieldWrapper.Source_Field_API_Name}${URL_LABEL_SUFFIX}`
+                }
+            };
+        }
+        return column;
+    }
 
 }
