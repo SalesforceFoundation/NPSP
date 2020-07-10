@@ -117,6 +117,26 @@ public class PMT_PaymentCreator {
         }
         set;
     }
+    
+    private static Boolean isACMEnabled {
+        get {
+            if (isACMEnabled == null) {
+                isACMEnabled = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
+            }
+            return isACMEnabled;
+        }
+        set;
+    }
+
+    private static npe01__Contacts_And_Orgs_Settings__c contactSettings{
+        get {
+            if (contactSettings == null) {
+                contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+            }
+            return contactSettings;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description specifies whether Payments should be excluded for the Opportunity
@@ -131,8 +151,8 @@ public class PMT_PaymentCreator {
         if (setOppRecordTypeIdNoPayment.contains((id)opp.get('RecordTypeId')))
             return true;
         return false;
-    }    
-                
+    }
+
     /*******************************************************************************************************
     * @description Constructor that gets called by the PMT_Payment_TDTM trigger handler.
     * @param newOppsMap the map of Opps from trigger new. 
@@ -140,12 +160,38 @@ public class PMT_PaymentCreator {
     * @param ta which trigger event (BeforeInsert, AfterInsert, etc.). 
     * @param dmlWrapper to hold any payments that need to be inserted, updated, or deleted.  
     ********************************************************************************************************/
-    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, 
+    public PMT_PaymentCreator(List<Opportunity> newOpps, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, 
         TDTM_Runnable.DMLWrapper dmlWrapper) {
-        
-        npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        List<Opportunity> updatedOpps = new List<Opportunity>();
+        Map<Id, Opportunity> newOppsMapRequeried = new Map<Id, Opportunity>();
 
-        Boolean isACMEnabled = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
+        // SOQL for Updated Opps and Related Payments.
+        // AfterUpdate => Queries for known fields and field in custom Payment Field Mappings.
+        // BeforeUpdate AND IsACMEnabled => Used to handle summing total payments when ACM is enabled in the org.
+        if (ta == TDTM_Runnable.Action.AfterUpdate || (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate)) {
+            String query = buildOppsQuery() + 'WHERE Id IN :newOpps';
+            updatedOpps = database.query(query);
+            if (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate) {
+                newOppsMapRequeried = new Map<Id, Opportunity>((List<Opportunity>)(updatedOpps));
+            }
+        }
+
+        if (TDTM_Runnable.Action.BeforeUpdate == ta) {
+            if (!String.isEmpty(contactSettings.Payments_Auto_Close_Stage_Name__c)) {
+                String closedStageName = contactSettings.Payments_Auto_Close_Stage_Name__c;
+
+                for (Opportunity opp : newOpps) {
+                    Decimal totalPaymentAmount = (isACMEnabled
+                            ? PMT_PaymentCreator.getPaymentsMade(newOppsMapRequeried.get(opp.Id)) : opp.npe01__Payments_Made__c);
+                    closeOpportunityIfAllPaymentsReceived(
+                        oldOppsMap.get(opp.Id),
+                        opp,
+                        closedStageName,
+                        totalPaymentAmount
+                    );
+                }
+            }
+        }
 
         // If ACM is enabled in an organization, changes to the Payment object will not roll-up to (and cause triggers
         // to execute) on the Opportunity. The trigger on the Payment Object is used to detect a new/updated payment
@@ -154,41 +200,10 @@ public class PMT_PaymentCreator {
         // the npe01__Payments_Made__c rollup field on the Opportunity does not work. In this case, we have to force
         // a requery of the Opportunities (with a sub-query on Payments) to allow the actual Payment Amount to be
         // queried.
+        if (contactSettings != null && contactSettings.npe01__Payments_Enabled__c == true){
 
-        if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
-            list<Opportunity> newOpps = newOppsMap.values();
-            Map<Id, Opportunity> newOppsMapRequeried = new Map<Id, Opportunity>();
             list<npe01__OppPayment__c> paymentsToInsert = new list<npe01__OppPayment__c>();
             list<npe01__OppPayment__c> paymentsToUpdate = new list<npe01__OppPayment__c>();
-            list<Opportunity> updatedOpps = new list<Opportunity>();
-
-            // SOQL for Updated Opps and Related Payments.
-            // AfterUpdate => Queries for known fields and field in custom Payment Field Mappings.
-            // BeforeUpdate AND IsACMEnabled => Used to handle summing total payments when ACM is enabled in the org.
-            if (ta == TDTM_Runnable.Action.AfterUpdate || (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate)) {
-                String query = buildOppsQuery() + 'WHERE Id IN :newOpps';
-                updatedOpps = database.query(query);
-                if (isACMEnabled && ta == TDTM_Runnable.Action.BeforeUpdate) {
-                    newOppsMapRequeried = new Map<Id, Opportunity>((List<Opportunity>)(updatedOpps));
-                }
-            }
-
-            if (TDTM_Runnable.Action.BeforeUpdate == ta) {
-                if (!String.isEmpty(ContactSettings.Payments_Auto_Close_Stage_Name__c)) {
-                    String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
-                    for (Opportunity opp : newOpps) {
-
-                        Decimal totalPaymentAmount = (isACMEnabled
-                                ? PMT_PaymentCreator.getPaymentsMade(newOppsMapRequeried.get(opp.Id)) : opp.npe01__Payments_Made__c);
-                        closeOpportunityIfAllPaymentsReceived(
-                            oldOppsMap.get(opp.Id),
-                            opp,
-                            closedStageName,
-                            totalPaymentAmount
-                        );
-                    }
-                }
-            }
 
             //IF Trigger is Insert, Create a new Payment
             if( ta == TDTM_Runnable.Action.AfterInsert){
@@ -410,7 +425,6 @@ public class PMT_PaymentCreator {
         }
 
         Boolean stageNameSpecified = !String.isEmpty(closedStageName);
-
         if (
             (amountUpdated || paymentAmountReceivedUpdated)
             && amountPositive

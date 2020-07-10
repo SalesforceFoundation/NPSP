@@ -119,7 +119,6 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<Opportunity> oldlist,
         TDTM_Runnable.Action triggerAction) {
 
-        Map<Id, Opportunity> mapIdOppNew = (newlist != null ? new Map<Id, Opportunity>(newlist) : new Map<Id, Opportunity>());
         Map<Id, Opportunity> mapIdOppOld = (oldlist != null ? new Map<Id, Opportunity>(oldlist) : new Map<Id, Opportunity>());
 
         DmlWrapper dmlWrapper = new DmlWrapper();
@@ -130,7 +129,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         // the decision to close the Opportunity is handled in the runForPayments() method.
         // However, even if ACM is enabled, if the Opportunity.Amount is updated to match the total Payments
         // the Opportunity should still be marked as closed.
-        PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper);
+        PMT_PaymentCreator pc = new PMT_PaymentCreator(newlist, mapIdOppOld, triggerAction, dmlWrapper);
 
         //if currency has changed, reset payment currencies
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && isCurrencyFieldAvailable) {
