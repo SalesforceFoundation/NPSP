@@ -263,9 +263,11 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .then(rows => {
                 rows.forEach(row => {
                     this.data.push(
-                        Object.assign(row, row.record));
+                        Object.assign(row,
+                            this.appendUrlColumnProperties.call(row.record,
+                                this.dataImportObjectInfo)));
                 });
-                this.data = [...this.data];
+                this.data = this.data.splice(0);
                 if (this.data.length >= this.count) {
                     disableInfiniteLoading();
                 }
