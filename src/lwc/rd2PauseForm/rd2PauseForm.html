@@ -1,0 +1,25 @@
+<template>
+
+    <header class="slds-modal__header slds-clearfix">
+        <h2
+            class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium">
+            {labels.header}
+        </h2>
+    </header>
+
+    <div class="slds-modal__content slds-p-around_medium">
+        <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
+    </div>
+
+    <footer class="slds-modal__footer slds-clearfix">
+        <div class="slds-x-small-buttons_horizontal slds-float_right">
+            <lightning-button label={labels.cancelButton} title={labels.cancelButton} variant="neutral"
+                class="slds-m-right_small" onclick={handleCancel}>
+            </lightning-button>
+            <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand" onclick={handleSave}
+                data-id="saveButton">
+            </lightning-button>
+        </div>
+    </footer>
+
+</template>
