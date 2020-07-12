@@ -382,6 +382,7 @@ public with sharing class USER_UserService_TEST {
             'TransferAnyLead',
             'UseTeamReassignWizards',
             'ViewAllData',
+            /*'ViewPlatformEvents', SUMMER '20 PERMISSION ONLY */
             'ViewDataLeakageEvents',
             'ViewEventLogFiles',
             'ViewPublicDashboards',
@@ -406,12 +407,20 @@ public with sharing class USER_UserService_TEST {
      */
     private static PermissionSet buildPermissionSet(Set<String> permissions) {
 
-        final String permissionManageTranslations = 'ManageTranslation';
+        final String PERM_FIELD_PREFIX = 'Permissions';
+
+        final String permissionManageTranslations = 'ManageTranslation';  // Required only IF present
+        final String permissionViewPlatformEvents = 'ViewPlatformEvents'; // Summer '20 ONLY
         final Boolean hasTranslationPerm =
-            PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey('Permissions' + permissionManageTranslations);
+            PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey(PERM_FIELD_PREFIX + permissionManageTranslations);
+        final Boolean hasViewPlatformEvents =
+            PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey(PERM_FIELD_PREFIX + permissionViewPlatformEvents);
 
         if (hasTranslationPerm) {
             permissions.add(permissionManageTranslations);
+        }
+        if (hasViewPlatformEvents && permissions.contains('ViewAllData')) {
+            permissions.add(permissionViewPlatformEvents);
         }
 
         PermissionSet permission = new PermissionSet(
@@ -419,7 +428,7 @@ public with sharing class USER_UserService_TEST {
             Label = 'Permission Set Test'
         );
         for (String perm : permissions) {
-            permission.put('Permissions' + perm, true);
+            permission.put(PERM_FIELD_PREFIX + perm, true);
         }
 
         return permission;
