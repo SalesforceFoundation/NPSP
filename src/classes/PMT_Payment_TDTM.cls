@@ -123,13 +123,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         DmlWrapper dmlWrapper = new DmlWrapper();
 
-        // Create new Payments as necessary. Also (when Advanced Curr Mgt is not enabled), auto close the
-        // Opportunity if that is enabled in settings and the total Payments == Opp.Amount.
-        // If ACM is enabled, changes to payment records will not cause the Opportunity trigger to execute, so
-        // the decision to close the Opportunity is handled in the runForPayments() method.
-        // However, even if ACM is enabled, if the Opportunity.Amount is updated to match the total Payments
-        // the Opportunity should still be marked as closed.
-        PMT_PaymentCreator pc = new PMT_PaymentCreator(newlist, mapIdOppOld, triggerAction, dmlWrapper);
+        //Evaluate and create new paymnets as necessary. Auto close opportunity when toatl payments == Opp.Amount.
+        //If ACM is enabled, changes to payment records will not cause the Opportunity trigger to execute, therefore,
+        //decision to close the Opportunity is also handled in Payment Trigger runForPayments() method.
+        new PMT_PaymentCreator()
+            .run(triggerAction, newList, mapIdOppOld, dmlWrapper);
 
         //if currency has changed, reset payment currencies
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && isCurrencyFieldAvailable) {
