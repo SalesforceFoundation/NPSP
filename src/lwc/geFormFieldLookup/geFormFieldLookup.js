@@ -207,7 +207,7 @@ export default class GeFormFieldLookup extends LightningElement {
     retrieveLookupOptions = async (searchValue, sObjectType) => {
         if(sObjectType === 'RecordType') {
             // if searching RecordTypes, set WHERE SObjectType clause to filter results.
-            this.options = await doSearchRecordType({searchValue, sObjectType: this.targetObjectApiName});
+            this.options = await doSearchRecordType({searchValue, sObjectType: this.objectApiName});
         } else {
             this.options = await doSearch({searchValue, sObjectType});
         }
