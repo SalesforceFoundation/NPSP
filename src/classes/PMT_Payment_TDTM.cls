@@ -125,7 +125,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         //Evaluate and create new paymnets as necessary. Auto close opportunity when toatl payments == Opp.Amount.
         //If ACM is enabled, changes to payment records will not cause the Opportunity trigger to execute, therefore,
-        //decision to close the Opportunity is also handled in Payment Trigger runForPayments() method.
+        //decision to close the Opportunity is also handled in Payment Trigger handleMultiCurrencyPayments() method.
         new PMT_PaymentCreator()
             .run(triggerAction, newList, mapIdOppOld, dmlWrapper);
 
