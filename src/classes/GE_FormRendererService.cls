@@ -234,9 +234,9 @@ public with sharing class GE_FormRendererService {
         }
 
         String relationshipField;
-        if (donorType == 'Account1') {
+        if (donorType == SObjectType.Account.Name) {
             relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
-        } else if (donorType == 'Contact1') {
+        } else if (donorType == SObjectType.Contact.Name) {
             relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
         }
 
