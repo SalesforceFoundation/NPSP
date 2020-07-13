@@ -363,7 +363,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     }
 
-    appendUrlColumnProperties(objectInfo) {
+    appendUrlColumnProperties(objectInfo, urlSuffix = URL_SUFFIX,
+                              urlLabelSuffix = URL_LABEL_SUFFIX) {
         for (const [key, value] of Object.entries(this)) {
             const field = objectInfo.data.fields[key];
             if (field && field.dataType === 'Reference') {
@@ -372,15 +373,15 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     continue;
                 }
 
-                this[`${key}${URL_SUFFIX}`] = `/${value}`;
+                this[`${key}${urlSuffix}`] = `/${value}`;
                 if (this[relationshipField].Name) {
-                    this[`${key}${URL_LABEL_SUFFIX}`] = this[relationshipField].Name;
+                    this[`${key}${urlLabelSuffix}`] = this[relationshipField].Name;
                 } else {
                     try {
                         const nameField = field.referenceToInfos[0].nameFields[0];
-                        this[`${key}${URL_LABEL_SUFFIX}`] = this[relationshipField][nameField];
+                        this[`${key}${urlLabelSuffix}`] = this[relationshipField][nameField];
                     } catch (e) {
-                        this[`${key}${URL_LABEL_SUFFIX}`] = value;
+                        this[`${key}${urlLabelSuffix}`] = value;
                     }
                 }
             }
