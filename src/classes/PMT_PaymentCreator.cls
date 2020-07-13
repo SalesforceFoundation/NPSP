@@ -169,7 +169,7 @@ public class PMT_PaymentCreator {
         }
     }
 
-            /**
+    /**
     * @description Evaluate if the opportunity stage needs to be updated when payments are fully received.
     *   If ACM is enabled in an organization, changes to the Payment object will not roll-up to (and cause triggers
     *   to execute) on the Opportunity. The trigger on the Payment Object is used to detect a new/updated payment
@@ -260,19 +260,8 @@ public class PMT_PaymentCreator {
 
                 paymentsToInsert.add(op);
             }
-            /*
-            else if (!thisOpp.IsClosed &&
-                            thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0 && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c) {
-                paymentsToInsert.add(new npe01__oppPayment__c(
-                    npe01__opportunity__c = thisOpp.id,
-                    npe01__scheduled_date__c = thisOpp.closeDate,
-                    npe01__payment_amount__c = thisOpp.amount,
-                    npe01__paid__c = false
-                ));
-            }
-            */
         }
-        // put in the payment for closed opps       
+        
         if (!paymentsToInsert.isEmpty()) {
             dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
         }
