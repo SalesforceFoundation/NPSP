@@ -65,16 +65,17 @@ public with sharing class GE_GiftEntryController {
             GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
 
             return JSON.serialize(response);
-        } catch (Exception ex) {
-            Boolean isCalloutException = ex instanceof System.CalloutException;
-            Boolean hasTimedout = isCalloutException && ex.getMessage().contains(TIMED_OUT);
+        } catch (CalloutException ex) {
+            Boolean hasTimedout = ex.getMessage().contains(TIMED_OUT);
 
             if (hasTimedout) {
                 return getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
             } else {
-                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-                throw returnDmlException(JSONExceptionData);
+                return null;
             }
+        } catch(DmlException ex) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw returnDmlException(JSONExceptionData);
         }
     }
 
@@ -147,7 +148,7 @@ public with sharing class GE_GiftEntryController {
             upsertDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 
-        } catch (Exception ex) {
+        } catch (DmlException ex) {
             // create custom lwc exception and throw it
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
 
@@ -202,7 +203,7 @@ public with sharing class GE_GiftEntryController {
             upsert dataImport Id;
 
             return dataImport;
-        } catch (Exception e) {
+        } catch (DmlException e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw returnDmlException(JSONExceptionData);
@@ -225,7 +226,7 @@ public with sharing class GE_GiftEntryController {
             List<DataImport__c> listDI = new List<DataImport__c>{dataImport};
 
             BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
-        } catch (Exception e) {
+        } catch (DmlException e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw returnDmlException(JSONExceptionData);
