@@ -299,20 +299,20 @@ public class UTIL_Describe {
      *          source field argument.
      */
     public static String getReferenceObjectNameField(String sObjectName, String fieldName) {
-        DescribeFieldResult sourceSObjectField = getFieldDescribe(
+        List<SObjectType> relatedObjects = getFieldDescribe(
                 String.valueOf(sObjectName),
                 String.valueOf(fieldName)
-        );
+        ).getReferenceTo();
 
-        List<SObjectType> sObjectTypes = sourceSObjectField.getReferenceTo();
+        if (relatedObjects.isEmpty()) {
+            return null;
+        }
 
-        String relatedObjNameField = String.join(new List<String>{
+        return String.join(new List<String>{
                 fieldName.replace('__c', '__r'),
                 UTIL_Describe.getNameField(
-                        String.valueOf(sObjectTypes[0]))
+                        String.valueOf(relatedObjects[0]))
         }, '.');
-
-        return relatedObjNameField;
     }
 
     /*******************************************************************************************************
