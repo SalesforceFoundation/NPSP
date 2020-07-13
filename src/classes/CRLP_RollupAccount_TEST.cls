@@ -311,7 +311,7 @@ public class CRLP_RollupAccount_TEST {
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         List<Opportunity> opps = new List<Opportunity>();
-        final Date closeDate = Date.Today().addMonths(-100).addDays(1);
+        final Date closeDate = Date.Today().addMonths(-100);
         final Decimal maxAmt = 1000;
         final Decimal baseAmt = 100;
         final Integer cnt = 100;
@@ -373,7 +373,7 @@ public class CRLP_RollupAccount_TEST {
         hardCreditAcctOppCount++;
 
         // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
-        Date oldCloseDate = closeDate.addDays(-1);
+        Date oldCloseDate = closeDate.addDays(-5);
         opps.add(new Opportunity (
                 Name = 'Test Not Include' + c.FirstName + ' ' + c.LastName,
                 Amount = 50000,
@@ -383,7 +383,7 @@ public class CRLP_RollupAccount_TEST {
                 RecordTypeId = rtId,
                 npe01__Do_Not_Automatically_Create_Payment__c = true
         ));
-        hardCreditAcctOppCount++;
+        hardCreditAcctOppCount++;       // Unclear on why this is incremented!?
 
         insert opps;
 
