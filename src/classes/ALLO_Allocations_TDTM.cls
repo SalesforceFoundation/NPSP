@@ -798,12 +798,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 Decimal amt = pmt.npe01__Payment_Amount__c;
                 // null delete all associated allocations
                 if (amt == null) {
-                    dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.listAllo);
-                    if (settings.Default_Allocations_Enabled__c && pmtWrap.defaultAllo != null) {
-                        dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
-                        dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.defaultDupesById.values());
-                    }
-
+                    addAllAssociatedAllocationsToDeleteCollection(pmtWrap);
                 } else {
                     for (Allocation__c allo : pmtWrap.listAllo) {
                         //if the percentage changed, recalculate the amount
@@ -872,6 +867,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             } else if (settings.Default_Allocations_Enabled__c && pmt.npe01__Payment_Amount__c != null) {
                 dmlWrapper.objectsToInsert.add(makeDefaultAllocation(pmt));
             }
+        }
+    }
+
+    /**
+     * @description Add all associated Allocations to the delete collection of the DMLWrapper
+     * @param alloWrap Allocation Wrapper to delete associated allocations from
+     */
+    private void addAllAssociatedAllocationsToDeleteCollection(alloWrapper alloWrap) {
+        dmlWrapper.objectsToDelete.addAll((List<SObject>)alloWrap.listAllo);
+        if (settings.Default_Allocations_Enabled__c && alloWrap.defaultAllo != null) {
+            dmlWrapper.objectsToDelete.add(alloWrap.defaultAllo);
+            dmlWrapper.objectsToDelete.addAll((List<SObject>)alloWrap.defaultDupesById.values());
         }
     }
 

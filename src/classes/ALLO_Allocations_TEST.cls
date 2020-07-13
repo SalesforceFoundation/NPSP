@@ -41,48 +41,16 @@ private with sharing class ALLO_Allocations_TEST {
     // test data that was created
 
     /** @description Key to find GAUs with */
-    private static final String GAUS_KEY {
-        private get {
-            if (GAUS_KEY == null) {
-                GAUS_KEY = 'GAUS';
-            }
-            return GAUS_KEY;
-        }
-        private set;
-    }
+    private static final String GAUS_KEY = 'GAUS';
 
     /** @description Key to find DEFAULT GAU with */
-    private static final String DEFAULTGAU_KEY {
-        private get {
-            if (DEFAULTGAU_KEY == null) {
-                DEFAULTGAU_KEY = 'DEFAULTGAU';
-            }
-            return DEFAULTGAU_KEY;
-        }
-        private set;
-    }
+    private static final String DEFAULTGAU_KEY = 'DEFAULTGAU';
 
     /** @description Key to find Opportunity Test Data with */
-    private static final String OPPS_KEY {
-        private get {
-            if (OPPS_KEY == null) {
-                OPPS_KEY = 'OPPS';
-            }
-            return OPPS_KEY;
-        }
-        private set;
-    }
+    private static final String OPPS_KEY = 'OPPS';
 
     /** @description Key to find Payment Test Data with */
-    private static final String PMTS_KEY {
-        private get {
-            if (PMTS_KEY == null) {
-                PMTS_KEY = 'PMTS';
-            }
-            return PMTS_KEY;
-        }
-        private set;
-    }
+    private static final String PMTS_KEY = 'PMTS';
 
     /*******************************************************************************************************
     * @description Setup of allocations settings.
