@@ -838,8 +838,7 @@ private class PMT_Payment_TEST {
     }
 
     /**
-    * @description Verifies that opportunity stage should be updated to closed when
-    *   payment amounts received surpass opportunity amounts when auto payment is disabled
+    * @description Verifies that when auto payment is not enabled and payments are fully received, the Opp will be updated to Closed 
     */
     @isTest
     private static void oppStageShouldClosedWhenPaymentsAreFullyReceivedAndAutoPaymentNotEnabled() {
