@@ -168,13 +168,15 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
-    * @description Receives an event from the modal component geDonationMatching
-    * and locally stores the currently selected donation along with its type.
+    * @description Receives an event from the modal component geDonationMatching,
+    * locally stores and dispatches an event up to parent geFormRenderer of the
+    * currently selected donation along with its type.
     *
-    * @param {object} event: Custom Event object received from another component.
+    * @param {object} pubsubEvent: Pubsub event fired from geDonationMatching
+    * containing the data on the user selected donation.
     */
-    handleReceiveEvent(event) {
-        this.setSelectedDonationsData(event);
+    handleReceiveEvent(pubsubEvent) {
+        this.setSelectedDonationsData(pubsubEvent);
 
         const detail = {
             selectedDonation: deepClone(this._selectedDonation),
