@@ -71,7 +71,6 @@ public with sharing class GE_LookupController {
         String query = String.format(queryTemplate, args);
 
         List<LookupResult> results = new List<LookupResult>();
-        System.debug(query);
         for(SObject result : Database.query(query)) {
             results.add(new LookupResult(result));
         }
