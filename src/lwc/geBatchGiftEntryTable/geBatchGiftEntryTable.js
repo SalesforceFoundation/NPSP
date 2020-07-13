@@ -363,6 +363,18 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     }
 
+    /*************************************************************************************
+     * @description For each relationship field on an object, this function appends two
+     *              properties to the object intended for use with url-type columns in
+     *              lightning-datatables. One to be used as the url value and another
+     *              to be used as its label.
+     * @param objectInfo objectInfo of the record object in context.
+     * @param urlSuffix value to be appended to the field name to comprise first new
+     *        property name.
+     * @param urlLabelSuffix value to be appended to the field name to comprise second new
+     *        property name.
+     * @returns {object}
+     */
     appendUrlColumnProperties(objectInfo, urlSuffix = URL_SUFFIX,
                               urlLabelSuffix = URL_LABEL_SUFFIX) {
         for (const [key, value] of Object.entries(this)) {

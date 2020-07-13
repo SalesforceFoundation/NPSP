@@ -293,10 +293,10 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-     * @description
-     * @param sourceFieldName A Lookup field on the NPSP DataImport object.
-     * @return The Name field used by the referenceTo object for the DataImport
-     *          source field argument.
+     * @description Provides the "Name" field used by the related object for
+     *              relationship fields.
+     * @return The API Name of the "Name" field used by the related object for the
+     *          relationship field represented by the arguments.
      */
     public static String getReferenceObjectNameField(String sObjectName, String fieldName) {
         List<SObjectType> relatedObjects = getFieldDescribe(
