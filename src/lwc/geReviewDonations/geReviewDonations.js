@@ -25,12 +25,12 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     _dedicatedListenerEventName = 'geDonationMatchingEvent';
 
     connectedCallback() {
-        registerListener('geDonationMatchingEvent', this.handleReceiveEvent, this);
+        registerListener(this._dedicatedListenerEventName, this.handleReceiveEvent, this);
         registerListener('resetReviewDonationsEvent', this.handleResetReviewDonationsComponent, this);
     }
 
     disconnectedCallback() {
-        unregisterListener('geDonationMatchingEvent', this.handleReceiveEvent, this);
+        unregisterListener(this._dedicatedListenerEventName, this.handleReceiveEvent, this);
         unregisterListener('resetReviewDonationsEvent', this.handleResetReviewDonationsComponent, this);
     }
 
