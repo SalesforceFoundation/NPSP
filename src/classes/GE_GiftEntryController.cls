@@ -73,9 +73,9 @@ public with sharing class GE_GiftEntryController {
             } else {
                 return null;
             }
-        } catch(DmlException ex) {
+        } catch(AuraHandledException ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-            throw returnDmlException(JSONExceptionData);
+            throw returnAuraException(JSONExceptionData);
         }
     }
 
@@ -152,7 +152,7 @@ public with sharing class GE_GiftEntryController {
             // create custom lwc exception and throw it
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
 
-            throw returnDmlException(JSONExceptionData);
+//            throw returnDmlException(JSONExceptionData);
         }
     }
 
