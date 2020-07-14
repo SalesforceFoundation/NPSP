@@ -417,8 +417,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Activate or deactivate RD2 triggers
-     * @param isActive True sets triggers to active. False sets to inactive.
+     * @description Activate or deactive RD2 triggers
+     * @param isActive Indicates if triggers are active
      * @return void
      */
     private void toggleTriggerState(Boolean isActive) {

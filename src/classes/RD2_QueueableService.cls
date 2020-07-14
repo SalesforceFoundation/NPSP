@@ -59,7 +59,6 @@ public class RD2_QueueableService {
         /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
-         * @param triggerAction - the trigger action responsible for the call
          */
         public EvaluateInstallmentOpportunities(Set<Id> rdIds) {
             this.rdIds = rdIds;
@@ -68,7 +67,6 @@ public class RD2_QueueableService {
         /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
-         * @param triggerAction - the trigger action responsible for the call
          * @param isScheduleChangedById - map of RD Ids to Boolean indicating changed schedule
          */
         public EvaluateInstallmentOpportunities(Set<Id> rdIds, Map<Id, Boolean> isScheduleChangedById) {
