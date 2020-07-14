@@ -48,9 +48,12 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert
-              || triggerAction == TDTM_Runnable.Action.AfterUpdate
               || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             setBatchStatus(newSObjects);
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+          setBatchStatus(oldSObjects, newSObjects);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
@@ -61,17 +64,39 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
     }
 
     /**
+     * @description returns a list of di records that had the status changed
+     * @param diOldList
+     * @param diNewList
+     * @return List<DataImport__c> diList
+     * 
+     */
+    private void setBatchStatus(List<DataImport__c> diOldList, 
+                                List<DataImport__c> diNewList) {
+
+      List<DataImport__c> diList = new List<DataImport__c>();
+      Map<Id, DataImport__c> diNewMap = new Map<Id, DataImport__c>(diNewList);
+
+      for(DataImport__c diOld : diOldList) {
+        DataImport__c diNew = diNewMap.get(diOld.Id);
+        if (diOld.Status__c != diNew.Status__c) {
+          diList.add(diOld);
+        }
+      }
+      setBatchStatus(diList);
+    }
+
+    /**
      * @description Update the batch status based on the data import statuses
      * when all DIs are Imported -> then the Batch Status is Completed
      * when any DI status is blank or Dry Run Validated or Dry Run error -> then the Batch Status is Open
      * when any DI is Failed -> then the Batch Status is Failed - needs review
      * 
      */
-    private void setBatchStatus(List<DataImport__c> diRecordList) {
+    private void setBatchStatus(List<DataImport__c> diList) {
       Set<Id> batchIdSet = new Set<Id>();
 
       // build a set of batch ids
-      for (DataImport__c di : diRecordList) {
+      for (DataImport__c di : diList) {
         if (di.NPSP_Data_Import_Batch__c != null) {
           batchIdSet.add(di.NPSP_Data_Import_Batch__c);
         }
@@ -86,7 +111,7 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
       // get all the di records in all the batches
       List<DataImport__c> diRecords = [SELECT Id, NPSP_Data_Import_Batch__c, Status__c 
                                           FROM DataImport__c
-                                          WHERE Id IN :batchIdSet];
+                                          WHERE NPSP_Data_Import_Batch__c IN :batchIdSet];
 
       // go through the di statuses and aggregate them by batch
       // store the results in a map
@@ -115,7 +140,7 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
     private void updateBatchStatus(List<DataImportBatch__c> batches, 
         Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap) {
 
-      List<DataImportBatch__c> batchesToUpdate   = new List<DataImportBatch__c>();
+      List<DataImportBatch__c> batchesToUpdate = new List<DataImportBatch__c>();
       for(DataImportBatch__c batch : batches) {
         String newBatchStatus = 
           getBatchStatus(batchDataImportStatusAggregateMap.get(batch.Id));

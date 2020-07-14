@@ -322,6 +322,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'BDI_DataImportBatch_TDTM', Load_Order__c = 1, Object__c = 'DataImportBatch__c',
               Trigger_Action__c = 'BeforeInsert'));
 
+        // data import
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'BDI_DataImport_TDTM', Load_Order__c = 1, Object__c = 'DataImport__c',
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterUndelete;AfterDelete'));
+
         // User
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'USER_InActiveUser_TDTM', Load_Order__c = 0, Object__c = 'User',
