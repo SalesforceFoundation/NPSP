@@ -152,7 +152,7 @@ public with sharing class GE_GiftEntryController {
             // create custom lwc exception and throw it
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
 
-//            throw returnDmlException(JSONExceptionData);
+            throw returnDmlException(JSONExceptionData);
         }
     }
 
