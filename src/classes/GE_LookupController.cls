@@ -69,7 +69,7 @@ public with sharing class GE_LookupController {
     public static List<LookupResult> doSearchRecordType(String searchValue, String sObjectType) {
         String formattedValue = '%' + String.escapeSingleQuotes(searchValue) + '%';
         String queryTemplate = 'SELECT Id, Name FROM RecordType WHERE SObjectType = :sObjectType AND Name LIKE :formattedValue LIMIT {0}';
-        List<String> args = new List<String>{String.valueOf(RESULTS_LIMIT)};
+        List<String> args = new List<String> {String.valueOf(RESULTS_LIMIT)};
         String query = String.format(queryTemplate, args);
 
         List<LookupResult> results = new List<LookupResult>();
