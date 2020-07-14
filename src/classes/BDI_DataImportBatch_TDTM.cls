@@ -36,8 +36,9 @@
 */
 public class BDI_DataImportBatch_TDTM extends TDTM_Runnable {
     
-    @TestVisible
-    private static final String STATUS_OPEN = 'Open';
+    public static final String BATCH_STATUS_OPEN = 'Open';
+    public static final String BATCH_STATUS_COMPLETED = 'Completed';
+    public static final String BATCH_STATUS_FAILED = 'Failed - Needs Review';
 
     /*******************************************************************************************************************
      * @description Trigger Handler on BatchDataImport
@@ -62,7 +63,7 @@ public class BDI_DataImportBatch_TDTM extends TDTM_Runnable {
      */
     private void handleBefore(List<DataImportBatch__c> batches) {
         for (DataImportBatch__c b : batches) {
-            b.Batch_Status__c = STATUS_OPEN;
+            b.Batch_Status__c = BATCH_STATUS_OPEN;
         }
     }
 }
