@@ -3,7 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { handleError } from 'c/utilTemplateBuilder';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { deepClone, arraysMatch } from 'c/utilCommon';
+import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
 import getOpenDonations from '@salesforce/apex/GE_FormRendererService.getOpenDonations';
 
