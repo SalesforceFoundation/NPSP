@@ -58,6 +58,8 @@ public with sharing class GE_LookupController {
     }
 
     /**
+     * Search for RecordTypes for the given SObject
+     *
      * @param searchValue   Value to search RecordType Names with
      * @param sObjectType   Parent SObject Type to search Record Types for
      *
