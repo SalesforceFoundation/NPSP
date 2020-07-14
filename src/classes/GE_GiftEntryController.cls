@@ -68,7 +68,7 @@ public with sharing class GE_GiftEntryController {
         } catch (CalloutException ex) {
             Boolean hasTimedout = ex.getMessage().contains(TIMED_OUT);
 
-            if (hasTimedout) {
+            if (hasTimedOut) {
                 return getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
             } else {
                 return null;
