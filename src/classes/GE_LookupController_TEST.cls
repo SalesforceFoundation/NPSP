@@ -76,15 +76,18 @@ private class GE_LookupController_TEST {
     /**
      * Test searching record types, which have an additional WHERE clause to restrict results to the parent SObject Type
      */
-    @isTest
+    @IsTest
     static void testSearchRecordType() {
 
         Test.startTest();
         List<GE_LookupController.LookupResult> results = GE_LookupController.doSearchRecordType('Donation', 'Opportunity');
         Test.stopTest();
 
+        // auto-builds do not deploy record types, but dev/qa builds do, run equivalent query and check results
+        List<RecordType> recordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND DeveloperName LIKE '%Donation%' LIMIT 50];
+
         System.assertNotEquals(null, results);
-        System.assertEquals(1, results.size());
+        System.assertEquals(recordTypes.size(), results.size());
     }
 
     @IsTest
