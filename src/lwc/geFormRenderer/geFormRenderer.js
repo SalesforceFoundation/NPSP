@@ -1231,14 +1231,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // If _donationDonor and recordId don't align or aren't set,
         // reset all selected donation properties and form fields
-        this.selectedDonorType = undefined;
-        this.selectedDonorId = undefined;
+        this.selectedDonorType = null;
+        this.selectedDonorId = null;
         if (!!this.selectedDonation) {
             this.resetDonationAndPaymentImportedFields();
             // moved this below because we previously would never actually reach inside this
             // condition otherwise. Even in scenarios we're we've definitely selected a donation
             // prior to needing to reset.
-            this.selectedDonation = undefined;
+            this.selectedDonation = null;
         }
     }
 
@@ -1573,6 +1573,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._donationDonor = donationDonorValue;
         if (!!this.selectedDonation) {
             this.resetDonationAndPaymentImportedFields();
+            fireEvent(this, 'resetReviewDonationsEvent', {});
         }
         this.setReviewDonationsDonorProperties(this.donorId);
     }
