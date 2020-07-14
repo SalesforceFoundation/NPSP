@@ -50,7 +50,7 @@ public with sharing class GE_LookupController {
     @AuraEnabled(Cacheable=true)
     public static List<LookupResult> doSearch(String searchValue, String sObjectType) {
         Boolean isSearchable = UTIL_Describe.getObjectDescribe(sObjectType).isSearchable();
-        if(isSearchable) {
+        if (isSearchable) {
             return doSearchSOSL(searchValue, sObjectType);
         } else {
             return doSearchSOQL(searchValue, sObjectType);
@@ -71,7 +71,7 @@ public with sharing class GE_LookupController {
         String query = String.format(queryTemplate, args);
 
         List<LookupResult> results = new List<LookupResult>();
-        for(SObject result : Database.query(query)) {
+        for (SObject result : Database.query(query)) {
             results.add(new LookupResult(result));
         }
 
@@ -119,7 +119,7 @@ public with sharing class GE_LookupController {
         String query = String.format(queryTemplate, args);
 
         List<LookupResult> results = new List<LookupResult>();
-        for(SObject result : Database.query(query)) {
+        for (SObject result : Database.query(query)) {
             results.add(new LookupResult(result));
         }
 

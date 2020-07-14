@@ -92,7 +92,7 @@ export default class GeAutocomplete extends LightningElement {
      */
     @api
     setCustomError(message) {
-        if ( isEmpty(message) ) {
+        if (isEmpty(message)) {
             message = this.CUSTOM_LABELS.geErrorCompleteThisField;
         }
         this.errorMessage = message;
