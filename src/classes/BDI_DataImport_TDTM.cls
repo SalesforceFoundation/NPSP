@@ -72,10 +72,10 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
 
       // build a set of batch ids
       for (DataImport__c di : diRecordList) {
-        if (di.npsp__NPSP_Data_Import_Batch__c != null) {
-          batchIdSet.add(di.npsp__NPSP_Data_Import_Batch__c);
+        if (di.NPSP_Data_Import_Batch__c != null) {
+          batchIdSet.add(di.NPSP_Data_Import_Batch__c);
         }
-        batchIdSet.add(di.npsp__NPSP_Data_Import_Batch__c);
+        batchIdSet.add(di.NPSP_Data_Import_Batch__c);
       }
 
       // get all the batch records
@@ -84,7 +84,7 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
                                           WHERE Id IN :batchIdSet];
 
       // get all the di records in all the batches
-      List<DataImport__c> diRecords = [SELECT Id, npsp__NPSP_Data_Import_Batch__c, Status__c 
+      List<DataImport__c> diRecords = [SELECT Id, NPSP_Data_Import_Batch__c, Status__c 
                                           FROM DataImport__c
                                           WHERE Id IN :batchIdSet];
 
@@ -94,12 +94,12 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
           new Map<Id, BatchDataImportStatusAggregate>();
       for(DataImport__c di : diRecords) {
         BatchDataImportStatusAggregate batchStatusAggregate = 
-              batchDataImportStatusAggregateMap.get(di.npsp__NPSP_Data_Import_Batch__c);
+              batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c);
         
         if (batchStatusAggregate != null) {
           batchStatusAggregate.updateStatusAggregate(di.Status__c);     
         } else {
-          batchDataImportStatusAggregateMap.put(di.npsp__NPSP_Data_Import_Batch__c, 
+          batchDataImportStatusAggregateMap.put(di.NPSP_Data_Import_Batch__c, 
                                               new BatchDataImportStatusAggregate());
         }
       }
