@@ -316,7 +316,6 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'EP_TaskDependency_TDTM', Load_Order__c = 1, Object__c = 'Task',
               Trigger_Action__c = 'AfterUpdate'));
 
-
         // batch data import
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'BDI_DataImportBatch_TDTM', Load_Order__c = 1, Object__c = 'DataImportBatch__c',
