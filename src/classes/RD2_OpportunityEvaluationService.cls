@@ -67,12 +67,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     */
     private Boolean isBatchContext = false;
 
-    /**
-    * @description Indicates the trigger action responsible for the call to RD2_OpportunityEvaluationService
-    */
-    @TestVisible
-    private TDTM_Runnable.Action triggerAction;
-
     /***
     * @description Recurring Donation custom settings
     */
@@ -280,16 +274,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Set the trigger action responsible for the call to RD2_OpportunityEvaluationService
-     * @param triggerAction Trigger action responsible for the call
-     * @return RD2_OpportunityEvaluationService The service instance
-     */
-    public RD2_OpportunityEvaluationService withTriggerAction(TDTM_Runnable.Action triggerAction) {
-        this.triggerAction = triggerAction;
-        return this;
-    }
-
-    /**
      * @description Map of Recurring Donation Ids to Boolean indicating a changed schedule
      * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean
      * @return RD2_OpportunityEvaluationService The service instance
@@ -470,9 +454,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         if (isBatchContext) {
             return !rdSettings.isDisableAllInstallments;
-
-        } else if (rd.isNew() && triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            return false;
 
         } else if (rd.isNew()) {
             return rdSettings.isFirstInstallmentEnabled;
