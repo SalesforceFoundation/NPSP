@@ -120,13 +120,13 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
       for(DataImport__c di : diRecords) {
         BatchDataImportStatusAggregate batchStatusAggregate = 
               batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c);
-        
-        if (batchStatusAggregate != null) {
-          batchStatusAggregate.updateStatusAggregate(di.Status__c);     
-        } else {
-          batchDataImportStatusAggregateMap.put(di.NPSP_Data_Import_Batch__c, 
-                                              new BatchDataImportStatusAggregate());
+        if (batchStatusAggregate == null) {
+          batchStatusAggregate = new BatchDataImportStatusAggregate();
         }
+
+        batchStatusAggregate.updateCounts(di.Status__c); 
+        batchDataImportStatusAggregateMap.put(di.NPSP_Data_Import_Batch__c, 
+                                              batchStatusAggregate);
       }
 
       // update the statuses on the batch records
@@ -163,7 +163,7 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
         return BDI_DataImportBatch_TDTM.BATCH_STATUS_FAILED;
       }
 
-      // all di records are completed
+      // all di records are imported
       if (0 < batchStatusAggregate.importedStatusCount &&
           0 == batchStatusAggregate.openStatusCount && 
           0 == batchStatusAggregate.failedStatusCount) {
@@ -193,7 +193,7 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
       * @description update the status count based on the incoming di status
       * @param String status
       */
-      void updateStatusAggregate(String status) {
+      void updateCounts(String status) {
         if (String.isBlank(status) || status == BDI_DataImport_API.bdiDryRunValidated
                                    || status == BDI_DataImport_API.bdiDryRunError) {
           openStatusCount++;
