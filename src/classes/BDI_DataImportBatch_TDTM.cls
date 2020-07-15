@@ -60,6 +60,7 @@ public class BDI_DataImportBatch_TDTM extends TDTM_Runnable {
 
     /**
      * @description In the before trigger context, sets the status for the batch
+     * @param List<DataImportBatch__c> 
      */
     private void handleBefore(List<DataImportBatch__c> batches) {
         for (DataImportBatch__c b : batches) {
