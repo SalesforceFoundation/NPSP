@@ -118,8 +118,7 @@ public with sharing class BDI_DataImport_TEST {
     */
     @IsTest
     static void shouldSetBatchStatusToOpen() {
-        DataImportBatch__c bdi = BDI_BatchOverride_TEST.newDIBatch();
-        insert bdi;
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
 
         DataImport__c di1 = newDi('fname1', 'lname1');
         di1.NPSP_Data_Import_Batch__c = bdi.Id;
@@ -159,8 +158,7 @@ public with sharing class BDI_DataImport_TEST {
     */
     @IsTest
     static void shouldSetBatchStatusToFailed() {
-        DataImportBatch__c bdi = BDI_BatchOverride_TEST.newDIBatch();
-        insert bdi;
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
 
         DataImport__c di1 = newDi('fname1', 'lname1');
         di1.NPSP_Data_Import_Batch__c = bdi.Id;
@@ -192,8 +190,7 @@ public with sharing class BDI_DataImport_TEST {
     */
     @IsTest
     static void shouldSetBatchStatusToCompleted() {
-        DataImportBatch__c bdi = BDI_BatchOverride_TEST.newDIBatch();
-        insert bdi;
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
 
         DataImport__c di1 = newDi('fname1', 'lname1');
         di1.NPSP_Data_Import_Batch__c = bdi.Id;
