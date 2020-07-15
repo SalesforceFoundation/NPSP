@@ -325,6 +325,7 @@ public with sharing class USER_UserService_TEST {
 
             /** Dependent Permissions **/
             'ManageCustomPermissions',
+            'ManageTranslation',
             'ViewRoles',
             'ViewSetup'
         };
@@ -375,6 +376,7 @@ public with sharing class USER_UserService_TEST {
             'ManageDashbdsInPubFolders',
             'ManageNetworks',
             'ManageReportsInPubFolders',
+            'ManageTranslation',
             'ModifyMetadata',
             'RunReports',
             'SolutionImport',
@@ -382,7 +384,7 @@ public with sharing class USER_UserService_TEST {
             'TransferAnyLead',
             'UseTeamReassignWizards',
             'ViewAllData',
-            /*'ViewPlatformEvents', SUMMER '20 PERMISSION ONLY */
+            'ViewPlatformEvents',
             'ViewDataLeakageEvents',
             'ViewEventLogFiles',
             'ViewPublicDashboards',
@@ -406,29 +408,19 @@ public with sharing class USER_UserService_TEST {
      * @return PermissionSet instance
      */
     private static PermissionSet buildPermissionSet(Set<String> permissions) {
+        Map<String, SObjectField> permissionsFields = PermissionSet.getSObjectType().getDescribe().fields.getMap();
 
         final String PERM_FIELD_PREFIX = 'Permissions';
 
-        final String permissionManageTranslations = 'ManageTranslation';  // Required only IF present
-        final String permissionViewPlatformEvents = 'ViewPlatformEvents'; // Summer '20 ONLY
-        final Boolean hasTranslationPerm =
-            PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey(PERM_FIELD_PREFIX + permissionManageTranslations);
-        final Boolean hasViewPlatformEvents =
-            PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey(PERM_FIELD_PREFIX + permissionViewPlatformEvents);
-
-        if (hasTranslationPerm) {
-            permissions.add(permissionManageTranslations);
-        }
-        if (hasViewPlatformEvents && permissions.contains('ViewAllData')) {
-            permissions.add(permissionViewPlatformEvents);
-        }
 
         PermissionSet permission = new PermissionSet(
             Name = 'X' + UTIL_UnitTestData_TEST.getUniqueString(),
             Label = 'Permission Set Test'
         );
         for (String perm : permissions) {
-            permission.put(PERM_FIELD_PREFIX + perm, true);
+            if (permissionsFields.containsKey(PERM_FIELD_PREFIX + perm)) {
+                permission.put(PERM_FIELD_PREFIX + perm, true);
+            }
         }
 
         return permission;
