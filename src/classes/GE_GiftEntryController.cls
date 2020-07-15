@@ -67,12 +67,13 @@ public with sharing class GE_GiftEntryController {
             return JSON.serialize(response);
         } catch (CalloutException ex) {
             Boolean hasTimedOut = ex.getMessage().contains(TIMED_OUT);
+            String timeoutResponse = '';
 
             if (hasTimedOut) {
-                return getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
-            } else {
-                return null;
+                timeoutResponse = getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
             }
+
+            return timeoutResponse;
         } catch(AuraHandledException ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
             throw returnAuraException(JSONExceptionData);
