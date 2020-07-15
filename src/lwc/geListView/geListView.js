@@ -681,7 +681,7 @@ export default class geListView extends LightningElement {
         this.sortedDirection =  event.detail.sortDirection;
         // Set sortedBy to correct fieldName if a URL type column
         if (hasNestedProperty(columnEntry, 'typeAttributes', 'label', 'fieldName')) {
-            let field = Object.values(this.objectInfo.fields).find(
+            const field = Object.values(this.objectInfo.fields).find(
               (field) => field.relationshipName === columnEntry.typeAttributes.label.fieldName);
             this._orderBy = isUndefined(field) ? undefined : field.apiName;
         }
