@@ -172,9 +172,9 @@ public with sharing class BDI_DataImport_TEST {
         insert dis;
 
         Test.startTest();
-            // make one di record fail
-            di2.Status__c = BDI_DataImport_API.bdiFailed;
-            update di2;
+        // make one di record fail
+        di2.Status__c = BDI_DataImport_API.bdiFailed;
+        update di2;
         Test.stopTest();
 
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
@@ -205,11 +205,11 @@ public with sharing class BDI_DataImport_TEST {
         insert dis;
 
         Test.startTest();
-            // make all dis imported
-            di1.Status__c = BDI_DataImport_API.bdiImported;
-            di2.Status__c = BDI_DataImport_API.bdiImported;
-            di3.Status__c = BDI_DataImport_API.bdiImported;
-            update dis;
+        // make all dis imported
+        di1.Status__c = BDI_DataImport_API.bdiImported;
+        di2.Status__c = BDI_DataImport_API.bdiImported;
+        di3.Status__c = BDI_DataImport_API.bdiImported;
+        update dis;
         Test.stopTest();
 
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
