@@ -55,22 +55,6 @@ public with sharing class BDI_DataImport_TEST {
     * @description creates a new di record for tests
     * @param firstname the firstname to specify for Contact1
     * @param lastname the lastname to specify for Contact1
-    * @param bdiId the parent batch id
-    * @return DataImport__c the new Data Import record
-    */
-    public static DataImport__c newDI(String firstname, String lastname, Id bdiId) {
-        return new DataImport__c(
-           NPSP_Data_Import_Batch__c = bdiId,
-           Contact1_Firstname__c = firstname,
-           Contact1_Lastname__c = lastname,
-           Contact1_Personal_Email__c = firstname + '@' + lastname + '.com'
-        );
-    }
-
-    /*******************************************************************************************************
-    * @description creates a new di record for tests
-    * @param firstname the firstname to specify for Contact1
-    * @param lastname the lastname to specify for Contact1
     * @param donationamount the amount to use for the donation
     * @return DataImport__c the new Data Import record
     */
@@ -137,9 +121,12 @@ public with sharing class BDI_DataImport_TEST {
         DataImportBatch__c bdi = BDI_BatchOverride_TEST.newDIBatch();
         insert bdi;
 
-        DataImport__c di1 = newDi('fname1', 'lname1', bdi.Id);
-        DataImport__c di2 = newDi('fname2', 'lname2', bdi.Id);
-        DataImport__c di3 = newDi('fname3', 'lname3', bdi.Id);
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
         List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
         insert dis;
 
@@ -175,9 +162,12 @@ public with sharing class BDI_DataImport_TEST {
         DataImportBatch__c bdi = BDI_BatchOverride_TEST.newDIBatch();
         insert bdi;
 
-        DataImport__c di1 = newDi('fname1', 'lname1', bdi.Id);
-        DataImport__c di2 = newDi('fname2', 'lname2', bdi.Id);
-        DataImport__c di3 = newDi('fname3', 'lname3', bdi.Id);
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
         List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
         insert dis;
 
@@ -205,9 +195,12 @@ public with sharing class BDI_DataImport_TEST {
         DataImportBatch__c bdi = BDI_BatchOverride_TEST.newDIBatch();
         insert bdi;
 
-        DataImport__c di1 = newDi('fname1', 'lname1', bdi.Id);
-        DataImport__c di2 = newDi('fname2', 'lname2', bdi.Id);
-        DataImport__c di3 = newDi('fname3', 'lname3', bdi.Id);
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
         List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
         insert dis;
 
