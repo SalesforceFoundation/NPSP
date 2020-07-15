@@ -293,10 +293,12 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-     * @description Provides the "Name" field used by the related object for
-     *              relationship fields.
-     * @return The API Name of the "Name" field used by the related object for the
-     *          relationship field represented by the arguments.
+     * @description Provides the field used to retrieve the name of the related record for
+     *              a lookup when querying the child record.
+     * @return The dot-notation field name to use in SOQL queries for the field
+     *          represented by the arguments. Ex: Account.Name, Case.CaseNumber,
+     *          CustomObject__r.Name.
+     *
      */
     public static String getReferenceObjectNameField(String sObjectName, String fieldName) {
         List<SObjectType> relatedObjects = getFieldDescribe(
@@ -308,8 +310,15 @@ public class UTIL_Describe {
             return null;
         }
 
+        String relatedObj;
+        if (fieldName.endsWithIgnoreCase('__c')) {
+            relatedObj = fieldName.removeEndIgnoreCase('c') + 'r';
+        } else if (fieldName.endsWithIgnoreCase('Id')) {
+            relatedObj = fieldName.removeEndIgnoreCase('Id');
+        }
+
         return String.join(new List<String>{
-                fieldName.replace('__c', '__r'),
+                relatedObj,
                 UTIL_Describe.getNameField(
                         String.valueOf(relatedObjects[0]))
         }, '.');
