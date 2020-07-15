@@ -377,10 +377,18 @@ export default class GeBatchGiftEntryTable extends LightningElement {
      */
     appendUrlColumnProperties(objectInfo, urlSuffix = URL_SUFFIX,
                               urlLabelSuffix = URL_LABEL_SUFFIX) {
+        const replaceLast = (find, replacement, string) => {
+            const lastIndex = string.lastIndexOf(find);
+            if (lastIndex === -1) {
+                return string;
+            }
+            return string.substring(0, lastIndex) + replacement;
+        };
+
         for (const [key, value] of Object.entries(this)) {
-            const field = objectInfo.data.fields[key];
+            const field = objectInfo.fields[key];
             if (field && field.dataType === 'Reference') {
-                const relationshipField = key.replace('__c', '__r');
+                const relationshipField = replaceLast('__c', '__r', key);
                 if (!this[relationshipField]) {
                     continue;
                 }
