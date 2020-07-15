@@ -115,5 +115,4 @@ public inherited sharing class RD2_Constants {
     * @description Contains default value for the Next Donation Date Match Range Days field
     */
     public static final Integer DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS = 3;
-
 }

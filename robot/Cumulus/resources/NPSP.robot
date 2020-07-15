@@ -51,6 +51,22 @@ API Modify Contact
     &{contact} =  Get From List  ${records}  0
     [return]         &{contact}
 
+API Modify Recurring Donation
+    [Documentation]  This keyword is used to update an existing recurring donation record by passing id and
+    ...              This keyword returns the recurring donation dictonary after the update, when called
+    ...              Syntax for passing parameters:
+    ...
+    ...              | Recurring Donation ID   |
+
+    [Arguments]             ${rd_id}      &{fields}
+    Salesforce Update       npe03__Recurring_Donation__c     ${rd_id}
+    ...                     &{fields}
+    @{records} =  Salesforce Query      npe03__Recurring_Donation__c
+    ...              select=StartDate__c,npe03__Amount__c
+    ...              Id=${rd_id}
+    &{rd} =          Get From List  ${records}  0
+    [return]         &{rd}
+
 API Create Campaign
     [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name 
     ...              as random strings and no additional info. This keyword returns the campaign dictonary when called
@@ -350,24 +366,20 @@ Enable Advanced Mapping
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
     Enable Advanced Mapping If Not Enabled
 
-Validate And Create Required CustomField
+Create Customfield In Object Manager
     [Documentation]        Reads key value pair arguments.
-    ...                    Go to Object Manager page and load fields and relationships for the specific object
-    ...                    Run keyword to create custom field based on the field type selection
+    ...                    Navigates to Object Manager page and load fields and relationships for the specific object
+    ...                    Runs keyword to create custom field
+    ...                    Example key,value pairs
+    ...                            Object=Payment
+    ...                            Field_Type=Formula
+    ...                            Field_Name=Is Opportunity From Prior Year
+    ...                            Formula=YEAR( npe01__Opportunity__r.CloseDate ) < YEAR( npe01__Payment_Date__c )
     [Arguments]            &{fields}
     Load Page Object                                     Custom                           ObjectManager
-    Open Fields And Relationships                        &{fields}[Object]
-    Run Keyword If     '&{fields}[Field_Type]' == "Lookup"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    ...                                                      &{fields}[Related_To]
-    Run Keyword If     '&{fields}[Field_Type]' == "Currency"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    Run Keyword If     '&{fields}[Field_Type]' == "Formula"   Create Custom Field
-    ...                                                      &{fields}[Field_Type]
-    ...                                                      &{fields}[Field_Name]
-    ...                                                      formula=&{fields}[Formula]
+    Open Fields And Relationships                        ${fields}[Object]
+    Create Custom Field                                  &{fields}
+
 
 Enable RD2QA
     [Documentation]        Enables Enhanced Recurring donations (RD2) settings and deploys the metadata

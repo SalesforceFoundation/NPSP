@@ -2,7 +2,7 @@ import {LightningElement, api, track, wire} from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import { isNumeric, isNotEmpty } from 'c/utilCommon';
+import { isNumeric, isNotEmpty, isEmpty } from 'c/utilCommon';
 import { registerListener } from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
@@ -345,11 +345,21 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 return true;
             })
             .reduce((accumulator, current) => {
-                let fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
-                let localFieldName = AMOUNT_FIELD.fieldApiName;
-                let currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
+                const fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
+                const localFieldName = AMOUNT_FIELD.fieldApiName;
+                const currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
                 
-                const currentAmount = current.record[currentKey];
+                let currentAmount = current.record[currentKey];
+                if (isEmpty(currentAmount)) {
+                    // amount is empty, use the percent field
+                    const fullFieldNamePercent = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
+                    const localFieldNamePercent = PERCENT_FIELD.fieldApiName;
+                    const currentKeyPercent = current.record.hasOwnProperty(fullFieldNamePercent) ?
+                                            fullFieldNamePercent : localFieldNamePercent;
+
+                    const currentPercent = current.record[currentKeyPercent];
+                    currentAmount = (currentPercent * this._totalAmount) / 100;
+                }
 
                 if(isNumeric(currentAmount)) {
                     // prefix + to ensure operand is treated as a number
@@ -379,7 +389,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
             const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
             // avoid floating point errors by subtracting whole numbers
-            return (remainingCents / 100)
+            return (remainingCents / 100);
         }
         return 0;
     }

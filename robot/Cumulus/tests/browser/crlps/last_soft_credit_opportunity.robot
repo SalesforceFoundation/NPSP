@@ -35,7 +35,7 @@ Create Crlp For Automated Soft Credit
     [tags]              unstable                                  W-037793                         feature:crlps
 
     # Create a custom lookup field requried for this particular testcase
-    Validate And Create Required CustomField
+    Create Customfield In Object Manager
     ...                                                    Object=Contact
     ...                                                    Field_Type=Lookup
     ...                                                    Field_Name=Last Soft Credit Opportunity

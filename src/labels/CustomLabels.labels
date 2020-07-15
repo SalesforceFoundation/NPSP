@@ -1951,7 +1951,6 @@
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
         &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
     </labels>
-
     <labels>
         <fullName>RD2_EndDateMustBeLaterThanCloseWonOpp</fullName>
         <categories>Recurring Donations Error</categories>
@@ -1967,6 +1966,158 @@
         <protected>true</protected>
         <shortDescription>Fixed Length Recurring Donation End Date must be valid</shortDescription>
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Custom Field section header</shortDescription>
+        <value>Custom Fields</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonationSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Donation Information section header</shortDescription>
+        <value>Donation Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Donor Information section header</shortDescription>
+        <value>Donor Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorTypeHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Inline HelpText for the Donor Type picklist</shortDescription>
+        <value>Select the type of donor for this Recurring Donation. If you select Account, enter an Organization Account, and optionally a related Contact. If you select Contact, enter a Contact related to a Household Account.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormDonorTypeLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Label for the Donor Type picklist</shortDescription>
+        <value>Donor Type</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form header</shortDescription>
+        <value>New Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormInsertSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is inserted</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was created.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormMissingPermissions</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Field Permissions Error</shortDescription>
+        <value>You don&apos;t have the required Recurring Donations field permissions. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodAdvanced</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Picklist value for the RD2 Entry Form custom period picklist</shortDescription>
+        <value>Advanced</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodHelpText</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Inline Help Text for the Monthly and Advanced Picklist</shortDescription>
+        <value>Select Advanced to enter other schedule types such as weekly, yearly, every 6 months, etc.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Label for the Monthly and Advanced Picklist</shortDescription>
+        <value>Recurring Period</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralDaily</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Daily</shortDescription>
+        <value>Days</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralMonthly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Monthly</shortDescription>
+        <value>Months</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralWeekly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Weekly</shortDescription>
+        <value>Weeks</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormPeriodPluralYearly</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Plural Picklist substitute for Yearly</shortDescription>
+        <value>Years</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormScheduleEveryLabel</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show as Every</shortDescription>
+        <value>Every</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormStatusSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Status Information section header</shortDescription>
+        <value>Status Information</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormUpdateSuccessMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form message when record is updated</shortDescription>
+        <value>Recurring Donation &quot;{0}&quot; was saved.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
+        <value>Other Information</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
@@ -2039,6 +2190,38 @@
         <protected>true</protected>
         <shortDescription>Message displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseClosedRDErrorMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when trying to pause Closed Recurring Donation.</shortDescription>
+        <value>You can&apos;t Pause a Closed Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseDescription</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Pause description</shortDescription>
+        <value>Select installments from the list below. You can pause for up to 12 consecutive installments.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseHeader</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause Header</shortDescription>
+        <value>Pause {0}</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseFirstDonationDateDynamicText</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause first donation date after the pause</shortDescription>
+        <value>The first donation date after the pause period will be {0}.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -2537,6 +2720,22 @@
         <protected>true</protected>
         <shortDescription>SmartyStreets Help Test</shortDescription>
         <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
+    </labels>
+    <labels>
+        <fullName>UTIL_InputFormFormFieldAltLabelDate</fullName>
+        <categories>Alt Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt Text for the Date Picker icon</shortDescription>
+        <value>Date Picker</value>
+    </labels>
+    <labels>
+        <fullName>UTIL_InputFormFormFieldAltLabelLookup</fullName>
+        <categories>Alt Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt Text for the Lookup icon</shortDescription>
+        <value>Lookup</value>
     </labels>
     <labels>
         <fullName>Zip_Not_Found</fullName>
@@ -4920,6 +5119,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Percent</shortDescription>
         <value>Percent</value>
+    </labels>
+    <labels>
+        <fullName>commonPermissionErrorMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
+        <value>You don&apos;t have the necessary access to use this feature. Please check with your Salesforce Administrator.</value>
     </labels>
     <labels>
         <fullName>commonReadMore</fullName>
@@ -7404,6 +7611,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Contact Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelDataBatchNotRun</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when Data Health Check does not run</shortDescription>
+        <value>Record data health checks were not run.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelDisableRecordBatch</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Setting label to disable Sobject batch</shortDescription>
+        <value>Disable Record Data Health Checks</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelDisableRecordBatchDescription</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for Disable Health Check Record Batch Setting</shortDescription>
+        <value>If selected, Health Check only checks your NPSP configuration settings for problems.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -7457,7 +7688,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your Account-related data. When complete, you can view the results below, including detailed information for any failures.</value>
+        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your record data. When complete, you can view the results below, including detailed information for any failures.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
@@ -8025,6 +8256,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>First</value>
     </labels>
     <labels>
+        <fullName>labelBooleanFalse</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Translatable label for False</shortDescription>
+        <value>False</value>
+    </labels>
+    <labels>
+        <fullName>labelBooleanTrue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Translatable label for True</shortDescription>
+        <value>True</value>
+    </labels>
+    <labels>
         <fullName>labelListViewLast</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>
@@ -8126,6 +8373,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>lblCountry</shortDescription>
         <value>Country</value>
+    </labels>
+     <labels>
+        <fullName>lblCurrency</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Override CurrencyIsoCode label</shortDescription>
+        <value>Currency</value>
     </labels>
     <labels>
         <fullName>lblDeleteContact</fullName>
@@ -12161,6 +12416,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
         <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingDescription</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming Description</shortDescription>
+        <value>When you create a Recurring Donation, NPSP automatically populates the Name using the specified name format. Choose Disable Automatic Naming to turn this feature off.</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingDisable</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming disable option</shortDescription>
+        <value>Disable Auto Naming</value>
+    </labels>
+    <labels>
+        <fullName>stgRDNamingOptionLabel</fullName>
+        <categories>Settings RDNaming</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Auto Naming Option Label</shortDescription>
+        <value>Recurring Donation Name Format</value>
     </labels>
     <labels>
         <fullName>stgReset</fullName>
