@@ -10,6 +10,7 @@ import {
     format,
     deepClone,
     isNotEmpty,
+    isUndefined,
     hasNestedProperty,
     showToast,
 } from 'c/utilCommon'
@@ -77,7 +78,7 @@ export default class geListView extends LightningElement {
     @track columnEntriesByName = {};
     @track selectedListView;
     @track orderedByInfo;
-
+    _orderBy;
     columnHeadersByFieldApiName;
     hasAdditionalRows = false;
     // Array of callback functions required by children that extend this component
@@ -315,15 +316,17 @@ export default class geListView extends LightningElement {
                 const columnEntry = this.columnEntriesByName[this.sortedBy];
                 let orderedByFieldApiName;
 
-                if (columnEntry) {
+                if (columnEntry && !this._orderBy) {
                     if (hasNestedProperty(this.columnEntriesByName[this.sortedBy],
                         'typeAttributes', 'label', 'fieldName')) {
                         orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
                     } else {
                         orderedByFieldApiName = columnEntry.fieldApiName;
                     }
-                    orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
+                } else {
+                    orderedByFieldApiName = this._orderBy;
                 }
+                orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
             }
             try {
                 const records = await retrieveRecords({
@@ -453,7 +456,6 @@ export default class geListView extends LightningElement {
 
             _columns.push(columnEntry)
         }
-
         return _columns;
     }
 
@@ -465,7 +467,6 @@ export default class geListView extends LightningElement {
     */
      setDatatableColumns(columnEntries) {
         let _columnEntriesByName = {};
-
         columnEntries.forEach(column => {
             _columnEntriesByName[column.fieldName] = column;
         });
@@ -677,14 +678,13 @@ export default class geListView extends LightningElement {
     handleColumnSorting(event) {
         this.sortedBy = event.detail.fieldName;
         const columnEntry = this.columnEntriesByName[this.sortedBy];
-        this.sortedDirection = event.detail.sortDirection;
-
-        // Set sortedBy to correct fieldName if a URL type column.
-        let sortedBy = this.sortedBy;
+        this.sortedDirection =  event.detail.sortDirection;
+        // Set sortedBy to correct fieldName if a URL type column
         if (hasNestedProperty(columnEntry, 'typeAttributes', 'label', 'fieldName')) {
-            sortedBy = columnEntry.typeAttributes.label.fieldName;
+            let field = Object.values(this.objectInfo.fields).find(
+              (field) => field.relationshipName === columnEntry.typeAttributes.label.fieldName);
+            this._orderBy = isUndefined(field) ? undefined : field.apiName;
         }
-
         this.getRecords(this.columns);
     }
 
