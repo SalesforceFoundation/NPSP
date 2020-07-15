@@ -838,7 +838,8 @@ private class PMT_Payment_TEST {
     }
 
     /**
-    * @description Verifies that when auto payment is not enabled and payments are fully received, the Opp will be updated to Closed 
+    * @description Verifies that when auto payment is not enabled and payments are fully received
+    *    the Opp will be updated to the Closed per Payment Auto Close State settings
     */
     @isTest
     private static void oppStageShouldClosedWhenPaymentsAreFullyReceivedAndAutoPaymentNotEnabled() {
@@ -846,13 +847,12 @@ private class PMT_Payment_TEST {
         UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = UTIL_UnitTestData_TEST.getClosedWonStage();
 
         Account acc = [SELECT Id FROM Account LIMIT 1];
-
-        Opportunity opp = new Opportunity(
-                Name = 'success',
-                Amount = 500,
-                AccountID = acc.id,
-                CloseDate = System.today(),
-                StageName = UTIL_UnitTestData_TEST.getOpenStage());
+        Opportunity opp = new TEST_OpportunityBuilder()
+            .withAccount(acc.Id)
+            .withOpenStage()
+            .withCloseDate(System.today())
+            .withAMount(500)
+            .build();
 
         insert opp;
 
@@ -880,7 +880,8 @@ private class PMT_Payment_TEST {
     }
 
     /**
-    * @description Verifies that when auto payment is enabled and payments are fully received, the Opp will be updated to Closed 
+    * @description Verifies that when auto payment is enabled and payments are fully received,
+    *    the Opp will be updated to the Closed per Payment Auto Close State settings
     */
     @isTest
     private static void oppStageShouldClosedWhenPaymentsAreFullyReceivedAndAutoPaymentEnabled() {
@@ -889,12 +890,12 @@ private class PMT_Payment_TEST {
 
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
-        Opportunity opp = new Opportunity(
-                Name = 'success',
-                Amount = 500,
-                AccountID = acc.id,
-                CloseDate = System.today(),
-                StageName = UTIL_UnitTestData_TEST.getOpenStage());
+        Opportunity opp = new TEST_OpportunityBuilder()
+            .withAccount(acc.Id)
+            .withOpenStage()
+            .withCloseDate(System.today())
+            .withAMount(500)
+            .build();
 
         insert opp;
 

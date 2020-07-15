@@ -182,7 +182,7 @@ public class PMT_PaymentCreator {
     * @param oldMap Opportunity trigger old map
     */
     private void closeOppsWhenFullPaymentsReceived(List<Opportunity> newOpps, Map<Id, Opportunity> oldMap) {
-        if (String.isEmpty(contactSettings.Payments_Auto_Close_Stage_Name__c)) {
+        if (String.isBlank(contactSettings.Payments_Auto_Close_Stage_Name__c)) {
             return;
         }
 
@@ -216,7 +216,7 @@ public class PMT_PaymentCreator {
             return;
         }
 
-        list<npe01__OppPayment__c> paymentsToInsert = new list<npe01__OppPayment__c>();
+        List<npe01__OppPayment__c> paymentsToInsert = new List<npe01__OppPayment__c>();
 
         for (Opportunity thisOpp : newOpps) {
             if (isNoPaymentForOpp(thisOpp)) {
@@ -228,7 +228,7 @@ public class PMT_PaymentCreator {
                 thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0) {
 
                 npe01__oppPayment__c op = new npe01__oppPayment__c(
-                    npe01__opportunity__c = thisOpp.id
+                    npe01__opportunity__c = thisOpp.Id
                 );
 
                 //in multicurrency SFDC set the payment currency field to equal to the opp currency
@@ -425,9 +425,12 @@ public class PMT_PaymentCreator {
 
         // If the org has multicurrency set up we need to round the currency value
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-            String oppCurrency = (UserInfo.isMultiCurrencyOrganization()) ? (String) newOpp.get('CurrencyIsoCode'): 'USD';
+            String oppCurrency = (UserInfo.isMultiCurrencyOrganization())
+                ? (String) newOpp.get('CurrencyIsoCode')
+                : UserInfo.getDefaultCurrency();
             Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
             isAmountEqualOrGreaterPaymentReceived = isEqualOrGreaterWhenRounded(totalPaymentAmount, newOpp.Amount, decimalPlaces);
+
         } else {
             isAmountEqualOrGreaterPaymentReceived = (totalPaymentAmount >= newOpp.Amount);
         }
@@ -459,18 +462,18 @@ public class PMT_PaymentCreator {
     }
 
     /**
-    * @description specifies whether Payments should be excluded for the Opportunity
-    * @param opp the Opportunity to test.
-    * @return boolean true if Payments excluded for the Opportunity
+    * @description Specifies whether Payments should be excluded for the Opportunity
+    *   The payment should not be created if:
+    *   - Record Type or Type is excluded in the Contact Settings Custom Setting
+    *   - npe01__Do_Not_Automatically_Create_Payment__c is true
+    * @param opp the Opportunity to evaluate.
+    * @return Boolean true if Payments excluded for the Opportunity
     */ 
     private static boolean isNoPaymentForOpp(Opportunity opp) {
-        if (opp.npe01__Do_Not_Automatically_Create_Payment__c)
-            return true;
-        if (setOppTypeNoPayment.contains(opp.Type))
-            return true;
-        if (setOppRecordTypeIdNoPayment.contains((id)opp.get('RecordTypeId')))
-            return true;
-        return false;
+        return (opp.npe01__Do_Not_Automatically_Create_Payment__c
+            || setOppTypeNoPayment.contains(opp.Type)
+            || setOppRecordTypeIdNoPayment.contains((Id) opp.get('RecordTypeId'))
+        );
     }   
 
     /**
