@@ -1,6 +1,8 @@
-import { LightningElement, api, track } from 'lwc';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { LightningElement, api, track, wire } from 'lwc';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+
+import NAME_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 
 import header from '@salesforce/label/c.RD2_PauseHeader';
 import description from '@salesforce/label/c.RD2_PauseDescription';
@@ -23,10 +25,13 @@ export default class Rd2PauseForm extends LightningElement {
 
     @api recordId;
 
+    @track isLoading = true;
+    @track pageHeader = '';
+    recordName;
+    
     maxRowDisplay = 12;
     maxRowSelection = 12;
     selectedIds = [];
-    @track isLoading = true;
     @track columns = [];
     @track installments;
 
@@ -48,6 +53,20 @@ export default class Rd2PauseForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
             });
+    }
+
+    @wire(getRecord, {
+        recordId: '$recordId',
+        fields: NAME_FIELD
+    })
+    wiredRecord(response) {
+        if (response.data) {
+            this.recordName = response.data.fields.Name.value;
+            this.pageHeader = this.labels.header.replace('{0}', this.recordName);
+
+        } else if (response.error) {
+            this.handleError(response.error);
+        }
     }
 
     /***
@@ -188,7 +207,8 @@ export default class Rd2PauseForm extends LightningElement {
     * @description 
     */
     handleSaveSuccess() {
-        const message = 'Pause on Recurring Donation {0} has been saved';//TODO
+        let message = 'Pause on Recurring Donation {0} has been saved';//TODO
+        message = message.replace('{0}', this.recordName);
         showToast(message, '', 'success', []);
 
         this.closeModal();
