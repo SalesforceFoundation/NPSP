@@ -81,8 +81,8 @@ public with sharing class GE_LookupController {
     }
 
     /**
-     * Search for an SObject by its name field using SOSL
-     * Objects without Name fields (Case, Task, Event...) are not compatible with this component.
+     * @description Search for an SObject by its name field using SOSL
+     *     Objects without Name fields (Case, Task, Event...) are not compatible with this component.
      *
      * @param searchValue   Value to search for
      * @param sObjectType   Type of SObject to Search
@@ -105,8 +105,8 @@ public with sharing class GE_LookupController {
     }
 
     /**
-     * Search for an SObject by its name field using SOQL
-     * Objects without Name fields (Case, Task, Event...) are not compatible with this component.
+     * @description  Search for an SObject by its name field using SOQL
+     *      Objects without Name fields (Case, Task, Event...) are not compatible with this component.
      *
      * @param searchValue   Value to search for
      * @param sObjectType   Type of SObject to Search
