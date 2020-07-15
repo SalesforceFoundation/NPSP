@@ -5,6 +5,7 @@ import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
 import doSearchRecordType from '@salesforce/apex/GE_LookupController.doSearchRecordType';
 import { isNotEmpty } from 'c/utilCommon';
 import { handleError } from 'c/utilTemplateBuilder';
+import RECORD_TYPE from '@salesforce/schema/RecordType';
 
 const DELAY = 300;
 
@@ -205,7 +206,7 @@ export default class GeFormFieldLookup extends LightningElement {
      * @returns {Promise<void>}
      */
     retrieveLookupOptions = async (searchValue, sObjectType) => {
-        if (sObjectType === 'RecordType') {
+        if (sObjectType === RECORD_TYPE.objectApiName) {
             // if searching RecordTypes, set WHERE SObjectType clause to filter results.
             this.options = await doSearchRecordType({searchValue, sObjectType: this.objectApiName});
         } else {
