@@ -1,4 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
+import { fireEvent } from 'c/pubsubNoPageRef';
+import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
 import header from '@salesforce/label/c.RD2_PauseHeader';
 import description from '@salesforce/label/c.RD2_PauseDescription';
@@ -7,6 +9,7 @@ import cancelButton from '@salesforce/label/c.stgBtnCancel';
 import saveButton from '@salesforce/label/c.stgBtnSave';
 
 import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
+import savePause from '@salesforce/apex/RD2_PauseForm_CTRL.savePause';
 
 export default class Rd2PauseForm extends LightningElement {
 
@@ -140,20 +143,77 @@ export default class Rd2PauseForm extends LightningElement {
     /***
     * @description 
     */
-    handleCancel() {
+    handleSave() {
+        this.clearError();
+        this.isLoading = true;
+
+        try {
+            const jsonPauseData = JSON.stringify(this.getPauseData());
+            console.log('Pause Data: ' + jsonPauseData);
+
+            savePause({ pauseData: jsonPauseData })
+                .then(() => {
+                    this.handleSaveSuccess();
+                })
+                .catch((error) => {
+                    this.handleError(error);
+                });
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+    /***
+    * @description
+    */
+    getPauseData() {
+        let pauseData = {};
+        let installmentById = this.installments.reduce(function (map, installment) {
+            map[installment.installmentNumber] = installment.donationDate;
+            return map;
+        }, {});
+
+        const firstSelectedId = this.selectedIds[0];
+        pauseData.startDate = installmentById[firstSelectedId];
+
+        const lastSelectedId = this.selectedIds[this.selectedIds.length - 1];
+        pauseData.resumeAfterDate = installmentById[lastSelectedId];
+
+        pauseData.reason = 'Test';//TODO
+
+        return pauseData;
+    }
+
+    /***
+    * @description 
+    */
+    handleSaveSuccess() {
+        const message = 'Pause on Recurring Donation {0} has been saved';//TODO
+        showToast(message, '', 'success', []);
+
         this.closeModal();
     }
 
     /***
     * @description 
     */
-    handleSave() {
+    handleCancel() {
         this.closeModal();
     }
 
+    /***
+    * @description
+    */
     closeModal() {
         const closeEvent = new CustomEvent('close');
         this.dispatchEvent(closeEvent);
+    }
+
+    /**
+    * @description Clears the error notification
+    */
+    clearError() {
+        this.error = {};
     }
 
     /***
@@ -161,24 +221,12 @@ export default class Rd2PauseForm extends LightningElement {
     * @param error: Error Event
     */
     handleError(error) {
-        this.error.message = this.constructErrorMessage(error);
+        this.isLoading = false;
+
+        this.error = constructErrorMessage(error);
 
         this.template.querySelector(".slds-modal__header").scrollIntoView();
-    }
 
-    /***
-     * @description Parse the error response
-     * @param {object} error: Event holding error details
-     * @return The error message to render
-     */
-    constructErrorMessage(error) {
-        if (error && error.status && error.body) {
-            return error.body.message;
-        } else if (error && error.name && error.message) {
-            return error.message;
-        } else {
-            return "";
-        }
+        console.log('Error: ' + JSON.stringify(this.error));//TODO
     }
-
 }

@@ -7,26 +7,35 @@
         </h2>
     </header>
 
-    <div class="slds-modal__content slds-p-around_medium">
+    <div class="slds-p-horizontal_medium" if:true={error.detail}>
+        <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error" 
+            icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
+            subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" >
+        </c-util-page-level-message>
+    </div>
+
+    <div class="slds-modal__content slds-p-horizontal_medium">
         <template if:true={isLoading}>
             <div class="slds-grid slds-grid_align-center">
                 <div class="slds-is-relative slds-size_1-of-1">
-                    <lightning-spinner alternative-text={labels.loadingMessage}></lightning-spinner>
+                    <lightning-spinner alternative-text={labels.loadingMessage} variant="brand"></lightning-spinner>
                     <c-util-stencil row-count={maxRowSelection} column-count="3"></c-util-stencil>
                 </div>
             </div>
         </template>
 
-        <template if:false={isLoading}>
-            <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
+        <div if:false={isLoading}>
+            <div class="slds-p-around_medium">
+                <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
+            </div>
 
-            <div class="slds-m-around_medium" if:true={installments}>
+            <div if:true={installments}>
                 <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
                     is-loading={isLoading} max-row-selection={maxRowSelection} onrowselection={handleRowSelection}
                     selected-rows={selectedIds}>
                 </lightning-datatable>
             </div>
-        </template>
+        </div>
     </div>
 
     <footer class="slds-modal__footer slds-clearfix">
