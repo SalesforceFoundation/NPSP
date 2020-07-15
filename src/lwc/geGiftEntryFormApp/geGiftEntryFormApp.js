@@ -506,7 +506,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleSectionsRetrieved(event) {
         const formSections = event.target.sections;
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.handleSectionsRetrieved(formSections);
+        table.sections = formSections;
     }
 
     handleBatchDryRun() {

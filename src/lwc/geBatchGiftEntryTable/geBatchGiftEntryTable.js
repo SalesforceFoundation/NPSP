@@ -1,4 +1,4 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
@@ -42,11 +42,16 @@ const columnTypeByDescribeType = {
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
-    @track ready = false;
+
+    get ready() {
+        return this._columnsLoaded && this._dataImportModel;
+    }
 
     _batchLoaded = false;
-    @track data = [];
-    @track hasData;
+    data = [];
+    get hasData() {
+        return this.data.length > 0;
+    }
 
     _columnsLoaded = false;
     _columns = [
@@ -80,74 +85,62 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api count;
     @api expectedCount;
     @api userDefinedBatchTableColumnNames;
-    @track isLoaded = true;
+    isLoaded = true;
+
+    connectedCallback() {
+        this.loadBatch();
+    }
 
     @api
-    handleSectionsRetrieved(sections) {
-        if (!this._batchLoaded) {
-            this.loadBatch(sections);
-        }
+    set sections(sections) {
+        this._sections = sections;
+        this.buildColumnsFromSections();
+    }
+    get sections() {
+        return this._sections;
     }
 
-    setReady() {
-        this.ready = this._columnsLoaded && this._batchLoaded;
-    }
-
-    loadBatch(sections) {
+    _dataImportModel;
+    loadBatch() {
         getDataImportModel({batchId: this.batchId})
             .then(
                 response => {
-                    const dataImportModel = JSON.parse(response);
-                    this.setTableProperties(dataImportModel);
-                    this.buildColumnsFromSections(sections);
-                    this.batchLoaded();
+                    this._dataImportModel = JSON.parse(response);
+                    this.setTableProperties();
+                    this._batchLoaded = true;
                 }
             )
-            .catch(
-                error => {
-                    handleError(error);
-                }
-            );
+            .catch(error => handleError(error));
     }
 
-    batchLoaded() {
-        this._batchLoaded = true;
-        this.setReady();
-    }
-
-    setTableProperties(dataImportModel) {
-        this._count = dataImportModel.totalCountOfRows;
-        this._total = dataImportModel.totalRowAmount;
-        dataImportModel.dataImportRows.forEach(row => {
+    _propertiesSet = false;
+    setTableProperties() {
+        if (this._propertiesSet) {
+            return;
+        }
+        if (!this._dataImportObjectInfo) {
+            return;
+        }
+        this._count = this._dataImportModel.totalCountOfRows;
+        this._total = this._dataImportModel.totalRowAmount;
+        this._dataImportModel.dataImportRows.forEach(row => {
             this.data.push(Object.assign(row,
                 this.appendUrlColumnProperties.call(row.record,
-                    this.dataImportObjectInfo)));
+                    this._dataImportObjectInfo)));
         });
         this.data = this.data.slice(0);
-        this.hasData = this.data.length > 0 ? true : false;
+        this._propertiesSet = true;
     }
 
     get columns() {
-        if (!this._columnsLoaded) return [];
-        if (this._columnsLoaded) return [...this.computedColumns, this._actionsColumn];
-    }
-
-    get computedColumns() {
-        const hasUserDefinedColumns =
-            this.userDefinedBatchTableColumnNames && this.userDefinedBatchTableColumnNames.length > 0;
-        if (hasUserDefinedColumns) {
-            return this.userDefinedColumns;
-        }
-
-        return this.allColumns;
+        return this.userDefinedBatchTableColumnNames &&
+        this.userDefinedBatchTableColumnNames.length > 0 ?
+            this.userDefinedColumns.concat(this._actionsColumn) :
+            this.allColumns.concat(this._actionsColumn);
     }
 
     get allColumns() {
-        let allColumns = [];
-        for (const columnValue in this._columnsBySourceFieldApiName) {
-            allColumns.push(this._columnsBySourceFieldApiName[columnValue]);
-        }
-        return allColumns;
+        return Object.values(this._columnsBySourceFieldApiName);
     }
 
     get userDefinedColumns() {
@@ -164,11 +157,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return userDefinedColumns;
     }
 
-    buildColumnsFromSections(sections) {
+    buildColumnsFromSections() {
         this.addSpecialCasedColumns();
-        if (!sections) return;
-
-        sections.forEach(section => {
+        this.sections.forEach(section => {
             section.elements.filter(e => e.elementType === 'field')
                 .forEach(fieldElement => {
                     const fieldWrapper =
@@ -181,8 +172,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 });
         });
-
-        this.columnsLoaded();
+        this._columnsLoaded = true;
     }
 
     /**
@@ -198,11 +188,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this._columnsBySourceFieldApiName[this._columns[1].fieldName] = this._columns[1];
         this._columnsBySourceFieldApiName[this._columns[2].fieldName] = this._columns[2];
         this._columnsBySourceFieldApiName[this._columns[3].fieldName] = this._columns[3];
-    }
-
-    columnsLoaded() {
-        this._columnsLoaded = true;
-        this.setReady();
     }
 
     @api
@@ -265,7 +250,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     this.data.push(
                         Object.assign(row,
                             this.appendUrlColumnProperties.call(row.record,
-                                this.dataImportObjectInfo)));
+                                this._dataImportObjectInfo)));
                 });
                 this.data = this.data.splice(0);
                 if (this.data.length >= this.count) {
@@ -292,7 +277,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     this.upsertData(
                         Object.assign(row,
                             this.appendUrlColumnProperties.call(row.record,
-                                this.dataImportObjectInfo)), 'Id');
+                                this._dataImportObjectInfo)), 'Id');
                 });
             })
             .catch(error => {
@@ -420,7 +405,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 let row = dataImportModel.dataImportRows[0];
                 Object.assign(row,
                     this.appendUrlColumnProperties.call(row.record,
-                        this.dataImportObjectInfo));
+                        this._dataImportObjectInfo));
                 this.upsertData(row, 'Id');
                 this._count = dataImportModel.totalCountOfRows;
                 this._total = dataImportModel.totalRowAmount;
@@ -431,8 +416,16 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             });
     }
 
-    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_OBJECT})
-    dataImportObjectInfo;
+    _dataImportObjectInfo;
+    @wire(getObjectInfo, {objectApiName: DATA_IMPORT_OBJECT})
+    wiredDataImportObjectInfo({error, data}) {
+        if (data) {
+            this._dataImportObjectInfo = data;
+            if (!this._propertiesSet) {
+                this.setTableProperties();
+            }
+        }
+    }
 
     getColumnTypeFromFieldType(dataType) {
         return columnTypeByDescribeType[dataType] || dataType.toLowerCase();
