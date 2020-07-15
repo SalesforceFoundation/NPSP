@@ -132,11 +132,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
         this._count = this._dataImportModel.totalCountOfRows;
         this._total = this._dataImportModel.totalRowAmount;
+        console.log('*** ' + 'begin' + ' ***');
+        console.time('appendUrlColumnsProps');
         this._dataImportModel.dataImportRows.forEach(row => {
             this.data.push(Object.assign(row,
                 this.appendUrlColumnProperties.call(row.record,
                     this._dataImportObjectInfo)));
         });
+        console.timeEnd('appendUrlColumnsProps');
         this.data = this.data.slice(0);
         this._propertiesSet = true;
     }
@@ -352,35 +355,69 @@ export default class GeBatchGiftEntryTable extends LightningElement {
      */
     appendUrlColumnProperties(objectInfo, urlSuffix = URL_SUFFIX,
                               urlLabelSuffix = URL_LABEL_SUFFIX) {
-        const replaceLast = (find, replacement, string) => {
-            const lastIndex = string.lastIndexOf(find);
-            if (lastIndex === -1) {
-                return string;
-            }
-            return string.substring(0, lastIndex) + replacement;
-        };
-
-        for (const [key, value] of Object.entries(this)) {
-            const field = objectInfo.fields[key];
-            if (field && field.dataType === 'Reference') {
-                const relationshipField = replaceLast('__c', '__r', key);
-                if (!this[relationshipField]) {
-                    continue;
-                }
-
-                this[`${key}${urlSuffix}`] = `/${value}`;
-                if (this[relationshipField].Name) {
-                    this[`${key}${urlLabelSuffix}`] = this[relationshipField].Name;
+        Object.keys(this)
+            .filter(key => key.endsWith('__r'))
+            .forEach(key => {
+                const referenceObj = this[key];
+                this[`${key}${urlSuffix}`] = `/${referenceObj.Id}`;
+                if (referenceObj.Name) {
+                    this[`${key}${urlLabelSuffix}`] = referenceObj.Name;
                 } else {
                     try {
+                        const field = objectInfo.fields[key];
                         const nameField = field.referenceToInfos[0].nameFields[0];
-                        this[`${key}${urlLabelSuffix}`] = this[relationshipField][nameField];
+                        this[`${key.replace(/.$/,"c")}${urlLabelSuffix}`] = referenceObj[nameField];
                     } catch (e) {
-                        this[`${key}${urlLabelSuffix}`] = value;
+                        this[`${key}${urlLabelSuffix}`] = referenceObj.Id;
                     }
                 }
-            }
-        }
+        });
+        //
+        // const replaceLast = (find, replacement, string) => {
+        //     const lastIndex = string.lastIndexOf(find);
+        //     if (lastIndex === -1) {
+        //         return string;
+        //     }
+        //     return string.substring(0, lastIndex) + replacement;
+        // };
+        // console.log('*** ' + 'before refF' + ' ***');
+        // console.log('JSON.parse(JSON.stringify(objectInfo)): ', JSON.parse(JSON.stringify(objectInfo)));
+        //
+        //
+        // const referenceFields = Object.values(objectInfo.fields)
+        //     .filter(field => field.dataType === 'Reference')
+        //     .map(field => field.apiName);
+        // console.log('JSON.parse(JSON.stringify(referenceFields)): ', JSON.parse(JSON.stringify(referenceFields)));
+        //
+        // const ownReferenceFields = Object.keys(this)
+        //     .filter(key => referenceFields.includes(key));
+        // // .reduce((obj, key) => {
+        // //     obj[key] = this[key];
+        // //     return obj;
+        // // }, {});
+        // console.log('JSON.parse(JSON.stringify(ownReferenceFields)): ', JSON.parse(JSON.stringify(ownReferenceFields)));
+        //
+        // ownReferenceFields.forEach(fieldName => {
+        //     const referenceFieldName = replaceLast('__c', '__r', fieldName);
+        //     const referenceObj = this[referenceFieldName];
+        //     if (!this[referenceObj]) {
+        //         return;
+        //     }
+        //
+        //     this[`${fieldName}${urlSuffix}`] = `/${referenceObj.Id}`;
+        //     if (referenceObj.Name) {
+        //         this[`${fieldName}${urlLabelSuffix}`] = referenceObj.Name;
+        //     } else {
+        //         try {
+        //             const field = objectInfo.fields[fieldName];
+        //             const nameField = field.referenceToInfos[0].nameFields[0];
+        //             this[`${fieldName}${urlLabelSuffix}`] = referenceObj[nameField];
+        //         } catch (e) {
+        //             this[`${fieldName}${urlLabelSuffix}`] = referenceObj.Id;
+        //         }
+        //     }
+        // });
+        //
         return this;
     }
 
