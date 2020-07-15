@@ -133,6 +133,7 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
 
     /**
     * @description update the batch record status  
+    * @param List<DataImportBatch__c>
     * @param Map<Id, BatchDataImportStatusAggregate>
     */
     private void updateBatchStatus(List<DataImportBatch__c> batches, 
