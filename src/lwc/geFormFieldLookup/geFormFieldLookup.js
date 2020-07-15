@@ -233,6 +233,15 @@ export default class GeFormFieldLookup extends LightningElement {
 
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
         autocomplete.setValue({value: this.value, displayValue: this.displayValue});
+
+        if (this.value) {
+            this.dispatchChangeEvent({
+                value: this.value,
+                displayValue:
+                this.displayValue,
+                fieldApiName: this.fieldApiName
+            });
+        }
     }
 
     dispatchChangeEvent(data) {
