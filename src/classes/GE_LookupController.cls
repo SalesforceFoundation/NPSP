@@ -47,7 +47,7 @@ public with sharing class GE_LookupController {
      *
      * @return              A List<LookupResult> containing records that match the search criteria.
      */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled
     public static List<LookupResult> doSearch(String searchValue, String sObjectType) {
         Boolean isSearchable = UTIL_Describe.getObjectDescribe(sObjectType).isSearchable();
         if (isSearchable) {
@@ -65,7 +65,7 @@ public with sharing class GE_LookupController {
      *
      * @return              A List<LookupResult> containing Record Types that match the search criteria.
      */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled
     public static List<LookupResult> doSearchRecordType(String searchValue, String sObjectType) {
         String formattedValue = '%' + String.escapeSingleQuotes(searchValue) + '%';
         String queryTemplate = 'SELECT Id, Name FROM RecordType WHERE SObjectType = :sObjectType AND Name LIKE :formattedValue LIMIT {0}';
