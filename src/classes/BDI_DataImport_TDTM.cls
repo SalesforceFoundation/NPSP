@@ -64,7 +64,7 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
     }
 
     /**
-     * @description returns a list of di records that had the status changed
+     * @description updates the batch status on update
      * @param diOldList
      * @param diNewList
      * @return List<DataImport__c> diList
