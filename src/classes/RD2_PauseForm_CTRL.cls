@@ -42,8 +42,38 @@ public with sharing class RD2_PauseForm_CTRL {
      * @return void
      */
     @AuraEnabled
-    public static void savePause(String pauseData) {
-        throwAuraHandledException('Not implemented yet');        
+    public static void savePause(String jsonData) {
+        try {
+            PauseData data = (PauseData) JSON.deserialize(jsonData, PauseData.class);
+
+            RecurringDonationSchedule__c schedule = buildPauseSchedule(data);
+            if (schedule.Id != null) {
+                update schedule;
+            } else {
+                insert schedule;
+            }
+
+        } catch(Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+    }
+
+    /**
+     * @description 
+     * @param 
+     * @return void
+     */
+    private static RecurringDonationSchedule__c buildPauseSchedule(PauseData data) {
+        RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
+            Id = data.scheduleId,
+            RecurringDonation__c = data.recurringDonationId,
+            IsPause__c = true,
+            PausedReason__c = data.pausedReason,
+            StartDate__c = data.startDate,
+            EndDate__c = data.resumeAfterDate
+        );
+
+        return schedule;
     }
 
     /***
@@ -55,6 +85,17 @@ public with sharing class RD2_PauseForm_CTRL {
         AuraHandledException e = new AuraHandledException(errMessage);
         e.setMessage(errMessage);
         throw e;
+    }
+
+    /***
+    * @description 
+    */
+    public class PauseData {
+        public Id scheduleId;
+        public Id recurringDonationId;
+        public Date startDate;
+        public Date resumeAfterDate;
+        public String pausedReason;
     }
 
 }

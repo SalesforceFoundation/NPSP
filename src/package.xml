@@ -417,6 +417,7 @@
         <members>RD2_OpportunityMatcher_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
+        <members>RD2_PauseForm_CTRL</members>
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonation</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
@@ -1321,6 +1322,8 @@
         <members>RecurringDonationSchedule__c.InstallmentAmount__c</members>
         <members>RecurringDonationSchedule__c.InstallmentFrequency__c</members>
         <members>RecurringDonationSchedule__c.InstallmentPeriod__c</members>
+        <members>RecurringDonationSchedule__c.IsPause__c</members>
+        <members>RecurringDonationSchedule__c.PausedReason__c</members>
         <members>RecurringDonationSchedule__c.PaymentMethod__c</members>
         <members>RecurringDonationSchedule__c.RecurringDonation__c</members>
         <members>RecurringDonationSchedule__c.StartDate__c</members>

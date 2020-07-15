@@ -29,7 +29,7 @@
                 <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
             </div>
 
-            <div if:true={installments}>
+            <div class="slds-p-bottom_x-large" if:true={installments}>
                 <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
                     is-loading={isLoading} max-row-selection={maxRowSelection} onrowselection={handleRowSelection}
                     selected-rows={selectedIds}>

@@ -442,6 +442,29 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>IsPause__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Set when the schedule record represents Recurring Donation pause date range</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Set when the schedule record represents Recurring Donation pause date range</inlineHelpText>
+        <label>Is Pause</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>PausedReason__c</fullName>
+        <description>Describes why the pause has been created on a Recurring Donation record</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Describes why the pause has been created on a Recurring Donation record</inlineHelpText>
+        <label>Paused Reason</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>PaymentMethod__c</fullName>
         <description>The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record.</description>
         <externalId>false</externalId>

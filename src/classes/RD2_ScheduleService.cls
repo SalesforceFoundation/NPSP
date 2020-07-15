@@ -362,7 +362,7 @@ public without sharing class RD2_ScheduleService {
 
         List <RecurringDonationSchedule__c> filteredSchedules = new List<RecurringDonationSchedule__c>();
         for (RecurringDonationSchedule__c schedule : schedules) {
-            if (isActive(schedule, referenceDate)) {
+            if (isActive(schedule, referenceDate) && !schedule.IsPause__c) {
                 filteredSchedules.add(schedule);
             }
         }
@@ -594,6 +594,9 @@ public without sharing class RD2_ScheduleService {
 
         Boolean first1stAnd15thFound = false;
         for (RecurringDonationSchedule__c schedule : schedules) {
+            if (schedule.IsPause__c) {
+                continue;
+            }
 
             // This block collapses 1st and 15th schedules into a single row and nulls out day of month
             if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
@@ -707,7 +710,7 @@ public without sharing class RD2_ScheduleService {
     public Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
         Map<Id, List<RecurringDonationSchedule__c>> schedulesById = new Map<Id, List<RecurringDonationSchedule__c>>();
 
-        for (RecurringDonationSchedule__c schedule : Database.query(getExistingScheduleQueryString())) {
+        for (RecurringDonationSchedule__c schedule : Database.query(buildScheduleQuery())) {
             if (!isActive(schedule, currentDate)) {
                 continue;
             }
@@ -724,30 +727,30 @@ public without sharing class RD2_ScheduleService {
     * @description Build dynamic soql query string with support for date injection
     * @return String
     */
-    private String getExistingScheduleQueryString() {
+    private String buildScheduleQuery() {
 
         Set<String> selectFields = new Set<String> {
             'Campaign__c',
             'Campaign__r.Name',
-            'DayOfMonth__c',
+            'StartDate__c',
             'EndDate__c',
+            'DayOfMonth__c',
             'InstallmentAmount__c',
             'InstallmentFrequency__c',
             'InstallmentPeriod__c',
             'PaymentMethod__c',
             'RecurringDonation__c',
-            'StartDate__c'
+            'IsPause__c',
+            'PausedReason__c'
         };
-        String orderString = 'StartDate__c';
 
-        Util_Query theQuery = new UTIL_Query()
+        return new UTIL_Query()
             .withSelectFields(selectFields)
             .withFrom(RecurringDonationSchedule__c.SObjectType)
             .withWhere('RecurringDonation__c IN :rds')
             .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')
-            .withOrderBy(orderString);
-
-        return theQuery.build();
+            .withOrderBy('StartDate__c')
+            .build();
     }
 
     /***

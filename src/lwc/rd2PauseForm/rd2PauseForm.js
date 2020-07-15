@@ -28,7 +28,7 @@ export default class Rd2PauseForm extends LightningElement {
     @track isLoading = true;
     @track pageHeader = '';
     recordName;
-    
+
     maxRowDisplay = 12;
     maxRowSelection = 12;
     selectedIds = [];
@@ -170,7 +170,7 @@ export default class Rd2PauseForm extends LightningElement {
             const jsonPauseData = JSON.stringify(this.getPauseData());
             console.log('Pause Data: ' + jsonPauseData);
 
-            savePause({ pauseData: jsonPauseData })
+            savePause({ jsonData: jsonPauseData })
                 .then(() => {
                     this.handleSaveSuccess();
                 })
@@ -187,6 +187,8 @@ export default class Rd2PauseForm extends LightningElement {
     */
     getPauseData() {
         let pauseData = {};
+        pauseData.recurringDonationId = this.recordId;
+
         let installmentById = this.installments.reduce(function (map, installment) {
             map[installment.installmentNumber] = installment.donationDate;
             return map;

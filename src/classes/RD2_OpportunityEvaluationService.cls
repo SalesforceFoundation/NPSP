@@ -535,7 +535,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'DayOfMonth__c, ' +
             'PaymentMethod__c, ' +
             'StartDate__c, ' +
-            'EndDate__c ' +
+            'EndDate__c, ' +
+            'IsPause__c, ' +
+            'PausedReason__c ' +
             'FROM RecurringDonationSchedules__r)';
     }
 
