@@ -8,7 +8,25 @@
     </header>
 
     <div class="slds-modal__content slds-p-around_medium">
-        <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
+        <template if:true={isLoading}>
+            <div class="slds-grid slds-grid_align-center">
+                <div class="slds-is-relative slds-size_1-of-1">
+                    <lightning-spinner alternative-text={labels.loadingMessage}></lightning-spinner>
+                    <c-util-stencil row-count={maxRowSelection} column-count="3"></c-util-stencil>
+                </div>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
+
+            <div class="slds-m-around_medium" if:true={installments}>
+                <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
+                    is-loading={isLoading} max-row-selection={maxRowSelection} onrowselection={handleRowSelection}
+                    selected-rows={selectedIds}>
+                </lightning-datatable>
+            </div>
+        </template>
     </div>
 
     <footer class="slds-modal__footer slds-clearfix">
