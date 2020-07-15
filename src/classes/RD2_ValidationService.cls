@@ -37,6 +37,20 @@
 public with sharing class RD2_ValidationService {
 
     /***
+    * @description Status of Enhanced Recurring Donations metadata deployment
+    */
+    @TestVisible
+    private static Boolean isRD2MetadataDeployed {
+        get {
+            if (isRD2MetadataDeployed == null) {
+                isRD2MetadataDeployed = RD2_EnablementService.isMetaDataDeployed();
+            }
+            return isRD2MetadataDeployed;
+        }
+        set;
+    }
+
+    /***
      * @description CurrencyIsoCode field name
      */
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
@@ -124,6 +138,7 @@ public with sharing class RD2_ValidationService {
         }
         set;
     }
+
     /***
     * @descripton Elevate integration service
     */
@@ -175,6 +190,7 @@ public with sharing class RD2_ValidationService {
     */
     public void validate() {
         for (npe03__Recurring_Donation__c rd : rds) {
+            validateRD2MetadataDeployed(rd);
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
@@ -196,6 +212,7 @@ public with sharing class RD2_ValidationService {
                 continue;
             }
 
+            validateRD2MetadataDeployed(rd);
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
@@ -206,6 +223,17 @@ public with sharing class RD2_ValidationService {
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
+        }
+    }
+
+    /***
+    * @description Validates Enhanced Recurring Donations metadata has been deployed
+    * @param rd The Recurring Donation to validate
+    * @return void
+    */
+    private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd) {
+        if (!isRD2MetadataDeployed) {
+            rd.addError(System.Label.RD2_EnablementIncomplete);
         }
     }
 
