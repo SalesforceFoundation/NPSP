@@ -40,6 +40,30 @@ const columnTypeByDescribeType = {
     'PICKLIST': 'text'
 };
 
+const COLUMNS = [
+    { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
+    { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
+    {
+        label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
+        typeAttributes: { label: { fieldName: 'donorName' } }
+    },
+    {
+        label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
+        typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
+    }
+];
+
+const ACTIONS_COLUMN = {
+    type: 'action',
+    typeAttributes: {
+        rowActions: [
+            { label: commonOpen, name: 'open' },
+            { label: bgeActionDelete, name: 'delete' }
+        ],
+        menuAlignment: 'auto'
+    }
+};
+
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
 
@@ -54,28 +78,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     _columnsLoaded = false;
-    _columns = [
-        { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
-        { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
-        {
-            label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
-            typeAttributes: { label: { fieldName: 'donorName' } }
-        },
-        {
-            label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
-            typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
-        }
-    ];
-    _actionsColumn = {
-        type: 'action',
-        typeAttributes: {
-            rowActions: [
-                { label: commonOpen, name: 'open' },
-                { label: bgeActionDelete, name: 'delete' }
-            ],
-            menuAlignment: 'auto'
-        }
-    };
     _columnsBySourceFieldApiName = {};
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -86,6 +88,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api expectedCount;
     @api userDefinedBatchTableColumnNames;
     isLoaded = true;
+
+    constructor() {
+        super();
+        COLUMNS.forEach(column => {
+            this._columnsBySourceFieldApiName[column.fieldName] = column;
+        });
+    }
 
     connectedCallback() {
         this.loadBatch();
@@ -135,8 +144,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     get columns() {
         return this.userDefinedBatchTableColumnNames &&
         this.userDefinedBatchTableColumnNames.length > 0 ?
-            this.userDefinedColumns.concat(this._actionsColumn) :
-            this.allColumns.concat(this._actionsColumn);
+            this.userDefinedColumns.concat(ACTIONS_COLUMN) :
+            this.allColumns.concat(ACTIONS_COLUMN);
     }
 
     get allColumns() {
@@ -158,7 +167,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     buildColumnsFromSections() {
-        this.addSpecialCasedColumns();
         this.sections.forEach(section => {
             section.elements.filter(e => e.elementType === 'field')
                 .forEach(fieldElement => {
@@ -175,21 +183,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this._columnsLoaded = true;
     }
 
-    /**
-     * @description Adds special cased columns to the map of columns. These
-     *              four special cased fields are the Donor, Donation, Status,
-     *              Failure Information fields. Donor and Donation are derived
-     *              fields and constructed in the BGE_DataImportBatchEntry_CTRL
-     *              class. Status and Failure Information are fields on the
-     *              DataImport__c object.
-     */
-    addSpecialCasedColumns() {
-        this._columnsBySourceFieldApiName[this._columns[0].fieldName] = this._columns[0];
-        this._columnsBySourceFieldApiName[this._columns[1].fieldName] = this._columns[1];
-        this._columnsBySourceFieldApiName[this._columns[2].fieldName] = this._columns[2];
-        this._columnsBySourceFieldApiName[this._columns[3].fieldName] = this._columns[3];
-    }
-
     @api
     upsertData(dataRow, idProperty) {
         const existingRowIndex = this.data.findIndex(row =>
@@ -200,10 +193,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             this.data.splice(existingRowIndex, 1, dataRow);
             this.data = this.data.splice(0);
         } else {
-            this.data = [dataRow, ...this.data];
-            if (this.hasData == false) {
-                this.hasData = true;
-            }
+            this.data = [dataRow].concat(this.data);
         }
     }
 
@@ -331,7 +321,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                         .map(({label, fieldName}) => ({
                             label, value: fieldName
                         })),
-                    values: this.computedColumns
+                    values: this.columns
                         .map(({fieldName}) => fieldName)
                 }
             });
