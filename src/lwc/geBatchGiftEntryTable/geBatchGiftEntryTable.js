@@ -356,68 +356,32 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     appendUrlColumnProperties(objectInfo, urlSuffix = URL_SUFFIX,
                               urlLabelSuffix = URL_LABEL_SUFFIX) {
         Object.keys(this)
-            .filter(key => key.endsWith('__r'))
+            .filter(key =>
+                key.endsWith('__r') || this[key].attributes
+            )
             .forEach(key => {
                 const referenceObj = this[key];
-                this[`${key}${urlSuffix}`] = `/${referenceObj.Id}`;
+                const urlFieldName = key.endsWith('__r') ?
+                    `${key.replace(/.$/,"c")}${urlSuffix}` :
+                    `${key}${urlSuffix}`;
+                const urlLabelFieldName = key.endsWith('__r') ?
+                    `${key.replace(/.$/,"c")}${urlLabelSuffix}` :
+                    `${key}${urlLabelSuffix}`;
+
+                this[urlFieldName] = `/${referenceObj.Id}`;
+
                 if (referenceObj.Name) {
-                    this[`${key}${urlLabelSuffix}`] = referenceObj.Name;
+                    this[urlLabelFieldName] = referenceObj.Name;
                 } else {
                     try {
                         const field = objectInfo.fields[key];
                         const nameField = field.referenceToInfos[0].nameFields[0];
-                        this[`${key.replace(/.$/,"c")}${urlLabelSuffix}`] = referenceObj[nameField];
+                        this[urlLabelFieldName] = referenceObj[nameField];
                     } catch (e) {
-                        this[`${key}${urlLabelSuffix}`] = referenceObj.Id;
+                        this[urlLabelFieldName] = referenceObj.Id;
                     }
                 }
         });
-        //
-        // const replaceLast = (find, replacement, string) => {
-        //     const lastIndex = string.lastIndexOf(find);
-        //     if (lastIndex === -1) {
-        //         return string;
-        //     }
-        //     return string.substring(0, lastIndex) + replacement;
-        // };
-        // console.log('*** ' + 'before refF' + ' ***');
-        // console.log('JSON.parse(JSON.stringify(objectInfo)): ', JSON.parse(JSON.stringify(objectInfo)));
-        //
-        //
-        // const referenceFields = Object.values(objectInfo.fields)
-        //     .filter(field => field.dataType === 'Reference')
-        //     .map(field => field.apiName);
-        // console.log('JSON.parse(JSON.stringify(referenceFields)): ', JSON.parse(JSON.stringify(referenceFields)));
-        //
-        // const ownReferenceFields = Object.keys(this)
-        //     .filter(key => referenceFields.includes(key));
-        // // .reduce((obj, key) => {
-        // //     obj[key] = this[key];
-        // //     return obj;
-        // // }, {});
-        // console.log('JSON.parse(JSON.stringify(ownReferenceFields)): ', JSON.parse(JSON.stringify(ownReferenceFields)));
-        //
-        // ownReferenceFields.forEach(fieldName => {
-        //     const referenceFieldName = replaceLast('__c', '__r', fieldName);
-        //     const referenceObj = this[referenceFieldName];
-        //     if (!this[referenceObj]) {
-        //         return;
-        //     }
-        //
-        //     this[`${fieldName}${urlSuffix}`] = `/${referenceObj.Id}`;
-        //     if (referenceObj.Name) {
-        //         this[`${fieldName}${urlLabelSuffix}`] = referenceObj.Name;
-        //     } else {
-        //         try {
-        //             const field = objectInfo.fields[fieldName];
-        //             const nameField = field.referenceToInfos[0].nameFields[0];
-        //             this[`${fieldName}${urlLabelSuffix}`] = referenceObj[nameField];
-        //         } catch (e) {
-        //             this[`${fieldName}${urlLabelSuffix}`] = referenceObj.Id;
-        //         }
-        //     }
-        // });
-        //
         return this;
     }
 
@@ -458,26 +422,28 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return columnTypeByDescribeType[dataType] || dataType.toLowerCase();
     }
 
-    getColumnFieldName(element, fieldWrapper) {
-        return element.dataType === 'REFERENCE' ?
-            `${fieldWrapper.Source_Field_API_Name}${URL_SUFFIX}`
-            : fieldWrapper.Source_Field_API_Name;
-    }
-
     getColumn(element, fieldWrapper) {
+        const isReferenceField = element.dataType === 'REFERENCE';
+        const columnFieldName =
+            fieldWrapper.Source_Field_API_Name.toLowerCase().endsWith('id') ?
+            fieldWrapper.Source_Field_API_Name.slice(0, -2) :
+            fieldWrapper.Source_Field_API_Name;
+
         let column = {
             label: element.customLabel,
-            fieldName: this.getColumnFieldName(element, fieldWrapper),
+            fieldName: isReferenceField ?
+                `${columnFieldName}${URL_SUFFIX}` :
+                fieldWrapper.Source_Field_API_Name,
             type: this.getColumnTypeFromFieldType(element.dataType)
         };
 
-        if (element.dataType === 'REFERENCE') {
+        if (isReferenceField) {
             column.type = 'url';
             column.target = '_blank';
             column.typeAttributes = {
                 label: {
                     fieldName:
-                        `${fieldWrapper.Source_Field_API_Name}${URL_LABEL_SUFFIX}`
+                        `${columnFieldName}${URL_LABEL_SUFFIX}`
                 }
             };
         }
