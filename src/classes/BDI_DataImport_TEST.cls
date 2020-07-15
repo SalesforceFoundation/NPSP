@@ -148,7 +148,7 @@ public with sharing class BDI_DataImport_TEST {
 
         System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, bdi.Batch_Status__c, 
                             'The batch status should be Open when all ' +
-                            'data import record are Open.');
+                            'data import records are Open.');
 
         Test.startTest();
         // set the statuses to a mix of dry run validated, and dry run error
@@ -160,10 +160,10 @@ public with sharing class BDI_DataImport_TEST {
 
         bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
                 WHERE Id = :bdi.Id];
-                
+
         System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, bdi.Batch_Status__c, 
                             'The batch status should be Open when all ' +
-                            'data import record are Open.');
+                            'data import records are Open.');
     }
 
     /*
@@ -224,7 +224,7 @@ public with sharing class BDI_DataImport_TEST {
 
         System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c, 
                             'The batch status should be Completed when all ' +
-                            'data import record have been imported.');
+                            'data import records have been imported.');
         
         // set one di to Open
         di3.Status__c = BDI_DataImport_API.bdiDryRunValidated;
@@ -236,7 +236,7 @@ public with sharing class BDI_DataImport_TEST {
 
         System.assertNotEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c, 
                             'The batch status should be Completed when all ' +
-                            'data import record have been imported.');
+                            'data import records have been imported.');
     }
 
     /*********************************************************************************************************
