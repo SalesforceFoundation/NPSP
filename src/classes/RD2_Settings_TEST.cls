@@ -355,9 +355,9 @@ public with sharing class RD2_Settings_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
     }
 
-    public static void insertFirstRDAsynchronously() {
+    public static void configureForASyncFirstOpportunityCreate() {
         setUpConfiguration(
-            new Map<String, Object>{ 'InstallmentOppFirstCreateAsync__c' => RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_Always.name() }
+            new Map<String, Object>{ 'InstallmentOppFirstCreateMode__c' => RD2_Constants.FirstInstallmentOppCreateOptions.ASynchronous.name() }
         );
     }
 }

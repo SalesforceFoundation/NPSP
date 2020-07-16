@@ -382,11 +382,14 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         RD2_QueueableService.EvaluateInstallmentOpportunities service =
             new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, isScheduleChangedById);
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert && evaluateOppsSynchronously()) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
             service.executeOppEvaluationService();
 
-        } else {
+        } else if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);
+
+        } else {
+            service.executeOppEvaluationService();
         }
     }
 
@@ -395,23 +398,18 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @return Boolean
     */
     @TestVisible
-    private Boolean evaluateOppsSynchronously() {
+    private Boolean shouldEvaluateOppsSynchronouslyOnInsert(Boolean isBulk) {
         RD2_Settings settings = new RD2_Settings();
 
-        if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Synchronous_Always.name()) {
+        if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name()) {
             return true;
         }
 
-        if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_Always.name()
-            && (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs())
-        ) {
+        if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.ASynchronous.name()) {
             return false;
         }
 
-        if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_When_Bulk.name()
-            && System.isBatch()
-            && (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs())
-        ) {
+        if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Asynchronous_When_Bulk.name() && isBulk) {
             return false;
         }
 

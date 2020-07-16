@@ -56,9 +56,9 @@ public inherited sharing class RD2_Constants {
     /**
     * @description Enum to specify asynchronous behavior for the creation of the first installment opportunity
     */
-    public enum FirstInstallmentAsyncOptions {
-        Synchronous_Always,
-        Asynchronous_Always,
+    public enum FirstInstallmentOppCreateOptions {
+        Synchronous,
+        Asynchronous,
         Asynchronous_When_Bulk
     }
 

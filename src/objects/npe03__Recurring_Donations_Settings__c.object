@@ -35,7 +35,7 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>InstallmentOppFirstCreateAsync__c</fullName>
+        <fullName>InstallmentOppFirstCreateMode__c</fullName>
         <description>Specifies the asynchronous processing behavior NPSP will use to create the first installment Opportunity for Recurring Donations. The default is Synchronous. Other options are Asynchronous and Asynchronous_When_Bulk.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous.</inlineHelpText>

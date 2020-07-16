@@ -1251,7 +1251,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void setUpConfiguration(String stageName) {
         setUpConfiguration(new Map<String, Object>{
             'InstallmentOppStageName__c' => stageName,
-            'InstallmentOppFirstCreateAsync__c' => RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_Always.name()
+            'InstallmentOppFirstCreateMode__c' => RD2_Constants.FirstInstallmentOppCreateOptions.ASynchronous.name()
         });
     }
 
