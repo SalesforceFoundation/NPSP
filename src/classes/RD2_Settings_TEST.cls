@@ -354,4 +354,10 @@ public with sharing class RD2_Settings_TEST {
         UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
     }
+
+    public static void insertFirstRDAsynchronously() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'InstallmentOppFirstCreateAsync__c' => RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_Always.name() }
+        );
+    }
 }

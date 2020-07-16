@@ -403,14 +403,14 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_Always.name()
-            && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()
+            && (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs())
         ) {
             return false;
         }
 
         if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_When_Bulk.name()
             && System.isBatch()
-            && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()
+            && (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs())
         ) {
             return false;
         }
