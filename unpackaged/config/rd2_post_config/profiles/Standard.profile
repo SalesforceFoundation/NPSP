@@ -5,6 +5,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>%%%NAMESPACE%%%RD2_EntryFormController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>%%%NAMESPACE%%%RD2_StatusMappingSettings_CTRL</apexClass>
         <enabled>true</enabled>
     </classAccesses>

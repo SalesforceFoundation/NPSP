@@ -39,31 +39,6 @@ public with sharing class GE_PaymentServices {
 
     PurchaseCallBody purchaseCallBody;
 
-    // Names of Payment Service configuration sets
-    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
-    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
-
-    // Properties used to configure headers in
-    // HTTP Requests to Elevate payment services
-    @TestVisible static final String API_KEY = 'apiKey';
-    @TestVisible static final String BASE_URL = 'baseURL';
-    @TestVisible static final String JWT_TOKEN = 'jwttoken';
-    // Note that the casing difference between "sfdo.merchantids" and "sfdo.gatewayIds" is intentional
-    @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids'; 
-    @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
-    @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
-    @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
-    @TestVisible static final String PRODUCTID = 'productId';
-
-    @TestVisible private static final List<String> REQUIRED_CONFIG_KEYS = new List<String>{
-            ELEVATE_SDK,
-            PRODUCTID,
-            BASE_URL,
-            API_KEY,
-            SFDO_MERCHANTIDS,
-            SFDO_GATEWAYIDS
-    };
-
     @TestVisible Map<String, String> config;
 
     public enum ElevateEndpoints { TOKENIZE, PURCHASE }
@@ -92,7 +67,7 @@ public with sharing class GE_PaymentServices {
     }
 
     public GE_PaymentServices() {
-        config = new Configuration().keyValueMap;
+        config = new PS_IntegrationServiceConfig.Configuration().keyValueMap;
     }
 
     @AuraEnabled(cacheable=true)
@@ -110,8 +85,8 @@ public with sharing class GE_PaymentServices {
                 (Map<String, Object>) JSON.deserializeUntyped(jsonString);
         this.purchaseCallBody = new PurchaseCallBody(
                 UserInfo.getDefaultCurrency(),
-                config.get(SFDO_MERCHANTIDS),
-                config.get(SFDO_GATEWAYIDS)
+                config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS),
+                config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS)
         ).applyAll(requestBodyParameters);
     }
 
@@ -126,10 +101,11 @@ public with sharing class GE_PaymentServices {
         request.setEndpoint(getEndpointRoot() + getEndpoint(ElevateEndpoints.PURCHASE));
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader(JWT_TOKEN, getJwt());
-        request.setHeader(SFDO_USERNAME, UserInfo.getUserName());
-        if (config.get(SFDO_MERCHANTIDS) != null) {
-            request.setHeader(SFDO_MERCHANTIDS, config.get(SFDO_MERCHANTIDS));
+        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt());
+        request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
+        if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
+            request.setHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS, 
+            config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
         }
 
         // Set the body as a JSON object...
@@ -143,29 +119,29 @@ public with sharing class GE_PaymentServices {
     }
 
     public String getEndpointRoot() {
-        return config.get(BASE_URL);
+        return config.get(PS_IntegrationServiceConfig.BASE_URL);
     }
 
     public String getJwt() {
-        JWTPayload jwtPayload = new JWTPayload(config.get(PRODUCTID));
+        JWTPayload jwtPayload = new JWTPayload(config.get(PS_IntegrationServiceConfig.PRODUCTID));
         String jwt = UTIL_Jwt.getSignedJWTFromString(
                 jwtPayload.getAsString(),
-                config.get(API_KEY)
+                config.get(PS_IntegrationServiceConfig.API_KEY)
         );
 
         return jwt;
     }
 
     public String getElevateSDKURL() {
-        return config.get(ELEVATE_SDK);
+        return config.get(PS_IntegrationServiceConfig.ELEVATE_SDK);
     }
 
     public String getProductId() {
-        return config.get(PRODUCTID);
+        return config.get(PS_IntegrationServiceConfig.PRODUCTID);
     }
 
     public String getGatewayIds() {
-        return config.get(SFDO_GATEWAYIDS);
+        return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
     }
 
     /*******************************************************************************************************
@@ -296,55 +272,6 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
-    * @description Inner class responsible for retrieving Payment Services configuration from
-    *              application storage and building and exposing a set of key-value
-    *              configuration pairs.
-    */
-    @TestVisible
-    private class Configuration {
-        public Configuration() {}
-
-        public Map<String, String> keyValueMap {
-            get {
-                if (keyValueMap == null) {
-                    keyValueMap = new Map<String, String>();
-                    String makanaKey;
-                    for (Payment_Services_Configuration__c configRecord :
-                            getConfigRecordsByName(
-                                    new List<String>{
-                                            PAYMENTS_SERVICE_NAME, MAKANA_SERVICE_NAME
-                                    }
-                            )) {
-                        if (configRecord.Service__c == PAYMENTS_SERVICE_NAME) {
-                            keyValueMap.put(configRecord.Key__c, configRecord.Value__c);
-                        } else if (configRecord.Key__c == API_KEY &&
-                                configRecord.Service__c == MAKANA_SERVICE_NAME) {
-                            makanaKey = configRecord.Value__c;
-                        }
-                    }
-
-                    // If the payments service config does not have an Api key
-                    // and makana does, use the makana Api key
-                    if (makanaKey != null && keyValueMap.get(API_KEY) == null) {
-                        keyValueMap.put(API_KEY, makanaKey);
-                    }
-                }
-                return keyValueMap;
-            }
-            private set;
-        }
-
-        private List<Payment_Services_Configuration__c> getConfigRecordsByName(List<String>
-                serviceNames) {
-            return [
-                    SELECT Key__c, Value__c, Service__c
-                    FROM Payment_Services_Configuration__c
-                    WHERE Service__c IN :serviceNames
-            ];
-        }
-    }
-
-    /**
      * @description Checks whether an org is a customer of Elevate Payment Services.
      *              After onboarding within Elevate, these configuration key-value
      *              pairs should exist in the org.  If this required set of keys is not
@@ -353,7 +280,8 @@ public with sharing class GE_PaymentServices {
     */
     public static Boolean isElevateCustomer {
         get {
-            return new Configuration().keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
+            PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+            return ps.isIntegrationEnabled();
         }
     }
 
