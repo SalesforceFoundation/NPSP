@@ -116,7 +116,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         if (isQueryException || batch.Batch_Gift_Entry_Version__c < 2) {
             BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-                    UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
+                    String.valueOf(DataImport__c.SObjectType),
                     BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
             );
         } else {
