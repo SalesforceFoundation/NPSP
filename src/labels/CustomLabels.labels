@@ -1759,7 +1759,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enhanced Recurring Donations enablement incomplete</shortDescription>
-        <value>You cannot create or update Recurring Donations because you haven't finished enabling Enhanced Recurring Donations. Go to NPSP Settings | Recurring Donations | Upgrade to Enhanced Recurring Donations and complete all enablement steps.</value>
+        <value>You cannot create or update Recurring Donations because you haven&apos;t finished enabling Enhanced Recurring Donations. Go to NPSP Settings | Recurring Donations | Upgrade to Enhanced Recurring Donations and complete all enablement steps.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementIntro</fullName>
