@@ -130,6 +130,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         if (!this._dataImportObjectInfo) {
             return;
         }
+        if (!this._dataImportModel) {
+            return;
+        }
         this._count = this._dataImportModel.totalCountOfRows;
         this._total = this._dataImportModel.totalRowAmount;
         this._dataImportModel.dataImportRows.forEach(row => {
