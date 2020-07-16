@@ -24,14 +24,15 @@ export default class Rd2PauseForm extends LightningElement {
     });
 
     @api recordId;
+    recordName;
 
     @track isLoading = true;
     @track pageHeader = '';
-    recordName;
 
     maxRowDisplay = 12;
     maxRowSelection = 12;
     selectedIds = [];
+    @track selectedRowMessage = null;
     @track columns = [];
     @track installments;
 
@@ -84,6 +85,8 @@ export default class Rd2PauseForm extends LightningElement {
                         this.selectedIds.push(this.installments[i].installmentNumber);
                     }
                 }
+
+                this.refreshSelectedRowMessage();
             }
         }
     }
@@ -119,6 +122,8 @@ export default class Rd2PauseForm extends LightningElement {
         } else {
             this.handleDeselect(selectedRows);
         }
+
+        this.refreshSelectedRowMessage();
 
         console.log('Selected Rows: ' + JSON.stringify(this.selectedIds));
     }
@@ -174,6 +179,19 @@ export default class Rd2PauseForm extends LightningElement {
             this.selectedIds.push(selectedId);
             previousId = selectedId;
         }
+    }
+
+    /***
+     * @description
+     */
+    refreshSelectedRowMessage() {
+        let messageSingular = 'You have selected 1 installment to skip.';//TODO
+        let messagePlural = 'You have selected {0} installments to skip.';//TODO
+        const selectedCount = this.selectedIds.length;
+
+        this.selectedRowMessage = selectedCount > 0
+            ? (selectedCount === 1 ? messageSingular : messagePlural.replace('{0}', selectedCount))
+            : null;
     }
 
     /***

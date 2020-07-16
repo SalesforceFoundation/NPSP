@@ -55,7 +55,9 @@ public with sharing class RD2_PauseForm_CTRL {
 
             //create new pause schedule
             RecurringDonationSchedule__c schedule = buildPauseSchedule(data);
-            insert schedule;
+            if (schedule.StartDate__c != null && schedule.EndDate__c != null) {
+                insert schedule;
+            }
 
         } catch(Exception e) {
             throwAuraHandledException(e.getMessage());

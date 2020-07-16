@@ -28,6 +28,9 @@
             <div class="slds-p-around_medium">
                 <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
             </div>
+            <div class="slds-p-around_medium">
+                <lightning-formatted-rich-text value={selectedRowMessage}></lightning-formatted-rich-text>
+            </div>
 
             <div class="slds-p-bottom_x-large" if:true={installments}>
                 <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
