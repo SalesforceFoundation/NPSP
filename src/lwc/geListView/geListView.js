@@ -10,8 +10,6 @@ import {
     format,
     deepClone,
     isNotEmpty,
-    isUndefined,
-    hasNestedProperty,
     showToast,
 } from 'c/utilCommon'
 import { fireEvent } from 'c/pubsubNoPageRef'
@@ -78,7 +76,6 @@ export default class geListView extends LightningElement {
     @track columnEntriesByName = {};
     @track selectedListView;
     @track orderedByInfo;
-    _orderBy;
     columnHeadersByFieldApiName;
     hasAdditionalRows = false;
     // Array of callback functions required by children that extend this component
@@ -306,47 +303,28 @@ export default class geListView extends LightningElement {
     * @description Method takes in the currently selected column headers and builds
     * a query string that's used to get records with the relevant fields.
     *
-    * @param {list} displayColumns: List of display columns used by lightning-datatable.
+    * @param {list} columns: List of display columns used by lightning-datatable.
     */
     getRecords = async (columns) => {
         const fields = columns.filter(column => column.fieldApiName).map(column => column.fieldApiName);
-        if (fields.length > 0) {
-            let orderBy = DEFAULT_ORDER_BY;
-            if (this.sortedBy && this.sortedDirection) {
-                const columnEntry = this.columnEntriesByName[this.sortedBy];
-                let orderedByFieldApiName;
+        try {
+            const records = await retrieveRecords({
+                selectFields: fields,
+                sObjectApiName: this.objectApiName,
+                orderByClause: DEFAULT_ORDER_BY,
+                limitClause: this.limit + 1
+            });
 
-                if (columnEntry && !this._orderBy) {
-                    if (hasNestedProperty(this.columnEntriesByName[this.sortedBy],
-                        'typeAttributes', 'label', 'fieldName')) {
-                        orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
-                    } else {
-                        orderedByFieldApiName = columnEntry.fieldApiName;
-                    }
-                } else {
-                    orderedByFieldApiName = this._orderBy;
-                }
-                orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
+            if (records.length > this.limit) {
+                this.hasAdditionalRows = true;
+                this.setDatatableRecordsForImperativeCall(records.slice(0, -1));
+            } else {
+                this.hasAdditionalRows = false;
+                this.setDatatableRecordsForImperativeCall(records);
             }
-            try {
-                const records = await retrieveRecords({
-                    selectFields: fields,
-                    sObjectApiName: this.objectApiName,
-                    orderByClause: orderBy,
-                    limitClause: this.limit + 1
-                });
 
-                if (records.length > this.limit) {
-                    this.hasAdditionalRows = true;
-                    this.setDatatableRecordsForImperativeCall(records.slice(0, -1));
-                } else {
-                    this.hasAdditionalRows = false;
-                    this.setDatatableRecordsForImperativeCall(records);
-                }
-
-            } catch (error) {
-                handleError(error);
-            }
+        } catch (error) {
+            handleError(error);
         }
     };
 
@@ -677,15 +655,15 @@ export default class geListView extends LightningElement {
     */
     handleColumnSorting(event) {
         this.sortedBy = event.detail.fieldName;
-        const columnEntry = this.columnEntriesByName[this.sortedBy];
-        this.sortedDirection =  event.detail.sortDirection;
-        // Set sortedBy to correct fieldName if a URL type column
-        if (hasNestedProperty(columnEntry, 'typeAttributes', 'label', 'fieldName')) {
-            const field = Object.values(this.objectInfo.fields).find(
-              (field) => field.relationshipName === columnEntry.typeAttributes.label.fieldName);
-            this._orderBy = isUndefined(field) ? undefined : field.apiName;
-        }
-        this.getRecords(this.columns);
+        this.sortedDirection = event.detail.sortDirection;
+        let fieldValue = row => row[this.sortedBy] || '';
+        let reverse = this.sortedDirection === 'asc' ? 1: -1;
+        this.records = [...this.records.sort(
+          (a,b) => (
+              a = fieldValue(a),
+              b = fieldValue (b) ,
+              reverse * ((a > b) - (b > a)))
+        )];
     }
 
     /*******************************************************************************
