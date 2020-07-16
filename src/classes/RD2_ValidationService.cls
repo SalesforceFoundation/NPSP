@@ -37,19 +37,6 @@
 public with sharing class RD2_ValidationService {
 
     /***
-    * @description Status of Enhanced Recurring Donations metadata deployment
-    */
-    public static Boolean isRD2MetadataDeployed {
-        get {
-            if (isRD2MetadataDeployed == null) {
-                isRD2MetadataDeployed = RD2_EnablementService.isMetaDataDeployed();
-            }
-            return isRD2MetadataDeployed;
-        }
-        set;
-    }
-
-    /***
      * @description CurrencyIsoCode field name
      */
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
@@ -231,7 +218,7 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd) {
-        if (!isRD2MetadataDeployed) {
+        if (!RD2_EnablementService.isMetadataDeployed) {
             rd.addError(System.Label.RD2_EnablementIncomplete);
         }
     }

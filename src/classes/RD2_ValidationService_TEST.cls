@@ -126,7 +126,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withInstallmentPeriodYearly()
             .build();
 
-        RD2_ValidationService.isRD2MetadataDeployed = false;
+        RD2_EnablementService.isMetadataDeployed = false;
 
         try {
             insert rd;
@@ -152,7 +152,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         insert rd;
 
-        RD2_ValidationService.isRD2MetadataDeployed = false;
+        RD2_EnablementService.isMetadataDeployed = false;
         rd.StartDate__c = rd.StartDate__c.addDays(1);
 
         try {
