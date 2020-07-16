@@ -300,25 +300,21 @@ public class UTIL_Describe {
      *          CustomObject__r.Name.
      *
      */
-    public static String getReferenceObjectNameField(String sObjectName, String fieldName) {
-        List<SObjectType> relatedObjects = getFieldDescribe(
-                String.valueOf(sObjectName),
-                String.valueOf(fieldName)
-        ).getReferenceTo();
-
+    public static String getReferenceObjectNameField(SObjectField field) {
+        List<SObjectType> relatedObjects = field.getDescribe().getReferenceTo();
         if (relatedObjects.isEmpty()) {
             return null;
         }
 
-        String relatedObj;
-        if (fieldName.endsWithIgnoreCase('__c')) {
-            relatedObj = fieldName.removeEndIgnoreCase('c') + 'r';
-        } else if (fieldName.endsWithIgnoreCase('Id')) {
-            relatedObj = fieldName.removeEndIgnoreCase('Id');
+        String childFieldName = String.valueOf(field);
+        if (childFieldName.endsWithIgnoreCase('__c')) {
+            childFieldName = childFieldName.removeEndIgnoreCase('c') + 'r';
+        } else if (childFieldName.endsWithIgnoreCase('Id')) {
+            childFieldName = childFieldName.removeEndIgnoreCase('Id');
         }
 
         return String.join(new List<String>{
-                relatedObj,
+                childFieldName,
                 UTIL_Describe.getNameField(
                         String.valueOf(relatedObjects[0]))
         }, '.');

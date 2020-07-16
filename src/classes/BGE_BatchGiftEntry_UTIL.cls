@@ -129,11 +129,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                         }
                         String sourceFieldName = fieldMapping != null ?
                                 fieldMapping.Source_Field_API_Name :
-                                isObjectMappedLookup ? fieldMappingName
-                                        .toLowerCase() : null;
+                                isObjectMappedLookup ?
+                                        fieldMappingName : null;
                         // Add the source fields used in the Template
-                        if (!fieldApiNames.contains(sourceFieldName)) {
-                            fieldApiNames.add(sourceFieldName);
+                        if (!fieldApiNames.contains(sourceFieldName.toLowerCase())) {
+                            fieldApiNames.add(sourceFieldName.toLowerCase());
                         }
 
                         // Add the Name fields on the related object(s) for all Lookup fields,
@@ -142,13 +142,18 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                                 fieldMapping.Source_Field_Data_Type == 'REFERENCE')
                                 || isObjectMappedLookup) {
 
-                            String relatedObjNameField =
-                                    UTIL_Describe.getReferenceObjectNameField(
-                                            String.valueOf(DataImport__c.SObjectType),
-                                            sourceFieldName);
+                            SObjectField field = DataImport__c.SObjectType.getDescribe()
+                                    .fields.getMap().get(sourceFieldName);
 
-                            if (!fieldApiNames.contains(relatedObjNameField)) {
-                                fieldApiNames.add(relatedObjNameField);
+                            if (field != null) {
+                                String relatedObjNameField =
+                                        UTIL_Describe.getReferenceObjectNameField(field);
+
+                                if (relatedObjNameField != null &&
+                                        !fieldApiNames.contains(
+                                                relatedObjNameField.toLowerCase())) {
+                                    fieldApiNames.add(relatedObjNameField.toLowerCase());
+                                }
                             }
                         }
                     }
