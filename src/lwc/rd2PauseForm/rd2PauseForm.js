@@ -75,6 +75,16 @@ export default class Rd2PauseForm extends LightningElement {
     handleRecords(response) {
         if (response && response.dataTable) {
             this.installments = response.dataTable.records;
+
+            if (this.installments) {
+                this.selectedIds = [];
+
+                for (let i = 0; i < this.installments.length; i++) {
+                    if (this.installments[i].isSkipped === true) {
+                        this.selectedIds.push(this.installments[i].installmentNumber);
+                    }
+                }
+            }
         }
     }
 
@@ -83,7 +93,14 @@ export default class Rd2PauseForm extends LightningElement {
      */
     handleColumns(response) {
         if (response && response.dataTable) {
-            this.columns = response.dataTable.columns;
+            let tempColumns = response.dataTable.columns;
+            this.columns = [];
+
+            for (let i = 0; i < tempColumns.length; i++) {
+                if (tempColumns[i].fieldName !== "pauseStatus") {
+                    this.columns.push(tempColumns[i]);
+                }
+            }
         }
     }
 
@@ -92,7 +109,7 @@ export default class Rd2PauseForm extends LightningElement {
      */
     handleRowSelection(event) {
         let selectedRows = this.template.querySelector("lightning-datatable").getSelectedRows();
-        if (selectedRows === undefined || selectedRows === null) {
+        if (isNull(selectedRows)) {
             selectedRows = [];
         }
         const isSelectEvent = this.selectedIds.length < selectedRows.length;

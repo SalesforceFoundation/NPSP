@@ -39,6 +39,7 @@ public with sharing class RD2_VisualizeScheduleController {
     private static final String INSTALLMENT_DONATION_DATE = 'donationDate';
     private static final String INSTALLMENT_AMOUNT = 'amount';
     private static final String INSTALLMENT_PAYMENT_METHOD = 'paymentMethod';
+    private static final String INSTALLMENT_PAUSE_STATUS = 'pauseStatus';
 
     private static final String SCHEDULE_IS_CURRENT = 'isCurrent';
     private static final String SCHEDULE_AMOUNT = 'amount';
@@ -237,21 +238,39 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     @TestVisible
     private static void sanitizeInstallments(DataTable dataTable) {
-        if (dataTable.getColumns().size() == 3) {
-            return;//all columns are visible
-        }
-
+        Boolean hasPauseStatus = false;
         for (Object obj : dataTable.getRecords()) {
             Installment record = (Installment) obj;
+            Integer hiddenFieldCounter = 0;
+
             if (!dataTable.isAccessible(INSTALLMENT_DONATION_DATE)) {
                 record.donationDate = null;
+                hiddenFieldCounter++;
             }
             if (!dataTable.isAccessible(INSTALLMENT_AMOUNT)) {
                 record.amount = null;
+                hiddenFieldCounter++;
             }
             if (!dataTable.isAccessible(INSTALLMENT_PAYMENT_METHOD)) {
                 record.paymentMethod = null;
+                hiddenFieldCounter++;
             }
+            if (hiddenFieldCounter == 3) {//all fields are hidden
+                record.pauseStatus = null;
+            }
+
+            if (String.isNotBlank(record.pauseStatus)) {
+                hasPauseStatus = true;
+            }
+        }
+
+        if (hasPauseStatus) {
+            dataTable.addColumn(new DataTableColumn()
+                .withFieldName(INSTALLMENT_PAUSE_STATUS)
+                .withLabel(null)
+                .withIsAccessible(true)
+                .withType(Schema.DisplayType.STRING)
+            );
         }
     }
 
@@ -376,14 +395,20 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public Date donationDate;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
+        @AuraEnabled public Boolean isSkipped;
+        @AuraEnabled public String pauseStatus;
 
         public Installment(Integer num, RD2_ScheduleService.Installment installment) {
             this.installmentNumber = num;
-            this.paymentMethod =
-                UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
-                    npe03__Recurring_Donation__c.PaymentMethod__c, installment.paymentMethod);
+            this.paymentMethod = UTIL_Describe.getTranslatedPicklistLabel(
+                npe03__Recurring_Donation__c.SObjectType,
+                npe03__Recurring_Donation__c.PaymentMethod__c, 
+                installment.paymentMethod
+            );
             this.donationDate = installment.nextDonationDate;
             this.amount = installment.installmentAmount;
+            this.isSkipped = installment.isSkipped;
+            this.pauseStatus = installment.isSkipped ? 'Paused' : '';//TODO
         }
     }
 

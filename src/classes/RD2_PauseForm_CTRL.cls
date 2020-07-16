@@ -46,12 +46,16 @@ public with sharing class RD2_PauseForm_CTRL {
         try {
             PauseData data = (PauseData) JSON.deserialize(jsonData, PauseData.class);
 
+            //deactivate current schedule(s)
+            delete [
+                SELECT Id FROM RecurringDonationSchedule__c 
+                WHERE RecurringDonation__c = :data.recurringDonationId
+                AND IsPause__c = true
+            ];//TODO it should deactivate not delete
+
+            //create new pause schedule
             RecurringDonationSchedule__c schedule = buildPauseSchedule(data);
-            if (schedule.Id != null) {
-                update schedule;
-            } else {
-                insert schedule;
-            }
+            insert schedule;
 
         } catch(Exception e) {
             throwAuraHandledException(e.getMessage());
@@ -65,7 +69,6 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     private static RecurringDonationSchedule__c buildPauseSchedule(PauseData data) {
         RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
-            Id = data.scheduleId,
             RecurringDonation__c = data.recurringDonationId,
             IsPause__c = true,
             PausedReason__c = data.pausedReason,

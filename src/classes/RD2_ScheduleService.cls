@@ -302,11 +302,33 @@ public without sharing class RD2_ScheduleService {
     * @return Boolean
     */
     public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
-        //ensure the passed in schedules are active within the time period
-        Boolean isActive = schedule.EndDate__c == null 
-            || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
+        return 
+            isWithinDateRange(schedule, referenceDate) 
+            && isValidInstallmentFrequency(schedule);
+    }
 
-        return isActive && isValidInstallmentFrequency(schedule);
+    /***
+    * @description 
+    * @param 
+    * @return Boolean
+    */
+    public Boolean isPause(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        if (!schedule.IsPause__c) {
+            return false;
+        }
+
+        return isWithinDateRange(schedule, referenceDate);
+    }
+
+    /***
+    * @description Indicates if the schedule is active starting from the reference date
+    * @param schedule Recurring Donation schedule
+    * @param referenceDate Reference Date
+    * @return Boolean
+    */
+    private Boolean isWithinDateRange(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        return schedule.EndDate__c == null 
+            || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
     }
 
     /***
@@ -318,32 +340,6 @@ public without sharing class RD2_ScheduleService {
         return schedule.InstallmentFrequency__c != null
             && schedule.InstallmentFrequency__c >= 1
             && schedule.InstallmentFrequency__c <= 20;
-    }
-
-    /***
-    * @description Wrapper class for Recurring Donation Installment data
-    */
-    public class Installment {
-        public Id       campaignId {get; set;}
-        public String   campaignName {get; set;}
-        public Date     startDate {get; set;}
-        public Date     endDate {get; set;}
-        public Date     nextDonationDate {get; set;}
-        public String   installmentPeriod {get; set;}
-        public Decimal  installmentAmount {get; set;}
-        public String   paymentMethod {get; set;}
-        public Id       scheduleId {get; set;}
-
-        Installment(RecurringDonationSchedule__c rdSchedule) {
-            campaignId =            rdSchedule.Campaign__c;
-            campaignName =          rdSchedule.Campaign__r.Name;
-            startDate =             rdSchedule.StartDate__c;
-            endDate =               rdSchedule.EndDate__c;
-            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
-            installmentAmount =     rdSchedule.InstallmentAmount__c;
-            paymentMethod =         rdSchedule.PaymentMethod__c;
-            scheduleId =            rdSchedule.Id;
-        }
     }
 
     /***
@@ -360,10 +356,14 @@ public without sharing class RD2_ScheduleService {
         Installment nextInstallment;
         Installment previousInstallment;
 
-        List <RecurringDonationSchedule__c> filteredSchedules = new List<RecurringDonationSchedule__c>();
+        List<RecurringDonationSchedule__c> filteredSchedules = new List<RecurringDonationSchedule__c>();
+        List<RecurringDonationSchedule__c> pauseSchedules = new List<RecurringDonationSchedule__c>();
         for (RecurringDonationSchedule__c schedule : schedules) {
             if (isActive(schedule, referenceDate) && !schedule.IsPause__c) {
                 filteredSchedules.add(schedule);
+
+            } else if (isPause(schedule, referenceDate)) {
+                pauseSchedules.add(schedule);
             }
         }
 
@@ -378,12 +378,31 @@ public without sharing class RD2_ScheduleService {
                 (previousInstallment == null || previousInstallment.nextDonationDate > nextDonationDate)) {
                     nextInstallment = new Installment(schedule);
                     nextInstallment.nextDonationDate = nextDonationDate;
+                    nextInstallment.isSkipped = isSkipped(nextInstallment, pauseSchedules);
             }
 
             previousInstallment = nextInstallment;
         }
 
         return nextInstallment;
+    }
+
+    /***
+    * @description 
+    * @param 
+    * @return Boolean
+    */
+    private Boolean isSkipped(Installment installment, List<RecurringDonationSchedule__c> pauseSchedules) {
+        if (pauseSchedules.isEmpty()) {
+            return false;
+        }
+
+        for (RecurringDonationSchedule__c schedule : pauseSchedules) {
+            if (schedule.StartDate__c <= installment.nextDonationDate && installment.nextDonationDate <= schedule.EndDate__c) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /***
@@ -610,40 +629,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         return activeSchedules;
-    }
-
-    /***
-    * @description Wrapper class for Recurring Donation Schedule data
-    */
-    public class ActiveSchedule {
-
-        public Boolean isCurrent { get; set; }
-        public Id campaignId { get; set; }
-        public String campaignName { get; set; }
-        public String dayOfMonth { get; set; }
-        public Date endDate { get; set; }
-        public Decimal installmentAmount { get; set; }
-        public Integer installmentFrequency { get; set; }
-        public String installmentPeriod { get; set; }
-        public String paymentMethod { get; set; }
-        public String recurringDonationId { get; set; }
-        public Id scheduleId { get; set; }
-        public Date startDate { get; set; }
-
-        public ActiveSchedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
-            isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
-            campaignId = rdSchedule.Campaign__c;
-            campaignName = rdSchedule.Campaign__r.Name;
-            dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
-            endDate = (rdSchedule.EndDate__c != null) ? rdSchedule.EndDate__c : rd.EndDate__c;
-            installmentAmount = rdSchedule.InstallmentAmount__c;
-            installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
-            installmentPeriod = rdSchedule.InstallmentPeriod__c;
-            paymentMethod = rdSchedule.PaymentMethod__c;
-            recurringDonationId = rdSchedule.RecurringDonation__c;
-            scheduleId = rdSchedule.Id;
-            startDate = rdSchedule.StartDate__c;
-        }
     }
 
     /***
@@ -916,5 +901,67 @@ public without sharing class RD2_ScheduleService {
         }
 
         return endDate;
+    }
+
+    /***
+    * @description Wrapper class for Recurring Donation Installment data
+    */
+    public class Installment {
+        public Id       campaignId {get; set;}
+        public String   campaignName {get; set;}
+        public Date     startDate {get; set;}
+        public Date     endDate {get; set;}
+        public Date     nextDonationDate {get; set;}
+        public String   installmentPeriod {get; set;}
+        public Decimal  installmentAmount {get; set;}
+        public String   paymentMethod {get; set;}
+        public Id       scheduleId {get; set;}
+        public Boolean  isSkipped {get; set;}
+
+        Installment(RecurringDonationSchedule__c rdSchedule) {
+            campaignId =            rdSchedule.Campaign__c;
+            campaignName =          rdSchedule.Campaign__r.Name;
+            startDate =             rdSchedule.StartDate__c;
+            endDate =               rdSchedule.EndDate__c;
+            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
+            installmentAmount =     rdSchedule.InstallmentAmount__c;
+            paymentMethod =         rdSchedule.PaymentMethod__c;
+            scheduleId =            rdSchedule.Id;
+            isSkipped =             false;
+        }
+    }
+
+    /***
+    * @description Wrapper class for Recurring Donation Schedule data
+    */
+    public class ActiveSchedule {
+
+        public Boolean isCurrent { get; set; }
+        public Id campaignId { get; set; }
+        public String campaignName { get; set; }
+        public String dayOfMonth { get; set; }
+        public Date endDate { get; set; }
+        public Decimal installmentAmount { get; set; }
+        public Integer installmentFrequency { get; set; }
+        public String installmentPeriod { get; set; }
+        public String paymentMethod { get; set; }
+        public String recurringDonationId { get; set; }
+        public Id scheduleId { get; set; }
+        public Date startDate { get; set; }
+
+        public ActiveSchedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
+            isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
+            campaignId = rdSchedule.Campaign__c;
+            campaignName = rdSchedule.Campaign__r.Name;
+            dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
+            endDate = (rdSchedule.EndDate__c != null) ? rdSchedule.EndDate__c : rd.EndDate__c;
+            installmentAmount = rdSchedule.InstallmentAmount__c;
+            installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
+            installmentPeriod = rdSchedule.InstallmentPeriod__c;
+            paymentMethod = rdSchedule.PaymentMethod__c;
+            recurringDonationId = rdSchedule.RecurringDonation__c;
+            scheduleId = rdSchedule.Id;
+            startDate = rdSchedule.StartDate__c;
+        }
     }
 }
