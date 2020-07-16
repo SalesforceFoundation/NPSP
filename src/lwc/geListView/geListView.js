@@ -10,7 +10,7 @@ import {
     format,
     deepClone,
     isNotEmpty,
-    showToast,
+    showToast
 } from 'c/utilCommon'
 import { fireEvent } from 'c/pubsubNoPageRef'
 import LibsMoment from 'c/libsMoment';
@@ -625,9 +625,7 @@ export default class geListView extends LightningElement {
                 }
             });
         });
-
-        this.records = records;
-
+        this.records = this.sortRows(records);
         return records;
     }
 
@@ -656,14 +654,24 @@ export default class geListView extends LightningElement {
     handleColumnSorting(event) {
         this.sortedBy = event.detail.fieldName;
         this.sortedDirection = event.detail.sortDirection;
-        let fieldValue = row => row[this.sortedBy] || '';
-        let reverse = this.sortedDirection === 'asc' ? 1: -1;
-        this.records = [...this.records.sort(
-          (a,b) => (
-              a = fieldValue(a),
-              b = fieldValue (b) ,
-              reverse * ((a > b) - (b > a)))
+        this.records = this.sortRows(this.records);
+    }
+
+    /*******************************************************************************
+     * @description This function sorts rows in the list view component
+     * @param records
+     * @returns {array}
+     */
+    sortRows (records) {
+        const reverse = this.sortedDirection === 'asc' ? 1 : -1;
+        const fieldValue = row => row[this.sortedBy] || '';
+        this.records = [...records.sort(
+          (a, b) => (
+            a = fieldValue(a),
+            b = fieldValue(b),
+            reverse * ((a > b) - (b > a)))
         )];
+        return this.records;
     }
 
     /*******************************************************************************
