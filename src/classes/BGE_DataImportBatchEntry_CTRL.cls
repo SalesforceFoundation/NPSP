@@ -493,8 +493,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
         String query = getDataImportQuery(batchId, null, loadSize, offset);
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ query ^^^^^^');
         return Database.query(query);
     }
 

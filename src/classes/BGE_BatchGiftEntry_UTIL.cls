@@ -159,7 +159,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     }
                 }
             }
-        }
+
         return fieldApiNames;
     }
 
