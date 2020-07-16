@@ -103,7 +103,7 @@ public with sharing class RD2_Settings {
     public Boolean isCloseActionNoAction() {
         return settings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name();
     }
-    
+
     /***
     * @description Installment Opp Auto Creation Option,
     * If random string is input, the setting will be default to Always Create Next installment
@@ -117,6 +117,24 @@ public with sharing class RD2_Settings {
             }
 
             return installmentCreateOption;
+        }
+        private set;
+    }
+
+    /***
+    * @description Installment Opp Auto Creation Option,
+    * If random string is input, the setting will be default to Always Create Next installment
+    */
+    @TestVisible
+    public String firstInstallmentAsync {
+        get {
+            if (firstInstallmentAsync == null) {
+                firstInstallmentAsync = String.isNotBlank(settings.InstallmentOppFirstCreateAsync__c)
+                    ? settings.InstallmentOppFirstCreateAsync__c
+                    : RD2_Constants.FirstInstallmentAsyncOptions.Synchronous_Always.name();
+            }
+
+            return firstInstallmentAsync;
         }
         private set;
     }

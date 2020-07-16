@@ -54,6 +54,15 @@ public inherited sharing class RD2_Constants {
     }
 
     /**
+    * @description Enum to specify asynchronous behavior for the creation of the first installment opportunity
+    */
+    public enum FirstInstallmentAsyncOptions {
+        Synchronous_Always,
+        Asynchronous_Always,
+        Asynchronous_When_Bulk
+    }
+
+    /**
     * @description Recurring Donation "Installment Period" picklist API values
     */
     public static final String INSTALLMENT_PERIOD_YEARLY = 'Yearly';

@@ -382,12 +382,40 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         RD2_QueueableService.EvaluateInstallmentOpportunities service =
             new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, isScheduleChangedById);
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || Limits.getQueueableJobs() >= Limits.getLimitQueueableJobs()) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert && evaluateOppsSynchronously()) {
             service.executeOppEvaluationService();
 
         } else {
             System.enqueueJob(service);
         }
+    }
+
+    /***
+    * @description Determines whether Opportunities should be evaluated synchronously or asynchronously
+    * @return Boolean
+    */
+    @TestVisible
+    private Boolean evaluateOppsSynchronously() {
+        RD2_Settings settings = new RD2_Settings();
+
+        if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Synchronous_Always.name()) {
+            return true;
+        }
+
+        if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_Always.name()
+            && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()
+        ) {
+            return false;
+        }
+
+        if (settings.firstInstallmentAsync == RD2_Constants.FirstInstallmentAsyncOptions.Asynchronous_When_Bulk.name()
+            && System.isBatch()
+            && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /***
