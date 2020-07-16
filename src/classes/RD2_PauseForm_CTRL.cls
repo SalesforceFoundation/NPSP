@@ -35,6 +35,19 @@
 */
 public with sharing class RD2_PauseForm_CTRL {
 
+    /***
+    * @description Recurring Donation Schedule service
+    */
+    @TestVisible
+    private static RD2_ScheduleService scheduleService {
+        get {
+            if (scheduleService == null) {
+                scheduleService = new RD2_ScheduleService();
+            }
+            return scheduleService;
+        } set;
+    }
+
 
     /**
      * @description 
@@ -73,12 +86,49 @@ public with sharing class RD2_PauseForm_CTRL {
         RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
             RecurringDonation__c = data.recurringDonationId,
             IsPause__c = true,
-            PausedReason__c = data.pausedReason,
+            PauseReason__c = data.pauseReason,
             StartDate__c = data.startDate,
             EndDate__c = data.resumeAfterDate
         );
 
         return schedule;
+    }
+
+    /**
+     * @description Returns the Pause Reason value and label select options
+     * @return String
+     */
+    @AuraEnabled(cacheable=false)
+    public static String getPauseReason(Id recurringDonationId) {
+        PauseReason reason = new PauseReason();
+        reason.label = Schema.SObjectType.RecurringDonationSchedule__c.fields.PauseReason__c.getLabel();
+        reason.options = getPauseReasonOptions();
+        reason.placeholder = 'Select an Option';//TODO
+
+        RecurringDonationSchedule__c schedule = scheduleService.getPauseSchedule(recurringDonationId);
+        reason.value = schedule == null ? null : schedule.PauseReason__c;
+
+        return JSON.serialize(reason);
+    }
+
+    /**
+     * @description Returns the Pause Reason value and label select options
+     * @return List<Option>
+     */
+    private static List<Option> getPauseReasonOptions() {
+        List<Option> options = new List<Option>();
+        List<Schema.PicklistEntry> entries = npe03__Recurring_Donation__c.ClosedReason__c.getDescribe().getPicklistValues();
+
+        for (Schema.PicklistEntry entry : entries) {
+            if (entry.isActive()) {                
+                options.add(
+                    new Option()
+                        .withValue(entry.getValue())
+                        .withLabel(entry.getLabel())
+                );
+            }
+        }
+        return options;
     }
 
     /***
@@ -100,7 +150,46 @@ public with sharing class RD2_PauseForm_CTRL {
         public Id recurringDonationId;
         public Date startDate;
         public Date resumeAfterDate;
-        public String pausedReason;
+        public String pauseReason;
     }
+
+    /***
+    * @description 
+    */
+    public class PauseReason {
+        public String value;
+        public String label;
+        public List<Option> options;
+        public String placeholder;
+    }
+
+    /**
+     * @description Contains custom select option
+     */
+    public class Option {
+        @AuraEnabled public String value;
+        @AuraEnabled public String label;
+
+        /**
+         * @description Sets the option value
+         * @param value The option value
+         * @return Option This option instance
+         */
+        public Option withValue(String value) {
+            this.value = value;
+            return this;
+        }
+
+        /**
+         * @description Sets the option label
+         * @param label The option label
+         * @return Option This option instance
+         */
+        public Option withLabel(String label) {
+            this.label = label;
+            return this;
+        }
+    }
+
 
 }

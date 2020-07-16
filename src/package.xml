@@ -1323,7 +1323,7 @@
         <members>RecurringDonationSchedule__c.InstallmentFrequency__c</members>
         <members>RecurringDonationSchedule__c.InstallmentPeriod__c</members>
         <members>RecurringDonationSchedule__c.IsPause__c</members>
-        <members>RecurringDonationSchedule__c.PausedReason__c</members>
+        <members>RecurringDonationSchedule__c.PauseReason__c</members>
         <members>RecurringDonationSchedule__c.PaymentMethod__c</members>
         <members>RecurringDonationSchedule__c.RecurringDonation__c</members>
         <members>RecurringDonationSchedule__c.StartDate__c</members>

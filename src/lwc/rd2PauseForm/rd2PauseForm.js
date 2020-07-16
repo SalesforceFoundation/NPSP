@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getRecord } from 'lightning/uiRecordApi';
 
 import NAME_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 
@@ -10,6 +10,7 @@ import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import cancelButton from '@salesforce/label/c.stgBtnCancel';
 import saveButton from '@salesforce/label/c.stgBtnSave';
 
+import getPauseReason from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseReason';
 import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
 import savePause from '@salesforce/apex/RD2_PauseForm_CTRL.savePause';
 
@@ -29,6 +30,8 @@ export default class Rd2PauseForm extends LightningElement {
     @track isLoading = true;
     @track pageHeader = '';
 
+    @track pauseReason = {};
+
     maxRowDisplay = 12;
     maxRowSelection = 12;
     selectedIds = [];
@@ -42,6 +45,26 @@ export default class Rd2PauseForm extends LightningElement {
     * @description 
     */
     connectedCallback() {
+        this.init();
+    }
+
+    /***
+    * @description Group various calls to Apex
+    */
+    init = async () => {
+        try {
+            this.loadInstallments();
+            await this.loadPauseReason();
+
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+    /***
+    * @description 
+    */
+    loadInstallments = async () => {
         getInstallments({ recordId: this.recordId, displayNum: this.maxRowDisplay })
             .then(response => {
                 this.handleRecords(response);
@@ -56,6 +79,9 @@ export default class Rd2PauseForm extends LightningElement {
             });
     }
 
+    /***
+    * @description
+    */
     @wire(getRecord, {
         recordId: '$recordId',
         fields: NAME_FIELD
@@ -124,8 +150,6 @@ export default class Rd2PauseForm extends LightningElement {
         }
 
         this.refreshSelectedRowMessage();
-
-        console.log('Selected Rows: ' + JSON.stringify(this.selectedIds));
     }
 
     /***
@@ -202,8 +226,7 @@ export default class Rd2PauseForm extends LightningElement {
         this.isLoading = true;
 
         try {
-            const jsonPauseData = JSON.stringify(this.getPauseData());
-            console.log('Pause Data: ' + jsonPauseData);
+            const jsonPauseData = JSON.stringify(this.constructPauseData());
 
             savePause({ jsonData: jsonPauseData })
                 .then(() => {
@@ -218,9 +241,40 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
+    * @description 
+    */
+    handleSaveSuccess() {
+        let message = 'Pause on Recurring Donation {0} has been saved';//TODO
+        message = message.replace('{0}', this.recordName);
+        showToast(message, '', 'success', []);
+
+        this.closeModal();
+    }
+
+    /***
     * @description
     */
-    getPauseData() {
+    loadPauseReason = async () => {
+        getPauseReason({ recurringDonationId: this.recordId })
+            .then(response => {
+                this.pauseReason = JSON.parse(response);
+            })
+            .catch(error => {
+                this.handleError(error);
+            });
+    }
+
+    /***
+    * @description
+    */
+    handlePauseReasonChange(event) {
+        this.pauseReason.value = event.detail.value;
+    }
+
+    /***
+    * @description
+    */
+    constructPauseData() {
         let pauseData = {};
         pauseData.recurringDonationId = this.recordId;
 
@@ -235,20 +289,9 @@ export default class Rd2PauseForm extends LightningElement {
         const lastSelectedId = this.selectedIds[this.selectedIds.length - 1];
         pauseData.resumeAfterDate = installmentById[lastSelectedId];
 
-        pauseData.reason = 'Test';//TODO
+        pauseData.pauseReason = this.pauseReason.value;
 
         return pauseData;
-    }
-
-    /***
-    * @description 
-    */
-    handleSaveSuccess() {
-        let message = 'Pause on Recurring Donation {0} has been saved';//TODO
-        message = message.replace('{0}', this.recordName);
-        showToast(message, '', 'success', []);
-
-        this.closeModal();
     }
 
     /***

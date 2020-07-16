@@ -707,14 +707,54 @@ public without sharing class RD2_ScheduleService {
 
         return schedulesById;
     }
+     
+    
+    /***
+    * @description 
+    * @param 
+    * @return RecurringDonationSchedule__c
+    */
+    public RecurringDonationSchedule__c getPauseSchedule(Id rdId) {
+        String soql = new UTIL_Query()
+            .withSelectFields(getScheduleFields())
+            .withFrom(RecurringDonationSchedule__c.SObjectType)
+            .withWhere('RecurringDonation__c = :rdId')
+            .withWhere('IsPause__c = true')
+            .withWhere('EndDate__c >= :currentDate')
+            .withOrderBy('StartDate__c')
+            .build();
+
+        for (RecurringDonationSchedule__c schedule : Database.query(soql)) {
+            if (isPause(schedule, currentDate)) {
+                return schedule;
+            }            
+        }
+
+        return null;
+    }
+
 
     /***
     * @description Build dynamic soql query string with support for date injection
     * @return String
     */
     private String buildScheduleQuery() {
+        return new UTIL_Query()
+            .withSelectFields(getScheduleFields())
+            .withFrom(RecurringDonationSchedule__c.SObjectType)
+            .withWhere('RecurringDonation__c IN :rds')
+            .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')
+            .withOrderBy('StartDate__c')
+            .build();
+    }
 
-        Set<String> selectFields = new Set<String> {
+    /***
+    * @description 
+    * @param 
+    * @return 
+    */
+    private Set<String> getScheduleFields() {
+        return new Set<String> {
             'Campaign__c',
             'Campaign__r.Name',
             'StartDate__c',
@@ -726,16 +766,8 @@ public without sharing class RD2_ScheduleService {
             'PaymentMethod__c',
             'RecurringDonation__c',
             'IsPause__c',
-            'PausedReason__c'
+            'PauseReason__c'
         };
-
-        return new UTIL_Query()
-            .withSelectFields(selectFields)
-            .withFrom(RecurringDonationSchedule__c.SObjectType)
-            .withWhere('RecurringDonation__c IN :rds')
-            .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')
-            .withOrderBy('StartDate__c')
-            .build();
     }
 
     /***
@@ -785,7 +817,7 @@ public without sharing class RD2_ScheduleService {
             }
             newSchedulesByRdId.get(rd.RecurringDonation__c).add(rd);
         }
-    }
+    }   
 
     /**
     * @description Evaluate Recurring Donation and set End Date on the RD scheulde

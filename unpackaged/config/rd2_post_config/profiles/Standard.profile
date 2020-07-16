@@ -119,7 +119,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>%%%NAMESPACE%%%RecurringDonationSchedule__c.%%%NAMESPACE%%%PausedReason__c</field>
+        <field>%%%NAMESPACE%%%RecurringDonationSchedule__c.%%%NAMESPACE%%%PauseReason__c</field>
         <readable>true</readable>
     </fieldPermissions>
 </Profile>

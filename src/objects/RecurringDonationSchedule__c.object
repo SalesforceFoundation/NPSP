@@ -453,11 +453,11 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>PausedReason__c</fullName>
+        <fullName>PauseReason__c</fullName>
         <description>Describes why the pause has been created on a Recurring Donation record</description>
         <externalId>false</externalId>
         <inlineHelpText>Describes why the pause has been created on a Recurring Donation record</inlineHelpText>
-        <label>Paused Reason</label>
+        <label>Pause Reason</label>
         <length>255</length>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
