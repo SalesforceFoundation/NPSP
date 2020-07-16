@@ -39,8 +39,7 @@ public with sharing class RD2_ValidationService {
     /***
     * @description Status of Enhanced Recurring Donations metadata deployment
     */
-    @TestVisible
-    private static Boolean isRD2MetadataDeployed {
+    public static Boolean isRD2MetadataDeployed {
         get {
             if (isRD2MetadataDeployed == null) {
                 isRD2MetadataDeployed = RD2_EnablementService.isMetaDataDeployed();

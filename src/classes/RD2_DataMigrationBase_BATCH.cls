@@ -152,6 +152,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
         //enable enhanced Recurring Donations during the batch transaction
         if (!RD2_EnablementService.isRecurringDonations2Enabled && isDryRunMode) {
             RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
+            RD2_ValidationService.isRD2MetadataDeployed = true;
         }
 
         //ensure enhanced RD enablement flag is enabled
