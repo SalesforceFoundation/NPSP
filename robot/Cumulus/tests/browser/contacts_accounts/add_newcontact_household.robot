@@ -17,7 +17,7 @@ Setup Test Data
     ${last_name} =        Generate Random String
     Set suite variable    ${last_name}
     &{contact1} =         API Create Contact                    Email=${EMAIL1}
-    Store Session Record  Account                               &{contact1}[AccountId]
+    Store Session Record  Account                               ${contact1}[AccountId]
     Set suite variable    &{contact1}
 
 *** Variables ***
@@ -31,7 +31,7 @@ Add New related Contact to Household With Different LastName
     ...                                   create another Linked contact with different name,address and email.
     [tags]                                  W-037650                                feature:Contacts And Accounts
     
-    Go To Page                              Details                                 Account                                object_id=&{contact1}[AccountId]
+    Go To Page                              Details                                 Account                                object_id=${contact1}[AccountId]
 
     #Add a new related contact with name, work and email different from the first contact under HouseHold Validation
     Select Tab                              Related
@@ -48,4 +48,4 @@ Add New related Contact to Household With Different LastName
     Current Page Should Be                  Details                                 Contact
     ${contact_id2} =                        Save Current Record ID For Deletion     Contact
     &{contact2}                             Verify Record Is Created In Database    Contact                                 ${contact_id2}
-    Header Field Value                      Account Name                            &{contact1}[LastName] and &{contact2}[LastName] Household
+    Header Field Value                      Account Name                            ${contact1}[LastName] and ${contact2}[LastName] Household
