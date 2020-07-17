@@ -176,11 +176,11 @@ public with sharing class RD2_ValidationService {
     */
     public void validate() {
         for (npe03__Recurring_Donation__c rd : rds) {
-            validateRD2MetadataDeployed(rd);
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             validateStatus(rd);
+            validateRD2MetadataDeployed(rd);
         }
     }
 
@@ -198,7 +198,6 @@ public with sharing class RD2_ValidationService {
                 continue;
             }
 
-            validateRD2MetadataDeployed(rd);
             validateActiveRecurringDonation(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
@@ -209,6 +208,8 @@ public with sharing class RD2_ValidationService {
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
+
+            validateRD2MetadataDeployed(rd);
         }
     }
 
