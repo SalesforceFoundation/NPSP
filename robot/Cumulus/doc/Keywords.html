@@ -203,9 +203,7 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>view_name</i>
                   
                 </td>
                 <td class="kwdoc"><p>Selects a different view for the object records in listing page</p></td>
@@ -435,9 +433,11 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>heading</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>rel_status</i>, 
+                  
+                  <i>link</i>
                   
                 </td>
                 <td class="kwdoc"><p>Clicks a link in the popup menu for first matching related list item. heading specifies the name of the list, rel_status specifies the status or other field vaule to identify a particular item, and link specifies the name of the link</p></td>
@@ -449,9 +449,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>title</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click the lightning dropdown to open it and select value</p></td>
@@ -565,9 +565,11 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>heading</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>dd_title</i>, 
+                  
+                  <i>button_title</i>
                   
                 </td>
                 <td class="kwdoc"><p>To Click on a related list dropdown button. Pass the list name, dd name and button name</p></td>
@@ -579,9 +581,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>heading</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>title</i>
                   
                 </td>
                 <td class="kwdoc"><p>Clicks a table header field link in the related list identified with the specified heading. This keyword will automatically call `Wait until loading is complete`</p></td>
@@ -605,9 +607,7 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>title</i>
                   
                 </td>
                 <td class="kwdoc"><p>Clicks on more actions dropdown and click the given title</p></td>
@@ -623,6 +623,18 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>clicks on the button under span tag</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Click Special Button">
+                <td class="kwname">
+                  Click Special Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>
+                  
+                </td>
+                <td class="kwdoc"><p>This keyword is similar to click button but uses set focus to button and javascript In the cases where javascript is being triggered on moving away from field, click button doesn't seem to work in headless mode</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Click Special Object Button">
@@ -750,9 +762,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>field</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>Scrolls just a little below the field Clicks on Edit icon next to field and enters a value into the field</p></td>
@@ -980,9 +992,13 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>field</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>status</i>, 
+                  
+                  <i>value</i>, 
+                  
+                  <i>section=None</i>
                   
                 </td>
                 <td class="kwdoc"><p>If status is 'contains' then the specified value should be present in the field 'does not contain' then the specified value should not be present in the field</p></td>
@@ -1102,8 +1118,6 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
                   <i>**kwargs</i>
                   
                 </td>
@@ -1182,9 +1196,7 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>Scrolls the button element into view and clicksthe button using JS</p></td>
@@ -1259,6 +1271,10 @@ pre {
                   Select Frame And Click Element
                 </td>
                 <td class="kwargs">
+                  
+                  <i>iframe</i>, 
+                  
+                  <i>path</i>, 
                   
                   <i>*args</i>, 
                   
@@ -1390,9 +1406,7 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>title</i>
                   
                 </td>
                 <td class="kwdoc"><p>Switch between different tabs on a record page like Related, Details, News, Activity and Chatter Pass title of the tab</p></td>
@@ -1418,9 +1432,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>dropdown</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>Select given value in the dropdown field</p></td>
@@ -1503,9 +1517,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>title</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"></td>
@@ -1709,9 +1723,7 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>name</i>
                   
                 </td>
                 <td class="kwdoc"><p>Checks for the record in the object page and returns true if found else returns false</p></td>
@@ -1795,9 +1807,7 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>verifies if actual row count matches with expected value</p></td>
@@ -1846,6 +1856,8 @@ pre {
                 </td>
                 <td class="kwargs">
                   
+                  <i>path</i>, 
+                  
                   <i>*args</i>, 
                   
                   <i>**kwargs</i>
@@ -1860,9 +1872,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>batch</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>status</i>
                   
                 </td>
                 <td class="kwdoc"><p>Checks every 30 secs for upto 9mins for batch with given status</p></td>
@@ -2275,6 +2287,25 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 </table></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.robot.API Modify Recurring Donation">
+                <td class="kwname">
+                  API Modify Recurring Donation
+                </td>
+                <td class="kwargs">
+                  
+                  <i>rd_id</i>, 
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>This keyword is used to update an existing recurring donation record by passing id and This keyword returns the recurring donation dictonary after the update, when called Syntax for passing parameters:</p>
+<table border="1">
+<tr>
+<td>Recurring Donation ID</td>
+</tr>
+</table></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.robot.API Query Installment">
                 <td class="kwname">
                   API Query Installment
@@ -2357,6 +2388,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 <td>parameters to identify button</td>
 </tr>
 </table></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Create Customfield In Object Manager">
+                <td class="kwname">
+                  Create Customfield In Object Manager
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Reads key value pair arguments. Navigates to Object Manager page and load fields and relationships for the specific object Runs keyword to create custom field Example key,value pairs Object=Payment Field_Type=Formula Field_Name=Is Opportunity From Prior Year Formula=YEAR( npe01__Opportunity__r.CloseDate ) &lt; YEAR( npe01__Payment_Date__c )</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.Enable Advanced Mapping">
@@ -2485,18 +2528,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 </table></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.robot.Validate And Create Required CustomField">
-                <td class="kwname">
-                  Validate And Create Required CustomField
-                </td>
-                <td class="kwargs">
-                  
-                  <i>**fields</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Reads key value pair arguments. Go to Object Manager page and load fields and relationships for the specific object Run keyword to create custom field based on the field type selection</p></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.robot.Validate Batch Process When CRLP Checked">
                 <td class="kwname">
                   Validate Batch Process When CRLP Checked
@@ -2566,6 +2597,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"><p>Logs the name of the current page object</p>
 <p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="AccountPageObject.py.Validate Rollup Field Contains">
+                <td class="kwname">
+                  Validate Rollup Field Contains
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>*args</i>
+                  
+                </td>
+                <td class="kwdoc"><p>verifies if the text value of the field matches the accepted values passed as a list</p></td>
               </tr>
               
             </tbody>
@@ -2648,15 +2693,29 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="AdvancedMappingPageObject.py.Create Mapping If Doesnt Exist">
+                <td class="kwname">
+                  Create Mapping If Doesnt Exist
+                </td>
+                <td class="kwargs">
+                  
+                  <i>src_fld</i>, 
+                  
+                  <i>tgt_fld</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Checks if mapping with src_fld exists and creates if it doesn't exist.</p></td>
+              </tr>
+              
               <tr class="kwrow" id="AdvancedMappingPageObject.py.Create New Field Mapping">
                 <td class="kwname">
                   Create New Field Mapping
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>src_fld</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>tgt_fld</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click on Create New Field Mapping button on the page select 'src_fld' arg in Source Field Label box 'tgt_fld' arg in Target Field Label box</p></td>
@@ -2668,9 +2727,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>fld_name</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click the dropdown for fld_name and select Delete and wait for field mapping to not present on the page.</p></td>
@@ -2682,9 +2739,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>fld_label</i>
                   
                 </td>
                 <td class="kwdoc"><p>Checks if mapping with fld_label exists and if exists deletes the mapping. If not then does nothing</p></td>
@@ -2696,9 +2751,9 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>fld_name</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>tgt_field</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click the dropdown for fieldname and select edit and wait for model is open. Once modal is open click on Target field to open a dropdown and select 'target_field' from available options</p></td>
@@ -2721,9 +2776,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>obj</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click the dropdwon for obj and select View Field Mappings and verify that field mappings page is open</p></td>
@@ -3229,12 +3282,26 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>rollup_name</i>, 
                   
                   <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>If new rollup doesn't exist - Clone an existing rollup, enter arguments passed  and create new rollup If new rollup exists - logs that rollup already exists</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Create New Filter Setting">
+                <td class="kwname">
+                  Create New Filter Setting
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates a new filter setting by taking in all the filtering criteria(s) Create New Filter Setting ...            @{filterPools}        // list of filtering criteria(s) ...            &amp;{dict}               // Should contain Filter name and description fields eg: Name=Old Payments    Description=this is a test.</p></td>
               </tr>
               
               <tr class="kwrow" id="CustomizableRollupsPageObject.py.Create New Rollup Setting">
@@ -3243,26 +3310,10 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
                   <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Wait for the Iframe to be available and switch to the Frame. Confirm that a rollup setting of the same type does not exist Click on new and create a new rollup settings record</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="CustomizableRollupsPageObject.py.Is Setting Present">
-                <td class="kwname">
-                  Is Setting Present
-                </td>
-                <td class="kwargs">
-                  
-                  <i>object</i>, 
-                  
-                  <i>name</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Search for the presence of an active crlp setting record already. Return a boolean value accordingly</p></td>
               </tr>
               
               <tr class="kwrow" id="CustomizableRollupsPageObject.py.Log Current Page Object">
@@ -3372,10 +3423,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
-                  
                 </td>
                 <td class="kwdoc"><p>From the actions dropdown select edit action and wait for modal to open</p></td>
               </tr>
@@ -3407,9 +3454,11 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>field</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>status</i>, 
+                  
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>If status is 'contains' then the specified value should be present in the field 'does not contain' then the specified value should not be present in the field</p></td>
@@ -4109,6 +4158,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="GiftEntryPageObject.py.Add Batch Table Columns">
+                <td class="kwname">
+                  Add Batch Table Columns
+                </td>
+                <td class="kwargs">
+                  
+                  <i>*args</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Adds specified batch columns to the visible section if they are not already added</p></td>
+              </tr>
+              
               <tr class="kwrow" id="GiftEntryPageObject.py.Add Field Bundle To New Section">
                 <td class="kwname">
                   Add Field Bundle To New Section
@@ -4139,8 +4200,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
                   <i>**kwargs</i>
                   
                 </td>
@@ -4158,18 +4217,34 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 <p>The current page object is also returned as an object</p></td>
               </tr>
               
-              <tr class="kwrow" id="GiftEntryPageObject.py.Select Object Group Field">
+              <tr class="kwrow" id="GiftEntryPageObject.py.Perform Action On Object Field">
                 <td class="kwname">
-                  Select Object Group Field
+                  Perform Action On Object Field
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>action</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>object_group</i>, 
+                  
+                  <i>field</i>
                   
                 </td>
-                <td class="kwdoc"><p>Select the specified field under specified object group to add the field to gift entry form and verify field is added</p></td>
+                <td class="kwdoc"><p>If action is 'select' then selects the specified field under specified object group to add the field to gift entry form and verify field is added If action is 'unselect'then Unselects the specified field under specified object group to remove the field from gift entry template</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Template Builder">
+                <td class="kwname">
+                  Verify Template Builder
+                </td>
+                <td class="kwargs">
+                  
+                  <i>check</i>, 
+                  
+                  <i>field</i>
+                  
+                </td>
+                <td class="kwdoc"><p>If check is 'contains'then verifies that template builder form contains the specified field If check is 'does not contain' then verifies that template builder form doesn't contain the field</p></td>
               </tr>
               
             </tbody>
@@ -4399,8 +4474,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
                   <i>**kwargs</i>
                   
                 </td>
@@ -4412,8 +4485,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Enter Level Values
                 </td>
                 <td class="kwargs">
-                  
-                  <i>*args</i>, 
                   
                   <i>**kwargs</i>
                   
@@ -4490,9 +4561,9 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>option</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>Performs a lookup of the contact provided as parameter and adds the contact to the hold based on the option Supported options are (New/Existing)</p></td>
@@ -4603,10 +4674,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
-                  
                 </td>
                 <td class="kwdoc"><p>Check if the rd2 metadeploy link is enabled</p></td>
               </tr>
@@ -4616,10 +4683,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Check Rd2 Is Enabled
                 </td>
                 <td class="kwargs">
-                  
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Verifies that Enhanced Recurring Donations is enabled on the org</p></td>
@@ -4641,9 +4704,9 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>panel_id</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>btn_value</i>
                   
                 </td>
                 <td class="kwdoc"><p>clicks on the buttons on npsp settings object using panel id and button value</p></td>
@@ -4655,9 +4718,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>page_name</i>
                   
                 </td>
                 <td class="kwdoc"><p>specify the partial id of submenu under which the checkbox exists</p></td>
@@ -4692,10 +4753,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Enable Customizable Rollups If Not Enabled
                 </td>
                 <td class="kwargs">
-                  
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Checks if advanced mapping is Enabled and enables if not enabled</p></td>
@@ -4786,9 +4843,9 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>list_name</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>value</i>
                   
                 </td>
                 <td class="kwdoc"><p>waits to exit edit mode and verifies list contains specified value</p></td>
@@ -4800,9 +4857,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>message</i>
                   
                 </td>
                 <td class="kwdoc"><p>Waits for the text passed in message to be displayed on the page for 6 min</p></td>
@@ -4866,12 +4921,24 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"><p>Creates a custom field based on type paramenter and the field_name</p></td>
+                <td class="kwdoc"><p>Ensure that the custom field does not exist prior and Creates a custom field based on type paramenter and the field_name IF the custom field exists it will not create the custom field and exits out of object manager The Field_Type is the mandatory field to be present in the kwargs</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Create Formula Field">
+                <td class="kwname">
+                  Create Formula Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field_name</i>, 
+                  
+                  <i>formula</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates a formula field by providing the field_name, formula and forumla fields</p></td>
               </tr>
               
               <tr class="kwrow" id="ObjectMangerPageObject.py.Create Lookup Field">
@@ -4886,6 +4953,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Creates a Lookpup field by taking in the inputs field_name and related field</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ObjectMangerPageObject.py.Create Text Field">
+                <td class="kwname">
+                  Create Text Field
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field_name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates a text field by taking in the field name</p></td>
               </tr>
               
               <tr class="kwrow" id="ObjectMangerPageObject.py.Log Current Page Object">
@@ -4905,9 +4984,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
-                  
-                  <i>**kwargs</i>
+                  <i>object_name</i>
                   
                 </td>
                 <td class="kwdoc"><p>To go to object manager page for a specific object</p></td>
@@ -5234,6 +5311,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Clicks on action button based on API version</p></td>
               </tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Edit Recurring Donation">
+                <td class="kwname">
+                  Edit Recurring Donation
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>From the actions dropdown select edit action and edit the fields specified in the kwargs</p></td>
+              </tr>
+              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -5261,7 +5350,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>section=None</i>, 
                   
                   <i>**kwargs</i>
                   
@@ -5275,12 +5364,24 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>*args</i>, 
+                  <i>num_payments</i>, 
                   
-                  <i>**kwargs</i>
+                  <i>startdate</i>, 
+                  
+                  <i>dayofmonth</i>
                   
                 </td>
                 <td class="kwdoc"><p>Takes in the parameter (number of payments) and the donation start date verifies that the payment schedules created on UI reflect the total number verifies that the next payment dates are reflected correctly for all the schedules</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Verify Schedule Warning Messages Present">
+                <td class="kwname">
+                  Verify Schedule Warning Messages Present
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Verify that the schedule warning messages are present when there are no schedules</p></td>
               </tr>
               
             </tbody>
@@ -5496,7 +5597,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Wednesday June 17, 11:56 AM - cumulusci v3.13.2
+      Generated on Wednesday July 08, 11:17 PM - cumulusci v3.14.0
     </div>
   </body>
 </html>

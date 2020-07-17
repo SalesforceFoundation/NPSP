@@ -485,12 +485,16 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
-    reset() {
-        this.value = this._defaultValue;
+    reset(setDefaults = true) {
+        if (setDefaults) {
+            this.value = this._defaultValue;
+        } else {
+            this.value = null;
+        }
 
         if (this.isLookup) {
             const lookup = this.template.querySelector('lightning-input-field');
-            lookup.reset();
+            lookup.reset(setDefaults);
             if (this.fieldApiName === 'RecordTypeId') {
                 // Using setTimeout here ensures that this recordTypeId
                 // will be set on sibling fields after they are reset by queueing the event.

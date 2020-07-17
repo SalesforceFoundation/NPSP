@@ -405,6 +405,8 @@
         <members>RD2_EnablementDelegate_TEST</members>
         <members>RD2_EnablementService</members>
         <members>RD2_EnablementService_TEST</members>
+        <members>RD2_EntryFormController</members>
+        <members>RD2_EntryFormController_TEST</members>
         <members>RD2_NamingService</members>
         <members>RD2_NamingService_TEST</members>
         <members>RD2_OpportunityEvaluationService</members>
@@ -510,6 +512,7 @@
         <members>STG_PanelOpps_CTRL</members>
         <members>STG_PanelOpps_TEST</members>
         <members>STG_PanelPaymentMapping_CTRL</members>
+        <members>STG_PanelPaymentMapping_CTRL_TEST</members>
         <members>STG_PanelPrimaryContactRoleMerge_CTRL</members>
         <members>STG_PanelRDBatch_CTRL</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
@@ -810,6 +813,7 @@
         <members>RD2_EnablementDelegate</members>
         <members>RD2_EnablementDelegateSimple</members>
         <members>RD2_EnhancementEnabledEvent</members>
+        <members>RD2_EntryForm</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -1431,10 +1435,10 @@
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
         <members>npe03__Recurring_Donations_Settings__c.NextDonationDateMatchRangeDays__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.RecurringDonationNameFormat__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.RecurringDonationNameFormat__c</members>
         <members>npe03__Recurring_Donations_Settings__c.StatusMappingDeploymentId__c</members>
         <members>npe03__Recurring_Donations_Settings__c.UseFiscalYearForRecurringDonationValue__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
@@ -1702,6 +1706,24 @@
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>
+        <members>RD2_EntryFormDonationSectionHeader</members>
+        <members>RD2_EntryFormDonorSectionHeader</members>
+        <members>RD2_EntryFormDonorTypeHelpText</members>
+        <members>RD2_EntryFormDonorTypeLabel</members>
+        <members>RD2_EntryFormHeader</members>
+        <members>RD2_EntryFormInsertSuccessMessage</members>
+        <members>RD2_EntryFormMissingPermissions</members>
+        <members>RD2_EntryFormOtherSectionHeader</members>
+        <members>RD2_EntryFormPeriodAdvanced</members>
+        <members>RD2_EntryFormPeriodHelpText</members>
+        <members>RD2_EntryFormPeriodLabel</members>
+        <members>RD2_EntryFormPeriodPluralDaily</members>
+        <members>RD2_EntryFormPeriodPluralMonthly</members>
+        <members>RD2_EntryFormPeriodPluralWeekly</members>
+        <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormScheduleEveryLabel</members>
+        <members>RD2_EntryFormStatusSectionHeader</members>
+        <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
@@ -1780,6 +1802,8 @@
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
+        <members>UTIL_InputFormFormFieldAltLabelDate</members>
+        <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
@@ -2291,6 +2315,7 @@
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geSearchPlaceholder</members>
+        <members>geSelectBatchTableColumns</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
         <members>geTabBatchSettings</members>
@@ -2465,13 +2490,13 @@
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
         <members>isARequiredField</members>
+        <members>labelBooleanFalse</members>
+        <members>labelBooleanTrue</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
         <members>labelListViewPageInfo</members>
         <members>labelListViewPrevious</members>
-        <members>labelBooleanTrue</members>
-        <members>labelBooleanFalse</members>
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblAddressOverride</members>
@@ -2481,6 +2506,7 @@
         <members>lblCity</members>
         <members>lblCloned</members>
         <members>lblCountry</members>
+        <members>lblCurrency</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
         <members>lblDeprecated</members>
@@ -3617,6 +3643,7 @@
         <members>Opportunity.BDE_Entry_FS_v2</members>
         <members>Opportunity.BDE_List_FS_v2</members>
         <members>npe01__OppPayment__c.Payment_WizardFS</members>
+        <members>npe03__Recurring_Donation__c.RD2_Entry_Form_Custom_Fields</members>
         <name>FieldSet</name>
     </types>
     <types>
@@ -3716,6 +3743,10 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2EntryForm</members>
+        <members>rd2EntryFormCustomFieldsSection</members>
+        <members>rd2EntryFormDonorSection</members>
+        <members>rd2EntryFormScheduleSection</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
