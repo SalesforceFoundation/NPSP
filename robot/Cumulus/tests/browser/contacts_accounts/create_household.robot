@@ -46,7 +46,7 @@ Create Household With Name Only
     #Verify contact is created and shows under recently viewed
     ${contact_id} =                       Save Current Record ID For Deletion      Contact
     &{contact}                            Verify Record Is Created In Database  Contact                     ${contact_id} 
-    Store Session Record                  Account                               &{contact}[AccountId]
+    Store Session Record                  Account                               ${contact}[AccountId]
     Header Field Value                    Account Name                          ${last_name} Household
     Go To Page                            Listing                               Contact
     Verify Record                         ${first_name} ${last_name}
@@ -87,7 +87,7 @@ Create Household With additional details
     # Verify records are saved and displayed in recently viewed contact list
     ${contact_id2} =                      Save Current Record ID For Deletion   Contact
     &{contact2}                           Verify Record Is Created In Database  Contact                       ${contact_id2}
-    Store Session Record                  Account                               &{contact2}[AccountId]
+    Store Session Record                  Account                               ${contact2}[AccountId]
     Header Field Value                    Account Name                          ${last_name2} Household
     Page Should Contain                   50 Fremont Street
     Go To Page                            Listing                               Contact
@@ -97,6 +97,6 @@ Create Household With additional details
     Current Page Should Be                Details                               Contact
     ${contact_id1} =                      Save Current Record ID For Deletion   Contact
     &{contact1}                           Verify Record Is Created In Database  Contact                        ${contact_id1}
-    Store Session Record                  Account                               &{contact1}[AccountId]
+    Store Session Record                  Account                               ${contact1}[AccountId]
     Navigate To And Validate Field Value  Work Email            contains        automation@example.com          Details
     

@@ -18,16 +18,16 @@ Best Match Donation Matching Behaviour
     [tags]  stable 
     Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
-    Click Link With Text    &{batch}[Name]
+    Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Search Field By Value    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    ${account}[Name]
     Wait Until Modal Is Open
-    Click Link    &{account}[Name]
+    Click Link    ${account}[Name]
     Click Link With Text    Review Donations
-    Page Should Contain    &{opp_match}[Name]
-    Page Should Contain    &{opp_dont_match}[Name]
-    ${pay_no}    Get BGE Card Header    &{opp_match}[Name]
+    Page Should Contain    ${opp_match}[Name]
+    Page Should Contain    ${opp_dont_match}[Name]
+    ${pay_no}    Get BGE Card Header    ${opp_match}[Name]
     Log To Console    ${pay_no}
     Click Button    title:Close this window
     Wait Until Modal Is Closed
@@ -39,8 +39,8 @@ Best Match Donation Matching Behaviour
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
     Scroll Page To Location    0    0
-    Search Field By Value    Search Accounts    &{account}[Name]
-    Click Element With Locator   bge.modal-link    &{account}[Name]
+    Search Field By Value    Search Accounts    ${account}[Name]
+    Click Element With Locator   bge.modal-link    ${account}[Name]
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=200
@@ -55,9 +55,9 @@ Best Match Donation Matching Behaviour
     Wait Until Element Is Visible    text:All Gifts
     @{value}    Return List    bge.value    Donation
     #Click Link    ${value}
-    Click Link With Text    @{value}[0]
+    Click Link With Text    ${value}[0]
     # Verify that a new payment and opportunity are created for the gift in closed won stage
-    Select Window    @{value}[0] | Salesforce    7
+    Select Window    ${value}[0] | Salesforce    7
     Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
@@ -73,7 +73,7 @@ Best Match Donation Matching Behaviour
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     # Verify that the gift matched to existing opportunity and updated it to closed won status and payment is paid
-    Go To Record Home    &{opp_match}[Id]
+    Go To Record Home    ${opp_match}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
@@ -88,7 +88,7 @@ Best Match Donation Matching Behaviour
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True  
     # Verify that the opportunity that does not match is still in prospecting stage
-    Go To Record Home    &{opp_dont_match}[Id]
+    Go To Record Home    ${opp_dont_match}[Id]
     Navigate To And Validate Field Value    Amount    contains    $50.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
@@ -113,17 +113,17 @@ Setup Test Data
     Set Suite Variable    &{account}
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     Set Suite Variable    ${date}
-    &{opp_match} =     API Create Opportunity   &{account}[Id]    Donation  
+    &{opp_match} =     API Create Opportunity   ${account}[Id]    Donation  
     ...    StageName=Prospecting    
     ...    Amount=100    
     ...    CloseDate=${date}    
     ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=&{account}[Name] Test 100 Donation      
+    ...    Name=${account}[Name] Test 100 Donation      
     Set Suite Variable    &{opp_match}
-    &{opp_dont_match} =     API Create Opportunity   &{account}[Id]    Donation  
+    &{opp_dont_match} =     API Create Opportunity   ${account}[Id]    Donation  
     ...    StageName=Prospecting    
     ...    Amount=50    
     ...    CloseDate=${date}    
     ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=&{account}[Name] Test 50 Donation      
+    ...    Name=${account}[Name] Test 50 Donation      
     Set Suite Variable    &{opp_dont_match}
