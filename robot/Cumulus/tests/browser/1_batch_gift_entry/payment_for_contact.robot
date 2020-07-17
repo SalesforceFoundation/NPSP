@@ -25,20 +25,20 @@ Select a payment for a contact make grid changes and process it
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{contact} =     API Create Contact
     ${date} =     Get Current Date    result_format=%Y-%m-%d
-    &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  
+    &{opportunity} =     API Create Opportunity   ${contact}[AccountId]    Donation  
     ...    StageName=Prospecting    
     ...    Amount=100    
     ...    CloseDate=${date}    
     ...    npe01__Do_Not_Automatically_Create_Payment__c=false
     Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
-    Click Link With Text    &{batch}[Name]
+    Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
-    Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Search Field By Value    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
     Wait Until Modal Is Open
-    Click Link    &{contact}[FirstName] &{contact}[LastName]
+    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Click Link With Text    Review Donations
-    ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
+    ${pay_no}    Get BGE Card Header    ${opportunity}[Name]
     Log To Console    ${pay_no}
     Click BGE Button    Update this Payment
     Fill BGE Form
@@ -59,7 +59,6 @@ Select a payment for a contact make grid changes and process it
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     ${value}    Return Locator Value    bge.value    Donation
-    # Click Link    ${value}
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
     Current Page Should Be    Details    npe01__OppPayment__c  
@@ -68,9 +67,9 @@ Select a payment for a contact make grid changes and process it
     ...    npe01__Payment_Amount__c=20.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
-    Go To Record Home    &{opportunity}[Id]
+    Go To Record Home    ${opportunity}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Prospecting
-    Store Session Record      Account    &{contact}[AccountId] 
+    Store Session Record      Account    ${contact}[AccountId] 
