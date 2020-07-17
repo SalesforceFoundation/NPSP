@@ -24,17 +24,16 @@ Dont select match for contact new donation with grid changes
     ...    ${ns}GiftBatch__c=true    
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{contact} =     API Create Contact
-    Store Session Record      Account    &{contact}[AccountId]
+    Store Session Record      Account    ${contact}[AccountId]
     ${date} =     Get Current Date    result_format=%Y-%m-%d
-    &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
+    &{opportunity} =     API Create Opportunity   ${contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
     Go To Page                        Listing                      Batch_Gift_Entry
-    # Click Link  &{batch}[Name]
-    Click Link With Text    &{batch}[Name]
+    Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Contact
-    Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Search Field By Value    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
     Wait Until Modal Is Open
-    Click Link    &{contact}[FirstName] &{contact}[LastName]
+    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Page Should Contain Link    Review Donations
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
@@ -43,20 +42,20 @@ Dont select match for contact new donation with grid changes
     Click BGE Button       Save
     Sleep    2
     Verify Row Count    1
-    Page Should Contain Link    &{opportunity}[Name]
+    Page Should Contain Link    ${opportunity}[Name]
     Wait For Locator    bge.edit_button    Donation Amount
     Click BGE Edit Button    Donation Amount 
     Wait For Locator    bge.edit_field  
     Populate BGE Edit Field    Donation Amount    20
     Click Element With Locator    span    Donation Date
     Wait Until Element Is Not Visible    //span[contains(@class,'toastMessage')]
-    Page Should Not Contain Link    &{opportunity}[Name]
+    Page Should Not Contain Link    ${opportunity}[Name]
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Batch To Process    BDI_DataImport_BATCH    Completed
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
-    Verify Expected Values    nonns    Opportunity    &{opportunity}[Id]
+    Verify Expected Values    nonns    Opportunity    ${opportunity}[Id]
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Prospecting
@@ -72,7 +71,7 @@ Dont select match for contact new donation with grid changes
     ...    Amount=20.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    Go To Record Home    &{contact}[Id]
+    Go To Record Home    ${contact}[Id]
     Validate Related Record Count     Opportunities     2
 
     

@@ -17,15 +17,15 @@ Match Based on Number of Days from Donation Date Functionality
     [tags]  stable  
     Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
-    Click Link With Text    &{batch}[Name]
+    Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Search Field By Value    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    ${account}[Name]
     Wait Until Modal Is Open
-    Click Link    &{account}[Name]
+    Click Link    ${account}[Name]
     Click Link With Text    Review Donations
-    Page Should Contain    &{opp}[Name]
-    ${pay_no}    Get BGE Card Header    &{opp}[Name]
+    Page Should Contain    ${opp}[Name]
+    ${pay_no}    Get BGE Card Header    ${opp}[Name]
     Log To Console    ${pay_no}
     Click Button With Title     Close this window
     Wait Until Modal Is Closed
@@ -42,7 +42,7 @@ Match Based on Number of Days from Donation Date Functionality
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     # Verify that the gift matched to existing opportunity and updated it to closed won status with gift date and payment is paid
-    Go To Record Home    &{opp}[Id]
+    Go To Record Home    ${opp}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
     Navigate To And Validate Field Value    Close Date    contains    ${date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
@@ -79,11 +79,11 @@ Setup Test Data
     ${date} =     Get Current Date    result_format=%-m/%-d/%Y
     Set Suite Variable    ${date}
     ${opp_date} =     Get Current Date    result_format=%Y-%m-%d    increment=2 days
-    &{opp} =     API Create Opportunity   &{account}[Id]    Donation  
+    &{opp} =     API Create Opportunity   ${account}[Id]    Donation  
     ...    StageName=Prospecting    
     ...    Amount=100    
     ...    CloseDate=${opp_date}    
     ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=&{account}[Name] Test 100 Donation      
+    ...    Name=${account}[Name] Test 100 Donation      
     Set Suite Variable    &{opp}
     
