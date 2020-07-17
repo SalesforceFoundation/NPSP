@@ -22,15 +22,14 @@ Delete a Data Import
     ...    ${ns}GiftBatch__c=true    
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{account} =     API Create Organization Account
-    &{data_import} =  API Create DataImport    ${ns}NPSP_Data_Import_Batch__c=&{batch}[Id]    ${ns}Account1Imported__c=&{account}[Id]    ${ns}Donation_Donor__c=Account1
+    &{data_import} =  API Create DataImport    ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]    ${ns}Account1Imported__c=${account}[Id]    ${ns}Donation_Donor__c=Account1
     Go To Page                        Listing                      Batch_Gift_Entry
-    # Click Link      link=&{batch}[Name]
-    Click Link With Text    &{batch}[Name]
+    Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Wait For Locator    bge.locate_dropdown    1
     Sleep    3
-    Select BGE Row     &{account}[Name]
+    Select BGE Row     ${account}[Name]
     Click Span Button    Delete  
     Page Should Contain    Total Count: 0
-    ${status} =     Run Keyword And Return Status     Salesforce Get      DataImport__c  &{data_import}[Id]
+    ${status} =     Run Keyword And Return Status     Salesforce Get      DataImport__c  ${data_import}[Id]
     Should Be Equal As Strings    ${status}    False
