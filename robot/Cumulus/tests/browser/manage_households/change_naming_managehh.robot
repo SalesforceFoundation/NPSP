@@ -15,10 +15,10 @@ Suite Teardown  Delete Records and Close Browser
 
 Setup Test Data
     &{contact1} =         API Create Contact                    Email=${EMAIL1}
-    Store Session Record  Account                               &{contact1}[AccountId]
+    Store Session Record  Account                               ${contact1}[AccountId]
     Set suite variable    &{contact1}
     &{contact2} =         API Create Contact
-    Store Session Record  Account                               &{contact2}[AccountId]
+    Store Session Record  Account                               ${contact2}[AccountId]
     Set suite variable    &{contact2}
 
 
@@ -37,10 +37,10 @@ Change Name Display Settings on Manage Household Page
 
     Go To Page                              Details
     ...                                     Account
-    ...                                     object_id=&{contact1}[AccountId]
+    ...                                     object_id=${contact1}[AccountId]
     Click Actions Link                      Manage Household
     Go To Page                              Custom                                                              ManageHousehold
-    Add contact                             Existing                                                            &{contact2}[FirstName] &{contact2}[LastName]
+    Add contact                             Existing                                                            ${contact2}[FirstName] ${contact2}[LastName]
     Current Page Should Be                  Details                                                             Account
     Wait Until Loading Is Complete
     Click Link                              link=Manage Household
@@ -48,12 +48,12 @@ Change Name Display Settings on Manage Household Page
 
     # Choose the display option as Informal Greeting for contact#1
 
-    Validate And Select Checkbox            &{contact1}[FirstName] &{contact1}[LastName]
+    Validate And Select Checkbox            ${contact1}[FirstName] ${contact1}[LastName]
     ...                                     Informal Greeting
 
     # Choose the display option as Formal Greeting for contact#2
 
-    Validate And Select Checkbox            &{contact2}[FirstName] &{contact2}[LastName]
+    Validate And Select Checkbox            ${contact2}[FirstName] ${contact2}[LastName]
     ...                                     Formal Greeting
 
     Save Changes Made For Manage Household
@@ -62,8 +62,8 @@ Change Name Display Settings on Manage Household Page
 
     Go To Page                              Details
     ...                                     Account
-    ...                                     object_id=&{contact1}[AccountId]
+    ...                                     object_id=${contact1}[AccountId]
 
     Select Tab                              Details
-    Check Field Value                       Informal Greeting                                                   &{contact2}[FirstName]
-    Check Field Value                       Formal Greeting                                                     &{contact1}[FirstName] &{contact1}[LastName]
+    Check Field Value                       Informal Greeting                                                   ${contact2}[FirstName]
+    Check Field Value                       Formal Greeting                                                     ${contact1}[FirstName] ${contact1}[LastName]
