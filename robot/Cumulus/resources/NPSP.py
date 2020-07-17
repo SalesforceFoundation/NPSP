@@ -997,7 +997,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 time.sleep(1)
 
     def click_link_with_text(self, text):
-        self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
         locator = npsp_lex_locators['link-text'].format(text)
         self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
