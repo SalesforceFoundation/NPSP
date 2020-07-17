@@ -367,6 +367,7 @@ public with sharing class RD2_EnablementService_TEST {
         RD2_EnablementService.enablementService = (RD2_EnablementService) Test.createStub(
             RD2_EnablementService.class, new Stub().withRecurringDonations2Enabled()
         );
+        RD2_EnablementService.isMetadataDeployed = true;
     }
 
     /***
