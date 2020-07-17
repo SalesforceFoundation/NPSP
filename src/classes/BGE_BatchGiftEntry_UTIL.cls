@@ -97,8 +97,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             // Must explicitly use BDI_MappingServiceAdvanced here (as opposed to
             // BDI_DataImportService.getDefaultMappingService()) because of the need
             // to reference the fieldMappingByDevName property.
-            Map<String,BDI_FieldMapping> fieldMappingByDevName =
-                    BDI_MappingServiceAdvanced.getInstance().fieldMappingByDevName;
+            BDI_MappingServiceAdvanced mappingService =
+                    BDI_MappingServiceAdvanced.getInstance();
+
+            Map<String, BDI_FieldMapping> fieldMappingByDevName =
+                    mappingService.fieldMappingByDevName;
 
             FORM_Template t = (FORM_Template) JSON.deserialize(
                     batch.Form_Template__r.Template_JSON__c,
@@ -116,34 +119,47 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
                         BDI_FieldMapping fieldMapping =
                                 fieldMappingByDevName.get(fieldMappingName);
-                        if (fieldMapping == null) {
+
+                        Boolean isObjectMappedLookup = mappingService
+                                .importedRecordFieldNames.contains(
+                                fieldMappingName.toLowerCase());
+
+                        if (fieldMapping == null && !isObjectMappedLookup) {
                             continue;
                         }
-
+                        String sourceFieldName = fieldMapping != null ?
+                                fieldMapping.Source_Field_API_Name :
+                                isObjectMappedLookup ?
+                                        fieldMappingName : null;
                         // Add the source fields used in the Template
-                        if (!fieldApiNames.contains(
-                                fieldMapping.Source_Field_API_Name.toLowerCase())) {
-                            fieldApiNames.add(
-                                    fieldMapping.Source_Field_API_Name.toLowerCase());
+                        if (!fieldApiNames.contains(sourceFieldName.toLowerCase())) {
+                            fieldApiNames.add(sourceFieldName.toLowerCase());
                         }
 
                         // Add the Name fields on the related object(s) for all Lookup fields,
                         // used as display value(s) for Lookup fields loaded in the Form UI
-                        if (fieldMapping.Source_Field_Data_Type == 'REFERENCE') {
-                            String relatedObjNameField = String.join(new List<String>{
-                                    fieldMapping.Source_Field_API_Name.replace('__c', '__r'),
-                                    'Name'
-                            }, '.'
-                            ).toLowerCase();
-                            if (!fieldApiNames.contains(relatedObjNameField)) {
-                                fieldApiNames.add(relatedObjNameField);
+                        if ((fieldMapping != null &&
+                                fieldMapping.Source_Field_Data_Type == 'REFERENCE')
+                                || isObjectMappedLookup) {
+
+                            SObjectField field = DataImport__c.SObjectType.getDescribe()
+                                    .fields.getMap().get(sourceFieldName);
+
+                            if (field != null) {
+                                String relatedObjNameField =
+                                        UTIL_Describe.getReferenceObjectNameField(field);
+
+                                if (relatedObjNameField != null &&
+                                        !fieldApiNames.contains(
+                                                relatedObjNameField.toLowerCase())) {
+                                    fieldApiNames.add(relatedObjNameField.toLowerCase());
+                                }
                             }
                         }
                     }
                 }
             }
         }
-
         return fieldApiNames;
     }
 
