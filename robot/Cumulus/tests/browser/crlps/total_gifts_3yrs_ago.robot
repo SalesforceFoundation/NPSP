@@ -41,15 +41,15 @@ Calculate CRLPs for Total Gifts 3 Years Ago
 # create a contact and opportunity via API and verify new rollup is working
     &{contact} =         API Create Contact       FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     ${date} =            Get Current Date         result_format=%Y-%m-%d             increment=-1098 days
-    &{opportunity} =     API Create Opportunity   &{contact}[AccountId]              Donation  
+    &{opportunity} =     API Create Opportunity   ${contact}[AccountId]              Donation  
     ...    StageName=Closed Won    
     ...    Amount=3000    
     ...    CloseDate=${date}    
     ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=&{contact}[Name] $3000 Donation
+    ...    Name=${contact}[Name] $3000 Donation
     Go To Page                                    Details
     ...                                           Contact
-    ...                                           object_id=&{contact}[Id]
+    ...                                           object_id=${contact}[Id]
     Verify Rollup Field Value                     Total Gifts Three Years Ago         $3,000.00     section=Contact Information
 
 

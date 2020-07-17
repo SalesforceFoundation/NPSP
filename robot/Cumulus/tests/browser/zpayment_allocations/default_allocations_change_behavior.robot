@@ -27,7 +27,7 @@ Allocations Behavior when $0 with Default Allocations Enabled
     ...                         object_id=${data}[contact1_opportunity][Id]
     Select Tab                  Related
     Verify Allocations          GAU Allocations
-    ...                         &{def_gau}[Name]=$0.00
+    ...                         ${def_gau}[Name]=$0.00
 
 Allocations Behavior when $0 with Default Allocations Disabled
     [Documentation]             Enable payment allocation and make sure default allocations are DISABLED. Create a $0 opportunity
@@ -35,26 +35,26 @@ Allocations Behavior when $0 with Default Allocations Disabled
     [tags]                      unstable    W-035647    feature:Payment Allocations
     Disable Default Allocations
     Setupdata                   contact2                    ${contact2_fields}     ${opportunity2_fields}
-    &{allocation} =             API Create GAU Allocation   &{gau}[Id]             ${data}[contact2_opportunity][Id]    
+    &{allocation} =             API Create GAU Allocation   ${gau}[Id]             ${data}[contact2_opportunity][Id]    
     ...                         ${ns}Percent__c=0.0 
     Go To Page                  Detail
     ...                         Opportunity
     ...                         object_id=${data}[contact2_opportunity][Id]
     Select Tab                  Related
     Verify Allocations          GAU Allocations
-    ...                         &{gau}[Name]=0.000000%
+    ...                         ${gau}[Name]=0.000000%
 
 ***Keywords***
 Enable Default Allocations
     API Modify Allocations Setting
     ...               ${ns}Default_Allocations_Enabled__c=true
-    ...               ${ns}Default__c=&{def_gau}[Id]    
+    ...               ${ns}Default__c=${def_gau}[Id]    
     ...               ${ns}Payment_Allocations_Enabled__c=true	
     
 Disable Default Allocations
     API Modify Allocations Setting
     ...               ${ns}Default_Allocations_Enabled__c=false
-    ...               ${ns}Default__c=&{def_gau}[Id]    
+    ...               ${ns}Default__c=${def_gau}[Id]    
     ...               ${ns}Payment_Allocations_Enabled__c=true    
 
 Disable Default And Payment Allocations
