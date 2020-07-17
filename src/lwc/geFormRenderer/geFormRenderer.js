@@ -928,7 +928,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    reset(objectMappingDeveloperName = null) {
+    reset(objectMappingDeveloperName = null, setDefaults = true) {
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         let fieldMappingDevNames = null;
@@ -945,7 +945,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         sectionsList.forEach(section => {
-            section.reset(fieldMappingDevNames);
+            section.reset(fieldMappingDevNames, setDefaults);
         });
         this.widgetData = {};
     }
