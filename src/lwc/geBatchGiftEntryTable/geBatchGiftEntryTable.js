@@ -1,13 +1,14 @@
-import { api, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
+import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
 import { isNotEmpty, isUndefined } from 'c/utilCommon';
-import GeListView from 'c/geListView';
 import GeFormService from 'c/geFormService';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
@@ -17,182 +18,172 @@ import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 
 import commonOpen from '@salesforce/label/c.commonOpen';
+import GeLabelService from 'c/geLabelService';
 
-import DATAIMPORT_INFO from '@salesforce/schema/DataImport__c';
+import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
-export default class GeBatchGiftEntryTable extends GeListView {
+const URL_SUFFIX = '_URL';
+const URL_LABEL_SUFFIX = '_URL_LABEL';
+
+const columnTypeByDescribeType = {
+    'DATE': 'date-local',
+    'DATETIME': 'date',
+    'EMAIL': 'email',
+    'DOUBLE': 'number',
+    'INTEGER': 'number',
+    'LONG': 'number',
+    'PERCENT': 'number',
+    'STRING': 'text',
+    'PICKLIST': 'text'
+};
+
+const COLUMNS = [
+    { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
+    { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
+    {
+        label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
+        typeAttributes: { label: { fieldName: 'donorName' } }
+    },
+    {
+        label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
+        typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
+    }
+];
+
+const ACTIONS_COLUMN = {
+    type: 'action',
+    typeAttributes: {
+        rowActions: [
+            { label: commonOpen, name: 'open' },
+            { label: bgeActionDelete, name: 'delete' }
+        ],
+        menuAlignment: 'auto'
+    }
+};
+
+export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
-    @api userDefinedBatchTableColumnNames;
-    @track columnsByFieldApiName = {};
-    @track ready = false;
+
+    get ready() {
+        return this._columnsLoaded && this._dataImportModel;
+    }
 
     _batchLoaded = false;
-    @track data = [];
-    @track hasData = false;
+    data = [];
+    get hasData() {
+        return this.data.length > 0;
+    }
 
     _columnsLoaded = false;
-    _columns = [
-        { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text' },
-        { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
-        {
-            label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
-            typeAttributes: { label: { fieldName: 'donorName' } }
-        },
-        {
-            label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
-            typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
-        }
-    ];
-    _actionsColumn = {
-        type: 'action',
-        typeAttributes: {
-            rowActions: [
-                { label: commonOpen, name: 'open' },
-                { label: bgeActionDelete, name: 'delete' }
-            ],
-            menuAlignment: 'auto'
-        }
-    };
+    _columnsBySourceFieldApiName = {};
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api title;
     @api total;
     @api expectedTotal;
     @api count;
     @api expectedCount;
-    @track isLoaded = true;
+    @api userDefinedBatchTableColumnNames;
+    isLoaded = true;
 
     constructor() {
-        super(DATAIMPORT_INFO.objectApiName);
-        /* Add the loadBatch function as a callback for the parent component to execute once it executes the
-        objectInfo wire service */
-        this.callbacks.push(this.loadBatch);
+        super();
+        COLUMNS.forEach(column => {
+            this._columnsBySourceFieldApiName[column.fieldName] = column;
+        });
     }
 
-    setReady() {
-        this.ready = this._columnsLoaded && this._batchLoaded;
-    }
-
-    loadBatch = () => {
-        getDataImportModel({ batchId: this.batchId })
-            .then(
-                response => {
-                    const dataImportModel = JSON.parse(response);
-                    this._count = dataImportModel.totalCountOfRows;
-                    this._total = dataImportModel.totalRowAmount;
-
-                    this.data = this.setDatatableRecordsForImperativeCall(
-                        dataImportModel.dataImportRows.map(row => {
-                            return Object.assign(row, row.record);
-                        })
-                    )
-                    this.hasData = this.data.length > 0;
-                    this.batchLoaded();
-                }
-            )
-            .catch(
-                error => {
-                    handleError(error);
-                }
-            );
-    }
-
-    batchLoaded() {
-        this._batchLoaded = true;
-        this.setReady();
+    connectedCallback() {
+        this.loadBatch();
     }
 
     @api
-    handleSectionsRetrieved(sections) {
-        if (!this._columnsLoaded) {
-            this.buildColumns(sections);
-        }
+    set sections(sections) {
+        this._sections = sections;
+        this.buildColumnsFromSections();
+    }
+    get sections() {
+        return this._sections;
     }
 
-    get computedColumns() {
-        if (!this._columnsLoaded) return [];
-
-        const hasUserDefinedColumns =
-            this.userDefinedBatchTableColumnNames &&
-            this.userDefinedBatchTableColumnNames.length > 0;
-
-        if (hasUserDefinedColumns) {
-            return [...this.retrieveUserDefinedColumns(), this._actionsColumn];
-        }
-
-        return [...this.retrieveAllColumns(), this._actionsColumn]
+    _dataImportModel;
+    loadBatch() {
+        getDataImportModel({batchId: this.batchId})
+            .then(
+                response => {
+                    this._dataImportModel = JSON.parse(response);
+                    this.setTableProperties();
+                    this._batchLoaded = true;
+                }
+            )
+            .catch(error => handleError(error));
     }
 
-    retrieveAllColumns() {
-        let allColumns = [];
-        for (const columnValue in this.columnsByFieldApiName) {
-            allColumns.push(this.columnsByFieldApiName[columnValue]);
+    _propertiesSet = false;
+    setTableProperties() {
+        if (this._propertiesSet) {
+            return;
         }
-        return allColumns;
+        if (!this._dataImportObjectInfo) {
+            return;
+        }
+        if (!this._dataImportModel) {
+            return;
+        }
+        this._count = this._dataImportModel.totalCountOfRows;
+        this._total = this._dataImportModel.totalRowAmount;
+        this._dataImportModel.dataImportRows.forEach(row => {
+            this.data.push(Object.assign(row,
+                this.appendUrlColumnProperties.call(row.record,
+                    this._dataImportObjectInfo)));
+        });
+        this.data = this.data.slice(0);
+        this._propertiesSet = true;
     }
 
-    retrieveUserDefinedColumns() {
+    get columns() {
+        return this.userDefinedBatchTableColumnNames &&
+        this.userDefinedBatchTableColumnNames.length > 0 ?
+            this.userDefinedColumns.concat(ACTIONS_COLUMN) :
+            this.allColumns.concat(ACTIONS_COLUMN);
+    }
+
+    get allColumns() {
+        return Object.values(this._columnsBySourceFieldApiName);
+    }
+
+    get userDefinedColumns() {
         let userDefinedColumns = [];
         this.userDefinedBatchTableColumnNames.forEach(columnName => {
-            if (isUndefined(this.columnsByFieldApiName[columnName])) return;
-            userDefinedColumns.push(this.columnsByFieldApiName[columnName]);
+            if (this._columnsBySourceFieldApiName[`${columnName}${URL_SUFFIX}`]) {
+                userDefinedColumns.push(this._columnsBySourceFieldApiName[`${columnName}${URL_SUFFIX}`]);
+            } else if (isUndefined(this._columnsBySourceFieldApiName[columnName])) {
+                return;
+            } else {
+                userDefinedColumns.push(this._columnsBySourceFieldApiName[columnName]);
+            }
         });
         return userDefinedColumns;
     }
 
-    buildColumns(sections) {
-        const fieldApiNames = [];
-        sections.forEach(section => {
-            section.elements
-                .filter(element => element.elementType === 'field')
-                .forEach(element => {
-                    const fieldWrapper = GeFormService.getFieldMappingWrapper(
-                        element.dataImportFieldMappingDevNames[0]
-                    );
+    buildColumnsFromSections() {
+        this.sections.forEach(section => {
+            section.elements.filter(e => e.elementType === 'field')
+                .forEach(fieldElement => {
+                    const fieldWrapper =
+                        GeFormService.getFieldMappingWrapper(
+                            fieldElement.dataImportFieldMappingDevNames[0]);
+
                     if (isNotEmpty(fieldWrapper)) {
-                        fieldApiNames.push(fieldWrapper.Source_Field_API_Name);
+                        const column = this.getColumn(fieldElement, fieldWrapper);
+                        this._columnsBySourceFieldApiName[column.fieldName] = column;
                     }
                 });
         });
-
-        this.buildColumnsByFieldApiNamesMap(fieldApiNames);
-        this.columnsLoaded();
-    }
-
-    /**
-    * @description Builds a map of all possible columns based on form fields
-    *              in the gift entry form. This map is used to return the relevant
-    *              columns based on the user defined list of table headers or
-    *              all columns if a user defined list couldn't be found.
-    */
-    buildColumnsByFieldApiNamesMap(fieldApiNames) {
-        const columns = this.buildNameFieldColumns(fieldApiNames);
-        columns.forEach(column => {
-            this.columnsByFieldApiName[column.fieldApiName] = column;
-        });
-        this.addSpecialCasedColumns();
-    }
-
-    /**
-    * @description Adds special cased columns to the map of columns. These
-    *              four special cased fields are the Donor, Donation, Status,
-    *              Failure Information fields. Donor and Donation are derived
-    *              fields and constructed in the BGE_DataImportBatchEntry_CTRL
-    *              class. Status and Failure Information are fields on the
-    *              DataImport__c object.
-    */
-    addSpecialCasedColumns() {
-        this.columnsByFieldApiName[this._columns[0].fieldName] = this._columns[0];
-        this.columnsByFieldApiName[this._columns[1].fieldName] = this._columns[1];
-        this.columnsByFieldApiName[this._columns[2].fieldName] = this._columns[2];
-        this.columnsByFieldApiName[this._columns[3].fieldName] = this._columns[3];
-    }
-
-    columnsLoaded() {
         this._columnsLoaded = true;
-        this.setReady();
     }
 
     @api
@@ -201,16 +192,11 @@ export default class GeBatchGiftEntryTable extends GeListView {
             row[idProperty] === dataRow[idProperty]
         );
 
-        let rows = this.setDatatableRecordsForImperativeCall([dataRow]);
-
         if (existingRowIndex !== -1) {
             this.data.splice(existingRowIndex, 1, dataRow);
-            this.data = [...this.data];
+            this.data = this.data.splice(0);
         } else {
-            this.data = [...rows, ...this.data];
-            if (this.hasData === false) {
-                this.hasData = true;
-            }
+            this.data = [dataRow].concat(this.data);
         }
     }
 
@@ -224,8 +210,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
                     this.deleteDIRow(event.detail.row);
                 }).catch(error => {
                     handleError(error);
-                }
-                );
+                });
                 break;
         }
     }
@@ -234,7 +219,7 @@ export default class GeBatchGiftEntryTable extends GeListView {
         const isRowToDelete = row => row.Id == rowToDelete.Id;
         const index = this.data.findIndex(isRowToDelete);
         this.data.splice(index, 1);
-        this.data = [...this.data];
+        this.data = this.data.splice(0);
         this.dispatchEvent(new CustomEvent('delete', {
             detail: {
                 amount: rowToDelete[DONATION_AMOUNT.fieldApiName]
@@ -256,11 +241,11 @@ export default class GeBatchGiftEntryTable extends GeListView {
             .then(rows => {
                 rows.forEach(row => {
                     this.data.push(
-                        Object.assign(row, row.record)
-                    );
-                }
-                );
-                this.data = [...this.data];
+                        Object.assign(row,
+                            this.appendUrlColumnProperties.call(row.record,
+                                this._dataImportObjectInfo)));
+                });
+                this.data = this.data.splice(0);
                 if (this.data.length >= this.count) {
                     disableInfiniteLoading();
                 }
@@ -281,9 +266,11 @@ export default class GeBatchGiftEntryTable extends GeListView {
                 const dataImportModel = JSON.parse(result);
                 this._count = dataImportModel.totalCountOfRows;
                 this._total = dataImportModel.totalRowAmount;
-                dataImportModel.dataImportRows.forEach((row, idx) => {
+                dataImportModel.dataImportRows.forEach(row => {
                     this.upsertData(
-                        Object.assign(row, row.record), 'Id');
+                        Object.assign(row,
+                            this.appendUrlColumnProperties.call(row.record,
+                                this._dataImportObjectInfo)), 'Id');
                 });
             })
             .catch(error => {
@@ -327,6 +314,140 @@ export default class GeBatchGiftEntryTable extends GeListView {
                 value: total
             }
         }));
+    }
+
+    handleMenuItemSelect(event) {
+        if (event.detail.value === 'selectcolumns') {
+            const selectColumns = new CustomEvent('selectcolumns', {
+                detail: {
+                    options: this.allColumns
+                        .map(({label, fieldName}) => ({
+                            label, value: fieldName
+                        })),
+                    values: this.columns
+                        .map(({fieldName}) => fieldName)
+                }
+            });
+            this.dispatchEvent(selectColumns);
+        }
+    }
+
+    get qaLocatorTableMenu() {
+        return 'button Show menu';
+    }
+
+    get qaLocatorSelectBatchTableColumns() {
+        return `link ${this.CUSTOM_LABELS.geSelectBatchTableColumns}`;
+
+    }
+
+    /*************************************************************************************
+     * @description For each relationship field on an object, this function appends two
+     *              properties to the object intended for use with url-type columns in
+     *              lightning-datatables. One to be used as the url value and another
+     *              to be used as its label.
+     * @param objectInfo objectInfo of the record object in context.
+     * @param urlSuffix value to be appended to the field name to comprise first new
+     *        property name.
+     * @param urlLabelSuffix value to be appended to the field name to comprise second new
+     *        property name.
+     * @returns {object}
+     */
+    appendUrlColumnProperties(objectInfo, urlSuffix = URL_SUFFIX,
+                              urlLabelSuffix = URL_LABEL_SUFFIX) {
+        Object.keys(this)
+            .filter(key =>
+                key.endsWith('__r') || this[key].attributes
+            )
+            .forEach(key => {
+                const referenceObj = this[key];
+                const urlFieldName = key.endsWith('__r') ?
+                    `${key.replace(/.$/,"c")}${urlSuffix}` :
+                    `${key}${urlSuffix}`;
+                const urlLabelFieldName = key.endsWith('__r') ?
+                    `${key.replace(/.$/,"c")}${urlLabelSuffix}` :
+                    `${key}${urlLabelSuffix}`;
+
+                this[urlFieldName] = `/${referenceObj.Id}`;
+
+                if (referenceObj.Name) {
+                    this[urlLabelFieldName] = referenceObj.Name;
+                } else {
+                    try {
+                        const field = objectInfo.fields[key];
+                        const nameField = field.referenceToInfos[0].nameFields[0];
+                        this[urlLabelFieldName] = referenceObj[nameField];
+                    } catch (e) {
+                        this[urlLabelFieldName] = referenceObj.Id;
+                    }
+                }
+        });
+        return this;
+    }
+
+    @api
+    handleSubmit(event) {
+        saveAndDryRunDataImport({
+            batchId: this.batchId,
+            dataImport: event.detail.dataImportRecord
+        })
+            .then(result => {
+                let dataImportModel = JSON.parse(result);
+                let row = dataImportModel.dataImportRows[0];
+                Object.assign(row,
+                    this.appendUrlColumnProperties.call(row.record,
+                        this._dataImportObjectInfo));
+                this.upsertData(row, 'Id');
+                this._count = dataImportModel.totalCountOfRows;
+                this._total = dataImportModel.totalRowAmount;
+                event.detail.success(); //Re-enable the Save button
+            })
+            .catch(error => {
+                event.detail.error(error);
+            });
+    }
+
+    _dataImportObjectInfo;
+    @wire(getObjectInfo, {objectApiName: DATA_IMPORT_OBJECT})
+    wiredDataImportObjectInfo({error, data}) {
+        if (data) {
+            this._dataImportObjectInfo = data;
+            if (!this._propertiesSet) {
+                this.setTableProperties();
+            }
+        }
+    }
+
+    getColumnTypeFromFieldType(dataType) {
+        return columnTypeByDescribeType[dataType] || dataType.toLowerCase();
+    }
+
+    getColumn(element, fieldWrapper) {
+        const isReferenceField = element.dataType === 'REFERENCE';
+        const columnFieldName =
+            fieldWrapper.Source_Field_API_Name.toLowerCase().endsWith('id') ?
+            fieldWrapper.Source_Field_API_Name.slice(0, -2) :
+            fieldWrapper.Source_Field_API_Name;
+
+        let column = {
+            label: element.customLabel,
+            fieldName: isReferenceField ?
+                `${columnFieldName}${URL_SUFFIX}` :
+                fieldWrapper.Source_Field_API_Name,
+            type: this.getColumnTypeFromFieldType(element.dataType)
+        };
+
+        if (isReferenceField) {
+            column.type = 'url';
+            column.target = '_blank';
+            column.typeAttributes = {
+                label: {
+                    fieldName:
+                        `${columnFieldName}${URL_LABEL_SUFFIX}`
+                }
+            };
+        }
+        return column;
     }
 
 }

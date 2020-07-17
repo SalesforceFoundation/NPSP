@@ -100,11 +100,44 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
-        // check permissions on hard coded fields
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-            UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
-            BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
-        );
+        DataImportBatch__c batch;
+        Boolean isQueryException = false;
+        try {
+            batch = [
+                    SELECT Batch_Gift_Entry_Version__c
+                    FROM DataImportBatch__c
+                    WHERE Id = :batchId
+                    WITH SECURITY_ENFORCED
+            ];
+        } catch (QueryException qe) {
+            // If User doesn't have access to Version field, treat as 1.0.
+            isQueryException = true;
+        }
+
+        if (isQueryException || batch.Batch_Gift_Entry_Version__c < 2) {
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
+            );
+        } else {
+            List<String> fields =
+                    BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+
+            List<String> nonNameFields = new List<String>();
+            for (String str : fields) {
+                Boolean isNameField = str.contains('.');
+                if (isNameField) {
+                    continue;
+                } else if (!nonNameFields.contains(str)) {
+                    nonNameFields.add(str);
+                }
+            }
+
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    nonNameFields
+            );
+        }
 
         return JSON.serialize(dataImportModel);
     }

@@ -184,6 +184,7 @@ import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
+import geSelectBatchTableColumns from '@salesforce/label/c.geSelectBatchTableColumns';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabBatchSettings from '@salesforce/label/c.geTabBatchSettings';
@@ -401,6 +402,7 @@ class GeLabelService {
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,
         geSearchPlaceholder,
+        geSelectBatchTableColumns,
         geSelectPlaceholder,
         geTabBatchHeader,
         geTabBatchSettings,
