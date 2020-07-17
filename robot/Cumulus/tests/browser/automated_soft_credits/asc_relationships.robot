@@ -46,7 +46,7 @@ Create ASC for Related Contact
     ...                                     Name=${data}[contact1][FirstName] $100 donation    
     ...                                     Amount=100
     Go To Page                              Details                              Opportunity                                
-    ...                                     object_id=&{opportunity}[Id]
+    ...                                     object_id=${opportunity}[Id]
     Select Tab                              Related
     Select Relatedlist                      Contact Roles
     Wait For Page Object                    Custom                               OpportunityContactRole
@@ -57,11 +57,11 @@ Create ASC for Related Contact
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact2][Id]
     Select Tab                              Related
-    Check Record Related Item               Opportunities                        &{opportunity}[Name]
+    Check Record Related Item               Opportunities                        ${opportunity}[Name]
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact3][Id]
     Select Tab                              Related
-    Check Record Related Item               Opportunities                        &{opportunity}[Name]
+    Check Record Related Item               Opportunities                        ${opportunity}[Name]
     Run Donations Batch Process
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact2][Id]
