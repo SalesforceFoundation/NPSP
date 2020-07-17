@@ -40,7 +40,7 @@ Create ASC Test for Primary and Affiliations
     
     #Check opportunity contact roles
     Go To Page                              Details                              Opportunity                                
-    ...                                     object_id=&{opportunity}[Id]
+    ...                                     object_id=${opportunity}[Id]
     Select Tab                              Related
     Select Relatedlist                      Contact Roles
     Wait For Page Object                    Custom                               OpportunityContactRole
@@ -52,12 +52,12 @@ Create ASC Test for Primary and Affiliations
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact1][Id]
     Select Tab                              Related
-    Check Record Related Item               Opportunities                        &{opportunity}[Name]
+    Check Record Related Item               Opportunities                        ${opportunity}[Name]
     
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact2][Id]
     Select Tab                              Related
-    Check Record Related Item               Opportunities                        &{opportunity}[Name]
+    Check Record Related Item               Opportunities                        ${opportunity}[Name]
     
     #Run batch job and verify soft credits on contacts
     Run Donations Batch Process
