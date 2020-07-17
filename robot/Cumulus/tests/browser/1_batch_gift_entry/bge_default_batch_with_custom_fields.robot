@@ -57,11 +57,11 @@ Create New gift and process batch and validate
     [tags]  stable
     &{contact} =     API Create Contact
     &{campaign} =    API Create Campaign
-    Set Global Variable     ${camp_id}       &{campaign}[Id]
+    Set Global Variable     ${camp_id}       ${campaign}[Id]
     Select Value From BGE DD    Donor Type    Contact
-    Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Search Field By Value    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
     Wait Until Modal Is Open
-    Click Link    &{contact}[FirstName] &{contact}[LastName]
+    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Fill BGE Form
     ...    Donation Amount=100
     ...    custom_currency=20
@@ -104,7 +104,7 @@ Verify Custom Fields on Payment and Donation
     ...    ${org_ns}custom_multipick__c=1;2;3
     ...    ${org_ns}custom_phone__c=1234567890
     ...    ${org_ns}custom_url__c=automation.com
-    Verify Expected Values    nonns    Opportunity    &{payment}[npe01__Opportunity__c]
+    Verify Expected Values    nonns    Opportunity    ${payment}[npe01__Opportunity__c]
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won

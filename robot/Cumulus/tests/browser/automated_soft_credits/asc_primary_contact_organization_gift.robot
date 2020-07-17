@@ -34,7 +34,7 @@ Create ASC for Primary Contact on Organization Gift
     [tags]                     feature:Automated Soft Credits        W-039819
     
     Go To Page                              Details                              Opportunity                                
-    ...                                     object_id=&{opportunity}[Id]
+    ...                                     object_id=${opportunity}[Id]
     Select Tab                              Related
     Select Relatedlist                      Contact Roles
     Wait For Page Object                    Custom                               OpportunityContactRole
@@ -43,7 +43,7 @@ Create ASC for Primary Contact on Organization Gift
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact][Id]
     Select Tab                              Related
-    Check Record Related Item               Opportunities                        &{opportunity}[Name]
+    Check Record Related Item               Opportunities                        ${opportunity}[Name]
     Run Donations Batch Process
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact][Id]
