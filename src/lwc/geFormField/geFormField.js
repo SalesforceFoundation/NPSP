@@ -476,7 +476,11 @@ export default class GeFormField extends LightningElement {
 
     @api
     reset(setDefaults = true) {
-        this.value = this._defaultValue;
+        if (setDefaults) {
+            this.value = this._defaultValue;
+        } else {
+            this.value = null;
+        }
 
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
