@@ -124,6 +124,7 @@ public with sharing class RD2_ValidationService {
         }
         set;
     }
+
     /***
     * @descripton Elevate integration service
     */
@@ -179,6 +180,7 @@ public with sharing class RD2_ValidationService {
             validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             validateStatus(rd);
+            validateRD2MetadataDeployed(rd);
         }
     }
 
@@ -206,6 +208,19 @@ public with sharing class RD2_ValidationService {
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
+
+            validateRD2MetadataDeployed(rd);
+        }
+    }
+
+    /***
+    * @description Validates Enhanced Recurring Donations metadata has been deployed
+    * @param rd The Recurring Donation to validate
+    * @return void
+    */
+    private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd) {
+        if (!RD2_EnablementService.isMetadataDeployed) {
+            rd.addError(System.Label.RD2_EnablementIncomplete);
         }
     }
 
