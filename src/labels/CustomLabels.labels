@@ -6857,6 +6857,13 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Search...</value>
     </labels>
     <labels>
+        <fullName>geSelectBatchTableColumns</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to select batch table columns</shortDescription>
+        <value>Select Batch Table Columns</value>
+    </labels>
+    <labels>
         <fullName>geSelectPlaceholder</fullName>
         <language>en_US</language>
         <protected>true</protected>
