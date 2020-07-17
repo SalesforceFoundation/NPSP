@@ -216,6 +216,11 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
                     else:
                         self.salesforce._populate_field(field_loc,value) 
+                elif section=="Field Label":
+                    key=f'{section} {field}'
+                    field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                    self.salesforce._populate_field(field_loc,value)
+
     
     def add_field_bundle_to_new_section(self,bundle):
         """Adds the specified field bundle to the template builder form if not already added"""
