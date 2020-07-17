@@ -227,12 +227,26 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     @api
-    reset() {
-        this.value = this.defaultValue;
-        this.displayValue = this._defaultDisplayValue;
+    reset(setDefaults = true) {
+        if (setDefaults) {
+            this.value = this.defaultValue;
+            this.displayValue = this._defaultDisplayValue;
+        } else {
+            this.value = null;
+            this.displayValue = '';
+        }
 
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
         autocomplete.setValue({value: this.value, displayValue: this.displayValue});
+
+        if (this.value) {
+            this.dispatchChangeEvent({
+                value: this.value,
+                displayValue:
+                this.displayValue,
+                fieldApiName: this.fieldApiName
+            });
+        }
     }
 
     dispatchChangeEvent(data) {
