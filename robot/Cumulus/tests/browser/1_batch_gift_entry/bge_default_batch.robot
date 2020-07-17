@@ -42,9 +42,9 @@ Create New gift and process batch and validate
     [tags]  stable
     &{contact} =     API Create Contact
     Select Value From BGE DD    Donor Type    Contact
-    Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Search Field By Value    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
     Wait Until Modal Is Open
-    Click Link    &{contact}[FirstName] &{contact}[LastName]
+    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Fill BGE Form    Donation Amount=100
     Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save

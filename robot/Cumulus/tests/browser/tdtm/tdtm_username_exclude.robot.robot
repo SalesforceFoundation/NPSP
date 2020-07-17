@@ -44,20 +44,20 @@ Update a Trigger Handler to Exclude a Username
 
     # Create a Recurring Donation and verify no Opportunities are created
     &{contact} =                 API Create Contact             Email=jjoseph@robot.com
-    Go To Page                   Details            Contact           object_id=&{contact}[Id]
-    &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
+    Go To Page                   Details            Contact           object_id=${contact}[Id]
+    &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=${contact}[Id]
     ...                          Name=Julian Recurring Donation
     ...                          npe03__Amount__c=1200
     ...                          npe03__Installments__c=12
     ...                          npe03__Schedule_Type__c=Divide By
     ...                          npe03__Installment_Period__c=Monthly
-    Go To Page                   Details           npe03__Recurring_Donation__c           object_id=&{recurringdonation}[Id]
-    Go To Page                   Details           Contact           object_id=&{contact}[Id]
+    Go To Page                   Details           npe03__Recurring_Donation__c           object_id=${recurringdonation}[Id]
+    Go To Page                   Details           Contact           object_id=${contact}[Id]
 
     #Verify no Opportunities were created
     @{opportunity} =             Salesforce Query             Opportunity
     ...                          select=Id
-    ...                          npe03__Recurring_Donation__c=&{recurringdonation}[Id]
+    ...                          npe03__Recurring_Donation__c=${recurringdonation}[Id]
     Should be empty              ${opportunity}
 
     # Assist Teardown by Removing Excluded Username
