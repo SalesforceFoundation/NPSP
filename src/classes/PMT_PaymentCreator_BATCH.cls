@@ -83,7 +83,8 @@ public class PMT_PaymentCreator_BATCH implements Database.Batchable<sObject> {
         
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.dmlWrapper();
         //send to payment creator as if these opportunities were just inserted in order to create payments
-        PMT_PaymentCreator pc = new PMT_PaymentCreator(mapOppIdOpportunity, null, TDTM_Runnable.Action.AfterInsert, dmlWrapper); 
+        new PMT_PaymentCreator()
+            .run(TDTM_Runnable.Action.AfterInsert, scope, null, dmlWrapper); 
 
         //insert payments
         TDTM_TriggerHandler.processDML(dmlWrapper);
