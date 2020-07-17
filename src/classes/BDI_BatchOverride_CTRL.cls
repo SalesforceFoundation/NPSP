@@ -66,7 +66,9 @@ public with sharing class BDI_BatchOverride_CTRL {
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Behavior__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Implementing_Class__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Rule__c'),
-                UTIL_Namespace.StrTokenNSPrefix('Process_Using_Scheduled_Job__c')
+                UTIL_Namespace.StrTokenNSPrefix('Process_Using_Scheduled_Job__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Run_Opportunity_Rollups_while_Processing__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Post_Process_Implementing_Class__c')
         };
         if (!Test.isRunningTest()) controller.addFields(listFields); //written as one line for test coverage
 
