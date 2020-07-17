@@ -167,7 +167,7 @@ public class TEST_SObjectGateway {
                     InstallmentPeriod__c,
                     RecurringDonation__c,
                     IsPause__c,
-                    PauseReason__c
+                    StatusReason__c
                 FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :rds
             ];

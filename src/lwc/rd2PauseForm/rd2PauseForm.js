@@ -10,7 +10,7 @@ import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import cancelButton from '@salesforce/label/c.stgBtnCancel';
 import saveButton from '@salesforce/label/c.stgBtnSave';
 
-import getPauseReason from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseReason';
+import getPausedReason from '@salesforce/apex/RD2_PauseForm_CTRL.getPausedReason';
 import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
 import savePause from '@salesforce/apex/RD2_PauseForm_CTRL.savePause';
 
@@ -30,7 +30,7 @@ export default class Rd2PauseForm extends LightningElement {
     @track isLoading = true;
     @track pageHeader = '';
 
-    @track pauseReason = {};
+    @track pausedReason = {};
 
     maxRowDisplay = 12;
     maxRowSelection = 12;
@@ -54,7 +54,7 @@ export default class Rd2PauseForm extends LightningElement {
     init = async () => {
         try {
             this.loadInstallments();
-            await this.loadPauseReason();
+            await this.loadPausedReason();
 
         } catch (error) {
             this.handleError(error);
@@ -209,8 +209,8 @@ export default class Rd2PauseForm extends LightningElement {
      * @description
      */
     refreshSelectedRowMessage() {
-        let messageSingular = 'You have selected 1 installment to skip.';//TODO
-        let messagePlural = 'You have selected {0} installments to skip.';//TODO
+        let messageSingular = 'You\'ve selected 1 installment to skip.';//TODO
+        let messagePlural = 'You\'ve selected {0} installments to skip.';//TODO
         const selectedCount = this.selectedIds.length;
 
         this.selectedRowMessage = selectedCount > 0
@@ -254,10 +254,10 @@ export default class Rd2PauseForm extends LightningElement {
     /***
     * @description
     */
-    loadPauseReason = async () => {
-        getPauseReason({ recurringDonationId: this.recordId })
+    loadPausedReason = async () => {
+        getPausedReason({ recurringDonationId: this.recordId })
             .then(response => {
-                this.pauseReason = JSON.parse(response);
+                this.pausedReason = JSON.parse(response);
             })
             .catch(error => {
                 this.handleError(error);
@@ -267,8 +267,8 @@ export default class Rd2PauseForm extends LightningElement {
     /***
     * @description
     */
-    handlePauseReasonChange(event) {
-        this.pauseReason.value = event.detail.value;
+    handlePausedReasonChange(event) {
+        this.pausedReason.value = event.detail.value;
     }
 
     /***
@@ -289,7 +289,7 @@ export default class Rd2PauseForm extends LightningElement {
         const lastSelectedId = this.selectedIds[this.selectedIds.length - 1];
         pauseData.resumeAfterDate = installmentById[lastSelectedId];
 
-        pauseData.pauseReason = this.pauseReason.value;
+        pauseData.pausedReason = this.pausedReason.value;
 
         return pauseData;
     }

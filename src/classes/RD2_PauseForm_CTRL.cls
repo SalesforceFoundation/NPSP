@@ -86,7 +86,7 @@ public with sharing class RD2_PauseForm_CTRL {
         RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
             RecurringDonation__c = data.recurringDonationId,
             IsPause__c = true,
-            PauseReason__c = data.pauseReason,
+            StatusReason__c = data.pausedReason,
             StartDate__c = data.startDate,
             EndDate__c = data.resumeAfterDate
         );
@@ -95,27 +95,27 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description Returns the Pause Reason value and label select options
+     * @description Returns the Paused Reason value and label select options
      * @return String
      */
     @AuraEnabled(cacheable=false)
-    public static String getPauseReason(Id recurringDonationId) {
-        PauseReason reason = new PauseReason();
-        reason.label = Schema.SObjectType.RecurringDonationSchedule__c.fields.PauseReason__c.getLabel();
-        reason.options = getPauseReasonOptions();
+    public static String getPausedReason(Id recurringDonationId) {
+        PausedReason reason = new PausedReason();
+        reason.label = 'Paused Reason';//TODO //Schema.SObjectType.RecurringDonationSchedule__c.fields.StatusReason__c.getLabel();
+        reason.options = getPausedReasonOptions();
         reason.placeholder = 'Select an Option';//TODO
 
         RecurringDonationSchedule__c schedule = scheduleService.getPauseSchedule(recurringDonationId);
-        reason.value = schedule == null ? null : schedule.PauseReason__c;
+        reason.value = schedule == null ? null : schedule.StatusReason__c;
 
         return JSON.serialize(reason);
     }
 
     /**
-     * @description Returns the Pause Reason value and label select options
+     * @description Returns the Paused Reason value and label select options
      * @return List<Option>
      */
-    private static List<Option> getPauseReasonOptions() {
+    private static List<Option> getPausedReasonOptions() {
         List<Option> options = new List<Option>();
         List<Schema.PicklistEntry> entries = npe03__Recurring_Donation__c.ClosedReason__c.getDescribe().getPicklistValues();
 
@@ -150,13 +150,13 @@ public with sharing class RD2_PauseForm_CTRL {
         public Id recurringDonationId;
         public Date startDate;
         public Date resumeAfterDate;
-        public String pauseReason;
+        public String pausedReason;
     }
 
     /***
     * @description 
     */
-    public class PauseReason {
+    public class PausedReason {
         public String value;
         public String label;
         public List<Option> options;

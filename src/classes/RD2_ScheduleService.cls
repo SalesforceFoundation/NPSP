@@ -766,7 +766,7 @@ public without sharing class RD2_ScheduleService {
             'PaymentMethod__c',
             'RecurringDonation__c',
             'IsPause__c',
-            'PauseReason__c'
+            'StatusReason__c'
         };
     }
 
