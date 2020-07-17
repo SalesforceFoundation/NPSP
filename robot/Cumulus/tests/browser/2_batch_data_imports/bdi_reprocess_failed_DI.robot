@@ -56,15 +56,15 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     #Create DI record and process batch and verify failure messages
     &{data_import} =                 Create Data Import Record
     Process Data Import Batch        Errors
-    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Open Data Import Record          &{data_import_upd}[Name]
+    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
+    Open Data Import Record          ${data_import_upd}[Name]
     Current Page Should be           Details         DataImport__c    
     Verify Failure Message           Failure Information        contains        Invalid Donation Donor
     Verify Failure Message           Donation Import Status     contains        Invalid Donation Donor
     
     # Verify Account Details
-    Verify Expected Values                     nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]
-    ...    Name=&{data_import}[${ns}Account1_Name__c]
+    Verify Expected Values                     nonns    Account            ${data_import_upd}[${ns}Account1Imported__c]
+    ...    Name=${data_import}[${ns}Account1_Name__c]
     
     #Update DI record and reprocess batch and verify status messages
     Click Show More Actions Button   Edit
@@ -73,31 +73,31 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     Click Modal Button               Save
     Wait Until Modal Is Closed
     Process Data Import Batch        Completed
-    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Open Data Import Record          &{data_import_upd}[Name] 
+    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
+    Open Data Import Record          ${data_import_upd}[Name] 
     Current Page Should Be           Details          DataImport__c      
     Verify Failure Message           Account1 Import Status    contains     Matched
     Verify Failure Message           Donation Import Status    contains     Created
    
     #Verify Opportunity is created as closed won with given date and amount
-    Verify Expected Values                     nonns    Opportunity        &{data_import_upd}[${ns}DonationImported__c]
+    Verify Expected Values                     nonns    Opportunity        ${data_import_upd}[${ns}DonationImported__c]
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    ...    AccountId=&{data_import_upd}[${ns}Account1Imported__c]
+    ...    AccountId=${data_import_upd}[${ns}Account1Imported__c]
         
     #Verify Payment record is created and linked to opportunity with correct details
-    Verify Expected Values                     nonns    npe01__OppPayment__c        &{data_import_upd}[${ns}PaymentImported__c]
+    Verify Expected Values                     nonns    npe01__OppPayment__c        ${data_import_upd}[${ns}PaymentImported__c]
     ...    npe01__Paid__c=True
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
-    ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
+    ...    npe01__Opportunity__c=${data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
 
     #Verify CustomObject2 record is created and linked to opportunity with correct details
-    Verify Expected Values                     nonns       CustomObject2__c      &{data_import_upd}[${org_ns}CustomObject2Imported__c]
+    Verify Expected Values                     nonns       CustomObject2__c      ${data_import_upd}[${org_ns}CustomObject2Imported__c]
     ...    ${org_ns}C2_currency__c=500.0
-    ...    ${org_ns}Account__c=&{data_import_upd}[${ns}Account1Imported__c]
+    ...    ${org_ns}Account__c=${data_import_upd}[${ns}Account1Imported__c]
 
 Verify GAU Allocation Fails on Incorrect Data and Reprocess
     [Documentation]        
@@ -109,46 +109,46 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     #Create DI record, process batch and confirm failure message
     &{data_import} =                 Create Data Import with GAU Details
     Process Data Import Batch        Errors
-    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
+    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
     Log Many       &{data_import_upd}
-    Open Data Import Record          &{data_import_upd}[Name] 
+    Open Data Import Record          ${data_import_upd}[Name] 
     Current Page Should Be           Details          DataImport__c   
     Verify Failure Message           Failure Information    contains       GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:${ns}GAU_Allocation_1_GAU__c
     
     # Verify Contact Details
-    Verify Expected Values                     nonns    Contact            &{data_import_upd}[${ns}Contact1Imported__c]
+    Verify Expected Values                     nonns    Contact            ${data_import_upd}[${ns}Contact1Imported__c]
     ...    FirstName=${first_name}
     ...    LastName=${last_name}
     
     #Verify Opportunity is created as closed won with given date and amount
-    &{contact} =     Salesforce Get  Contact  &{data_import_upd}[${ns}Contact1Imported__c]
-    Verify Expected Values                     nonns    Opportunity        &{data_import_upd}[${ns}DonationImported__c]
+    &{contact} =     Salesforce Get  Contact  ${data_import_upd}[${ns}Contact1Imported__c]
+    Verify Expected Values                     nonns    Opportunity        ${data_import_upd}[${ns}DonationImported__c]
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    ...    AccountId=&{contact}[AccountId]
+    ...    AccountId=${contact}[AccountId]
     
     #Verify Payment record is created and linked to opportunity with correct details
-    Verify Expected Values                     nonns    npe01__OppPayment__c        &{data_import_upd}[${ns}PaymentImported__c]
+    Verify Expected Values                     nonns    npe01__OppPayment__c        ${data_import_upd}[${ns}PaymentImported__c]
     ...    npe01__Paid__c=True
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
-    ...    npe01__Opportunity__c=&{data_import_upd}[${ns}DonationImported__c]
+    ...    npe01__Opportunity__c=${data_import_upd}[${ns}DonationImported__c]
     ...    Payment_Status__c=Paid
     
     #Update DI record, reprocess batch and verify status messages and allocations
-    Salesforce Update                ${ns}DataImport__c    &{data_import}[Id]
-    ...                              ${ns}GAU_Allocation_1_GAU__c=&{gau}[Id]
+    Salesforce Update                ${ns}DataImport__c    ${data_import}[Id]
+    ...                              ${ns}GAU_Allocation_1_GAU__c=${gau}[Id]
     Process Data Import Batch        Completed
-    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Open Data Import Record          &{data_import_upd}[Name]    
+    &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
+    Open Data Import Record          ${data_import_upd}[Name]    
     Current Page Should Be           Details          DataImport__c
     Verify Failure Message           Contact1 Import Status    contains     Matched
     Verify Failure Message           Donation Import Status    contains     Created
-    Go To Page                Detail        Opportunity     object_id=&{data_import_upd}[${ns}DonationImported__c]
+    Go To Page                Detail        Opportunity     object_id=${data_import_upd}[${ns}DonationImported__c]
     Select Tab                Related
     Verify Allocations        GAU Allocations
-    ...    &{gau}[Name]=50.000000%
+    ...    ${gau}[Name]=50.000000%
     
         
     
