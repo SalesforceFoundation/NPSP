@@ -149,7 +149,7 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    reset(fieldMappingDevNames = null) {
+    reset(fieldMappingDevNames = null, setDefaults = true) {
         const fields = this.template.querySelectorAll('c-ge-form-field');
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
 
@@ -160,11 +160,11 @@ export default class GeFormSection extends LightningElement {
                 if (fieldMappingDevNames.includes(
                     field.element.dataImportFieldMappingDevNames[0]
                 )) {
-                    field.reset();
+                    field.reset(setDefaults);
                 }
             } else {
                 // reset all field elements in this section
-                field.reset();
+                field.reset(setDefaults);
             }
         });
 

@@ -1435,10 +1435,10 @@
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
         <members>npe03__Recurring_Donations_Settings__c.NextDonationDateMatchRangeDays__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.RecurringDonationNameFormat__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.RecurringDonationNameFormat__c</members>
         <members>npe03__Recurring_Donations_Settings__c.StatusMappingDeploymentId__c</members>
         <members>npe03__Recurring_Donations_Settings__c.UseFiscalYearForRecurringDonationValue__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
@@ -1802,8 +1802,8 @@
         <members>Saved</members>
         <members>Settings_not_Saved</members>
         <members>SmartyStreets_Help_Text</members>
-        <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>UTIL_InputFormFormFieldAltLabelDate</members>
+        <members>UTIL_InputFormFormFieldAltLabelLookup</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
@@ -2315,6 +2315,7 @@
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geSearchPlaceholder</members>
+        <members>geSelectBatchTableColumns</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
         <members>geTabBatchSettings</members>
@@ -2489,13 +2490,13 @@
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
         <members>isARequiredField</members>
+        <members>labelBooleanFalse</members>
+        <members>labelBooleanTrue</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
         <members>labelListViewPageInfo</members>
         <members>labelListViewPrevious</members>
-        <members>labelBooleanTrue</members>
-        <members>labelBooleanFalse</members>
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblAddressOverride</members>
