@@ -1680,6 +1680,7 @@
         <members>RD2_EnablementEnableSimpleIntro</members>
         <members>RD2_EnablementEnableTitle</members>
         <members>RD2_EnablementEnableWarning</members>
+        <members>RD2_EnablementIncomplete</members>
         <members>RD2_EnablementIntro</members>
         <members>RD2_EnablementMetaDeployConfirm</members>
         <members>RD2_EnablementMetaDeployConfirmError</members>
