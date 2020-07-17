@@ -113,6 +113,57 @@ private with sharing class RD2_ValidationService_TEST {
         System.assert(errMessage.contains(System.Label.RD_ContactMustBelongToAccount));
     }
 
+    /***
+    * @description Verifies that donation insert fails when metadata not deployed
+    */
+    @isTest
+    private static void shouldFailWhenMetadataNotDeployedOnInsert() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentPeriodYearly()
+            .build();
+
+        RD2_EnablementService.isMetadataDeployed = false;
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_EnablementIncomplete));
+    }
+
+    /***
+    * @description Verifies that donation update fails when metadata not deployed
+    */
+    @isTest
+    private static void shouldFailWhenMetadataNotDeployedOnUpdate() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentPeriodYearly()
+            .build();
+
+        insert rd;
+
+        RD2_EnablementService.isMetadataDeployed = false;
+        rd.StartDate__c = rd.StartDate__c.addDays(1);
+
+        try {
+            update rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_EnablementIncomplete));
+    }
+
     /**
     * @description Should fail when there is an invalid contact for the account in the Recurring Donations list.
     */
