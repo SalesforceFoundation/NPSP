@@ -2,9 +2,10 @@
 * @description Server / Platform  Imports
 */
 import { LightningElement, api, track, wire } from 'lwc';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { HttpRequestError, CardChargedBDIError } from 'c/utilCustomErrors';
 import { isNotEmpty, validateJSONString, format, getNamespace } from 'c/utilCommon';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
@@ -15,7 +16,6 @@ import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
-import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
@@ -31,6 +31,7 @@ import EXPECTED_COUNT_OF_GIFTS
     from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
 import EXPECTED_TOTAL_BATCH_AMOUNT
     from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -140,19 +141,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     batchGiftSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         this.dataImportRecord = event.detail.dataImportRecord;
-        saveAndDryRunDataImport({batchId: this.recordId, dataImport: this.dataImportRecord})
-            .then((result) => {
-                let dataImportModel = JSON.parse(result);
-                Object.assign(dataImportModel.dataImportRows[0],
-                    dataImportModel.dataImportRows[0].record);
-                table.upsertData(dataImportModel.dataImportRows[0], 'Id');
-                this.count = dataImportModel.totalCountOfRows;
-                this.total = dataImportModel.totalRowAmount;
-                event.detail.success(); //Re-enable the Save button
-            })
-            .catch(error => {
-                event.detail.error(error);
-            });
+        table.handleSubmit(event);
     }
 
     /*******************************************************************************
@@ -517,7 +506,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleSectionsRetrieved(event) {
         const formSections = event.target.sections;
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.handleSectionsRetrieved(formSections);
+        table.sections = formSections;
     }
 
     handleBatchDryRun() {
@@ -534,7 +523,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     handleLoadData(event) {
         const form = this.template.querySelector('c-ge-form-renderer');
-        form.reset();
+        form.reset(null, false);
         form.load(event.detail);
     }
 
@@ -585,10 +574,16 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @wire(getRecord, {
         recordId: '$recordId',
-        fields: [BATCH_NAME, EXPECTED_COUNT_OF_GIFTS,
+        fields: [
+            BATCH_ID_FIELD,
+            BATCH_NAME
+        ],
+        optionalFields: [
+            EXPECTED_COUNT_OF_GIFTS,
             EXPECTED_TOTAL_BATCH_AMOUNT,
             REQUIRE_TOTAL_MATCH,
-            BATCH_TABLE_COLUMNS_FIELD]
+            BATCH_TABLE_COLUMNS_FIELD
+        ]
     })
     batch;
 
@@ -667,6 +662,117 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     handleTotalChanged(event) {
         this.total = event.detail.value;
+    }
+
+    get batchId() {
+        return getFieldValue(this.batch.data, BATCH_ID_FIELD);
+    }
+
+    handleReceiveEvent(event) {
+        const closeModalCallback = function() {
+            closeModal();
+            unregisterModalListener();
+        }
+        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
+        const unregisterModalListener = () =>
+            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
+
+        if (event.action === 'save') {
+            let fields = {};
+            fields[BATCH_ID_FIELD.fieldApiName] = this.batchId;
+            fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
+                JSON.stringify(event.payload.values);
+
+            const recordInput = {fields};
+            const lastModifiedDate =
+                this.batch.data.lastModifiedDate;
+            const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
+            updateRecord(recordInput, clientOptions)
+                .then(closeModalCallback)
+                .catch((error) =>
+                    handleError(error)
+                );
+        } else {
+            closeModalCallback();
+        }
+    }
+
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT})
+    dataImportBatchObjectInfo;
+
+    get userCanEditBatchTableColumns() {
+        try {
+            return this.dataImportBatchObjectInfo.data.fields[
+                BATCH_TABLE_COLUMNS_FIELD.fieldApiName
+                ].updateable;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    handleSelectColumns(event) {
+        const modalContent =
+            this.userCanEditBatchTableColumns ?
+                this.buildModalConfigSelectColumns(
+                    event.detail.options,
+                    event.detail.values) :
+                this.modalConfigNoAccess;
+
+        registerListener('privateselectcolumns', this.handleReceiveEvent, this);
+
+        this.dispatchEvent(new CustomEvent('togglemodal', {
+            detail: modalContent
+        }));
+    }
+
+    buildModalConfigSelectColumns(available, selected) {
+        const modalConfig = {
+            componentProperties: {
+                name: 'selectcolumnsmodal',
+                cssClass: 'slds-m-bottom_medium slds-p-horizontal_small',
+                sourceLabel: this.CUSTOM_LABELS.geLabelCustomTableSourceFields,
+                selectedLabel: this.CUSTOM_LABELS.geLabelCustomTableSelectedFields,
+                dedicatedListenerEventName: 'privateselectcolumns',
+                options: available,
+                values: selected,
+                showModalFooter: true,
+                min: 1
+            },
+            modalProperties: {
+                cssClass: 'slds-modal_large',
+                header: this.CUSTOM_LABELS.geTabBatchTableColumns,
+                componentName: 'utilDualListbox',
+                showCloseButton: true
+            }
+        };
+        return modalConfig;
+    }
+
+    get modalConfigNoAccess() {
+        const errorFieldName =
+            `${BATCH_TABLE_COLUMNS_FIELD.objectApiName}: (${BATCH_TABLE_COLUMNS_FIELD.fieldApiName})`;
+        const errorFLSBody = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorFLSBody, [errorFieldName]
+        );
+        const message = `${this.CUSTOM_LABELS.geErrorFLSBatchTableColumns}  ${errorFLSBody}`;
+        const modalConfig = {
+            componentProperties: {
+                name: 'noaccessmodal',
+                illustrationClass: 'slds-p-around_large',
+                dedicatedListenerEventName: 'privateselectcolumns',
+                showModalFooter: false,
+                message: message,
+                title: this.CUSTOM_LABELS.geErrorFLSHeader,
+                variant: 'no-access'
+            },
+            modalProperties: {
+                cssClass: 'slds-modal_large',
+                header: this.CUSTOM_LABELS.geTabBatchTableColumns,
+                componentName: 'utilIllustration',
+                showCloseButton: true
+            }
+        };
+        return modalConfig;
     }
 
 }

@@ -25,6 +25,18 @@ export default class utilDualListbox extends LightningElement {
     @api dedicatedListenerEventName;
     @api targetComponentName;
 
+    @api
+    set header(value) {
+        this.hasHeaderString = value !== '';
+        this._headerPrivate = value;
+    }
+    get header() {
+        return this._headerPrivate;
+    }
+
+    hasHeaderString = false;
+    _headerPrivate;
+
     handleChange = (event) => {
         this.values = event.detail.value;
     }
