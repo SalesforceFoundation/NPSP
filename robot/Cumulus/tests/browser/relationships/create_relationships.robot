@@ -18,10 +18,10 @@ Capture Screenshot on Failure
 
 Setup Test Data
     &{contact1} =                        API Create Contact    Email=automation@example.com
-    Store Session Record                 Account               &{contact1}[AccountId]
+    Store Session Record                 Account               ${contact1}[AccountId]
     Set suite variable                   &{contact1}
     &{contact2} =                        API Create Contact
-    Store Session Record                 Account               &{contact2}[AccountId]
+    Store Session Record                 Account               ${contact2}[AccountId]
     Set suite variable                   &{contact2}
 
 *** Test Cases ***
@@ -33,34 +33,34 @@ Create Relationships for contacts
 
     [tags]                              W-037650                                                    feature:Relationships
 
-    Go To Page                          Details                                                     Contact                                               object_id=&{contact2}[Id]
+    Go To Page                          Details                                                     Contact                                     object_id=${contact2}[Id]
     Select Tab                          Related
     Wait Until Loading Is Complete
     Click Related List Button           Relationships                                               New
     Wait For Modal                      New                                                         Relationship
 
     Populate Modal Form
-    ...                                 Related Contact=&{contact1}[FirstName] &{contact1}[LastName]
+    ...                                 Related Contact=${contact1}[FirstName] ${contact1}[LastName]
     ...                                 Type=Parent
     Click Modal Button                  Save
     Current Page Should Be              Details                                                     Contact
-    Validate Relation Status Message    &{contact1}[FirstName] &{contact1}[LastName]
-    ...                                 &{contact2}[FirstName] &{contact2}[LastName]
+    Validate Relation Status Message    ${contact1}[FirstName] ${contact1}[LastName]
+    ...                                 ${contact2}[FirstName] ${contact2}[LastName]
     ...                                 Parent
 
     Click More Actions Button
     Click Link                          link=Relationships Viewer
     Wait Until Loading Is Complete
     Capture Page Screenshot
-    Go To Page                          Details                                                     Contact                                               object_id=&{contact1}[Id]
+    Go To Page                          Details                                                     Contact                                     object_id=${contact1}[Id]
     Current Page Should Be              Details                                                     Contact
 
     Select Tab                          Related
-    Validate Relation Status Message    &{contact2}[FirstName] &{contact2}[LastName]
-    ...                                 &{contact1}[FirstName] &{contact1}[LastName]
+    Validate Relation Status Message    ${contact2}[FirstName] ${contact2}[LastName]
+    ...                                 ${contact1}[FirstName] ${contact1}[LastName]
     ...                                 Child
 
-    Click Related Table Item Link       Relationships                                               &{contact2}[FirstName] &{contact2}[LastName]
+    Click Related Table Item Link       Relationships                                               ${contact2}[FirstName] ${contact2}[LastName]
 
     Current Page Should Be              Details                                                     npe4__Relationship__c
     Save Current Record ID For Deletion  npe4__Relationship__c
