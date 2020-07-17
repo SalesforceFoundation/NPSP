@@ -10,11 +10,29 @@
                 </div>
 
                 <lightning-layout multiple-rows>
-                    <lightning-layout-item size=12
+                    <lightning-layout-item size=10
                                            class="slds-p-top_small"
                                            padding="horizontal-small">
                         <div>
                             <h1 class="slds-text-title_bold">{title}</h1>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size=2
+                                           class="slds-p-top_small slds-grid_vertical-align-center"
+                                           padding="horizontal-small">
+                        <div class="slds-float_right">
+                            <lightning-button-menu alternative-text="Show menu"
+                                                   variant="border-filled"
+                                                   icon-name="utility:settings"
+                                                   menu-alignment="right"
+                                                   onselect={handleMenuItemSelect}
+                                                   data-qa-locator={qaLocatorTableMenu}>
+                                <lightning-menu-item
+                                        value="selectcolumns"
+                                        label={CUSTOM_LABELS.geSelectBatchTableColumns}
+                                        data-qa-locator={qaLocatorSelectBatchTableColumns}>
+                                </lightning-menu-item>
+                            </lightning-button-menu>
                         </div>
                     </lightning-layout-item>
                     <lightning-layout-item size=12 medium-device-size=6
@@ -43,7 +61,7 @@
                     <lightning-datatable
                             key-field="uid"
                             data={data}
-                            columns={computedColumns}
+                            columns={columns}
                             show-row-number-column="true"
                             onrowaction={handleRowActions}
                             enable-infinite-loading
