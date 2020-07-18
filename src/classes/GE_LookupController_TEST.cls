@@ -36,6 +36,10 @@
 */
 @IsTest
 private class GE_LookupController_TEST {
+
+    /**
+     * Test SOSL implementation of searching.
+     */
     @IsTest
     static void testSearch() {
         List<Account> accounts = new List<Account>{
@@ -56,6 +60,9 @@ private class GE_LookupController_TEST {
         System.assertEquals('Test Account', results[0].displayValue, 'Expected display value to be Test Account');
     }
 
+    /**
+     * Ensure that when no results are found, we still get an empty List<LookupResult> and not null.
+     */
     @IsTest
     static void testSearchNoResults() {
         Test.startTest();
@@ -64,5 +71,42 @@ private class GE_LookupController_TEST {
 
         System.assertNotEquals(null, results, 'Expected results to not be null.');
         System.assertEquals(0, results.size(), 'Expected results to be empty.');
+    }
+
+    /**
+     * Test searching record types, which have an additional WHERE clause to restrict results to the parent SObject Type
+     */
+    @IsTest
+    static void testSearchRecordType() {
+
+        Test.startTest();
+        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearchRecordType('Donation', 'Opportunity');
+        Test.stopTest();
+
+        // auto-builds do not deploy record types, but dev/qa builds do, run equivalent query and check results
+        List<RecordType> recordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND DeveloperName LIKE '%Donation%' LIMIT 50];
+
+        System.assertNotEquals(null, results);
+        System.assertEquals(recordTypes.size(), results.size());
+    }
+
+    @IsTest
+    static void testSearchSOQL() {
+        List<Account> accounts = new List<Account>{
+                new Account(Name = 'Test Account'),
+                new Account(Name = 'Non-Matching Account')
+        };
+        insert accounts;
+
+        // doSearch utilizes SOSL, which means results must be hardcoded in tests
+        Test.setFixedSearchResults(new List<Id>{accounts[0].Id});
+
+        Test.startTest();
+        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearchSOQL('test', 'Account');
+        Test.stopTest();
+
+        System.assertNotEquals(null, results, 'Expected results to not be null.');
+        System.assertEquals(1, results.size(), 'Expected one result.');
+        System.assertEquals('Test Account', results[0].displayValue, 'Expected display value to be Test Account');
     }
 }
