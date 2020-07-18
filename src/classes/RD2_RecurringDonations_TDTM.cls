@@ -146,8 +146,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
     /***
     * @description Data Transformation Actions for Before Insert and Update Trigger Actions:
-    * - If RecurringType is Open and number of plannned installments = 1, set number of plannned installments to null
-    * - If RecurringType is Fixed and number of paid installments is >= number of plannned installments, then close RD
+    * - If RecurringType is Open and number of planned installments = 1, set number of planned installments to null
+    * - If RecurringType is Fixed and number of paid installments is >= number of planned installments, then close RD
     * - Update the Next Donation Date on both Before Insert and Update trigger actions
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
@@ -382,12 +382,38 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         RD2_QueueableService.EvaluateInstallmentOpportunities service =
             new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, isScheduleChangedById);
 
-        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
+            service.executeOppEvaluationService();
+
+        } else if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);
 
         } else {
             service.executeOppEvaluationService();
         }
+    }
+
+    /***
+    * @description Determines whether Opportunities should be evaluated synchronously or asynchronously
+    * @return Boolean
+    */
+    @TestVisible
+    private Boolean shouldEvaluateOppsSynchronouslyOnInsert(Boolean isBulk) {
+        RD2_Settings settings = new RD2_Settings();
+
+        if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name()) {
+            return true;
+        }
+
+        if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.ASynchronous.name()) {
+            return false;
+        }
+
+        if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Asynchronous_When_Bulk.name() && isBulk) {
+            return false;
+        }
+
+        return true;
     }
 
     /***
