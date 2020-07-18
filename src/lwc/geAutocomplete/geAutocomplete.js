@@ -73,6 +73,14 @@ export default class GeAutocomplete extends LightningElement {
         return !this.hasOptions && isNotEmpty(this.value);
     }
 
+    /**
+     * When TRUE, iconName is defined and we should display an icon in the left side of the lookup.
+     * @returns {boolean}
+     */
+    get hasIcon() {
+        return typeof this.iconName !== 'undefined' && this.iconName !== null;
+    }
+
     get invalid() {
         // necessary for aria attributes
         return !this.valid;
@@ -84,7 +92,7 @@ export default class GeAutocomplete extends LightningElement {
      */
     @api
     setCustomError(message) {
-        if ( isEmpty(message) ) {
+        if (isEmpty(message)) {
             message = this.CUSTOM_LABELS.geErrorCompleteThisField;
         }
         this.errorMessage = message;
@@ -126,9 +134,11 @@ export default class GeAutocomplete extends LightningElement {
     }
 
     get comboBoxFormElementClass() {
-        return this.hasOptionSelected ?
-            'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right'
-            : 'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right';
+        const baseClass = 'slds-combobox__form-element slds-input-has-icon';
+        const iconClass = this.hasIcon ? 'slds-input-has-icon_left-right' : 'slds-input-has-icon_right';
+        const iconClasses = this.hasOptionSelected ? iconClass : 'slds-input-has-icon slds-input-has-icon_right';
+
+        return `${baseClass} ${iconClasses}`;
     }
 
     get inputClass() {
