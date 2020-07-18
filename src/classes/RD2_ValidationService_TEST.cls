@@ -363,21 +363,25 @@ private with sharing class RD2_ValidationService_TEST {
         TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
             .withContact(getContact().Id);
 
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
         for (String day : new Set<String>{
             '15', '10', '28', '29', '30'
         }) {
-            npe03__Recurring_Donation__c rd = rdBuilder
+            rds.add(rdBuilder
                 .withDayOfMonth(day)
-                .build();
-
-            String errMessage = '';
-            try {
-                insert rd;
-            } catch (Exception e) {
-                errMessage = e.getMessage();
-            }
-            System.assert(String.isBlank(errMessage), 'Recurring Donation should be created successfully: ' + errMessage);
+                .build());
         }
+
+        Database.SaveResult[] srs = Database.insert(rds, false);
+        for (Database.SaveResult sr : srs) {
+            if (!sr.isSuccess()) {
+                String errMessage = sr.getErrors()[0].getMessage();
+                System.assert(false, 'Recurring Donation should be created successfully: ' + errMessage);
+            }
+        }
+
+        rds = rdGateway.getRecords();
+        System.assertEquals(5, rds.size(), '5 Opportunities should have been created');
     }
 
     /***
@@ -820,7 +824,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withStatusActive()
             .build();
-        
+
         String errMessage = '';
         try {
             Test.startTest();
@@ -853,7 +857,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withStatusClosed()
             .build();
-    
+
         String errMessage = '';
         try {
             Test.startTest();
@@ -888,8 +892,8 @@ private with sharing class RD2_ValidationService_TEST {
             .withStatusActive()
             .build();
         insert rd;
-        
-        
+
+
         String errMessage = '';
         try {
             Test.startTest();
@@ -924,8 +928,8 @@ private with sharing class RD2_ValidationService_TEST {
             .withStatusActive()
             .build();
         insert rd;
-        
-        
+
+
         String errMessage = '';
         try {
             Test.startTest();
@@ -943,7 +947,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies that RD fail to update when End Date is before the latest closed won Opp close date. 
+    * @description Verifies that RD fail to update when End Date is before the latest closed won Opp close date.
     */
     @isTest
     private static void shouldFailRDUpdateWhenEndDateIsBeforeOppClosedWonDate() {
@@ -979,7 +983,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies that Fixed RD fail to Closes when End Date is in the future. 
+    * @description Verifies that Fixed RD fail to Closes when End Date is in the future.
     */
     @isTest
     private static void shouldFailFixedRDUpdateWhenEndDateIsInTheFuture() {
