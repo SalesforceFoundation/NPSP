@@ -1249,7 +1249,10 @@ private with sharing class RD2_OpportunityService_TEST {
     * @return void
     */
     private static void setUpConfiguration(String stageName) {
-        setUpConfiguration(new Map<String, Object>{ 'InstallmentOppStageName__c' => stageName });
+        setUpConfiguration(new Map<String, Object>{
+            'InstallmentOppStageName__c' => stageName,
+            'InstallmentOppFirstCreateMode__c' => RD2_Constants.FirstInstallmentOppCreateOptions.ASynchronous.name()
+        });
     }
 
     /***
