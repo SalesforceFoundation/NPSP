@@ -408,7 +408,7 @@ public with sharing class RD2_VisualizeScheduleController {
             this.donationDate = installment.nextDonationDate;
             this.amount = installment.installmentAmount;
             this.isSkipped = installment.isSkipped;
-            this.pauseStatus = installment.isSkipped ? 'Paused' : '';//TODO
+            this.pauseStatus = installment.isSkipped ? System.Label.RD2_InstallmentStatusSkipped : '';
         }
     }
 

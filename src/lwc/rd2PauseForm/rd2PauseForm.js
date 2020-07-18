@@ -9,6 +9,10 @@ import description from '@salesforce/label/c.RD2_PauseDescription';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import cancelButton from '@salesforce/label/c.stgBtnCancel';
 import saveButton from '@salesforce/label/c.stgBtnSave';
+import selectedRowsSummaryPlural from '@salesforce/label/c.RD2_PauseSelectedInstallmentTextPlural';
+import selectedRowsSummarySingular from '@salesforce/label/c.RD2_PauseSelectedInstallmentTextSingular';
+import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage';
+import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
 
 import getPausedReason from '@salesforce/apex/RD2_PauseForm_CTRL.getPausedReason';
 import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
@@ -22,6 +26,10 @@ export default class Rd2PauseForm extends LightningElement {
         loadingMessage,
         cancelButton,
         saveButton,
+        selectedRowsSummaryPlural,
+        selectedRowsSummarySingular,
+        saveSuccessMessage,
+        deactivationSuccessMessage
     });
 
     @api recordId;
@@ -35,7 +43,7 @@ export default class Rd2PauseForm extends LightningElement {
     maxRowDisplay = 12;
     maxRowSelection = 12;
     selectedIds = [];
-    @track selectedRowMessage = null;
+    @track selectedRowsSummary = null;
     @track columns = [];
     @track installments;
 
@@ -112,7 +120,7 @@ export default class Rd2PauseForm extends LightningElement {
                     }
                 }
 
-                this.refreshSelectedRowMessage();
+                this.refreshSelectedRowsSummary();
             }
         }
     }
@@ -149,7 +157,7 @@ export default class Rd2PauseForm extends LightningElement {
             this.handleDeselect(selectedRows);
         }
 
-        this.refreshSelectedRowMessage();
+        this.refreshSelectedRowsSummary();
     }
 
     /***
@@ -208,14 +216,16 @@ export default class Rd2PauseForm extends LightningElement {
     /***
      * @description
      */
-    refreshSelectedRowMessage() {
-        let messageSingular = 'You\'ve selected 1 installment to skip.';//TODO
-        let messagePlural = 'You\'ve selected {0} installments to skip.';//TODO
+    refreshSelectedRowsSummary() {
         const selectedCount = this.selectedIds.length;
 
-        this.selectedRowMessage = selectedCount > 0
-            ? (selectedCount === 1 ? messageSingular : messagePlural.replace('{0}', selectedCount))
-            : null;
+        if (selectedCount > 0) {
+            this.selectedRowsSummary = selectedCount === 1
+                ? this.labels.selectedRowsSummarySingular
+                : this.labels.selectedRowsSummaryPlural.replace('{0}', selectedCount);
+        } else {
+            this.selectedRowsSummary = null;
+        }
     }
 
     /***
@@ -244,8 +254,9 @@ export default class Rd2PauseForm extends LightningElement {
     * @description 
     */
     handleSaveSuccess() {
-        let message = 'Pause on Recurring Donation {0} has been saved';//TODO
-        message = message.replace('{0}', this.recordName);
+        const message = this.selectedIds.length > 0
+            ? this.labels.saveSuccessMessage.replace('{0}', this.recordName)
+            : this.labels.deactivationSuccessMessage.replace('{0}', this.recordName);
         showToast(message, '', 'success', []);
 
         this.closeModal();
@@ -327,6 +338,6 @@ export default class Rd2PauseForm extends LightningElement {
 
         this.template.querySelector(".slds-modal__header").scrollIntoView();
 
-        console.log('Error: ' + JSON.stringify(this.error));//TODO
+        console.log('Error: ' + JSON.stringify(this.error));
     }
 }

@@ -101,9 +101,9 @@ public with sharing class RD2_PauseForm_CTRL {
     @AuraEnabled(cacheable=false)
     public static String getPausedReason(Id recurringDonationId) {
         PausedReason reason = new PausedReason();
-        reason.label = 'Paused Reason';//TODO //Schema.SObjectType.RecurringDonationSchedule__c.fields.StatusReason__c.getLabel();
+        reason.label = System.Label.RD2_PausedReasonLabel;
         reason.options = getPausedReasonOptions();
-        reason.placeholder = 'Select an Option';//TODO
+        reason.placeholder = System.Label.lblSelectOptionPlaceholder;
 
         RecurringDonationSchedule__c schedule = scheduleService.getPauseSchedule(recurringDonationId);
         reason.value = schedule == null ? null : schedule.StatusReason__c;

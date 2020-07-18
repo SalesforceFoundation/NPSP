@@ -1732,15 +1732,21 @@
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_InstallmentStatusSkipped</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
         <members>RD2_PauseClosedRDErrorMessage</members>
+        <members>RD2_PauseDeactivationSuccessMessage</members>
         <members>RD2_PauseDescription</members>
         <members>RD2_PauseFirstDonationDateDynamicText</members>
         <members>RD2_PauseHeader</members>
+        <members>RD2_PauseSaveSuccessMessage</members>
+        <members>RD2_PauseSelectedInstallmentTextPlural</members>
+        <members>RD2_PauseSelectedInstallmentTextSingular</members>
+        <members>RD2_PausedReasonLabel</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -2531,6 +2537,7 @@
         <members>lblProgress</members>
         <members>lblRequired</members>
         <members>lblSalutation</members>
+        <members>lblSelectOptionPlaceholder</members>
         <members>lblState</members>
         <members>lblStatus</members>
         <members>lblStreet</members>
