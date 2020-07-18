@@ -237,9 +237,9 @@ API Modify Allocations Setting
     @{records} =        Salesforce Query      ${ns}Allocations_Settings__c
     ...                 select=Id
     &{setting} =        Get From List  ${records}  0
-    Salesforce Update  ${ns}Allocations_Settings__c     &{setting}[Id]
+    Salesforce Update  ${ns}Allocations_Settings__c     ${setting}[Id]
     ...                 &{fields} 
-    &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  &{setting}[Id]
+    &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  ${setting}[Id]
     [return]            &{alloc_setting}
 
 API Create DataImportBatch
@@ -443,7 +443,7 @@ API Get Id
     ...                         select=Id
     ...                         &{fields}
     &{Id} =                 Get From List  ${records}  0
-    [return]                &{Id}[Id]
+    [return]                ${Id}[Id]
 
 Enable Gift Entry
     [Documentation]    This keyword enables advanced mapping(prerequisite) and gift entry if not already enabled.
