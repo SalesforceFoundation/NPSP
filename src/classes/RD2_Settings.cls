@@ -103,7 +103,7 @@ public with sharing class RD2_Settings {
     public Boolean isCloseActionNoAction() {
         return settings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name();
     }
-    
+
     /***
     * @description Installment Opp Auto Creation Option,
     * If random string is input, the setting will be default to Always Create Next installment
@@ -117,6 +117,23 @@ public with sharing class RD2_Settings {
             }
 
             return installmentCreateOption;
+        }
+        private set;
+    }
+
+    /***
+    * @description Sets execution mode for insertion of first Opportunity on a Recurring Donation
+    */
+    @TestVisible
+    public String firstInstallmentCreateMode {
+        get {
+            if (firstInstallmentCreateMode == null) {
+                firstInstallmentCreateMode = String.isNotBlank(settings.InstallmentOppFirstCreateMode__c)
+                    ? settings.InstallmentOppFirstCreateMode__c
+                    : RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
+            }
+
+            return firstInstallmentCreateMode;
         }
         private set;
     }
