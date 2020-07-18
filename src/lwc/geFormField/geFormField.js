@@ -7,6 +7,7 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
 
 import {
     DI_DONATION_DONOR_INFO,
@@ -303,6 +304,10 @@ export default class GeFormField extends LightningElement {
         if(typeof this.fieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
             return this.fieldDescribeInfo.htmlFormatted;
         }
+    }
+
+    get isRecordType() {
+        return this.fieldType === LOOKUP_TYPE && this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
     @api

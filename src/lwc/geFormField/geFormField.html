@@ -27,6 +27,20 @@
             ></lightning-input-field>
         </lightning-record-edit-form>
     </template>
+    <template if:true={isRecordType}>
+        <c-ge-form-field-lookup data-id='inputComponent'
+                                field-api-name={fieldApiName}
+                                object-api-name={objectApiName}
+                                onchange={handleValueChange}
+                                default-value={element.defaultValue}
+                                required={required}
+                                id={element.id}
+                                object-describe-info={objectDescribeInfo}
+                                label={fieldLabel}
+                                disabled={disabled}
+                                qa-locator-base={qaLocatorBase}>
+        </c-ge-form-field-lookup>
+    </template>
     <template if:true={isRichText}>
         <label class="slds-form-element__label">
             <abbr class="slds-required" title="required" if:true={required}>*</abbr>
