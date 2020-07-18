@@ -436,6 +436,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     @IsTest
     private static void shouldDisplayFutureInstallmentsWhenRDIsFixedLength() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         Date startDate = Date.newInstance(2018, 2, 1);
         Date today = Date.newInstance(2018, 4, 2);
