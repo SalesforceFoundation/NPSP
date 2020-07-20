@@ -11,7 +11,6 @@ class ExceptionDataError extends Error {
     constructor(apexException) {
         super();
 
-
         if (isNotEmpty(apexException.body)) {
             const apexExceptionWrapper = validateJSONString(apexException.body.message);
 
