@@ -50,7 +50,6 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     set opportunities(value) {
-        if (!value) return this._opportunities = [];
         this._opportunities = value;
     }
 
