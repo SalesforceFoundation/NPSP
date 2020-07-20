@@ -134,6 +134,16 @@
         <name>Contact1_Birthdate__c</name>
     </fields>
     <fields>
+        <help><!-- Provides details on what the Contact opted in to. --></help>
+        <label><!-- Contact1 Consent Message --></label>
+        <name>Contact1_Consent_Message__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if a Contact consented to opt in. --></help>
+        <label><!-- Contact1 Consent Opt-In --></label>
+        <name>Contact1_Consent_Opt_In__c</name>
+    </fields>
+    <fields>
         <label>Contact1 - שם פרטי</label>
         <name>Contact1_Firstname__c</name>
     </fields>
@@ -350,6 +360,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help><!-- The external, unique ID of the Recurring Donation in Elevate that this donation Opportunity is linked to. --></help>
+        <label><!-- Donation Elevate Recurring ID --></label>
+        <name>Donation_Elevate_Recurring_ID__c</name>
+    </fields>
+    <fields>
         <label>רמת חבר בתרומה</label>
         <name>Donation_Member_Level__c</name>
     </fields>
@@ -534,17 +549,112 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
+        <help><!-- Authorization token for a transaction. --></help>
+        <label><!-- Payment Authorization Token --></label>
+        <name>Payment_Authorization_Token__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date and time the transaction was authorized. --></help>
+        <label><!-- Payment Authorized Date --></label>
+        <name>Payment_Authorized_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized. --></help>
+        <label><!-- Payment Authorized UTC Timestamp --></label>
+        <name>Payment_Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help><!-- The expiration month of the card used for this transaction. --></help>
+        <label><!-- Payment Card Expiration Month --></label>
+        <name>Payment_Card_Expiration_Month__c</name>
+    </fields>
+    <fields>
+        <help><!-- The expiration year of the card used for this transaction. --></help>
+        <label><!-- Payment Card Expiration Year --></label>
+        <name>Payment_Card_Expiration_Year__c</name>
+    </fields>
+    <fields>
+        <help><!-- The last four digits of the card used for this transaction. --></help>
+        <label><!-- Payment Card Last 4 --></label>
+        <name>Payment_Card_Last_4__c</name>
+    </fields>
+    <fields>
+        <help><!-- The card network of the card used for this transaction. --></help>
+        <label><!-- Payment Card Network --></label>
+        <name>Payment_Card_Network__c</name>
+    </fields>
+    <fields>
         <label>המחאה/מספר סימוכין של התשלום</label>
         <name>Payment_Check_Reference_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- Provides detail about why a transaction was declined. --></help>
+        <label><!-- Payment Declined Reason --></label>
+        <name>Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date and time the transaction was created. --></help>
+        <label><!-- Payment Elevate Created Date --></label>
+        <name>Payment_Elevate_Created_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The exact date and time (down to the millisecond) from Elevate that the transaction was created. --></help>
+        <label><!-- Payment Elevate Created UTC  Timestamp --></label>
+        <name>Payment_Elevate_Created_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help><!-- The unique ID for this transaction from Elevate. --></help>
+        <label><!-- Payment Elevate ID --></label>
+        <name>Payment_Elevate_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- For refunds only. Shows the ID of the original payment transaction from Elevate. --></help>
+        <label><!-- Payment Elevate Original Payment ID --></label>
+        <name>Payment_Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- The ID of the payment gateway that processed this transaction. --></help>
+        <label><!-- Payment Gateway ID --></label>
+        <name>Payment_Gateway_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- The unique ID for this transaction from the payment gateway. --></help>
+        <label><!-- Payment Gateway Payment ID --></label>
+        <name>Payment_Gateway_Payment_ID__c</name>
     </fields>
     <fields>
         <label>שיטת תשלום</label>
         <name>Payment_Method__c</name>
     </fields>
     <fields>
+        <help><!-- The ID for the system where the transaction was initiated. --></help>
+        <label><!-- Payment Origin ID --></label>
+        <name>Payment_Origin_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- The name of the system where the transaction was initiated. --></help>
+        <label><!-- Payment Origin Name --></label>
+        <name>Payment_Origin_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce. --></help>
+        <label><!-- Payment Origin Type --></label>
+        <name>Payment_Origin_Type__c</name>
+    </fields>
+    <fields>
         <help><!-- A comma-separated list of Ids for the first 10 possible Payment matches for a Donation. --></help>
         <label><!-- Payment Possible Matches --></label>
         <name>Payment_Possible_Matches__c</name>
+    </fields>
+    <fields>
+        <help><!-- The API status of the transaction from Elevate. --></help>
+        <label><!-- Payment Status --></label>
+        <name>Payment_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates the type of transaction. --></help>
+        <label><!-- Payment Type --></label>
+        <name>Payment_Type__c</name>
     </fields>
     <fields>
         <help>המצב של יבוא רשומת יבוא הנתונים.</help>
@@ -565,6 +675,10 @@
         <picklistValues>
             <masterLabel>Imported</masterLabel>
             <translation>מיובא</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ready to Process</masterLabel>
+            <translation><!-- Ready to Process --></translation>
         </picklistValues>
     </fields>
     <gender><!-- Masculine --></gender>
