@@ -48,67 +48,51 @@ public with sharing class RD2_PauseForm_CTRL {
         } set;
     }
 
-
     /**
      * @description 
-     * @param 
-     * @return void
+     * @return 
      */
-    @AuraEnabled
-    public static void savePause(String jsonData) {
-        try {
-            PauseData data = (PauseData) JSON.deserialize(jsonData, PauseData.class);
+    @AuraEnabled(cacheable=false)
+    public static String getPauseData(Id rdId) {
+        PauseData pause = new PauseData();
+        pause.isRDClosed = isClosed(rdId);
 
-            //deactivate current schedule(s)
-            delete [
-                SELECT Id FROM RecurringDonationSchedule__c 
-                WHERE RecurringDonation__c = :data.recurringDonationId
-                AND IsPause__c = true
-            ];//TODO it should deactivate not delete
-
-            //create new pause schedule
-            RecurringDonationSchedule__c schedule = buildPauseSchedule(data);
-            if (schedule.StartDate__c != null && schedule.EndDate__c != null) {
-                insert schedule;
-            }
-
-        } catch(Exception e) {
-            throwAuraHandledException(e.getMessage());
+        if (!pause.isRDClosed) {
+            pause.pausedReason = getPausedReason(rdId);
         }
+
+        return JSON.serialize(pause);
     }
 
     /**
      * @description 
-     * @param 
-     * @return void
+     * @return 
      */
-    private static RecurringDonationSchedule__c buildPauseSchedule(PauseData data) {
-        RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
-            RecurringDonation__c = data.recurringDonationId,
-            IsPause__c = true,
-            StatusReason__c = data.pausedReason,
-            StartDate__c = data.startDate,
-            EndDate__c = data.resumeAfterDate
-        );
+    public static Boolean isClosed(Id rdId) {
+        npe03__Recurring_Donation__c rd = [
+            SELECT Status__c
+            FROM npe03__Recurring_Donation__c
+            WHERE Id = :rdId
+            LIMIT 1
+        ];
 
-        return schedule;
+        return (new RD2_RecurringDonation(rd)).isClosed();
     }
 
     /**
      * @description Returns the Paused Reason value and label select options
-     * @return String
+     * @return PausedReason
      */
-    @AuraEnabled(cacheable=false)
-    public static String getPausedReason(Id recurringDonationId) {
+    public static PausedReason getPausedReason(Id rdId) {
         PausedReason reason = new PausedReason();
         reason.label = System.Label.RD2_PausedReasonLabel;
         reason.options = getPausedReasonOptions();
         reason.placeholder = System.Label.lblSelectOptionPlaceholder;
 
-        RecurringDonationSchedule__c schedule = scheduleService.getPauseSchedule(recurringDonationId);
+        RecurringDonationSchedule__c schedule = scheduleService.getPauseSchedule(rdId);
         reason.value = schedule == null ? null : schedule.StatusReason__c;
 
-        return JSON.serialize(reason);
+        return reason;
     }
 
     /**
@@ -130,6 +114,72 @@ public with sharing class RD2_PauseForm_CTRL {
         }
         return options;
     }
+    
+    /**
+     * @description Builds future projected installments for the Recurring Donation
+     * @param recordId Record Id
+     * @param maxRowDisplay Number of installments to display
+     * @return Map<String, Object>
+     */
+    @AuraEnabled
+    public static Map<String, Object> getInstallments(Id recordId, Integer maxRowDisplay) {
+        Map<String, Object> dataByKey = new Map<String, Object>();
+        try {
+            dataByKey = RD2_VisualizeScheduleController.getInstallments(recordId, maxRowDisplay);
+
+        } catch(Exception e) {
+            if (e.getMessage().contains(System.Label.RD2_ScheduleVisualizerMessageNoSchedule)) {
+                throw e;
+            }
+        }
+
+        return dataByKey;
+    }
+
+    /**
+     * @description 
+     * @param 
+     * @return void
+     */
+    @AuraEnabled
+    public static void savePause(String jsonPauseData) {
+        try {
+            PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
+
+            //deactivate current schedule(s)
+            delete [
+                SELECT Id FROM RecurringDonationSchedule__c 
+                WHERE RecurringDonation__c = :pause.rdId
+                AND IsPause__c = true
+            ];//TODO it should deactivate not delete
+
+            //create new pause schedule
+            RecurringDonationSchedule__c schedule = buildPauseSchedule(pause);
+            if (schedule.StartDate__c != null && schedule.EndDate__c != null) {
+                insert schedule;
+            }
+
+        } catch(Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+    }
+
+    /**
+     * @description 
+     * @param 
+     * @return void
+     */
+    private static RecurringDonationSchedule__c buildPauseSchedule(PauseData pause) {
+        RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
+            RecurringDonation__c = pause.rdId,
+            IsPause__c = true,
+            StatusReason__c = pause.pausedReason.value,
+            StartDate__c = pause.startDate,
+            EndDate__c = pause.resumeAfterDate
+        );
+
+        return schedule;
+    }
 
     /***
     * @description Throws AuraHandledException
@@ -146,11 +196,11 @@ public with sharing class RD2_PauseForm_CTRL {
     * @description 
     */
     public class PauseData {
-        public Id scheduleId;
-        public Id recurringDonationId;
+        public Id rdId;
+        public Boolean isRDClosed;
         public Date startDate;
         public Date resumeAfterDate;
-        public String pausedReason;
+        public PausedReason pausedReason;
     }
 
     /***

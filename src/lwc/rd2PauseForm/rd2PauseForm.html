@@ -24,46 +24,67 @@
             </div>
         </template>
 
-        <div if:false={isLoading}>
-            <lightning-layout multiple-rows="true">
-                <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="12">
-                    <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
-                </lightning-layout-item>
+        <template if:false={isLoading}>
+            <template if:true={isRDClosed}>
+                <div class="slds-p-around_medium">
+                    <lightning-formatted-rich-text value={labels.rdClosedMessage}></lightning-formatted-rich-text>
+                </div>
+            </template>
 
-                <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="8">
-                    <lightning-combobox data-id="pausedReason" name="pausedReason" label={pausedReason.label}
-                        value={pausedReason.value} placeholder={pausedReason.placeholder} options={pausedReason.options}
-                        onchange={handlePausedReasonChange}>
-                    </lightning-combobox>
-                </lightning-layout-item>
-            </lightning-layout>
+            <template if:false={isRDClosed}>
+                <lightning-layout multiple-rows="true">
+                    <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="12">
+                        <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
+                    </lightning-layout-item>
 
-            <div class="slds-p-top_large" if:true={installments}>
-                <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
-                    is-loading={isLoading} max-row-selection={maxRowSelection} onrowselection={handleRowSelection}
-                    selected-rows={selectedIds}>
-                </lightning-datatable>
-            </div>
+                    <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="8">
+                        <lightning-combobox data-id="pausedReason" name="pausedReason" label={pausedReason.label}
+                            value={pausedReason.value} placeholder={pausedReason.placeholder}
+                            options={pausedReason.options} onchange={handlePausedReasonChange}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                </lightning-layout>
 
-            <lightning-layout multiple-rows="true">
-                <lightning-layout-item padding="horizontal-medium" class="slds-p-top_large" size="12">
-                    <lightning-formatted-rich-text value={selectedRowsSummary}></lightning-formatted-rich-text>
-                </lightning-layout-item>
-            </lightning-layout>
+                <div class="slds-p-top_large" if:true={installments}>
+                    <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
+                        is-loading={isLoading} max-row-selection={maxRowSelection} onrowselection={handleRowSelection}
+                        selected-rows={selectedIds}>
+                    </lightning-datatable>
+                </div>
 
+                <lightning-layout multiple-rows="true">
+                    <lightning-layout-item padding="horizontal-medium" class="slds-p-top_large" size="12">
+                        <lightning-formatted-rich-text value={selectedRowsSummary}></lightning-formatted-rich-text>
+                    </lightning-layout-item>
+                </lightning-layout>
+                
+            </template>
+            
             <div class="slds-p-bottom_x-large"></div>
-        </div>
+        </template>
     </div>
 
-    <footer class="slds-modal__footer slds-clearfix">
-        <div class="slds-x-small-buttons_horizontal slds-float_right">
-            <lightning-button label={labels.cancelButton} title={labels.cancelButton} variant="neutral"
-                class="slds-m-right_small" onclick={handleCancel}>
-            </lightning-button>
-            <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand" onclick={handleSave}
-                data-id="saveButton">
-            </lightning-button>
-        </div>
-    </footer>
+    <div if:false={isLoading}>
+        <footer class="slds-modal__footer slds-clearfix">
+            <div class="slds-x-small-buttons_horizontal slds-float_right">
+
+                <template if:false={isRDClosed}>
+                    <lightning-button label={labels.cancelButton} title={labels.cancelButton} variant="neutral"
+                        class="slds-m-right_small" onclick={handleCancel}>
+                    </lightning-button>
+                    <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand"
+                        onclick={handleSave} data-id="saveButton">
+                    </lightning-button>
+                </template>
+
+                <template if:true={isRDClosed}>
+                    <lightning-button label={labels.okButton} title={labels.okButton} variant="brand"
+                        onclick={handleCancel}>
+                    </lightning-button>
+                </template>
+
+            </div>
+        </footer>
+    </div>
 
 </template>

@@ -9,13 +9,15 @@ import description from '@salesforce/label/c.RD2_PauseDescription';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import cancelButton from '@salesforce/label/c.stgBtnCancel';
 import saveButton from '@salesforce/label/c.stgBtnSave';
+import okButton from '@salesforce/label/c.stgLabelOK';
 import selectedRowsSummaryPlural from '@salesforce/label/c.RD2_PauseSelectedInstallmentTextPlural';
 import selectedRowsSummarySingular from '@salesforce/label/c.RD2_PauseSelectedInstallmentTextSingular';
 import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage';
 import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
+import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
 
-import getPausedReason from '@salesforce/apex/RD2_PauseForm_CTRL.getPausedReason';
-import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
+import getPauseData from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseData';
+import getInstallments from '@salesforce/apex/RD2_PauseForm_CTRL.getInstallments';
 import savePause from '@salesforce/apex/RD2_PauseForm_CTRL.savePause';
 
 export default class Rd2PauseForm extends LightningElement {
@@ -26,10 +28,12 @@ export default class Rd2PauseForm extends LightningElement {
         loadingMessage,
         cancelButton,
         saveButton,
+        okButton,
         selectedRowsSummaryPlural,
         selectedRowsSummarySingular,
         saveSuccessMessage,
-        deactivationSuccessMessage
+        deactivationSuccessMessage,
+        rdClosedMessage
     });
 
     @api recordId;
@@ -37,7 +41,6 @@ export default class Rd2PauseForm extends LightningElement {
 
     @track isLoading = true;
     @track pageHeader = '';
-
     @track pausedReason = {};
 
     maxRowDisplay = 12;
@@ -47,6 +50,7 @@ export default class Rd2PauseForm extends LightningElement {
     @track columns = [];
     @track installments;
 
+    @track isRDClosed;
     @track error = {};
 
     /***
@@ -62,7 +66,7 @@ export default class Rd2PauseForm extends LightningElement {
     init = async () => {
         try {
             this.loadInstallments();
-            await this.loadPausedReason();
+            await this.loadPauseData();
 
         } catch (error) {
             this.handleError(error);
@@ -73,13 +77,29 @@ export default class Rd2PauseForm extends LightningElement {
     * @description 
     */
     loadInstallments = async () => {
-        getInstallments({ recordId: this.recordId, displayNum: this.maxRowDisplay })
+        getInstallments({ recordId: this.recordId, maxRowDisplay: this.maxRowDisplay })
             .then(response => {
                 this.handleRecords(response);
                 this.handleColumns(response);
             })
             .catch(error => {
                 this.installments = null;
+                this.handleError(error);
+            });
+    }
+
+    /***
+    * @description
+    */
+    loadPauseData = async () => {
+        getPauseData({ rdId: this.recordId })
+            .then(response => {
+                const pauseData = JSON.parse(response);
+
+                this.isRDClosed = pauseData.isRDClosed;
+                this.pausedReason = pauseData.pausedReason;
+            })
+            .catch(error => {
                 this.handleError(error);
             })
             .finally(() => {
@@ -94,7 +114,7 @@ export default class Rd2PauseForm extends LightningElement {
         recordId: '$recordId',
         fields: NAME_FIELD
     })
-    wiredRecord(response) {
+    wiredRecurringDonation(response) {
         if (response.data) {
             this.recordName = response.data.fields.Name.value;
             this.pageHeader = this.labels.header.replace('{0}', this.recordName);
@@ -236,9 +256,9 @@ export default class Rd2PauseForm extends LightningElement {
         this.isLoading = true;
 
         try {
-            const jsonPauseData = JSON.stringify(this.constructPauseData());
+            const jsonData = JSON.stringify(this.constructPauseData());
 
-            savePause({ jsonData: jsonPauseData })
+            savePause({ jsonPauseData: jsonData })
                 .then(() => {
                     this.handleSaveSuccess();
                 })
@@ -265,19 +285,6 @@ export default class Rd2PauseForm extends LightningElement {
     /***
     * @description
     */
-    loadPausedReason = async () => {
-        getPausedReason({ recurringDonationId: this.recordId })
-            .then(response => {
-                this.pausedReason = JSON.parse(response);
-            })
-            .catch(error => {
-                this.handleError(error);
-            });
-    }
-
-    /***
-    * @description
-    */
     handlePausedReasonChange(event) {
         this.pausedReason.value = event.detail.value;
     }
@@ -287,7 +294,7 @@ export default class Rd2PauseForm extends LightningElement {
     */
     constructPauseData() {
         let pauseData = {};
-        pauseData.recurringDonationId = this.recordId;
+        pauseData.rdId = this.recordId;
 
         let installmentById = this.installments.reduce(function (map, installment) {
             map[installment.installmentNumber] = installment.donationDate;
@@ -300,7 +307,8 @@ export default class Rd2PauseForm extends LightningElement {
         const lastSelectedId = this.selectedIds[this.selectedIds.length - 1];
         pauseData.resumeAfterDate = installmentById[lastSelectedId];
 
-        pauseData.pausedReason = this.pausedReason.value;
+        pauseData.pausedReason = {};
+        pauseData.pausedReason.value = this.pausedReason.value;
 
         return pauseData;
     }
