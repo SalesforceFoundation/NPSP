@@ -932,21 +932,7 @@ private with sharing class RD2_ScheduleService_TEST {
         insert rd;
         Test.stopTest();
 
-        List<RecurringDonationSchedule__c> schedules = [
-            SELECT
-                Campaign__c,
-                Campaign__r.Name,
-                DayOfMonth__c,
-                EndDate__c,
-                InstallmentAmount__c,
-                InstallmentFrequency__c,
-                InstallmentPeriod__c,
-                PaymentMethod__c,
-                RecurringDonation__c,
-                StartDate__c
-            FROM RecurringDonationSchedule__c
-            WHERE RecurringDonation__c = :rd.Id
-            AND Active__c = true];
+        List<RecurringDonationSchedule__c> schedules = scheduleGateway.getRecords(rd);
 
         List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
                 new List<npe03__Recurring_Donation__c>{ rd }, startDate, null, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }

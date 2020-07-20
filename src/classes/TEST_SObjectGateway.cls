@@ -159,12 +159,14 @@ public class TEST_SObjectGateway {
             return [
                 SELECT
                     Campaign__c,
+                    Campaign__r.Name,
                     DayOfMonth__c,
                     StartDate__c,
                     EndDate__c,
                     InstallmentAmount__c,
                     InstallmentFrequency__c,
                     InstallmentPeriod__c,
+                    PaymentMethod__c,
                     RecurringDonation__c,
                     IsPause__c,
                     StatusReason__c
