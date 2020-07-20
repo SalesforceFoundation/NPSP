@@ -158,6 +158,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldNotCreateDuplicateOppWhenNextCloseDateIsToday() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         final Date today = START_DATE.addMonths(1);
         RD2_ScheduleService.currentDate = today;
@@ -188,6 +189,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldNotCreateDuplicateOppWhenNextCloseDateIsInFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         final Date today = START_DATE.addMonths(1).addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(2);
@@ -226,6 +228,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         Date today = prevCloseDate.addDays(-1);
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
@@ -269,6 +272,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldCreateNextOppWhenCloseDateIsToday() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         final Date prevCloseDate = START_DATE.addMonths(1);
         final Date today = START_DATE.addMonths(2);
@@ -302,6 +306,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldCreateNextOppWhenRDStatusIsActive() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         
@@ -314,6 +319,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldCreateNextOppWhenRDStatusIsLapsed() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withStatusLapsed()
@@ -359,6 +365,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldCreateNextOppWhenInstallmentPeriodIs1stAnd15th() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         final Date prevCloseDate = START_DATE.addMonths(1);
         final Date today = prevCloseDate.addDays(1);
@@ -396,6 +403,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldNotCreateNextOppWhenScheduleEndDateIsPassed() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         final Date today = START_DATE.addMonths(1).addDays(1);
         RD2_ScheduleService.currentDate = today;
@@ -450,6 +458,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldCreateNextOppWhenRDNextDonationDateIsOutdated() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         Date today = START_DATE.addDays(1);
         final Date nextDonationDate = START_DATE.addMonths(1);
@@ -595,6 +604,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldCreateNextOppWhenSameCloseDateOppIsClosedLostInMigration() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         final Date today = START_DATE.addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(1);
@@ -635,6 +645,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldNotCreateNextOppWhenSameCloseDateOppIsClosedLostOutsideMigration() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         final Date today = START_DATE.addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(1);
@@ -885,6 +896,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         RD2_ScheduleService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withStartDate(startDate)
@@ -934,6 +946,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         RD2_ScheduleService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withStartDate(startDate)
@@ -1117,7 +1130,8 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     */
     private static void configInvalidOppRecordTypeId() {
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{
-            'npe03__Record_Type__c' => UTIL_RecordTypes_TEST.MOCK_ID
+            'npe03__Record_Type__c' => UTIL_RecordTypes_TEST.MOCK_ID,
+            'InstallmentOppFirstCreateMode__c' => RD2_Constants.FirstInstallmentOppCreateOptions.ASynchronous.name()
         });
     }
 

@@ -69,7 +69,7 @@ Edit GE Template And Verify Changes
     # Verify Single Gift form throws error when a required field is not filled, correct and save 
     Fill Gift Entry Form
     ...                              Donor Type=Account1
-    ...                              Existing Donor Organization Account=&{account}[Name]
+    ...                              Existing Donor Organization Account=${account}[Name]
     ...                              Donation Amount=${amount}
     Click Button                     Save
     Verify Error For Field
@@ -87,7 +87,7 @@ Edit GE Template And Verify Changes
     ...                              npe01__Paid__c=True
     ...                              npe01__Check_Reference_Number__c=abc11233
     ...                              npe01__Payment_Method__c=Check
-    Verify Expected Values           nonns    Account     &{account}[Id]
+    Verify Expected Values           nonns    Account     ${account}[Id]
     ...                              ${org_ns}custom_acc_text__c=${msg}
     # Create a new batch and verify default values are displayed on the Batch Gift Form
     Go To Page                       Landing                       GE_Gift_Entry               
@@ -108,7 +108,7 @@ Edit GE Template And Verify Changes
     # Verify batch gift form throws error when a required field is not filled, correct and save
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
-    ...                              Existing Donor Contact=&{contact}[Name]
+    ...                              Existing Donor Contact=${contact}[Name]
     ...                              Donation Amount=${amount}
     Click Button                     Save & Enter New Gift
     Verify Error For Field
@@ -132,7 +132,7 @@ Edit GE Template And Verify Changes
     ...                              npe01__Paid__c=True
     ...                              npe01__Check_Reference_Number__c=abc11233
     ...                              npe01__Payment_Method__c=Check
-    Verify Expected Values           nonns    Account     &{contact}[AccountId]
+    Verify Expected Values           nonns    Account     ${contact}[AccountId]
     ...                              ${org_ns}custom_acc_text__c=None
 
 

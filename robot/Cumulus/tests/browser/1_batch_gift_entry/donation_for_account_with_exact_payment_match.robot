@@ -25,24 +25,23 @@ Enter a donation for an account with exact payment match
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{account} =     API Create Organization Account
     ${date} =     Get Current Date    result_format=%Y-%m-%d
-    &{opportunity} =     API Create Opportunity   &{account}[Id]    Donation  
+    &{opportunity} =     API Create Opportunity   ${account}[Id]    Donation  
     ...    StageName=Prospecting    
     ...    Amount=100    
     ...    CloseDate=${date}    
     ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=&{account}[Name] Test Donation        
+    ...    Name=${account}[Name] Test Donation        
     Go To Page                        Listing                      Batch_Gift_Entry
-    # Click Link  &{batch}[Name]
-    Click Link With Text    &{batch}[Name]
+    Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Search Field By Value    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    ${account}[Name]
     Wait Until Modal Is Open
-    Click Link    &{account}[Name]
+    Click Link    ${account}[Name]
     Click Link With Text    Review Donations
-    ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
+    ${pay_no}    Get BGE Card Header    ${opportunity}[Name]
     Log To Console    ${pay_no}
-    Page Should Contain    &{opportunity}[Name]
+    Page Should Contain    ${opportunity}[Name]
     Click Button With Title     Close this window
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
@@ -69,7 +68,7 @@ Enter a donation for an account with exact payment match
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
-    Go To Record Home    &{opportunity}[Id]
+    Go To Record Home    ${opportunity}[Id]
     Navigate To And Validate Field Value   Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}

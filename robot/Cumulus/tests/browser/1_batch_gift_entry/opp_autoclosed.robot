@@ -24,29 +24,28 @@ Opportunity is Autoclosed when Overpaid
     ...    ${ns}GiftBatch__c=true    
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{contact} =     API Create Contact
-    Store Session Record      Account    &{contact}[AccountId] 
+    Store Session Record      Account    ${contact}[AccountId] 
     ${date} =     Get Current Date    result_format=%Y-%m-%d
-    &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  
+    &{opportunity} =     API Create Opportunity   ${contact}[AccountId]    Donation  
     ...    StageName=Prospecting    
     ...    Amount=100    
     ...    CloseDate=${date}
-    ...    Name=&{contact}[LastName] Test Donation    
+    ...    Name=${contact}[LastName] Test Donation    
     Go To Page                        Listing                      Batch_Gift_Entry
-    # Click Link  &{batch}[Name]
-    Click Link With Text    &{batch}[Name]
+    Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
-    Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Search Field By Value    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
     Wait Until Modal Is Open
-    Click Link    &{contact}[FirstName] &{contact}[LastName]
+    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Click Link With Text    Review Donations
     Click BGE Button    Apply New Payment
-    Page Should Contain     You are currently applying a new Payment to Opportunity:&{opportunity}[Name]
+    Page Should Contain     You are currently applying a new Payment to Opportunity:${opportunity}[Name]
     Fill BGE Form
     ...                       Donation Amount=101
     Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Verify Row Count    1
-    Page Should Contain Link    &{opportunity}[Name]
+    Page Should Contain Link    ${opportunity}[Name]
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Batch To Process    BDI_DataImport_BATCH    Completed
@@ -62,7 +61,7 @@ Opportunity is Autoclosed when Overpaid
     ...    npe01__Payment_Amount__c=101.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
-    Go To Record Home    &{opportunity}[Id]
+    Go To Record Home    ${opportunity}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}

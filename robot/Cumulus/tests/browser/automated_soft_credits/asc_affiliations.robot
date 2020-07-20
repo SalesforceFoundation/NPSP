@@ -46,7 +46,7 @@ Create ASC for Affiliated Contact
     ...                                     Amount=500    
     
     Go To Page                              Details                              Opportunity                                
-    ...                                     object_id=&{opportunity}[Id]
+    ...                                     object_id=${opportunity}[Id]
     Select Tab                              Related
     Select Relatedlist                      Contact Roles
     Wait For Page Object                    Custom                               OpportunityContactRole
@@ -56,7 +56,7 @@ Create ASC for Affiliated Contact
     Go To Page                              Details                              Contact                                
     ...                                     object_id=${data}[contact][Id]
     Select Tab                              Related
-    Check Record Related Item               Opportunities                        &{opportunity}[Name]
+    Check Record Related Item               Opportunities                        ${opportunity}[Name]
     
     #Run batch job and verify soft credits on contact
     Run Donations Batch Process

@@ -193,7 +193,7 @@ public with sharing class RD2_EnablementService_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100', null), rd.Name, 'Name should match');
+        System.assertEquals(RD2_NamingService_TEST.getDefaultExpectedName(contact, '100', null), rd.Name, 'Name should match');
     }
 
     /****
@@ -367,6 +367,7 @@ public with sharing class RD2_EnablementService_TEST {
         RD2_EnablementService.enablementService = (RD2_EnablementService) Test.createStub(
             RD2_EnablementService.class, new Stub().withRecurringDonations2Enabled()
         );
+        RD2_EnablementService.isMetadataDeployed = true;
     }
 
     /***

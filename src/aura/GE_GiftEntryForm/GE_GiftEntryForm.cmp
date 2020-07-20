@@ -20,5 +20,6 @@
                           recordId="{!v.recordId}"
                           sObjectName="{!v.sObjectName}"
                           oneditbatch="{!c.handleEditBatch}"
-                          ontogglemodal="{!c.handleToggleModal}"/>
+                          ontogglemodal="{!c.handleToggleModal}"
+                          onclosemodal="{!c.closeModal}"/>
 </aura:component>

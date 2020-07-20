@@ -147,4 +147,36 @@ public with sharing class RD2_EnablementService {
 
         return true;
     }
+
+    /**
+     * @description Evaluates whether Enhanced Recurring Donation metadata has been deployed
+     * @return Boolean
+     */
+    public static Boolean isMetadataDeployed {
+        get {
+            if (isMetadataDeployed == null) {
+                isMetadataDeployed = (getEnablementState().isMetaConfirmed == true);
+            }
+            return isMetadataDeployed;
+        }
+        set;
+    }
+
+    /**
+     * @description Retrieves RD2 enablement state from custom settings
+     * @return RD2_EnablementDelegate_CTRL.EnablementState
+     */
+    private static RD2_EnablementDelegate_CTRL.EnablementState getEnablementState() {
+        RD2_EnablementDelegate_CTRL.EnablementState state = new RD2_EnablementDelegate_CTRL.EnablementState();
+        state.isMetaConfirmed = false;
+
+        try {
+            String jsonState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2EnablementState__c;
+            if (String.isNotBlank(jsonState)) {
+                state = (RD2_EnablementDelegate_CTRL.EnablementState) JSON.deserialize(jsonState, RD2_EnablementDelegate_CTRL.EnablementState.class);
+            }
+        } catch (Exception e) { }
+
+        return state;
+    }
 }
