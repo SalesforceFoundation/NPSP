@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fields>
-        <help>El lote desde el que se creó este candidato.</help>
-        <label>Lote</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Candidatos</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Ciudad de la organización</label>
-        <name>CompanyCity__c</name>
-    </fields>
-    <fields>
-        <label>País de la organización</label>
-        <name>CompanyCountry__c</name>
-    </fields>
-    <fields>
-        <label>Código postal de la organización</label>
-        <name>CompanyPostalCode__c</name>
-    </fields>
-    <fields>
-        <label>Estado o provincia de la organización</label>
-        <name>CompanyState__c</name>
-    </fields>
-    <fields>
-        <label>Calle de la organización</label>
-        <name>CompanyStreet__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Batch__c</name>
+    <help>El lote desde el que se creó este candidato.</help>
+    <relationshipLabel>Candidatos</relationshipLabel>
+    <label>Lote</label>
+  </fields>
+  <fields>
+    <name>CompanyCity__c</name>
+    <label>Ciudad de la organización</label>
+  </fields>
+  <fields>
+    <name>CompanyCountry__c</name>
+    <label>País de la organización</label>
+  </fields>
+  <fields>
+    <name>CompanyPostalCode__c</name>
+    <label>Código postal de la organización</label>
+  </fields>
+  <fields>
+    <name>CompanyState__c</name>
+    <label>Estado o provincia de la organización</label>
+  </fields>
+  <fields>
+    <name>CompanyStreet__c</name>
+    <label>Calle de la organización</label>
+  </fields>
+</CustomObjectTranslation>

@@ -1,65 +1,69 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Livrable</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Livrables</value>
-    </caseValues>
-    <fields>
-        <help>La date à laquelle ce livrable est dû.</help>
-        <label>Date d’échéance</label>
-        <name>Grant_Deadline_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>La date à laquelle le livrable a été effectivement soumis.</help>
-        <label>Date de fermeture</label>
-        <name>Grant_Deliverable_Close_Date__c</name>
-    </fields>
-    <fields>
-        <help>Description de ce qui est requis pour ce livrable.</help>
-        <label>Exigences</label>
-        <name>Grant_Deliverable_Requirements__c</name>
-    </fields>
-    <fields>
-        <label>Opportunité</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Livrables</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Type</label>
-        <name>Type__c</name>
-        <picklistValues>
-            <masterLabel>Application</masterLabel>
-            <translation>Application</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Final Report</masterLabel>
-            <translation>Rapport final</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Interim Report</masterLabel>
-            <translation>Rapport intermédiaire</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>LOI</masterLabel>
-            <translation>LOI</translation>
-        </picklistValues>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Grant Deadline Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Exigences de livrables de subvention</label>
-            <section>Grant Deliverable Requirements</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du livrable</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Grant_Deadline_Due_Date__c</name>
+    <help>La date à laquelle ce livrable est dû.</help>
+    <label>Date d’échéance</label>
+  </fields>
+  <fields>
+    <name>Grant_Deliverable_Close_Date__c</name>
+    <help>La date à laquelle le livrable a été effectivement soumis.</help>
+    <label>Date de fermeture</label>
+  </fields>
+  <fields>
+    <name>Grant_Deliverable_Requirements__c</name>
+    <help>Description de ce qui est requis pour ce livrable.</help>
+    <label>Exigences</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>Livrables</relationshipLabel>
+    <label>Opportunité</label>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <label>Type</label>
+    <picklistValues>
+      <masterLabel>LOI</masterLabel>
+      <translation>LOI</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Application</masterLabel>
+      <translation>Application</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Interim Report</masterLabel>
+      <translation>Rapport intermédiaire</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Final Report</masterLabel>
+      <translation>Rapport final</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Grant Deadline Layout</layout>
+    <sections>
+      <label>Exigences de livrables de subvention</label>
+      <section>Grant Deliverable Requirements</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom du livrable</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du livrable</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Livrable</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Livrables</value>
+  </caseValues>
 </CustomObjectTranslation>

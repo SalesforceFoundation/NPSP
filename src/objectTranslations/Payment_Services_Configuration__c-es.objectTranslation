@@ -1,40 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value><!-- Payment Services Configuration --></value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value><!-- Payment Services Configuration --></value>
-    </caseValues>
-    <fields>
-        <label><!-- Is Secret --></label>
-        <name>Is_Secret__c</name>
-    </fields>
-    <fields>
-        <label><!-- Key --></label>
-        <name>Key__c</name>
-    </fields>
-    <fields>
-        <label><!-- Service Key --></label>
-        <name>Service_Key__c</name>
-    </fields>
-    <fields>
-        <label><!-- Service --></label>
-        <name>Service__c</name>
-    </fields>
-    <fields>
-        <label><!-- Value --></label>
-        <name>Value__c</name>
-    </fields>
-    <gender><!-- Feminine --></gender>
-    <layouts>
-        <layout>Payment Configuration Layout</layout>
-        <sections>
-            <label><!-- Custom Links --></label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel><!-- Payment Services Configuration Name --></nameFieldLabel>
+  <fields>
+    <name>Is_Secret__c</name>
+    <label>Es Secreto</label>
+  </fields>
+  <fields>
+    <name>Key__c</name>
+    <label>Clave</label>
+  </fields>
+  <fields>
+    <name>Service_Key__c</name>
+    <label>Clave de servicio</label>
+  </fields>
+  <fields>
+    <name>Service__c</name>
+    <label>Servicio</label>
+  </fields>
+  <fields>
+    <name>Value__c</name>
+    <label>Valor</label>
+  </fields>
+  <layouts>
+    <layout>Payment Configuration Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre de configuración de Servicios de pago</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de configuración de Servicios de pago</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de Servicios de pago</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de Servicios de pago</value>
+  </caseValues>
 </CustomObjectTranslation>

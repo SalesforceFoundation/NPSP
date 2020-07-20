@@ -1,117 +1,121 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>GAU</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>GAU&apos;s</value>
-    </caseValues>
-    <fields>
-        <help>Bepaalt of deze GAU beschikbaar is voor selectie op Toewijzingen. Enkel actieve GAU&apos;s zijn beschikbaar voor selectie.</help>
-        <label>Actief</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Het gemiddelde bedrag van alle Toewijzingen aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Gemiddelde Toewijzing</label>
-        <name>Average_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>Extra informatie over deze GAU.</help>
-        <label>Beschrijving</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>De Sluitingsdatum van de eerste Opportunity toegewezen aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Eerste Toewijzingsdatum</label>
-        <name>First_Allocation_Date__c</name>
-    </fields>
-    <fields>
-        <help>Het bedrag van de grootste Toewijzing aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Grootste Toewijzing</label>
-        <name>Largest_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>De Sluitingsdatum van de laatste Opportunity van een toewijzing gekoppeld aan deze GAU.</help>
-        <label>Laatste Toewijzingsdatum</label>
-        <name>Last_Allocation_Date__c</name>
-    </fields>
-    <fields>
-        <help>Het totale aantal toewijzingen van opportunities in een gesloten en gewonnen fase in de laatste N dagen. De waarde van N kan gewijzigd worden in de instellingen.</help>
-        <label>Aantal Toewijzingen Laatste N Dagen</label>
-        <name>Number_of_Allocations_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Het totale aantal Toewijzingen vorig jaar van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Aantal Toewijzingen Vorig Jaar</label>
-        <name>Number_of_Allocations_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Het totale aantal Toewijzingen dit jaar van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Aantal Toewijzingen Dit Jaar</label>
-        <name>Number_of_Allocations_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Het totale aantal Toewijzingen twee jaar geleden van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Aantal Toewijzingen Twee Jaar Geleden</label>
-        <name>Number_of_Allocations_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>Het bedrag van de kleinste Toewijzing aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Kleinste Toewijzing</label>
-        <name>Smallest_Allocation__c</name>
-    </fields>
-    <fields>
-        <help>Het aantal Toewijzingen van Gesloten/Gewonnen Opportunities in de laatste N dagen. (De waarde van N wordt ingesteld in NPSP-Instellingen, onder Donaties, GAU-Toewijzingen.) NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Totaal Toewijzingen Laatste N Dagen</label>
-        <name>Total_Allocations_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Somtotaal van alle toewijzingen van opportunities in een gesloten en gewonnen fase van vorig jaar.</help>
-        <label>Totaal Toewijzingen Vorig Jaar</label>
-        <name>Total_Allocations_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Het totaalbedrag van Toewijzingen van Gesloten/Gewonnen Opportunities dit jaar. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Totaal Toewijzingen Dit Jaar</label>
-        <name>Total_Allocations_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Het totaalbedrag van Toewijzingen van Gesloten/Gewonnen van Opportunities twee jaar geleden. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Totaal Toewijzingen Twee Jaar Geleden</label>
-        <name>Total_Allocations_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>Het totaalbedrag van alle Toewijzingen van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Totaal Toewijzingen</label>
-        <name>Total_Allocations__c</name>
-    </fields>
-    <fields>
-        <help>Het totale aantal Toewijzingen van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
-        <label>Totale Aantal Toewijzingen</label>
-        <name>Total_Number_of_Allocations__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>General Accounting Unit Layout</layout>
-        <sections>
-            <label>Toewijzingsinformatie</label>
-            <section>Allocation Information</section>
-        </sections>
-        <sections>
-            <label>Toewijzingstotalen</label>
-            <section>Allocation Totals</section>
-        </sections>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Naam GAU</nameFieldLabel>
-    <webLinks>
-        <label>Totaliseringen opnieuw berekenen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+  <fields>
+    <name>Active__c</name>
+    <help>Bepaalt of deze GAU beschikbaar is voor selectie op Toewijzingen. Enkel actieve GAU's zijn beschikbaar voor selectie.</help>
+    <label>Actief</label>
+  </fields>
+  <fields>
+    <name>Average_Allocation__c</name>
+    <help>Het gemiddelde bedrag van alle Toewijzingen aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Gemiddelde Toewijzing</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <help>Extra informatie over deze GAU.</help>
+    <label>Beschrijving</label>
+  </fields>
+  <fields>
+    <name>First_Allocation_Date__c</name>
+    <help>De Sluitingsdatum van de eerste Opportunity toegewezen aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Eerste Toewijzingsdatum</label>
+  </fields>
+  <fields>
+    <name>Largest_Allocation__c</name>
+    <help>Het bedrag van de grootste Toewijzing aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Grootste Toewijzing</label>
+  </fields>
+  <fields>
+    <name>Last_Allocation_Date__c</name>
+    <help>De Sluitingsdatum van de laatste Opportunity van een toewijzing gekoppeld aan deze GAU.</help>
+    <label>Laatste Toewijzingsdatum</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Last_N_Days__c</name>
+    <help>Het totale aantal toewijzingen van opportunities in een gesloten en gewonnen fase in de laatste N dagen. De waarde van N kan gewijzigd worden in de instellingen.</help>
+    <label>Aantal Toewijzingen Laatste N Dagen</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Last_Year__c</name>
+    <help>Het totale aantal Toewijzingen vorig jaar van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Aantal Toewijzingen Vorig Jaar</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_This_Year__c</name>
+    <help>Het totale aantal Toewijzingen dit jaar van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Aantal Toewijzingen Dit Jaar</label>
+  </fields>
+  <fields>
+    <name>Number_of_Allocations_Two_Years_Ago__c</name>
+    <help>Het totale aantal Toewijzingen twee jaar geleden van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Aantal Toewijzingen Twee Jaar Geleden</label>
+  </fields>
+  <fields>
+    <name>Smallest_Allocation__c</name>
+    <help>Het bedrag van de kleinste Toewijzing aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Kleinste Toewijzing</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Last_N_Days__c</name>
+    <help>Het aantal Toewijzingen van Gesloten/Gewonnen Opportunities in de laatste N dagen. (De waarde van N wordt ingesteld in NPSP-Instellingen, onder Donaties, GAU-Toewijzingen.) NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Totaal Toewijzingen Laatste N Dagen</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Last_Year__c</name>
+    <help>Somtotaal van alle toewijzingen van opportunities in een gesloten en gewonnen fase van vorig jaar.</help>
+    <label>Totaal Toewijzingen Vorig Jaar</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_This_Year__c</name>
+    <help>Het totaalbedrag van Toewijzingen van Gesloten/Gewonnen Opportunities dit jaar. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Totaal Toewijzingen Dit Jaar</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations_Two_Years_Ago__c</name>
+    <help>Het totaalbedrag van Toewijzingen van Gesloten/Gewonnen van Opportunities twee jaar geleden. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Totaal Toewijzingen Twee Jaar Geleden</label>
+  </fields>
+  <fields>
+    <name>Total_Allocations__c</name>
+    <help>Het totaalbedrag van alle Toewijzingen van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Totaal Toewijzingen</label>
+  </fields>
+  <fields>
+    <name>Total_Number_of_Allocations__c</name>
+    <help>Het totale aantal Toewijzingen van Gesloten/Gewonnen Opportunities. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
+    <label>Totale Aantal Toewijzingen</label>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Totaliseringen opnieuw berekenen</label>
+  </webLinks>
+  <layouts>
+    <layout>General Accounting Unit Layout</layout>
+    <sections>
+      <label>Toewijzingsinformatie</label>
+      <section>Allocation Information</section>
+    </sections>
+    <sections>
+      <label>Toewijzingstotalen</label>
+      <section>Allocation Totals</section>
+    </sections>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Naam GAU</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam GAU</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>GAU</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>GAU's</value>
+  </caseValues>
 </CustomObjectTranslation>

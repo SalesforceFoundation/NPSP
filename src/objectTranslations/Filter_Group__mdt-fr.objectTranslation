@@ -1,32 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Groupe de filtres</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Groupes de filtres</value>
-    </caseValues>
-    <fields>
-        <label>Descriptif</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Supprimé</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Filter Group Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Nouvelle section</label>
-            <section>New Section</section>
-        </sections>
-    </layouts>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Description__c</name>
+    <label>Descriptif</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>Supprimé</label>
+  </fields>
+  <layouts>
+    <layout>Filter Group Layout</layout>
+    <sections>
+      <label>Nouvelle section</label>
+      <section>New Section</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Groupe de filtres</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Groupes de filtres</value>
+  </caseValues>
 </CustomObjectTranslation>
