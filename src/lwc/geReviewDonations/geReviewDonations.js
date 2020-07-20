@@ -142,7 +142,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     * body. modalProperties holds all the data for the actual modal created by the 
     * overlay library.
     */
-    handleReviewDonations() {
+    openReviewDonationsModal() {
         const donorRecordName = this._donor ? this._donor.fields.Name.value : '';
         const modalHeader = geLabelService.format(
             this.CUSTOM_LABELS.geHeaderMatchingReviewDonations,

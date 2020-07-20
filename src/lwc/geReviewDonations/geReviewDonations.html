@@ -21,7 +21,7 @@
                     <template if:false={hasSelectedDonation}>
                         <span>
                             <button class="slds-button slds-m-left_xx-small"
-                                    onclick={handleReviewDonations}>
+                                    onclick={openReviewDonationsModal}>
                                 {CUSTOM_LABELS.geButtonMatchingReviewDonations}
                             </button>
                         </span>
@@ -30,7 +30,7 @@
                 <template if:true={hasSelectedDonation}>
                     <lightning-layout-item size="12">
                         <button class="slds-button slds-button_margin-extension"
-                                onclick={handleReviewDonations}>
+                                onclick={openReviewDonationsModal}>
                             {CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}
                         </button>
                     </lightning-layout-item>
