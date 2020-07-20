@@ -58,6 +58,7 @@ private class RD2_RecurringDonationsOpp_TEST {
     private static void setUp() {
         RD2_ScheduleService.currentDate = TODAY;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
 
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
