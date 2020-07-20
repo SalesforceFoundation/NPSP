@@ -10,12 +10,20 @@ Suite Setup     Run keywords
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
+&{CONTACT}        Email=test@example.com
 ${TEMPLATE}       Labels Template
 &{DATE}           Field Label=Closed Date
 &{CAMPAIGN}       Field Label=Campaign
 &{PAY}            Field Label=Check Number
 &{RECORD_TYPE}    Field Label=Record Type
 
+*** Keywords ***
+Setup Test Data
+    Setupdata   contact   ${CONTACT}
+    &{campaign} =    API Create Campaign
+    Set suite variable   &{CAMPAIGN}
+    ${ns} =  Get NPSP Namespace Prefix
+    Set suite variable    ${NS}
 
 *** Test Cases ***
 
@@ -57,6 +65,19 @@ Verify Mapped Field Is Available For Batch Template
     Click Gift Entry Button                 Next
     Click Gift Entry Button                 Save
     Current Page Should Be                  Form                            Gift Entry            title=Gift Entry Form
-    ${batch_id} =                           Save Current Record ID For Deletion     ${ns}DataImportBatch__c
-    # Wait Until Page Contains                Test Mapping
+    ${batch_id} =                           Save Current Record ID For Deletion     ${NS}DataImportBatch__c
+    Wait Until Page Contains Element        npsp:label:${DATE}[Field Label]
+    Page Should Contain Element             npsp:label:${CAMPAIGN}[Field Label]
+    Page Should Contain Element             npsp:label:${PAY}[Field Label]
+    Page Should Contain Element             npsp:label:${RECORD_TYPE}[Field Label]
+    Fill Gift Entry Form
+    ...                                     Data Import: Donation Donor=Contact1
+    ...                                     Data Import: Contact1 Imported=${data}[contact][Name]
+    ...                                     ${DATE}[Field Label]=Today
+    ...                                     Donation Amount=150
+    ...                                     ${CAMPAIGN}[Field Label]=${CAMPAIGN}[Name]
+    ...                                     ${PAY}[Field Label]=74454354
+    ...                                     ${RECORD_TYPE}[Field Label]=Donation
+    Click Button                            Save & Enter New Gift
+    Sleep                                   5
     

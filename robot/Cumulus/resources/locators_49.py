@@ -62,6 +62,7 @@ npsp_lex_locators={
     'link-text':'//a[contains(text(),"{}")]',
     'link-title':'//a[@title="{}"]',
     'link-contains':'//button[.//span[contains(text(),"{}")]]',
+    'label':'//label[text()="{}"]',
     'checkbox':{
         'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
         'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/following-sibling::div//input',

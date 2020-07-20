@@ -218,8 +218,9 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                         self.salesforce._populate_field(field_loc,value) 
                 elif section=="Field Label":
                     key=f'{section} {field}'
-                    field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
-                    self.salesforce._populate_field(field_loc,value)
+                    field_name=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                    print(field_name)
+                    self.salesforce._populate_field(field_name,value)
 
     
     def add_field_bundle_to_new_section(self,bundle):
