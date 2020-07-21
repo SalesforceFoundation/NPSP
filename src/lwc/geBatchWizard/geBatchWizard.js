@@ -15,7 +15,7 @@ import {
     getNamespace,
     getNestedProperty,
     isNull,
-    stripNameSpace
+    stripNamespace
 } from 'c/utilCommon'
 import GeLabelService from 'c/geLabelService';
 
@@ -379,7 +379,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             let strippedFields = '';
             const matchingRuleFields = donationMatchingRule.split(COMMA_SEPARATOR);
             matchingRuleFields.forEach(field => {
-                strippedFields += stripNameSpace(field) + COMMA_SEPARATOR;
+                strippedFields += stripNamespace(field,
+                  namespace + '__') + COMMA_SEPARATOR;
             });
             dataImportBatch.fields[
               DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName] =

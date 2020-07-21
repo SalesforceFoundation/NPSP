@@ -6,7 +6,6 @@ import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
 
 const FUNCTION = 'function';
 const OBJECT = 'object';
-const NAMESPACE_PREFIX = 'npsp__';
 
 
 /*******************************************************************************
@@ -518,10 +517,14 @@ const showToast = (title, message, variant, mode, messageData) => {
 /*******************************************************************************
  * @description Strips namespace prefix from object and field api names
  * @param apiName
+ * @param namespacePrefix
  * @returns {*|string}
  */
-const stripNameSpace = (apiName) => {
-    const apiNameParts = apiName.split(NAMESPACE_PREFIX);
+const stripNamespace = (apiName , namespacePrefix) => {
+    if (!apiName.startsWith(namespacePrefix)) {
+        return apiName;
+    }
+    const apiNameParts = apiName.split(namespacePrefix);
     return apiNameParts[1];
 }
 
@@ -555,5 +558,5 @@ export {
     arraysMatch,
     getValueFromDotNotationString,
     validateJSONString,
-    stripNameSpace
+    stripNamespace
 };
