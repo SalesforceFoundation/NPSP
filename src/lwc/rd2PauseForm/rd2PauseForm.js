@@ -42,6 +42,7 @@ export default class Rd2PauseForm extends LightningElement {
     @track isLoading = true;
     @track hasAccess = true;
     @track isRDClosed;
+    @track isSaveDisplayed;
     @track pageHeader = '';
     @track pausedReason = {};
 
@@ -105,6 +106,7 @@ export default class Rd2PauseForm extends LightningElement {
             })
             .finally(() => {
                 this.isLoading = false;
+                this.handleButtonDisplay();
             });
     }
 
@@ -123,16 +125,6 @@ export default class Rd2PauseForm extends LightningElement {
         } else if (response.error) {
             this.handleError(response.error);
         }
-    }
-
-    /***
-    * @description
-    */
-    get isSaveDisplayed() {
-        return 
-            (this.isLoading == false)
-            && (this.isRDClosed === false)
-            && (this.hasAccess === true);
     }
 
     /***
@@ -257,6 +249,13 @@ export default class Rd2PauseForm extends LightningElement {
         } else {
             this.selectedRowsSummary = null;
         }
+    }
+
+    /***
+    * @description
+    */
+    handleButtonDisplay() {
+        this.isSaveDisplayed = !this.isLoading && !this.isRDClosed && this.hasAccess;
     }
 
     /***
