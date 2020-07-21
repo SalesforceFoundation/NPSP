@@ -454,9 +454,9 @@
     </fields>
     <fields>
         <fullName>StatusReason__c</fullName>
-        <description>Contains additional details for the schedule. For example, it is a paused reason for a pause schedule.</description>
+        <description>Contains additional details for the schedule. For example, a paused reason for a paused schedule.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Contains additional details for the schedule. For example, it is a paused reason for a pause schedule.</inlineHelpText>
+        <inlineHelpText>Contains additional details for the schedule. For example, a paused reason for a paused schedule.</inlineHelpText>
         <label>Status Reason</label>
         <length>255</length>
         <required>false</required>

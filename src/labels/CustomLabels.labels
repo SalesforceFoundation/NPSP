@@ -2221,7 +2221,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Contains message indicating a pause has been deleted successfully</shortDescription>
-        <value>Pause on {0} was deactivated</value>
+        <value>Pause on {0} was removed</value>
     </labels>
     <labels>
         <fullName>RD2_PauseDescription</fullName>
@@ -2269,7 +2269,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Contains message indicating multiple installments have been selected to skip</shortDescription>
-        <value>You&apos;ve selected {0} installments to skip.</value>
+        <value>You&apos;ve selected {0} installments.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseSelectedInstallmentTextSingular</fullName>
@@ -2277,7 +2277,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Contains message indicating one installment has been selected to skip</shortDescription>
-        <value>You&apos;ve selected 1 installment to skip.</value>
+        <value>You&apos;ve selected 1 installment.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
