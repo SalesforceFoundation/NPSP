@@ -1834,9 +1834,31 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
 
+    /**
+    * @description Verifies that only fields in Custom Field Mapper or is necessary for calculation should be included
+    */
+    @IsTest
+    private static void shouldOnlyQueryNecessaryAndCustomFieldMappingFields() {
+        RD2_CustomFieldMapper_TEST.createCustomFieldMapping(
+            String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c)
+            ,String.valueOf(Opportunity.Closed_Lost_Reason__c)
+        );
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .build();
 
+        insert rd;
+                
+        Test.startTest();
+        RD2_OpportunityEvaluationService service = new RD2_OpportunityEvaluationService().withRds(new Set<Id>{rd.Id});
+        Set<String> queriedFields = service.rds[0].getPopulatedFieldsAsMap().keySet();
+        Test.stopTest();
 
+        System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c)),
+            'Only fields included in the RD Custom Field Mapping or is necessary for calculation should not be queried back');
+        System.assert(queriedFields.contains('npe03__Open_Ended_Status__c') == false,
+            'Fields not included in the RD Custom Field Mapping and is not necessary for calculation should not be queried back');
+    }
 
     // Helpers
     ///////////////////
