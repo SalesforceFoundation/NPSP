@@ -1,72 +1,96 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>DEPRECATED-Schedulable</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>DEPRECATED-Schedulables</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>DEPRECATED-Schedulable</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>DEPRECATED-Schedulables</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>DEPRECATED-Schedulables</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>DEPRECATED-Schedulables</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>DEPRECATED-Schedulable</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>DEPRECATED-Schedulables</value>
-    </caseValues>
-    <fields>
-        <help>Legt fest, ob der Auftrag aktiv ist.</help>
-        <label>Aktiv</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Klasse, deren Ausführung mit einer bestimmten Häufigkeit geplant wird.</help>
-        <label>Klassenname</label>
-        <name>Class_Name__c</name>
-    </fields>
-    <fields>
-        <help>Wie oft der Auftrag ausgeführt wird.</help>
-        <label>Häufigkeit</label>
-        <name>Frequency__c</name>
-        </fields>
-    <fields>
-        <help>Letzte Ausführung des Auftrags.</help>
-        <label>Letzte Ausführung</label>
-        <name>Last_Time_Run__c</name>
-    </fields>
-    <gender>Neuter</gender>
-    <layouts>
-        <layout>Schedulable Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Auftragsname</nameFieldLabel>
+  <fields>
+    <name>Active__c</name>
+    <help>Legt fest, ob der Auftrag aktiv ist.</help>
+    <label>Aktiv</label>
+  </fields>
+  <fields>
+    <name>Class_Name__c</name>
+    <help>Klasse, deren Ausführung mit einer bestimmten Häufigkeit geplant wird.</help>
+    <label>Klassenname</label>
+  </fields>
+  <fields>
+    <name>Frequency__c</name>
+    <help>Wie oft der Auftrag ausgeführt wird.</help>
+    <label>Häufigkeit</label>
+    <picklistValues>
+      <masterLabel>Hourly</masterLabel>
+      <translation>Stündlich</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>Täglich</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Wöchentlich</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Monatlich</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Vierteljährlich</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Last_Time_Run__c</name>
+    <help>Letzte Ausführung des Auftrags.</help>
+    <label>Letzte Ausführung</label>
+  </fields>
+  <layouts>
+    <layout>Schedulable Layout</layout>
+    <sections>
+      <label>Benutzerdefinierte Links</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Auftragsname</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Auftragsname</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>DEPRECATED-Schedulable</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Accusative</caseType>
+    <value>DEPRECATED-Schedulable</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Dative</caseType>
+    <value>DEPRECATED-Schedulable</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Genitive</caseType>
+    <value>DEPRECATED-Schedulables</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>DEPRECATED-Schedulables</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Accusative</caseType>
+    <value>DEPRECATED-Schedulables</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Dative</caseType>
+    <value>DEPRECATED-Schedulables</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Genitive</caseType>
+    <value>DEPRECATED-Schedulables</value>
+  </caseValues>
 </CustomObjectTranslation>

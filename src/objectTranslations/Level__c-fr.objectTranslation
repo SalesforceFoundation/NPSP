@@ -1,87 +1,87 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Niveau</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Niveaux</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- LevelEdit --></label>
-        <name>LevelEdit</name>
-    </fieldSets>
-    <fields>
-        <help>Indique si ce niveau est utilisé actuellement.</help>
-        <label>Actif</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Décrit à quoi correspond ce niveau, ou ce que cela signifie d’atteindre ce niveau.</help>
-        <label>Descriptif</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>Le modèle de plan d’engagement à appliquer à l’objet cible lorsque ce niveau est atteint.</help>
-        <label>Modèle de plan d’engagement</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Niveaux</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indique quel champ utiliser sur l&apos;objet cible pour stocker le niveau actuel.</help>
-        <label>Champ de niveau</label>
-        <name>Level_Field__c</name>
-    </fields>
-    <fields>
-        <help>Le montant maximal sous lequel la valeur doit rester pour que ce niveau lui soit attribué. Si ce champ est vide, NPSP attribuera ce niveau pour tout montant supérieur ou égal au montant minimum de ce niveau.</help>
-        <label>Montant maximal (&lt;)</label>
-        <name>Maximum_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Le montant minimal pour que ce niveau soit attribué. Si ce champ est vide, NPSP attribuera ce niveau à un montant inférieur au montant maximal de ce niveau.</help>
-        <label>Montant minimal (&gt;=)</label>
-        <name>Minimum_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Indique quel champ utiliser sur l&apos;objet cible pour stocker le niveau précédent.</help>
-        <label>Champ de niveau précédent</label>
-        <name>Previous_Level_Field__c</name>
-    </fields>
-    <fields>
-        <help>Le champ (nom du développeur) de l’objet cible qui définit le montant et la période sur lesquels ce niveau est basé.</help>
-        <label>Champ source</label>
-        <name>Source_Field__c</name>
-    </fields>
-    <fields>
-        <help>L’objet auquel ce niveau s’applique.</help>
-        <label>Cible</label>
-        <name>Target__c</name>
-        <picklistValues>
-            <masterLabel>Account</masterLabel>
-            <translation>Compte</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Contact</masterLabel>
-            <translation>Contact</translation>
-        </picklistValues>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Level Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>longue section de texte</label>
-            <section>long text section</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du niveau</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
-    <validationRules>
-        <errorMessage>La cible est un champ obligatoire du niveau. Veuillez indiquer l’objet cible pour ce niveau.</errorMessage>
-        <name>Target_Required</name>
-    </validationRules>
+  <fields>
+    <name>Active__c</name>
+    <help>Indique si ce niveau est utilisé actuellement.</help>
+    <label>Actif</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <help>Décrit à quoi correspond ce niveau, ou ce que cela signifie d’atteindre ce niveau.</help>
+    <label>Descriptif</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <help>Le modèle de plan d’engagement à appliquer à l’objet cible lorsque ce niveau est atteint.</help>
+    <relationshipLabel>Niveaux</relationshipLabel>
+    <label>Modèle de plan d’engagement</label>
+  </fields>
+  <fields>
+    <name>Level_Field__c</name>
+    <help>Indique quel champ utiliser sur l'objet cible pour stocker le niveau actuel.</help>
+    <label>Champ de niveau</label>
+  </fields>
+  <fields>
+    <name>Maximum_Amount__c</name>
+    <help>Le montant maximal sous lequel la valeur doit rester pour que ce niveau lui soit attribué. Si ce champ est vide, NPSP attribuera ce niveau pour tout montant supérieur ou égal au montant minimum de ce niveau.</help>
+    <label>Montant maximal (&lt;)</label>
+  </fields>
+  <fields>
+    <name>Minimum_Amount__c</name>
+    <help>Le montant minimal pour que ce niveau soit attribué. Si ce champ est vide, NPSP attribuera ce niveau à un montant inférieur au montant maximal de ce niveau.</help>
+    <label>Montant minimal (&gt;=)</label>
+  </fields>
+  <fields>
+    <name>Previous_Level_Field__c</name>
+    <help>Indique quel champ utiliser sur l'objet cible pour stocker le niveau précédent.</help>
+    <label>Champ de niveau précédent</label>
+  </fields>
+  <fields>
+    <name>Source_Field__c</name>
+    <help>Le champ (nom du développeur) de l’objet cible qui définit le montant et la période sur lesquels ce niveau est basé.</help>
+    <label>Champ source</label>
+  </fields>
+  <fields>
+    <name>Target__c</name>
+    <help>L’objet auquel ce niveau s’applique.</help>
+    <label>Cible</label>
+    <picklistValues>
+      <masterLabel>Account</masterLabel>
+      <translation>Compte</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contact</masterLabel>
+      <translation>Contact</translation>
+    </picklistValues>
+  </fields>
+  <validationRules>
+    <errorMessage>La cible est un champ obligatoire du niveau. Veuillez indiquer l’objet cible pour ce niveau.</errorMessage>
+    <name>Target_Required</name>
+  </validationRules>
+  <layouts>
+    <layout>Level Layout</layout>
+    <sections>
+      <label>longue section de texte</label>
+      <section>long text section</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom du niveau</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du niveau</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Niveau</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Niveaux</value>
+  </caseValues>
 </CustomObjectTranslation>

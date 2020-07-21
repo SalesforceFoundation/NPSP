@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Wanneer u een Opportunity maakt voor de Contactpersoon in deze Relatie, wijst NPSP deze Opportunitycontactpersoonrol toe aan de Gerelateerde Contactpersoon.</help>
-        <label>Gerelateerde Opp.contactpersoonrol</label>
-        <name>Related_Opportunity_Contact_Role__c</name>
-        <picklistValues>
-            <masterLabel>Soft Credit</masterLabel>
-            <translation>Soft Credit</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Solicitor</masterLabel>
-            <translation>Aanvrager</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Tribute</masterLabel>
-            <translation>Eerbetoon</translation>
-        </picklistValues>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Related_Opportunity_Contact_Role__c</name>
+    <help>Wanneer u een Opportunity maakt voor de Contactpersoon in deze Relatie, wijst NPSP deze Opportunitycontactpersoonrol toe aan de Gerelateerde Contactpersoon.</help>
+    <label>Gerelateerde Opp.contactpersoonrol</label>
+    <picklistValues>
+      <masterLabel>Soft Credit</masterLabel>
+      <translation>Soft Credit</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Solicitor</masterLabel>
+      <translation>Aanvrager</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Tribute</masterLabel>
+      <translation>Eerbetoon</translation>
+    </picklistValues>
+  </fields>
+</CustomObjectTranslation>

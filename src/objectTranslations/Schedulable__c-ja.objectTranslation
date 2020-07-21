@@ -1,35 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>廃止-スケジュール可能</value>
-    </caseValues>
-    <fields>
-        <help>ジョブが有効かどうかを判断します。</help>
-        <label>有効</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>特定の頻度で実行するようにスケジュールされるクラス。</help>
-        <label>クラス名</label>
-        <name>Class_Name__c</name>
-    </fields>
-    <fields>
-        <help>ジョブの実行頻度。</help>
-        <label>頻度</label>
-        <name>Frequency__c</name>
-        </fields>
-    <fields>
-        <help>ジョブが最後に実行された日時。</help>
-        <label>最終実行日時</label>
-        <name>Last_Time_Run__c</name>
-    </fields>
-    <layouts>
-        <layout>Schedulable Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>ジョブ名</nameFieldLabel>
+  <fields>
+    <name>Active__c</name>
+    <help>ジョブが有効かどうかを判断します。</help>
+    <label>有効</label>
+  </fields>
+  <fields>
+    <name>Class_Name__c</name>
+    <help>特定の頻度で実行するようにスケジュールされるクラス。</help>
+    <label>クラス名</label>
+  </fields>
+  <fields>
+    <name>Frequency__c</name>
+    <help>ジョブの実行頻度。</help>
+    <label>頻度</label>
+    <picklistValues>
+      <masterLabel>Hourly</masterLabel>
+      <translation>1 時間ごと</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>毎日</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>毎週</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>毎月</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>毎四半期</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Last_Time_Run__c</name>
+    <help>ジョブが最後に実行された日時。</help>
+    <label>最終実行日時</label>
+  </fields>
+  <layouts>
+    <layout>Schedulable Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>ジョブ名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>ジョブ名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>廃止-スケジュール可能</value>
+  </caseValues>
 </CustomObjectTranslation>

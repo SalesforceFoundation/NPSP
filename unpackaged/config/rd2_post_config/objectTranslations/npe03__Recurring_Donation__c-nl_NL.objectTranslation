@@ -12,8 +12,8 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%ClosedReason__c</name>
-    <help>De reden waarom deze terugkerende donatie is gesloten.</help>
-    <label>Reden voor Gesloten</label>
+    <help>De reden waarom deze terugkerende donatie de huidige statuswaarde heeft.</help>
+    <label>Statusreden</label>
     <picklistValues>
       <masterLabel>Card Expired</masterLabel>
       <translation>Kaart vervallen</translation>
@@ -41,7 +41,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%Day_of_Month__c</name>
-    <help>Stelt de specifieke dag van de maand in voor toekomstige Opportunities voor termijnen wanneer de Termijnperiode Maandelijks is.</help>
+    <help>Hiermee stelt u de dag van de maand in voor toekomstige termijnopportunities als de termijnperiode maandelijks is. Als u 29 of 30 selecteert, is de termijndatum de laatste dag van de maand bij maanden die uit relatief weinig dagen bestaan.</help>
     <label>Dag van de Maand</label>
     <picklistValues>
       <masterLabel>1</masterLabel>
@@ -156,16 +156,16 @@
       <translation>28</translation>
     </picklistValues>
     <picklistValues>
-      <masterLabel>Last Day Of Month</masterLabel>
-      <translation>Laatste dag van de maand</translation>
-    </picklistValues>
-    <picklistValues>
       <masterLabel>29</masterLabel>
       <translation>29</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>30</masterLabel>
       <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Laatste dag van de maand</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>31</masterLabel>
@@ -243,12 +243,20 @@
   <layouts>
     <layout>Enhanced Recurring Donations Layout</layout>
     <sections>
-      <label>Planningsdetails</label>
-      <section>Schedule Details</section>
+      <label>Gegevens donateur</label>
+      <section>Donor Information</section>
     </sections>
     <sections>
-      <label>Statistieken over terugkerende donatie(s)</label>
-      <section>Recurring Donation Statistics</section>
+      <label>Gegevens over donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Overige gegevens</label>
+      <section>Other Information</section>
+    </sections>
+    <sections>
+      <label>Statistieken</label>
+      <section>Statistics</section>
     </sections>
     <sections>
       <label>Aangepaste koppelingen</label>

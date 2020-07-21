@@ -1,72 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Plan d&apos;engagement</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Plans d&apos;engagement</value>
-    </caseValues>
-    <fields>
-        <label>Compte</label>
-        <name>Account__c</name>
-        <relationshipLabel>Plans d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Campagne</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Plans d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Requête</label>
-        <name>Case__c</name>
-        <relationshipLabel>Plans d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Tâches terminées</label>
-        <name>Completed_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>Contact</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Plans d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Modèle de plan d’engagement</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Plans d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Opportunité</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Plans d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Don régulier</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>Plans d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Statut</label>
-        <name>Status__c</name>
-    </fields>
-    <fields>
-        <label>Tâches PE totales</label>
-        <name>Total_EP_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>Tâches totales</label>
-        <name>Total_Tasks__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Engagement Plan Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Numéro du plan d’engagement</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Account__c</name>
+    <relationshipLabel>Plans d’engagement</relationshipLabel>
+    <label>Compte</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <relationshipLabel>Plans d’engagement</relationshipLabel>
+    <label>Campagne</label>
+  </fields>
+  <fields>
+    <name>Case__c</name>
+    <relationshipLabel>Plans d’engagement</relationshipLabel>
+    <label>Requête</label>
+  </fields>
+  <fields>
+    <name>Completed_Tasks__c</name>
+    <label>Tâches terminées</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <relationshipLabel>Plans d’engagement</relationshipLabel>
+    <label>Contact</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>Plans d’engagement</relationshipLabel>
+    <label>Modèle de plan d’engagement</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>Plans d’engagement</relationshipLabel>
+    <label>Opportunité</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>Plans d’engagement</relationshipLabel>
+    <label>Don régulier</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <label>Statut</label>
+  </fields>
+  <fields>
+    <name>Total_EP_Tasks__c</name>
+    <label>Tâches PE totales</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>Tâches totales</label>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Numéro du plan d’engagement</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Numéro du plan d’engagement</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Plan d'engagement</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Plans d'engagement</value>
+  </caseValues>
 </CustomObjectTranslation>

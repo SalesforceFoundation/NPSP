@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <quickActions>
+        <name>New_Organization</name>
+        <label>Nieuwe organisatie</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Household_Account</name>
+        <label>Nieuw huishouden</label>
+    </quickActions>
+</Translations>

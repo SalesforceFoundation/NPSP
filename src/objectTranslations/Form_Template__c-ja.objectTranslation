@@ -1,30 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>フォームテンプレート</value>
-    </caseValues>
-    <fields>
-        <help>ユーザが入力できるテンプレートの簡単な説明。</help>
-        <label>説明</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>このテンプレートの作成に使用する支援エントリのバージョン。</help>
-        <label>形式バージョン</label>
-        <name>Format_Version__c</name>
-    </fields>
-    <fields>
-        <help>このテンプレートのセクションと項目、およびそれらの順序、要件、デフォルト値。JSON として保存されます。直接編集しないでください。</help>
-        <label>テンプレートの JSON</label>
-        <name>Template_JSON__c</name>
-    </fields>
-    <layouts>
-        <layout>Form Template Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>フォームテンプレート名</nameFieldLabel>
+  <fields>
+    <name>Description__c</name>
+    <help>ユーザが入力できるテンプレートの簡単な説明。</help>
+    <label>説明</label>
+  </fields>
+  <fields>
+    <name>Format_Version__c</name>
+    <help>このテンプレートの作成に使用する支援エントリのバージョン。</help>
+    <label>形式バージョン</label>
+  </fields>
+  <fields>
+    <name>Template_JSON__c</name>
+    <help>このテンプレートのセクションと項目、およびそれらの順序、要件、デフォルト値。JSON として保存されます。直接編集しないでください。</help>
+    <label>テンプレートの JSON</label>
+  </fields>
+  <layouts>
+    <layout>Form Template Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>フォームテンプレート名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>フォームテンプレート名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>フォームテンプレート</value>
+  </caseValues>
 </CustomObjectTranslation>

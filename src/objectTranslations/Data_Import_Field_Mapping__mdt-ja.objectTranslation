@@ -1,54 +1,54 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>データインポート項目の対応付け</value>
-    </caseValues>
-    <fields>
-        <help>この項目の対応付けが含まれるデータインポート項目の対応付けセット。</help>
-        <label>データインポート項目の対応付けセット</label>
-        <name>Data_Import_Field_Mapping_Set__c</name>
-        <relationshipLabel>データインポート項目の対応付け</relationshipLabel>
-    </fields>
-    <fields>
-        <help>オンになっていると、このレコードがデータインポートの高度な対応付けのユーザインターフェースから削除されており、NPSP データインポートの処理時に無視されることを示します。</help>
-        <label>削除済み</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>NPSP データインポートオブジェクトの項目に値が含まれている必要があるかどうかを示します。必須の場合、項目に値が含まれていないと、Dry Run は失敗します。</help>
-        <label>必須?</label>
-        <name>Required__c</name>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation>いいえ</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation>はい</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>NPSP データインポートオブジェクトの項目の API 参照名。</help>
-        <label>ソース項目 API 参照名</label>
-        <name>Source_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>対象オブジェクトの項目の API 参照名。</help>
-        <label>対象項目 API 参照名</label>
-        <name>Target_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>この項目の対応付けの対象データインポートオブジェクトグループ。</help>
-        <label>対象オブジェクトの対応付け</label>
-        <name>Target_Object_Mapping__c</name>
-        <relationshipLabel>データインポート項目の対応付け</relationshipLabel>
-    </fields>
-    <layouts>
-        <layout>Data Import Field Mapping Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Data_Import_Field_Mapping_Set__c</name>
+    <help>この項目の対応付けが含まれるデータインポート項目の対応付けセット。</help>
+    <relationshipLabel>データインポート項目の対応付け</relationshipLabel>
+    <label>データインポート項目の対応付けセット</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <help>オンになっていると、このレコードがデータインポートの高度な対応付けのユーザインターフェースから削除されており、NPSP データインポートの処理時に無視されることを示します。</help>
+    <label>削除済み</label>
+  </fields>
+  <fields>
+    <name>Required__c</name>
+    <help>NPSP データインポートオブジェクトの項目に値が含まれている必要があるかどうかを示します。必須の場合、項目に値が含まれていないと、Dry Run は失敗します。</help>
+    <label>必須?</label>
+    <picklistValues>
+      <masterLabel>Yes</masterLabel>
+      <translation>はい</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No</masterLabel>
+      <translation>いいえ</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Source_Field_API_Name__c</name>
+    <help>NPSP データインポートオブジェクトの項目の API 参照名。</help>
+    <label>ソース項目 API 参照名</label>
+  </fields>
+  <fields>
+    <name>Target_Field_API_Name__c</name>
+    <help>対象オブジェクトの項目の API 参照名。</help>
+    <label>対象項目 API 参照名</label>
+  </fields>
+  <fields>
+    <name>Target_Object_Mapping__c</name>
+    <help>この項目の対応付けの対象データインポートオブジェクトグループ。</help>
+    <relationshipLabel>データインポート項目の対応付け</relationshipLabel>
+    <label>対象オブジェクトの対応付け</label>
+  </fields>
+  <layouts>
+    <layout>Data Import Field Mapping Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <caseValues>
+    <plural>false</plural>
+    <value>データインポート項目の対応付け</value>
+  </caseValues>
 </CustomObjectTranslation>

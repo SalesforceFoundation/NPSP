@@ -1,30 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Status-naar-staat-toewijzing voor opportunity</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Status-naar-staat-toewijzingen voor opportunity</value>
-    </caseValues>
-    <fields>
-        <help>API-naam van de opportunityfase die wordt toegewezen aan de status.</help>
-        <label>Opportunityfase</label>
-        <name>Opportunity_Stage__c</name>
-    </fields>
-    <fields>
-        <help>Geldige gegevens zijn &quot;Niet toegezegd&quot;, &quot;Toegezegd&quot; of &quot;Afgerond&quot;.</help>
-        <label>Opportunitystatus</label>
-        <name>Opportunity_State__c</name>
-        <picklistValues>
-            <masterLabel>Committed</masterLabel>
-            <translation>Toegezegd</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Finalized</masterLabel>
-            <translation>Afgerond</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Opportunity_Stage__c</name>
+    <help>API-naam van de opportunityfase die wordt toegewezen aan de status.</help>
+    <label>Opportunityfase</label>
+  </fields>
+  <fields>
+    <name>Opportunity_State__c</name>
+    <help>Geldige gegevens zijn "Niet toegezegd", "Toegezegd" of "Afgerond".</help>
+    <label>Opportunitystatus</label>
+    <picklistValues>
+      <masterLabel>Committed</masterLabel>
+      <translation>Toegezegd</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Finalized</masterLabel>
+      <translation>Afgerond</translation>
+    </picklistValues>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Status-naar-staat-toewijzing voor opportunity</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Status-naar-staat-toewijzingen voor opportunity</value>
+  </caseValues>
 </CustomObjectTranslation>

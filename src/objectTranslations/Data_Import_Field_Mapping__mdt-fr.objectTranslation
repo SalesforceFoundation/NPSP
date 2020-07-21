@@ -1,60 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Mappage de champs d&apos;importation de données</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Mappages de champs d&apos;importation de données</value>
-    </caseValues>
-    <fields>
-        <help>L&apos;ensemble de mappages de champs d&apos;importation de données qui contient ce mappage de champs.</help>
-        <label>Ensemble mappages champs Import. données</label>
-        <name>Data_Import_Field_Mapping_Set__c</name>
-        <relationshipLabel>Mappages de champs d&apos;importation de données</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est cochée, elle indique que cet enregistrement a été supprimé de l&apos;interface utilisateur Mappage avancé Importation de données et qu&apos;il sera ignoré lors du traitement Importation de données NPSP.</help>
-        <label>Est supprimé</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>Indique si le champ de l&apos;objet Importation de données NPSP doit contenir une valeur. Lorsqu&apos;une valeur est obligatoire, l&apos;importation test échoue si ce champ ne contient aucune valeur.</help>
-        <label>Obligatoire ?</label>
-        <name>Required__c</name>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation>Non</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation>Oui</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API du champ dans l&apos;objet Importation de données NPSP.</help>
-        <label>Nom d&apos;API du champ source</label>
-        <name>Source_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API du champ dans l&apos;objet cible.</help>
-        <label>Nom d&apos;API du champ cible</label>
-        <name>Target_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Le Groupe d&apos;objets Importation de données cible de ce mappage de champs.</help>
-        <label>Mappage des objets cibles</label>
-        <name>Target_Object_Mapping__c</name>
-        <relationshipLabel>Mappages de champs d&apos;importation de données</relationshipLabel>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Data Import Field Mapping Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Data_Import_Field_Mapping_Set__c</name>
+    <help>L'ensemble de mappages de champs d'importation de données qui contient ce mappage de champs.</help>
+    <relationshipLabel>Mappages de champs d'importation de données</relationshipLabel>
+    <label>Ensemble mappages champs Import. données</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <help>Lorsque cette option est cochée, elle indique que cet enregistrement a été supprimé de l'interface utilisateur Mappage avancé Importation de données et qu'il sera ignoré lors du traitement Importation de données NPSP.</help>
+    <label>Est supprimé</label>
+  </fields>
+  <fields>
+    <name>Required__c</name>
+    <help>Indique si le champ de l'objet Importation de données NPSP doit contenir une valeur. Lorsqu'une valeur est obligatoire, l'importation test échoue si ce champ ne contient aucune valeur.</help>
+    <label>Obligatoire ?</label>
+    <picklistValues>
+      <masterLabel>Yes</masterLabel>
+      <translation>Oui</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No</masterLabel>
+      <translation>Non</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Source_Field_API_Name__c</name>
+    <help>Le nom d'API du champ dans l'objet Importation de données NPSP.</help>
+    <label>Nom d'API du champ source</label>
+  </fields>
+  <fields>
+    <name>Target_Field_API_Name__c</name>
+    <help>Le nom d'API du champ dans l'objet cible.</help>
+    <label>Nom d'API du champ cible</label>
+  </fields>
+  <fields>
+    <name>Target_Object_Mapping__c</name>
+    <help>Le Groupe d'objets Importation de données cible de ce mappage de champs.</help>
+    <relationshipLabel>Mappages de champs d'importation de données</relationshipLabel>
+    <label>Mappage des objets cibles</label>
+  </fields>
+  <layouts>
+    <layout>Data Import Field Mapping Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Mappage de champs d'importation de données</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Mappages de champs d'importation de données</value>
+  </caseValues>
 </CustomObjectTranslation>
