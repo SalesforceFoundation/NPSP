@@ -370,7 +370,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
      * @param dataImportBatch
      * @returns {object}
      */
-    stripNameSpacedDonationMatchingRuleFields (dataImportBatch) {
+    stripNamespaceFromDonationMatchingRuleFields (dataImportBatch) {
         const donationMatchingRule = dataImportBatch.fields[
           DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName];
         const namespace = getNamespace(DATA_IMPORT_BATCH_INFO.objectApiName);
