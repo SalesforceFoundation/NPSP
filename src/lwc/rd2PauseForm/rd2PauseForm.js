@@ -40,6 +40,8 @@ export default class Rd2PauseForm extends LightningElement {
     recordName;
 
     @track isLoading = true;
+    @track hasAccess = true;
+    @track isRDClosed;
     @track pageHeader = '';
     @track pausedReason = {};
 
@@ -50,7 +52,6 @@ export default class Rd2PauseForm extends LightningElement {
     @track columns = [];
     @track installments;
 
-    @track isRDClosed;
     @track error = {};
 
     /***
@@ -122,6 +123,16 @@ export default class Rd2PauseForm extends LightningElement {
         } else if (response.error) {
             this.handleError(response.error);
         }
+    }
+
+    /***
+    * @description
+    */
+    get isSaveDisplayed() {
+        return 
+            (this.isLoading == false)
+            && (this.isRDClosed === false)
+            && (this.hasAccess === true);
     }
 
     /***
@@ -344,8 +355,9 @@ export default class Rd2PauseForm extends LightningElement {
 
         this.error = constructErrorMessage(error);
 
-        this.template.querySelector(".slds-modal__header").scrollIntoView();
+        const errorDetail = this.error.detail;
+        this.hasAccess = !(errorDetail && errorDetail.includes("RD2_PauseForm_CTRL"));
 
-        console.log('Error: ' + JSON.stringify(this.error));
+        this.template.querySelector(".slds-modal__header").scrollIntoView();
     }
 }
