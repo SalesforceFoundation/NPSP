@@ -291,9 +291,4 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  <nameFieldLabel>Nombre de donación recurrente</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>Nombre de donación recurrente</label>
-  </standardFields>
   </CustomObjectTranslation>

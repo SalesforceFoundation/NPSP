@@ -287,9 +287,4 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  <nameFieldLabel>Naam van terugkerende donatie</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>Naam van terugkerende donatie</label>
-  </standardFields>
-</CustomObjectTranslation>
+  </CustomObjectTranslation>

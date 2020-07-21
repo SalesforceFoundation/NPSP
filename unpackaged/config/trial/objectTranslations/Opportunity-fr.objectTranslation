@@ -23,7 +23,7 @@
   <recordTypes>
     <name>MatchingGift</name>
     <label>Don jumelé</label>
-    <description>Don jumelé de l’employeur du donateur ou d'une autre organisation</description>
+    <description>Don jumelé de l’employeur du donateur ou d&apos;une autre organisation</description>
   </recordTypes>
   <recordTypes>
     <name>Membership</name>

@@ -287,10 +287,5 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  <nameFieldLabel>Nom du don récurrent</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>Nom du don récurrent</label>
-  </standardFields>
   <startsWith>Consonant</startsWith>
   </CustomObjectTranslation>

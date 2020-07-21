@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>%%%NAMESPACE%%%Opportunity__c</name>
@@ -12,18 +12,4 @@
       <section>Grant Deliverable Requirements</section>
     </sections>
   </layouts>
-  <nameFieldLabel>Nombre de aporte</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>Nombre de aporte</label>
-  </standardFields>
-  <gender>Masculine</gender>
-  <caseValues>
-    <plural>false</plural>
-    <value>Aporte</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <value>Aportes</value>
-  </caseValues>
-</CustomObjectTranslation>
+  </CustomObjectTranslation>

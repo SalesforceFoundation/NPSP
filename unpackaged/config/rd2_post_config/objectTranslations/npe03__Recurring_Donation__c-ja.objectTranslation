@@ -287,9 +287,4 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  <nameFieldLabel>継続支援名</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>継続支援名</label>
-  </standardFields>
   </CustomObjectTranslation>

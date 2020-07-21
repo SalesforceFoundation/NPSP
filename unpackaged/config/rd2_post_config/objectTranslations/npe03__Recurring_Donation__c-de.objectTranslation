@@ -287,9 +287,4 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  <nameFieldLabel>Name für wiederkehrende Spende</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>Name für wiederkehrende Spende</label>
-  </standardFields>
   </CustomObjectTranslation>

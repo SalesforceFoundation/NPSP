@@ -704,8 +704,10 @@ tasks:
                   xpath: //ns:fields/ns:help[../ns:name='DonationCampaignImported__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
-                - path: unpackaged/config/rd2_post_config/objectTranslations/npe03**.objectTranslation
-                  xpath: //ns:gender|//ns:caseValues
+                - path: unpackaged/config/rd2_post_config/objectTranslations/**.objectTranslation
+                  xpath: //ns:gender|//ns:caseValues|//ns:nameFieldLabel|//ns:standardFields
+                - path: unpackaged/config/trial/objectTranslations/**.objectTranslation
+                  xpath: //ns:gender|//ns:caseValues|//ns:nameFieldLabel|//ns:standardFields
 
     set_user_language:
         description: Update the language of the Current User to the specified language as '-o param1 English' (Other languages are are Spanish, French, German and Dutch).
