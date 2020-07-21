@@ -62,7 +62,12 @@ Schedulable {
     public static Integer batchSize = (UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c != null) ?
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue() : 50;
 
-
+	/*******************************************************************************************************
+	 * @description Variable to skip the execute method if another instance of this batch is running
+	 */
+    @testVisible
+    private boolean skippingOtherJobIsRunning = false;
+    
     /*******************************************************************************************************
     * @description Class constructor
     */
@@ -103,9 +108,16 @@ Schedulable {
     * @return void
     */
     public void execute(Database.BatchableContext bc, SObject[] result) {
-        RD_RecurringDonations_BATCH.isBatchButton = true;
-        recCount += result.size();
-        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
+		String className = CRLP_Account_BATCH.class.getName();
+        if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
+        	RD_RecurringDonations_BATCH.isBatchButton = true;
+        	recCount += result.size();
+        	failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
+        } else {
+            RecurringDonationsBatchException ex = new RecurringDonationsBatchException();
+            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
+        }
+ 
     }
 
     /*******************************************************************************************************

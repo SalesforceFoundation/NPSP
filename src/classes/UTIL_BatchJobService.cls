@@ -62,6 +62,15 @@ public with sharing class UTIL_BatchJobService {
     public enum ApexJobStatus {
         HOLDING, QUEUED, PREPARING, PROCESSING, COMPLETED, FAILED, ABORTED
     }
+    /******
+    * @description Logs an error when a trying to run a Batch when there is another already running.
+    * @param ex The exception to be logged.
+    * @param className the Apex Batch class name.
+    */
+    public static void logDuplicateBatchError(Exception ex, String className, ERR_Handler_API.Context context) {
+        ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
+        ERR_Handler.processError(ex, context);
+    }
 
     /***
     * @description AsyncApexJob possible status values indicating the batch job is in progress
