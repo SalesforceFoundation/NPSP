@@ -19,8 +19,9 @@ export default class RdScheduleVisualizer extends LightningElement {
     @api displayNum;
 
     @track isLoading = true;
-    @track installments;
     @track columns = [];
+    @track installments;
+    selectedIds = [];
     @track error;
 
     labels = {
@@ -67,6 +68,23 @@ export default class RdScheduleVisualizer extends LightningElement {
     handleRecords(response) {
         if (response && response.dataTable) {
             this.installments = response.dataTable.records;
+
+            this.selectSkippedInstallments();
+        }
+    }
+
+    /*******************************************************************************
+     * @description Highlight rows containing skipped installments
+     */
+    selectSkippedInstallments() {
+        if (this.installments) {
+            this.selectedIds = [];
+
+            for (let i = 0; i < this.installments.length; i++) {
+                if (this.installments[i].isSkipped === true) {
+                    this.selectedIds.push(this.installments[i].installmentNumber);
+                }
+            }
         }
     }
 
