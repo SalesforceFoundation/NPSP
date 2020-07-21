@@ -1845,6 +1845,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         );
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withClosedReason('Random Reason')
             .build();
 
         insert rd;
@@ -1856,7 +1857,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c)),
             'Only fields included in the RD Custom Field Mapping or is necessary for calculation should not be queried back');
-        System.assert(queriedFields.contains('npe03__Open_Ended_Status__c') == false,
+        System.assert(queriedFields.contains('name') == false,
             'Fields not included in the RD Custom Field Mapping and is not necessary for calculation should not be queried back');
     }
 
