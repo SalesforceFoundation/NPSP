@@ -359,7 +359,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             dataImportBatch.fields[DATA_IMPORT_BATCH_ID_INFO.fieldApiName] = this.recordId;
         }
 
-        dataImportBatch = this.stripNameSpacedDonationMatchingRuleFields(dataImportBatch);
+        dataImportBatch = this.stripNamespaceFromDonationMatchingRuleFields(dataImportBatch);
 
         return dataImportBatch;
     }
