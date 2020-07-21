@@ -263,8 +263,13 @@ export default class Rd2PauseForm extends LightningElement {
     */
     handleSave() {
         this.clearError();
-        this.isLoading = true;
 
+        const pausedReasonField = this.template.querySelector("[data-id='pausedReason']");
+        if (pausedReasonField && !pausedReasonField.reportValidity()) {
+            return;
+        }
+
+        this.isLoading = true;
         try {
             const jsonData = JSON.stringify(this.constructPauseData());
 
