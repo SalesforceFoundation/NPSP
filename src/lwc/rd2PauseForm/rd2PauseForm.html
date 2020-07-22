@@ -10,7 +10,8 @@
     <div class="slds-p-horizontal_medium" if:true={error.detail}>
         <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
             icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
-            subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small">
+            subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small"
+            data-id="error" data-qa-locator="error">
         </c-util-page-level-message>
     </div>
 
@@ -18,7 +19,7 @@
         <template if:true={isLoading}>
             <div class="slds-grid slds-grid_align-center">
                 <div class="slds-is-relative slds-size_1-of-1">
-                    <lightning-spinner alternative-text={labels.loadingMessage} variant="brand"></lightning-spinner>
+                    <lightning-spinner alternative-text={labels.loadingMessage} variant="brand" data-id="spinner" data-qa-locator="spinner"></lightning-spinner>
                     <c-util-stencil row-count={maxRowSelection} column-count="3"></c-util-stencil>
                 </div>
             </div>
@@ -27,7 +28,9 @@
         <template if:false={isLoading}>
             <template if:true={isRDClosed}>
                 <div class="slds-p-around_medium">
-                    <lightning-formatted-rich-text value={labels.rdClosedMessage}></lightning-formatted-rich-text>
+                    <lightning-formatted-rich-text value={labels.rdClosedMessage} 
+                        data-id="closedMessage" data-qa-locator="text closedMessage">
+                    </lightning-formatted-rich-text>
                 </div>
             </template>
 
@@ -36,12 +39,14 @@
                 <template if:true={hasAccess}>
                     <lightning-layout multiple-rows="true">
                         <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="12">
-                            <lightning-formatted-rich-text value={labels.description}></lightning-formatted-rich-text>
+                            <lightning-formatted-rich-text value={labels.description} 
+                                data-id="description" data-qa-locator="richtext description">
+                            </lightning-formatted-rich-text>
                         </lightning-layout-item>
 
                         <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="8">
-                            <lightning-combobox data-id="pausedReason" name="pausedReason" label={pausedReason.label}
-                                value={pausedReason.value} placeholder={pausedReason.placeholder}
+                            <lightning-combobox data-id="pausedReason" name="pausedReason" data-qa-locator="combobox pausedReason"
+                                label={pausedReason.label} value={pausedReason.value} placeholder={pausedReason.placeholder}
                                 options={pausedReason.options} onchange={handlePausedReasonChange} required>
                             </lightning-combobox>
                         </lightning-layout-item>
@@ -50,13 +55,16 @@
                     <div class="slds-p-top_large" if:true={installments}>
                         <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
                             is-loading={isLoading} max-row-selection={maxRowSelection}
-                            onrowselection={handleRowSelection} selected-rows={selectedIds}>
+                            onrowselection={handleRowSelection} selected-rows={selectedIds}                            
+                            data-id="installments" data-qa-locator="datatable installments">
                         </lightning-datatable>
                     </div>
 
                     <lightning-layout multiple-rows="true">
                         <lightning-layout-item padding="horizontal-medium" class="slds-p-top_large" size="12">
-                            <lightning-formatted-rich-text value={selectedRowsSummary}></lightning-formatted-rich-text>
+                            <lightning-formatted-rich-text value={selectedRowsSummary} 
+                                data-id="rowSummary" data-qa-locator="richtext rowSummary">
+                            </lightning-formatted-rich-text>
                         </lightning-layout-item>
                     </lightning-layout>
                 </template>
@@ -73,16 +81,17 @@
 
                 <template if:true={isSaveDisplayed}>
                     <lightning-button label={labels.cancelButton} title={labels.cancelButton} variant="neutral"
-                        class="slds-m-right_small" onclick={handleCancel}>
+                        class="slds-m-right_small" onclick={handleCancel} 
+                        data-id="cancelButton" data-qa-locator="button cancel">
                     </lightning-button>
                     <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand"
-                        onclick={handleSave} data-id="saveButton">
+                        onclick={handleSave} data-id="saveButton" data-qa-locator="button save">
                     </lightning-button>
                 </template>
 
                 <template if:false={isSaveDisplayed}>
                     <lightning-button label={labels.okButton} title={labels.okButton} variant="brand"
-                        onclick={handleCancel}>
+                        onclick={handleCancel} data-id="okButton" data-qa-locator="button ok">
                     </lightning-button>
                 </template>
 
