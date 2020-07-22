@@ -1835,17 +1835,16 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-    * @description Verifies that only fields in Custom Field Mapper or is necessary for calculation should be included
+    * @description Verifies that only fields in Custom Field Mapper or is mandatory for calculation should be included
     */
     @IsTest
-    private static void shouldOnlyQueryNecessaryAndCustomFieldMappingFields() {
+    private static void shouldOnlyQueryMandatoryAndCustomFieldMappingFields() {
         RD2_CustomFieldMapper_TEST.createCustomFieldMapping(
-            String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c)
-            ,String.valueOf(Opportunity.Closed_Lost_Reason__c)
+            String.valueOf(npe03__Recurring_Donation__c.OwnerId)
+            ,String.valueOf(Opportunity.OwnerId)
         );
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
-            .withClosedReason('Random Reason')
             .build();
 
         insert rd;
@@ -1855,9 +1854,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         Set<String> queriedFields = service.rds[0].getPopulatedFieldsAsMap().keySet();
         Test.stopTest();
 
-        System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c)),
+        System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.OwnerId)),
             'Only fields included in the RD Custom Field Mapping or is necessary for calculation should not be queried back');
-        System.assert(queriedFields.contains('name') == false,
+        System.assert(queriedFields.contains('npe03__Open_Ended_Status__c') == false,
             'Fields not included in the RD Custom Field Mapping and is not necessary for calculation should not be queried back');
     }
 

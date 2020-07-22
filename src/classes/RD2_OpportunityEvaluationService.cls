@@ -214,22 +214,23 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-    * @description Contains all necessary fields for Recurring Donations Evaluation Services 
+    * @description Contains all mandatory Recurring Donation fields required for the Opportunity Evaluation Service
     */
     private Set<String> rdFields = new Set<String> {
+        'Name',
         'npe03__Organization__c',
         'npe03__Amount__c',
-        'npe03__Recurring_Donation_Campaign__c',
         'npe03__Contact__c',
         'npe03__Contact__r.AccountId',
         'npe03__Date_Established__c',
         'npe03__Donor_Name__c',
-        'npe03__Total_Paid_Installments__c',
         'npe03__Installments__c',
         'npe03__Installment_Period__c',
         'npe03__Last_Payment_Date__c',
         'npe03__Next_Payment_Date__c',
         'npe03__Paid_Amount__c',
+        'npe03__Recurring_Donation_Campaign__c',
+        'npe03__Total_Paid_Installments__c',
         String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c),
         String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
         String.valueOf(npe03__Recurring_Donation__c.CurrentYearValue__c),
