@@ -1855,9 +1855,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.stopTest();
 
         System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.OwnerId)),
-            'Only fields included in the RD Custom Field Mapping or is necessary for calculation should not be queried back');
+            'RD field used in the custom mapping should be queried.');
         System.assert(queriedFields.contains('npe03__Open_Ended_Status__c') == false,
-            'Fields not included in the RD Custom Field Mapping and is not necessary for calculation should not be queried back');
+            'RD legacy field not used in the custom mapping should not be queried.');
     }
 
     // Helpers
