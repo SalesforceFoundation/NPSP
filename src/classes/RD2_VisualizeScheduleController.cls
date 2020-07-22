@@ -568,7 +568,7 @@ public with sharing class RD2_VisualizeScheduleController {
             this.label = field.getLabel();
             this.type = getType(field.getType());
             this.typeAttributes = getTypeAttributes(field.getType());
-            this.sortable = field.isSortable();
+            //this.sortable = field.isSortable();// records are not sortable in the datatable
             this.isAccessible = field.isAccessible();
         }
 

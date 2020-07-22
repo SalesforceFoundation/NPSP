@@ -1,13 +1,13 @@
 <template>
 
-    <header class="slds-modal__header slds-clearfix">
+    <header class="slds-modal__header slds-clearfix slds-align_absolute-center" data-qa-locator="heading">
         <h2
             class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium">
             {pageHeader}
         </h2>
     </header>
 
-    <div class="slds-p-horizontal_medium" if:true={error.detail}>
+    <div class="slds-p-horizontal_small" if:true={error.detail}>
         <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
             icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
             subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small"
@@ -15,11 +15,13 @@
         </c-util-page-level-message>
     </div>
 
-    <div class="slds-modal__content slds-p-horizontal_medium">
+    <div class="slds-modal__content slds-p-horizontal_small">
         <template if:true={isLoading}>
             <div class="slds-grid slds-grid_align-center">
                 <div class="slds-is-relative slds-size_1-of-1">
-                    <lightning-spinner alternative-text={labels.loadingMessage} variant="brand" data-id="spinner" data-qa-locator="spinner"></lightning-spinner>
+                    <lightning-spinner alternative-text={labels.loadingMessage} variant="brand" 
+                        data-id="spinner" data-qa-locator="spinner">
+                    </lightning-spinner>
                     <c-util-stencil row-count={maxRowSelection} column-count="3"></c-util-stencil>
                 </div>
             </div>
@@ -38,13 +40,13 @@
 
                 <template if:true={hasAccess}>
                     <lightning-layout multiple-rows="true">
-                        <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="12">
+                        <lightning-layout-item padding="horizontal-small" class="slds-p-top_medium" size="12">
                             <lightning-formatted-rich-text value={labels.description} 
                                 data-id="description" data-qa-locator="richtext description">
                             </lightning-formatted-rich-text>
                         </lightning-layout-item>
 
-                        <lightning-layout-item padding="horizontal-medium" class="slds-p-top_medium" size="8">
+                        <lightning-layout-item padding="horizontal-small" class="slds-p-top_medium" size="8">
                             <lightning-combobox data-id="pausedReason" name="pausedReason" data-qa-locator="combobox pausedReason"
                                 label={pausedReason.label} value={pausedReason.value} placeholder={pausedReason.placeholder}
                                 options={pausedReason.options} onchange={handlePausedReasonChange} required>
@@ -55,13 +57,14 @@
                     <div class="slds-p-top_large" if:true={installments}>
                         <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
                             is-loading={isLoading} max-row-selection={maxRowSelection}
-                            onrowselection={handleRowSelection} selected-rows={selectedIds}                            
+                            onrowselection={handleRowSelection} selected-rows={selectedIds} 
+                            resize-column-disabled                           
                             data-id="installments" data-qa-locator="datatable installments">
                         </lightning-datatable>
                     </div>
 
                     <lightning-layout multiple-rows="true">
-                        <lightning-layout-item padding="horizontal-medium" class="slds-p-top_large" size="12">
+                        <lightning-layout-item padding="horizontal-small" class="slds-p-top_large" size="12">
                             <lightning-formatted-rich-text value={selectedRowsSummary} 
                                 data-id="rowSummary" data-qa-locator="richtext rowSummary">
                             </lightning-formatted-rich-text>
