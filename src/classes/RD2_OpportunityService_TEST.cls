@@ -969,6 +969,38 @@ private with sharing class RD2_OpportunityService_TEST {
             'Opp Account should be the same as the Contact household Account');
     }
 
+    /**
+     * @description Validate that an RD Installment Opportunity is still created propertly even if Automatic Payments
+     * are not enabled in the Org
+     */
+    @IsTest
+    private static void shouldCreateOpportunityWhenPaymentsIsDisabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration(STAGE_NAME_PLEDGED);
+
+        // turn off automatic payments
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
+            npe01__Payments_Enabled__c = false
+        ));
+
+        Test.startTest();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
+
+        System.assertEquals(getExpectedOppName(rd, CLOSE_DATE), opps[0].Name, 'Opportunity Name should match');
+        System.assertEquals(getContact().Id, opps[0].npe01__Contact_Id_for_Role__c);
+        System.assertEquals(rd.npe03__Amount__c, opps[0].Amount);
+        System.assertEquals(rd.npe03__Contact__c, opps[0].Primary_Contact__c);
+        System.assertEquals(CLOSE_DATE, opps[0].CloseDate);
+        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, opps[0].CampaignId);
+        System.assertEquals(STAGE_NAME_PLEDGED, opps[0].StageName);
+        System.assert(paymentGateway.getRecords(opps).isEmpty(), 'No Payment Records should exist');
+    }
+
     /***
     * @description Verifies the Account on Opportunity is not nulled
     * when Recurring Donation having Organization specified is updated
