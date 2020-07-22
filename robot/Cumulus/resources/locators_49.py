@@ -286,7 +286,6 @@ npsp_lex_locators={
         'modal_dropdown_selector': "//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger') and @role='combobox']",
         'modal_input_field': "//label[text()='{}']/following-sibling::div/input",
         'modal_selection_value': "//lightning-base-combobox-item[@data-value='{}']",
-        'modal_button': "//lightning-button[@data-id='{}']",
         'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
         'text_message':'//span[contains(@class,"slds-text-color_error")]',
         'rd2_installed': "//c-progress-ring/following-sibling::lightning-formatted-text[text() = 'Enable Enhanced Recurring Donations']",

@@ -1226,9 +1226,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     @capture_screenshot_on_error
     def click_rd2_modal_button(self, name):
-        if name == "Save":
-            dataid = "submitButton"
-        btnlocator = npsp_lex_locators["erd"]["modal_button"].format(dataid)
+        """Based on the button name (Cancel)  or (Save) on the modal footer, select and click on the respective button"""
+        btnlocator = npsp_lex_locators["button-with-text"].format(name)
         self.selenium.scroll_element_into_view(btnlocator)
         ele = self.selenium.get_webelement(btnlocator)
         self.selenium.click_element(ele)
