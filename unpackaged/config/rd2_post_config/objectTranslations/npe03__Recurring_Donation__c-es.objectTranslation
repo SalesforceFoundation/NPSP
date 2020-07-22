@@ -27,7 +27,6 @@
     <name>npe03__Schedule_Type__c</name>
   </fields>
   <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
-
   <fields>
     <name>npe03__Amount__c</name>
     <help>El importe de cada oportunidad de cuota.</help>

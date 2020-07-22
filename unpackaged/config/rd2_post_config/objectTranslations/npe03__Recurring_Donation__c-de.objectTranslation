@@ -23,7 +23,6 @@
     <name>npe03__Total__c</name>
   </fields>
   <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
-
   <fields>
     <name>npe03__Amount__c</name>
     <help>Der Betrag für jede Raten-Opportunity.</help>
