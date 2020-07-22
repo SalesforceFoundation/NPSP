@@ -1,5 +1,12 @@
 #!/bin/bash
 
+## Verify that JQ is installed before continuing
+if ! command -v jq &> /dev/null
+then
+    echo "JQ is not installed. Use 'brew install jq' to install JQ from the command line."
+    exit
+fi
+
 ECHO "# === Create a temporary org definition file with sample data disabled"
 mv orgs/feature.json orgs/feature-save.json
 jq '.hasSampleData = false' orgs/feature-save.json > orgs/temp.json
