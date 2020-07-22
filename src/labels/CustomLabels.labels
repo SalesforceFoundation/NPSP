@@ -7105,7 +7105,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Warning for preventing update to certain fields when GAU Allocations exist on Donation</shortDescription>
+        <shortDescription>Warning for preventing update to certain fields when GAU Allocs exist on Donation</shortDescription>
         <value>Since this donation has at least one GAU Allocation assigned, you can&apos;t update certain fields.</value>
     </labels>
     <labels>
