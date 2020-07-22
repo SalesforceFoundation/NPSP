@@ -7106,7 +7106,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message for preventing update to certain fields when GAU Allocations already exist on Donation</shortDescription>
-        <value>Since this donation has at least one GAU Allocation assigned, you can't update certain fields.</value>
+        <value>Since this donation has at least one GAU Allocation assigned, you can&apos;t update certain fields.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>
