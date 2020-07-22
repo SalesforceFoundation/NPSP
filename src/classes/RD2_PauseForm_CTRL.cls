@@ -39,12 +39,12 @@ public with sharing class RD2_PauseForm_CTRL {
     * @description Recurring Donation Schedule service
     */
     @TestVisible
-    private static RD2_ScheduleService scheduleService {
+    private static RD2_ScheduleService.PauseScheduleHandler pauseHandler {
         get {
-            if (scheduleService == null) {
-                scheduleService = new RD2_ScheduleService();
+            if (pauseHandler == null) {
+                pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
             }
-            return scheduleService;
+            return pauseHandler;
         } set;
     }
 
@@ -54,14 +54,22 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     @AuraEnabled(cacheable=false)
     public static String getPauseData(Id rdId) {
-        PauseData pause = new PauseData();
-        pause.isRDClosed = isClosed(rdId);
+        String jsonData;
+        try {
+            PauseData pause = new PauseData();
+            pause.isRDClosed = isClosed(rdId);
 
-        if (!pause.isRDClosed) {
-            pause.pausedReason = getPausedReason(rdId);
+            if (!pause.isRDClosed) {
+                pause.pausedReason = getPausedReason(rdId);
+            }
+
+            jsonData = JSON.serialize(pause);
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
         }
 
-        return JSON.serialize(pause);
+        return jsonData;
     }
 
     /**
@@ -69,14 +77,22 @@ public with sharing class RD2_PauseForm_CTRL {
      * @return 
      */
     public static Boolean isClosed(Id rdId) {
-        npe03__Recurring_Donation__c rd = [
-            SELECT Status__c
-            FROM npe03__Recurring_Donation__c
-            WHERE Id = :rdId
-            LIMIT 1
-        ];
+        Boolean isClosed = false;
+        try {
+            npe03__Recurring_Donation__c rd = [
+                SELECT Status__c
+                FROM npe03__Recurring_Donation__c
+                WHERE Id = :rdId
+                LIMIT 1
+            ];
 
-        return (new RD2_RecurringDonation(rd)).isClosed();
+            isClosed = (new RD2_RecurringDonation(rd)).isClosed();
+
+        } catch (Exception e) {
+            //the record has been deleted; 
+        }
+
+        return isClosed;        
     }
 
     /**
@@ -89,7 +105,7 @@ public with sharing class RD2_PauseForm_CTRL {
         reason.options = getPausedReasonOptions();
         reason.placeholder = System.Label.lblSelectOptionPlaceholder;
 
-        RecurringDonationSchedule__c schedule = scheduleService.getPauseSchedule(rdId);
+        RecurringDonationSchedule__c schedule = pauseHandler.getPauseSchedule(rdId);
         reason.value = schedule == null ? null : schedule.StatusReason__c;
 
         return reason;
@@ -127,8 +143,8 @@ public with sharing class RD2_PauseForm_CTRL {
         try {
             dataByKey = RD2_VisualizeScheduleController.getInstallments(recordId, maxRowDisplay);
 
-        } catch(Exception e) {
-            if (e.getMessage().contains(System.Label.RD2_ScheduleVisualizerMessageNoSchedule)) {
+        } catch (Exception e) {
+            if (!e.getMessage().contains(System.Label.RD2_ScheduleVisualizerMessageNoSchedule)) {
                 throw e;
             }
         }
@@ -146,12 +162,7 @@ public with sharing class RD2_PauseForm_CTRL {
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
 
-            //deactivate current schedule(s)
-            delete [
-                SELECT Id FROM RecurringDonationSchedule__c 
-                WHERE RecurringDonation__c = :pause.rdId
-                AND IsPause__c = true
-            ];//TODO it should deactivate not delete
+            pauseHandler.cancelPauseSchedule(pause.rdId);
 
             //create new pause schedule
             RecurringDonationSchedule__c schedule = buildPauseSchedule(pause);
@@ -159,7 +170,7 @@ public with sharing class RD2_PauseForm_CTRL {
                 insert schedule;
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
     }

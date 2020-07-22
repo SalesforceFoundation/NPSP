@@ -89,18 +89,29 @@ public with sharing class RD2_VisualizeScheduleController {
         DataTable dataTable = buildInstallmentDataTable(rd.getSObject());
 
         if (dataTable.getColumns().isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSInstallment);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerFLSInstallment);
         }
 
         getInstallmentRecords(rd, displayNum, dataTable);
 
         if (dataTable.getRecords().isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
         }
 
         sanitizeInstallments(dataTable);
 
         return new Map<String, Object>{ 'dataTable' => dataTable };
+    }    
+
+    /***
+    * @description Throws AuraHandledException
+    * @param errMessage
+    * @return void
+    */
+    private static void throwAuraHandledException(String errMessage) {
+        AuraHandledException e = new AuraHandledException(errMessage);
+        e.setMessage(errMessage);
+        throw e;
     }
 
     /**
@@ -157,7 +168,6 @@ public with sharing class RD2_VisualizeScheduleController {
 
         return new Map<String, Object>{ 'dataTable' => dataTable };
     }
-
 
     /**
      * @description Constructs the data table columns for the projected installments display

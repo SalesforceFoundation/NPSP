@@ -65,6 +65,19 @@ public without sharing class RD2_ScheduleService {
         } set;
     }
 
+    /**
+    * @description
+    */
+    private PauseScheduleHandler pauseHandler {
+        get {
+            if (pauseHandler == null) {
+                pauseHandler = new PauseScheduleHandler();
+            }
+            return pauseHandler;
+        }
+        set;
+    }
+
     /***
     * @description Builds new recurring donation schedule(s) for recurring donation
     * @param rd Recurring donation record
@@ -126,6 +139,15 @@ public without sharing class RD2_ScheduleService {
 
         if (schedules != null) {
             for (RecurringDonationSchedule__c schedule : schedules) {
+                //The pause schedule should stay the same if the RD schedule data is updated
+                //unless the RD is closed, when all schedules should be closed
+                if (pauseHandler.isPause(schedule)) {
+                    if (isClosed) {
+                        schedule.EndDate__c = currentDate.addDays(-1);
+                    } else {
+                        continue;
+                    }
+                }
 
                 if (!isClosed && schedule.StartDate__c <= currentDate) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
@@ -303,21 +325,9 @@ public without sharing class RD2_ScheduleService {
     */
     public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
         return 
-            isWithinDateRange(schedule, referenceDate) 
+            !pauseHandler.isPause(schedule)
+            && isWithinDateRange(schedule, referenceDate) 
             && isValidInstallmentFrequency(schedule);
-    }
-
-    /***
-    * @description 
-    * @param 
-    * @return Boolean
-    */
-    public Boolean isPause(RecurringDonationSchedule__c schedule, Date referenceDate) {
-        if (!schedule.IsPause__c) {
-            return false;
-        }
-
-        return isWithinDateRange(schedule, referenceDate);
     }
 
     /***
@@ -359,10 +369,10 @@ public without sharing class RD2_ScheduleService {
         List<RecurringDonationSchedule__c> filteredSchedules = new List<RecurringDonationSchedule__c>();
         List<RecurringDonationSchedule__c> pauseSchedules = new List<RecurringDonationSchedule__c>();
         for (RecurringDonationSchedule__c schedule : schedules) {
-            if (isActive(schedule, referenceDate) && !schedule.IsPause__c) {
+            if (isActive(schedule, referenceDate)) {
                 filteredSchedules.add(schedule);
 
-            } else if (isPause(schedule, referenceDate)) {
+            } else if (pauseHandler.isActivePause(schedule, referenceDate)) {
                 pauseSchedules.add(schedule);
             }
         }
@@ -378,31 +388,13 @@ public without sharing class RD2_ScheduleService {
                 (previousInstallment == null || previousInstallment.nextDonationDate > nextDonationDate)) {
                     nextInstallment = new Installment(schedule);
                     nextInstallment.nextDonationDate = nextDonationDate;
-                    nextInstallment.isSkipped = isSkipped(nextInstallment, pauseSchedules);
+                    nextInstallment.isSkipped = pauseHandler.isSkipped(nextInstallment, pauseSchedules);
             }
 
             previousInstallment = nextInstallment;
         }
 
         return nextInstallment;
-    }
-
-    /***
-    * @description 
-    * @param 
-    * @return Boolean
-    */
-    private Boolean isSkipped(Installment installment, List<RecurringDonationSchedule__c> pauseSchedules) {
-        if (pauseSchedules.isEmpty()) {
-            return false;
-        }
-
-        for (RecurringDonationSchedule__c schedule : pauseSchedules) {
-            if (schedule.StartDate__c <= installment.nextDonationDate && installment.nextDonationDate <= schedule.EndDate__c) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /***
@@ -613,7 +605,7 @@ public without sharing class RD2_ScheduleService {
 
         Boolean first1stAnd15thFound = false;
         for (RecurringDonationSchedule__c schedule : schedules) {
-            if (schedule.IsPause__c) {
+            if (pauseHandler.isPause(schedule)) {
                 continue;
             }
 
@@ -695,10 +687,12 @@ public without sharing class RD2_ScheduleService {
     public Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
         Map<Id, List<RecurringDonationSchedule__c>> schedulesById = new Map<Id, List<RecurringDonationSchedule__c>>();
 
-        for (RecurringDonationSchedule__c schedule : Database.query(buildScheduleQuery())) {
-            if (!isActive(schedule, currentDate)) {
+        for (RecurringDonationSchedule__c schedule : Database.query(new ScheduleQueryHandler().buildQuery())) {
+            Boolean isActive = isActive(schedule, currentDate) || pauseHandler.isActivePause(schedule, currentDate);
+            if (!isActive) {
                 continue;
             }
+
             if (!schedulesById.containsKey(schedule.RecurringDonation__c)) {
                 schedulesById.put(schedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
             }
@@ -706,68 +700,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         return schedulesById;
-    }
-     
-    
-    /***
-    * @description 
-    * @param 
-    * @return RecurringDonationSchedule__c
-    */
-    public RecurringDonationSchedule__c getPauseSchedule(Id rdId) {
-        String soql = new UTIL_Query()
-            .withSelectFields(getScheduleFields())
-            .withFrom(RecurringDonationSchedule__c.SObjectType)
-            .withWhere('RecurringDonation__c = :rdId')
-            .withWhere('IsPause__c = true')
-            .withWhere('EndDate__c >= :currentDate')
-            .withOrderBy('StartDate__c')
-            .build();
-
-        for (RecurringDonationSchedule__c schedule : Database.query(soql)) {
-            if (isPause(schedule, currentDate)) {
-                return schedule;
-            }            
-        }
-
-        return null;
-    }
-
-
-    /***
-    * @description Build dynamic soql query string with support for date injection
-    * @return String
-    */
-    private String buildScheduleQuery() {
-        return new UTIL_Query()
-            .withSelectFields(getScheduleFields())
-            .withFrom(RecurringDonationSchedule__c.SObjectType)
-            .withWhere('RecurringDonation__c IN :rds')
-            .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')
-            .withOrderBy('StartDate__c')
-            .build();
-    }
-
-    /***
-    * @description 
-    * @param 
-    * @return 
-    */
-    private Set<String> getScheduleFields() {
-        return new Set<String> {
-            'Campaign__c',
-            'Campaign__r.Name',
-            'StartDate__c',
-            'EndDate__c',
-            'DayOfMonth__c',
-            'InstallmentAmount__c',
-            'InstallmentFrequency__c',
-            'InstallmentPeriod__c',
-            'PaymentMethod__c',
-            'RecurringDonation__c',
-            'IsPause__c',
-            'StatusReason__c'
-        };
     }
 
     /***
@@ -994,6 +926,146 @@ public without sharing class RD2_ScheduleService {
             recurringDonationId = rdSchedule.RecurringDonation__c;
             scheduleId = rdSchedule.Id;
             startDate = rdSchedule.StartDate__c;
+        }
+    }
+
+    public class PauseScheduleHandler {
+
+        /***
+        * @description 
+        * @param 
+        * @return Boolean
+        */
+        public Boolean isPause(RecurringDonationSchedule__c schedule) {
+            return schedule.IsPause__c;
+        }
+
+
+        /***
+        * @description 
+        * @param 
+        * @return Boolean
+        */
+        public Boolean isActivePause(RecurringDonationSchedule__c schedule, Date referenceDate) {
+            if (!schedule.IsPause__c) {
+                return false;
+            }
+
+            return isWithinDateRange(schedule, referenceDate);
+        }
+
+        /***
+        * @description Indicates if the schedule is active starting from the reference date
+        * @param schedule Recurring Donation schedule
+        * @param referenceDate Reference Date
+        * @return Boolean
+        */
+        private Boolean isWithinDateRangeX(RecurringDonationSchedule__c schedule, Date referenceDate) {
+            return schedule.StartDate__c <= schedule.EndDate__c 
+                && schedule.StartDate__c <= referenceDate
+                && referenceDate <= schedule.EndDate__c;
+        }
+        private Boolean isWithinDateRange(RecurringDonationSchedule__c schedule, Date referenceDate) {
+            return schedule.EndDate__c == null 
+                || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
+        }
+
+        /***
+        * @description 
+        * @param 
+        * @return void
+        */
+        public void cancelPauseSchedule(Id rdId) {
+            RecurringDonationSchedule__c schedule = getPauseSchedule(rdId);
+
+            if (schedule == null) {
+                return;
+            }
+
+            schedule.EndDate__c = currentDate.addDays(-1);
+            update schedule;
+        }        
+        
+        /***
+        * @description 
+        * @param 
+        * @return RecurringDonationSchedule__c
+        */
+        public RecurringDonationSchedule__c getPauseSchedule(Id rdId) {
+            String soql = new UTIL_Query()
+                .withSelectFields(new ScheduleQueryHandler().getFields())
+                .withFrom(RecurringDonationSchedule__c.SObjectType)
+                .withWhere('RecurringDonation__c = :rdId')
+                .withWhere('IsPause__c = true')
+                .withWhere('EndDate__c >= :currentDate')
+                .withOrderBy('StartDate__c')
+                .build();
+
+            for (RecurringDonationSchedule__c schedule : Database.query(soql)) {
+                if (isActivePause(schedule, currentDate)) {
+                    return schedule;
+                }            
+            }
+
+            return null;
+        }
+
+        /***
+        * @description 
+        * @param 
+        * @return Boolean
+        */
+        public Boolean isSkipped(Installment installment, List<RecurringDonationSchedule__c> pauseSchedules) {
+            if (pauseSchedules.isEmpty()) {
+                return false;
+            }
+
+            for (RecurringDonationSchedule__c schedule : pauseSchedules) {
+                if (schedule.StartDate__c <= installment.nextDonationDate && installment.nextDonationDate <= schedule.EndDate__c) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
+    public class ScheduleQueryHandler {
+
+        /***
+        * @description Build dynamic soql query string with support for date injection
+        * @return String
+        */
+        public String buildQuery() {
+            return new UTIL_Query()
+                .withSelectFields(getFields())
+                .withFrom(RecurringDonationSchedule__c.SObjectType)
+                .withWhere('RecurringDonation__c IN :rds')
+                .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')
+                .withOrderBy('StartDate__c')
+                .build();
+        }
+
+        /***
+        * @description 
+        * @param 
+        * @return 
+        */
+        public Set<String> getFields() {
+            return new Set<String> {
+                'Campaign__c',
+                'Campaign__r.Name',
+                'StartDate__c',
+                'EndDate__c',
+                'DayOfMonth__c',
+                'InstallmentAmount__c',
+                'InstallmentFrequency__c',
+                'InstallmentPeriod__c',
+                'PaymentMethod__c',
+                'RecurringDonation__c',
+                'IsPause__c',
+                'StatusReason__c'
+            };
         }
     }
 }
