@@ -101,17 +101,6 @@ public with sharing class RD2_VisualizeScheduleController {
         sanitizeInstallments(dataTable);
 
         return new Map<String, Object>{ 'dataTable' => dataTable };
-    }    
-
-    /***
-    * @description Throws AuraHandledException
-    * @param errMessage
-    * @return void
-    */
-    private static void throwAuraHandledException(String errMessage) {
-        AuraHandledException e = new AuraHandledException(errMessage);
-        e.setMessage(errMessage);
-        throw e;
     }
 
     /**
@@ -150,7 +139,7 @@ public with sharing class RD2_VisualizeScheduleController {
         DataTable dataTable = buildScheduleDataTable(rd.getSObject());
 
         if (dataTable.getColumns().size() <= 1) {//"isCurrent" field is always part of the data table fields
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
         }
 
         Integer counter = 1;
@@ -161,7 +150,7 @@ public with sharing class RD2_VisualizeScheduleController {
         }
 
         if (dataTable.getRecords().isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule);
         }
 
         sanitizeSchedules(dataTable);
@@ -376,12 +365,27 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     private static void validate(Id recordId) {
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
+            // The label value: "You must enable Enhanced Recurring Donations to use this component."
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
         }
 
         if (recordId == null || recordId.getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
+            // The label value: "This component must be used on a Recurring Donations record page."
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
         }
+    }
+
+    /***
+    * @description Throws AuraHandledException
+    * The wrapping of the error message again is required
+    * so the specific message is displayed instead of generic "Script thrown exception".
+    * @param errMessage Exception message that needs to be set again
+    * @return void
+    */
+    private static void throwAuraHandledException(String errMessage) {
+        AuraHandledException e = new AuraHandledException(errMessage);
+        e.setMessage(errMessage);
+        throw e;
     }
 
     /**
@@ -412,7 +416,7 @@ public with sharing class RD2_VisualizeScheduleController {
             this.installmentNumber = num;
             this.paymentMethod = UTIL_Describe.getTranslatedPicklistLabel(
                 npe03__Recurring_Donation__c.SObjectType,
-                npe03__Recurring_Donation__c.PaymentMethod__c, 
+                npe03__Recurring_Donation__c.PaymentMethod__c,
                 installment.paymentMethod
             );
             this.donationDate = installment.nextDonationDate;

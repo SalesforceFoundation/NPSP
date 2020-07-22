@@ -143,7 +143,9 @@ public without sharing class RD2_ScheduleService {
                 //unless the RD is closed, when all schedules should be closed
                 if (pauseHandler.isPause(schedule)) {
                     if (isClosed) {
-                        schedule.EndDate__c = currentDate.addDays(-1);
+                        schedule.EndDate__c = (schedule.EndDate__c == null || schedule.EndDate__c > currentDate )
+                            ? currentDate.addDays(-1)
+                            : schedule.EndDate__c;//the pause end date has passed
                     } else {
                         continue;
                     }
@@ -324,9 +326,9 @@ public without sharing class RD2_ScheduleService {
     * @return Boolean
     */
     public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
-        return 
+        return
             !pauseHandler.isPause(schedule)
-            && isWithinDateRange(schedule, referenceDate) 
+            && isWithinDateRange(schedule, referenceDate)
             && isValidInstallmentFrequency(schedule);
     }
 
@@ -337,7 +339,7 @@ public without sharing class RD2_ScheduleService {
     * @return Boolean
     */
     private Boolean isWithinDateRange(RecurringDonationSchedule__c schedule, Date referenceDate) {
-        return schedule.EndDate__c == null 
+        return schedule.EndDate__c == null
             || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
     }
 
@@ -402,7 +404,7 @@ public without sharing class RD2_ScheduleService {
     * @param rd Recurring Donation record
     * @return Date
     */
-    public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {   
+    public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
         return getNextDonationDate(rd, buildNewSchedules(rd));
     }
 
@@ -412,7 +414,7 @@ public without sharing class RD2_ScheduleService {
     * @param rdSchedules Schedules on the Recurring Donation record
     * @return Date
     */
-    public Date getNextDonationDate(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {   
+    public Date getNextDonationDate(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
         RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(rd, rdSchedules);
 
         return record != null && record.getInstallment() != null
@@ -430,15 +432,15 @@ public without sharing class RD2_ScheduleService {
     public RD2_OpportunityMatcher.Record getNextDonationDateRecord(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
         RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
-        if (rdSchedules == null || rdSchedules.isEmpty() 
-            || rdRecord.isClosed() 
+        if (rdSchedules == null || rdSchedules.isEmpty()
+            || rdRecord.isClosed()
             || rdRecord.isFixedLengthComplete()
         ) {
             return null;
         }
 
         evaluateScheduleEndDate(rdRecord, rdSchedules);
-        
+
         RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//TODO cache current matcher by RD Id
             .includeCurrent(rd.npe03__Donations__r);
 
@@ -749,7 +751,7 @@ public without sharing class RD2_ScheduleService {
             }
             newSchedulesByRdId.get(rd.RecurringDonation__c).add(rd);
         }
-    }   
+    }
 
     /**
     * @description Evaluate Recurring Donation and set End Date on the RD scheulde
@@ -759,9 +761,9 @@ public without sharing class RD2_ScheduleService {
     * @return void
     */
     public void evaluateScheduleEndDate(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
-        if (rdSchedules == null 
-            || rdSchedules.isEmpty() 
-            || rdRecord.isClosed() 
+        if (rdSchedules == null
+            || rdSchedules.isEmpty()
+            || rdRecord.isClosed()
         ) {
             return;
         }
@@ -809,7 +811,7 @@ public without sharing class RD2_ScheduleService {
                 getVisualizedInstallments(currentDate, estimatedOpenSlots, rdSchedules)
             )
             .getRecords();
-        
+
         Date scheduleEndDate = getScheduleEndDateForFixedLength(records, plannedInstallments, paidInstallments);
 
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
@@ -820,7 +822,7 @@ public without sharing class RD2_ScheduleService {
     }
 
     /**
-    * @description Dynamically calculates the schedule end date 
+    * @description Dynamically calculates the schedule end date
     * based on existing Opportunities and projected installments
     * @param records Opportunity matcher records
     * @param plannedInstallments Number of planned installments
@@ -861,7 +863,7 @@ public without sharing class RD2_ScheduleService {
             endDate = scheduleEndRecord.getInstallment().nextDonationDate;
 
         } else {
-            endDate = scheduleEndRecord.getOpportunity().CloseDate; 
+            endDate = scheduleEndRecord.getOpportunity().CloseDate;
         }
 
         return endDate;
@@ -932,8 +934,8 @@ public without sharing class RD2_ScheduleService {
     public class PauseScheduleHandler {
 
         /***
-        * @description 
-        * @param 
+        * @description
+        * @param
         * @return Boolean
         */
         public Boolean isPause(RecurringDonationSchedule__c schedule) {
@@ -942,8 +944,8 @@ public without sharing class RD2_ScheduleService {
 
 
         /***
-        * @description 
-        * @param 
+        * @description
+        * @param
         * @return Boolean
         */
         public Boolean isActivePause(RecurringDonationSchedule__c schedule, Date referenceDate) {
@@ -960,19 +962,14 @@ public without sharing class RD2_ScheduleService {
         * @param referenceDate Reference Date
         * @return Boolean
         */
-        private Boolean isWithinDateRangeX(RecurringDonationSchedule__c schedule, Date referenceDate) {
-            return schedule.StartDate__c <= schedule.EndDate__c 
-                && schedule.StartDate__c <= referenceDate
-                && referenceDate <= schedule.EndDate__c;
-        }
         private Boolean isWithinDateRange(RecurringDonationSchedule__c schedule, Date referenceDate) {
-            return schedule.EndDate__c == null 
-                || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
+            return schedule.EndDate__c == null
+                || (referenceDate <= schedule.EndDate__c && schedule.StartDate__c <= schedule.EndDate__c);
         }
 
         /***
-        * @description 
-        * @param 
+        * @description
+        * @param
         * @return void
         */
         public void cancelPauseSchedule(Id rdId) {
@@ -984,11 +981,11 @@ public without sharing class RD2_ScheduleService {
 
             schedule.EndDate__c = currentDate.addDays(-1);
             update schedule;
-        }        
-        
+        }
+
         /***
-        * @description 
-        * @param 
+        * @description
+        * @param
         * @return RecurringDonationSchedule__c
         */
         public RecurringDonationSchedule__c getPauseSchedule(Id rdId) {
@@ -1004,15 +1001,15 @@ public without sharing class RD2_ScheduleService {
             for (RecurringDonationSchedule__c schedule : Database.query(soql)) {
                 if (isActivePause(schedule, currentDate)) {
                     return schedule;
-                }            
+                }
             }
 
             return null;
         }
 
         /***
-        * @description 
-        * @param 
+        * @description
+        * @param
         * @return Boolean
         */
         public Boolean isSkipped(Installment installment, List<RecurringDonationSchedule__c> pauseSchedules) {
@@ -1047,9 +1044,9 @@ public without sharing class RD2_ScheduleService {
         }
 
         /***
-        * @description 
-        * @param 
-        * @return 
+        * @description
+        * @param
+        * @return
         */
         public Set<String> getFields() {
             return new Set<String> {
