@@ -60,7 +60,8 @@ public with sharing class RD2_PauseForm_CTRL {
             pause.isRDClosed = isClosed(rdId);
 
             if (!pause.isRDClosed) {
-                pause.pausedReason = getPausedReason(rdId);
+                pause.pausedReason = buildPausedReason();
+                populateScheduleData(pause, rdId);
             }
 
             jsonData = JSON.serialize(pause);
@@ -99,16 +100,28 @@ public with sharing class RD2_PauseForm_CTRL {
      * @description Returns the Paused Reason value and label select options
      * @return PausedReason
      */
-    public static PausedReason getPausedReason(Id rdId) {
+    private static PausedReason buildPausedReason() {
         PausedReason reason = new PausedReason();
         reason.label = System.Label.RD2_PausedReasonLabel;
         reason.options = getPausedReasonOptions();
         reason.placeholder = System.Label.lblSelectOptionPlaceholder;
 
-        RecurringDonationSchedule__c schedule = pauseHandler.getPauseSchedule(rdId);
-        reason.value = schedule == null ? null : schedule.StatusReason__c;
-
         return reason;
+    }
+
+    /**
+     * @description Returns the Paused Reason value and label select options
+     * @return void
+     */
+    private static void populateScheduleData(PauseData pause, Id rdId) {
+        RecurringDonationSchedule__c schedule = pauseHandler.getPauseSchedule(rdId);
+
+        if (schedule == null) {
+            return;
+        }
+
+        pause.pausedReason.value = schedule.StatusReason__c;
+        pause.scheduleId = schedule.Id;
     }
 
     /**
@@ -211,6 +224,7 @@ public with sharing class RD2_PauseForm_CTRL {
         public Boolean isRDClosed;
         public Date startDate;
         public Date resumeAfterDate;
+        public Id scheduleId;
         public PausedReason pausedReason;
     }
 

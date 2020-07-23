@@ -43,8 +43,10 @@ export default class Rd2PauseForm extends LightningElement {
     @track hasAccess = true;
     @track isRDClosed;
     @track isSaveDisplayed;
+    @track isSaveDisabled = false;
     @track pageHeader = '';
     @track pausedReason = {};
+    scheduleId;
 
     maxRowDisplay = 12;
     maxRowSelection = 12;
@@ -100,13 +102,14 @@ export default class Rd2PauseForm extends LightningElement {
 
                 this.isRDClosed = pauseData.isRDClosed;
                 this.pausedReason = pauseData.pausedReason;
+                this.scheduleId = pauseData.scheduleId;
             })
             .catch(error => {
                 this.handleError(error);
             })
             .finally(() => {
                 this.isLoading = false;
-                this.handleButtonDisplay();
+                this.handleButtonsDisplay();
             });
     }
 
@@ -249,18 +252,34 @@ export default class Rd2PauseForm extends LightningElement {
         } else {
             this.selectedRowsSummary = null;
         }
+
+        this.refreshSaveButton();
     }
 
     /***
     * @description
     */
-    handleButtonDisplay() {
+    handleButtonsDisplay() {
         this.isSaveDisplayed = !this.isLoading && !this.isRDClosed && this.hasAccess;
 
         // Disable data display and Save button when installments are not returned
         if (this.installments == null && this.isSaveDisplayed) {
             this.isSaveDisplayed = false;
             this.hasAccess = false;
+        }
+
+        this.refreshSaveButton();
+    }
+
+    /***
+     * @description
+     */
+    refreshSaveButton() {
+        if (isNull(this.scheduleId)) {
+            this.isSaveDisabled = (this.pausedReason && isNull(this.pausedReason.value))
+                || (this.selectedIds.length == 0);
+        } else {
+            this.isSaveDisabled = false;
         }
     }
 
@@ -308,6 +327,11 @@ export default class Rd2PauseForm extends LightningElement {
     */
     handlePausedReasonChange(event) {
         this.pausedReason.value = event.detail.value;
+
+        const pausedReasonField = this.template.querySelector("[data-id='pausedReason']");
+        pausedReasonField.reportValidity();
+
+        this.refreshSaveButton();
     }
 
     /***
