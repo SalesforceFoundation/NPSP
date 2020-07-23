@@ -4,7 +4,7 @@
   "features": [
     "StateAndCountryPicklist"
   ],
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
     "chatterSettings": {
       "enableChatter": true

@@ -2,7 +2,7 @@
   "orgName": "NPSP - Beta Test Org",
   "edition": "Developer",
   "language": "es",
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
     "chatterSettings": {
       "enableChatter": true

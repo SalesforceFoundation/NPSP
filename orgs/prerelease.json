@@ -2,7 +2,7 @@
   "orgName": "NPSP - Prerelease Workspace",
   "edition": "Developer",
   "instance": "CS46",
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
     "chatterSettings": {
       "enableChatter": true

@@ -1,7 +1,7 @@
 {
   "orgName": "NPSP - Beta Org - MiddleSuffix",
   "edition": "Developer",
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
     "nameSettings": {
       "enableMiddleName": true,

@@ -4,7 +4,7 @@
   "features": [
     "PersonAccounts"
   ],
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
     "chatterSettings": {
       "enableChatter": true
