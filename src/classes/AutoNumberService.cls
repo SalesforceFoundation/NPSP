@@ -146,7 +146,7 @@ public class AutoNumberService {
             return [
                     SELECT IsActive__c
                     FROM AutoNumber__c
-                    WHERE Object_API_Name__c = :String.valueOf(DataImportBatch__c.SObjectType)
+                    WHERE Object_API_Name__c = :String.valueOf(sObjType)
                     AND IsActive__c = true
             ];
         }
@@ -167,7 +167,7 @@ public class AutoNumberService {
                     Asynchronous__c = false,
                     Class__c = AutoNumber_TDTM.class.getName(),
                     Load_Order__c = 0,
-                    Object__c = String.valueOf(DataImportBatch__c.SObjectType),
+                    Object__c = String.valueOf(sObjType),
                     Trigger_Action__c = 'AfterInsert;');
         }
     }
@@ -177,7 +177,7 @@ public class AutoNumberService {
             return ![
                     SELECT Id
                     FROM Trigger_Handler__c
-                    WHERE Object__c = :String.valueOf(DataImportBatch__c.SObjectType)
+                    WHERE Object__c = :String.valueOf(sObjType)
                     AND Class__c = :AutoNumber_TDTM.class.getName()
                     AND Active__c = true
             ].isEmpty();
