@@ -31,31 +31,14 @@
 * @author Salesforce.org
 * @date 2020
 * @group Gift Entry
-* @description Used to manage creation and retrieval of Auto Number records for the
+* @description This class wraps Auto Number Services as @AuraEnabled methods, which
+* manage the creation and retrieval of Auto Number records, for use with the
 * DataImportBatch object in Lightning web components.
 */
 public class GE_AutoNumberController {
 
     static AutoNumberService autoNumberService =
             new AutoNumberService(DataImportBatch__c.SObjectType);
-
-    @AuraEnabled
-    public static AutoNumber__c save(String autoNumber) {
-        try {
-            return autoNumberService.save(autoNumber);
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
-
-    @AuraEnabled
-    public static List<AutoNumber__c> getAutoNumbers() {
-        try {
-            return autoNumberService.getAutoNumbers();
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
 
     @AuraEnabled
     public static void activate(String autoNumberId) {
@@ -70,6 +53,24 @@ public class GE_AutoNumberController {
     public static void deactivate(String autoNumberId) {
         try {
             autoNumberService.deactivate(autoNumberId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static AutoNumber__c save(String autoNumber) {
+        try {
+            return autoNumberService.save(autoNumber);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static List<AutoNumber__c> getAutoNumbers() {
+        try {
+            return autoNumberService.getAutoNumbers();
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
