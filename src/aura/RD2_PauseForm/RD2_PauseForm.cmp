@@ -1,16 +1,26 @@
 <aura:component implements="force:lightningQuickActionWithoutHeader, force:hasRecordId">
 
-    <!-- remove padding so that Pause Form including the header, footer and the body can be displayed as the modal-->
     <aura:html tag="style">
+        /**
+         * Remove padding so that Pause Form including the header, 
+         * footer and the body can be displayed as the modal
+         */
         .cuf-content {
-        padding: 0 0rem !important;
+            padding: 0 0rem !important;
         }
         .slds-p-around--medium {
-        padding: 0rem !important;
+            padding: 0rem !important;
         }
         .slds-modal__content{
-        height:unset !important;
-        max-height:unset !important;
+            height:unset !important;
+            max-height:unset !important;
+        }
+
+        /**
+         * Remove Wrap Text/Clip Text button options in the datatable header.
+         */
+        .slds-th__action-button {
+            display: none;
         }
     </aura:html>
 
