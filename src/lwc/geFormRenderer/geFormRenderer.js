@@ -25,6 +25,7 @@ import {
     isUndefined,
     hasNestedProperty,
     deepClone,
+    getNamespace,
     getSubsetObject,
     validateJSONString,
 } from 'c/utilCommon';
@@ -1134,7 +1135,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @description Navigates to Gift Entry landing page.
      */
     navigateToLandingPage() {
-        const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment(GIFT_ENTRY_TAB_NAME);
+        const giftEntryTabName =
+            TemplateBuilderService.alignSchemaNSWithEnvironment(
+                GIFT_ENTRY_TAB_NAME,
+                this.namespace
+            );
         let url = `/lightning/n/${giftEntryTabName}`;
 
         this[NavigationMixin.Navigate]({
@@ -1753,4 +1758,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get qaLocatorSaveButton() {
         return `button ${this.saveActionLabel}`;
     }
+
+    get namespace() {
+        return getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
+    }
+
 }
