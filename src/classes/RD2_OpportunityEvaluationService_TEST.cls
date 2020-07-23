@@ -1857,7 +1857,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.npe03__Open_Ended_Status__c)),
             'RD field used in the custom mapping should be queried.');
         System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.RecurringType__c)),
-            'RD field that is mandatory for calculation should be queried by default ');
+            'RD field that is mandatory for calculation should be queried by default.');
         System.assert(queriedFields.contains('npe03__Schedule_Type__c') == false,
             'RD legacy field not used in the custom mapping should not be queried.');
         
