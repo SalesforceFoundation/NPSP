@@ -1,12 +1,12 @@
 import { LightningElement, api, track } from 'lwc';
-import { getQueryParameters } from 'c/utilCommon';
+import { getQueryParameters, getNamespace } from 'c/utilCommon';
 import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import DataImport from '@salesforce/schema/DataImport__c';
 import { registerListener } from 'c/pubsubNoPageRef'
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
-const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const GIFT_ENTRY = 'Gift_Entry';
 const TEMPLATE_BUILDER = 'Template_Builder';
@@ -41,7 +41,6 @@ export default class geHome extends LightningElement {
           this.handleListViewPermissionsChange, this);
         this.isAppAccessible = await getPageAccess();
         if (this.isAppAccessible) {
-            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.setGiftEntryTabName();
             this.setInitialView();
         }
@@ -52,7 +51,9 @@ export default class geHome extends LightningElement {
     * @description Method sets the Gift Entry tab name with the proper namespace.
     */
     setGiftEntryTabName() {
-        this.giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment(GIFT_ENTRY_TAB_NAME);
+        this.giftEntryTabName =
+            TemplateBuilderService.alignSchemaNSWithEnvironment(
+                GIFT_ENTRY_TAB_NAME, this.namespace);
     }
 
     /*******************************************************************************
@@ -139,4 +140,9 @@ export default class geHome extends LightningElement {
             this._listViewPermissionErrorHeader = event.messageHeader;
         }
     }
+
+    get namespace() {
+        return getNamespace(DataImport.objectApiName);
+    }
+
 }
