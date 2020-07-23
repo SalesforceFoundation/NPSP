@@ -256,6 +256,12 @@ export default class Rd2PauseForm extends LightningElement {
     */
     handleButtonDisplay() {
         this.isSaveDisplayed = !this.isLoading && !this.isRDClosed && this.hasAccess;
+
+        // Disable data display and Save button when installments are not returned
+        if (this.installments == null && this.isSaveDisplayed) {
+            this.isSaveDisplayed = false;
+            this.hasAccess = false;
+        }
     }
 
     /***
