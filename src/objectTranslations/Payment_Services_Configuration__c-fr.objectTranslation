@@ -36,6 +36,6 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Nom de configuration des services de paiement</nameFieldLabel>
+    <nameFieldLabel>Nom de config. des services de paiement</nameFieldLabel>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
