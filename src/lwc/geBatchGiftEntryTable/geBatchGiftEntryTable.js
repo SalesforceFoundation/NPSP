@@ -29,6 +29,7 @@ import DONATION_RECORD_TYPE_NAME
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
+const REFERENCE = 'REFERENCE';
 
 const columnTypeByDescribeType = {
     'DATE': 'date-local',
@@ -425,7 +426,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getColumn(element, fieldWrapper) {
-        const isReferenceField = element.dataType === 'REFERENCE' &&
+        const isReferenceField = element.dataType === REFERENCE &&
             fieldWrapper.Source_Field_API_Name !== DONATION_RECORD_TYPE_NAME.fieldApiName;
 
         const columnFieldName =
