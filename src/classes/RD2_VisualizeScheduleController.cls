@@ -554,9 +554,10 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String fieldName;
         @AuraEnabled public String label;
         @AuraEnabled public String type;
-        @AuraEnabled public Boolean sortable = false;
+        @AuraEnabled public Boolean sortable = false; // records are not sortable in the datatable
         @AuraEnabled public Map<String, Object> typeAttributes = new Map<String, Object>();
         @AuraEnabled public Boolean isAccessible = false;
+        @AuraEnabled public Boolean hideDefaultActions = true;
 
         /**
          * @description Default constructor
@@ -572,7 +573,6 @@ public with sharing class RD2_VisualizeScheduleController {
             this.label = field.getLabel();
             this.type = getType(field.getType());
             this.typeAttributes = getTypeAttributes(field.getType());
-            //this.sortable = field.isSortable();// records are not sortable in the datatable
             this.isAccessible = field.isAccessible();
         }
 

@@ -15,13 +15,6 @@
             height:unset !important;
             max-height:unset !important;
         }
-
-        /**
-         * Remove Wrap Text/Clip Text button options in the datatable header.
-         */
-        .slds-th__action-button {
-            display: none;
-        }
     </aura:html>
 
     <c:rd2PauseForm recordId="{!v.recordId}" onclose="{!c.handleClose}" />
