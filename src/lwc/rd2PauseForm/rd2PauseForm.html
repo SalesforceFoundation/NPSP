@@ -22,7 +22,7 @@
                     <lightning-spinner alternative-text={labels.loadingMessage} variant="brand" data-id="spinner"
                         data-qa-locator="spinner">
                     </lightning-spinner>
-                    <c-util-stencil row-count={maxRowSelection} column-count="3"></c-util-stencil>
+                    <c-util-stencil row-count="20" column-count="3"></c-util-stencil>
                 </div>
             </div>
         </template>
@@ -37,9 +37,9 @@
             </template>
 
             <template if:false={isRDClosed}>
-
                 <template if:true={hasAccess}>
                     <lightning-layout multiple-rows="true">
+
                         <lightning-layout-item padding="horizontal-small" class="slds-p-top_medium" size="12">
                             <lightning-formatted-rich-text value={labels.description} data-id="description"
                                 data-qa-locator="richtext Description">
@@ -64,17 +64,23 @@
                     </div>
 
                     <lightning-layout multiple-rows="true">
+
                         <lightning-layout-item padding="horizontal-small" class="slds-p-top_large" size="12">
-                            <lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
-                                data-qa-locator="richtext Row Summary">
-                            </lightning-formatted-rich-text>
+                            <template if:true={selectedRowsSummary}>
+                                <lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
+                                    data-qa-locator="richtext Row Summary">
+                                </lightning-formatted-rich-text>
+                            </template>
+
+                            <div if:false={selectedRowsSummary} class="slds-p-top_medium">
+                            </div>
                         </lightning-layout-item>
                     </lightning-layout>
-                </template>
 
+                </template>
             </template>
 
-            <div class="slds-p-bottom_x-large"></div>
+            <div class="slds-p-bottom_large"></div>
         </template>
     </div>
 
