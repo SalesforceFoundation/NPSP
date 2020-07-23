@@ -42,6 +42,7 @@
 public class AutoNumberService {
     SObjectType sObjType;
     List<SObject> records;
+    public class AutoNumberException extends Exception {}
 
     /**
      * @description This constructor is currently used by the settings UI
@@ -61,35 +62,27 @@ public class AutoNumberService {
         this.sObjType = records.isEmpty() ? null : records[0].getSObjectType();
     }
 
-    /**
-     * @description Primary method used by callers to apply Auto Numbers to the
-     * records in the trigger context that have active Auto Numbers.
-     */
-    public void apply() {
-        AutoNumber an = getAutoNumber();
-        if (an == null) {
-            return;
+    public void activate(String autoNumberId) {
+        List<AutoNumber__c> autoNumbersToUpdate = new List<AutoNumber__c>();
+        for (AutoNumber__c autoNumber : activeAutoNumbers) {
+            autoNumber.IsActive__c = false;
+            autoNumbersToUpdate.add(autoNumber);
         }
 
-        List<SObject> sObjectsToUpdate = new List<SObject>();
-        Integer nextAutoNumberInSequence = an.nextAutoNumber;
-        for (SObject record : records) {
-            SObject clone = record.clone(true);
-            clone.put(an.fieldApiName, an.getFormattedNumber(nextAutoNumberInSequence));
-            sObjectsToUpdate.add(clone);
-            nextAutoNumberInSequence++;
+        autoNumbersToUpdate.add(new AutoNumber__c(Id = autoNumberId, IsActive__c = true));
+        update autoNumbersToUpdate;
+
+        if (!hasTriggerHandlerEntry) {
+            insert triggerHandler;
         }
-
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        dmlWrapper.objectsToUpdate.addAll(sObjectsToUpdate);
-        // Throws DmlException STRING TOO LONG if format+number is longer than target field
-        TDTM_TriggerHandler.processDml(dmlWrapper);
-
-        // Update the AutoNumber record AFTER Successful Save
-        an.setMaxUsedNumber(nextAutoNumberInSequence - 1);
     }
 
-    public class AutoNumberException extends Exception {
+    public void deactivate(String autoNumberId) {
+        AutoNumber__c a = new AutoNumber__c(
+                Id = autoNumberId,
+                IsActive__c = false
+        );
+        update a;
     }
 
     public AutoNumber__c save(String autoNumber) {
@@ -125,65 +118,6 @@ public class AutoNumberService {
         return false;
     }
 
-    public void activate(String autoNumberId) {
-        List<AutoNumber__c> autoNumbersToUpdate = new List<AutoNumber__c>();
-        for (AutoNumber__c autoNumber : activeAutoNumbers) {
-            autoNumber.IsActive__c = false;
-            autoNumbersToUpdate.add(autoNumber);
-        }
-
-        // Activate the passed-in AutoNumber
-        autoNumbersToUpdate.add(new AutoNumber__c(Id = autoNumberId, IsActive__c = true));
-        update autoNumbersToUpdate;
-
-        if (!hasTriggerHandlerEntry) {
-            insert triggerHandler;
-        }
-    }
-
-    private List<AutoNumber__c> activeAutoNumbers {
-        get {
-            return [
-                    SELECT IsActive__c
-                    FROM AutoNumber__c
-                    WHERE Object_API_Name__c = :String.valueOf(sObjType)
-                    AND IsActive__c = true
-            ];
-        }
-    }
-
-    public void deactivate(String autoNumberId) {
-        AutoNumber__c a = new AutoNumber__c(
-                Id = autoNumberId,
-                IsActive__c = false
-        );
-        update a;
-    }
-
-    Trigger_Handler__c triggerHandler {
-        get {
-            return new Trigger_Handler__c(
-                    Active__c = true,
-                    Asynchronous__c = false,
-                    Class__c = AutoNumber_TDTM.class.getName(),
-                    Load_Order__c = 0,
-                    Object__c = String.valueOf(sObjType),
-                    Trigger_Action__c = 'AfterInsert;');
-        }
-    }
-
-    Boolean hasTriggerHandlerEntry {
-        get {
-            return ![
-                    SELECT Id
-                    FROM Trigger_Handler__c
-                    WHERE Object__c = :String.valueOf(sObjType)
-                    AND Class__c = :AutoNumber_TDTM.class.getName()
-                    AND Active__c = true
-            ].isEmpty();
-        }
-    }
-
     private AutoNumber__c convertJSONToAutoNumber(String autoNumber) {
         Map<String, Object> anMap =
                 (Map<String, Object>) JSON.deserializeUntyped(autoNumber);
@@ -205,6 +139,74 @@ public class AutoNumberService {
         return an;
     }
 
+    /**
+     * @description Primary method used by callers to apply Auto Numbers to the
+     * records in the trigger context that have active Auto Numbers.
+     */
+    public void apply() {
+        AutoNumber an = getAutoNumber();
+        if (an == null) {
+            return;
+        }
+
+        List<SObject> sObjectsToUpdate = new List<SObject>();
+        Integer nextAutoNumberInSequence = an.nextAutoNumber;
+        for (SObject record : records) {
+            SObject clone = record.clone(true);
+            clone.put(an.fieldApiName, an.getFormattedNumber(nextAutoNumberInSequence));
+            sObjectsToUpdate.add(clone);
+            nextAutoNumberInSequence++;
+        }
+
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        dmlWrapper.objectsToUpdate.addAll(sObjectsToUpdate);
+        // Throws DmlException STRING TOO LONG if format+number is longer than target field
+        TDTM_TriggerHandler.processDml(dmlWrapper);
+
+        // Update the AutoNumber record AFTER Successful Save
+        an.setMaxUsedNumber(nextAutoNumberInSequence - 1);
+    }
+
+    private List<AutoNumber__c> activeAutoNumbers {
+        get {
+            return [
+                    SELECT IsActive__c
+                    FROM AutoNumber__c
+                    WHERE Object_API_Name__c = :String.valueOf(sObjType)
+                    AND IsActive__c = true
+            ];
+        }
+    }
+
+    Boolean hasTriggerHandlerEntry {
+        get {
+            return ![
+                    SELECT Id
+                    FROM Trigger_Handler__c
+                    WHERE Object__c = :String.valueOf(sObjType)
+                    AND Class__c = :AutoNumber_TDTM.class.getName()
+                    AND Active__c = true
+            ].isEmpty();
+        }
+    }
+
+    @TestVisible
+    Trigger_Handler__c triggerHandler {
+        get {
+            return new Trigger_Handler__c(
+                    Active__c = true,
+                    Asynchronous__c = false,
+                    Class__c = AutoNumber_TDTM.class.getName(),
+                    Load_Order__c = 0,
+                    Object__c = String.valueOf(sObjType),
+                    Trigger_Action__c = 'AfterInsert;');
+        }
+    }
+
+    /**
+     * @description Wrapper class used to provide easier access to calculated
+     * properties for AutoNumber__c records.
+     */
     private class AutoNumber {
         AutoNumber__c record;
         String fieldApiName;
