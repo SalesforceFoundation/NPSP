@@ -1,5 +1,5 @@
-<!--
-    Copyright (c) 2019, Salesforce.org
+/*
+    Copyright (c) 2020 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,53 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-	@author Salesforce.org
-	@date 2019
-	@group Recurring Donations
-	@description Harness app for NPSP Settings Lightning Components.
--->
-<aura:application access="GLOBAL" extends="ltng:outApp">
-    <aura:dependency resource="c:RD2_EnablementDelegate" />
-    <aura:dependency resource="c:RD2_EnablementDelegateSimple" />
-    <aura:dependency resource="c:rd2StatusMappingSettings" />
-    <aura:dependency resource="c:utilIllustration" />
-    <aura:dependency resource="c:geBatchNumberSettings" />
-</aura:application>
+*/
+/**
+* @author Salesforce.org
+* @date 2020
+* @group Gift Entry
+* @description Used to manage creation and retrieval of Auto Number records for the
+* DataImportBatch object in Lightning web components.
+*/
+public class GE_AutoNumberController {
+
+    static AutoNumberService autoNumberService =
+            new AutoNumberService(DataImportBatch__c.SObjectType);
+
+    @AuraEnabled
+    public static AutoNumber__c save(String autoNumber) {
+        try {
+            return autoNumberService.save(autoNumber);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static List<AutoNumber__c> getAutoNumbers() {
+        try {
+            return autoNumberService.getAutoNumbers();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void activate(String autoNumberId) {
+        try {
+            autoNumberService.activate(autoNumberId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void deactivate(String autoNumberId) {
+        try {
+            autoNumberService.deactivate(autoNumberId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+}

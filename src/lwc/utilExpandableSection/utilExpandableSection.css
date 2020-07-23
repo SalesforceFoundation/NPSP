@@ -18,3 +18,7 @@
     opacity: 0;
     visibility: hidden;
 }
+
+.slds-section__title-action-background-none {
+    background: none;
+}
