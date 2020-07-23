@@ -520,7 +520,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
-        queryFIelds.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
+        queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            queryFields.add('CurrencyIsoCode');
+        }
         queryFields.add(getOpportunitySubQuery());
         queryFields.add(getScheduleSubQuery());
 
