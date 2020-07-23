@@ -15,6 +15,8 @@ import selectedRowsSummarySingular from '@salesforce/label/c.RD2_PauseSelectedIn
 import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage';
 import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
 import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
+import permissionRequired from '@salesforce/label/c.RD2_PausePermissionRequired';
+import insufficientPermissions from '@salesforce/label/c.lblInsufficientPermissions';
 
 import getPauseData from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseData';
 import getInstallments from '@salesforce/apex/RD2_PauseForm_CTRL.getInstallments';
@@ -33,7 +35,9 @@ export default class Rd2PauseForm extends LightningElement {
         selectedRowsSummarySingular,
         saveSuccessMessage,
         deactivationSuccessMessage,
-        rdClosedMessage
+        rdClosedMessage,
+        permissionRequired,
+        insufficientPermissions
     });
 
     @api recordId;
@@ -88,6 +92,7 @@ export default class Rd2PauseForm extends LightningElement {
             })
             .catch(error => {
                 this.installments = null;
+                this.hasAccess = false;
                 this.handleError(error);
             });
     }
@@ -100,9 +105,15 @@ export default class Rd2PauseForm extends LightningElement {
             .then(response => {
                 const pauseData = JSON.parse(response);
 
+                this.hasAccess = pauseData.hasAccess;
                 this.isRDClosed = pauseData.isRDClosed;
                 this.pausedReason = pauseData.pausedReason;
                 this.scheduleId = pauseData.scheduleId;
+
+                if (!this.hasAccess) {
+                    this.error.detail = this.labels.permissionRequired;
+                    this.handleErrorDisplay();
+                }
             })
             .catch(error => {
                 this.handleError(error);
@@ -389,8 +400,25 @@ export default class Rd2PauseForm extends LightningElement {
 
         this.error = constructErrorMessage(error);
 
+        this.handleErrorDisplay();
+    }
+
+
+    /***
+    * @description Handle component display when an error occurs
+    * @param error: Error Event
+    */
+    handleErrorDisplay() {
         const errorDetail = this.error.detail;
-        this.hasAccess = !(errorDetail && errorDetail.includes("RD2_PauseForm_CTRL"));
+
+        const isApexClassDisabled = errorDetail && errorDetail.includes("RD2_PauseForm_CTRL");
+        if (isApexClassDisabled) {
+            this.hasAccess = false;
+        }
+
+        if (errorDetail && this.hasAccess === false) {
+            this.error.header = this.labels.insufficientPermissions;
+        }
 
         this.template.querySelector(".slds-modal__header").scrollIntoView();
     }

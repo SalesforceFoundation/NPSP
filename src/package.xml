@@ -1745,6 +1745,7 @@
         <members>RD2_PauseDescription</members>
         <members>RD2_PauseFirstDonationDateDynamicText</members>
         <members>RD2_PauseHeader</members>
+        <members>RD2_PausePermissionRequired</members>
         <members>RD2_PauseSaveSuccessMessage</members>
         <members>RD2_PauseSelectedInstallmentTextPlural</members>
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
@@ -2530,6 +2531,7 @@
         <members>lblHousehold</members>
         <members>lblHouseholdName</members>
         <members>lblInformalGreeting</members>
+        <members>lblInsufficientPermissions</members>
         <members>lblLastName</members>
         <members>lblMergeHHPrompt</members>
         <members>lblMergeHHTitle</members>

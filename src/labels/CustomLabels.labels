@@ -2232,6 +2232,14 @@
         <value>Select installments from the list below. You can pause for up to 12 consecutive installments.</value>
     </labels>
     <labels>
+        <fullName>RD2_PausePermissionRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>User does not have a permission to edit or create Recurring Donations</shortDescription>
+        <value>You do&apos;t have permissions to Pause Recurring Donations. Please contact your system administrator for create and edit access on Recurring Donation.</value>
+    </labels>
+    <labels>
         <fullName>RD2_PausedReasonLabel</fullName>
         <categories>Recurring-Donations, Pause</categories>
         <language>en_US</language>
@@ -8531,6 +8539,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>lblInformalGreeting</shortDescription>
         <value>Informal Greeting</value>
+    </labels>
+    <labels>
+        <fullName>lblInsufficientPermissions</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Indicates user does not have permissions for the action</shortDescription>
+        <value>Insufficient Permissions</value>
     </labels>
     <labels>
         <fullName>lblLastName</fullName>

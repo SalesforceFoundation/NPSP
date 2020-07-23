@@ -55,11 +55,14 @@ public with sharing class RD2_PauseForm_CTRL {
     @AuraEnabled(cacheable=false)
     public static String getPauseData(Id rdId) {
         String jsonData;
+
         try {
             PauseData pause = new PauseData();
-            pause.isRDClosed = isClosed(rdId);
+            pause.rdId = rdId;
+            pause.hasAccess = hasAccess();
+            pause.isRDClosed = pause.hasAccess ? isClosed(rdId) : null;
 
-            if (!pause.isRDClosed) {
+            if (pause.isRDClosed == false) {
                 pause.pausedReason = buildPausedReason();
                 populateScheduleData(pause, rdId);
             }
@@ -74,10 +77,21 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
+     * @description Checks if the user has access to create or update a Recurring Donation
+     * @return 
+     */
+    private static Boolean hasAccess() {
+        SObjectType objType = npe03__Recurring_Donation__c.SObjectType;
+        UTIL_Permissions permissions = new UTIL_Permissions();
+
+        return permissions.canCreate(objType) && permissions.canUpdate(objType);
+    }
+
+    /**
      * @description 
      * @return 
      */
-    public static Boolean isClosed(Id rdId) {
+    private static Boolean isClosed(Id rdId) {
         Boolean isClosed = false;
         try {
             npe03__Recurring_Donation__c rd = [
@@ -224,8 +238,9 @@ public with sharing class RD2_PauseForm_CTRL {
         public Boolean isRDClosed;
         public Date startDate;
         public Date resumeAfterDate;
-        public Id scheduleId;
         public PausedReason pausedReason;
+        public Id scheduleId;
+        public Boolean hasAccess;
     }
 
     /***
