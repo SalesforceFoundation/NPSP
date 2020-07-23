@@ -217,7 +217,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     * @description Contains all mandatory Recurring Donation fields required for the Opportunity Evaluation Service
     */
     private Set<String> rdFields = new Set<String> {
+        'CreatedDate',
+        'CreatedById',
+        'Id',
+        'LastModifiedDate',
+        'LastModifiedById',
         'Name',
+        'OwnerId',
         'npe03__Organization__c',
         'npe03__Amount__c',
         'npe03__Contact__c',
@@ -521,12 +527,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         queryFields.addAll(rdFields);
         queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
+        queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
+        queryFields.add(getOpportunitySubQuery());
+        queryFields.add(getScheduleSubQuery());
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add('CurrencyIsoCode');
         }
-        queryFields.add(getOpportunitySubQuery());
-        queryFields.add(getScheduleSubQuery());
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
