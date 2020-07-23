@@ -957,6 +957,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._account1Name = null;
         this._contact1LastName = null;
         this._contact1FirstName = null;
+        fireEvent(this, 'resetReviewDonationsEvent', {});
     }
 
     get mode() {
@@ -1546,7 +1547,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._account1Imported = selectedRecordId;
         if (selectedRecordId == null) {
             this._account1Name = null;
-            fireEvent(this, 'resetReviewDonationsEvent', {});
         }
         if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             this.setReviewDonationsDonorProperties(this._account1Imported);
@@ -1560,7 +1560,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (selectedRecordId == null) {
             this._contact1LastName = null;
             this._contact1FirstName = null;
-            fireEvent(this, 'resetReviewDonationsEvent', {});
         }
         if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
             this.setReviewDonationsDonorProperties(this._contact1Imported);
