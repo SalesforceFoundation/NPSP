@@ -1,31 +1,31 @@
 <template>
     <template if:true={_hasAccess}>
-        <lightning-layout class='slds-m-around_x-large'
-                          multiple-rows='true'>
+        <lightning-layout class="slds-m-around_x-large"
+                          multiple-rows="true">
 
-            <lightning-layout-item size='12'
-                                   class='slds-m-vertical_small'>
+            <lightning-layout-item size="12"
+                                   class="slds-m-vertical_small">
                 <div class="slds-section slds-is-open">
                     <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
-                        <span class='slds-truncate slds-p-horizontal_small'
-                              title='Batch Number Settings'>
+                        <span class="slds-truncate slds-p-horizontal_small"
+                              title="Batch Number Settings">
                             Batch Number Settings
                         </span>
                     </h3>
                     <div aria-hidden="false"
                          class="slds-section__content">
                         <template if:true={error}>
-                            <c-util-page-level-message variant='error'
-                                                       title='Error'>
-                                <p slot='body'
-                                   class='slds-m-bottom_small slds-text-color_destructive'>
+                            <c-util-page-level-message variant="error"
+                                                       title="Error">
+                                <p slot="body"
+                                   class="slds-m-bottom_small slds-text-color_destructive">
                                     There was an error creating a batch number format.
                                     Please review and try again.
                                     {errorMessage}
                                 </p>
                             </c-util-page-level-message>
                         </template>
-                        <p class='slds-text-body_regular'>
+                        <p class="slds-text-body_regular">
                             Batch numbers are unique identifiers for batches created for Gift
                             Entry,
                             NPSP Data Importer, and the legacy Batch Gift Entry tool.
@@ -37,29 +37,28 @@
                 </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size='12'
-                                   class='slds-m-vertical_small'>
-                <h3 class='slds-text-title slds-text-title_bold'>Configure Batch Number</h3>
-                <p class='slds-text-body_regular slds-p-vertical_small'>
+            <lightning-layout-item size="12">
+                <h3 class="slds-text-title slds-text-title_bold">Configure Batch Number</h3>
+                <p class="slds-text-body_regular slds-p-vertical_small">
                     Create a custom batch number format by defining the display format and
                     setting the starting
                     number. Newly created batch number formats are not activated.
                 </p>
 
-                <c-util-expandable-section label='What is a Display Format?'
-                                           is-collapsed='true'
-                                           button-background='none'>
-                    <p class='slds-text-body_regular slds-m-vertical_small'>
+                <c-util-expandable-section label="What is a Display Format?"
+                                           is-collapsed="true"
+                                           button-background="none">
+                    <p class="slds-text-body_regular slds-m-vertical_small">
                         A Display Format allows you to control the appearance of the Auto
                         Number field. A Display Format
                         consists of the substitution variables described below, plus any other
                         characters you wish to
                         include as a prefix.
                     </p>
-                    <p class='slds-text-body_regular slds-m-bottom_small'>
+                    <p class="slds-text-body_regular slds-m-bottom_small">
                         (0)
                     </p>
-                    <p class='slds-text-body_regular slds-m-bottom_small'>
+                    <p class="slds-text-body_regular slds-m-bottom_small">
                         Sequence number. One or more zeros enclosed in curly braces represent
                         the sequence number itself.
                         The number of zeros in the curly braces dictates the minimum number of
@@ -69,19 +68,20 @@
                         zeros.
                         Maximum is 10 digits.
                     </p>
-                    <p class='slds-text-body_regular slds-m-bottom_small'>
+                    <p class="slds-text-body_regular slds-m-bottom_small">
                         Examples
                     </p>
-                    <img src='https://via.placeholder.com/450x600'
-                         alt='example image'/>
+                    <img src="https://via.placeholder.com/450x600"
+                         alt="example image"/>
                 </c-util-expandable-section>
             </lightning-layout-item>
 
-            <lightning-layout-item size='12'
-                                   class='slds-m-bottom_small'>
-                <lightning-layout multiple-rows='true'>
+            <lightning-layout-item size="12"
+                                   class="slds-m-bottom_small">
+                <lightning-layout multiple-rows="true" horizontal-align="left">
 
-                    <lightning-layout-item size='4'>
+                    <lightning-layout-item size="12" medium-device-size="4"
+                                           padding="around-small">
                         <lightning-input type="text"
                                          name="displayFormat"
                                          label="Display Format or Auto Number Definition"
@@ -93,17 +93,18 @@
                                          onblur={handleDisplayFormatBlur}>
                         </lightning-input>
                     </lightning-layout-item>
-                    <lightning-layout-item size='4'
-                                           padding='horizontal-small'>
+                    <lightning-layout-item size="12" medium-device-size="4"
+                                           padding="around-small">
                         <lightning-input type="number"
                                          name="startingNumber"
                                          label="Starting Number"
-                                         field-level-help='Help text goes here'
+                                         field-level-help="Help text goes here"
                                          value={startingNumber}
                                          onchange={handleStartingNumberChange}>
                         </lightning-input>
                     </lightning-layout-item>
-                    <lightning-layout-item size='4'>
+                    <lightning-layout-item size="12" medium-device-size="4"
+                                           padding="around-small">
                         <lightning-input type="text"
                                          name="description"
                                          label="Description"
@@ -111,18 +112,8 @@
                                          onchange={handleDescriptionChange}>
                         </lightning-input>
                     </lightning-layout-item>
-
-                    <lightning-layout-item size='12'
-                                           class='slds-m-top_small'>
-                        Batch Number Preview
-                    </lightning-layout-item>
-                    <lightning-layout-item size='12'
-                                           class='slds-m-bottom_small'>
-                        {preview}
-                    </lightning-layout-item>
-
-                    <lightning-layout-item size='12'
-                                           class='slds-m-vertical_small'>
+                    <lightning-layout-item size="12"
+                                           padding="horizontal-small">
                         <lightning-button variant="brand"
                                           label="Create Batch Number Format"
                                           title="Create Batch Number Format"
@@ -133,11 +124,11 @@
                 </lightning-layout>
             </lightning-layout-item>
 
-            <lightning-layout-item size='12'
-                                   class='slds-m-vertical_small'>
-                <h3 class='slds-text-title slds-text-title_bold'>Existing Batch Number
+            <lightning-layout-item size="12"
+                                   class="slds-m-vertical_small">
+                <h3 class="slds-text-title slds-text-title_bold">Existing Batch Number
                     Formats</h3>
-                <p class='slds-text-body_regular slds-p-vertical_small'>
+                <p class="slds-text-body_regular slds-p-vertical_small">
                     You can activate or deactivate batch number formats here. Only one batch
                     number format can be
                     active at any given time. When you activate a display format, it will
@@ -149,7 +140,7 @@
                                      data={autoNumberRecords}
                                      columns={columns}
                                      onrowaction={handleRowAction}
-                                     hide-checkbox-column='true'>
+                                     hide-checkbox-column="true">
                 </lightning-datatable>
             </lightning-layout-item>
 

@@ -148,10 +148,6 @@ export default class geBatchNumberSettings extends LightningElement {
         this.description = event.target.value;
     }
 
-    get preview() {
-        return this.displayFormat || '0000001';
-    }
-
     handleDisplayFormatBlur(event) {
         const re = '.*\\{.*?\\}';
         const regex = RegExp(re);
