@@ -52,7 +52,7 @@ Create Data Import Via API
     Set Global Variable     &{data_import}       &{data_import}
     Go To Page        Listing       DataImport__c
     Change View To    To Be Imported
-    Page Should Contain Link    &{data_import}[Name]
+    Page Should Contain Link    ${data_import}[Name]
     Click Special Object Button       Start Data Import
     Wait For Locator    frame    NPSP Data Import
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
@@ -61,22 +61,22 @@ Create Data Import Via API
 
 Verify Custom Fields on Account Contact and Address Objects
     [tags]  stable
-    &{data_import_new} =     Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Verify Expected Values    nonns    Account    &{data_import_new}[${ns}Account1Imported__c]
+    &{data_import_new} =     Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
+    Verify Expected Values    nonns    Account    ${data_import_new}[${ns}Account1Imported__c]
     ...    Name=${acc1}
     ...    ${org_ns}custom_acc_text__c=automation
-    Verify Expected Values    nonns    Account    &{data_import_new}[${ns}Account2Imported__c]
+    Verify Expected Values    nonns    Account    ${data_import_new}[${ns}Account2Imported__c]
     ...    Name=${acc2}
     ...    ${org_ns}custom_acc_text__c=None
-    Verify Expected Values    nonns    Contact    &{data_import_new}[${ns}Contact1Imported__c]
+    Verify Expected Values    nonns    Contact    ${data_import_new}[${ns}Contact1Imported__c]
     ...    FirstName=${first_name1}
     ...    LastName=${last_name1}
     ...    ${org_ns}custom_cont_num__c=None
-    Verify Expected Values    nonns    Contact    &{data_import_new}[${ns}Contact2Imported__c]
+    Verify Expected Values    nonns    Contact    ${data_import_new}[${ns}Contact2Imported__c]
     ...    FirstName=${first_name2}
     ...    LastName=${last_name2}
     ...    ${org_ns}custom_cont_num__c=9876543210.0
-    Verify Expected Values    nonns    ${ns}Address__c    &{data_import_new}[${ns}HomeAddressImported__c]
+    Verify Expected Values    nonns    ${ns}Address__c    ${data_import_new}[${ns}HomeAddressImported__c]
     ...        ${org_ns}Custom_add_date__c=${date}
     ...        ${ns}MailingStreet__c=123 automation street
     ...        ${ns}MailingCity__c=Toledo

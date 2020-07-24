@@ -75,7 +75,7 @@ Test Case 2
     ...                                     Amount=500    
     ...                                     ${ns}Primary_Contact__c=${data}[contact3][Id]  
     Go To Page                              Details                              Opportunity                                
-    ...                                     object_id=&{opportunity2}[Id]
+    ...                                     object_id=${opportunity2}[Id]
     Select Tab                              Related
     Select Relatedlist                      Contact Roles
     Verify Related List Field Values

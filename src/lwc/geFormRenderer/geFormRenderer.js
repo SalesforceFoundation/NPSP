@@ -26,6 +26,7 @@ import {
     hasNestedProperty,
     arraysMatch,
     deepClone,
+    getNamespace,
     getSubsetObject,
     validateJSONString,
     isEmptyObject
@@ -937,7 +938,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    reset(objectMappingDeveloperName = null) {
+    reset(objectMappingDeveloperName = null, setDefaults = true) {
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         let fieldMappingDevNames = null;
@@ -954,7 +955,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         sectionsList.forEach(section => {
-            section.reset(fieldMappingDevNames);
+            section.reset(fieldMappingDevNames, setDefaults);
         });
         this.widgetData = {};
     }
@@ -1142,7 +1143,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @description Navigates to Gift Entry landing page.
      */
     navigateToLandingPage() {
-        const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment(GIFT_ENTRY_TAB_NAME);
+        const giftEntryTabName =
+            TemplateBuilderService.alignSchemaNSWithEnvironment(
+                GIFT_ENTRY_TAB_NAME,
+                this.namespace
+            );
         let url = `/lightning/n/${giftEntryTabName}`;
 
         this[NavigationMixin.Navigate]({
@@ -1781,4 +1786,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get qaLocatorSaveButton() {
         return `button ${this.saveActionLabel}`;
     }
+
+    get namespace() {
+        return getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
+    }
+
 }
