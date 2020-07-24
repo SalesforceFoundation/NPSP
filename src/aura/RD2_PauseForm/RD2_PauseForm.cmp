@@ -15,6 +15,25 @@
             height:unset !important;
             max-height:unset !important;
         }
+
+        /*
+        * Sets the first column width on the datatable.
+        * Center the checkbox in the first column header.
+        */
+        .slds-th__action.slds-th__action_form.slds-cell-fixed {
+            width: 60px !important;
+            justify-content: center !important; 
+        }
+        .slds-table_edit thead th:first-child {
+            width: 60px !important;
+        }
+        /*
+        * Center the checkbox in the first column on the datatable
+        */
+        table tr td:first-child { 
+            text-align: center !important; 
+        }
+
     </aura:html>
 
     <c:rd2PauseForm recordId="{!v.recordId}" onclose="{!c.handleClose}" />

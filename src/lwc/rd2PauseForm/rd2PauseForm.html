@@ -40,13 +40,13 @@
                 <template if:true={hasAccess}>
                     <lightning-layout multiple-rows="true">
 
-                        <lightning-layout-item padding="horizontal-small" class="slds-p-top_medium" size="12">
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_medium" size="12">
                             <lightning-formatted-rich-text value={labels.description} data-id="description"
                                 data-qa-locator="richtext Description">
                             </lightning-formatted-rich-text>
                         </lightning-layout-item>
 
-                        <lightning-layout-item padding="horizontal-small" class="slds-p-top_medium" size="8">
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_medium" size="8">
                             <lightning-combobox data-id="pausedReason" name="pausedReason"
                                 data-qa-locator="combobox Paused Reason" label={pausedReason.label}
                                 value={pausedReason.value} placeholder={pausedReason.placeholder}
@@ -65,7 +65,7 @@
 
                     <lightning-layout multiple-rows="true">
 
-                        <lightning-layout-item padding="horizontal-small" class="slds-p-top_large" size="12">
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_large" size="12">
                             <template if:true={selectedRowsSummary}>
                                 <lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
                                     data-qa-locator="richtext Row Summary">
