@@ -71,6 +71,7 @@
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UnitTestHelper_TEST</members>
         <members>AutoNumberService</members>
+        <members>AutoNumberService_TEST</members>
         <members>AutoNumber_TDTM</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>

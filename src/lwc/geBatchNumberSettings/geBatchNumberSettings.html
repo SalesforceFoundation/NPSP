@@ -57,7 +57,8 @@
                                          required
                                          placeholder={displayNumberPlaceholder}
                                          onchange={handleDisplayFormatChange}
-                                         onblur={handleDisplayFormatBlur}>
+                                         onblur={handleDisplayFormatBlur}
+                                         data-qa-locator={qaLocatorDisplayFormat}>
                         </lightning-input>
                     </lightning-layout-item>
                     <lightning-layout-item size="12" medium-device-size="4"
@@ -67,7 +68,8 @@
                                          label="Starting Number"
                                          field-level-help="Help text goes here"
                                          value={startingNumber}
-                                         onchange={handleStartingNumberChange}>
+                                         onchange={handleStartingNumberChange}
+                                         data-qa-locator={qaLocatorStartingNumber}>
                         </lightning-input>
                     </lightning-layout-item>
                     <lightning-layout-item size="12" medium-device-size="4"
@@ -76,7 +78,8 @@
                                          name="description"
                                          label="Description"
                                          value={description}
-                                         onchange={handleDescriptionChange}>
+                                         onchange={handleDescriptionChange}
+                                         data-qa-locator={qaLocatorDescription}>
                         </lightning-input>
                     </lightning-layout-item>
                     <lightning-layout-item size="12"
@@ -84,7 +87,8 @@
                         <lightning-button variant="brand"
                                           label={labels.buttonSave}
                                           title={labels.buttonSave}
-                                          onclick={handleCreateBatchNumber}>
+                                          onclick={handleCreateBatchNumber}
+                                          data-qa-locator={qaLocatorCreateBatchNumberFormatButton}>
                         </lightning-button>
                     </lightning-layout-item>
 
@@ -102,7 +106,8 @@
                                      data={autoNumberRecords}
                                      columns={columns}
                                      onrowaction={handleRowAction}
-                                     hide-checkbox-column="true">
+                                     hide-checkbox-column="true"
+                                     data-qa-locator={qaLocatorBatchNumberDatatable}>
                 </lightning-datatable>
             </lightning-layout-item>
 

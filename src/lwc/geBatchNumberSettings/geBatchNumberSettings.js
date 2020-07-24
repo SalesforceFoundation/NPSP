@@ -196,13 +196,29 @@ export default class geBatchNumberSettings extends LightningElement {
         return '{000000} or BTC-{000000}';
     }
 
-    // TODO: Add QA locators
-    get qaLocatorTable(){
-        return '';
+    // ================================================================================
+    // Quality Assurance Locators
+    // ================================================================================
+
+    customLabelPlaceholder = 'placeholder';
+
+    get qaLocatorDisplayFormat() {
+        return `input ${this.customLabelPlaceholder}`;
     }
 
-    get qaLocatorButtonCreate() {
-        return 'button ';
+    get qaLocatorStartingNumber() {
+        return `input ${this.customLabelPlaceholder}`;
     }
 
+    get qaLocatorDescription() {
+        return `input ${this.customLabelPlaceholder}`;
+    }
+
+    get qaLocatorCreateBatchNumberFormatButton() {
+        return `button ${this.customLabelPlaceholder}`;
+    }
+
+    get qaLocatorBatchNumberDatatable() {
+        return `datatable ${this.customLabelPlaceholder}`;
+    }
 }
