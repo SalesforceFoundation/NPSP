@@ -67,9 +67,9 @@ public with sharing class GE_GiftEntryController {
             return JSON.serialize(response);
         } catch (Exception ex) {
             Boolean isCalloutException = ex instanceof System.CalloutException;
-            Boolean hasTimedout = isCalloutException && ex.getMessage().contains(TIMED_OUT);
+            Boolean hasTimedOut = isCalloutException && ex.getMessage().contains(TIMED_OUT);
 
-            if (hasTimedout) {
+            if (hasTimedOut) {
                 return getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
             } else {
                 String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
@@ -199,7 +199,6 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static DataImport__c upsertDataImport(DataImport__c dataImport) {
         try {
-
             upsert dataImport Id;
 
             return dataImport;
