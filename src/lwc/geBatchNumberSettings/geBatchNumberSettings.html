@@ -8,8 +8,8 @@
                 <div class="slds-section slds-is-open">
                     <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
                         <span class="slds-truncate slds-p-horizontal_small"
-                              title="Batch Number Settings">
-                            Batch Number Settings
+                              title={labels.header}>
+                            {labels.header}
                         </span>
                     </h3>
                     <div aria-hidden="false"
@@ -25,54 +25,21 @@
                                 </p>
                             </c-util-page-level-message>
                         </template>
-                        <p class="slds-text-body_regular">
-                            Batch numbers are unique identifiers for batches created for Gift
-                            Entry,
-                            NPSP Data Importer, and the legacy Batch Gift Entry tool.
-                            Customize the format and set one as active. The auto-generated
-                            value will appear
-                            in the Batch Number field.
-                        </p>
+                        <p class="slds-text-body_regular">{labels.description}</p>
                     </div>
                 </div>
             </lightning-layout-item>
 
             <lightning-layout-item size="12">
-                <h3 class="slds-text-title slds-text-title_bold">Configure Batch Number</h3>
+                <h3 class="slds-text-title slds-text-title_bold">{labels.headerConfigure}</h3>
                 <p class="slds-text-body_regular slds-p-vertical_small">
-                    Create a custom batch number format by defining the display format and
-                    setting the starting
-                    number. Newly created batch number formats are not activated.
+                    {labels.descriptionConfigure}
                 </p>
-
-                <c-util-expandable-section label="What is a Display Format?"
+                <c-util-expandable-section label={labels.headerDisplayFormat}
                                            is-collapsed="true"
                                            button-background="none">
-                    <p class="slds-text-body_regular slds-m-vertical_small">
-                        A Display Format allows you to control the appearance of the Auto
-                        Number field. A Display Format
-                        consists of the substitution variables described below, plus any other
-                        characters you wish to
-                        include as a prefix.
-                    </p>
-                    <p class="slds-text-body_regular slds-m-bottom_small">
-                        (0)
-                    </p>
-                    <p class="slds-text-body_regular slds-m-bottom_small">
-                        Sequence number. One or more zeros enclosed in curly braces represent
-                        the sequence number itself.
-                        The number of zeros in the curly braces dictates the minimum number of
-                        digits that will be
-                        displayed. If the actual number has fewer digits than this, it will be
-                        padded with leading
-                        zeros.
-                        Maximum is 10 digits.
-                    </p>
-                    <p class="slds-text-body_regular slds-m-bottom_small">
-                        Examples
-                    </p>
-                    <img src="https://via.placeholder.com/450x600"
-                         alt="example image"/>
+                    <lightning-formatted-text
+                            value={labels.descriptionDisplayFormat}></lightning-formatted-text>
                 </c-util-expandable-section>
             </lightning-layout-item>
 
@@ -115,8 +82,8 @@
                     <lightning-layout-item size="12"
                                            padding="horizontal-small">
                         <lightning-button variant="brand"
-                                          label="Create Batch Number Format"
-                                          title="Create Batch Number Format"
+                                          label={labels.buttonSave}
+                                          title={labels.buttonSave}
                                           onclick={handleCreateBatchNumber}>
                         </lightning-button>
                     </lightning-layout-item>
@@ -126,14 +93,9 @@
 
             <lightning-layout-item size="12"
                                    class="slds-m-vertical_small">
-                <h3 class="slds-text-title slds-text-title_bold">Existing Batch Number
-                    Formats</h3>
+                <h3 class="slds-text-title slds-text-title_bold">{labels.headerFormats}</h3>
                 <p class="slds-text-body_regular slds-p-vertical_small">
-                    You can activate or deactivate batch number formats here. Only one batch
-                    number format can be
-                    active at any given time. When you activate a display format, it will
-                    automatically deactivate
-                    the current active one.
+                    {labels.descriptionActivation}
                 </p>
 
                 <lightning-datatable key-field="id"

@@ -17,6 +17,25 @@ import Max_Used_Number from '@salesforce/schema/AutoNumber__c.Max_Used_Number__c
 import Object_API_Name from '@salesforce/schema/AutoNumber__c.Object_API_Name__c';
 import Starting_Number from '@salesforce/schema/AutoNumber__c.Starting_Number__c';
 
+import commonActivate from '@salesforce/label/c.commonActivate';
+import commonDeactivate from '@salesforce/label/c.commonDeactivate';
+import batchNumberSettingsConfigureHeader
+    from '@salesforce/label/c.batchNumberSettingsConfigureHeader';
+import batchNumberSettingsDescActivation
+    from '@salesforce/label/c.batchNumberSettingsDescActivation';
+import batchNumberSettingsDescDisplayFormat
+    from '@salesforce/label/c.batchNumberSettingsDescDisplayFormat';
+import batchNumberSettingsDescription
+    from '@salesforce/label/c.batchNumberSettingsDescription';
+import batchNumberSettingsHeaderFormats
+    from '@salesforce/label/c.batchNumberSettingsHeaderFormats';
+import batchNumberSettingsSave from '@salesforce/label/c.batchNumberSettingsSave';
+import batchNumberSettingsHeader from '@salesforce/label/c.batchNumberSettingsHeader';
+import batchNumberSettingsDescriptionCreate
+    from '@salesforce/label/c.batchNumberSettingsDescriptionCreate';
+import batchNumberSettingsHeaderDisplayFormat
+    from '@salesforce/label/c.batchNumberSettingsHeaderDisplayFormat';
+
 const COLUMNS = [
     {fieldName: Display_Format.fieldApiName},
     {fieldName: IsActive.fieldApiName, type: 'boolean'},
@@ -40,6 +59,18 @@ export default class geBatchNumberSettings extends LightningElement {
         return this.error.body.message;
     }
 
+    labels = {
+        header: batchNumberSettingsHeader,
+        description: batchNumberSettingsDescription,
+        headerConfigure: batchNumberSettingsConfigureHeader,
+        descriptionConfigure: batchNumberSettingsDescriptionCreate,
+        headerDisplayFormat: batchNumberSettingsHeaderDisplayFormat,
+        descriptionDisplayFormat: batchNumberSettingsDescDisplayFormat,
+        headerFormats: batchNumberSettingsHeaderFormats,
+        descriptionActivation: batchNumberSettingsDescActivation,
+        buttonSave: batchNumberSettingsSave
+    }
+
     @wire(getObjectInfo, {objectApiName: AutoNumber.objectApiName})
     autoNumberInfo({data}) {
         if (data) {
@@ -58,12 +89,12 @@ export default class geBatchNumberSettings extends LightningElement {
         const actions = [];
         if (row[IsActive.fieldApiName]) {
             actions.push({
-                'label': 'Deactivate',
+                'label': commonDeactivate,
                 'name': 'deactivate'
             });
         } else {
             actions.push({
-                'label': 'Activate',
+                'label': commonActivate,
                 'name': 'activate'
             });
         }
@@ -86,11 +117,9 @@ export default class geBatchNumberSettings extends LightningElement {
     }
 
     fetchAutoNumbers() {
-        console.log('*** ' + 'fetching' + ' ***');
         getAutoNumbers()
             .then(response => {
                 this.autoNumberRecords = response;
-                console.log('JSON.parse(JSON.stringify(this.autoNumberRecords)): ', JSON.parse(JSON.stringify(this.autoNumberRecords)));
             })
             .catch(error => this.error = error);
     }
@@ -152,7 +181,7 @@ export default class geBatchNumberSettings extends LightningElement {
         const re = '.*\\{.*?\\}';
         const regex = RegExp(re);
         if (!regex.test(event.target.value)) {
-           event.target.setCustomValidity('Invalid Display Number format.');
+            event.target.setCustomValidity('Invalid Display Number format.');
         } else {
             event.target.setCustomValidity('');
         }
@@ -166,5 +195,14 @@ export default class geBatchNumberSettings extends LightningElement {
     get displayNumberPlaceholder() {
         return '{000000} or BTC-{000000}';
     }
+
     // TODO: Add QA locators
+    get qaLocatorTable(){
+        return '';
+    }
+
+    get qaLocatorButtonCreate() {
+        return 'button ';
+    }
+
 }
