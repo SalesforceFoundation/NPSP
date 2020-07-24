@@ -69,11 +69,7 @@ public class GE_AutoNumberController {
 
     @AuraEnabled
     public static List<AutoNumber__c> getAutoNumbers() {
-        try {
-            return autoNumberService.getAutoNumbers();
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
+        return autoNumberService.getAutoNumbers();
     }
 
 }
