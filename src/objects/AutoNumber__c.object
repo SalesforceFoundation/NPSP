@@ -166,6 +166,7 @@
     <fields>
         <fullName>Display_Format__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>The format for the auto-numbered field including number of digits and, if desired, a prefix.</inlineHelpText>
         <label>Display Format</label>
         <length>30</length>
         <required>true</required>
