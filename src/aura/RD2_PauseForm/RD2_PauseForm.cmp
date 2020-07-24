@@ -20,17 +20,17 @@
         * Sets the first column width on the datatable.
         * Center the checkbox in the first column header.
         */
-        .slds-th__action.slds-th__action_form.slds-cell-fixed {
+        .installments .slds-th__action.slds-th__action_form.slds-cell-fixed {
             width: 60px !important;
             justify-content: center !important;
         }
-        .slds-table_edit thead th:first-child {
+        .installments thead th:first-child {
             width: 60px !important;
         }
         /*
         * Center the checkbox in the first column on the datatable
         */
-        table tr td:first-child {
+        .installments tr td:first-child {
             text-align: center !important;
         }
 
