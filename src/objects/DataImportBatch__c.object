@@ -113,7 +113,7 @@
     <fields>
         <fullName>Batch_Number__c</fullName>
         <description>The unique, auto-numbered identifier for this batch.</description>
-        <externalId>false</externalId>
+        <externalId>true</externalId>
         <inlineHelpText>The unique, auto-numbered identifier for this batch.</inlineHelpText>
         <label>Batch Number</label>
         <length>30</length>
