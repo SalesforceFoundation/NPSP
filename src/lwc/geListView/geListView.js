@@ -11,7 +11,8 @@ import {
     deepClone,
     isNotEmpty,
     hasNestedProperty,
-    showToast,
+    getNamespace,
+    showToast
 } from 'c/utilCommon'
 import { fireEvent } from 'c/pubsubNoPageRef'
 import LibsMoment from 'c/libsMoment';
@@ -659,8 +660,13 @@ export default class geListView extends LightningElement {
     */
     getRecordUrl(objectApiName) {
         let url;
-        if (objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
-            const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment('GE_Gift_Entry');
+
+        if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
+            const giftEntryTabName =
+                TemplateBuilderService.alignSchemaNSWithEnvironment(
+                    'GE_Gift_Entry',
+                    this.namespace
+                );
             url = `/lightning/n/${giftEntryTabName}?c__view=Template_Builder&c__formTemplateRecordId={0}`;
         } else {
             url = `/lightning/r/${objectApiName}/{0}/view`;
@@ -744,5 +750,9 @@ export default class geListView extends LightningElement {
               messageHeader: messageHeader,
           });
     }
-}
 
+    get namespace() {
+        return getNamespace(FORM_TEMPLATE_INFO.objectApiName);
+    }
+
+}
