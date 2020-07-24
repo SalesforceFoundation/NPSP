@@ -177,6 +177,7 @@
     </fields>
     <fields>
         <fullName>Field_API_Name__c</fullName>
+        <description>The API name of the field that contains the auto-number.</description>
         <externalId>false</externalId>
         <inlineHelpText>The API name of the field that contains the auto-number.</inlineHelpText>
         <label>Field API Name</label>
