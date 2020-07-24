@@ -72,6 +72,7 @@
         <members>ALLO_UnitTestHelper_TEST</members>
         <members>AutoNumberService</members>
         <members>AutoNumberService_TEST</members>
+        <members>AutoNumberService_TEST_Helper</members>
         <members>AutoNumber_TDTM</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
@@ -1872,6 +1873,15 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>batchNumberSettingsConfigureHeader</members>
+        <members>batchNumberSettingsDescActivation</members>
+        <members>batchNumberSettingsDescDisplayFormat</members>
+        <members>batchNumberSettingsDescription</members>
+        <members>batchNumberSettingsDescriptionCreate</members>
+        <members>batchNumberSettingsHeader</members>
+        <members>batchNumberSettingsHeaderDisplayFormat</members>
+        <members>batchNumberSettingsHeaderFormats</members>
+        <members>batchNumberSettingsSave</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiAdditionalObjChildNotUpdated</members>
         <members>bdiAdditionalObjPredNotFound</members>
@@ -2089,6 +2099,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonActivate</members>
         <members>commonAdminPermissionErrorMessage</members>
         <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
@@ -2104,6 +2115,7 @@
         <members>commonClone</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
+        <members>commonDeactivate</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
