@@ -216,6 +216,7 @@
     </fields>
     <fields>
         <fullName>Starting_Number__c</fullName>
+        <description>The first number in the auto-numbered sequence.</description>
         <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <label>Starting Number</label>
