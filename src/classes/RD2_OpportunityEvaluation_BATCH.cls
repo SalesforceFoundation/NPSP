@@ -59,6 +59,12 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     }
 
     /**
+	 * @description Variable used to mock result of hasAnotherTestRunning
+	 */
+    @TestVisible
+    private boolean resultOfHasAnotherTestRunning = null;
+
+    /**
     * @description Should Rollups be disabled before any new Installments Opps are inserted
     */
     private Boolean disableRollups {
@@ -140,6 +146,12 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Execute Method
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
+        String className = RD2_OpportunityEvaluation_BATCH.class.getName();
+        boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
+        if (hasRunningJob) {
+            BatchException ex = new BatchException();
+            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
+        }
         recordsProcessed += rds.size();
 
         if (disableRollups) {

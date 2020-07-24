@@ -39,7 +39,6 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     * @description The panel's constructor
     */
     public STG_PanelRDBatch_CTRL() {
-        isRunningBatch = false;
     }
 
     /*********************************************************************************************************
@@ -50,7 +49,12 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Whether the batch process is currently running
     */
-    public Boolean isRunningBatch { get; set; }
+    public Boolean isRunningBatch { 
+        get {
+            String className = isRD2Enabled ? RD2_OpportunityEvaluation_BATCH.class.getName() : RD_RecurringDonations_BATCH.class.getName();
+            return UTIL_MasterSchedulableHelper.hasRunningJob(className);
+        }
+    }
 
     /*********************************************************************************************************
     * Description The Recurring Donation Batch Introduction Text
@@ -68,8 +72,6 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     public PageReference runBatch() {
         Savepoint sp = Database.setSavepoint();
         try {
-            isRunningBatch = true;
-
             // Call the batch job, using the Recurring Donations Batch Size field in Custom Settings
             if (isRD2Enabled) {
                 RD2_OpportunityEvaluation_BATCH rdBatchJob = new RD2_OpportunityEvaluation_BATCH();

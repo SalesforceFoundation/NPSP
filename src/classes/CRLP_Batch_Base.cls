@@ -656,7 +656,7 @@ public abstract class CRLP_Batch_Base {
      */
     protected void logDuplicateBatchError(String className) {
 		CRLPBatchException ex = new CRLPBatchException(); 
-        UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.CRLP);
+        UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.CRLP); 
     }
 
     /**

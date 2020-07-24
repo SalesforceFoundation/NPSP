@@ -57,17 +57,17 @@ Schedulable {
     public Integer failuresCount = 0;
 
     /*******************************************************************************************************
+	 * @description Variable used to mock result of hasAnotherTestRunning
+	 */
+    @TestVisible
+    private boolean resultOfHasAnotherTestRunning = null;
+
+    /*******************************************************************************************************
     * @description Batch size for Apex Job. Uses default of 50 if Custom Setting is null.
     */
     public static Integer batchSize = (UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c != null) ?
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue() : 50;
 
-	/*******************************************************************************************************
-	 * @description Variable to skip the execute method if another instance of this batch is running
-	 */
-    @testVisible
-    private boolean skippingOtherJobIsRunning = false;
-    
     /*******************************************************************************************************
     * @description Class constructor
     */
@@ -76,7 +76,6 @@ Schedulable {
         query += ' where npe03__Open_Ended_Status__c = \'' + RD_Constants.OPEN_ENDED_STATUS_OPEN + '\'';
         RD_RecurringDonations_BATCH.isBatchButton = true;
     }
-
     /*******************************************************************************************************
     * @description Executes the RD Batch process.
     */
@@ -109,7 +108,8 @@ Schedulable {
     */
     public void execute(Database.BatchableContext bc, SObject[] result) {
 		String className = CRLP_Account_BATCH.class.getName();
-        if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
+        boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
+        if (!hasRunningJob) {
         	RD_RecurringDonations_BATCH.isBatchButton = true;
         	recCount += result.size();
         	failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);

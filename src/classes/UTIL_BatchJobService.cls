@@ -90,7 +90,7 @@ public with sharing class UTIL_BatchJobService {
     public Boolean isInProgress(Id batchId) {
         if (batchId == null) {
             return false;
-        }
+        } 
 
         return (Database.countQuery('SELECT Count() FROM AsyncApexJob WHERE Id = :batchId AND Status IN :IN_PROGRESS_STATUSES') > 0);
     }

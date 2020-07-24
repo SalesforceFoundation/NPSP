@@ -328,6 +328,36 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         testNextInstallmentOppCreation(rd);
     }
 
+    @isTest
+    private static void shouldNotRunTheBatchIfAnotherJobIsRunning() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStatusLapsed()
+            .build();
+
+        final Date prevCloseDate = START_DATE.addMonths(1);
+        final Date today = prevCloseDate.addDays(1);
+        final Date nextCloseDate = START_DATE.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withOpenStage()
+            .withCloseDate(prevCloseDate)
+            .build();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
+
+        RD2_OpportunityEvaluation_BATCH batch  = new RD2_OpportunityEvaluation_BATCH(nextCloseDate.addDays(1));
+        batch.resultOfHasAnotherTestRunning = true;
+        runBatch(batch);
+
+        System.assertEquals(1, [SELECT id FROM Error__c].size(), 'Error should have been created');
+    }
     /**
      * @description Verifies next installment Opp is created for the next installment date
      */
@@ -357,6 +387,8 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate,
             'Close Date on the new Opp should match next Close Date');
     }
+
+    
 
     /**
      * @description Verifies an Opp with Close Date equal to the Recurring Donation Next Donation Date is created

@@ -564,6 +564,39 @@ private with sharing class RD_RecurringDonations_TEST2 {
         ID ApexJobId = Database.executeBatch(rdbatch, 10);
         Test.stopTest();
     }
+    /***
+     * @description Test that not opportunity is created when another job is running
+     */
+    @isTest
+    public static void testBatchDidntRunIfAnotherJobIsRunning() {
+        RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();
+
+        Account a = buildAccount();
+        insert a;
+
+        Contact c = buildContact(a.Id);
+        insert c;
+
+        npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(null);
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
+        rd.npe03__Next_Payment_Date__c = TODAY;
+        insert rd;
+
+        List<Opportunity> originalOpps = RD_RecurringDonations_TEST.getOppsOrderByCloseDate(rd.Id);
+
+        Opportunity o = originalOpps[0];
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+        update o;
+
+        Test.StartTest();
+        RD_RecurringDonations_BATCH rdbatch = new RD_RecurringDonations_BATCH();
+        rdbatch.resultOfHasAnotherTestRunning = true;
+        ID ApexJobId = Database.executeBatch(rdbatch, 10);
+        Test.stopTest();
+        System.assertEquals(1, [SELECT id FROM Error__c].size(), 'Error should have been created');
+    }
 
     /***
      * @description Verifies Recurring Donations are returned when enhanced Recurring Donations are not enabled

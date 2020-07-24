@@ -5,7 +5,7 @@
             <apex:outputText value="{!pageDescription}" escape="false" />
         </div>
         <c:UTIL_PageMessages />
-        <apex:outputPanel rendered="{!isReadOnlyMode}">
+        <apex:outputPanel rendered="{!and(isReadOnlyMode, not(isRunningBatch))}">
             <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
                 <apex:commandButton id="runRDBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </div>

@@ -221,10 +221,6 @@ public without sharing class UTIL_MasterSchedulableHelper {
             AND Status NOT IN ('Queued','Aborted','Completed','Failed')
             AND CreatedDate < :tenMinutesAgo
             LIMIT 1];
-        if (jobCount == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return jobCount != 0;
     }
 }
