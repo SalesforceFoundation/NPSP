@@ -37,6 +37,7 @@ const ID = 'id';
 const MAX_STEPS = 2;
 const CANCEL = 'cancel';
 const COMMA_SEPARATOR = ';';
+const NAMESPACE_PREFIX = 'npsp__';
 
 export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
@@ -380,7 +381,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             const matchingRuleFields = donationMatchingRule.split(COMMA_SEPARATOR);
             matchingRuleFields.forEach(field => {
                 strippedFields += stripNamespace(field,
-                  namespace + '__') + COMMA_SEPARATOR;
+                  NAMESPACE_PREFIX) + COMMA_SEPARATOR;
             });
             dataImportBatch.fields[
               DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName] =
