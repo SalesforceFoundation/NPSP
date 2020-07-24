@@ -60,7 +60,7 @@ Verify Mapped Field Is Available For Batch Template
     Select Template                         ${TEMPLATE}
     Load Page Object                        Form                            Gift Entry
     Fill Gift Entry Form
-    ...                                     Batch Name=Field Labels Automation Batch
+    ...                                     Batch Name=${CAMPAIGN_REC}[Name] Automation Batch
     ...                                     Batch Description=This is a test batch created via automation script
     Click Gift Entry Button                 Next
     Click Gift Entry Button                 Save
@@ -80,5 +80,13 @@ Verify Mapped Field Is Available For Batch Template
     ...                                     ${RECORD_TYPE}[Field Label]=Donation
     Click Button                            Save & Enter New Gift
     Verify Gift Count                       1
-    Sleep                                   5
+    Wait Until Page Contains Element        npsp:gift_entry.field_span:Batch Gifts,${DATE}[Field Label]
+    Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${CAMPAIGN}[Field Label]
+    Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${PAY}[Field Label]
+    Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${RECORD_TYPE}[Field Label]
+    Click Gift Entry Button          Process Batch
+    Click Data Import Button         NPSP Data Import              button       Begin Data Import Process
+    Wait For Batch To Process        BDI_DataImport_BATCH          Completed
+    Click Button With Value          Close
+    
     

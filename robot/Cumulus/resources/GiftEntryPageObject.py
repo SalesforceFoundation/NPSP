@@ -290,7 +290,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             print(f"type is {type}")
             if 'autocomplete' in type :
                 self.salesforce._populate_field(locator,value)
-                value_locator=npsp_lex_locators["gift_entry"]["id"].format(value)
+                value_locator=npsp_lex_locators["gift_entry"]["id"].format("Select "+value)
                 self.selenium.wait_until_page_contains_element(value_locator)
                 self.selenium.click_element(value_locator)
             elif 'combobox' in type :
