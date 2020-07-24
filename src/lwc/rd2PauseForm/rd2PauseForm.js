@@ -330,7 +330,8 @@ export default class Rd2PauseForm extends LightningElement {
             : this.labels.deactivationSuccessMessage.replace('{0}', this.recordName);
         showToast(message, '', 'success', []);
 
-        this.closeModal();
+        const closeEvent = new CustomEvent('save');
+        this.dispatchEvent(closeEvent);
     }
 
     /***
@@ -373,13 +374,6 @@ export default class Rd2PauseForm extends LightningElement {
     * @description 
     */
     handleCancel() {
-        this.closeModal();
-    }
-
-    /***
-    * @description
-    */
-    closeModal() {
         const closeEvent = new CustomEvent('close');
         this.dispatchEvent(closeEvent);
     }

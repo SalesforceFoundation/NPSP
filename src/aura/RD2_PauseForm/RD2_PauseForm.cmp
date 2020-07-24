@@ -2,9 +2,9 @@
 
     <aura:html tag="style">
         /**
-         * Remove padding so that Pause Form including the header, 
-         * footer and the body can be displayed as the modal
-         */
+        * Remove padding so that Pause Form including the header,
+        * footer and the body can be displayed as the modal
+        */
         .cuf-content {
             padding: 0 0rem !important;
         }
@@ -22,7 +22,7 @@
         */
         .slds-th__action.slds-th__action_form.slds-cell-fixed {
             width: 60px !important;
-            justify-content: center !important; 
+            justify-content: center !important;
         }
         .slds-table_edit thead th:first-child {
             width: 60px !important;
@@ -30,12 +30,12 @@
         /*
         * Center the checkbox in the first column on the datatable
         */
-        table tr td:first-child { 
-            text-align: center !important; 
+        table tr td:first-child {
+            text-align: center !important;
         }
 
     </aura:html>
 
-    <c:rd2PauseForm recordId="{!v.recordId}" onclose="{!c.handleClose}" />
+    <c:rd2PauseForm recordId="{!v.recordId}" onclose="{!c.handleClose}" onsave="{!c.handleCloseOnSave}" />
 
 </aura:component>
