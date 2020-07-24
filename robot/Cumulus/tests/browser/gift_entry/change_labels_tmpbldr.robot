@@ -1,5 +1,4 @@
 *** Settings ***
-
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
@@ -27,11 +26,11 @@ Setup Test Data
 
 *** Test Cases ***
 
-Verify Mapped Field Is Available For Batch Template
-    # [Documentation]                         Create a custom field on opportunity and npsp data import objects. Create advanced mapping to these fields.
-    # ...                                     Verify that the mapped field is available for selection while creating a new template and once selected, its avialble on newly created batch gift form
-    # ...                                     Remove field from template, delete mapping and verify that the new field is not avaialable for selection while creating template.  
-    [tags]                                  unstable      feature:GE                    W-042499   
+Verify Changing Labels on Template Gets Updated on Batches
+    [Documentation]                         Create a template with Record Type and Campagin Lookup fields, custom labels for lookup, date and text fields
+    ...                                     and finally add these fields to batch table. Using this new template create a batch and verify that labels are updated on batch form
+    ...                                     Create a gift and verify batch table field names are updated as well and verify that batch is processed without errors.  
+    [tags]                                  unstable      feature:GE        W-042499   
     #Create new template with new field labels                            
     Go To Page                              Landing                         GE_Gift_Entry         
     Click Link                              Templates
@@ -79,14 +78,15 @@ Verify Mapped Field Is Available For Batch Template
     ...                                     ${PAY}[Field Label]=74454354
     ...                                     ${RECORD_TYPE}[Field Label]=Donation
     Click Button                            Save & Enter New Gift
+    #Verify gift is created and labels are updated on the table and process batch
     Verify Gift Count                       1
     Wait Until Page Contains Element        npsp:gift_entry.field_span:Batch Gifts,${DATE}[Field Label]
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${CAMPAIGN}[Field Label]
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${PAY}[Field Label]
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${RECORD_TYPE}[Field Label]
-    Click Gift Entry Button          Process Batch
-    Click Data Import Button         NPSP Data Import              button       Begin Data Import Process
-    Wait For Batch To Process        BDI_DataImport_BATCH          Completed
-    Click Button With Value          Close
+    Click Gift Entry Button                 Process Batch
+    Click Data Import Button                NPSP Data Import                button       Begin Data Import Process
+    Wait For Batch To Process               BDI_DataImport_BATCH            Completed
+    Click Button With Value                 Close
     
     
