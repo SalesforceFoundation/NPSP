@@ -56,11 +56,11 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """ Verify we are on the Account detail page
             by verifying that the url contains '/view'
         """
+        self.selenium.location_should_contain("/lightning/r/npe03__Recurring_Donation__c/",message="Current page is not a Recurring Donations record view")
         locator=npsp_lex_locators['bge']['button'].format("Edit")
         edit_button=self.selenium.get_webelement(locator)
-        self.selenium.wait_until_page_contains_element(edit_button, error="Details page should not load fully")
-        self.selenium.location_should_contain("/lightning/r/npe03__Recurring_Donation__c/",message="Current page is not a Recurring Donations record view")
-    
+        self.selenium.wait_until_page_contains_element(edit_button, error="Details page did not load fully")
+
     def click_actions_button(self,button_name):
         """Clicks on action button based on API version"""
         if self.npsp.latest_api_version == 47.0:
