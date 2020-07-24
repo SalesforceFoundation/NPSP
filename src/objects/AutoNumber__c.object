@@ -230,7 +230,7 @@
     </fields>
     <label>AutoNumber</label>
     <nameField>
-        <label>AutoNumber Name</label>
+        <label>Auto-Number Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>AutoNumbers</pluralLabel>
