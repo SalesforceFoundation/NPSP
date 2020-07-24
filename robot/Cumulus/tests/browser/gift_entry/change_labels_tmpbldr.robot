@@ -20,8 +20,8 @@ ${TEMPLATE}       Labels Template
 *** Keywords ***
 Setup Test Data
     Setupdata   contact   ${CONTACT}
-    &{campaign} =    API Create Campaign
-    Set suite variable   &{CAMPAIGN}
+    &{campaign_rec} =    API Create Campaign
+    Set suite variable   &{CAMPAIGN_REC}
     ${ns} =  Get NPSP Namespace Prefix
     Set suite variable    ${NS}
 
@@ -74,10 +74,11 @@ Verify Mapped Field Is Available For Batch Template
     ...                                     Data Import: Donation Donor=Contact1
     ...                                     Data Import: Contact1 Imported=${data}[contact][Name]
     ...                                     ${DATE}[Field Label]=Today
-    ...                                     Donation Amount=150
-    ...                                     ${CAMPAIGN}[Field Label]=${CAMPAIGN}[Name]
+    ...                                     Opportunity: Amount=150
+    ...                                     ${CAMPAIGN}[Field Label]=${CAMPAIGN_REC}[Name]
     ...                                     ${PAY}[Field Label]=74454354
     ...                                     ${RECORD_TYPE}[Field Label]=Donation
     Click Button                            Save & Enter New Gift
+    Verify Gift Count                       1
     Sleep                                   5
     
