@@ -219,6 +219,7 @@
         <description>The first number in the auto-numbered sequence.</description>
         <defaultValue>0</defaultValue>
         <externalId>false</externalId>
+        <inlineHelpText>The first number in the auto-numbered sequence.</inlineHelpText>
         <label>Starting Number</label>
         <precision>10</precision>
         <required>false</required>
