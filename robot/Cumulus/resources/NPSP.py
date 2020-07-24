@@ -1223,31 +1223,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
         self.npsp.click_link_with_text(value)
-
-    @capture_screenshot_on_error
-    def click_rd2_modal_button(self, name):
-        """Based on the button name (Cancel)  or (Save) on the modal footer, select and click on the respective button"""
-        btnlocator = npsp_lex_locators["button-with-text"].format(name)
-        self.selenium.scroll_element_into_view(btnlocator)
-        ele = self.selenium.get_webelement(btnlocator)
-        self.selenium.click_element(ele)
-
-    @capture_screenshot_on_error
-    def select_value_from_rd2_modal_dropdown(self,dropdown,value):
-        """Selects given value in the dropdown field on the rd2 modal"""
-        locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(
-            dropdown
-        )
-        selection_value = npsp_lex_locators["erd"][
-            "modal_selection_value"
-        ].format(value)
-        if self.npsp.check_if_element_exists(locator):
-            self.selenium.set_focus_to_element(locator)
-            self.selenium.wait_until_element_is_visible(locator)
-            self.selenium.scroll_element_into_view(locator)
-            self.salesforce._jsclick(locator)
-            self.selenium.wait_until_element_is_visible(selection_value)
-            self.selenium.click_element(selection_value)
         
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects

@@ -13,6 +13,26 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     object_name = "npe03__Recurring_Donation__c"
 
     @capture_screenshot_on_error
+    def click_rd2_modal_button(self, name):
+      """Based on the button name (Cancel)  or (Save) on the modal footer, select and click on the respective button"""
+      btnlocator = npsp_lex_locators["button-with-text"].format(name)
+      self.selenium.scroll_element_into_view(btnlocator)
+      self.selenium.click_element(btnlocator)
+
+    @capture_screenshot_on_error
+    def select_value_from_rd2_modal_dropdown(self,dropdown,value):
+      """Selects given value in the dropdown field on the rd2 modal"""
+      locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(dropdown)
+      selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+      if self.npsp.check_if_element_exists(locator):
+          self.selenium.set_focus_to_element(locator)
+          self.selenium.wait_until_element_is_visible(locator)
+          self.selenium.scroll_element_into_view(locator)
+          self.salesforce._jsclick(locator)
+          self.selenium.wait_until_element_is_visible(selection_value)
+          self.selenium.click_element(selection_value)
+
+    @capture_screenshot_on_error
     def populate_rd2_modal_form(self, **kwargs):
         """Populate the RD2 modal form fields with the respective fields and values"""
         for key, value in kwargs.items():
@@ -24,35 +44,24 @@ class RDListingPage(BaseNPSPPage, ListingPage):
             if key in ("Account", "Contact"):
                 self.salesforce.populate_lookup_field(key, value)
             else:
-                self.npsp.select_value_from_rd2_modal_dropdown(key,value)
+                self.select_value_from_rd2_modal_dropdown(key,value)
 
 
 @pageobject("Details", "npe03__Recurring_Donation__c")
 class RDDetailPage(BaseNPSPPage, DetailPage):
     object_name = "npe03__Recurring_Donation__c"
-
+    
+    
     def _is_current_page(self):
         """ Verify we are on the Account detail page
             by verifying that the url contains '/view'
         """
-        self.selenium.wait_until_location_contains(
-            "/view", timeout=60, message="Record view did not open in 1 min"
-        )
-        self.selenium.location_should_contain(
-            "/lightning/r/npe03__Recurring_Donation__c/",
-            message="Current page is not a Recurring Donations record view",
-        )
-
-    def refresh_opportunities(self):
-        """Clicks on more actions dropdown and click the given title"""
-        locator = npsp_lex_locators["link-contains"].format("more actions")
-        self.selenium.click_element(locator)
-        self.selenium.wait_until_page_contains("Refresh Opportunities")
-        link_locator = npsp_lex_locators["link"].format(
-            "Refresh_Opportunities", "Refresh_Opportunities"
-        )
-
-    def click_actions_button(self, button_name):
+        locator=npsp_lex_locators['bge']['button'].format("Edit")
+        edit_button=self.selenium.get_webelement(locator)
+        self.selenium.wait_until_page_contains_element(edit_button, error="Details page should not load fully")
+        self.selenium.location_should_contain("/lightning/r/npe03__Recurring_Donation__c/",message="Current page is not a Recurring Donations record view")
+    
+    def click_actions_button(self,button_name):
         """Clicks on action button based on API version"""
         if self.npsp.latest_api_version == 47.0:
             self.selenium.click_link(button_name)
@@ -67,15 +76,25 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.wait_until_page_contains_element(edit_button, error="Show more actions dropdown didn't open in 30 sec")
         self.selenium.click_element(locator)
         self.salesforce.wait_until_modal_is_open()
-        self._populate_edit_status(**kwargs)
-        self.npsp.click_rd2_modal_button("Save")
+        self._populate_edit_status_values(**kwargs)
+        btnlocator = npsp_lex_locators["button-with-text"].format("Save")
+        self.selenium.scroll_element_into_view(btnlocator)
+        self.selenium.click_element(btnlocator)
         self.salesforce.wait_until_modal_is_closed()
 
     @capture_screenshot_on_error
-    def _populate_edit_status(self, **kwargs):
+    def _populate_edit_status_values(self, **kwargs):
         """Pass the status and reason for the status as key, value pairs to populate the edit form"""
         for key, value in kwargs.items():
-            self.npsp.select_value_from_rd2_modal_dropdown(key,value)
+            locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
+            selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+            if self.npsp.check_if_element_exists(locator):
+                self.selenium.set_focus_to_element(locator)
+                self.selenium.wait_until_element_is_visible(locator)
+                self.selenium.scroll_element_into_view(locator)
+                self.salesforce._jsclick(locator)
+                self.selenium.wait_until_element_is_visible(selection_value)
+                self.selenium.click_element(selection_value)
 
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):
@@ -95,9 +114,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
          Validates the display fields in the card match with the values passed in the key value pair"""
 
         if section == "Current Schedule":
-            active_schedule_card = npsp_lex_locators["erd"][
-                "active_schedules_card"
-            ].format(section)
+            active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format(section)
             number_fields = ["Amount", "Installment Frequency"]
             date_fields = ["Effective Date"]
             self.selenium.wait_until_element_is_visible(active_schedule_card, 60)
@@ -117,19 +134,13 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                         actual_value = self.selenium.get_webelement(locator).text
                         print(f"actual value is {actual_value}")
                         self.builtin.log(f"actual value is {actual_value}")
-                        assert (
-                            value == actual_value
-                        ), "Expected {} value to be {} but found {}".format(
-                            label, value, actual_value
-                        )
+                        assert value == actual_value, "Expected {} value to be {} but found {}".format(label,value, actual_value)
                     else:
                         self.builtin.log("element Not found")
         else:
             for label, value in kwargs.items():
-                self.npsp.navigate_to_and_validate_field_value(
-                    label, "contains", value, section
-                )
-
+                self.npsp.navigate_to_and_validate_field_value(label, "contains", value, section)
+       
     @capture_screenshot_on_error
     def validate_upcoming_schedules(self, num_payments, startdate, dayofmonth):
         """Takes in the parameter (number of payments) and the donation start date
@@ -140,23 +151,15 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         installments = self.selenium.get_webelements(installmentrow)
         count = len(installments)
         print(f"Number of installments created is {count}")
-        assert count == int(
-            num_payments
-        ), "Expected installments to be {} but found {}".format(num_payments, count)
+        assert count == int(num_payments), "Expected installments to be {} but found {}".format(num_payments, count)
         if count == int(num_payments):
             i = 1
             while i < count:
                 datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
                 installment_date = self.selenium.get_webelement(datefield)
-                date_object = datetime.strptime(startdate, "%m/%d/%Y").date()
-                expected_date = (date_object + relativedelta(months=+i)).replace(
-                    day=int(dayofmonth)
-                )
-                actual_date = self.selenium.get_webelement(installment_date).text
-                formatted_actual = datetime.strptime(actual_date, "%m/%d/%Y").date()
-                assert (
-                    formatted_actual == expected_date
-                ), "Expected date to be {} but found {}".format(
-                    expected_date, formatted_actual
-                )
-                i = i + 1
+                date_object = datetime.strptime(startdate, '%m/%d/%Y').date()
+                expected_date = (date_object+relativedelta(months=+i)).replace(day=int(dayofmonth))
+                actual_date=self.selenium.get_webelement(installment_date).text
+                formatted_actual = datetime.strptime(actual_date, '%m/%d/%Y').date()
+                assert formatted_actual == expected_date, "Expected date to be {} but found {}".format(expected_date,formatted_actual)
+                i=i+1
