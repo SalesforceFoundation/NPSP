@@ -1430,8 +1430,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                                 print ("class name for key {} did not match with field type supported by this keyword".format(key))
                                      
             else:
-                raise Exception("Locator for {} is not found on the page".format(key))   
-     
+                raise Exception("Locator for {} is not found on the page".format(key))
+
+
     def verify_toast_message(self,value):
         """Verifies that toast contains specified value"""       
         locator=npsp_lex_locators["toast-msg"]
