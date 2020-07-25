@@ -64,7 +64,6 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains("Refresh Opportunities")
         link_locator=npsp_lex_locators['link'].format('Refresh_Opportunities','Refresh_Opportunities')
-        self.selenium.click_element(link_locator)
     
     def click_actions_button(self,button_name):
         """Clicks on action button based on API version"""
