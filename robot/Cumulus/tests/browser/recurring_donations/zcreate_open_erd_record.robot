@@ -27,12 +27,12 @@ Setup Test Data
 
 *** Variables ***
 &{account_fields}  Type=Organization
-${installments}  1
+
 ${frequency}  1
 ${day_of_month}  2
 ${amount}  100
 ${method}  Credit Card
-${type}    Open
+
 
 *** Test Cases ***
 
@@ -47,26 +47,22 @@ Create Open Recurring Donation With Monthly Installment
     Go To Page                             Listing                                   npe03__Recurring_Donation__c
     Click Object Button                    New
     Wait For Modal                         New                                       Recurring Donation
+    # Reload page is a temporary fix till the developers fix the ui-modal
+    Reload Page
+    Wait For Modal                         New                                       Recurring Donation
 
     # Create Enhanced recurring donation of type Open
-    Populate Modal Form
-    ...                                    Recurring Donation Name=ERD Recurring Donation Open
-    ...                                    Amount= ${amount}
-    ...                                    Installment Frequency= ${frequency}
-    ...                                    Number of Planned Installments= ${installments}
-
-    Populate Lookup Field                  Account                                   ${data}[account][Name]
-    Select Value From Dropdown             Day of Month                              ${day_of_month}
-    Sleep                                  1
-    Select Value From Dropdown             Recurring Type                            ${type}
-    Select Value From Dropdown             Payment Method                            ${method}
-
-    Click Modal Button                     Save
+    Populate Rd2 Modal Form
+    ...                                   Donor Type=Account
+    ...                                   Account=${data}[account][Name]
+    ...                                   Amount= ${amount}
+    ...                                   Payment Method=Credit Card
+    ...                                   Day of Month=${day_of_month}
+    Click Rd2 Modal Button                Save
     Wait Until Modal Is Closed
-    Current Page Should Be                 Details                                   npe03__Recurring_Donation__c
+    Current Page Should Be                Details                                   npe03__Recurring_Donation__c
 
     ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
-
     Validate Field Values Under Section
 
     ...                                     Account=${data}[account][Name]
