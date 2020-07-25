@@ -109,10 +109,7 @@ public class AutoNumberService {
             nextAutoNumberInSequence++;
         }
 
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        dmlWrapper.objectsToUpdate.addAll(sObjectsToUpdate);
-        // Throws DmlException STRING TOO LONG if format+number is longer than target field
-        TDTM_TriggerHandler.processDml(dmlWrapper);
+        update sObjectsToUpdate;
 
         // Update the AutoNumber record AFTER Successful Save
         an.setMaxUsedNumber(nextAutoNumberInSequence - 1);
@@ -207,9 +204,7 @@ public class AutoNumberService {
 
         public void setMaxUsedNumber(Integer num) {
             record.Max_Used_Number__c = num;
-            TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-            dmlWrapper.objectsToUpdate.add(record);
-            TDTM_TriggerHandler.processDML(dmlWrapper);
+            update record;
         }
 
         private AutoNumber__c convertJSONToAutoNumber(String autoNumber) {
