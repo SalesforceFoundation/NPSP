@@ -1138,7 +1138,7 @@ flows:
         steps:
             1:
                 flow: qa_org
-            3:
+            2:
                 flow: rd_load_for_mbeatty
 
     test_performance_LDV:
