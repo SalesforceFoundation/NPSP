@@ -69,7 +69,7 @@ public class GE_AutoNumberController {
 
     @AuraEnabled
     public static List<AutoNumber__c> getAutoNumbers() {
-        return autoNumberService.getAutoNumbers();
+        return autoNumberService.getAutoNumbers(DataImportBatch__c.SObjectType);
     }
 
 }

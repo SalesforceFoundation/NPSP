@@ -59,8 +59,7 @@ public class GE_AutoNumberController_TEST {
     @IsTest
     static void shouldSave() {
         GE_AutoNumberController.save(AutoNumberService_TEST_Helper.autoNumberJSON);
-        AutoNumberService ans = new AutoNumberService(DataImportBatch__c.SObjectType);
-        System.assert(!ans.getAutoNumbers().isEmpty(),
+        System.assert(![SELECT Id FROM AutoNumber__c].isEmpty(),
                 'The Auto Number should have been created.');
     }
 

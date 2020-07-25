@@ -35,7 +35,7 @@ private class AutoNumberService_TEST {
         AutoNumberService ans = new AutoNumberService(DataImportBatch__c.SObjectType);
         ans.save(AutoNumberService_TEST_Helper.autoNumberJSON);
 
-        List<AutoNumber__c> autoNumbers = ans.getAutoNumbers();
+        List<AutoNumber__c> autoNumbers = ans.getAutoNumbers(DataImportBatch__c.SObjectType);
         System.assert(!autoNumbers.isEmpty(),
                 'The AutoNumber should have been inserted.');
     }
