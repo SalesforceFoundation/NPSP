@@ -92,8 +92,10 @@ export default class Rd2PauseForm extends LightningElement {
             })
             .catch(error => {
                 this.installments = null;
-                this.hasAccess = false;
-                this.handleError(error);
+
+                if (this.isRDClosed !== true && this.hasAccess !== false) {
+                    this.handleError(error);
+                }
             });
     }
 

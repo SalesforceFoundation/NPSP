@@ -49,8 +49,14 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description 
-     * @return 
+     * @description Returns PauseData to the LWC so the page can be initialized and rendered.
+     * Determines if the user has the access to create/update the pause
+     * as well as determines if the Recurring Donation is closed.
+     * The Paused Reason field label and options are returned regardless
+     * if the pause exists. However, the schedule Id and the Paused Reason value
+     * are specified if the pause exists for the RD.
+     * @param rdId Recurring Donation Id
+     * @return String JSON string representing PauseData
      */
     @AuraEnabled(cacheable=false)
     public static String getPauseData(Id rdId) {
@@ -78,7 +84,7 @@ public with sharing class RD2_PauseForm_CTRL {
 
     /**
      * @description Checks if the user has access to create or update a Recurring Donation
-     * @return 
+     * @return Boolean
      */
     private static Boolean hasAccess() {
         SObjectType objType = npe03__Recurring_Donation__c.SObjectType;
@@ -88,8 +94,9 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description 
-     * @return 
+     * @description Determines if the Recurring Donation is closed
+     * @param rdId Recurring Donation Id
+     * @return Boolean
      */
     private static Boolean isClosed(Id rdId) {
         Boolean isClosed = false;
@@ -111,7 +118,7 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description Returns the Paused Reason value and label select options
+     * @description Returns the Paused Reason field label and select options
      * @return PausedReason
      */
     private static PausedReason buildPausedReason() {
@@ -124,7 +131,8 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description Returns the Paused Reason value and label select options
+     * @description Populates PausedReason.value and PauseData.scheduleId
+     * if the pause exists on the Recurring Donation
      * @return void
      */
     private static void populateScheduleData(PauseData pause, Id rdId) {
@@ -139,9 +147,10 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description Returns the Paused Reason value and label select options
+     * @description Returns the Paused Reason field select options
      * @return List<Option>
      */
+    @TestVisible
     private static List<Option> getPausedReasonOptions() {
         List<Option> options = new List<Option>();
         List<Schema.PicklistEntry> entries = npe03__Recurring_Donation__c.ClosedReason__c.getDescribe().getPicklistValues();
@@ -159,29 +168,21 @@ public with sharing class RD2_PauseForm_CTRL {
     }
     
     /**
-     * @description Builds future projected installments for the Recurring Donation
+     * @description Returns future projected installments for the Recurring Donation
      * @param recordId Record Id
-     * @param maxRowDisplay Number of installments to display
-     * @return Map<String, Object>
+     * @param maxRowDisplay Maximum number of installments to display
+     * @return Map<String, Object> Installments datatable value by 'dataTable' key
      */
     @AuraEnabled
     public static Map<String, Object> getInstallments(Id recordId, Integer maxRowDisplay) {
-        Map<String, Object> dataByKey = new Map<String, Object>();
-        try {
-            dataByKey = RD2_VisualizeScheduleController.getInstallments(recordId, maxRowDisplay);
-
-        } catch (Exception e) {
-            if (!e.getMessage().contains(System.Label.RD2_ScheduleVisualizerMessageNoSchedule)) {
-                throw e;
-            }
-        }
-
-        return dataByKey;
+        return RD2_VisualizeScheduleController.getInstallments(recordId, maxRowDisplay);
     }
 
     /**
-     * @description 
-     * @param 
+     * @description Deactivates existing pause (if any). 
+     * Creates new pause based on provided data if the both start and end dates are provided.
+     * Otherwise, if dates are not provided, save is actual deactivation of the current pause on the RD.
+     * @param jsonPauseData JSON representation of the PauseData 
      * @return void
      */
     @AuraEnabled
@@ -203,15 +204,15 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description 
-     * @param 
-     * @return void
+     * @description Constructs schedule to be inserted for the new pause
+     * @param pause PauseData
+     * @return RecurringDonationSchedule__c
      */
     private static RecurringDonationSchedule__c buildPauseSchedule(PauseData pause) {
         RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
             RecurringDonation__c = pause.rdId,
             IsPause__c = true,
-            StatusReason__c = pause.pausedReason.value,
+            StatusReason__c = pause.pausedReason == null ? null : pause.pausedReason.value,
             StartDate__c = pause.startDate,
             EndDate__c = pause.resumeAfterDate
         );
@@ -220,8 +221,9 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /***
-    * @description Throws AuraHandledException
-    * @param errMessage
+    * @description Sets the error message and throws the AuraHandledException.
+    * This is required to avoid generic "script-thrown exception" error.
+    * @param errMessage Error message
     * @return void
     */
     private static void throwAuraHandledException(String errMessage) {
@@ -231,7 +233,7 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /***
-    * @description 
+    * @description Contains pause data
     */
     public class PauseData {
         public Id rdId;
@@ -244,7 +246,7 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /***
-    * @description 
+    * @description Contains Paused Reason field details
     */
     public class PausedReason {
         public String value;

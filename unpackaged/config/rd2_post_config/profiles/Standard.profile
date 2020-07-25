@@ -112,14 +112,4 @@
         <field>npe03__Recurring_Donation__c.npe03__Total__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>%%%NAMESPACE%%%RecurringDonationSchedule__c.%%%NAMESPACE%%%IsPause__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>%%%NAMESPACE%%%RecurringDonationSchedule__c.%%%NAMESPACE%%%StatusReason__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
 </Profile>
