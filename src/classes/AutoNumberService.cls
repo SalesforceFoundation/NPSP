@@ -72,7 +72,7 @@ public class AutoNumberService {
         autoNumbersToUpdate.add(new AutoNumber__c(Id = autoNumberId, IsActive__c = true));
         update autoNumbersToUpdate;
 
-        if (!hasTriggerHandlerEntry) {
+        if (!isTriggerHandlerEnabled) {
             insert triggerHandler;
         }
     }
@@ -179,7 +179,7 @@ public class AutoNumberService {
     }
 
     @TestVisible
-    Boolean hasTriggerHandlerEntry {
+    Boolean isTriggerHandlerEnabled {
         get {
             return ![
                     SELECT Id

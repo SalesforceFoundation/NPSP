@@ -54,7 +54,7 @@ private class AutoNumberService_TEST {
                 AutoNumberService_TEST_Helper.getAutoNumberById(activeAutoNumberId).IsActive__c);
 
         AutoNumberService ans = new AutoNumberService(DataImportBatch__c.SObjectType);
-        System.assertEquals(false, ans.hasTriggerHandlerEntry,
+        System.assertEquals(false, ans.isTriggerHandlerEnabled,
                 'The Trigger Handler table should not have an entry for AutoNumber_TDTM if' +
                         'no AutoNumbers have been activated.');
         ans.activate(autoNumberIdToActivate);
@@ -65,7 +65,7 @@ private class AutoNumberService_TEST {
         System.assertEquals(false,
                 AutoNumberService_TEST_Helper.getAutoNumberById(activeAutoNumberId).IsActive__c,
                 'The initially active AutoNumber record should now be inactive.');
-        System.assertEquals(true, ans.hasTriggerHandlerEntry,
+        System.assertEquals(true, ans.isTriggerHandlerEnabled,
                 'Activating an Auto Number should create an entry for ' +
                         'the AutoNumber_TDTM class in the Trigger Handler table.');
     }
