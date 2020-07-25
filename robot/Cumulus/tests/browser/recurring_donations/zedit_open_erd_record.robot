@@ -40,11 +40,18 @@ Edit An Enhanced Recurring donation record of type open
 
     [tags]                                 unstable               W-040346            feature:RD2
 
+    Go To Page                              Listing                                   npe03__Recurring_Donation__c
+
+    Click Object Button                     New
+    Wait For Modal                          New                                       Recurring Donation
+    # Reload page is a temporary fix till the developers fix the ui-modal
+    Reload Page
+
     Go To Page                             Details
     ...                                    npe03__Recurring_Donation__c
     ...                                    object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
-    Edit Recurring Donation
+    Edit Recurring Donation Status
     ...                                    Status=Closed
     ...                                    Status Reason=Commitment Completed
 
