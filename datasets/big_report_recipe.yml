@@ -153,7 +153,7 @@
       count: << (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 >>
       fields:
         AccountId: <<npe03__Recurring_Donation__c.npe03__Organization__c>>
-        # CloseDate: << date(npe03__Recurring_Donation__c.npe03__Date_Established__c) + relativedelta(months=1) >>
+        CloseDate: << date(npe03__Recurring_Donation__c.npe03__Date_Established__c) + relativedelta(months=child_index) >>
         npe03__Recurring_Donation__c:
           reference:
             npe03__Recurring_Donation__c
