@@ -1,170 +1,130 @@
-- option: thousand
+- option: one
   default: 1  # Don't really generate 1000 in a single execution
 
-- option: million
-  default: 1000   # Don't really generate millions in a single execution
+- option: thousand
+  default: 10   # Don't really generate thousands in a single execution
 
-- object: Account
-  count: <<7.5 * million>>
+- object: Contact
+  count: 1300
   fields:
-    name: Account <<id>> - 1
-
-- object: Campaign
-  count: <<115  * thousand>>
-  fields:
-    name: YK<<id>> - 1
-        
-- object: Campaign
-  count: <<50  * thousand>>
-  fields:
-    name: JK<<id>> - 1
-
-- object: Campaign
-  count: <<4  * thousand>>
-  fields:
-    name: EK<<id>> - 1
-
-- object: Campaign
-  count: <<5.5  * thousand>>
-  fields:
-    name: YL<<id>> - 1
-
-- object: Campaign
-  count: <<25.5  * thousand>>
-  nickname: JL_Campaign
-  fields:
-    name: JL<<id>> - 1
-
-- object: Campaign
-  count: <<7.3 * million - (116.5 + 49 + 4 + 5.5 + 25.5) * thousand>>
-  fields:
-    name: ZZ<<id>> - 1
+    record_type: HH_Account
+    FirstName: Contact <<id>> - 1
+    LastName: Contact
+    AccountId:
+    - object: Account
+      fields:
+        name: Account <<id>> - 1
 
 - macro: OpportunityStuff
   fields:
     name: Opportunity <<count>>
-    AccountId: <<count % Account.id>>
-
-    CampaignId:
-      random_choice:
-        - choice:
-            probability: << 50 * thousand >>
-            pick:
-              random_number:
-                min: 0
-                max: << JL_Campaign.id >>
-        - choice:
-            probability: << 25 * thousand >>
-            pick:
-              random_number:
-                min: << JL_Campaign.id >>
-                max: << Campaign.id >>
+    AccountId: <<((count-1) % Account.id)+1>>
 
     CloseDate:
       random_choice:
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-01-01
                 end_date: 2019-01-31
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-02-01
                 end_date: 2019-02-28
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-03-01
                 end_date: 2019-03-31
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-04-01
                 end_date: 2019-04-30
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-05-01
                 end_date: 2019-05-31
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-06-01
                 end_date: 2019-06-30
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-07-01
                 end_date: 2019-07-31
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-08-01
                 end_date: 2019-08-31
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-09-01
                 end_date: 2019-09-30
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-10-01
                 end_date: 2019-10-31
         - choice:
-            probability: <<550 * thousand>>
+            probability: <<550 * one>>
             pick:
               date_between:
                 start_date: 2019-11-01
                 end_date: 2019-11-30
         - choice:
-            probability: <<7.5 * million>>
+            probability: <<7.5 * thousand>>
             pick:
               date_between:
                 start_date: 2019-12-01
                 end_date: 2019-12-31
 
         - choice:
-            probability: <<14 * million>>
+            probability: <<14 * thousand>>
             pick:
               date_between:
                 start_date: 2018-01-01
                 end_date: 2018-12-31
 
         - choice:
-            probability: <<14 * million>>
+            probability: <<14 * thousand>>
             pick:
               date_between:
                 start_date: 2017-01-01
                 end_date: 2017-12-31
 
         - choice:
-            probability: <<14 * million>>
+            probability: <<14 * thousand>>
             pick:
               date_between:
                 start_date: 2016-01-01
                 end_date: 2016-12-31
 
         - choice:
-            probability: <<14 * million>>
+            probability: <<14 * thousand>>
             pick:
               date_between:
                 start_date: 2015-01-01
                 end_date: 2015-12-31
 
         - choice:
-            probability: <<7 * million>>
+            probability: <<7 * thousand>>
             pick:
               date_between:
                 start_date: 2014-01-01
@@ -173,33 +133,16 @@
     StageName:
       random_choice:
         - choice:
-            probability: <<45 * million>>
+            probability: <<45 * thousand>>
             pick: Completed
         - choice:
-            probability: <<(75 - 45) * million>>
+            probability: <<(75 - 45) * thousand>>
             pick: Open
-    record_type:
-      random_choice:
-        - choice:
-            probability: <<65.5 * million>>
-            pick: Donation
-        - choice:
-            probability: <<(75.5 - 65.5) / 4 * million>>
-            pick: Grant
-        - choice:
-            probability: <<(75.5 - 65.5) / 4 * million>>
-            pick: InKindGift
-        - choice:
-            probability: <<(75.5 - 65.5) / 4 * million>>
-            pick: MajorGift
-        - choice:
-            probability: <<(75.5 - 65.5) / 4 * million>>
-            pick: Membership
 
 - object: npe03__Recurring_Donation__c
-  count: << 2.5 * million >>
+  count: << 1300 >>
   fields:
-    npe03__Organization__c: <<count % Account.id>>  # pseudo-randomly select Account
+    npe03__Contact__c: <<((count -1 )% Contact.id)+1>>  # pseudo-randomly select Account
     npe03__Date_Established__c:
       date_between:
         start_date: 2014-08-01
@@ -210,7 +153,7 @@
       count: << (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 >>
       fields:
         AccountId: <<npe03__Recurring_Donation__c.npe03__Organization__c>>
-        CloseDate: << date(npe03__Recurring_Donation__c.npe03__Date_Established__c) + relativedelta(months=child_count) >>
+        # CloseDate: << date(npe03__Recurring_Donation__c.npe03__Date_Established__c) + relativedelta(months=1) >>
         npe03__Recurring_Donation__c:
           reference:
             npe03__Recurring_Donation__c

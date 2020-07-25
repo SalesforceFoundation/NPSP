@@ -3,138 +3,38 @@ Insert Account:
   table: Account
   fields:
     name: name
-Insert Recurring_Donation__c:
+  record_type: HH_Account
+Insert Contact:
+  sf_object: Contact
+  table: Contact
+  fields:
+    FirstName: FirstName
+    LastName: LastName
+  lookups:
+    AccountId:
+      table: Account
+      key_field: AccountId
+Insert npe03__Recurring_Donation__c:
   sf_object: npe03__Recurring_Donation__c
   table: npe03__Recurring_Donation__c
   fields:
     npe03__Date_Established__c: npe03__Date_Established__c
   lookups:
-    npe03__Organization__c:
-      table: Account
-Insert Campaign:
-  sf_object: Campaign
-  table: Campaign
-  fields:
-    name: name
+    npe03__Contact__c:
+      table: Contact
+      key_field: npe03__Contact__c
 Insert Opportunity:
   sf_object: Opportunity
   table: Opportunity
   fields:
-    CloseDate: CloseDate
     name: name
+    AccountId: AccountId
+    CloseDate: CloseDate
     StageName: StageName
-    record_type: record_type
   lookups:
     npe03__Recurring_Donation__c:
       table: npe03__Recurring_Donation__c
-    AccountId:
-      table: Account
-    CampaignId:
-      table: Campaign
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-  filters:
-  - record_type is NULL
-Insert Donation:
-  sf_object: Opportunity
-  table: Opportunity
-  fields:
-    name: name
-    CloseDate: CloseDate
-    StageName: StageName
-    record_type: record_type
-  record_type: Donation
-  lookups:
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-    AccountId:
-      table: Account
-    CampaignId:
-      table: Campaign
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-  filters:
-  - record_type = 'Donation'
-Insert Grant:
-  sf_object: Opportunity
-  table: Opportunity
-  fields:
-    name: name
-    CloseDate: CloseDate
-    StageName: StageName
-    record_type: record_type
-  lookups:
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-    AccountId:
-      table: Account
-    CampaignId:
-      table: Campaign
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-  record_type: Grant
-  filters:
-  - record_type = 'Grant'
-Insert InKindGift:
-  sf_object: Opportunity
-  table: Opportunity
-  fields:
-    name: name
-    CloseDate: CloseDate
-    StageName: StageName
-    record_type: record_type
-  lookups:
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-    AccountId:
-      table: Account
-    CampaignId:
-      table: Campaign
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-  record_type: InKindGift
-  filters:
-  - record_type = 'InKindGift'
-Insert MajorGift:
-  sf_object: Opportunity
-  table: Opportunity
-  fields:
-    name: name
-    CloseDate: CloseDate
-    StageName: StageName
-    record_type: record_type
-  lookups:
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-    AccountId:
-      table: Account
-    CampaignId:
-      table: Campaign
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-  record_type: MajorGift
-  filters:
-  - record_type = 'MajorGift'
-Insert Membership:
-  sf_object: Opportunity
-  table: Opportunity
-  fields:
-    name: name
-    CloseDate: CloseDate
-    StageName: StageName
-    record_type: record_type
-  lookups:
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-    AccountId:
-      table: Account
-    CampaignId:
-      table: Campaign
-    npe03__Recurring_Donation__c:
-      table: npe03__Recurring_Donation__c
-  record_type: Membership
-  filters:
-  - record_type = 'Membership'
+      key_field: npe03__Recurring_Donation__c
 Insert npe01__OppPayment__c:
   sf_object: npe01__OppPayment__c
   table: npe01__OppPayment__c
