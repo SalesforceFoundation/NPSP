@@ -40,26 +40,27 @@ Create Fixed Recurring Donation With Monthly Installment
 
     [tags]                       unstable                     W-040346               feature:RD2
 
-    Go To Page                             Listing                                   npe03__Recurring_Donation__c
-    Click Object Button                    New
-    Wait For Modal                         New                                       Recurring Donation
+    Go To Page                              Listing                                   npe03__Recurring_Donation__c
+
+    Click Object Button                     New
+    Wait For Modal                          New                                       Recurring Donation
+    # Reload page is a temporary fix till the developers fix the ui-modal
+    Reload Page
+    Wait For Modal                          New                                       Recurring Donation
     # Create Enhanced recurring donation of type Fixed
-
-    Populate Modal Form
-    ...                                    Recurring Donation Name=ERD Recurring Donation Fixed
-    ...                                    Amount= ${amount}
-    ...                                    Installment Frequency= ${frequency}
-    ...                                    Number of Planned Installments= ${installments}
-
-    Populate Lookup Field                  Account                                   ${data}[account][Name]
-    Select Value From Dropdown             Recurring Type                            ${type}
-    Select Value From Dropdown             Payment Method                            ${method}
-    Select Value From Dropdown             Day of Month                              ${day_of_month}
-    Click Modal Button                     Save
+    Populate Rd2 Modal Form
+    ...                                     Donor Type=Account
+    ...                                     Account=${data}[account][Name]
+    ...                                     Recurring Type=${type}
+    ...                                     Number of Planned Installments=${installments}
+    ...                                     Amount=100
+    ...                                     Payment Method=Credit Card
+    ...                                     Day of Month=${day_of_month}
+    Click Rd2 Modal Button                  Save
     Wait Until Modal Is Closed
-    Current Page Should Be                 Details                                   npe03__Recurring_Donation__c
+    Current Page Should Be                  Details                                   npe03__Recurring_Donation__c
     Wait Until Loading Is Complete
-    ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
+    ${rd_id}                                Save Current Record ID For Deletion       npe03__Recurring_Donation__c
 
     Validate Field Values Under Section
 
@@ -70,11 +71,11 @@ Create Fixed Recurring Donation With Monthly Installment
 
     # Validate the fields under Current Schedule card
     Validate Field Values Under Section     Current Schedule
-     ...                                    Amount=$100.00
-     ...                                    Payment Method=${method}
-     ...                                    Effective Date=${date}
-     ...                                    Installment Period=Monthly
-     ...                                    Day of Month=${day_of_month}
+    ...                                     Amount=$100.00
+    ...                                     Payment Method=${method}
+    ...                                     Effective Date=${date}
+    ...                                     Installment Period=Monthly
+    ...                                     Day of Month=${day_of_month}
     # Validate upcoming installments
     Validate_Upcoming_Schedules             ${installments}               ${date}                       ${day_of_month}
 
