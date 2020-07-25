@@ -283,6 +283,9 @@ npsp_lex_locators={
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
         'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",
+        'modal_dropdown_selector': "//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger') and @role='combobox']",
+        'modal_input_field': "//label[text()='{}']/following-sibling::div/input",
+        'modal_selection_value': "//lightning-base-combobox-item[@data-value='{}']",
         'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
         'text_message':'//span[contains(@class,"slds-text-color_error")]',
         'rd2_installed': "//c-progress-ring/following-sibling::lightning-formatted-text[text() = 'Enable Enhanced Recurring Donations']",
