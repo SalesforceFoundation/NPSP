@@ -64,33 +64,8 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
     }
 
     /**
-     * @description updates the batch status on update
-     * @param diOldList
-     * @param diNewList
-     * @return List<DataImport__c> diList
-     * 
-     */
-    private void setBatchStatus(List<DataImport__c> diOldList, 
-                                List<DataImport__c> diNewList) {
-
-      List<DataImport__c> diList = new List<DataImport__c>();
-      Map<Id, DataImport__c> diNewMap = new Map<Id, DataImport__c>(diNewList);
-
-      for(DataImport__c diOld : diOldList) {
-        DataImport__c diNew = diNewMap.get(diOld.Id);
-        if (diOld.Status__c != diNew.Status__c) {
-          diList.add(diOld);
-        }
-      }
-      setBatchStatus(diList);
-    }
-
-    /**
-     * @description Update the batch status based on the data import statuses
-     * when all DIs are Imported -> then the Batch Status is Completed
-     * when any DI status is blank or Dry Run Validated or Dry Run error -> then the Batch Status is Open
-     * when any DI is Failed -> then the Batch Status is Failed - needs review
-     * 
+     * @description updates the batch status on di records insert, delete or undelete
+     * @param diList the old or new list
      */
     private void setBatchStatus(List<DataImport__c> diList) {
       Set<Id> batchIdSet = new Set<Id>();
@@ -101,6 +76,49 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
           batchIdSet.add(di.NPSP_Data_Import_Batch__c);
         }
       }
+      setBatchStatus(batchIdSet);
+    }
+
+    /**
+     * @description updates the batch status on di records update
+     * @param diOldList
+     * @param diNewList
+     */
+    private void setBatchStatus(List<DataImport__c> diOldList, 
+                                List<DataImport__c> diNewList) {
+
+      Set<Id> batchIdSet = new Set<Id>();
+      Map<Id, DataImport__c> diNewMap = new Map<Id, DataImport__c>(diNewList);
+
+      // build a set of batch ids
+      for(DataImport__c diOld : diOldList) {
+        DataImport__c diNew = diNewMap.get(diOld.Id);
+
+        if (diOld.NPSP_Data_Import_Batch__c != diNew.NPSP_Data_Import_Batch__c) {
+          // di records changed parents
+          if (diOld.NPSP_Data_Import_Batch__c != null) {
+            batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
+          }
+          if (diNew.NPSP_Data_Import_Batch__c != null) {
+            batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
+          }
+        } else if (diOld.Status__c != diNew.Status__c) {
+          // status was changed; same parent
+          batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
+        }
+      }
+      setBatchStatus(batchIdSet);
+    }
+
+    /**
+     * @description Update the batch status based on the data import statuses
+     * @param Set<Id> batchIdSet
+     * when all DIs are Imported -> then the Batch Status is Completed
+     * when any DI status is blank or Dry Run Validated or Dry Run error -> then the Batch Status is Open
+     * when any DI is Failed -> then the Batch Status is Failed - needs review
+     * 
+     */
+    private void setBatchStatus(Set<Id> batchIdSet) {
 
       // get all the batch records
       List<DataImportBatch__c> batches = [SELECT Id, Batch_Status__c
