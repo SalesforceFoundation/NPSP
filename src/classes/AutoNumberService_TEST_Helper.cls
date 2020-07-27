@@ -31,9 +31,20 @@
 public class AutoNumberService_TEST_Helper {
 
     public static String autoNumberJSON =
-            '{"fields":{"Object_API_Name__c":"DataImportBatch__c",' +
-                    '"Field_API_Name__c":"Batch_Number__c","Display_Format__c":"abc-{000}",' +
-                    '"Starting_Number__c":100,"Max_Used_Number__c":105,"IsActive__c":false}}';
+            '{"fields":{"' + String.valueOf(AutoNumber__c.fields.Object_API_Name__c) +
+                    '":"'
+                    + String.valueOf(DataImportBatch__c.SObjectType)
+                    + '","' + String.valueOf(AutoNumber__c.fields.Field_API_Name__c) +
+                    '":"'
+                    + String.valueOf(DataImportBatch__c.fields.Batch_Number__c)
+                    + '","' + String.valueOf(AutoNumber__c.fields.Display_Format__c) +
+                    '":"abc-{000}","' +
+                    String.valueOf(AutoNumber__c.fields.Starting_Number__c) +
+                    '":100,"' +
+                    String.valueOf(AutoNumber__c.fields.Max_Used_Number__c) +
+                    '":105,"' +
+                    String.valueOf(AutoNumber__c.fields.IsActive__c) +
+                    '":false}}';
 
     public static Id setupAutoNumber(Boolean isActive, String displayFormat,
             Integer startingNumber, Boolean insertTriggerHandler) {
