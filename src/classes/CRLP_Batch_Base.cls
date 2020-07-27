@@ -655,7 +655,7 @@ public abstract class CRLP_Batch_Base {
      * @param className The name of the skipped batch class to be used in the error message
      */
     protected void logDuplicateBatchError(String className) {
-		CRLPBatchException ex = new CRLPBatchException(); 
+	    CRLPBatchException ex = new CRLPBatchException(); 
         UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.CRLP); 
     }
 

@@ -57,8 +57,8 @@ Schedulable {
     public Integer failuresCount = 0;
 
     /*******************************************************************************************************
-	 * @description Variable used to mock result of hasAnotherTestRunning
-	 */
+    * @description Variable used to mock result of hasAnotherTestRunning
+    */
     @TestVisible
     private boolean resultOfHasAnotherTestRunning = null;
 
@@ -107,8 +107,8 @@ Schedulable {
     * @return void
     */
     public void execute(Database.BatchableContext bc, SObject[] result) {
-		String className = CRLP_Account_BATCH.class.getName();
-        boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
+		String className = RD_RecurringDonations_BATCH.class.getName();
+        Boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
         if (!hasRunningJob) {
         	RD_RecurringDonations_BATCH.isBatchButton = true;
         	recCount += result.size();

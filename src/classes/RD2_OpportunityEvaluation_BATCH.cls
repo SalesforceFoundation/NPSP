@@ -59,8 +59,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     }
 
     /**
-	 * @description Variable used to mock result of hasAnotherTestRunning
-	 */
+     * @description Variable used to mock result of hasAnotherTestRunning
+     */
     @TestVisible
     private boolean resultOfHasAnotherTestRunning = null;
 
