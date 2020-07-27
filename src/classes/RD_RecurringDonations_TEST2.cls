@@ -590,7 +590,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         o.CloseDate = TODAY;
         update o;
 
-        Test.StartTest();
+        Test.startTest();
         RD_RecurringDonations_BATCH rdbatch = new RD_RecurringDonations_BATCH();
         rdbatch.resultOfHasAnotherTestRunning = true;
         ID ApexJobId = Database.executeBatch(rdbatch, 10);

@@ -93,11 +93,18 @@ Schedulable {
         // execute() method will not properly update the processed/failure
         // counts (see W-2443023).
 
+        
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new RecurringDonationsBatchException(System.Label.RD_ErrorLegacyBatchJobCannotBeRun);
-        } else {
-            return Database.getQueryLocator(query);
         }
+        String className = RD_RecurringDonations_BATCH.class.getName();
+        Boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
+        if (hasRunningJob) {
+            RecurringDonationsBatchException ex = new RecurringDonationsBatchException();
+            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
+            query += ' LIMIT 0';
+        }
+        return Database.getQueryLocator(query);
     }
 
     /*******************************************************************************************************
@@ -107,17 +114,10 @@ Schedulable {
     * @return void
     */
     public void execute(Database.BatchableContext bc, SObject[] result) {
-	    String className = RD_RecurringDonations_BATCH.class.getName();
-        Boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
-        if (!hasRunningJob) {
-        	RD_RecurringDonations_BATCH.isBatchButton = true;
-        	recCount += result.size();
-        	failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
-        } else {
-            RecurringDonationsBatchException ex = new RecurringDonationsBatchException();
-            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
-        }
- 
+        RD_RecurringDonations_BATCH.isBatchButton = true;
+        recCount += result.size();
+        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
+        
     }
 
     /*******************************************************************************************************

@@ -135,23 +135,26 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Start Method
     */
     public Database.QueryLocator start(Database.BatchableContext context) {
-        if (RD2_EnablementService.isRecurringDonations2Enabled) {
-            return Database.getQueryLocator(getRDBatchQuery());
-        } else {
+        
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
         }
+        String className = RD2_OpportunityEvaluation_BATCH.class.getName();
+        boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
+        String query = getRDBatchQuery();
+        if (hasRunningJob) {
+            BatchException ex = new BatchException();
+            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
+            query += ' LIMIT 0';
+        }    
+        return Database.getQueryLocator(query);
+        
     }
 
     /**
     * @description Batch Execute Method
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
-        String className = RD2_OpportunityEvaluation_BATCH.class.getName();
-        boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
-        if (hasRunningJob) {
-            BatchException ex = new BatchException();
-            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
-        }
         recordsProcessed += rds.size();
 
         if (disableRollups) {
