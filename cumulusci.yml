@@ -1198,7 +1198,6 @@ flows:
                 task: disable_triggers
                 options:
                     handlers:
-                    # Disable all trigger handlers other than Engagement Plans
                         - HH_Households_TDTM
             2:
                 task: generate_and_load_big_report_test_data
@@ -1208,11 +1207,11 @@ flows:
                     batch_size: 10
                     num_records_tablename: Account
                     mapping: datasets/big_report_mapping.yml
-            3:
-                task: restore_triggers
-                options:
-                    handlers:
-                        - HH_Households_TDTM
+            # 3:
+            #     task: restore_triggers
+            #     options:
+            #         handlers:
+            #             - HH_Households_TDTM
 
 orgs:
     scratch:
