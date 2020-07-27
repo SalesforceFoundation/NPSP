@@ -1,42 +1,41 @@
 <template>
-    <c-util-dedicated-listener event-name={dedicatedListenerEventName}
-                               onreceiveevent={handleReceiveEvent}>
-    </c-util-dedicated-listener>
-    <article class={reviewDonationsComputedClass}>
-        <lightning-layout vertical-align="center"
-                          multiple-rows="true">
-            <lightning-layout-item size="12">
-                <span class="slds-text-body_regular"
-                      role="alert">
-                    <lightning-icon class="slds-m-right_small"
-                                    icon-name="utility:info"
-                                    size="x-small">
-                    </lightning-icon>
-                    {reviewDonationsMessage}
-                    <template if:true={hasDonorLink}>
-                        <button class="slds-button slds-m-left_xx-small"
-                                onclick={navigateToRecord}>
-                            {selectedDonation.Name}
-                        </button>
-                    </template>
-                </span>
-                <template if:false={hasSelectedDonation}>
-                    <span>
-                        <button class="slds-button slds-m-left_xx-small"
-                                onclick={handleReviewDonations}>
-                            {CUSTOM_LABELS.geButtonMatchingReviewDonations}
-                        </button>
-                    </span>
-                </template>
-            </lightning-layout-item>
-            <template if:true={hasSelectedDonation}>
+    <template if:true={hasPendingDonations}>
+        <article class={reviewDonationsComputedClass}>
+            <lightning-layout vertical-align="center"
+                              multiple-rows="true">
                 <lightning-layout-item size="12">
-                    <button class="slds-button slds-button_margin-extension"
-                            onclick={handleReviewDonations}>
-                        {CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}
-                    </button>
+                    <span class="slds-text-body_regular"
+                          role="alert">
+                        <lightning-icon class="slds-m-right_small"
+                                        icon-name="utility:info"
+                                        size="x-small">
+                        </lightning-icon>
+                        {reviewDonationsMessage}
+                        <template if:true={showDonorLink}>
+                            <button class="slds-button slds-m-left_xx-small"
+                                    onclick={navigateToRecord}>
+                                {_selectedDonation.Name}
+                            </button>
+                        </template>
+                    </span>
+                    <template if:false={hasSelectedDonation}>
+                        <span>
+                            <button class="slds-button slds-m-left_xx-small"
+                                    onclick={openReviewDonationsModal}>
+                                {CUSTOM_LABELS.geButtonMatchingReviewDonations}
+                            </button>
+                        </span>
+                    </template>
                 </lightning-layout-item>
-            </template>
-        </lightning-layout>
-    </article>
+                <template if:true={hasSelectedDonation}>
+                    <lightning-layout-item size="12">
+                        <button class="slds-button slds-button_margin-extension"
+                                onclick={openReviewDonationsModal}>
+                            {CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}
+                        </button>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </article>
+    </template>
 </template>
