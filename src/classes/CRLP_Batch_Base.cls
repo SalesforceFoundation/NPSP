@@ -662,7 +662,7 @@ public abstract class CRLP_Batch_Base {
     /**
      * @description Only called by the Finish() method if debug logging is enabled to log state
      * @param String addlLogData
-     */
+     */ 
     protected void logDebugInfo(String addlLogData) {
         Error__c logEntry = new Error__c(
             Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),

@@ -107,7 +107,7 @@ Schedulable {
     * @return void
     */
     public void execute(Database.BatchableContext bc, SObject[] result) {
-		String className = RD_RecurringDonations_BATCH.class.getName();
+	    String className = RD_RecurringDonations_BATCH.class.getName();
         Boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
         if (!hasRunningJob) {
         	RD_RecurringDonations_BATCH.isBatchButton = true;
