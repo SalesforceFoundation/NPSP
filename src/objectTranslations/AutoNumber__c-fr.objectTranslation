@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value>AutoNumber</value>
+        <value><!-- AutoNumber --></value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>AutoNumbers</value>
+        <value><!-- AutoNumber --></value>
     </caseValues>
     <fields>
         <label><!-- Display Format --></label>
@@ -36,6 +36,7 @@
         <label><!-- Object API Name --></label>
         <name>Object_API_Name__c</name>
     </fields>
+    <gender><!-- Masculine --></gender>
     <layouts>
         <layout>AutoNumber Layout</layout>
         <sections>
@@ -43,5 +44,6 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <startsWith>Vowel</startsWith>
+    <nameFieldLabel><!-- Auto-Number Name --></nameFieldLabel>
+    <startsWith><!-- Vowel --></startsWith>
 </CustomObjectTranslation>
