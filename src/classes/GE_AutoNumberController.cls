@@ -41,6 +41,11 @@ public class GE_AutoNumberController {
             new AutoNumberService(DataImportBatch__c.SObjectType);
 
     @AuraEnabled
+    public static Boolean isSysAdmin() {
+        return STG_Panel.runningUserIsAdmin();
+    }
+
+    @AuraEnabled
     public static void activate(String autoNumberId) {
         try {
             autoNumberService.activate(autoNumberId);

@@ -1,9 +1,10 @@
 import {LightningElement, wire} from 'lwc';
 import {getObjectInfo} from 'lightning/uiObjectInfoApi';
-import getAutoNumbers from '@salesforce/apex/GE_AutoNumberController.getAutoNumbers';
+import isSysAdmin from '@salesforce/apex/GE_AutoNumberController.isSysAdmin';
 import save from '@salesforce/apex/GE_AutoNumberController.save';
 import activate from '@salesforce/apex/GE_AutoNumberController.activate';
 import deactivate from '@salesforce/apex/GE_AutoNumberController.deactivate';
+import getAutoNumbers from '@salesforce/apex/GE_AutoNumberController.getAutoNumbers';
 
 import DataImportBatch from '@salesforce/schema/DataImportBatch__c';
 import Batch_Number from '@salesforce/schema/DataImportBatch__c.Batch_Number__c';
@@ -44,8 +45,6 @@ const COLUMNS = [
 ];
 
 export default class geBatchNumberSettings extends LightningElement {
-    _hasAccess = false;
-
     displayFormat;
     startingNumber;
     description;
@@ -111,9 +110,17 @@ export default class geBatchNumberSettings extends LightningElement {
         return columnsWithFieldLabelsApplied;
     }
 
-    connectedCallback() {
-        this._hasAccess = true;
-        this.fetchAutoNumbers();
+    permissionEnabled;
+    async connectedCallback() {
+        await isSysAdmin()
+            .then(response => {
+                this.permissionEnabled = response;
+            })
+            .catch(error => this.error = error);
+
+        if (this.permissionEnabled) {
+            this.fetchAutoNumbers();
+        }
     }
 
     _isLoading;
