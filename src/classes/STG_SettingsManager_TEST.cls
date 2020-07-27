@@ -1290,20 +1290,7 @@ private with sharing class STG_SettingsManager_TEST {
             System.assertEquals(label, convertedLabel, 'The api value should be correctly converted into the corressponding label');
         }
     }
-
-    /*********************************************************************************************************
-    * @description Tests the Run RD Batch panel
-    * @return void
-    */
-    @isTest
-    private static void testPanelRDBatch() {
-        STG_PanelRDBatch_CTRL panel = new STG_PanelRDBatch_CTRL();
-        system.assertEquals('idPanelRDBatch', panel.idPanel());
-        system.assertEquals(false, panel.isRunningBatch);
-        panel.runBatch();
-        system.assertEquals(true, panel.isRunningBatch);
-    }
-
+    
     /*********************************************************************************************************
     * @description Tests the RD Custom Field Mapping panel
     * @return void
