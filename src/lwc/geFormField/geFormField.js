@@ -312,7 +312,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     get isLookup() {
-        return this.fieldType === LOOKUP_TYPE;
+        return this.fieldType === LOOKUP_TYPE && this.fieldApiName !== RECORD_TYPE_FIELD.fieldApiName;
     }
 
     @api
