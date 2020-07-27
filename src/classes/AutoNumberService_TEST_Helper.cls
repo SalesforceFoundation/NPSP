@@ -36,7 +36,7 @@ public class AutoNumberService_TEST_Helper {
                     '"Starting_Number__c":100,"Max_Used_Number__c":105,"IsActive__c":false}}';
 
     public static Id setupAutoNumber(Boolean isActive, String displayFormat,
-            Integer startingNumber) {
+            Integer startingNumber, Boolean insertTriggerHandler) {
         AutoNumber__c a = new AutoNumber__c(
                 Object_API_Name__c = String.valueOf(DataImportBatch__c.SObjectType),
                 Field_API_Name__c = String.valueOf(DataImportBatch__c.fields.Batch_Number__c),
@@ -47,6 +47,11 @@ public class AutoNumberService_TEST_Helper {
                 Max_Used_Number__c = 0
         );
         insert a;
+
+        if (insertTriggerHandler) {
+            insert new AutoNumberService(DataImportBatch__c.SObjectType).triggerHandler;
+        }
+
         return a.Id;
     }
 

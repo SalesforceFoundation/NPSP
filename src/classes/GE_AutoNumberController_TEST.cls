@@ -33,7 +33,8 @@ public class GE_AutoNumberController_TEST {
     @IsTest
     static void shouldActivate() {
         Id autoNumberId =
-                AutoNumberService_TEST_Helper.setupAutoNumber(false, 'abc-{000}', 0);
+                AutoNumberService_TEST_Helper.setupAutoNumber(false,
+                        'abc-{000}', 0, false);
         System.assertEquals(false,
                 AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
         GE_AutoNumberController.activate(autoNumberId);
@@ -46,7 +47,8 @@ public class GE_AutoNumberController_TEST {
     @IsTest
     static void shouldDeactivate() {
         Id autoNumberId =
-                AutoNumberService_TEST_Helper.setupAutoNumber(true, 'abc-{000}', 0);
+                AutoNumberService_TEST_Helper.setupAutoNumber(true,
+                        'abc-{000}', 0, false);
         System.assertEquals(true,
                 AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
         GE_AutoNumberController.deactivate(autoNumberId);
