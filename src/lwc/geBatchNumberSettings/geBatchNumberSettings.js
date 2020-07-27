@@ -123,14 +123,7 @@ export default class geBatchNumberSettings extends LightningElement {
         }
     }
 
-    _isLoading;
-    set isLoading(value) {
-        this._isLoading = !!value;
-    }
-    get isLoading() {
-        return this._isLoading;
-    }
-
+    isLoading;
     fetchAutoNumbers() {
         this.isLoading = true;
         getAutoNumbers()
