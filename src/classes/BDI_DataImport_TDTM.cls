@@ -120,31 +120,30 @@ public class BDI_DataImport_TDTM extends TDTM_Runnable {
      */
     private void setBatchStatus(Set<Id> batchIdSet) {
 
-      // get all the batch records
-      List<DataImportBatch__c> batches = [SELECT Id, Batch_Status__c
+      // get the all the batch and di records in one query
+      List<DataImportBatch__c> batches = [SELECT Id, Batch_Status__c, 
+                                          (SELECT Id, NPSP_Data_Import_Batch__c, Status__c 
+                                                  FROM NPSP_Data_Imports__r)
                                           FROM DataImportBatch__c
                                           WHERE Id IN :batchIdSet];
-
-      // get all the di records in all the batches
-      List<DataImport__c> diRecords = [SELECT Id, NPSP_Data_Import_Batch__c, Status__c 
-                                          FROM DataImport__c
-                                          WHERE NPSP_Data_Import_Batch__c IN :batchIdSet];
 
       // go through the di statuses and aggregate them by batch
       // store the results in a map
       Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap = 
           new Map<Id, BatchDataImportStatusAggregate>();
-      for(DataImport__c di : diRecords) {
-        BatchDataImportStatusAggregate batchStatusAggregate = 
+      for (DataImportBatch__c b : batches) {
+        for (DataImport__c di : b.NPSP_Data_Imports__r) {
+          BatchDataImportStatusAggregate batchStatusAggregate = 
               batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c) == null ?
               new BatchDataImportStatusAggregate() :
               batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c);
 
-        batchStatusAggregate.updateCounts(di.Status__c); 
-        batchDataImportStatusAggregateMap.put(di.NPSP_Data_Import_Batch__c, 
+          batchStatusAggregate.updateCounts(di.Status__c); 
+          batchDataImportStatusAggregateMap.put(di.NPSP_Data_Import_Batch__c, 
                                               batchStatusAggregate);
+        }
       }
-
+    
       // update the statuses on the batch records
       updateBatchStatus(batches, batchDataImportStatusAggregateMap);
     }
