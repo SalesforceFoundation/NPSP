@@ -1210,6 +1210,9 @@ flows:
                     mapping: datasets/big_report_mapping.yml
             3:
                 task: restore_triggers
+                options:
+                    handlers:
+                        - HH_Households_TDTM
 
 orgs:
     scratch:
