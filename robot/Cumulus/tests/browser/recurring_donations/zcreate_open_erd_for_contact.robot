@@ -2,7 +2,6 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
-...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -16,12 +15,10 @@ Setup Test Data
     Setupdata           contact               contact_data=${contact_fields}
 
 *** Variables ***
-&{contact_fields}  Email=testuser@example.com
-
-${frequency}  1
-${day_of_month}  2
-${amount}  100
-${method}  Credit Card
+&{contact_fields}   Email=testuser@example.com
+${DAY_OF_MONTH}  2
+${AMOUNT}  100
+${METHOD}  Credit Card
 
 
 *** Test Cases ***
@@ -42,12 +39,12 @@ ${method}  Credit Card
     Reload Page
     Wait For Modal                         New                                                Recurring Donation
 
-    # Create Enhanced recurring donation of type Open
+    # Create Enhanced recurring donation of type Open and assign it to a contact
     Populate Rd2 Modal Form
     ...                                    Contact=${data}[contact][LastName] Household
-    ...                                    Amount= ${amount}
-    ...                                    Payment Method=Credit Card
-    ...                                    Day of Month=${day_of_month}
+    ...                                    Amount= ${AMOUNT}
+    ...                                    Payment Method=${METHOD}
+    ...                                    Day of Month=${DAY_OF_MONTH}
     Click Rd2 Modal Button                 Save
     Wait Until Modal Is Closed
     Current Page Should Be                 Details                                          npe03__Recurring_Donation__c
@@ -56,5 +53,5 @@ ${method}  Credit Card
     Validate Field Values Under Section
 
     ...                                    Contact=${data}[contact][FirstName] ${data}[contact][LastName]
-    ...                                    Amount=$100.00
+    ...                                    Amount=${AMOUNT}
     ...                                    Status=Active

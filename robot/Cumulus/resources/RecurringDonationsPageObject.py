@@ -31,6 +31,8 @@ class RDListingPage(BaseNPSPPage, ListingPage):
           self.salesforce._jsclick(locator)
           self.selenium.wait_until_element_is_visible(selection_value)
           self.selenium.click_element(selection_value)
+      else:
+          self.builtin.log("The dropdown element not found", "WARN")
 
     @capture_screenshot_on_error
     def populate_rd2_modal_form(self, **kwargs):
@@ -41,6 +43,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.salesforce._populate_field(locator, value)
+                self.builtin.log("element Not found")
             if key in ("Account", "Contact"):
                 self.salesforce.populate_lookup_field(key, value)
             else:
@@ -61,13 +64,11 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         edit_button=self.selenium.get_webelement(locator)
         self.selenium.wait_until_page_contains_element(edit_button, error="Recurring donations Details page did not load fully")
 
-
     def refresh_opportunities(self):
         """Clicks on more actions dropdown and click the given title"""
         locator=npsp_lex_locators['link-contains'].format("more actions")
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains("Refresh Opportunities")
-        link_locator=npsp_lex_locators['link'].format('Refresh_Opportunities','Refresh_Opportunities')
     
     def click_actions_button(self,button_name):
         """Clicks on action button based on API version"""
@@ -78,11 +79,12 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
 
     @capture_screenshot_on_error
     def edit_recurring_donation_status(self,**kwargs):
-        """From the actions dropdown select edit action and edit the fields specified in the kwargs
+        """From the actions dropdown selects edit action and edits the fields specified in the kwargs
            |  Example
            |     Edit Recurring Donation Status
            |     ...                        Recurring Period=Advanced
-           |     ...                        Every=3"""
+           |     ...                        Every=3
+        """
         locator=npsp_lex_locators['bge']['button'].format("Edit")
         edit_button=self.selenium.get_webelement(locator)
         self.selenium.wait_until_page_contains_element(edit_button, error="Show more actions dropdown didn't open in 30 sec")
@@ -116,7 +118,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
 
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):
-        """Verify that the schedule warning messages are present when there are no schedules"""
+        """Verifies that the schedule warning messages are present when there are no schedules"""
         message_locator = npsp_lex_locators["erd"]["text_message"]
         list_ele = self.selenium.get_webelements(message_locator)
         p_count = len(list_ele)

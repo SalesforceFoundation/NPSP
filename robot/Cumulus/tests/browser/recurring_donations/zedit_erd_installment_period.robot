@@ -12,7 +12,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Keywords ***
 
 Setup Test Data
-        #Create a Recurring Donation type Open and installment period Monthly
+        #Create a Recurring Donation type Open and installment period Monthly Associated To a contact using API
         &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
         &{recurringdonation_fields} =	Create Dictionary           Name=ERD Open Recurring Donation
         ...                                                         npe03__Installment_Period__c=Monthly
@@ -45,7 +45,7 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     # Reload page is a temporary fix till the developers fix the ui-modal
     Reload Page
 
-    Go To Page                              Details
+    Go To Page                              Detail
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
