@@ -36,7 +36,8 @@ const NAME = 'name';
 const ID = 'id';
 const MAX_STEPS = 2;
 const CANCEL = 'cancel';
-const COMMA_SEPARATOR = ';';
+const SEMI_COLON_SEPARATOR = ';';
+const PACKAGE_NAMESPACE_PREFIX = 'npsp';
 
 export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
@@ -377,17 +378,16 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         
         if (isNull(namespace)) {
             let strippedFields = '';
-            const matchingRuleFields = donationMatchingRule.split(COMMA_SEPARATOR);
-            const namespacePrefix = getNamespace(matchingRuleFields[0]);
-            if (!isNull(namespacePrefix)) {
-                matchingRuleFields.forEach(field => {
-                    strippedFields += stripNamespace(field,
-                      namespacePrefix+'__') + COMMA_SEPARATOR;
-                });
-                dataImportBatch.fields[
-                  DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName] =
-                  strippedFields.slice(0, -1);
-            }
+            const matchingRuleFields = donationMatchingRule.split(
+              SEMI_COLON_SEPARATOR);
+            matchingRuleFields.forEach(field => {
+                strippedFields += stripNamespace(field,
+                  PACKAGE_NAMESPACE_PREFIX+'__') +
+                  SEMI_COLON_SEPARATOR;
+            });
+            dataImportBatch.fields[
+              DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName] =
+              strippedFields.slice(0, -1);
         }
         return dataImportBatch;
     }
