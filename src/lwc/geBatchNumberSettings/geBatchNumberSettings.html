@@ -50,8 +50,9 @@
                     <lightning-layout-item size="12" medium-device-size="4"
                                            padding="around-small">
                         <lightning-input type="text"
-                                         name="displayFormat"
-                                         label="Display Format or Auto Number Definition"
+                                         name={labelDisplayFormat}
+                                         label={labelDisplayFormat}
+                                         field-level-help={inlineHelpTextDisplayFormat}
                                          value={displayFormat}
                                          max-length="30"
                                          required
@@ -64,9 +65,9 @@
                     <lightning-layout-item size="12" medium-device-size="4"
                                            padding="around-small">
                         <lightning-input type="number"
-                                         name="startingNumber"
-                                         label="Starting Number"
-                                         field-level-help="Help text goes here"
+                                         name={labelStartingNumber}
+                                         label={labelStartingNumber}
+                                         field-level-help={inlineHelpTextStartingNumber}
                                          value={startingNumber}
                                          onchange={handleStartingNumberChange}
                                          data-qa-locator={qaLocatorStartingNumber}
@@ -76,8 +77,9 @@
                     <lightning-layout-item size="12" medium-device-size="4"
                                            padding="around-small">
                         <lightning-input type="text"
-                                         name="description"
-                                         label="Description"
+                                         name={labelDescription}
+                                         label={labelDescription}
+                                         field-level-help={inlineHelpTextDescription}
                                          value={description}
                                          onchange={handleDescriptionChange}
                                          data-qa-locator={qaLocatorDescription}>

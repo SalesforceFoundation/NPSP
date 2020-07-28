@@ -210,18 +210,16 @@ export default class geBatchNumberSettings extends LightningElement {
     // Quality Assurance Locators
     // ================================================================================
 
-    customLabelPlaceholder = 'placeholder';
-
     get qaLocatorDisplayFormat() {
-        return `input ${this.customLabelPlaceholder}`;
+        return `input ${this.labelDisplayFormat}`;
     }
 
     get qaLocatorStartingNumber() {
-        return `input ${this.customLabelPlaceholder}`;
+        return `input ${this.labelStartingNumber}`;
     }
 
     get qaLocatorDescription() {
-        return `input ${this.customLabelPlaceholder}`;
+        return `input ${this.labelDescription}`;
     }
 
     get qaLocatorCreateBatchNumberFormatButton() {
