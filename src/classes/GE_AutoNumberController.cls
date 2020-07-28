@@ -77,4 +77,30 @@ public class GE_AutoNumberController {
         return autoNumberService.getAutoNumbers(DataImportBatch__c.SObjectType);
     }
 
+    /**
+     * @description The AutoNumber__c object is protected, and cannot be imported
+     * into LWC modules.  This method provides the FieldDescribe info for the
+     * AutoNumber__c fields to the UI.
+     * @return A map of field API Name to SObjectFieldDescribe object.
+     */
+    @AuraEnabled(cacheable=true)
+    public static String getFieldDescribes() {
+        return JSON.serialize(new Map<String, Object>{
+                Schema.SObjectType.AutoNumber__c.fields.IsActive__c.Name =>
+                        Schema.SObjectType.AutoNumber__c.fields.IsActive__c,
+                Schema.SObjectType.AutoNumber__c.fields.Display_Format__c.Name =>
+                        Schema.SObjectType.AutoNumber__c.fields.Display_Format__c,
+                Schema.SObjectType.AutoNumber__c.fields.Starting_Number__c.Name =>
+                        Schema.SObjectType.AutoNumber__c.fields.Starting_Number__c,
+                Schema.SObjectType.AutoNumber__c.fields.Description__c.Name =>
+                        Schema.SObjectType.AutoNumber__c.fields.Description__c,
+                Schema.SObjectType.AutoNumber__c.fields.Max_Used_Number__c.Name =>
+                        Schema.SObjectType.AutoNumber__c.fields.Max_Used_Number__c,
+                Schema.SObjectType.AutoNumber__c.fields.Object_API_Name__c.Name =>
+                        Schema.SObjectType.AutoNumber__c.fields.Object_API_Name__c,
+                Schema.SObjectType.AutoNumber__c.fields.Field_API_Name__c.Name =>
+                        Schema.SObjectType.AutoNumber__c.fields.Field_API_Name__c
+        });
+    }
+
 }

@@ -5,6 +5,7 @@ import save from '@salesforce/apex/GE_AutoNumberController.save';
 import activate from '@salesforce/apex/GE_AutoNumberController.activate';
 import deactivate from '@salesforce/apex/GE_AutoNumberController.deactivate';
 import getAutoNumbers from '@salesforce/apex/GE_AutoNumberController.getAutoNumbers';
+import getFieldDescribes from '@salesforce/apex/GE_AutoNumberController.getFieldDescribes';
 
 import DataImportBatch from '@salesforce/schema/DataImportBatch__c';
 import Batch_Number from '@salesforce/schema/DataImportBatch__c.Batch_Number__c';
@@ -51,7 +52,6 @@ export default class geBatchNumberSettings extends LightningElement {
 
     columns;
     autoNumberRecords;
-    autoNumberInfoData;
 
     error;
     get error() {
@@ -70,13 +70,16 @@ export default class geBatchNumberSettings extends LightningElement {
         buttonSave: batchNumberSettingsSave
     }
 
-    @wire(getObjectInfo, {objectApiName: AutoNumber.objectApiName})
-    autoNumberInfo({data}) {
+    fieldDescribes;
+    @wire(getFieldDescribes)
+    wiredFieldDescribes({error, data}) {
         if (data) {
-            this.autoNumberInfoData = data;
+            this.fieldDescribes = JSON.parse(data);
             this.columns =
-                this.getColumnsWithFieldLabels(COLUMNS, this.autoNumberInfoData)
+                this.getColumnsWithFieldLabels(COLUMNS, this.fieldDescribes)
                     .concat(this.actionsColumn);
+        } else if (error) {
+            this.error = error;
         }
     }
 
@@ -100,11 +103,11 @@ export default class geBatchNumberSettings extends LightningElement {
         doneCallback(actions);
     }
 
-    getColumnsWithFieldLabels = (columns, objectInfoData) => {
+    getColumnsWithFieldLabels = (columns, fields) => {
         let columnsWithFieldLabelsApplied = JSON.parse(JSON.stringify(columns));
         columnsWithFieldLabelsApplied.forEach(column => {
-            if (objectInfoData.fields[column.fieldName]) {
-                column.label = objectInfoData.fields[column.fieldName].label;
+            if (fields[column.fieldName]) {
+                column.label = fields[column.fieldName].label;
             }
         });
         return columnsWithFieldLabelsApplied;
@@ -237,27 +240,27 @@ export default class geBatchNumberSettings extends LightningElement {
     }
 
     get labelDisplayFormat() {
-        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Display_Format__c.label : '';
+        return this.fieldDescribes ? this.fieldDescribes[Display_Format.fieldApiName].label : '';
     }
 
     get inlineHelpTextDisplayFormat() {
-        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Display_Format__c.inlineHelpText : '';
+        return this.fieldDescribes ? this.fieldDescribes[Display_Format.fieldApiName].inlineHelpText : '';
     }
 
     get labelStartingNumber() {
-        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Starting_Number__c.label : '';
+        return this.fieldDescribes ? this.fieldDescribes[Starting_Number.fieldApiName].label : '';
     }
 
     get inlineHelpTextStartingNumber() {
-        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Starting_Number__c.inlineHelpText : '';
+        return this.fieldDescribes ? this.fieldDescribes[Starting_Number.fieldApiName].inlineHelpText : '';
     }
 
     get labelDescription() {
-        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Description__c.label : '';
+        return this.fieldDescribes ? this.fieldDescribes[Description.fieldApiName].label : '';
     }
 
     get inlineHelpTextDescription() {
-        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Description__c.inlineHelpText : '';
+        return this.fieldDescribes ? this.fieldDescribes[Description.fieldApiName].inlineHelpText : '';
     }
 
 }
