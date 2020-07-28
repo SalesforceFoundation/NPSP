@@ -23,9 +23,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     def select_value_from_rd2_modal_dropdown(self, dropdown, value):
         """Selects given value from the dropdown field on the rd2 modal"""
         locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(dropdown)
-        selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(
-            value
-        )
+        selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
         if self.npsp.check_if_element_exists(locator):
             self.selenium.set_focus_to_element(locator)
             self.selenium.wait_until_element_is_visible(locator)
@@ -90,7 +88,8 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
            |  Example
            |     Edit Recurring Donation Status
            |     ...                        Recurring Period=Advanced
-           |     ...                        Every=3"""
+           |     ...                        Every=3
+        """
         locator = npsp_lex_locators["bge"]["button"].format("Edit")
         edit_button = self.selenium.get_webelement(locator)
         self.selenium.wait_until_page_contains_element(
