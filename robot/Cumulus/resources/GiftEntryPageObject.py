@@ -334,5 +334,5 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |"""
         for field,value in kwargs.items():
             locator=npsp_lex_locators["gift_entry"]["table"].format(table,field,value)
-            self.selenium.wait_until_page_contains_element(locator)
+            self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {table} table')
 

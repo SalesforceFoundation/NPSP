@@ -87,7 +87,7 @@ Verify Changing Labels on Template Gets Updated on Batches
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${PAY}[Field Label]
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${RECORD_TYPE}[Field Label]
     Verify Table Field Values               Batch Gifts
-    ...                                     Donation Donor=${data}[contact][Name]
+    ...                                     Donor Name=${data}[contact][Name]
     ...                                     Opportunity: Amount=$150.00
     ...                                     ${CAMPAIGN}[Field Label]=${CAMPAIGN_REC}[Name]
     ...                                     ${PAY}[Field Label]=74454354
