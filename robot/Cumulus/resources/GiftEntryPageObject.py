@@ -327,3 +327,12 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         """clicks on the link present in the given field"""
         value=self.npsp.return_locator_value("bge.value",field_name) 
         self.npsp.click_link_with_text(value)   
+
+    def verify_table_field_values(self,table,**kwargs):
+        """Verifies that table has given field name with value. 
+        Arguments are: table=table name, fieldname=fieldvalue 
+        Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |"""
+        for field,value in kwargs.items():
+            locator=npsp_lex_locators["gift_entry"]["table"].format(table,field,value)
+            self.selenium.wait_until_page_contains_element(locator)
+

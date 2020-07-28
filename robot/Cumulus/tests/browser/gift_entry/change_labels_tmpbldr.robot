@@ -23,6 +23,8 @@ Setup Test Data
     Set suite variable   &{CAMPAIGN_REC}
     ${ns} =  Get NPSP Namespace Prefix
     Set suite variable    ${NS}
+    ${ui_date} =    Get Current Date                   result_format=%b %-d, %Y
+    Set suite variable    ${UI_DATE}
 
 *** Test Cases ***
 
@@ -78,12 +80,19 @@ Verify Changing Labels on Template Gets Updated on Batches
     ...                                     ${PAY}[Field Label]=74454354
     ...                                     ${RECORD_TYPE}[Field Label]=Donation
     Click Button                            Save & Enter New Gift
-    #Verify gift is created and labels are updated on the table and process batch
+    #Verify gift is created with correct values and labels are updated on the table and process batch
     Verify Gift Count                       1
     Wait Until Page Contains Element        npsp:gift_entry.field_span:Batch Gifts,${DATE}[Field Label]
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${CAMPAIGN}[Field Label]
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${PAY}[Field Label]
     Page Should Contain Element             npsp:gift_entry.field_span:Batch Gifts,${RECORD_TYPE}[Field Label]
+    Verify Table Field Values               Batch Gifts
+    ...                                     Donation Donor=${data}[contact][Name]
+    ...                                     Opportunity: Amount=$150.00
+    ...                                     ${CAMPAIGN}[Field Label]=${CAMPAIGN_REC}[Name]
+    ...                                     ${PAY}[Field Label]=74454354
+    ...                                     ${RECORD_TYPE}[Field Label]=Donation
+    ...                                     ${DATE}[Field Label]=${UI_DATE}
     Click Gift Entry Button                 Process Batch
     Click Data Import Button                NPSP Data Import                button       Begin Data Import Process
     Wait For Batch To Process               BDI_DataImport_BATCH            Completed
