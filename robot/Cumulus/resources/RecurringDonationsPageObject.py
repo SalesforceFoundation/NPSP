@@ -51,7 +51,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
                 self.select_value_from_rd2_modal_dropdown(key, value)
 
 
-@pageobject("Detail", "npe03__Recurring_Donation__c")
+@pageobject("Details", "npe03__Recurring_Donation__c")
 class RDDetailPage(BaseNPSPPage, DetailPage):
     object_name = "npe03__Recurring_Donation__c"
 
