@@ -212,20 +212,24 @@ public class AutoNumberService {
         private AutoNumber__c convertJSONToAutoNumber(String autoNumber) {
             Map<String, Object> anMap =
                     (Map<String, Object>) JSON.deserializeUntyped(autoNumber);
+
             AutoNumber__c an = new AutoNumber__c();
             Map<String, Object> fields = (Map<String, Object>) anMap.get('fields');
             an.Display_Format__c =
                     (String) fields.get(String.valueOf(
                             AutoNumber__c.Display_Format__c));
-            an.Field_API_Name__c =
-                    (String) fields.get(String.valueOf(
-                            AutoNumber__c.Field_API_Name__c));
-            an.Object_API_Name__c =
-                    (String) fields.get(String.valueOf(
-                            AutoNumber__c.Object_API_Name__c));
             an.Starting_Number__c =
                     Integer.valueOf(fields.get(String.valueOf(
                             AutoNumber__c.Starting_Number__c)));
+            an.Description__c =
+                    (String) fields.get(String.valueOf(
+                            AutoNumber__c.Description__c));
+            an.Object_API_Name__c =
+                    (String) fields.get(String.valueOf(
+                            AutoNumber__c.Object_API_Name__c));
+            an.Field_API_Name__c =
+                    (String) fields.get(String.valueOf(
+                            AutoNumber__c.Field_API_Name__c));
             return an;
         }
 
