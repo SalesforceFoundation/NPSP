@@ -171,6 +171,7 @@ export default class geBatchNumberSettings extends LightningElement {
         save({autoNumber: anString})
             .then(() => {
                 this.error = null;
+                this.reset();
                 this.fetchAutoNumbers();
             })
             .catch(error => {
@@ -261,6 +262,12 @@ export default class geBatchNumberSettings extends LightningElement {
 
     get inlineHelpTextDescription() {
         return this.fieldDescribes ? this.fieldDescribes[Description.fieldApiName].inlineHelpText : '';
+    }
+
+    reset() {
+        this.displayFormat = null;
+        this.startingNumber = null;
+        this.description = null;
     }
 
 }
