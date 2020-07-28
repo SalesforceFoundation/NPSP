@@ -191,7 +191,7 @@
             <div class="{!IF(isPolling, 'slds-hide', '')}">
                 <div class="slds-m-horizontal_xxx-small slds-section slds-is-open">
                     <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small"
+                        <span class="slds-section-title_divider"
                               title="{!$Label.geHeaderGiftEntry}">
                               {!$Label.geHeaderGiftEntry}
                         </span>
