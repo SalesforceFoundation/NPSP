@@ -32,11 +32,10 @@
 * @date 2020
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Trigger Handler for the DataImport SObject
+* @description Trigger Handler for the DataImport SObject to set the batch status
 */
-public class BDI_DataImport_TDTM extends TDTM_Runnable {
-  
-    /*******************************************************************************************************************
+public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
+/*******************************************************************************************************************
      * @description Trigger Handler on DataImport
      * @param newSObjects the list of records from trigger new.
      * @param oldSObjects the list of records from trigger old.

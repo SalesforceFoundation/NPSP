@@ -95,7 +95,7 @@
         <members>BDI_DataImport_API</members>
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
-        <members>BDI_DataImport_TDTM</members>
+        <members>BDI_DataImportBatchStatus_TDTM</members>
         <members>BDI_DataImport_TEST</members>
         <members>BDI_DataImport_TEST2</members>
         <members>BDI_Donations</members>
