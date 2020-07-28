@@ -188,14 +188,20 @@ export default class geBatchNumberSettings extends LightningElement {
     }
 
     handleDisplayFormatBlur(event) {
-        const re = '.*\\{.*?\\}';
-        const regex = RegExp(re);
-        if (!regex.test(event.target.value)) {
+        if (!this.isValidDisplayFormat(event.target.value)) {
             event.target.setCustomValidity('Invalid Display Number format.');
         } else {
             event.target.setCustomValidity('');
         }
         event.target.reportValidity();
+    }
+
+    isValidDisplayFormat(value) {
+        const re = '.*\\{0*\\}';
+        const regex = RegExp(re);
+        return regex.test(value) &&
+            value.match(/{/g).length === 1 &&
+            value.match(/}/g).length === 1;
     }
 
     handleDisplayFormatChange(event) {

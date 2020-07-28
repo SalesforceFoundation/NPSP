@@ -247,7 +247,9 @@ public class AutoNumberService {
 
         private Boolean isValidPattern {
             get {
-                return Pattern.matches('.*\\{.*?\\}', record.Display_Format__c);
+                return Pattern.matches('.*\\{0*\\}', record.Display_Format__c) &&
+                        record.Display_Format__c.countMatches('{') == 1 &&
+                        record.Display_Format__c.countMatches('}') == 1;
             }
         }
 
