@@ -229,10 +229,35 @@ export default class geBatchNumberSettings extends LightningElement {
     }
 
     get qaLocatorCreateBatchNumberFormatButton() {
-        return `button ${this.customLabelPlaceholder}`;
+        return `button ${this.labels.buttonSave}`;
     }
 
     get qaLocatorBatchNumberDatatable() {
-        return `datatable ${this.customLabelPlaceholder}`;
+        return `datatable`;
     }
+
+    get labelDisplayFormat() {
+        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Display_Format__c.label : '';
+    }
+
+    get inlineHelpTextDisplayFormat() {
+        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Display_Format__c.inlineHelpText : '';
+    }
+
+    get labelStartingNumber() {
+        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Starting_Number__c.label : '';
+    }
+
+    get inlineHelpTextStartingNumber() {
+        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Starting_Number__c.inlineHelpText : '';
+    }
+
+    get labelDescription() {
+        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Description__c.label : '';
+    }
+
+    get inlineHelpTextDescription() {
+        return this.autoNumberInfoData ? this.autoNumberInfoData.fields.Description__c.inlineHelpText : '';
+    }
+
 }
