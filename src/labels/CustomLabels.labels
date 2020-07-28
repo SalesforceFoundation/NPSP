@@ -4910,11 +4910,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Display Format options</shortDescription>
-        <value>Display Format allows you to control the appearance of your auto-numbered field. It must be unique and include the number of digits as well as a prefix, if desired. Your format can be up to 30 characters.
-            &#10;Examples
-            *
-            *
-            *</value>
+        <value>Display Format allows you to control the appearance of your auto-numbered field. It must be unique and include the number of digits as well as a prefix, if desired. Your format can be up to 30 characters.&#10;&#10;A sequence formatted as {00000} with a starting number of 9 displays as 00009, 00010, 00011, etc.
+        </value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
