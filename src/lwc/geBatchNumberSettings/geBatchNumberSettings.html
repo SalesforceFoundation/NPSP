@@ -37,12 +37,13 @@
                 <p class="slds-text-body_regular slds-p-vertical_small">
                     {labels.descriptionConfigure}
                 </p>
-                <c-util-expandable-section label={labels.headerDisplayFormat}
-                                           is-collapsed="true"
-                                           button-background="none">
-                    <lightning-formatted-rich-text
-                            value={labels.descriptionDisplayFormat}></lightning-formatted-rich-text>
-                </c-util-expandable-section>
+                <lightning-accordion allow-multiple-sections-open>
+                    <lightning-accordion-section name={labels.headerDisplayFormat}
+                                                 label={labels.headerDisplayFormat}>
+                        <lightning-formatted-rich-text
+                                value={labels.descriptionDisplayFormat}></lightning-formatted-rich-text>
+                    </lightning-accordion-section>
+                </lightning-accordion>
             </lightning-layout-item>
 
             <lightning-layout-item size="12"
