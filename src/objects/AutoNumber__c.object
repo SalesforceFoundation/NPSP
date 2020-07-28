@@ -200,6 +200,7 @@
     <fields>
         <fullName>Max_Used_Number__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>The highest auto-number used for this format.</inlineHelpText>
         <label>Max Used Number</label>
         <precision>10</precision>
         <required>false</required>
