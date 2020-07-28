@@ -2504,6 +2504,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked else runs Validate Batch Process When CRLP UnChecked</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.robot.Run Recurring Donations Batch">
+                <td class="kwname">
+                  Run Recurring Donations Batch
+                </td>
+                <td class="kwargs">
+                  
+                  <i>type</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.robot.Scroll Page To Location">
                 <td class="kwname">
                   Scroll Page To Location
@@ -5311,16 +5323,22 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Clicks on action button based on API version</p></td>
               </tr>
               
-              <tr class="kwrow" id="RecurringDonationsPageObject.py.Edit Recurring Donation">
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Edit Recurring Donation Status">
                 <td class="kwname">
-                  Edit Recurring Donation
+                  Edit Recurring Donation Status
                 </td>
                 <td class="kwargs">
                   
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"><p>From the actions dropdown select edit action and edit the fields specified in the kwargs</p></td>
+                <td class="kwdoc"><p>From the actions dropdown select edit action and edit the fields specified in the kwargs</p>
+<pre>
+ Example
+    Edit Recurring Donation Status
+    ...                        Recurring Period=Advanced
+    ...                        Every=3
+</pre></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
@@ -5413,6 +5431,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Click Rd2 Modal Button">
+                <td class="kwname">
+                  Click Rd2 Modal Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button</p></td>
+              </tr>
+              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -5422,6 +5452,32 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"><p>Logs the name of the current page object</p>
 <p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Populate Rd2 Modal Form">
+                <td class="kwname">
+                  Populate Rd2 Modal Form
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Populate the RD2 modal form fields with the respective fields and values</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Select Value From Rd2 Modal Dropdown">
+                <td class="kwname">
+                  Select Value From Rd2 Modal Dropdown
+                </td>
+                <td class="kwargs">
+                  
+                  <i>dropdown</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Selects given value from the dropdown field on the rd2 modal</p></td>
               </tr>
               
             </tbody>
@@ -5597,7 +5653,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Wednesday July 08, 11:17 PM - cumulusci v3.14.0
+      Generated on Monday July 27, 05:13 PM - cumulusci v3.16.0.dev1
     </div>
   </body>
 </html>

@@ -28,7 +28,7 @@ Setup Test Data
 
 *** Test Cases ***
 
-Edit An Enhanced Recurring donation record of type open
+Edit Installment Period For An Enhanced Recurring donation record of type open
     [Documentation]               After creating an open recurring donation using API, The test edits the recurring
      ...                          donation period to advanced and frequency to every 3 month. Verifies the current year
      ...                          and next year values get updated according to the payment period selected. Another edit
