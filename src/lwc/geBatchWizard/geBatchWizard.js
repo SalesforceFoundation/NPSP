@@ -37,7 +37,6 @@ const ID = 'id';
 const MAX_STEPS = 2;
 const CANCEL = 'cancel';
 const COMMA_SEPARATOR = ';';
-const NAMESPACE_PREFIX = 'npsp__';
 
 export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
@@ -379,13 +378,16 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         if (isNull(namespace)) {
             let strippedFields = '';
             const matchingRuleFields = donationMatchingRule.split(COMMA_SEPARATOR);
-            matchingRuleFields.forEach(field => {
-                strippedFields += stripNamespace(field,
-                  NAMESPACE_PREFIX) + COMMA_SEPARATOR;
-            });
-            dataImportBatch.fields[
-              DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName] =
-              strippedFields.slice(0, -1);
+            const namespacePrefix = getNamespace(matchingRuleFields[0]);
+            if (!isNull(namespacePrefix)) {
+                matchingRuleFields.forEach(field => {
+                    strippedFields += stripNamespace(field,
+                      namespacePrefix+'__') + COMMA_SEPARATOR;
+                });
+                dataImportBatch.fields[
+                  DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName] =
+                  strippedFields.slice(0, -1);
+            }
         }
         return dataImportBatch;
     }
