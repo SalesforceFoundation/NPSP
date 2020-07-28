@@ -4910,11 +4910,25 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Display Format options</shortDescription>
-        <value>Display Format allows you to control the appearance of your auto-numbered field. It must be unique and include the number of digits as well as a prefix, if desired. Your format can be up to 10 characters.&#10;
-            Examples&#10;
-            * A sequence formatted as {0} with a starting number of 9 displays as 9, 10, 11, etc.&#10;
-            * A sequence formatted as {00000} with a starting number of 9 displays as 00009, 00010, 00011, etc.&#10;
-            * A sequence formatted as ABC-{0000} with a starting number of 9 displays as ABC-0009, ABC-0010, ABC-0011, etc.</value>
+        <value>Display Format allows you to control the appearance of your auto-numbered
+            field. It must be unique and include the number of digits as well as a prefix, if
+            desired. Your format can be up to 10 characters.&lt;/br&gt;&lt;/br&gt;
+            Examples&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            A sequence formatted as {0} with a starting number of 9 displays as 9, 10, 11,
+            etc.
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as {00000} with a starting number of 9 displays as 00009,
+            00010, 00011, etc.&#10;
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as ABC-{0000} with a starting number of 9 displays as
+            ABC-0009, ABC-0010, ABC-0011, etc.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
