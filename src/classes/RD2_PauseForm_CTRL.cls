@@ -125,9 +125,7 @@ public with sharing class RD2_PauseForm_CTRL {
     private static PausedReason buildPausedReason() {
         PausedReason reason = new PausedReason();
         reason.label = System.Label.RD2_PausedReasonLabel;
-        reason.options = UTIL_Describe.getSelectOptions(
-            'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c)
-        );
+        reason.options = getPausedReasonOptions();
         reason.placeholder = System.Label.lblSelectOptionPlaceholder;
 
         return reason;
