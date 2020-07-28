@@ -201,7 +201,7 @@
     <label>継続種別</label>
     <picklistValues>
       <masterLabel>Open</masterLabel>
-      <translation>Open</translation>
+      <translation>無期限</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Fixed</masterLabel>
