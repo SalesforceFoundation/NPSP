@@ -56,7 +56,7 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     #Open NPSP Settings and run Recurring Donations Batch job for the payment values to get updated
     Run Recurring Donations Batch           RD2
 
-    Go To Page                              Details
+    Go To Page                              Detail
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
     # validate recurring donation statistics current and next year values
@@ -70,7 +70,7 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     Installment Period=Weekly
     #Open NPSP Settings and run Recurring Donations Batch job for the payment values to get updated
     Run Recurring Donations Batch           RD2
-    Go To Page                              Details
+    Go To Page                              Detail
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
 

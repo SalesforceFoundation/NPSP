@@ -42,16 +42,16 @@ ${METHOD}  Credit Card
     # Create Enhanced recurring donation of type Open and assign it to a contact
     Populate Rd2 Modal Form
     ...                                    Contact=${data}[contact][LastName] Household
-    ...                                    Amount= ${AMOUNT}
+    ...                                    Amount=${AMOUNT}
     ...                                    Payment Method=${METHOD}
     ...                                    Day of Month=${DAY_OF_MONTH}
     Click Rd2 Modal Button                 Save
     Wait Until Modal Is Closed
-    Current Page Should Be                 Details                                          npe03__Recurring_Donation__c
+    Current Page Should Be                 Detail                                          npe03__Recurring_Donation__c
 
     ${rd_id}                               Save Current Record ID For Deletion              npe03__Recurring_Donation__c
     Validate Field Values Under Section
 
     ...                                    Contact=${data}[contact][FirstName] ${data}[contact][LastName]
-    ...                                    Amount=${AMOUNT}
+    ...                                    Amount=$${AMOUNT}.00
     ...                                    Status=Active

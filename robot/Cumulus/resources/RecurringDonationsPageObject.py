@@ -51,7 +51,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
                 self.select_value_from_rd2_modal_dropdown(key, value)
 
 
-@pageobject("Details", "npe03__Recurring_Donation__c")
+@pageobject("Detail", "npe03__Recurring_Donation__c")
 class RDDetailPage(BaseNPSPPage, DetailPage):
     object_name = "npe03__Recurring_Donation__c"
 
@@ -65,9 +65,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         )
         locator = npsp_lex_locators["bge"]["button"].format("Edit")
         edit_button = self.selenium.get_webelement(locator)
-        self.selenium.wait_until_page_contains_element(
-            edit_button, error="Recurring donations Details page did not load fully"
-        )
+        self.selenium.wait_until_page_contains_element(edit_button, error="Recurring donations Details page did not load fully")
 
     def refresh_opportunities(self):
         """Clicks on more actions dropdown and click the given title"""
@@ -92,9 +90,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """
         locator = npsp_lex_locators["bge"]["button"].format("Edit")
         edit_button = self.selenium.get_webelement(locator)
-        self.selenium.wait_until_page_contains_element(
-            edit_button, error="Show more actions dropdown didn't open in 30 sec"
-        )
+        self.selenium.wait_until_page_contains_element(edit_button, error="Show more actions dropdown didn't open in 30 sec")
         self.selenium.click_element(locator)
         self.salesforce.wait_until_modal_is_open()
         self._populate_edit_status_values(**kwargs)
