@@ -362,7 +362,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Validates header value"""   
         locator= npsp_lex_locators['header'].format(value)
         self.selenium.page_should_contain_element(locator)    
-        
+
+    @capture_screenshot_on_error    
     def verify_related_list(self,list_name,status,name):   
         """If status is 'contains' then the specified related list should contain name
                         'does not contain' then the specified related list should not contain name"""

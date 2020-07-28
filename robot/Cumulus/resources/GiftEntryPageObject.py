@@ -159,7 +159,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_does_not_contain(label)
 
 
-
+    @capture_screenshot_on_error
     def verify_template_builder(self,check,field):
         """If check is 'contains'then verifies that template builder form contains the specified field
         If check is 'does not contain' then verifies that template builder form doesn't contain the field"""
