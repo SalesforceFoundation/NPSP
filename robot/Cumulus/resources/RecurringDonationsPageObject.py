@@ -14,14 +14,14 @@ class RDListingPage(BaseNPSPPage, ListingPage):
 
     @capture_screenshot_on_error
     def click_rd2_modal_button(self, name):
-      """Based on the button name (Cancel)  or (Save) on the modal footer, select and click on the respective button"""
+      """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
       btnlocator = npsp_lex_locators["button-with-text"].format(name)
       self.selenium.scroll_element_into_view(btnlocator)
       self.selenium.click_element(btnlocator)
 
     @capture_screenshot_on_error
     def select_value_from_rd2_modal_dropdown(self,dropdown,value):
-      """Selects given value in the dropdown field on the rd2 modal"""
+      """Selects given value from the dropdown field on the rd2 modal"""
       locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(dropdown)
       selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
       if self.npsp.check_if_element_exists(locator):
@@ -53,11 +53,15 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
     
     
     def _is_current_page(self):
-        """ Verify we are on the Account detail page
+        """ Verify we are on the Recurring Donations Detail page
             by verifying that the url contains '/view'
         """
         self.selenium.location_should_contain("/lightning/r/npe03__Recurring_Donation__c/",message="Current page is not a Recurring Donations record view")
-    
+        locator=npsp_lex_locators['bge']['button'].format("Edit")
+        edit_button=self.selenium.get_webelement(locator)
+        self.selenium.wait_until_page_contains_element(edit_button, error="Recurring donations Details page did not load fully")
+
+
     def refresh_opportunities(self):
         """Clicks on more actions dropdown and click the given title"""
         locator=npsp_lex_locators['link-contains'].format("more actions")
@@ -74,7 +78,11 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
 
     @capture_screenshot_on_error
     def edit_recurring_donation_status(self,**kwargs):
-        """From the actions dropdown select edit action and edit the fields specified in the kwargs"""
+        """From the actions dropdown select edit action and edit the fields specified in the kwargs
+           |  Example
+           |     Edit Recurring Donation Status
+           |     ...                        Recurring Period=Advanced
+           |     ...                        Every=3"""
         locator=npsp_lex_locators['bge']['button'].format("Edit")
         edit_button=self.selenium.get_webelement(locator)
         self.selenium.wait_until_page_contains_element(edit_button, error="Show more actions dropdown didn't open in 30 sec")
@@ -88,9 +96,8 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
 
     @capture_screenshot_on_error
     def _populate_edit_status_values(self, **kwargs):
-        """Pass the status and reason for the status as key, value pairs to populate the edit form"""
+        """Takes the key value pairs to edit and makes changes accordingly"""
         for key, value in kwargs.items():
-
             if key in ("Amount", "Number of Planned Installments", "Every"):
                 locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
                 if self.npsp.check_if_element_exists(locator):
@@ -106,20 +113,6 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                   self.salesforce._jsclick(locator)
                   self.selenium.wait_until_element_is_visible(selection_value)
                   self.selenium.click_element(selection_value)
-
-    @capture_screenshot_on_error
-    def _populate_Recurring_period_values(self, **kwargs):
-        """Pass the status and reason for the status as key, value pairs to populate the edit form"""
-        for key, value in kwargs.items():
-            locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
-            selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
-            if self.npsp.check_if_element_exists(locator):
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.wait_until_element_is_visible(locator)
-                self.selenium.scroll_element_into_view(locator)
-                self.salesforce._jsclick(locator)
-                self.selenium.wait_until_element_is_visible(selection_value)
-                self.selenium.click_element(selection_value)
 
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):

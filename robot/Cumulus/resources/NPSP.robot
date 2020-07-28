@@ -437,13 +437,13 @@ Enable RD2
     ...                       Enable RD2QA
 
 Run Recurring Donations Batch
-    [Arguments]                  ${type}
     [Documentation]              Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type
+    [Arguments]                  ${type}
     Open NPSP Settings           Bulk Data Processes               Recurring Donations Batch
     Click Settings Button        idPanelRDBatch                    Run Batch
     Run Keyword if               "${type}"!="RD2"
-    ...                          Wait For Batch To Process    RD_RecurringDonations_BATCH       Completed
-    ...     ELSE                 Wait For Batch To Process    RD2_OpportunityEvaluation_BATCH   Completed
+    ...                          Wait For Batch To Process         RD_RecurringDonations_BATCH       Completed
+    ...     ELSE                 Wait For Batch To Process         RD2_OpportunityEvaluation_BATCH   Completed
 
 API Get Id
     [Documentation]         Returns the ID of a record identified by the given field_name and field_value input for a specific object
