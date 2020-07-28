@@ -2014,6 +2014,69 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(null, pause, 'A past Pause Schedule should not be returned');
     }
 
+    /***
+    * @description Verifies existing pause is not deactivated when save of the new pause fails
+    */
+    @isTest
+    private static void shouldRollbackExistingPauseDeactivationWhenNewPauseInsertFails() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
+
+        RecurringDonationSchedule__c newPause = buildPauseSchedule(rd.Id);
+        newPause.RecurringDonation__c = null;//cause the insert DML error
+
+        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+        Exception actualException;
+        try {
+            pauseHandler.savePauseSchedule(rd.Id, newPause);
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 
+            'An error should be generated due to invalid new Pause Schedule');
+
+        RecurringDonationSchedule__c actualPause = pauseHandler.getPauseSchedule(rd.Id);
+
+        System.assertEquals(existingPause.Id, actualPause.Id, 'Existing Pause should be returned');
+        System.assertEquals(true, pauseHandler.isActivePause(actualPause, RD2_ScheduleService.currentDate), 
+            'Existing Pause should be active');
+    }
+
+    /***
+    * @description Verifies existing pause is deactivated when a new pause is created
+    */
+    @isTest
+    private static void shouldDeactivateExistingPauseWhenNewPauseIsCreated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
+
+        RecurringDonationSchedule__c newPause = buildPauseSchedule(rd.Id);
+        newPause.StartDate__c = newPause.StartDate__c.addMonths(1);
+
+        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+        pauseHandler.savePauseSchedule(rd.Id, newPause);
+
+        RecurringDonationSchedule__c actualPause = pauseHandler.getPauseSchedule(rd.Id);
+
+        System.assertNotEquals(existingPause.Id, actualPause.Id, 'Existing Pause should not be returned');
+        System.assertEquals(newPause.StartDate__c, actualPause.StartDate__c, 'New Pause Start Date should match');
+    }
+
 
 
 

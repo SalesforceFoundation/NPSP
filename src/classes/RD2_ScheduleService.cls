@@ -973,6 +973,27 @@ public without sharing class RD2_ScheduleService {
         }
 
         /***
+        * @description Deactivates an active Pause Schedule (if any) and 
+        * saves the specified Pause Schedule.
+        * @param rdId Recurring Donation Id
+        * @param pauseSchedule The Pause Schedule on the Recurring Donation
+        * @return void
+        */
+        public void savePauseSchedule(Id rdId, RecurringDonationSchedule__c pauseSchedule) {
+            Savepoint sp = Database.setSavepoint();
+            try {
+                cancelPauseSchedule(rdId);
+
+                insert pauseSchedule;
+
+            } catch (Exception e) {
+                Database.rollback(sp);
+                
+                throw new ScheduleException(e.getMessage());
+            }
+        }
+
+        /***
         * @description Cancels the Pause Schedule.
         * The End Date is set to yesterday. This is valid when the schedule Start Date
         * is in future or has passed but the End Date has not been reached yet.
@@ -1077,4 +1098,9 @@ public without sharing class RD2_ScheduleService {
             };
         }
     }
+
+    /**
+     * @description Exception thrown during Recurring Donation Schedule processing
+     */
+    public class ScheduleException extends Exception { }
 }

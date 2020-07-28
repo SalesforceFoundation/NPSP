@@ -125,7 +125,9 @@ public with sharing class RD2_PauseForm_CTRL {
     private static PausedReason buildPausedReason() {
         PausedReason reason = new PausedReason();
         reason.label = System.Label.RD2_PausedReasonLabel;
-        reason.options = getPausedReasonOptions();
+        reason.options = UTIL_Describe.getSelectOptions(
+            'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c)
+        );
         reason.placeholder = System.Label.lblSelectOptionPlaceholder;
 
         return reason;
@@ -191,12 +193,11 @@ public with sharing class RD2_PauseForm_CTRL {
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
 
-            pauseHandler.cancelPauseSchedule(pause.rdId);
-
-            //create new pause schedule
-            RecurringDonationSchedule__c schedule = buildPauseSchedule(pause);
-            if (schedule.StartDate__c != null && schedule.EndDate__c != null) {
-                insert schedule;
+            Boolean isNewPause = pause.startDate != null && pause.resumeAfterDate != null;
+            if (isNewPause) {
+                pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
+            } else {//deactivate the current pause (if any)
+                pauseHandler.cancelPauseSchedule(pause.rdId);
             }
 
         } catch (Exception e) {
