@@ -2221,7 +2221,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Contains message indicating a pause has been deleted successfully</shortDescription>
-        <value>Pause on {0} was removed</value>
+        <value>Pause on {0} was removed.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseDescription</fullName>
@@ -2269,7 +2269,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Contains message indicating a pause has been saved successfully</shortDescription>
-        <value>Pause on {0} was saved</value>
+        <value>Pause on {0} was saved.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseSelectedInstallmentTextPlural</fullName>

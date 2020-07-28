@@ -34,7 +34,7 @@
 * @description Unit tests for the Pause Recurring Donation feature
 *
 */
-@IsTest(IsParallel=true)
+@IsTest(IsParallel=false)
 public with sharing class RD2_PauseForm_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
@@ -95,6 +95,31 @@ public with sharing class RD2_PauseForm_TEST {
 		System.assertEquals(true, pause.isRDClosed, 'The Recurring Donation should be closed');
 		System.assertEquals(true, pause.hasAccess, 'The user should have access');
 		System.assertEquals(null, pause.pausedReason, 'The Paused Reason should not be initialized for a closed RD');
+	}
+
+    /****
+	* @description Verifies full Pause Data is not returned when user does not have Create and Edit 
+	* permissions on the Recurring Donation SObject
+    */
+    @isTest
+    private static void shouldNotReturnPauseDataWhenUserDoesNotHaveCreateAndEditPermissions() {
+		RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+		RD2_ScheduleService.currentDate = START_DATE;
+		
+		npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+		RecurringDonationSchedule__c pauseSchedule = createPauseSchedule(rd.Id);
+
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        System.runAs(readOnlyUser) {
+			RD2_ScheduleService.currentDate = pauseSchedule.StartDate__c.addDays(1);	
+
+			RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);
+			System.assertEquals(false, pause.hasAccess, 'The user should not have access: ' + pause);
+			System.assertEquals(null, pause.isRDClosed, 'The Recurring Donation closed status should not be specified');
+			System.assertEquals(null, pause.startDate, 'The Pause Start Date should not be set');
+			System.assertEquals(null, pause.resumeAfterDate, 'The Pause Resume After Date should not be set');
+			System.assertEquals(null, pause.pausedReason, 'The Paused Reason should not be initialized');
+		}
 	}
 
 	/****

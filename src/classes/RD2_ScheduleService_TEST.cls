@@ -42,6 +42,7 @@ private with sharing class RD2_ScheduleService_TEST {
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
     private static final String PAYMENT_CHECK = 'Check';
     private static final String PAYMENT_ACH_EFT = 'ACH/EFT';
+    private static final Integer NUM_INSTALLMENTS = 12;
 
 
     /****
@@ -1700,6 +1701,322 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
     }
 
+    /***
+    * @description Verifies pause schedules are excluded from active schedules
+    */
+    @isTest
+    private static void shouldExcludePauseScheduleInActiveSchedules() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        RecurringDonationSchedule__c pause = createPauseSchedule(rd.Id);
+        System.assertNotEquals(null, pause.EndDate__c, 'End Date on the Pause Schedule should be specified');
+
+        List<RD2_ScheduleService.ActiveSchedule> schedules = new RD2_ScheduleService().getVisualizedSchedules(rd);
+        System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
+        System.assertEquals(null, schedules[0].endDate, 'The End Date should not be specified');
+    }
+
+    /***
+    * @description Verifies active pause schedules are included in existing schedules
+    */
+    @isTest
+    private static void shouldIncludeActivePauseScheduleInExistingSchedules() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        createPauseSchedule(rd.Id);
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getExistingSchedules(rd);
+        System.assertEquals(2, schedules.size(), 'Pause schedule should be included in the schedule list.');
+    }
+
+    /***
+    * @description Verifies pause schedules are excluded from updated schedules 
+    * when Recurring Donation is not closed.
+    */
+    @isTest
+    private static void shouldExcludeActivePauseScheduleInUpdatedSchedulesWhenRDIsNotClosed() {
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withMockId()
+            .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        RecurringDonationSchedule__c pause = buildPauseSchedule(rd.Id);
+        schedules.add(pause);
+
+        RD2_ScheduleService.currentDate = pause.StartDate__c.addMonths(1);
+
+        //Simulate RD update
+        rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
+        TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
+
+        System.assertEquals(1, changes.objectsToUpdate.size(), 'One Schedule should be set for update');
+        System.assertEquals(1, changes.objectsToInsert.size(), 'One Schedule should be set for insert');
+        System.assertNotEquals(true, changes.objectsToUpdate[0].get('IsPause__c'), 'Pause Schedule should not be updated');
+        System.assertNotEquals(true, changes.objectsToInsert[0].get('IsPause__c'), 'Pause Schedule should not be inserted');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY, changes.objectsToInsert[0].get('InstallmentPeriod__c'), 
+            'New schedule Installment Period should match');
+    }
+
+    /***
+    * @description Verifies pause schedules are included in updated schedules 
+    * when Recurring Donation is just closed.
+    */
+    @isTest
+    private static void shouldIncludeActivePauseScheduleInUpdatedSchedulesWhenRDIsClosed() {
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withMockId()
+            .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        RecurringDonationSchedule__c pause = buildPauseSchedule(rd.Id);
+        schedules.add(pause);
+
+        RD2_ScheduleService.currentDate = pause.StartDate__c.addMonths(1);
+        final Date yesterday = RD2_ScheduleService.currentDate.addDays(-1);
+
+        //Simulate closing the RD
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
+
+        System.assertEquals(2, changes.objectsToUpdate.size(), 'Pause Schedule should be set for update');
+        System.assertEquals(0, changes.objectsToInsert.size(), 'No Schedule should be set for insert');
+
+        for (SObject schedule : changes.objectsToUpdate) {
+            System.assertEquals(yesterday, schedule.get('EndDate__c'), 'All Schedules should end: ' + schedule);
+        }
+    }
+
+    /***
+    * @description Verifies pause schedules are excluded in updated schedules 
+    * when Recurring Donation is just closed and the pause schedule has already ended.
+    */
+    @isTest
+    private static void shouldExcludeInactivePauseScheduleInUpdatedSchedulesWhenRDIsClosed() {
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withMockId()
+            .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        RecurringDonationSchedule__c pause = buildPauseSchedule(rd.Id);
+        schedules.add(pause);
+
+        RD2_ScheduleService.currentDate = pause.EndDate__c.addDays(1);
+
+        //Simulate closing the RD
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
+
+        System.assertEquals(1, changes.objectsToUpdate.size(), 'Pause Schedule should be excluded from the update');
+        System.assertEquals(0, changes.objectsToInsert.size(), 'No Schedule should be set for insert');
+
+        System.assertNotEquals(true, changes.objectsToUpdate[0].get('IsPause__c'), 'Pause Schedule should not be updated');
+    }
+    
+    /***
+    * @description Verifies installments are set as skipped when within active pause date range
+    */
+    @isTest
+    private static void shouldSetInstallmentsAsSkippedWhenWithinActivePause() {
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withMockId()
+            .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        RecurringDonationSchedule__c pause = buildPauseSchedule(rd.Id);
+        schedules.add(pause);
+
+        RD2_ScheduleService.currentDate = pause.StartDate__c.addDays(-1);
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+            RD2_ScheduleService.currentDate, NUM_INSTALLMENTS, schedules
+        );
+        System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
+
+		for (Integer i = 0, pauseCounter = 4; i < pauseCounter; i++) {
+			System.assertEquals(true, installments[i].isSkipped, 
+				'Installment should be skipped when within the pause: ' + i + ' -> ' + installments[i]);
+        }
+        
+		for (Integer i = 4; i < NUM_INSTALLMENTS; i++) {
+			System.assertEquals(false, installments[i].isSkipped, 
+				'Installment should not be skipped after the pause: ' + i + ' -> ' + installments[i]);
+		}
+    }
+
+    /***
+    * @description Verifies installments are not skipped when within inactive pause date range
+    */
+    @isTest
+    private static void shouldNotSetInstallmentsAsSkippedWhenWithinInactivePause() {
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withMockId()
+            .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+
+        RecurringDonationSchedule__c pause = buildPauseSchedule(rd.Id);
+        schedules.add(pause);
+
+        RD2_ScheduleService.currentDate = pause.StartDate__c.addMonths(2);
+        pause.EndDate__c = RD2_ScheduleService.currentDate.addDays(-1);
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+            RD2_ScheduleService.currentDate, NUM_INSTALLMENTS, schedules
+        );
+        System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
+
+		for (RD2_ScheduleService.Installment installment : installments) {
+			System.assertEquals(false, installment.isSkipped, 
+				'Installment should not be skipped when within the inactive pause: ' + installment);
+        }
+    }
+
+    /***
+    * @description Verifies an active pause schedule can be cancelled
+    */
+    @isTest
+    private static void shouldCancelActivePauseSchedule() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        createPauseSchedule(rd.Id);
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getExistingSchedules(rd);
+        System.assertEquals(2, schedules.size(), 'Pause schedule should be included in the schedule list.');
+
+        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+        pauseHandler.cancelPauseSchedule(rd.Id);
+
+        schedules = new RD2_ScheduleService().getExistingSchedules(rd);
+        System.assertEquals(1, schedules.size(), 'Pause schedule should be excluded after being deactivated.');
+        System.assertEquals(false, schedules[0].IsPause__c, 'Returned Schedule should not be a Pause Schedule');
+    }
+
+    /***
+    * @description Verifies pause cancel does not throw an error when no active pause exists
+    */
+    @isTest
+    private static void shouldNotThrowErrorWhenCancelingPauseAndNoneExists() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        Exception actualException;
+        try {
+            RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+            pauseHandler.cancelPauseSchedule(rd.Id);
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertEquals(null, actualException, 
+            'No error should be generated when cancelling a Pause and none exists');
+    }
+
+    /***
+    * @description Verifies a future pause is returned
+    */
+    @isTest
+    private static void shouldReturnFuturePauseSchedule() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        RecurringDonationSchedule__c pause = createPauseSchedule(rd.Id);
+
+        RD2_ScheduleService.currentDate = pause.StartDate__c.addDays(-1);
+        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+        pause = pauseHandler.getPauseSchedule(rd.Id);
+
+        System.assertNotEquals(null, pause, 'A future Pause Schedule should be returned');
+    }
+
+    /***
+    * @description Verifies a current pause is returned
+    */
+    @isTest
+    private static void shouldReturnCurrentPauseSchedule() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        RecurringDonationSchedule__c pause = createPauseSchedule(rd.Id);
+
+        RD2_ScheduleService.currentDate = pause.StartDate__c;
+        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+        pause = pauseHandler.getPauseSchedule(rd.Id);
+
+        System.assertNotEquals(null, pause, 'A current Pause Schedule should be returned');
+    }
+
+    /***
+    * @description Verifies a past pause is not returned
+    */
+    @isTest
+    private static void shouldNotReturnPastPauseSchedule() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        RecurringDonationSchedule__c pause = createPauseSchedule(rd.Id);
+
+        RD2_ScheduleService.currentDate = pause.EndDate__c.addDays(1);
+        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+        pause = pauseHandler.getPauseSchedule(rd.Id);
+
+        System.assertEquals(null, pause, 'A past Pause Schedule should not be returned');
+    }
+
+
+
+
     //// Helpers
     //////////////////////////
 
@@ -1832,6 +2149,33 @@ private with sharing class RD2_ScheduleService_TEST {
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1);
     }
+
+    /**
+     * @description Creates test pause schedule
+	 * @param rdId Recurring Donation Id
+     * @return RecurringDonationSchedule__c
+     */
+	private static RecurringDonationSchedule__c createPauseSchedule(Id rdId) {
+		RecurringDonationSchedule__c pause = buildPauseSchedule(rdId);
+
+		insert pause;
+		return pause;
+    }
+    
+    /**
+     * @description Builds a pause schedule
+	 * @param rdId Recurring Donation Id
+     * @return RecurringDonationSchedule__c
+     */
+	private static RecurringDonationSchedule__c buildPauseSchedule(Id rdId) {
+		return new RecurringDonationSchedule__c(
+			RecurringDonation__c = rdId,
+			StartDate__c = Date.newInstance(2020, 1, 1),
+			EndDate__c = Date.newInstance(2020, 4, 1),
+			IsPause__c = true,
+			StatusReason__c = 'Unknown'
+		);
+	}
 
     /****
     * @description Returns contact record

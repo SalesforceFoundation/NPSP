@@ -87,10 +87,11 @@ public with sharing class RD2_PauseForm_CTRL {
      * @return Boolean
      */
     private static Boolean hasAccess() {
-        SObjectType objType = npe03__Recurring_Donation__c.SObjectType;
-        UTIL_Permissions permissions = new UTIL_Permissions();
+        String rdObjectName = Schema.SObjectType.npe03__Recurring_Donation__c.getName();
 
-        return permissions.canCreate(objType) && permissions.canUpdate(objType);
+        return UTIL_Permissions.canRead(rdObjectName, false) &&
+            UTIL_Permissions.canCreate(rdObjectName, false) &&
+            UTIL_Permissions.canUpdate(rdObjectName, false);
     }
 
     /**

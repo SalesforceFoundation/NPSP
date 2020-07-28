@@ -66,7 +66,7 @@ public without sharing class RD2_ScheduleService {
     }
 
     /**
-    * @description
+    * @description Handles Pause Schedules
     */
     private PauseScheduleHandler pauseHandler {
         get {
@@ -140,12 +140,11 @@ public without sharing class RD2_ScheduleService {
         if (schedules != null) {
             for (RecurringDonationSchedule__c schedule : schedules) {
                 //The pause schedule should stay the same if the RD schedule data is updated
-                //unless the RD is closed, when all schedules should be closed
+                //unless the RD is closed, when all schedules should be closed.
                 if (pauseHandler.isPause(schedule)) {
-                    if (isClosed) {
-                        schedule.EndDate__c = (schedule.EndDate__c == null || schedule.EndDate__c > currentDate )
-                            ? currentDate.addDays(-1)
-                            : schedule.EndDate__c;//the pause end date has passed
+                    Boolean isCurrentPause = schedule.EndDate__c == null || schedule.EndDate__c > currentDate;
+                    if (isClosed && isCurrentPause) {
+                        schedule.EndDate__c = currentDate.addDays(-1);
                     } else {
                         continue;
                     }
@@ -320,7 +319,8 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Indicates if the schedule is active starting from the reference date
+    * @description Indicates if the schedule is active starting from the reference date.
+    * It excludes Pause Schedule handling.
     * @param schedule Recurring Donation schedule
     * @param referenceDate Reference Date
     * @return Boolean
@@ -597,7 +597,8 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Retrieves detailed information about schedules suitable for viewing through UI
+    * @description Retrieves detailed information about schedules suitable for viewing through UI.
+    * Pause Schedules are excluded from the list.
     * @param rd Recurring Donation record
     * @return List<ActiveSchedule>
     */
@@ -682,7 +683,8 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Retrieves recurring donation schedules associated with recurring donation list
+    * @description Retrieves active recurring donation schedules associated with recurring donation list.
+    * The output includes pause schedules as well.
     * @param rds List<npe03__Recurring_Donation__c>
     * @return Map<Id, List<RecurringDonationSchedule__c>>
     */
@@ -931,21 +933,24 @@ public without sharing class RD2_ScheduleService {
         }
     }
 
+    /***
+    * @description Handles Pause Recurring Donation functionality
+    */
     public class PauseScheduleHandler {
 
         /***
-        * @description
-        * @param
+        * @description Simple check on the schedule to check if the "Is Pause" field is checked
+        * @param schedule Recurring Donation Schedule
         * @return Boolean
         */
         public Boolean isPause(RecurringDonationSchedule__c schedule) {
             return schedule.IsPause__c;
         }
 
-
         /***
-        * @description
-        * @param
+        * @description Indicates if the schedule is an active pause schedule
+        * @param schedule Recurring Donation Schedule
+        * @param referenceDate As of today to compare the Schedule Start and End Dates against
         * @return Boolean
         */
         public Boolean isActivePause(RecurringDonationSchedule__c schedule, Date referenceDate) {
@@ -968,8 +973,10 @@ public without sharing class RD2_ScheduleService {
         }
 
         /***
-        * @description
-        * @param
+        * @description Cancels the Pause Schedule.
+        * The End Date is set to yesterday. This is valid when the schedule Start Date
+        * is in future or has passed but the End Date has not been reached yet.
+        * @param rdId Recurring Donation Id
         * @return void
         */
         public void cancelPauseSchedule(Id rdId) {
@@ -984,8 +991,9 @@ public without sharing class RD2_ScheduleService {
         }
 
         /***
-        * @description
-        * @param
+        * @description Retrieves a Pause Schedule on the Recurring Donation (if any).
+        * Currently at most one Pause Schedule can exist on a Recurring Donation.
+        * @param rdId Recurring Donation Id
         * @return RecurringDonationSchedule__c
         */
         public RecurringDonationSchedule__c getPauseSchedule(Id rdId) {
@@ -1008,8 +1016,9 @@ public without sharing class RD2_ScheduleService {
         }
 
         /***
-        * @description
-        * @param
+        * @description Indicates if the projected future installment is within the Pause Schedules
+        * @param installment Future installment
+        * @param pauseSchedules List of *active* Pause Schedules
         * @return Boolean
         */
         public Boolean isSkipped(Installment installment, List<RecurringDonationSchedule__c> pauseSchedules) {
@@ -1024,13 +1033,16 @@ public without sharing class RD2_ScheduleService {
             }
             return false;
         }
-
     }
 
+
+    /***
+    * @description Handles SOQL on Recurring Donation Schedule
+    */
     public class ScheduleQueryHandler {
 
         /***
-        * @description Build dynamic soql query string with support for date injection
+        * @description Builds dynamic soql query string with support for date injection
         * @return String
         */
         public String buildQuery() {
@@ -1044,8 +1056,8 @@ public without sharing class RD2_ScheduleService {
         }
 
         /***
-        * @description
-        * @param
+        * @description Fields to select on the RD Schedule SObject
+        * @param Set<String> Set of fields
         * @return
         */
         public Set<String> getFields() {
