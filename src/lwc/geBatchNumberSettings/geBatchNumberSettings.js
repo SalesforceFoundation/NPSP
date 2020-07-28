@@ -1,5 +1,4 @@
 import {LightningElement, wire} from 'lwc';
-import {getObjectInfo} from 'lightning/uiObjectInfoApi';
 import isSysAdmin from '@salesforce/apex/GE_AutoNumberController.isSysAdmin';
 import save from '@salesforce/apex/GE_AutoNumberController.save';
 import activate from '@salesforce/apex/GE_AutoNumberController.activate';
