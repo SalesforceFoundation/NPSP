@@ -175,6 +175,7 @@ export default class geBatchNumberSettings extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
+                this.displayErrorOnInputs(this.errorMessage);
             });
     }
 
@@ -267,6 +268,18 @@ export default class geBatchNumberSettings extends LightningElement {
         this.displayFormat = null;
         this.startingNumber = null;
         this.description = null;
+    }
+
+    displayErrorOnInputs(errorMessage) {
+        const inputs = this.template.querySelectorAll('lightning-input');
+        inputs.forEach(input => {
+            if (errorMessage.includes(input.name) || errorMessage.includes(input.label)) {
+                input.setCustomValidity(errorMessage);
+                input.reportValidity();
+            } else {
+                input.setCustomValidity('');
+            }
+        })
     }
 
 }
