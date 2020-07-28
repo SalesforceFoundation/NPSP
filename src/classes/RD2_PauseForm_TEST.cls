@@ -42,7 +42,7 @@ public with sharing class RD2_PauseForm_TEST {
     private static final Date START_DATE = Date.newInstance(2020, 3, 15);
 	private static final String PAYMENT_CHECK = 'Check';
 	private static final Integer MAX_ROW_DISPLAY = 12;
-	
+
     /****
     * @description Creates data required for unit tests
     */
@@ -52,8 +52,8 @@ public with sharing class RD2_PauseForm_TEST {
 		RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
 		Contact contact = UTIL_UnitTestData_TEST.getContact();
-		insert contact;		
-		
+		insert contact;
+
 		insert getRecurringDonationBuilder(contact.Id).build();
     }
 
@@ -69,13 +69,13 @@ public with sharing class RD2_PauseForm_TEST {
 		System.assertEquals(true, pause.hasAccess, 'The user should have access');
 
 		System.assertNotEquals(null, pause.pausedReason, 'The Paused Reason should be initialized');
-		System.assertEquals(System.Label.RD2_PausedReasonLabel, pause.pausedReason.label, 
+		System.assertEquals(System.Label.RD2_PausedReasonLabel, pause.pausedReason.label,
 			'The Paused Reason label should match');
-		System.assertNotEquals(null, pause.pausedReason.options, 
+		System.assertNotEquals(null, pause.pausedReason.options,
 			'The Paused Reason options should be retrieved');
-		System.assertEquals(System.Label.lblSelectOptionPlaceholder, pause.pausedReason.placeholder, 
+		System.assertEquals(System.Label.lblSelectOptionPlaceholder, pause.pausedReason.placeholder,
 			'The Paused Reason label should match');
-		System.assertEquals(null, pause.pausedReason.value, 
+		System.assertEquals(null, pause.pausedReason.value,
 			'The Paused Reason value should be empty when no pause exists on the RD');
     }
 
@@ -85,7 +85,7 @@ public with sharing class RD2_PauseForm_TEST {
     @isTest
     private static void shouldReturnOnlyRequiredPauseDataWhenRDIsClosed() {
 		RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-		
+
 		npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
 			.withStatusClosed()
 			.build();
@@ -98,20 +98,20 @@ public with sharing class RD2_PauseForm_TEST {
 	}
 
     /****
-	* @description Verifies full Pause Data is not returned when user does not have Create and Edit 
+	* @description Verifies full Pause Data is not returned when user does not have Create and Edit
 	* permissions on the Recurring Donation SObject
     */
     @isTest
     private static void shouldNotReturnPauseDataWhenUserDoesNotHaveCreateAndEditPermissions() {
 		RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 		RD2_ScheduleService.currentDate = START_DATE;
-		
+
 		npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 		RecurringDonationSchedule__c pauseSchedule = createPauseSchedule(rd.Id);
 
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
-        System.runAs(readOnlyUser) {
-			RD2_ScheduleService.currentDate = pauseSchedule.StartDate__c.addDays(1);	
+		User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+		System.runAs(readOnlyUser) {
+			RD2_ScheduleService.currentDate = pauseSchedule.StartDate__c.addDays(1);
 
 			RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);
 			System.assertEquals(false, pause.hasAccess, 'The user should not have access: ' + pause);
@@ -178,8 +178,8 @@ public with sharing class RD2_PauseForm_TEST {
 	}
 
 	/****
-	* @description Verifies the existing pause is deactivated 
-	* and no new pause schedule created when passed in data does not have 
+	* @description Verifies the existing pause is deactivated
+	* and no new pause schedule created when passed in data does not have
 	* Start and End Date set.
     */
     @isTest
@@ -220,7 +220,7 @@ public with sharing class RD2_PauseForm_TEST {
 
 		RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
 
-		RD2_ScheduleService.currentDate = existingPause.EndDate__c;		
+		RD2_ScheduleService.currentDate = existingPause.EndDate__c;
 		RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);
 		System.assertEquals(existingPause.Id, pause.scheduleId, 'The pause schedule should be returned on its End Date');
 		System.assertEquals(existingPause.Statusreason__c, pause.pausedReason.value, 'Paused Reason should be specified');
@@ -243,7 +243,7 @@ public with sharing class RD2_PauseForm_TEST {
 		System.assertEquals(MAX_ROW_DISPLAY, installments.size(), 'Number of installments should match');
 
 		for (RD2_VisualizeScheduleController.Installment installment : installments) {
-			System.assertEquals(false, installment.isSkipped, 
+			System.assertEquals(false, installment.isSkipped,
 				'No installment should be skipped when no pause exists');
 		}
 	}
@@ -262,10 +262,10 @@ public with sharing class RD2_PauseForm_TEST {
 		Integer isSkippedCounter = 0;
 		for (RD2_VisualizeScheduleController.Installment installment : getInstallments(rd.Id)) {
 
-			Boolean isSkipped = existingPause.StartDate__c <= installment.donationDate 
+			Boolean isSkipped = existingPause.StartDate__c <= installment.donationDate
 				&& installment.donationDate <= existingPause.EndDate__c;
 
-			System.assertEquals(isSkipped, installment.isSkipped, 
+			System.assertEquals(isSkipped, installment.isSkipped,
 				'Installment isSkipped flag should match: ' + installment);
 
 			if (isSkipped) {
@@ -292,10 +292,10 @@ public with sharing class RD2_PauseForm_TEST {
 		Integer isSkippedCounter = 0;
 		for (RD2_VisualizeScheduleController.Installment installment : getInstallments(rd.Id)) {
 
-			Boolean isSkipped = existingPause.StartDate__c <= installment.donationDate 
+			Boolean isSkipped = existingPause.StartDate__c <= installment.donationDate
 				&& installment.donationDate <= existingPause.EndDate__c;
 
-			System.assertEquals(isSkipped, installment.isSkipped, 
+			System.assertEquals(isSkipped, installment.isSkipped,
 				'Installment isSkipped flag should match: ' + installment);
 
 			if (isSkipped) {
@@ -327,7 +327,7 @@ public with sharing class RD2_PauseForm_TEST {
 		RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
 
 		for (RD2_VisualizeScheduleController.Installment installment : getInstallments(rd.Id)) {
-			System.assertEquals(false, installment.isSkipped, 
+			System.assertEquals(false, installment.isSkipped,
 				'No installment should be skipped when the pause is deactivated');
 		}
 	}
@@ -344,16 +344,16 @@ public with sharing class RD2_PauseForm_TEST {
 		RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
 
 		RD2_ScheduleService.currentDate = existingPause.EndDate__c.addDays(1);
-		
+
 		for (RD2_VisualizeScheduleController.Installment installment : getInstallments(rd.Id)) {
-			System.assertEquals(false, installment.isSkipped, 
+			System.assertEquals(false, installment.isSkipped,
 				'No installment should be skipped when the pause is passed');
 		}
 	}
 
 	/****
 	* @description Verifies the error generated when no installments is returned
-	* is propagated to the calling method. 
+	* is propagated to the calling method.
     */
     @isTest
     private static void shouldPropagateExceptionGeneratedWhenNoInstallmentIsReturned() {
@@ -375,13 +375,13 @@ public with sharing class RD2_PauseForm_TEST {
 			actualException = e;
 		}
 
-		System.assertNotEquals(null, actualException, 
+		System.assertNotEquals(null, actualException,
 			'Exception should be generated when no installment is returned');
-		System.assertEquals(System.Label.RD2_ScheduleVisualizerMessageNoSchedule, actualException.getMessage(), 
+		System.assertEquals(System.Label.RD2_ScheduleVisualizerMessageNoSchedule, actualException.getMessage(),
 			'Exception message should match');
 	}
 
-	
+
 
     //Helpers
 	/////////////
@@ -453,21 +453,21 @@ public with sharing class RD2_PauseForm_TEST {
 
 		System.assertEquals(1, datatableByKey.size(), 'Installments should be returned');
 
-		RD2_VisualizeScheduleController.DataTable dataTable = 
+		RD2_VisualizeScheduleController.DataTable dataTable =
 			(RD2_VisualizeScheduleController.DataTable) datatableByKey.values()[0];
 
         List<RD2_VisualizeScheduleController.Installment> installments = new List<RD2_VisualizeScheduleController.Installment>();
         for (Object record : dataTable.getRecords()) {
             installments.add((RD2_VisualizeScheduleController.Installment) record);
 		}
-		
+
 		System.assertEquals(MAX_ROW_DISPLAY, installments.size(), 'Number of installments should match');
 
 		return installments;
 	}
 
     /**
-     * @description Build open Recurring Donation 
+     * @description Build open Recurring Donation
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
@@ -488,7 +488,7 @@ public with sharing class RD2_PauseForm_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE);
 	}
-	
+
     /****
     * @description Returns contact record
     * @return Contact
