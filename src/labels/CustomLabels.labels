@@ -4912,7 +4912,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Explanation of Display Format options</shortDescription>
         <value>Display Format allows you to control the appearance of your auto-numbered
             field. It must be unique and include the number of digits as well as a prefix, if
-            desired. Your format can be up to 10 characters.&lt;/br&gt;&lt;/br&gt;
+            desired. Your format can be up to 30 characters.&lt;/br&gt;&lt;/br&gt;
             Examples&lt;/br&gt;
             &lt;ul&gt;
             &lt;li&gt;
