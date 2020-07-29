@@ -2111,7 +2111,7 @@
         <members>commonFieldLabel</members>
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
-        <members>commonInsuffientPermissions</members>
+        <members>commonInsufficientPermissions</members>
         <members>commonJWTInvalidKey</members>
         <members>commonJWTInvalidPayload</members>
         <members>commonMMYY</members>

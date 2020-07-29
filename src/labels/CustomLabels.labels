@@ -5097,7 +5097,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>General Account Unit</value>
     </labels>
     <labels>
-        <fullName>commonInsuffientPermissions</fullName>
+        <fullName>commonInsufficientPermissions</fullName>
         <categories>Error</categories>
         <language>en_US</language>
         <protected>true</protected>

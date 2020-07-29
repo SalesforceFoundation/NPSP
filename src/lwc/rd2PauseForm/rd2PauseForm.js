@@ -16,7 +16,7 @@ import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage'
 import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
 import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
 import permissionRequired from '@salesforce/label/c.RD2_PausePermissionRequired';
-import insufficientPermissions from '@salesforce/label/c.commonInsuffientPermissions';
+import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 
 import getPauseData from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseData';
 import getInstallments from '@salesforce/apex/RD2_PauseForm_CTRL.getInstallments';
