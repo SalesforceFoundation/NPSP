@@ -20,6 +20,7 @@ from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 from cumulusci.robotframework.utils import capture_screenshot_on_error
+from cumulusci.robotframework import locator_manager
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
@@ -52,6 +53,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
         self._init_locators()
+        locator_manager.register_locators("npsp",npsp_lex_locators)
 
     def _init_locators(self):
         try:
@@ -360,7 +362,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Validates header value"""   
         locator= npsp_lex_locators['header'].format(value)
         self.selenium.page_should_contain_element(locator)    
-        
+
+    @capture_screenshot_on_error    
     def verify_related_list(self,list_name,status,name):   
         """If status is 'contains' then the specified related list should contain name
                         'does not contain' then the specified related list should not contain name"""
