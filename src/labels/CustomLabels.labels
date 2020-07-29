@@ -2220,7 +2220,7 @@
         <categories>Recurring-Donations, Pause</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Contains message indicating a pause has been deleted successfully</shortDescription>
+        <shortDescription>Contains message indicating a pause has been removed successfully</shortDescription>
         <value>Pause on {0} was removed.</value>
     </labels>
     <labels>
