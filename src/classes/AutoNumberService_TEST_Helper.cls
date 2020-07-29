@@ -27,6 +27,13 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2020
+* @description Contains static helper methods used by the AutoNumberService test class,
+* and the test classes of Apex controllers that wrap the AutoNumberService methods in
+* AuraHandledExceptions for use in LWC.
+*/
 @IsTest
 public class AutoNumberService_TEST_Helper {
 

@@ -27,6 +27,11 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.org
+* @date 2020
+* @description Trigger Handler for SObjects that have active AutoNumbers.
+*/
 public class AutoNumber_TDTM extends TDTM_Runnable {
 
     public override DmlWrapper run(
