@@ -185,7 +185,6 @@ public class AutoNumberService {
             this.validate();
         }
 
-        // Used in trigger context by apply()
         public AutoNumber(AutoNumber__c record) {
             this.record = record;
             this.nextAutoNumber = getNextAutoNumber();
