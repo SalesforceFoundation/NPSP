@@ -7,13 +7,12 @@ export default class utilExpandableSection extends LightningElement {
     @api isCollapsed = false;
     @api alternativeText;
     @api bodyClass;
-    @api buttonBackground;
 
     get containerClass() {
-        let classItems = ['slds-section'];
+        let classItems = ['slds-section', 'slds-is-open'];
 
-        if (this.isCollapsed === false) {
-            classItems = [...classItems, 'slds-is-open'];
+        if (this.classList && this.classList.length > 0) {
+            classItems = [...classItems, this.classList];
         }
 
         return classItems.join(' ');
@@ -40,16 +39,6 @@ export default class utilExpandableSection extends LightningElement {
                 let bodyClass = this.bodyClass.split(' ');
                 classItems = [...classItems, ...bodyClass];
             }
-        }
-
-        return classItems.join(' ');
-    }
-
-    get computedButtonClass() {
-        let classItems = ['slds-button', 'slds-section__title-action'];
-
-        if (this.buttonBackground && this.buttonBackground === 'none') {
-            classItems = [...classItems, 'slds-section__title-action-background-none'];
         }
 
         return classItems.join(' ');
