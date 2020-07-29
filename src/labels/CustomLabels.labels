@@ -5258,7 +5258,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>commonSelectOptionPlaceholder</fullName>
-        <categories>UI</categories>
+        <categories>Combobox</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Contains value for a placeholder on a dropdown field</shortDescription>
