@@ -32,14 +32,14 @@
 * @date 2020
 * @description Trigger Handler for SObjects that have active AutoNumbers.
 */
-public class AutoNumber_TDTM extends TDTM_Runnable {
+public class AN_AutoNumber_TDTM extends TDTM_Runnable {
 
     public override DmlWrapper run(
             List<SObject> newList, List<SObject> oldList,
             TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            AutoNumberService autoNumberService = new AutoNumberService(newList);
+            AN_AutoNumberService autoNumberService = new AN_AutoNumberService(newList);
             autoNumberService.apply();
         }
         return null;

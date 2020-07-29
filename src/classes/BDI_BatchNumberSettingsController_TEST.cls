@@ -28,48 +28,48 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 @IsTest
-public class GE_AutoNumberController_TEST {
+public class BDI_BatchNumberSettingsController_TEST {
 
     @IsTest
     static void shouldActivate() {
         Id autoNumberId =
-                AutoNumberService_TEST_Helper.setupAutoNumber(false,
+                AN_AutoNumberService_TEST_Helper.setupAutoNumber(false,
                         'abc-{000}', 0, false);
         System.assertEquals(false,
-                AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
-        GE_AutoNumberController.activate(autoNumberId);
+                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
+        BDI_BatchNumberSettingsController.activate(autoNumberId);
 
         System.assertEquals(true,
-                AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c,
+                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c,
                 'The AutoNumber record should be active.');
     }
 
     @IsTest
     static void shouldDeactivate() {
         Id autoNumberId =
-                AutoNumberService_TEST_Helper.setupAutoNumber(true,
+                AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
                         'abc-{000}', 0, false);
         System.assertEquals(true,
-                AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
-        GE_AutoNumberController.deactivate(autoNumberId);
+                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
+        BDI_BatchNumberSettingsController.deactivate(autoNumberId);
 
         System.assertEquals(false,
-                AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c,
+                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c,
                 'The AutoNumber record should be inactive.');
     }
 
     @IsTest
     static void shouldSave() {
-        GE_AutoNumberController.save(AutoNumberService_TEST_Helper.autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
         System.assert(![SELECT Id FROM AutoNumber__c].isEmpty(),
                 'The Auto Number should have been created.');
     }
 
     @IsTest
     static void shouldPreventSaveOfDuplicate() {
-        GE_AutoNumberController.save(AutoNumberService_TEST_Helper.autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
         try {
-            GE_AutoNumberController.save(AutoNumberService_TEST_Helper.autoNumberJSON);
+            BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
         } catch (AuraHandledException ahe) {
             System.assertNotEquals(null, ahe,
                     'An AuraHandledException should be thrown when attempting to insert a ' +
@@ -79,8 +79,8 @@ public class GE_AutoNumberController_TEST {
 
     @IsTest
     static void shouldGetAutoNumbers() {
-        GE_AutoNumberController.save(AutoNumberService_TEST_Helper.autoNumberJSON);
-        System.assert(!GE_AutoNumberController.getAutoNumbers().isEmpty(),
+        BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+        System.assert(!BDI_BatchNumberSettingsController.getAutoNumbers().isEmpty(),
                 'The created Auto Number record should be returned.');
     }
 

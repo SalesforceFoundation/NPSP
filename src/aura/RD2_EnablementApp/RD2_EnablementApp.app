@@ -38,5 +38,5 @@
     <aura:dependency resource="c:RD2_EnablementDelegateSimple" />
     <aura:dependency resource="c:rd2StatusMappingSettings" />
     <aura:dependency resource="c:utilIllustration" />
-    <aura:dependency resource="c:geBatchNumberSettings" />
+    <aura:dependency resource="c:bdiBatchNumberSettings" />
 </aura:application>

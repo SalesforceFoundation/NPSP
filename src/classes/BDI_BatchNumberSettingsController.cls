@@ -35,10 +35,10 @@
 * manage the creation and retrieval of Auto Number records, for use with the
 * DataImportBatch object in Lightning web components.
 */
-public class GE_AutoNumberController {
+public class BDI_BatchNumberSettingsController {
 
-    static AutoNumberService autoNumberService =
-            new AutoNumberService(DataImportBatch__c.SObjectType);
+    static AN_AutoNumberService autoNumberService =
+            new AN_AutoNumberService(DataImportBatch__c.SObjectType);
 
     @AuraEnabled
     public static Boolean isSysAdmin() {

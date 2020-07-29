@@ -30,12 +30,12 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @description Contains static helper methods used by the AutoNumberService test class,
-* and the test classes of Apex controllers that wrap the AutoNumberService methods in
+* @description Contains static helper methods used by the AN_AutoNumberService test class,
+* and the test classes of Apex controllers that wrap the AN_AutoNumberService methods in
 * AuraHandledExceptions for use in LWC.
 */
 @IsTest
-public class AutoNumberService_TEST_Helper {
+public class AN_AutoNumberService_TEST_Helper {
 
     public static String autoNumberJSON =
             '{"fields":{"' + String.valueOf(AutoNumber__c.fields.Object_API_Name__c) +
@@ -67,7 +67,7 @@ public class AutoNumberService_TEST_Helper {
         insert a;
 
         if (insertTriggerHandler) {
-            insert new AutoNumberService(DataImportBatch__c.SObjectType).triggerHandler;
+            insert new AN_AutoNumberService(DataImportBatch__c.SObjectType).triggerHandler;
         }
 
         return a.Id;

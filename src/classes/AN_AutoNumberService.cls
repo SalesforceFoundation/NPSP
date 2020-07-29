@@ -39,7 +39,7 @@
 * increment based on the last used number for the active Display Format, rather than
 * using a global number sequence for all new records for the object.
 */
-public class AutoNumberService {
+public class AN_AutoNumberService {
     SObjectType sObjType;
     List<SObject> records;
     public class AutoNumberException extends Exception {}
@@ -49,7 +49,7 @@ public class AutoNumberService {
      * to create and activate/deactivate Auto Numbers for the passed in
      * SObjectType.
      */
-    public AutoNumberService(SObjectType sObjType) {
+    public AN_AutoNumberService(SObjectType sObjType) {
         this.sObjType = sObjType;
     }
 
@@ -57,7 +57,7 @@ public class AutoNumberService {
      * @description This constructor is currently used by the Trigger Handler
      * framework when applying Auto Numbers to new records.
      */
-    public AutoNumberService(List<SObject> records) {
+    public AN_AutoNumberService(List<SObject> records) {
         this.records = records;
         this.sObjType = records.isEmpty() ? null : records[0].getSObjectType();
     }
@@ -124,7 +124,7 @@ public class AutoNumberService {
     }
 
     // TDTM expects local names without namespaces for Class and Object
-    private final String TRIGGER_HANDLER_CLASS_NAME = 'AutoNumber_TDTM';
+    private final String TRIGGER_HANDLER_CLASS_NAME = 'AN_AutoNumber_TDTM';
     @TestVisible
     Boolean isTriggerHandlerEnabled {
         get {
@@ -158,7 +158,7 @@ public class AutoNumberService {
     private class AutoNumber {
         AutoNumber__c record;
         Integer nextAutoNumber;
-        AutoNumberService autoNumberService;
+        AN_AutoNumberService autoNumberService;
         private SObjectType sObjType {
             get {
                 return UTIL_Describe.getSObjectType(record.Object_API_Name__c);
@@ -176,7 +176,7 @@ public class AutoNumberService {
             }
         }
 
-        public AutoNumber(String autoNumberJSON, AutoNumberService ans) {
+        public AutoNumber(String autoNumberJSON, AN_AutoNumberService ans) {
             this.record = convertJSONToAutoNumber(autoNumberJSON);
             this.autoNumberService = ans;
             this.validate();

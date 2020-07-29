@@ -234,7 +234,7 @@
         const renderBatchNumberSettingsComponent = function () {
             $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
                 $Lightning.createComponent(
-                    "{!namespace}" + ":geBatchNumberSettings",
+                    "{!namespace}" + ":bdiBatchNumberSettings",
                     {},
                     "stgPanelBatchNumberSettings",
                     function () { }

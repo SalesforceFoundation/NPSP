@@ -1,10 +1,10 @@
 import {LightningElement, wire} from 'lwc';
-import isSysAdmin from '@salesforce/apex/GE_AutoNumberController.isSysAdmin';
-import save from '@salesforce/apex/GE_AutoNumberController.save';
-import activate from '@salesforce/apex/GE_AutoNumberController.activate';
-import deactivate from '@salesforce/apex/GE_AutoNumberController.deactivate';
-import getAutoNumbers from '@salesforce/apex/GE_AutoNumberController.getAutoNumbers';
-import getFieldDescribes from '@salesforce/apex/GE_AutoNumberController.getFieldDescribes';
+import isSysAdmin from '@salesforce/apex/BDI_BatchNumberSettingsController.isSysAdmin';
+import save from '@salesforce/apex/BDI_BatchNumberSettingsController.save';
+import activate from '@salesforce/apex/BDI_BatchNumberSettingsController.activate';
+import deactivate from '@salesforce/apex/BDI_BatchNumberSettingsController.deactivate';
+import getAutoNumbers from '@salesforce/apex/BDI_BatchNumberSettingsController.getAutoNumbers';
+import getFieldDescribes from '@salesforce/apex/BDI_BatchNumberSettingsController.getFieldDescribes';
 
 import DataImportBatch from '@salesforce/schema/DataImportBatch__c';
 import Batch_Number from '@salesforce/schema/DataImportBatch__c.Batch_Number__c';
@@ -44,7 +44,7 @@ const COLUMNS = [
     {fieldName: Max_Used_Number.fieldApiName, type: 'text'},
 ];
 
-export default class geBatchNumberSettings extends LightningElement {
+export default class bdiBatchNumberSettings extends LightningElement {
     displayFormat;
     startingNumber;
     description;

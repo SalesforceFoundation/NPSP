@@ -70,10 +70,10 @@
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UnitTestHelper_TEST</members>
-        <members>AutoNumberService</members>
+        <members>AN_AutoNumberService</members>
         <members>AutoNumberService_TEST</members>
-        <members>AutoNumberService_TEST_Helper</members>
-        <members>AutoNumber_TDTM</members>
+        <members>AN_AutoNumberService_TEST_Helper</members>
+        <members>AN_AutoNumber_TDTM</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -296,8 +296,8 @@
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
-        <members>GE_AutoNumberController</members>
-        <members>GE_AutoNumberController_TEST</members>
+        <members>BDI_BatchNumberSettingsController</members>
+        <members>BDI_BatchNumberSettingsController_TEST</members>
         <members>GE_DefaultTemplate</members>
         <members>GE_DefaultTemplate_TEST</members>
         <members>GE_FormRendererService</members>
@@ -3744,7 +3744,7 @@
         <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
-        <members>geBatchNumberSettings</members>
+        <members>bdiBatchNumberSettings</members>
         <members>geBatchWizard</members>
         <members>geConstants</members>
         <members>geDonationMatching</members>
