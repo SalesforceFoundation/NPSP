@@ -157,7 +157,7 @@ export default class geBatchNumberSettings extends LightningElement {
         const fields = {};
         fields[Object_API_Name.fieldApiName] = DataImportBatch.objectApiName;
         fields[Field_API_Name.fieldApiName] = Batch_Number.fieldApiName;
-        fields[Starting_Number.fieldApiName] = this.startingNumber || 1;
+        fields[Starting_Number.fieldApiName] = this.startingNumber;
         fields[Display_Format.fieldApiName] = this.displayFormat;
         fields[Description.fieldApiName] = this.description;
 

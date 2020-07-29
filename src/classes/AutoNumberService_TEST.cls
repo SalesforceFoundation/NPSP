@@ -106,6 +106,21 @@ private class AutoNumberService_TEST {
     }
 
     @IsTest
+    static void shouldAllowStartingNumberZero() {
+        AutoNumberService_TEST_Helper.setupAutoNumber(true,
+                'ABCZZZ-{000}', 0, true);
+
+        DataImportBatch__c b = new DataImportBatch__c();
+        insert b;
+
+        b = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b.Id];
+        System.assertNotEquals(null, b.Batch_Number__c,
+                'The Batch should have a Batch Number applied.');
+        System.assertEquals('ABCZZZ-000', b.Batch_Number__c,
+                'The starting number 0 should be used for the first record.');
+    }
+
+    @IsTest
     static void shouldApplyWithoutFieldAccess() {
         AutoNumberService_TEST_Helper.setupAutoNumber(true,
                 'ABCZZZ-{000}', 100, true);

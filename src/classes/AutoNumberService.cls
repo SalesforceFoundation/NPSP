@@ -262,17 +262,15 @@ public class AutoNumberService {
         }
 
         private Integer getNextAutoNumber() {
+            Integer startingNumber = record.Starting_Number__c != null ?
+                    Integer.valueOf(record.Starting_Number__c) : 1;
             Integer maxUsedNumber = record.Max_Used_Number__c != null ?
                     Integer.valueOf(record.Max_Used_Number__c) : 0;
-            Integer startingNumber = record.Starting_Number__c != null ?
-                    Integer.valueOf(record.Starting_Number__c) : null;
-            Integer nextNumber = maxUsedNumber + 1;
-            if (startingNumber != null) {
-                return maxUsedNumber < startingNumber ?
-                        startingNumber :
-                        nextNumber;
+            if (startingNumber == 0 && maxUsedNumber == 0) {
+                return 0;
             } else {
-                return nextNumber;
+                Integer nextNumber = maxUsedNumber + 1;
+                return nextNumber < startingNumber ? startingNumber : nextNumber;
             }
         }
 
