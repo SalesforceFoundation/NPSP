@@ -118,7 +118,7 @@ public with sharing class RD2_PauseForm_CTRL {
         PausedReason reason = new PausedReason();
         reason.label = System.Label.RD2_PausedReasonLabel;
         reason.options = getPausedReasonOptions();
-        reason.placeholder = System.Label.lblSelectOptionPlaceholder;
+        reason.placeholder = System.Label.commonSelectOptionPlaceholder;
 
         return reason;
     }

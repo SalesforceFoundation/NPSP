@@ -73,7 +73,7 @@ public with sharing class RD2_PauseForm_TEST {
             'The Paused Reason label should match');
         System.assertNotEquals(null, pause.pausedReason.options,
             'The Paused Reason options should be retrieved');
-        System.assertEquals(System.Label.lblSelectOptionPlaceholder, pause.pausedReason.placeholder,
+        System.assertEquals(System.Label.commonSelectOptionPlaceholder, pause.pausedReason.placeholder,
             'The Paused Reason label should match');
         System.assertEquals(null, pause.pausedReason.value,
             'The Paused Reason value should be empty when no pause exists on the RD');

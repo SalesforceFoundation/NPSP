@@ -2129,6 +2129,7 @@
         <members>commonReviewForm</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
+        <members>commonSelectOptionPlaceholder</members>
         <members>commonTemplate</members>
         <members>commonTemplates</members>
         <members>commonUnknownError</members>
@@ -2542,7 +2543,6 @@
         <members>lblProgress</members>
         <members>lblRequired</members>
         <members>lblSalutation</members>
-        <members>lblSelectOptionPlaceholder</members>
         <members>lblState</members>
         <members>lblStatus</members>
         <members>lblStreet</members>

@@ -5257,6 +5257,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save &amp; Close</value>
     </labels>
     <labels>
+        <fullName>commonSelectOptionPlaceholder</fullName>
+        <categories>UI</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains value for a placeholder on a dropdown field</shortDescription>
+        <value>Select an Option</value>
+    </labels>
+    <labels>
         <fullName>commonTemplate</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8619,14 +8627,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>lblSalutation</shortDescription>
         <value>Salutation</value>
-    </labels>
-    <labels>
-        <fullName>lblSelectOptionPlaceholder</fullName>
-        <categories>UI</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Contains value for a placeholder on a dropdown field</shortDescription>
-        <value>Select an Option</value>
     </labels>
     <labels>
         <fullName>lblState</fullName>
