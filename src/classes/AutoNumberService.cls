@@ -78,10 +78,7 @@ public class AutoNumberService {
     }
 
     public void deactivate(String autoNumberId) {
-        AutoNumber__c a = new AutoNumber__c(
-                Id = autoNumberId,
-                IsActive__c = false
-        );
+        AutoNumber__c a = new AutoNumber__c(Id = autoNumberId, IsActive__c = false);
         update a;
     }
 
