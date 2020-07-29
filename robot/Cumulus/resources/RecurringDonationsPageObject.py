@@ -184,9 +184,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         installments = self.selenium.get_webelements(installmentrow)
         count = len(installments)
         print(f"Number of installments created is {count}")
-        assert count == int(
-            num_payments
-        ), "Expected installments to be {} but found {}".format(num_payments, count)
+        assert count == int(num_payments), "Expected installments to be {} but found {}".format(num_payments, count)
         if count == int(num_payments):
             i = 1
             while i < count:
