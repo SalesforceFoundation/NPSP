@@ -67,15 +67,15 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
      * @param diList the old or new list
      */
     private void setBatchStatus(List<DataImport__c> diList) {
-      Set<Id> batchIdSet = new Set<Id>();
+        Set<Id> batchIdSet = new Set<Id>();
 
-      // build a set of batch ids
-      for (DataImport__c di : diList) {
-        if (di.NPSP_Data_Import_Batch__c != null) {
-          batchIdSet.add(di.NPSP_Data_Import_Batch__c);
+        // build a set of batch ids
+        for (DataImport__c di : diList) {
+            if (di.NPSP_Data_Import_Batch__c != null) {
+                batchIdSet.add(di.NPSP_Data_Import_Batch__c);
+            }
         }
-      }
-      setBatchStatus(batchIdSet);
+        setBatchStatus(batchIdSet);
     }
 
     /**
@@ -86,28 +86,28 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
     private void setBatchStatus(List<DataImport__c> diOldList, 
                                 List<DataImport__c> diNewList) {
 
-      Set<Id> batchIdSet = new Set<Id>();
-      Map<Id, DataImport__c> diNewMap = new Map<Id, DataImport__c>(diNewList);
+        Set<Id> batchIdSet = new Set<Id>();
+        Map<Id, DataImport__c> diNewMap = new Map<Id, DataImport__c>(diNewList);
 
-      // build a set of batch ids
-      for(DataImport__c diOld : diOldList) {
-        DataImport__c diNew = diNewMap.get(diOld.Id);
+        // build a set of batch ids
+        for(DataImport__c diOld : diOldList) {
+            DataImport__c diNew = diNewMap.get(diOld.Id);
 
-        if (diOld.NPSP_Data_Import_Batch__c != diNew.NPSP_Data_Import_Batch__c) {
-          // di records changed parents
-          if (diOld.NPSP_Data_Import_Batch__c != null) {
-            batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
-          }
-          if (diNew.NPSP_Data_Import_Batch__c != null) {
-            batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
-          }
-        } else if (diOld.Status__c != diNew.Status__c) {
-          // status was changed; same parent
-          batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
+            if (diOld.NPSP_Data_Import_Batch__c != diNew.NPSP_Data_Import_Batch__c) {
+                // di records changed parents
+                if (diOld.NPSP_Data_Import_Batch__c != null) {
+                    batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
+                }
+                if (diNew.NPSP_Data_Import_Batch__c != null) {
+                    batchIdSet.add(diNew.NPSP_Data_Import_Batch__c);
+                }
+            } else if (diOld.Status__c != diNew.Status__c) {
+                // status was changed; same parent
+                batchIdSet.add(diOld.NPSP_Data_Import_Batch__c);
+                }
+            }
+            setBatchStatus(batchIdSet);
         }
-      }
-      setBatchStatus(batchIdSet);
-    }
 
     /**
      * @description Update the batch status based on the data import statuses
@@ -119,32 +119,32 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
      */
     private void setBatchStatus(Set<Id> batchIdSet) {
 
-      // get the all the batch and di records in one query
-      List<DataImportBatch__c> batches = [SELECT Id, Batch_Status__c, 
-                                          (SELECT Id, NPSP_Data_Import_Batch__c, Status__c 
-                                                  FROM NPSP_Data_Imports__r)
-                                          FROM DataImportBatch__c
-                                          WHERE Id IN :batchIdSet];
+        // get the all the batch and di records in one query
+        List<DataImportBatch__c> batches = [SELECT Id, Batch_Status__c, 
+                                            (SELECT Id, NPSP_Data_Import_Batch__c, Status__c 
+                                                    FROM NPSP_Data_Imports__r)
+                                            FROM DataImportBatch__c
+                                            WHERE Id IN :batchIdSet];
 
-      // go through the di statuses and aggregate them by batch
-      // store the results in a map
-      Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap = 
-          new Map<Id, BatchDataImportStatusAggregate>();
-      for (DataImportBatch__c b : batches) {
-        for (DataImport__c di : b.NPSP_Data_Imports__r) {
-          BatchDataImportStatusAggregate batchStatusAggregate = 
-              batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c) == null ?
-              new BatchDataImportStatusAggregate() :
-              batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c);
+        // go through the di statuses and aggregate them by batch
+        // store the results in a map
+        Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap = 
+            new Map<Id, BatchDataImportStatusAggregate>();
+        for (DataImportBatch__c b : batches) {
+            for (DataImport__c di : b.NPSP_Data_Imports__r) {
+                BatchDataImportStatusAggregate batchStatusAggregate = 
+                    batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c) == null ?
+                    new BatchDataImportStatusAggregate() :
+                    batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c);
 
-          batchStatusAggregate.updateCounts(di.Status__c); 
-          batchDataImportStatusAggregateMap.put(di.NPSP_Data_Import_Batch__c, 
-                                              batchStatusAggregate);
+                batchStatusAggregate.updateCounts(di.Status__c); 
+                batchDataImportStatusAggregateMap.put(di.NPSP_Data_Import_Batch__c, 
+                                                    batchStatusAggregate);
+            }
         }
-      }
     
-      // update the statuses on the batch records
-      updateBatchStatus(batches, batchDataImportStatusAggregateMap);
+        // update the statuses on the batch records
+        updateBatchStatus(batches, batchDataImportStatusAggregateMap);
     }
 
     /**
@@ -155,16 +155,16 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
     private void updateBatchStatus(List<DataImportBatch__c> batches, 
         Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap) {
 
-      List<DataImportBatch__c> batchesToUpdate = new List<DataImportBatch__c>();
-      for(DataImportBatch__c batch : batches) {
-        String newBatchStatus = 
-          getBatchStatus(batchDataImportStatusAggregateMap.get(batch.Id));
-        if (batch.Batch_Status__c != newBatchStatus) {
-          batch.Batch_Status__c = newBatchStatus;
-          batchesToUpdate.add(batch);
+        List<DataImportBatch__c> batchesToUpdate = new List<DataImportBatch__c>();
+        for(DataImportBatch__c batch : batches) {
+            String newBatchStatus = 
+                getBatchStatus(batchDataImportStatusAggregateMap.get(batch.Id));
+            if (batch.Batch_Status__c != newBatchStatus) {
+                batch.Batch_Status__c = newBatchStatus;
+                batchesToUpdate.add(batch);
+            }
         }
-      }
-      update batchesToUpdate;
+        update batchesToUpdate;
     }
 
     /**
@@ -173,19 +173,19 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
     * @return String
     */
     private static String getBatchStatus(BatchDataImportStatusAggregate batchStatusAggregate) {
-      // at least one failure means the batch failed
-      if (0 < batchStatusAggregate.failedStatusCount) {
-        return BDI_DataImportBatch_TDTM.BATCH_STATUS_FAILED;
-      }
+        // at least one failure means the batch failed
+        if (0 < batchStatusAggregate.failedStatusCount) {
+            return BDI_DataImportBatch_TDTM.BATCH_STATUS_FAILED;
+        }
 
-      // all di records are imported
-      if (0 < batchStatusAggregate.importedStatusCount &&
-          0 == batchStatusAggregate.openStatusCount && 
-          0 == batchStatusAggregate.failedStatusCount) {
-        return BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED;
-      }
+        // all di records are imported
+        if (0 < batchStatusAggregate.importedStatusCount &&
+            0 == batchStatusAggregate.openStatusCount && 
+            0 == batchStatusAggregate.failedStatusCount) {
+            return BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED;
+        }
 
-      return BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN;
+        return BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN;
     }
 
     /**
@@ -193,31 +193,31 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
     * of the di records in a batch
     */
     private class BatchDataImportStatusAggregate {
-      Integer openStatusCount { get; set; }
-      Integer importedStatusCount { get; set; }
-      Integer failedStatusCount { get; set; }
+        Integer openStatusCount { get; set; }
+        Integer importedStatusCount { get; set; }
+        Integer failedStatusCount { get; set; }
     
-      // default constructor
-      BatchDataImportStatusAggregate() {
-        openStatusCount = 0;
-        importedStatusCount = 0;
-        failedStatusCount = 0;
-      }
-
-      /**
-      * @description update the status count based on the incoming di status
-      * @param String status
-      */
-      void updateCounts(String status) {
-        if (String.isBlank(status) || status == BDI_DataImport_API.bdiDryRunValidated
-                                   || status == BDI_DataImport_API.bdiDryRunError) {
-          openStatusCount++;
-        } else if (status == BDI_DataImport_API.bdiImported) {
-          importedStatusCount++;
-        } else if (status == BDI_DataImport_API.bdiFailed) {
-          failedStatusCount++;
+        // default constructor
+        BatchDataImportStatusAggregate() {
+            openStatusCount = 0;
+            importedStatusCount = 0;
+            failedStatusCount = 0;
         }
-      }
+
+        /**
+         * @description update the status count based on the incoming di status
+        * @param String status
+        */
+        void updateCounts(String status) {
+            if (String.isBlank(status) || status == BDI_DataImport_API.bdiDryRunValidated
+                                    || status == BDI_DataImport_API.bdiDryRunError) {
+                openStatusCount++;
+            } else if (status == BDI_DataImport_API.bdiImported) {
+                importedStatusCount++;
+            } else if (status == BDI_DataImport_API.bdiFailed) {
+                failedStatusCount++;
+            }
+        }
 
     } 
 
