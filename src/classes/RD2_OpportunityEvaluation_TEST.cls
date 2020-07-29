@@ -356,7 +356,14 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         batch.isBatchInProgress = true;
         runBatch(batch);
 
-        System.assertEquals(1, [SELECT id FROM Error__c].size(), 'Error should have been created');
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'One error should be created: ' + errors);
+        
+        String expectedMessage = String.format(
+            System.Label.stgConcurrentBatchError,
+            new String[]{ RD2_OpportunityEvaluation_BATCH.class.getName() }
+        );
+        System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
     }
     
     /**

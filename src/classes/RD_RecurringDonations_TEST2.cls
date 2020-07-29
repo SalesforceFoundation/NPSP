@@ -38,6 +38,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static final Date DEFAULT_ESTABLISHED_DATE = RD_RecurringDonations_TEST.DEFAULT_ESTABLISHED_DATE;
     private static final Date TODAY = System.today();
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
     private static final Integer NUM_INSTALLMENTS = 12;
 
 
@@ -595,7 +596,15 @@ private with sharing class RD_RecurringDonations_TEST2 {
         rdbatch.isBatchInProgress = true;
         ID ApexJobId = Database.executeBatch(rdbatch, 10);
         Test.stopTest();
-        System.assertEquals(1, [SELECT id FROM Error__c].size(), 'Error should have been created');
+        
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'One error should be created: ' + errors);
+        
+        String expectedMessage = String.format(
+            System.Label.stgConcurrentBatchError,
+            new String[]{ RD_RecurringDonations_BATCH.class.getName() }
+        );
+        System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
     }
 
     /***
