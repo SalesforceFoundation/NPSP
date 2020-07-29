@@ -1,26 +1,27 @@
 public class EOCR_JWT {
     
-    public String alg {get;set;}
-    public String iss {get;set;}
-    public String sub {get;set;}
-    public String aud {get;set;}
-    public String exp {get;set;}
-    public String iat {get;set;}
-    public Map<String,String> claims {get;set;}
-    public Integer validFor {get;set;}
-    public String cert {get;set;}
-    public String pkcs8 {get;set;}
-    public String privateKey {get;set;}
+    public String alg { get; set; }
+    public String iss { get; set; }
+    public String sub { get; set; }
+    public String aud { get; set; }
+    public String exp { get; set; }
+    public String iat { get; set; }
+    public Map<String,String> claims { get; set; }
+    public Integer validFor { get; set; }
+    public String cert { get; set; }
+    public String pkcs8 { get; set; }
+    public String privateKey { get; set; }
     
     
     public static final String HS256 = 'HS256';
     public static final String RS256 = 'RS256';
     public static final String NONE = 'none';
+    public static final Integer VALID_FOR_SECONDS = 300;
 
-    
+    // constructor
     public EOCR_JWT(String alg) {
         this.alg = alg;
-        this.validFor = 300;
+        this.validFor = VALID_FOR_SECONDS;
     }
     
     
@@ -70,7 +71,6 @@ public class EOCR_JWT {
         }
         
         return jwt;
-    
     }
     
 
@@ -78,7 +78,7 @@ public class EOCR_JWT {
         String output = encodingUtil.base64Encode(input);
         output = output.replace('+', '-');
         output = output.replace('/', '_');
-        while ( output.endsWith('=')){
+        while ( output.endsWith('=')) {
             output = output.subString(0,output.length()-1);
         }
         return output;
