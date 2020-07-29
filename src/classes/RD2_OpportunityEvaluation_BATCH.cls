@@ -58,12 +58,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         private set;
     }
 
-    /**
-     * @description Variable used to mock result of hasAnotherTestRunning
-     */
-    @TestVisible
-    private boolean resultOfHasAnotherTestRunning = null;
-
     /***
     * @description Contains batch Apex class name
     */

@@ -1760,7 +1760,6 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
-        <members>RD_ConcurrentBatchError</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -2700,6 +2699,7 @@
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgClearErrors</members>
+        <members>stgConcurrentBatchError</members>
         <members>stgCountOf</members>
         <members>stgCreatedBy</members>
         <members>stgDIFMNonAdminError</members>

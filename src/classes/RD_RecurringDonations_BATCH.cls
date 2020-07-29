@@ -57,12 +57,6 @@ Schedulable {
     public Integer failuresCount = 0;
 
     /*******************************************************************************************************
-    * @description Variable used to mock result of hasAnotherTestRunning
-    */
-    @TestVisible
-    private boolean resultOfHasAnotherTestRunning = null;
-
-    /*******************************************************************************************************
     * @description Batch size for Apex Job. Uses default of 50 if Custom Setting is null.
     */
     public static Integer batchSize = (UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c != null) ?
