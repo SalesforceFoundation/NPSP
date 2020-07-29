@@ -127,7 +127,7 @@ public class AutoNumberService {
     }
 
     // TDTM expects local names without namespaces for Class and Object
-    private final String classNameForTDTM = 'AutoNumber_TDTM';
+    private final String TRIGGER_HANDLER_CLASS_NAME = 'AutoNumber_TDTM';
     @TestVisible
     Boolean isTriggerHandlerEnabled {
         get {
@@ -135,7 +135,7 @@ public class AutoNumberService {
                     SELECT Id
                     FROM Trigger_Handler__c
                     WHERE Object__c = :sObjType.getDescribe().getLocalName()
-                    AND Class__c = :classNameForTDTM
+                    AND Class__c = :TRIGGER_HANDLER_CLASS_NAME
                     AND Active__c = true
             ].isEmpty();
         }
@@ -147,7 +147,7 @@ public class AutoNumberService {
             return new Trigger_Handler__c(
                     Active__c = true,
                     Asynchronous__c = false,
-                    Class__c = classNameForTDTM,
+                    Class__c = TRIGGER_HANDLER_CLASS_NAME,
                     Load_Order__c = 0,
                     Object__c = sObjType.getDescribe().getLocalName(),
                     Trigger_Action__c = 'AfterInsert;');
