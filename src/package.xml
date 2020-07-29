@@ -2111,6 +2111,7 @@
         <members>commonFieldLabel</members>
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
+        <members>commonInsuffientPermissions</members>
         <members>commonJWTInvalidKey</members>
         <members>commonJWTInvalidPayload</members>
         <members>commonMMYY</members>
@@ -2532,7 +2533,6 @@
         <members>lblHousehold</members>
         <members>lblHouseholdName</members>
         <members>lblInformalGreeting</members>
-        <members>lblInsufficientPermissions</members>
         <members>lblLastName</members>
         <members>lblMergeHHPrompt</members>
         <members>lblMergeHHTitle</members>

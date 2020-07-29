@@ -5097,6 +5097,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>General Account Unit</value>
     </labels>
     <labels>
+        <fullName>commonInsuffientPermissions</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Indicates user does not have permissions for the action</shortDescription>
+        <value>Insufficient Permissions</value>
+    </labels>
+    <labels>
         <fullName>commonJWTInvalidKey</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8539,14 +8547,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>lblInformalGreeting</shortDescription>
         <value>Informal Greeting</value>
-    </labels>
-    <labels>
-        <fullName>lblInsufficientPermissions</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Indicates user does not have permissions for the action</shortDescription>
-        <value>Insufficient Permissions</value>
     </labels>
     <labels>
         <fullName>lblLastName</fullName>
