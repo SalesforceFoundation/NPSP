@@ -4015,6 +4015,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Verify that the no. of gifts on the page match with count</p></td>
               </tr>
               
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Table Field Values">
+                <td class="kwname">
+                  Verify Table Field Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>table</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies that table has given field name with value. Arguments are: table=table name, fieldname=fieldvalue Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |</p></td>
+              </tr>
+              
             </tbody>
           </table>
         </div> 
@@ -5311,9 +5325,9 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Clicks on action button based on API version</p></td>
               </tr>
               
-              <tr class="kwrow" id="RecurringDonationsPageObject.py.Edit Recurring Donation">
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Edit Recurring Donation Status">
                 <td class="kwname">
-                  Edit Recurring Donation
+                  Edit Recurring Donation Status
                 </td>
                 <td class="kwargs">
                   
@@ -5413,6 +5427,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Click Rd2 Modal Button">
+                <td class="kwname">
+                  Click Rd2 Modal Button
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, select and click on the respective button</p></td>
+              </tr>
+              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -5422,6 +5448,32 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"><p>Logs the name of the current page object</p>
 <p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Populate Rd2 Modal Form">
+                <td class="kwname">
+                  Populate Rd2 Modal Form
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Populate the RD2 modal form fields with the respective fields and values</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Select Value From Rd2 Modal Dropdown">
+                <td class="kwname">
+                  Select Value From Rd2 Modal Dropdown
+                </td>
+                <td class="kwargs">
+                  
+                  <i>dropdown</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Selects given value in the dropdown field on the rd2 modal</p></td>
               </tr>
               
             </tbody>
@@ -5597,7 +5649,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Wednesday July 08, 11:17 PM - cumulusci v3.14.0
+      Generated on Tuesday July 28, 11:41 AM - cumulusci v3.15.0
     </div>
   </body>
 </html>

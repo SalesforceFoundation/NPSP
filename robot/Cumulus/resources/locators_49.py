@@ -62,6 +62,7 @@ npsp_lex_locators={
     'link-text':'//a[contains(text(),"{}")]',
     'link-title':'//a[@title="{}"]',
     'link-contains':'//button[.//span[contains(text(),"{}")]]',
+    'label':'//label[text()="{}"]',
     'checkbox':{
         'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
         'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/following-sibling::div//input',
@@ -273,12 +274,14 @@ npsp_lex_locators={
         'id':'//*[contains(@data-qa-locator,"{}")]',
         'button':'//*[contains(@data-qa-locator,"{}")]/button',
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
+        'field_span':'//*[contains(@data-qa-locator,"{}")]//child::span[text()="{}"]',
         'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
         'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
         'field_alert':"//*[contains(@data-qa-locator,'{}')]/div[@role='alert' and text()='{}']",
         'count':'//lightning-layout[.//span[text()="{}"]]//child::lightning-layout-item//strong[text()="{}"]',
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
+        'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
