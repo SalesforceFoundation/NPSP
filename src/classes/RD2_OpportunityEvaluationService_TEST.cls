@@ -1834,9 +1834,34 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
 
+    /**
+    * @description Verifies that only fields in Custom Field Mapper or is mandatory for calculation should be included
+    */
+    @IsTest
+    private static void shouldOnlyQueryMandatoryAndCustomFieldMappingFields() {
+        RD2_CustomFieldMapper_TEST.createCustomFieldMapping(
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Open_Ended_Status__c)
+            ,String.valueOf(Opportunity.Name)
+        );
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .build();
 
+        insert rd;
+                
+        Test.startTest();
+        RD2_OpportunityEvaluationService service = new RD2_OpportunityEvaluationService().withRds(new Set<Id>{rd.Id});
+        Set<String> queriedFields = service.rds[0].getPopulatedFieldsAsMap().keySet();
+        Test.stopTest();
 
+        System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.npe03__Open_Ended_Status__c)),
+            'RD field used in the custom mapping should be queried.');
+        System.assert(queriedFields.contains(String.valueOf(npe03__Recurring_Donation__c.RecurringType__c)),
+            'RD field that is mandatory for calculation should be queried by default.');
+        System.assert(queriedFields.contains('npe03__Schedule_Type__c') == false,
+            'RD legacy field not used in the custom mapping should not be queried.');
+        
+    }
 
     // Helpers
     ///////////////////
