@@ -36,7 +36,7 @@
 */
 public class BDI_DataImportBatch_TDTM extends TDTM_Runnable {
     
-public static final String BATCH_STATUS_OPEN = 'Open';
+    public static final String BATCH_STATUS_OPEN = 'Open';
     public static final String BATCH_STATUS_COMPLETED = 'Completed';
     public static final String BATCH_STATUS_FAILED = 'Failed - Needs Review';
 
