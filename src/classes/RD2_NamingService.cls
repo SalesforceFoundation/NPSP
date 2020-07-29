@@ -380,7 +380,7 @@ public with sharing class RD2_NamingService {
     /**
     * @description Instantiate only a single instance of the NameFormatter wrapper
     */
-    private NameFormatter nameFormatter {
+    public NameFormatter nameFormatter {
         get {
             if (nameFormatter == null) {
                 nameFormatter = new NameFormatter();
@@ -394,7 +394,7 @@ public with sharing class RD2_NamingService {
      * Parses the RD name format to obtain fields to be used to construct a name for each individual RD.
      */
     @TestVisible
-    private class NameFormatter {
+    public class NameFormatter {
 
         /**
          * @description Contains Recurring Donation name format
