@@ -62,14 +62,16 @@ export default class Rd2PauseForm extends LightningElement {
     @track error = {};
 
     /***
-    * @description 
+    * @description Initializes the component
     */
     connectedCallback() {
         this.init();
     }
 
     /***
-    * @description Group various calls to Apex
+    * @description Groups various calls to Apex:
+    * - Loads installments
+    * - Waits for latest pause data (if any) and initializes the Paused Reason
     */
     init = async () => {
         try {
@@ -82,7 +84,8 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description 
+    * @description Loads installments and sets datatable columns and records.
+    * If the user does not have permission to create/edit RD, then installments are not rendered.
     */
     loadInstallments = async () => {
         getInstallments({ recordId: this.recordId, maxRowDisplay: this.maxRowDisplay })
@@ -100,7 +103,9 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description
+    * @description Load active current/future Pause.
+    * Sets Paused Reason field.
+    * If the user does not have permission to create/edit RD, then pause details are not rendered.
     */
     loadPauseData = async () => {
         getPauseData({ rdId: this.recordId })
@@ -127,7 +132,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description
+    * @description Loads the Recurring Donation name asynchronously
     */
     @wire(getRecord, {
         recordId: '$recordId',
@@ -144,7 +149,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description Get the installments
+     * @description Sets installment datatable records
      */
     handleRecords(response) {
         if (response && response.dataTable) {
@@ -165,7 +170,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description Get the data table columns
+     * @description Sets installment datatable columns
      */
     handleColumns(response) {
         if (response && response.dataTable) {
@@ -181,7 +186,8 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description An event fired on both select and deselect of all and specific records
+     * @description Handles the row selection event fired on 
+     * both select and deselect of all and individual installments
      */
     handleRowSelection(event) {
         let selectedRows = this.template.querySelector("lightning-datatable").getSelectedRows();
@@ -200,7 +206,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description
+     * @description Handles select event on an installment or select all event
      */
     handleSelect(selectedRows) {
         this.selectedIds = [];
@@ -216,7 +222,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description 
+     * @description Selects installments in between selected rows
      */
     selectRowsInBetween(previousId, selectedId) {
         if (previousId === null) {
@@ -229,7 +235,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description
+     * @description Handles deselect event on an installment or deselect all event
      */
     handleDeselect(selectedRows) {
         this.selectedIds = [];
@@ -253,7 +259,8 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description
+     * @description Constructs the installment selection summary message
+     * notofying user how many installments has been selected
      */
     refreshSelectedRowsSummary() {
         const selectedCount = this.selectedIds.length;
@@ -270,7 +277,8 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description
+    * @description Handles button display. In the case of permission, field visibility
+    * or RD closed error, [OK] button is displayed and [Save] button is not displayed.
     */
     handleButtonsDisplay() {
         this.isSaveDisplayed = !this.isLoading && !this.isRDClosed && this.hasAccess;
@@ -285,7 +293,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description
+     * @description Rechecks if the [Save] button should be displayed
      */
     refreshSaveButton() {
         if (isNull(this.scheduleId)) {
@@ -297,7 +305,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description 
+    * @description Save pause: Inserts new pause (if any) and deactivates the old one.
     */
     handleSave() {
         this.clearError();
@@ -324,7 +332,8 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description 
+    * @description Displays message that the pause save has been successful
+    * and closes the modal.
     */
     handleSaveSuccess() {
         const message = this.selectedIds.length > 0
@@ -337,7 +346,8 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description
+    * @description Records the latest Paused Reason value 
+    * and checks if the [Save] button should be enabled.
     */
     handlePausedReasonChange(event) {
         this.pausedReason.value = event.detail.value;
@@ -349,7 +359,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description
+    * @description Constructs pause data to be sent to the Apex method when user clicks [Save]
     */
     constructPauseData() {
         let pauseData = {};
@@ -373,7 +383,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description 
+    * @description Closes the pause modal on save
     */
     handleCancel() {
         const closeEvent = new CustomEvent('close');
@@ -388,7 +398,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description Handle component display when an error occurs
+    * @description Handle error
     * @param error: Error Event
     */
     handleError(error) {

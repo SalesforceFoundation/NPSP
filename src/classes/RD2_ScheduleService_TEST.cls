@@ -1856,15 +1856,15 @@ private with sharing class RD2_ScheduleService_TEST {
         );
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
 
-		for (Integer i = 0, pauseCounter = 4; i < pauseCounter; i++) {
-			System.assertEquals(true, installments[i].isSkipped, 
-				'Installment should be skipped when within the pause: ' + i + ' -> ' + installments[i]);
+        for (Integer i = 0, pauseCounter = 4; i < pauseCounter; i++) {
+            System.assertEquals(true, installments[i].isSkipped, 
+                'Installment should be skipped when within the pause: ' + i + ' -> ' + installments[i]);
         }
         
-		for (Integer i = 4; i < NUM_INSTALLMENTS; i++) {
-			System.assertEquals(false, installments[i].isSkipped, 
-				'Installment should not be skipped after the pause: ' + i + ' -> ' + installments[i]);
-		}
+        for (Integer i = 4; i < NUM_INSTALLMENTS; i++) {
+            System.assertEquals(false, installments[i].isSkipped, 
+                'Installment should not be skipped after the pause: ' + i + ' -> ' + installments[i]);
+        }
     }
 
     /***
@@ -1891,9 +1891,9 @@ private with sharing class RD2_ScheduleService_TEST {
         );
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
 
-		for (RD2_ScheduleService.Installment installment : installments) {
-			System.assertEquals(false, installment.isSkipped, 
-				'Installment should not be skipped when within the inactive pause: ' + installment);
+        for (RD2_ScheduleService.Installment installment : installments) {
+            System.assertEquals(false, installment.isSkipped, 
+                'Installment should not be skipped when within the inactive pause: ' + installment);
         }
     }
 
@@ -2215,30 +2215,30 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /**
      * @description Creates test pause schedule
-	 * @param rdId Recurring Donation Id
+     * @param rdId Recurring Donation Id
      * @return RecurringDonationSchedule__c
      */
-	private static RecurringDonationSchedule__c createPauseSchedule(Id rdId) {
-		RecurringDonationSchedule__c pause = buildPauseSchedule(rdId);
+    private static RecurringDonationSchedule__c createPauseSchedule(Id rdId) {
+        RecurringDonationSchedule__c pause = buildPauseSchedule(rdId);
 
-		insert pause;
-		return pause;
+        insert pause;
+        return pause;
     }
     
     /**
      * @description Builds a pause schedule
-	 * @param rdId Recurring Donation Id
+     * @param rdId Recurring Donation Id
      * @return RecurringDonationSchedule__c
      */
-	private static RecurringDonationSchedule__c buildPauseSchedule(Id rdId) {
-		return new RecurringDonationSchedule__c(
-			RecurringDonation__c = rdId,
-			StartDate__c = Date.newInstance(2020, 1, 1),
-			EndDate__c = Date.newInstance(2020, 4, 1),
-			IsPause__c = true,
-			StatusReason__c = 'Unknown'
-		);
-	}
+    private static RecurringDonationSchedule__c buildPauseSchedule(Id rdId) {
+        return new RecurringDonationSchedule__c(
+            RecurringDonation__c = rdId,
+            StartDate__c = Date.newInstance(2020, 1, 1),
+            EndDate__c = Date.newInstance(2020, 4, 1),
+            IsPause__c = true,
+            StatusReason__c = 'Unknown'
+        );
+    }
 
     /****
     * @description Returns contact record

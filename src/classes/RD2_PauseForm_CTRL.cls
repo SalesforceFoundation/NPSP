@@ -100,22 +100,14 @@ public with sharing class RD2_PauseForm_CTRL {
      * @return Boolean
      */
     private static Boolean isClosed(Id rdId) {
-        Boolean isClosed = false;
-        try {
-            npe03__Recurring_Donation__c rd = [
-                SELECT Status__c
-                FROM npe03__Recurring_Donation__c
-                WHERE Id = :rdId
-                LIMIT 1
-            ];
+        npe03__Recurring_Donation__c rd = [
+            SELECT Status__c
+            FROM npe03__Recurring_Donation__c
+            WHERE Id = :rdId
+            LIMIT 1
+        ];
 
-            isClosed = (new RD2_RecurringDonation(rd)).isClosed();
-
-        } catch (Exception e) {
-            //the record has been deleted; 
-        }
-
-        return isClosed;        
+        return (new RD2_RecurringDonation(rd)).isClosed();
     }
 
     /**
