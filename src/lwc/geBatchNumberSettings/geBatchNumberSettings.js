@@ -201,7 +201,7 @@ export default class geBatchNumberSettings extends LightningElement {
     }
 
     isValidDisplayFormat(value) {
-        const re = '.*\\{0*\\}';
+        const re = '.*\\{0+\\}';
         const regex = RegExp(re);
         return regex.test(value) &&
             value.match(/{/g).length === 1 &&
