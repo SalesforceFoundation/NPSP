@@ -353,11 +353,12 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
         RD2_OpportunityEvaluation_BATCH batch  = new RD2_OpportunityEvaluation_BATCH(nextCloseDate.addDays(1));
-        batch.resultOfHasAnotherTestRunning = true;
+        batch.anotherBatchIsInProgress = true;
         runBatch(batch);
 
         System.assertEquals(1, [SELECT id FROM Error__c].size(), 'Error should have been created');
     }
+    
     /**
      * @description Verifies next installment Opp is created for the next installment date
      */
@@ -387,8 +388,6 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate,
             'Close Date on the new Opp should match next Close Date');
     }
-
-    
 
     /**
      * @description Verifies an Opp with Close Date equal to the Recurring Donation Next Donation Date is created

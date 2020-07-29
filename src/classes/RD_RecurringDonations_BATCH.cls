@@ -71,6 +71,35 @@ Schedulable {
     /*******************************************************************************************************
     * @description Class constructor
     */
+
+        /***
+    * @description Contains batch Apex class name
+    */
+    private String batchClassName {
+        get {
+            if (batchClassName == null) {
+                batchClassName = RD2_OpportunityEvaluation_BATCH.class.getName();
+            }
+            return batchClassName;
+        }
+        set;
+    }
+
+    /***
+    * @description Checks if another concurrent batch job is in progress
+    */
+    @TestVisible
+    private Boolean isBatchInProgress {
+        get {
+            if (isBatchInProgress == null) {
+                //in this context, we have at least 1 Batch running(this itself).
+                isBatchInProgress = new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 1;
+            }
+            return isBatchInProgress;
+        }
+        set;
+    }
+
     public RD_RecurringDonations_BATCH() {
         query = RD_RecurringDonations.strQueryRDNoWhere();
         query += ' where npe03__Open_Ended_Status__c = \'' + RD_Constants.OPEN_ENDED_STATUS_OPEN + '\'';
@@ -98,10 +127,9 @@ Schedulable {
             throw new RecurringDonationsBatchException(System.Label.RD_ErrorLegacyBatchJobCannotBeRun);
         }
         String className = RD_RecurringDonations_BATCH.class.getName();
-        Boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
-        if (hasRunningJob) {
-            RecurringDonationsBatchException ex = new RecurringDonationsBatchException();
-            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
+        
+        if (isBatchInProgress) {
+            new UTIL_BatchJobService().logConcurrentBatchError(className, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
         }
         return Database.getQueryLocator(query);

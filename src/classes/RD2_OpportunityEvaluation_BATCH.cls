@@ -64,6 +64,34 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     @TestVisible
     private boolean resultOfHasAnotherTestRunning = null;
 
+    /***
+    * @description Contains batch Apex class name
+    */
+    private String batchClassName {
+        get {
+            if (batchClassName == null) {
+                batchClassName = RD2_OpportunityEvaluation_BATCH.class.getName();
+            }
+            return batchClassName;
+        }
+        set;
+    }
+
+    /***
+    * @description Checks if another concurrent batch job is in progress
+    */
+    @TestVisible
+    private Boolean anotherBatchIsInProgress {
+        get {
+            if (anotherBatchIsInProgress == null) {
+                //in this context, we have at least 1 Batch running(this itself).
+                anotherBatchIsInProgress = new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 1;
+            }
+            return anotherBatchIsInProgress;
+        }
+        set;
+    }
+
     /**
     * @description Should Rollups be disabled before any new Installments Opps are inserted
     */
@@ -140,11 +168,11 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
         }
         String className = RD2_OpportunityEvaluation_BATCH.class.getName();
-        boolean hasRunningJob = (resultOfHasAnotherTestRunning != null ? resultOfHasAnotherTestRunning : UTIL_MasterSchedulableHelper.hasRunningJob(className));
         String query = getRDBatchQuery();
-        if (hasRunningJob) {
+        
+        if (anotherBatchIsInProgress) {
             BatchException ex = new BatchException();
-            UTIL_BatchJobService.logDuplicateBatchError(ex, className, ERR_Handler_API.Context.RD);
+            new UTIL_BatchJobService().logConcurrentBatchError(className, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
         }    
         return Database.getQueryLocator(query);

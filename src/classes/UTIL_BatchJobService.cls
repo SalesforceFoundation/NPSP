@@ -62,15 +62,6 @@ public with sharing class UTIL_BatchJobService {
     public enum ApexJobStatus {
         HOLDING, QUEUED, PREPARING, PROCESSING, COMPLETED, FAILED, ABORTED
     }
-    /******
-    * @description Logs an error when a trying to run a Batch when there is another already running.
-    * @param ex The exception to be logged.
-    * @param className the Apex Batch class name.
-    */
-    public static void logDuplicateBatchError(Exception ex, String className, ERR_Handler_API.Context context) {
-        ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
-        ERR_Handler.processError(ex, context);
-    }
 
     /***
     * @description AsyncApexJob possible status values indicating the batch job is in progress
@@ -102,6 +93,54 @@ public with sharing class UTIL_BatchJobService {
     */
     public Boolean isInProgress(String status) {
         return IN_PROGRESS_STATUSES.contains(status.toUpperCase());
+    }
+
+    /***
+    * @description Returns the list of batches that are in progress at this moment.
+    * @param className Apex class name
+    * @return List<AsuncApexJob>
+    */
+    public List<AsyncApexJob> getBatchesInProgress(String className) {        
+        String namespacePrefix = UTIL_Namespace.getNamespace();
+        List<AsyncApexJob> apexJobs = [
+            SELECT
+                Status, ApexClass.Name,
+                ExtendedStatus, NumberOfErrors,
+                TotalJobItems, JobItemsProcessed,
+                CreatedDate, CompletedDate
+            FROM AsyncApexJob
+            WHERE JobType = :JOB_TYPE_BATCH
+                AND ApexClass.Name = :className
+                AND ApexClass.NamespacePrefix = :namespacePrefix
+                AND Status IN :IN_PROGRESS_STATUSES
+            ORDER BY CreatedDate DESC];
+       
+        return apexJobs;
+    }
+
+    /***
+    * @description Logs an error when another same batch is running
+    * @param className Apex batch class name
+    * @param context Error context
+    * @return void
+    */
+    public void logConcurrentBatchError(String className, ERR_Handler_API.Context context) {
+        BatchException ex = new BatchException();
+        ex.setMessage(getConcurrentBatchMessage(className));
+
+        ERR_Handler.processError(ex, context);
+    }
+
+    /***
+    * @description Builds concurrent batch error message
+    * @param className Apex batch class name
+    * @return String
+    */
+    public String getConcurrentBatchMessage(String className) {
+        return String.format(
+            System.Label.UTIL_ConcurrentBatchJobError, 
+            new List<String>{ className }
+        );
     }
 
     /***
@@ -191,7 +230,6 @@ public with sharing class UTIL_BatchJobService {
 
         return batchJob == null ? null : new BatchJob(batchJob);
     }
-
 
     /***
     * @description Batch job descriptor

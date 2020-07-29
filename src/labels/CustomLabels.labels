@@ -12512,4 +12512,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
     </labels>
+    <labels>
+        <fullName>RD_ConcurrentBatchError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RD_ConcurrentBatchError</shortDescription>
+        <value>There is a running job for {0} batch</value>
+    </labels>
 </CustomLabels>

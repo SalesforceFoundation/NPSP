@@ -592,7 +592,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         Test.startTest();
         RD_RecurringDonations_BATCH rdbatch = new RD_RecurringDonations_BATCH();
-        rdbatch.resultOfHasAnotherTestRunning = true;
+        rdbatch.isBatchInProgress = true;
         ID ApexJobId = Database.executeBatch(rdbatch, 10);
         Test.stopTest();
         System.assertEquals(1, [SELECT id FROM Error__c].size(), 'Error should have been created');
