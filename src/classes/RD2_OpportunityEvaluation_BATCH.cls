@@ -75,13 +75,13 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Checks if another concurrent batch job is in progress
     */
     @TestVisible
-    private Boolean anotherBatchIsInProgress {
+    private Boolean isBatchInProgress {
         get {
-            if (anotherBatchIsInProgress == null) {
+            if (isBatchInProgress == null) {
                 //in this context, we have at least 1 Batch running(this itself).
-                anotherBatchIsInProgress = new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 1;
+                isBatchInProgress = new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 1;
             }
-            return anotherBatchIsInProgress;
+            return isBatchInProgress;
         }
         set;
     }
@@ -161,12 +161,10 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
         }
-        String className = RD2_OpportunityEvaluation_BATCH.class.getName();
         String query = getRDBatchQuery();
         
-        if (anotherBatchIsInProgress) {
-            BatchException ex = new BatchException();
-            new UTIL_BatchJobService().logConcurrentBatchError(className, ERR_Handler_API.Context.RD);
+        if (isBatchInProgress) {
+            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
         }    
         return Database.getQueryLocator(query);

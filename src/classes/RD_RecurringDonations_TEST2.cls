@@ -568,7 +568,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
      * @description Test that not opportunity is created when another job is running
      */
     @isTest
-    public static void testBatchDidntRunIfAnotherJobIsRunning() {
+    public static void shouldNotRunTheBatchIfAnotherJobIsRunning() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();
 
         Account a = buildAccount();

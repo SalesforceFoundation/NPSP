@@ -72,7 +72,7 @@ Schedulable {
     private String batchClassName {
         get {
             if (batchClassName == null) {
-                batchClassName = RD2_OpportunityEvaluation_BATCH.class.getName();
+                batchClassName = RD_RecurringDonations_BATCH.class.getName();
             }
             return batchClassName;
         }
@@ -120,10 +120,9 @@ Schedulable {
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new RecurringDonationsBatchException(System.Label.RD_ErrorLegacyBatchJobCannotBeRun);
         }
-        String className = RD_RecurringDonations_BATCH.class.getName();
         
         if (isBatchInProgress) {
-            new UTIL_BatchJobService().logConcurrentBatchError(className, ERR_Handler_API.Context.RD);
+            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
         }
         return Database.getQueryLocator(query);

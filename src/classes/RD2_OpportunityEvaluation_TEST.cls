@@ -353,7 +353,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
         RD2_OpportunityEvaluation_BATCH batch  = new RD2_OpportunityEvaluation_BATCH(nextCloseDate.addDays(1));
-        batch.anotherBatchIsInProgress = true;
+        batch.isBatchInProgress = true;
         runBatch(batch);
 
         System.assertEquals(1, [SELECT id FROM Error__c].size(), 'Error should have been created');
