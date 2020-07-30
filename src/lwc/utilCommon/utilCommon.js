@@ -514,6 +514,20 @@ const showToast = (title, message, variant, mode, messageData) => {
     dispatchEvent(event);
 }
 
+/*******************************************************************************
+ * @description Strips namespace prefix from object and field api names
+ * @param apiName
+ * @param namespacePrefix
+ * @returns {*|string}
+ */
+const stripNamespace = (apiName , namespacePrefix) => {
+    if (!apiName.startsWith(namespacePrefix)) {
+        return apiName;
+    }
+    const apiNameParts = apiName.split(namespacePrefix);
+    return apiNameParts[1];
+}
+
 export {
     constructErrorMessage,
     debouncify,
@@ -543,5 +557,6 @@ export {
     getLikeMatchByKey,
     arraysMatch,
     getValueFromDotNotationString,
-    validateJSONString
+    validateJSONString,
+    stripNamespace
 };
