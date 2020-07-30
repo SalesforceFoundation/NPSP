@@ -4960,7 +4960,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Invalid Display Format error message.</shortDescription>
-        <value>Invalid Display Format. See examples in "Learn more about display formats" section.</value>
+        <value>Invalid Display Format.</value>
     </labels>
     <labels>
         <fullName>autoNumberErrorDuplicate</fullName>
