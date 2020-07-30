@@ -47,27 +47,19 @@ public class BDI_BatchNumberSettingsController {
 
     @AuraEnabled
     public static void activate(String autoNumberId) {
-        try {
-            autoNumberService.activate(autoNumberId);
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
+        autoNumberService.activate(autoNumberId);
     }
 
     @AuraEnabled
     public static void deactivate(String autoNumberId) {
-        try {
-            autoNumberService.deactivate(autoNumberId);
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
+        autoNumberService.deactivate(autoNumberId);
     }
 
     @AuraEnabled
     public static AutoNumber__c save(String autoNumber) {
         try {
             return autoNumberService.save(autoNumber);
-        } catch (Exception e) {
+        } catch (AN_AutoNumberService.AutoNumberException e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
