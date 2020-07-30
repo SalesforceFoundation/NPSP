@@ -131,7 +131,7 @@ Create and edit level to verify fields
 
 3. Delete a Level
     [Documentation]                      Delete the Level from the levels listing page
-    [tags]                                  W-038641                 feature:Level
+    [tags]                                  unstable    W-038641                 feature:Level
 
     Go To Page                              Details
     ...                                     Level__c
