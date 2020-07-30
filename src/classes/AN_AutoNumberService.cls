@@ -155,6 +155,7 @@ public class AN_AutoNumberService {
      * @description Wrapper class used to provide easier access to calculated
      * properties for AutoNumber__c records.
      */
+    @TestVisible
     private class AutoNumber {
         AutoNumber__c record;
         Integer nextAutoNumber;
@@ -230,35 +231,31 @@ public class AN_AutoNumberService {
         }
 
         private void validate() {
-            if (!isValidPattern) {
+            if (!isValidPattern(displayFormat)) {
                 throw new AutoNumberException('Invalid Display Format: ' + record
                         .Display_Format__c);
             }
-            if (isDuplicate) {
+            if (isDuplicate(displayFormat, autoNumberService.getAutoNumbers(sObjType))) {
                 throw new AutoNumberException('Duplicate Display Format: ' +
                         record.Display_Format__c + ' for Object: ' + record
                         .Object_API_Name__c);
             }
         }
 
-        private Boolean isValidPattern {
-            get {
-                return Pattern.matches('.*\\{0+\\}', record.Display_Format__c) &&
-                        record.Display_Format__c.countMatches('{') == 1 &&
-                        record.Display_Format__c.countMatches('}') == 1;
-            }
+        private Boolean isValidPattern(String displayFormat) {
+            return Pattern.matches('.*\\{0+\\}', displayFormat) &&
+                    displayFormat.countMatches('{') == 1 &&
+                    displayFormat.countMatches('}') == 1;
         }
 
-        private Boolean isDuplicate {
-            get {
-                for (AutoNumber__c autoNumber : autoNumberService.getAutoNumbers(sObjType)) {
-                    if (autoNumber.Display_Format__c.substringBefore('{') ==
-                            record.Display_Format__c.substringBefore('{')) {
-                        return true;
-                    }
+        private Boolean isDuplicate(String displayFormat, List<AutoNumber__c> autoNumbers) {
+            for (AutoNumber__c autoNumber : autoNumbers) {
+                if (autoNumber.Display_Format__c.substringBefore('{') ==
+                        displayFormat.substringBefore('{')) {
+                    return true;
                 }
-                return false;
             }
+            return false;
         }
 
         private Integer getNextAutoNumber() {
@@ -315,6 +312,57 @@ public class AN_AutoNumberService {
                 WHERE Object_API_Name__c = :String.valueOf(sObjType)
                 ORDER BY CreatedDate DESC, IsActive__c DESC
         ];
+    }
+
+    /**
+    * @description Utility class that can be used when testing methods in this class.
+    */
+    @TestVisible
+    private class TestUtility {
+
+        public String autoNumberJSON =
+                '{"fields":{"' + String.valueOf(AutoNumber__c.fields.Object_API_Name__c) +
+                        '":"'
+                        + String.valueOf(DataImportBatch__c.SObjectType)
+                        + '","' + String.valueOf(AutoNumber__c.fields.Field_API_Name__c) +
+                        '":"'
+                        + String.valueOf(DataImportBatch__c.fields.Batch_Number__c)
+                        + '","' + String.valueOf(AutoNumber__c.fields.Display_Format__c) +
+                        '":"abc-{000}","' +
+                        String.valueOf(AutoNumber__c.fields.Starting_Number__c) +
+                        '":100,"' +
+                        String.valueOf(AutoNumber__c.fields.Max_Used_Number__c) +
+                        '":105,"' +
+                        String.valueOf(AutoNumber__c.fields.IsActive__c) +
+                        '":false}}';
+
+        public Id setupAutoNumber(Boolean isActive, String displayFormat,
+                Integer startingNumber, Boolean insertTriggerHandler) {
+            AutoNumber__c a = new AutoNumber__c(
+                    Object_API_Name__c = String.valueOf(DataImportBatch__c.SObjectType),
+                    Field_API_Name__c = String.valueOf(DataImportBatch__c.fields.Batch_Number__c),
+                    Display_Format__c = displayFormat,
+                    Starting_Number__c = startingNumber,
+                    IsActive__c = isActive,
+                    Description__c = 'test description',
+                    Max_Used_Number__c = 0
+            );
+            insert a;
+
+            if (insertTriggerHandler) {
+                insert new AN_AutoNumberService(DataImportBatch__c.SObjectType).triggerHandler;
+            }
+
+            return a.Id;
+        }
+
+        public AutoNumber__c getAutoNumberById(Id id) {
+            return [
+                    SELECT IsActive__c, Max_Used_Number__c
+                    FROM AutoNumber__c
+                    WHERE Id = :id
+            ];
+        }
     }
 
 }

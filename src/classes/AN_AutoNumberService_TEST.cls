@@ -30,10 +30,12 @@
 @IsTest
 private class AN_AutoNumberService_TEST {
 
+    static AN_AutoNumberService.TestUtility utility = new AN_AutoNumberService.TestUtility();
+
     @IsTest
     static void shouldSave() {
         AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
-        ans.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+        ans.save(utility.autoNumberJSON);
 
         List<AutoNumber__c> autoNumbers = ans.getAutoNumbers(DataImportBatch__c.SObjectType);
         System.assert(!autoNumbers.isEmpty(),
@@ -43,16 +45,16 @@ private class AN_AutoNumberService_TEST {
     @IsTest
     static void shouldActivate() {
         Id autoNumberIdToActivate =
-                AN_AutoNumberService_TEST_Helper.setupAutoNumber(false,
+                utility.setupAutoNumber(false,
                         'ABCZZZ-{000}', 100, false);
-        Id activeAutoNumberId = AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+        Id activeAutoNumberId = utility.setupAutoNumber(true,
                 'INITIAL-ACTIVE-{000}', 0, false);
 
         System.assertEquals(false,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(
+                utility.getAutoNumberById(
                         autoNumberIdToActivate).IsActive__c);
         System.assertEquals(true,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(
+                utility.getAutoNumberById(
                         activeAutoNumberId).IsActive__c);
 
         AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
@@ -62,11 +64,11 @@ private class AN_AutoNumberService_TEST {
         ans.activate(autoNumberIdToActivate);
 
         System.assertEquals(true,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(
+                utility.getAutoNumberById(
                         autoNumberIdToActivate).IsActive__c,
                 'The AutoNumber record should be active.');
         System.assertEquals(false,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(
+                utility.getAutoNumberById(
                         activeAutoNumberId).IsActive__c,
                 'The initially active AutoNumber record should now be inactive.');
         System.assertEquals(true, ans.isTriggerHandlerEnabled,
@@ -77,24 +79,24 @@ private class AN_AutoNumberService_TEST {
     @IsTest
     static void shouldDeactivate() {
         Id autoNumberId =
-                AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+                utility.setupAutoNumber(true,
                         'ABCZZZ-{000}', 100,
                         false);
 
         System.assertEquals(true,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
+                utility.getAutoNumberById(autoNumberId).IsActive__c);
 
         AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
         ans.deactivate(autoNumberId);
 
         System.assertEquals(false,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c,
+                utility.getAutoNumberById(autoNumberId).IsActive__c,
                 'The AutoNumber record should be inactive.');
     }
 
     @IsTest
     static void shouldApply() {
-        AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+        utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', 100, true);
 
         DataImportBatch__c b = new DataImportBatch__c();
@@ -107,7 +109,7 @@ private class AN_AutoNumberService_TEST {
 
     @IsTest
     static void shouldAllowStartingNumberZero() {
-        AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+        utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', 0, true);
 
         DataImportBatch__c b = new DataImportBatch__c();
@@ -121,43 +123,8 @@ private class AN_AutoNumberService_TEST {
     }
 
     @IsTest
-    static void shouldRequireAtLeastOneZeroInsideBraces() {
-//        System.assertEquals(false, new AN_AutoNumberService.AutoNumber(new AutoNumber__c
-//                (Display_Format__c = '{}')).isValidPattern,
-//        'A valid Display Format requires at least one 0 in between braces.');
-//        AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
-//                '{}', 0, true);
-//
-//        DataImportBatch__c b = new DataImportBatch__c();
-//        insert b;
-        String autoNumberJSON =
-        '{"fields":{"' + String.valueOf(AutoNumber__c.fields.Object_API_Name__c) +
-        '":"'
-        + String.valueOf(DataImportBatch__c.SObjectType)
-        + '","' + String.valueOf(AutoNumber__c.fields.Field_API_Name__c) +
-        '":"'
-        + String.valueOf(DataImportBatch__c.fields.Batch_Number__c)
-        + '","' + String.valueOf(AutoNumber__c.fields.Display_Format__c) +
-        '":"abc-{}","' +
-        String.valueOf(AutoNumber__c.fields.Starting_Number__c) +
-        '":100,"' +
-        String.valueOf(AutoNumber__c.fields.Max_Used_Number__c) +
-        '":105,"' +
-        String.valueOf(AutoNumber__c.fields.IsActive__c) +
-                '":false}}';
-        AN_AutoNumberService an = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
-        an.save(autoNumberJSON);
-//
-//        b = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b.Id];
-//        System.assertNotEquals(null, b.Batch_Number__c,
-//                'The Batch should have a Batch Number applied.');
-//        System.assertEquals('ABCZZZ-000', b.Batch_Number__c,
-//                'The starting number 0 should be used for the first record.');
-    }
-
-    @IsTest
     static void shouldApplyWithoutFieldAccess() {
-        AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+        utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', 100, true);
 
         System.runAs(UTIL_UnitTestData_TEST.createUser('Standard User')) {
@@ -186,7 +153,7 @@ private class AN_AutoNumberService_TEST {
     @IsTest
     static void shouldApplyInBulk() {
         Integer startingNumber = 100;
-        Id anId = AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+        Id anId = utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', startingNumber, true);
 
         DataImportBatch__c b = new DataImportBatch__c();
@@ -224,7 +191,7 @@ private class AN_AutoNumberService_TEST {
 
         Integer maxUsedNumber = numbersInSequence.get(numbersInSequence.size() - 1);
         System.assertEquals(maxUsedNumber,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(anId).Max_Used_Number__c,
+                utility.getAutoNumberById(anId).Max_Used_Number__c,
                 'The Auto Number record should be updated with the ' +
                         'Max Used Number after processing.');
     }
@@ -232,9 +199,9 @@ private class AN_AutoNumberService_TEST {
     @IsTest
     static void shouldPreventDuplicatePrefix() {
         AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
-        ans.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+        ans.save(utility.autoNumberJSON);
         try {
-            ans.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+            ans.save(utility.autoNumberJSON);
         } catch (AN_AutoNumberService.AutoNumberException ane) {
             System.assertNotEquals(null, ane,
                     'An exception should be thrown when attempting to insert a ' +
@@ -245,7 +212,7 @@ private class AN_AutoNumberService_TEST {
     @IsTest
     static void shouldPreventInvalidPattern() {
         try {
-            AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+            utility.setupAutoNumber(true,
                     'ABCZZZ-000}', 100, false);
         } catch (AN_AutoNumberService.AutoNumberException ane) {
             System.assertNotEquals(null, ane,
@@ -256,7 +223,7 @@ private class AN_AutoNumberService_TEST {
     @IsTest
     static void shouldUseStartingNumber() {
         Integer startingNumber = 9877;
-        AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+        utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', startingNumber, true);
 
         DataImportBatch__c b = new DataImportBatch__c();

@@ -33,43 +33,43 @@ public class BDI_BatchNumberSettingsController_TEST {
     @IsTest
     static void shouldActivate() {
         Id autoNumberId =
-                AN_AutoNumberService_TEST_Helper.setupAutoNumber(false,
+                new AN_AutoNumberService.TestUtility().setupAutoNumber(false,
                         'abc-{000}', 0, false);
         System.assertEquals(false,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
+                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c);
         BDI_BatchNumberSettingsController.activate(autoNumberId);
 
         System.assertEquals(true,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c,
+                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c,
                 'The AutoNumber record should be active.');
     }
 
     @IsTest
     static void shouldDeactivate() {
         Id autoNumberId =
-                AN_AutoNumberService_TEST_Helper.setupAutoNumber(true,
+                new AN_AutoNumberService.TestUtility().setupAutoNumber(true,
                         'abc-{000}', 0, false);
         System.assertEquals(true,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c);
+                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c);
         BDI_BatchNumberSettingsController.deactivate(autoNumberId);
 
         System.assertEquals(false,
-                AN_AutoNumberService_TEST_Helper.getAutoNumberById(autoNumberId).IsActive__c,
+                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c,
                 'The AutoNumber record should be inactive.');
     }
 
     @IsTest
     static void shouldSave() {
-        BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
         System.assert(![SELECT Id FROM AutoNumber__c].isEmpty(),
                 'The Auto Number should have been created.');
     }
 
     @IsTest
     static void shouldPreventSaveOfDuplicate() {
-        BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
         try {
-            BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+            BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
         } catch (AuraHandledException ahe) {
             System.assertNotEquals(null, ahe,
                     'An AuraHandledException should be thrown when attempting to insert a ' +
@@ -79,9 +79,36 @@ public class BDI_BatchNumberSettingsController_TEST {
 
     @IsTest
     static void shouldGetAutoNumbers() {
-        BDI_BatchNumberSettingsController.save(AN_AutoNumberService_TEST_Helper.autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
         System.assert(!BDI_BatchNumberSettingsController.getAutoNumbers().isEmpty(),
                 'The created Auto Number record should be returned.');
+    }
+
+    @IsTest
+    static void shouldBeInvalidPatternBracesOnly() {
+        String invalidDisplayFormatBracesOnly = '{}';
+
+        JSONGenerator gen = JSON.createGenerator(false);
+        gen.writeStartObject();
+        gen.writeFieldName('fields');
+        gen.writeStartObject();
+        gen.writeStringField(
+                String.valueOf(AutoNumber__c.Display_Format__c),
+                invalidDisplayFormatBracesOnly);
+        gen.writeEndObject();
+        gen.writeEndObject();
+
+        AN_AutoNumberService.AutoNumberException autoNumberException;
+        try {
+            AN_AutoNumberService.AutoNumber autoNumber = new AN_AutoNumberService.AutoNumber(
+                    gen.getAsString(), new AN_AutoNumberService(Account.SObjectType)
+            );
+        } catch (AN_AutoNumberService.AutoNumberException ane) {
+            autoNumberException = ane;
+        }
+
+        System.assertNotEquals(null, autoNumberException,
+                'A valid display format should include at least one "0" in between the braces.');
     }
 
 }
