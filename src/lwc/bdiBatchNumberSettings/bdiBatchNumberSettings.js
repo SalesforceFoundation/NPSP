@@ -158,9 +158,6 @@ export default class bdiBatchNumberSettings extends LightningElement {
     }
 
     handleCreateBatchNumber() {
-        this.isLoading = true;
-        this.reset();
-
         const fields = {};
         fields[Object_API_Name.fieldApiName] = DataImportBatch.objectApiName;
         fields[Field_API_Name.fieldApiName] = Batch_Number.fieldApiName;
@@ -172,9 +169,10 @@ export default class bdiBatchNumberSettings extends LightningElement {
             fields: fields
         }
 
-        const anString = JSON.stringify(record);
-        save({autoNumber: anString})
+        this.isLoading = true;
+        save({autoNumber: JSON.stringify(record)})
             .then(() => {
+                this.reset();
                 this.fetchAutoNumbers();
             })
             .catch(error => {
