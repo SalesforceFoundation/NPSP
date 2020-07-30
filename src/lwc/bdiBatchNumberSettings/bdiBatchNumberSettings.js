@@ -158,6 +158,9 @@ export default class bdiBatchNumberSettings extends LightningElement {
     }
 
     handleCreateBatchNumber() {
+        this.isLoading = true;
+        this.reset();
+
         const fields = {};
         fields[Object_API_Name.fieldApiName] = DataImportBatch.objectApiName;
         fields[Field_API_Name.fieldApiName] = Batch_Number.fieldApiName;
@@ -172,18 +175,21 @@ export default class bdiBatchNumberSettings extends LightningElement {
         const anString = JSON.stringify(record);
         save({autoNumber: anString})
             .then(() => {
-                this.error = null;
-                this.reset();
                 this.fetchAutoNumbers();
             })
             .catch(error => {
                 this.error = error;
-                this.displayErrorOnInputs(this.errorMessage);
-            });
+                this.displayErrorOnInputs(this.errorDetails);
+            })
+            .finally(() => this.isLoading = false);
     }
 
     get errorMessage() {
-        return this.error ? labels.error + this.error.body.message : null;
+        return this.error ? this.labels.error + ' ' + this.errorDetails : null;
+    }
+
+    get errorDetails() {
+        return this.error ? this.error.body.message : '';
     }
 
     handleStartingNumberChange(event) {
@@ -268,6 +274,7 @@ export default class bdiBatchNumberSettings extends LightningElement {
     }
 
     reset() {
+        this.error = null;
         this.displayFormat = null;
         this.startingNumber = null;
         this.description = null;

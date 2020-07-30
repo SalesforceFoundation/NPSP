@@ -240,7 +240,8 @@ public class AN_AutoNumberService {
         }
 
         private Boolean isValidPattern(String displayFormat) {
-            return Pattern.matches('.*\\{0+\\}', displayFormat) &&
+            return String.isNotBlank(displayFormat) &&
+                    Pattern.matches('.*\\{0+\\}', displayFormat) &&
                     displayFormat.countMatches('{') == 1 &&
                     displayFormat.countMatches('}') == 1;
         }

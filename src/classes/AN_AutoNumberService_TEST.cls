@@ -269,4 +269,31 @@ private class AN_AutoNumberService_TEST {
                 'A valid display format should include at least one "0" in between the braces.');
     }
 
+    @IsTest
+    static void shouldBeInvalidPatternBlankDisplayFormat() {
+        String invalidDisplayFormatBlank = '';
+
+        JSONGenerator gen = JSON.createGenerator(false);
+        gen.writeStartObject();
+        gen.writeFieldName('fields');
+        gen.writeStartObject();
+        gen.writeStringField(
+                String.valueOf(AutoNumber__c.Display_Format__c),
+                invalidDisplayFormatBlank);
+        gen.writeEndObject();
+        gen.writeEndObject();
+
+        AN_AutoNumberService.AutoNumberException autoNumberException;
+        try {
+            AN_AutoNumberService.AutoNumber autoNumber = new AN_AutoNumberService.AutoNumber(
+                    gen.getAsString(), new AN_AutoNumberService(sObjType)
+            );
+        } catch (AN_AutoNumberService.AutoNumberException ane) {
+            autoNumberException = ane;
+        }
+
+        System.assertNotEquals(null, autoNumberException,
+                'A valid display format is required when creating an AutoNumber record.');
+    }
+
 }
