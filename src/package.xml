@@ -2089,6 +2089,7 @@
         <members>commonCancel</members>
         <members>commonCardType</members>
         <members>commonClone</members>
+        <members>commonConcurrentBatchError</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
         <members>commonDefaultValue</members>
@@ -2699,7 +2700,6 @@
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgClearErrors</members>
-        <members>stgConcurrentBatchError</members>
         <members>stgCountOf</members>
         <members>stgCreatedBy</members>
         <members>stgDIFMNonAdminError</members>

@@ -601,7 +601,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         System.assertEquals(1, errors.size(), 'One error should be created: ' + errors);
         
         String expectedMessage = String.format(
-            System.Label.stgConcurrentBatchError,
+            System.Label.commonCriticalError,
             new String[]{ RD_RecurringDonations_BATCH.class.getName() }
         );
         System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
