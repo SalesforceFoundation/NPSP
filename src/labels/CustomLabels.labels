@@ -4959,7 +4959,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>AutoNumber</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Invalid Display Format error message.</shortDescription>
+        <shortDescription>Error when auto-number Display Format is invalid</shortDescription>
         <value>Invalid Display Format.</value>
     </labels>
     <labels>
