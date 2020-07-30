@@ -81,6 +81,7 @@
         <members>BDI_ContactService</members>
         <members>BDI_CustObjMappingGAUAllocation</members>
         <members>BDI_DataImportAPI_TEST</members>
+        <members>BDI_DataImportBatchStatus_TDTM</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
         <members>BDI_DataImportBatch_TDTM</members>
@@ -95,7 +96,6 @@
         <members>BDI_DataImport_API</members>
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
-        <members>BDI_DataImportBatchStatus_TDTM</members>
         <members>BDI_DataImport_TEST</members>
         <members>BDI_DataImport_TEST2</members>
         <members>BDI_Donations</members>

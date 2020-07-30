@@ -131,10 +131,13 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
         Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap = 
             new Map<Id, BatchDataImportStatusAggregate>();
         for (DataImportBatch__c b : batches) {
+            // initialize the counts with 0s in the aggregate counts
+            batchDataImportStatusAggregateMap.put(b.Id, 
+                                    new BatchDataImportStatusAggregate());
+
+            // loop through the child DIs
             for (DataImport__c di : b.NPSP_Data_Imports__r) {
                 BatchDataImportStatusAggregate batchStatusAggregate = 
-                    batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c) == null ?
-                    new BatchDataImportStatusAggregate() :
                     batchDataImportStatusAggregateMap.get(di.NPSP_Data_Import_Batch__c);
 
                 batchStatusAggregate.updateCounts(di.Status__c); 
@@ -153,7 +156,7 @@ public class BDI_DataImportBatchStatus_TDTM extends TDTM_Runnable {
     * @param Map<Id, BatchDataImportStatusAggregate>
     */
     private void updateBatchStatus(List<DataImportBatch__c> batches, 
-        Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap) {
+        Map<Id, BatchDataImportStatusAggregate> batchDataImportStatusAggregateMap) { 
 
         List<DataImportBatch__c> batchesToUpdate = new List<DataImportBatch__c>();
         for(DataImportBatch__c batch : batches) {
