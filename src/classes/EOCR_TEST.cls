@@ -1,3 +1,4 @@
+@IsTest
 private class EOCR_TEST {
 
     @IsTest
