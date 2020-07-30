@@ -249,6 +249,9 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>EOCR_JWT</members>
+        <members>EOCR_JWTBearerFlow</members>
+        <members>EOCR_Utilities</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -1156,6 +1159,8 @@
         <members>Data_Import_Settings__c.Field_Mapping_Method__c</members>
         <members>Data_Import_Settings__c.Post_Process_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>Einstein_OCR_Configuration__c.Email__c</members>
+        <members>Einstein_OCR_Configuration__c.Private_Key__c</members>
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
         <members>Engagement_Plan_Task__c.Comments__c</members>
         <members>Engagement_Plan_Task__c.Days_After__c</members>
@@ -3139,6 +3144,7 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
+        <members>Einstein_OCR_Configuration__c</members>
         <members>Engagement_Plan_Task__c</members>
         <members>Engagement_Plan_Template__c</members>
         <members>Engagement_Plan__c</members>
@@ -3663,6 +3669,7 @@
         <members>Contact-Contact Layout</members>
         <members>DataImportBatch__c-NPSP Data Import Batch Layout</members>
         <members>DataImport__c-Data Import Layout</members>
+        <members>Einstein_OCR_Configuration__c-Einstein OCR Configuration Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
