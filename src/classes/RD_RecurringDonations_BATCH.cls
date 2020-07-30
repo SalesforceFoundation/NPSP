@@ -99,6 +99,7 @@ Schedulable {
         query += ' where npe03__Open_Ended_Status__c = \'' + RD_Constants.OPEN_ENDED_STATUS_OPEN + '\'';
         RD_RecurringDonations_BATCH.isBatchButton = true;
     }
+    
     /*******************************************************************************************************
     * @description Executes the RD Batch process.
     */
@@ -115,7 +116,6 @@ Schedulable {
         // this must return a QueryLocator, or else uncaught exceptions in the
         // execute() method will not properly update the processed/failure
         // counts (see W-2443023).
-
         
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new RecurringDonationsBatchException(System.Label.RD_ErrorLegacyBatchJobCannotBeRun);
