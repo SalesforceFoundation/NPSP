@@ -4936,7 +4936,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message used when there is an error creating a Batch Number Format.</shortDescription>
-        <value>There was an error creating the Batch Number Format. Please review and try again. </value>
+        <value>Cannot save auto-number format. Please review the errors and try again.</value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
