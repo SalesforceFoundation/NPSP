@@ -84,31 +84,4 @@ public class BDI_BatchNumberSettingsController_TEST {
                 'The created Auto Number record should be returned.');
     }
 
-    @IsTest
-    static void shouldBeInvalidPatternBracesOnly() {
-        String invalidDisplayFormatBracesOnly = '{}';
-
-        JSONGenerator gen = JSON.createGenerator(false);
-        gen.writeStartObject();
-        gen.writeFieldName('fields');
-        gen.writeStartObject();
-        gen.writeStringField(
-                String.valueOf(AutoNumber__c.Display_Format__c),
-                invalidDisplayFormatBracesOnly);
-        gen.writeEndObject();
-        gen.writeEndObject();
-
-        AN_AutoNumberService.AutoNumberException autoNumberException;
-        try {
-            AN_AutoNumberService.AutoNumber autoNumber = new AN_AutoNumberService.AutoNumber(
-                    gen.getAsString(), new AN_AutoNumberService(Account.SObjectType)
-            );
-        } catch (AN_AutoNumberService.AutoNumberException ane) {
-            autoNumberException = ane;
-        }
-
-        System.assertNotEquals(null, autoNumberException,
-                'A valid display format should include at least one "0" in between the braces.');
-    }
-
 }
