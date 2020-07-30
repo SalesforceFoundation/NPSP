@@ -4967,7 +4967,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>AutoNumber</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Duplicate Display Format error message.</shortDescription>
+        <shortDescription>Error for duplicate auto-number format</shortDescription>
         <value>This Display Format is already in use.</value>
     </labels>
     <labels>
