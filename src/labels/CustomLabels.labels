@@ -4969,6 +4969,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Clone</value>
     </labels>
     <labels>
+        <fullName>commonConcurrentBatchError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message displayed when a batch job is executed while the same batch job is already running.</shortDescription>
+        <value>There's already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
+    </labels>
+    <labels>
         <fullName>commonCreditNumber</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -9874,14 +9882,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Error shown when errors must be removed before something else can occur.</shortDescription>
         <value>Clear errors before proceeding.</value>
-    </labels>
-    <labels>
-        <fullName>stgConcurrentBatchError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgConcurrentBatchError</shortDescription>
-        <value>There is a running job for {0} batch</value>
     </labels>
     <labels>
         <fullName>stgCountOf</fullName>
