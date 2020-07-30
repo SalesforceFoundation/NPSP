@@ -4968,7 +4968,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Duplicate Display Format error message.</shortDescription>
-        <value>Duplicate Display Format. The text before the opening brace must be unique.</value>
+        <value>This Display Format is already in use.</value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsConfigureHeader</fullName>
