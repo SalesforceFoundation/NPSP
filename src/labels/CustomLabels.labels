@@ -4984,7 +4984,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of the batch number settings</shortDescription>
-        <value>Batch numbers are unique identifiers used in Gift Entry, NPSP Data Importer, and the legacy Batch Gift Entry feature. The auto-numbered value appears in the Batch Number field.</value>
+        <value>Batch numbers are unique identifiers used in Gift Entry, NPSP Data Importer, and the legacy Batch Gift Entry feature. The auto-numbered value appears in the Batch Number fields on Opportunities and Payments.</value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsHeader</fullName>
