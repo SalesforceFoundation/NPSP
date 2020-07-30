@@ -71,8 +71,7 @@
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UnitTestHelper_TEST</members>
         <members>AN_AutoNumberService</members>
-        <members>AutoNumberService_TEST</members>
-        <members>AN_AutoNumberService_TEST_Helper</members>
+        <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
@@ -80,6 +79,8 @@
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_AdditionalObjectService</members>
         <members>BDI_AdditionalObjectService_TEST</members>
+        <members>BDI_BatchNumberSettingsController</members>
+        <members>BDI_BatchNumberSettingsController_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
@@ -296,8 +297,6 @@
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
-        <members>BDI_BatchNumberSettingsController</members>
-        <members>BDI_BatchNumberSettingsController_TEST</members>
         <members>GE_DefaultTemplate</members>
         <members>GE_DefaultTemplate_TEST</members>
         <members>GE_FormRendererService</members>
@@ -1873,11 +1872,14 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>autoNumberErrorDuplicate</members>
+        <members>autoNumberErrorInvalidDisplayFormat</members>
         <members>batchNumberSettingsConfigureHeader</members>
         <members>batchNumberSettingsDescActivation</members>
         <members>batchNumberSettingsDescDisplayFormat</members>
         <members>batchNumberSettingsDescription</members>
         <members>batchNumberSettingsDescriptionCreate</members>
+        <members>batchNumberSettingsError</members>
         <members>batchNumberSettingsHeader</members>
         <members>batchNumberSettingsHeaderDisplayFormat</members>
         <members>batchNumberSettingsHeaderFormats</members>
@@ -3734,6 +3736,7 @@
     </types>
     <types>
         <members>batchProgress</members>
+        <members>bdiBatchNumberSettings</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
@@ -3744,7 +3747,6 @@
         <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
-        <members>bdiBatchNumberSettings</members>
         <members>geBatchWizard</members>
         <members>geConstants</members>
         <members>geDonationMatching</members>

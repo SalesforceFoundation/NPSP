@@ -232,13 +232,10 @@ public class AN_AutoNumberService {
 
         private void validate() {
             if (!isValidPattern(displayFormat)) {
-                throw new AutoNumberException('Invalid Display Format: ' + record
-                        .Display_Format__c);
+                throw new AutoNumberException(Label.autoNumberErrorInvalidDisplayFormat);
             }
             if (isDuplicate(displayFormat, autoNumberService.getAutoNumbers(sObjType))) {
-                throw new AutoNumberException('Duplicate Display Format: ' +
-                        record.Display_Format__c + ' for Object: ' + record
-                        .Object_API_Name__c);
+                throw new AutoNumberException(Label.autoNumberErrorDuplicate);
             }
         }
 

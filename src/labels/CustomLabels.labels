@@ -4931,6 +4931,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         </value>
     </labels>
     <labels>
+        <fullName>batchNumberSettingsError</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message used when there is an error creating a Batch Number Format.</shortDescription>
+        <value>There was an error creating the Batch Number Format. Please review and try again. </value>
+    </labels>
+    <labels>
         <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
         <categories>Batch Number Settings</categories>
         <language>en_US</language>
@@ -4945,6 +4953,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Description for creating a batch number format</shortDescription>
         <value>Create a custom batch number format and choose a starting number. You must activate the new batch number format in the Batch Number Formats section.</value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorInvalidDisplayFormat</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid Display Format error message.</shortDescription>
+        <value>Invalid Display Format. See examples in "Learn more about display formats" section.</value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorDuplicate</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Duplicate Display Format error message.</shortDescription>
+        <value>Duplicate Display Format. The text before the opening brace must be unique.</value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsConfigureHeader</fullName>

@@ -9,7 +9,6 @@ import getFieldDescribes from '@salesforce/apex/BDI_BatchNumberSettingsControlle
 import DataImportBatch from '@salesforce/schema/DataImportBatch__c';
 import Batch_Number from '@salesforce/schema/DataImportBatch__c.Batch_Number__c';
 
-import AutoNumber from '@salesforce/schema/AutoNumber__c';
 import Description from '@salesforce/schema/AutoNumber__c.Description__c';
 import Display_Format from '@salesforce/schema/AutoNumber__c.Display_Format__c';
 import Field_API_Name from '@salesforce/schema/AutoNumber__c.Field_API_Name__c';
@@ -36,6 +35,9 @@ import batchNumberSettingsDescriptionCreate
     from '@salesforce/label/c.batchNumberSettingsDescriptionCreate';
 import batchNumberSettingsHeaderDisplayFormat
     from '@salesforce/label/c.batchNumberSettingsHeaderDisplayFormat';
+import batchNumberSettingsError from '@salesforce/label/c.batchNumberSettingsError';
+import autoNumberErrorInvalidDisplayFormat
+    from '@salesforce/label/c.autoNumberErrorInvalidDisplayFormat';
 
 const COLUMNS = [
     {fieldName: Display_Format.fieldApiName},
@@ -66,7 +68,9 @@ export default class bdiBatchNumberSettings extends LightningElement {
         descriptionDisplayFormat: batchNumberSettingsDescDisplayFormat,
         headerFormats: batchNumberSettingsHeaderFormats,
         descriptionActivation: batchNumberSettingsDescActivation,
-        buttonSave: batchNumberSettingsSave
+        buttonSave: batchNumberSettingsSave,
+        error: batchNumberSettingsError,
+        errorInvalidDisplayFormat: autoNumberErrorInvalidDisplayFormat
     }
 
     fieldDescribes;
@@ -162,7 +166,6 @@ export default class bdiBatchNumberSettings extends LightningElement {
         fields[Description.fieldApiName] = this.description;
 
         const record = {
-            apiName: AutoNumber.objectApiName,
             fields: fields
         }
 
@@ -180,7 +183,7 @@ export default class bdiBatchNumberSettings extends LightningElement {
     }
 
     get errorMessage() {
-        return this.error ? this.error.body.message : null;
+        return this.error ? labels.error + this.error.body.message : null;
     }
 
     handleStartingNumberChange(event) {
@@ -193,7 +196,7 @@ export default class bdiBatchNumberSettings extends LightningElement {
 
     handleDisplayFormatBlur(event) {
         if (!this.isValidDisplayFormat(event.target.value)) {
-            event.target.setCustomValidity('Invalid Display Number format.');
+            event.target.setCustomValidity(this.labels.errorInvalidDisplayFormat);
         } else {
             event.target.setCustomValidity('');
         }
