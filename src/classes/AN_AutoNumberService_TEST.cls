@@ -27,17 +27,26 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @description Test methods for the AN_AutoNumberService class.  Currently this class
+* uses the DataImportBatch__c object and the Batch_Number__c field for testing.
+*/
 @IsTest
 private class AN_AutoNumberService_TEST {
 
-    static AN_AutoNumberService.TestUtility utility = new AN_AutoNumberService.TestUtility();
+    static SObjectType sObjType = DataImportBatch__c.SObjectType;
+    static SObjectField autoNumberField = DataImportBatch__c.Batch_Number__c;
+
+    static AN_AutoNumberService ans =
+            new AN_AutoNumberService(sObjType);
+    static AN_AutoNumberService.TestUtility utility =
+            new AN_AutoNumberService.TestUtility(sObjType, autoNumberField);
 
     @IsTest
     static void shouldSave() {
-        AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
         ans.save(utility.autoNumberJSON);
 
-        List<AutoNumber__c> autoNumbers = ans.getAutoNumbers(DataImportBatch__c.SObjectType);
+        List<AutoNumber__c> autoNumbers = ans.getAutoNumbers(sObjType);
         System.assert(!autoNumbers.isEmpty(),
                 'The AutoNumber should have been inserted.');
     }
@@ -57,10 +66,10 @@ private class AN_AutoNumberService_TEST {
                 utility.getAutoNumberById(
                         activeAutoNumberId).IsActive__c);
 
-        AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
         System.assertEquals(false, ans.isTriggerHandlerEnabled,
                 'The Trigger Handler table should not have an entry for AN_AutoNumber_TDTM if' +
                         'no AutoNumbers have been activated.');
+
         ans.activate(autoNumberIdToActivate);
 
         System.assertEquals(true,
@@ -86,7 +95,6 @@ private class AN_AutoNumberService_TEST {
         System.assertEquals(true,
                 utility.getAutoNumberById(autoNumberId).IsActive__c);
 
-        AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
         ans.deactivate(autoNumberId);
 
         System.assertEquals(false,
@@ -198,7 +206,6 @@ private class AN_AutoNumberService_TEST {
 
     @IsTest
     static void shouldPreventDuplicatePrefix() {
-        AN_AutoNumberService ans = new AN_AutoNumberService(DataImportBatch__c.SObjectType);
         ans.save(utility.autoNumberJSON);
         try {
             ans.save(utility.autoNumberJSON);
@@ -252,7 +259,7 @@ private class AN_AutoNumberService_TEST {
         AN_AutoNumberService.AutoNumberException autoNumberException;
         try {
             AN_AutoNumberService.AutoNumber autoNumber = new AN_AutoNumberService.AutoNumber(
-                    gen.getAsString(), new AN_AutoNumberService(Account.SObjectType)
+                    gen.getAsString(), new AN_AutoNumberService(sObjType)
             );
         } catch (AN_AutoNumberService.AutoNumberException ane) {
             autoNumberException = ane;

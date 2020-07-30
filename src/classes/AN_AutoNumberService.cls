@@ -317,27 +317,40 @@ public class AN_AutoNumberService {
     @TestVisible
     private class TestUtility {
 
-        public String autoNumberJSON =
-                '{"fields":{"' + String.valueOf(AutoNumber__c.fields.Object_API_Name__c) +
-                        '":"'
-                        + String.valueOf(DataImportBatch__c.SObjectType)
-                        + '","' + String.valueOf(AutoNumber__c.fields.Field_API_Name__c) +
-                        '":"'
-                        + String.valueOf(DataImportBatch__c.fields.Batch_Number__c)
-                        + '","' + String.valueOf(AutoNumber__c.fields.Display_Format__c) +
-                        '":"abc-{000}","' +
-                        String.valueOf(AutoNumber__c.fields.Starting_Number__c) +
-                        '":100,"' +
-                        String.valueOf(AutoNumber__c.fields.Max_Used_Number__c) +
-                        '":105,"' +
-                        String.valueOf(AutoNumber__c.fields.IsActive__c) +
-                        '":false}}';
+        SObjectType sObjType;
+        SObjectField sObjField;
+
+        public TestUtility(SObjectType sObjType, SObjectField sObjField) {
+            this.sObjType = sObjType;
+            this.sObjField = sObjField;
+        }
+
+        public String autoNumberJSON {
+            get {
+                return getAutoNumberJSON(String.valueOf(sObjType), String.valueOf(sObjField));
+            }
+        }
+
+        private String getAutoNumberJSON(String sObjectName, String fieldName) {
+            return '{"fields":{"' + String.valueOf(AutoNumber__c.fields.Object_API_Name__c) +
+                    '":"' + sObjectName
+                    + '","' + String.valueOf(AutoNumber__c.fields.Field_API_Name__c) +
+                    '":"' + fieldName
+                    + '","' + String.valueOf(AutoNumber__c.fields.Display_Format__c) +
+                    '":"abc-{000}","' +
+                    String.valueOf(AutoNumber__c.fields.Starting_Number__c) +
+                    '":100,"' +
+                    String.valueOf(AutoNumber__c.fields.Max_Used_Number__c) +
+                    '":105,"' +
+                    String.valueOf(AutoNumber__c.fields.IsActive__c) +
+                    '":false}}';
+        }
 
         public Id setupAutoNumber(Boolean isActive, String displayFormat,
                 Integer startingNumber, Boolean insertTriggerHandler) {
             AutoNumber__c a = new AutoNumber__c(
-                    Object_API_Name__c = String.valueOf(DataImportBatch__c.SObjectType),
-                    Field_API_Name__c = String.valueOf(DataImportBatch__c.fields.Batch_Number__c),
+                    Object_API_Name__c = String.valueOf(sObjType),
+                    Field_API_Name__c = String.valueOf(sObjField),
                     Display_Format__c = displayFormat,
                     Starting_Number__c = startingNumber,
                     IsActive__c = isActive,
@@ -347,7 +360,7 @@ public class AN_AutoNumberService {
             insert a;
 
             if (insertTriggerHandler) {
-                insert new AN_AutoNumberService(DataImportBatch__c.SObjectType).triggerHandler;
+                insert new AN_AutoNumberService(sObjType).triggerHandler;
             }
 
             return a.Id;

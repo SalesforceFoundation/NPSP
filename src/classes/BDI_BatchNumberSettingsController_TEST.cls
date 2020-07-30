@@ -30,46 +30,52 @@
 @IsTest
 public class BDI_BatchNumberSettingsController_TEST {
 
+    static SObjectType sObjType = DataImportBatch__c.SObjectType;
+    static SObjectField autoNumberField = DataImportBatch__c.Batch_Number__c;
+
+    static AN_AutoNumberService.TestUtility utility =
+            new AN_AutoNumberService.TestUtility(sObjType, autoNumberField);
+
     @IsTest
     static void shouldActivate() {
         Id autoNumberId =
-                new AN_AutoNumberService.TestUtility().setupAutoNumber(false,
+                utility.setupAutoNumber(false,
                         'abc-{000}', 0, false);
         System.assertEquals(false,
-                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c);
-        BDI_BatchNumberSettingsController.activate(autoNumberId);
+                utility.getAutoNumberById(autoNumberId).IsActive__c);
 
+        BDI_BatchNumberSettingsController.activate(autoNumberId);
         System.assertEquals(true,
-                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c,
+                utility.getAutoNumberById(autoNumberId).IsActive__c,
                 'The AutoNumber record should be active.');
     }
 
     @IsTest
     static void shouldDeactivate() {
         Id autoNumberId =
-                new AN_AutoNumberService.TestUtility().setupAutoNumber(true,
+                utility.setupAutoNumber(true,
                         'abc-{000}', 0, false);
         System.assertEquals(true,
-                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c);
-        BDI_BatchNumberSettingsController.deactivate(autoNumberId);
+                utility.getAutoNumberById(autoNumberId).IsActive__c);
 
+        BDI_BatchNumberSettingsController.deactivate(autoNumberId);
         System.assertEquals(false,
-                new AN_AutoNumberService.TestUtility().getAutoNumberById(autoNumberId).IsActive__c,
+                utility.getAutoNumberById(autoNumberId).IsActive__c,
                 'The AutoNumber record should be inactive.');
     }
 
     @IsTest
     static void shouldSave() {
-        BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(utility.autoNumberJSON);
         System.assert(![SELECT Id FROM AutoNumber__c].isEmpty(),
                 'The Auto Number should have been created.');
     }
 
     @IsTest
     static void shouldPreventSaveOfDuplicate() {
-        BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(utility.autoNumberJSON);
         try {
-            BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
+            BDI_BatchNumberSettingsController.save(utility.autoNumberJSON);
         } catch (AuraHandledException ahe) {
             System.assertNotEquals(null, ahe,
                     'An AuraHandledException should be thrown when attempting to insert a ' +
@@ -79,7 +85,7 @@ public class BDI_BatchNumberSettingsController_TEST {
 
     @IsTest
     static void shouldGetAutoNumbers() {
-        BDI_BatchNumberSettingsController.save(new AN_AutoNumberService.TestUtility().autoNumberJSON);
+        BDI_BatchNumberSettingsController.save(utility.autoNumberJSON);
         System.assert(!BDI_BatchNumberSettingsController.getAutoNumbers().isEmpty(),
                 'The created Auto Number record should be returned.');
     }
