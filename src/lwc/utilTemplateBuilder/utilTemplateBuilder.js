@@ -20,6 +20,7 @@ import DI_BATCH_LAST_VIEWED_DATE from '@salesforce/schema/DataImportBatch__c.Las
 import DI_BATCH_SYSTEM_MODSTAMP from '@salesforce/schema/DataImportBatch__c.SystemModstamp';
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
+import DI_BATCH_STATUS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Status__c';
 import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
 import DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Implementing_Class__c'
 import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c'
@@ -122,6 +123,7 @@ Object.freeze(DEFAULT_BATCH_HEADER_FIELDS);
 const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_PROCESS_SIZE_INFO.fieldApiName,
     DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO.fieldApiName,
+    DI_BATCH_STATUS_INFO.fieldApiName,
     DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO.fieldApiName,
     DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO.fieldApiName,
     DI_BATCH_DONATION_MATCHING_RULE_INFO.fieldApiName,
