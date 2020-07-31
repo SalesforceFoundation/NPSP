@@ -286,7 +286,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
         }
 
         //set the recordtype if its not already set
-        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
+        Recordtypeinfo householdAccount =  Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(CAO_Constants.HH_ACCOUNT_RT_DEVELOPER_NAME);
         if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c == null && householdAccount != null){
             npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
             ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
