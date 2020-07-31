@@ -138,7 +138,7 @@ public with sharing class UTIL_BatchJobService {
     */
     public String getConcurrentBatchMessage(String className) {
         return String.format(
-            System.Label.commonCriticalError, 
+            System.Label.commonConcurrentBatchError,
             new List<String>{ className }
         );
     }

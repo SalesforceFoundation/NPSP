@@ -4974,7 +4974,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when a batch job is executed while the same batch job is already running.</shortDescription>
-        <value>There's already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
+        <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
     </labels>
     <labels>
         <fullName>commonCreditNumber</fullName>
