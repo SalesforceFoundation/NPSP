@@ -551,16 +551,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return String RD Schedule subquery used in the Recurring Donation SOQL
      */
     public String getScheduleSubQuery() {
-        return '(SELECT Id, InstallmentAmount__c, ' +
-            'Campaign__c, ' +
-            'Campaign__r.Name, ' +
-            'InstallmentFrequency__c, ' +
-            'InstallmentPeriod__c, ' +
-            'DayOfMonth__c, ' +
-            'PaymentMethod__c, ' +
-            'StartDate__c, ' +
-            'EndDate__c ' +
-            'FROM RecurringDonationSchedules__r)';
+        Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
+
+        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
     }
 
     /**

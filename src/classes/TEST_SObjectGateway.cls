@@ -159,13 +159,17 @@ public class TEST_SObjectGateway {
             return [
                 SELECT
                     Campaign__c,
+                    Campaign__r.Name,
                     DayOfMonth__c,
+                    StartDate__c,
                     EndDate__c,
                     InstallmentAmount__c,
                     InstallmentFrequency__c,
                     InstallmentPeriod__c,
+                    PaymentMethod__c,
                     RecurringDonation__c,
-                    StartDate__c
+                    IsPause__c,
+                    StatusReason__c
                 FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :rds
             ];
