@@ -18,9 +18,9 @@ public class EOCR_JWT {
     public static final String NONE = 'none';
 
     
-    public EOCR_JWT(String alg) {
+    public EOCR_JWT(String alg, Integer validFor) {
         this.alg = alg;
-        this.validFor = 300;
+        this.validFor = validFor;
     }
     
     
