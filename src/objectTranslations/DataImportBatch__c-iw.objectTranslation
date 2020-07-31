@@ -163,6 +163,11 @@
         <label><!-- Calculate Donation Rollups with Batch --></label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
+    <fields>
+        <help><!--The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."--></help>
+        <label><!--Batch Status--></label>
+        <name>Batch_Status__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
