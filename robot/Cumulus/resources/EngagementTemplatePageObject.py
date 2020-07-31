@@ -4,6 +4,7 @@ from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
+
 @pageobject("Detail", "EngagementTemplate")
 class EngagementTemplatePage(BaseNPSPPage, DetailPage):
     object_name = "npsp__Engagement_Plan_Template__c"
