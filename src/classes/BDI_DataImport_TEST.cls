@@ -110,6 +110,124 @@ public with sharing class BDI_DataImport_TEST {
         );
     }
 
+    /*
+    * @description checks if the batch status gets set to Open
+    * when dis are not all Imported
+    * and when we don't have Failed dis
+    * and the remaining dis are in an open state
+    */
+    @IsTest
+    static void shouldSetBatchStatusToOpen() {
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
+
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
+        List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
+        insert dis;
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, bdi.Batch_Status__c, 
+                            'The batch status should be Open when all ' +
+                            'data import records are Open.');
+
+        Test.startTest();
+        // set the statuses to a mix of dry run validated, and dry run error
+        di1.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        di2.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        di3.Status__c = BDI_DataImport_API.bdiDryRunError;
+        update dis;
+        Test.stopTest();
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, bdi.Batch_Status__c, 
+                            'The batch status should be Open when all ' +
+                            'data import records are Open.');
+    }
+
+    /*
+    * @description checks if the batch status gets set to failed
+    * when at least one di record has failed
+    */
+    @IsTest
+    static void shouldSetBatchStatusToFailed() {
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
+
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
+        List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
+        insert dis;
+
+        Test.startTest();
+        // make one di record fail
+        di2.Status__c = BDI_DataImport_API.bdiFailed;
+        update di2;
+        Test.stopTest();
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_FAILED, bdi.Batch_Status__c, 
+                            'The batch status should be Failed when at least one ' +
+                            'data import record has failed.');
+        
+    }
+
+    /*
+    * @description checks if the batch status gets set to imported
+    * when all the di records are imported
+    */
+    @IsTest
+    static void shouldSetBatchStatusToCompleted() {
+        DataImportBatch__c bdi = BDI_DataImportAPI_TEST.newBatch('testBatch', true);
+
+        DataImport__c di1 = newDi('fname1', 'lname1');
+        di1.NPSP_Data_Import_Batch__c = bdi.Id;
+        DataImport__c di2 = newDi('fname2', 'lname2');
+        di2.NPSP_Data_Import_Batch__c = bdi.id;
+        DataImport__c di3 = newDi('fname3', 'lname3');
+        di3.NPSP_Data_Import_Batch__c = bdi.Id;
+        List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
+        insert dis;
+
+        Test.startTest();
+        // make all dis imported
+        di1.Status__c = BDI_DataImport_API.bdiImported;
+        di2.Status__c = BDI_DataImport_API.bdiImported;
+        di3.Status__c = BDI_DataImport_API.bdiImported;
+        update dis;
+        Test.stopTest();
+
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c, 
+                            'The batch status should be Completed when all ' +
+                            'data import records have been imported.');
+        
+        // set one di to Open
+        di3.Status__c = BDI_DataImport_API.bdiDryRunValidated;
+        update di3;
+
+        // check the batch is no longer in the completed stage
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+                WHERE Id = :bdi.Id];
+
+        System.assertNotEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c, 
+                            'The batch status should be Completed when all ' +
+                            'data import records have been imported.');
+    }
 
     /*********************************************************************************************************
     * @description operation
