@@ -81,8 +81,10 @@
         <members>BDI_ContactService</members>
         <members>BDI_CustObjMappingGAUAllocation</members>
         <members>BDI_DataImportAPI_TEST</members>
+        <members>BDI_DataImportBatchStatus_TDTM</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
+        <members>BDI_DataImportBatch_TDTM</members>
         <members>BDI_DataImportBatch_TEST</members>
         <members>BDI_DataImportCTRL_TEST</members>
         <members>BDI_DataImportDeleteBTN_CTRL</members>
@@ -994,6 +996,7 @@
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Batch_Status__c</members>
         <members>DataImportBatch__c.Batch_Table_Columns__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
@@ -2346,6 +2349,7 @@
         <members>geUtilJWTTestInvalidPayload</members>
         <members>geUtilJWTTestInvalidString</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
+        <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
