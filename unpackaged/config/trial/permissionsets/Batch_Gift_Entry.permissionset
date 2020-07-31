@@ -223,6 +223,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1ImportStatus__c</field>
         <readable>true</readable>
     </fieldPermissions>
