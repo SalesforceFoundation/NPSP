@@ -62,16 +62,44 @@ Schedulable {
     public static Integer batchSize = (UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c != null) ?
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue() : 50;
 
-
     /*******************************************************************************************************
     * @description Class constructor
     */
+
+        /***
+    * @description Contains batch Apex class name
+    */
+    private String batchClassName {
+        get {
+            if (batchClassName == null) {
+                batchClassName = RD_RecurringDonations_BATCH.class.getName();
+            }
+            return batchClassName;
+        }
+        set;
+    }
+
+    /***
+    * @description Checks if another concurrent batch job is in progress
+    */
+    @TestVisible
+    private Boolean isBatchInProgress {
+        get {
+            if (isBatchInProgress == null) {
+                //in this context, we have at least 1 Batch running(this itself).
+                isBatchInProgress = new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 1;
+            }
+            return isBatchInProgress;
+        }
+        set;
+    }
+
     public RD_RecurringDonations_BATCH() {
         query = RD_RecurringDonations.strQueryRDNoWhere();
         query += ' where npe03__Open_Ended_Status__c = \'' + RD_Constants.OPEN_ENDED_STATUS_OPEN + '\'';
         RD_RecurringDonations_BATCH.isBatchButton = true;
     }
-
+    
     /*******************************************************************************************************
     * @description Executes the RD Batch process.
     */
@@ -88,12 +116,16 @@ Schedulable {
         // this must return a QueryLocator, or else uncaught exceptions in the
         // execute() method will not properly update the processed/failure
         // counts (see W-2443023).
-
+        
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new RecurringDonationsBatchException(System.Label.RD_ErrorLegacyBatchJobCannotBeRun);
-        } else {
-            return Database.getQueryLocator(query);
         }
+        
+        if (isBatchInProgress) {
+            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
+            query += ' LIMIT 0';
+        }
+        return Database.getQueryLocator(query);
     }
 
     /*******************************************************************************************************
@@ -106,6 +138,7 @@ Schedulable {
         RD_RecurringDonations_BATCH.isBatchButton = true;
         recCount += result.size();
         failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
+        
     }
 
     /*******************************************************************************************************
