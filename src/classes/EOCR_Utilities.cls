@@ -1,7 +1,6 @@
 public with sharing class EOCR_Utilities {
 
     public static final String AUTH = 'https://api.einstein.ai/v1/oauth2/token';
-    public stat
     public class EinsteinAuthException extends Exception {}
 
     //@AuraEnabled
