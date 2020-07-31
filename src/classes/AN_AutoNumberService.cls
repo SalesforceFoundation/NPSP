@@ -103,16 +103,11 @@ public class AN_AutoNumberService {
             SObject clone = record.clone(true);
             clone.put(an.sObjField, an.getFormattedNumber(nextAutoNumberInSequence));
             sObjectsToUpdate.add(clone);
-            System.debug(LoggingLevel.ERROR, '*** variable value: ' + nextAutoNumberInSequence);
-            System.debug(LoggingLevel.ERROR, '^^^^^^ USING nextAutoNumberInSequence ^^^^^^');
             nextAutoNumberInSequence++;
         }
 
         update sObjectsToUpdate;
 
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + (nextAutoNumberInSequence - 1));
-        System.debug(LoggingLevel.ERROR, '^^^^^^ setting max used to: ' +
-                '(nextAutoNumberInSequence -1) ^^^^^^');
         // Update the AutoNumber record AFTER Successful Save
         an.setMaxUsedNumber(nextAutoNumberInSequence - 1);
     }
@@ -269,7 +264,7 @@ public class AN_AutoNumberService {
                 return (Integer) autoNumber.Starting_Number__c;
             } else if (autoNumber.Max_Used_Number__c != null) {
                 Integer maxUsedNumber = (Integer) autoNumber.Max_Used_Number__c;
-                return maxUsedNumber++;
+                return maxUsedNumber + 1;
             } else {
                 return defaultFirstNumber;
             }
