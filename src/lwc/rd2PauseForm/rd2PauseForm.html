@@ -55,7 +55,7 @@
                         </lightning-layout-item>
                     </lightning-layout>
 
-                    <div class="installments slds-p-top_large" if:true={installments}>
+                    <div class="installments slds-p-left_medium slds-p-top_large slds-p-right_medium" if:true={installments}>
                         <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
                             is-loading={isLoading} max-row-selection={maxRowSelection}
                             onrowselection={handleRowSelection} selected-rows={selectedIds} resize-column-disabled
