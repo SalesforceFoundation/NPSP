@@ -38,6 +38,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static final Date DEFAULT_ESTABLISHED_DATE = RD_RecurringDonations_TEST.DEFAULT_ESTABLISHED_DATE;
     private static final Date TODAY = System.today();
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
     private static final Integer NUM_INSTALLMENTS = 12;
 
 
@@ -563,6 +564,47 @@ private with sharing class RD_RecurringDonations_TEST2 {
         RD_RecurringDonations_BATCH rdbatch = new RD_RecurringDonations_BATCH();
         ID ApexJobId = Database.executeBatch(rdbatch, 10);
         Test.stopTest();
+    }
+    /***
+     * @description Test that not opportunity is created when another job is running
+     */
+    @isTest
+    public static void shouldNotRunTheBatchIfAnotherJobIsRunning() {
+        RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();
+
+        Account a = buildAccount();
+        insert a;
+
+        Contact c = buildContact(a.Id);
+        insert c;
+
+        npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(null);
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
+        rd.npe03__Next_Payment_Date__c = TODAY;
+        insert rd;
+
+        List<Opportunity> originalOpps = RD_RecurringDonations_TEST.getOppsOrderByCloseDate(rd.Id);
+
+        Opportunity o = originalOpps[0];
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+        update o;
+
+        Test.startTest();
+        RD_RecurringDonations_BATCH rdbatch = new RD_RecurringDonations_BATCH();
+        rdbatch.isBatchInProgress = true;
+        ID ApexJobId = Database.executeBatch(rdbatch, 10);
+        Test.stopTest();
+        
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'One error should be created: ' + errors);
+        
+        String expectedMessage = String.format(
+            System.Label.commonConcurrentBatchError,
+            new String[]{ RD_RecurringDonations_BATCH.class.getName() }
+        );
+        System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
     }
 
     /***
