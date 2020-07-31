@@ -130,6 +130,39 @@ private class AN_AutoNumberService_TEST {
                 'The starting number 0 should be used for the first record.');
     }
 
+
+    @IsTest
+    static void shouldIncrementStartingNumberZeroCorrectly() {
+        Id autoNumberId = utility.setupAutoNumber(true,
+                'ABCZZZ-{000}', 0, true);
+
+        DataImportBatch__c b = new DataImportBatch__c();
+        insert b;
+
+        b = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b.Id];
+        System.assertNotEquals(null, b.Batch_Number__c,
+                'The Batch should have a Batch Number applied.');
+        System.assertEquals('ABCZZZ-000', b.Batch_Number__c,
+                'The starting number 0 should be used for the first record.');
+
+        System.assertEquals(0, utility.getAutoNumberById(autoNumberId).Max_Used_Number__c,
+                'Max Used Number should be 0 after the first record is inserted when ' +
+                        'the Starting Number was 0.');
+
+        DataImportBatch__c b1 = new DataImportBatch__c();
+        insert b1;
+        b1 = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b1.Id];
+        System.assertNotEquals(null, b1.Batch_Number__c,
+                'The Batch should have a Batch Number applied.');
+        System.assertEquals('ABCZZZ-001', b1.Batch_Number__c,
+                'The number 1 should be used for the next record.');
+
+        System.assertEquals(1, utility.getAutoNumberById(autoNumberId).Max_Used_Number__c,
+                'Max Used Number should be 1 after the second record is inserted when ' +
+                        'the Starting Number was 0.');
+
+    }
+
     @IsTest
     static void shouldApplyWithoutFieldAccess() {
         utility.setupAutoNumber(true,
