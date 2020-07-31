@@ -1,14 +1,19 @@
 public with sharing class EOCR_Utilities {
 
     public static final String AUTH = 'https://api.einstein.ai/v1/oauth2/token';
+    public stat
     public class EinsteinAuthException extends Exception {}
 
     //@AuraEnabled
     public static String getAccessToken() { 
         EOCR_JWT jwt = new EOCR_JWT('RS256');
 
-        List<Einstein_OCR_Configuration__c> configs = [SELECT Private_Key__c, Email__c
+        List<Einstein_OCR_Configuration__c> configs = [SELECT Id, Private_Key__c, Email__c
                                                         FROM Einstein_OCR_Configuration__c];
+        if (configs.isEmpty()) {
+            throw new EinsteinAuthException('Could not retrieve the Einstein OCR configuration.');
+        }
+
         Einstein_OCR_Configuration__c config = configs[0];
 
         jwt.pkcs8 = config.Private_Key__c;
