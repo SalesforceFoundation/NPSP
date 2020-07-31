@@ -189,8 +189,8 @@
     </fields>
     <fields>
         <fullName>IsActive__c</fullName>
-        <description>When selected, the auto-number format is active.</description>
         <defaultValue>false</defaultValue>
+        <description>When selected, the auto-number format is active.</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, the auto-number format is active.</inlineHelpText>
         <label>Active</label>
@@ -224,7 +224,6 @@
     <fields>
         <fullName>Starting_Number__c</fullName>
         <description>The first number in the auto-numbered sequence.</description>
-        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>The first number in the auto-numbered sequence.</inlineHelpText>
         <label>Starting Number</label>

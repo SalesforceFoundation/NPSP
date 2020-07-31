@@ -103,11 +103,16 @@ public class AN_AutoNumberService {
             SObject clone = record.clone(true);
             clone.put(an.sObjField, an.getFormattedNumber(nextAutoNumberInSequence));
             sObjectsToUpdate.add(clone);
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + nextAutoNumberInSequence);
+            System.debug(LoggingLevel.ERROR, '^^^^^^ USING nextAutoNumberInSequence ^^^^^^');
             nextAutoNumberInSequence++;
         }
 
         update sObjectsToUpdate;
 
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + (nextAutoNumberInSequence - 1));
+        System.debug(LoggingLevel.ERROR, '^^^^^^ setting max used to: ' +
+                '(nextAutoNumberInSequence -1) ^^^^^^');
         // Update the AutoNumber record AFTER Successful Save
         an.setMaxUsedNumber(nextAutoNumberInSequence - 1);
     }
@@ -185,7 +190,7 @@ public class AN_AutoNumberService {
 
         public AutoNumber(AutoNumber__c record) {
             this.record = record;
-            this.nextAutoNumber = getNextAutoNumber();
+            this.nextAutoNumber = getNextAutoNumber(this.record);
         }
 
         public String getFormattedNumber(Integer num) {
@@ -256,16 +261,17 @@ public class AN_AutoNumberService {
             return false;
         }
 
-        private Integer getNextAutoNumber() {
-            Integer startingNumber = record.Starting_Number__c != null ?
-                    Integer.valueOf(record.Starting_Number__c) : 1;
-            Integer maxUsedNumber = record.Max_Used_Number__c != null ?
-                    Integer.valueOf(record.Max_Used_Number__c) : 0;
-            if (startingNumber == 0 && maxUsedNumber == 0) {
-                return 0;
+        private Integer getNextAutoNumber(AutoNumber__c autoNumber) {
+            Integer defaultFirstNumber = 1;
+            if (autoNumber.Starting_Number__c != null &&
+                    (autoNumber.Max_Used_Number__c == null ||
+                            autoNumber.Max_Used_Number__c < autoNumber.Starting_Number__c)) {
+                return (Integer) autoNumber.Starting_Number__c;
+            } else if (autoNumber.Max_Used_Number__c != null) {
+                Integer maxUsedNumber = (Integer) autoNumber.Max_Used_Number__c;
+                return maxUsedNumber++;
             } else {
-                Integer nextNumber = maxUsedNumber + 1;
-                return nextNumber < startingNumber ? startingNumber : nextNumber;
+                return defaultFirstNumber;
             }
         }
 
@@ -355,8 +361,7 @@ public class AN_AutoNumberService {
                     Display_Format__c = displayFormat,
                     Starting_Number__c = startingNumber,
                     IsActive__c = isActive,
-                    Description__c = 'test description',
-                    Max_Used_Number__c = 0
+                    Description__c = 'test description'
             );
             insert a;
 
