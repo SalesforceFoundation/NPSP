@@ -215,10 +215,15 @@ public class AN_AutoNumberService {
             an.Display_Format__c =
                     (String) fields.get(String.valueOf(
                             AutoNumber__c.Display_Format__c));
-            an.Starting_Number__c =
-                    an.Starting_Number__c != null ? Integer.valueOf(
-                            fields.get(String.valueOf(
-                                    AutoNumber__c.Starting_Number__c))) : null;
+            try {
+                Integer startingNumber = Integer.valueOf(
+                        fields.get(String.valueOf(
+                                AutoNumber__c.Starting_Number__c)));
+                an.Starting_Number__c = startingNumber;
+            } catch (Exception e) {
+                // Continue without assigning a value to Starting Number
+                // if the value cannot be converted to an Integer.
+            }
             an.Description__c =
                     (String) fields.get(String.valueOf(
                             AutoNumber__c.Description__c));
