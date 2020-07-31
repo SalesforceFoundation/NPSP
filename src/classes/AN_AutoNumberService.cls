@@ -216,8 +216,9 @@ public class AN_AutoNumberService {
                     (String) fields.get(String.valueOf(
                             AutoNumber__c.Display_Format__c));
             an.Starting_Number__c =
-                    Integer.valueOf(fields.get(String.valueOf(
-                            AutoNumber__c.Starting_Number__c)));
+                    an.Starting_Number__c != null ? Integer.valueOf(
+                            fields.get(String.valueOf(
+                                    AutoNumber__c.Starting_Number__c))) : null;
             an.Description__c =
                     (String) fields.get(String.valueOf(
                             AutoNumber__c.Description__c));
