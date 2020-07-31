@@ -2092,6 +2092,7 @@
         <members>commonCancel</members>
         <members>commonCardType</members>
         <members>commonClone</members>
+        <members>commonConcurrentBatchError</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
         <members>commonDefaultValue</members>
