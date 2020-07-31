@@ -360,7 +360,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(1, errors.size(), 'One error should be created: ' + errors);
         
         String expectedMessage = String.format(
-            System.Label.commonCriticalError,
+            System.Label.commonConcurrentBatchError,
             new String[]{ RD2_OpportunityEvaluation_BATCH.class.getName() }
         );
         System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
