@@ -35,24 +35,62 @@
 */
 public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
 
-    /*********************************************************************************************************
+
+    /***
     * @description The panel's constructor
     */
     public STG_PanelRDBatch_CTRL() {
         isRunningBatch = false;
     }
 
-    /*********************************************************************************************************
+    /***
+    * @description Batch job service
+    */
+    private UTIL_BatchJobService batchService {
+        get {
+            if (batchService == null) {
+                batchService = new UTIL_BatchJobService();
+            }
+            return batchService;
+        }
+        set;
+    }
+
+    /***
     * @description Returns the string Id of the RD Batch panel.
     */
     public override String idPanel() { return 'idPanelRDBatch'; }
 
-    /*********************************************************************************************************
+    /***
+    * @description Batch class name
+    */
+    private String batchClassName {
+        get {
+            if (batchClassName == null) {
+                batchClassName = isRD2Enabled 
+                    ? RD2_OpportunityEvaluation_BATCH.class.getName() 
+                    : RD_RecurringDonations_BATCH.class.getName();
+            }
+            return batchClassName;
+        }
+        set;
+    }
+
+    /***
     * @description Whether the batch process is currently running
     */
     public Boolean isRunningBatch { get; set; }
 
-    /*********************************************************************************************************
+    /***
+    * @description Whether another same batch process is currently running
+    */
+    public Boolean isConcurrentBatch {
+        get {
+            return new UTIL_BatchJobService().getBatchesInProgress(batchClassName).size() > 0 ;
+        }
+    }
+
+    /***
     * Description The Recurring Donation Batch Introduction Text
     */
     public String getPageDescription() {
@@ -61,15 +99,22 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
             : System.Label.stgHelpRDBatch;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Action Method to execute the RD Batch process
     * @return null
     */
     public PageReference runBatch() {
+        if (isConcurrentBatch) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR, 
+                batchService.getConcurrentBatchMessage(batchClassName)
+            ));
+            return null;
+        }
+
         Savepoint sp = Database.setSavepoint();
         try {
             isRunningBatch = true;
-
             // Call the batch job, using the Recurring Donations Batch Size field in Custom Settings
             if (isRD2Enabled) {
                 RD2_OpportunityEvaluation_BATCH rdBatchJob = new RD2_OpportunityEvaluation_BATCH();
