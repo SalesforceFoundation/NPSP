@@ -209,9 +209,9 @@ public class AN_AutoNumberService {
         private AutoNumber__c convertJSONToAutoNumber(String autoNumber) {
             Map<String, Object> anMap =
                     (Map<String, Object>) JSON.deserializeUntyped(autoNumber);
+            Map<String, Object> fields = (Map<String, Object>) anMap.get('fields');
 
             AutoNumber__c an = new AutoNumber__c();
-            Map<String, Object> fields = (Map<String, Object>) anMap.get('fields');
             an.Display_Format__c =
                     (String) fields.get(String.valueOf(
                             AutoNumber__c.Display_Format__c));
