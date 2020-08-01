@@ -183,8 +183,7 @@ private class AN_AutoNumberService_TEST {
         System.assertNotEquals(null, [
                 SELECT Batch_Number__c
                 FROM DataImportBatch__c
-                LIMIT
-                        1
+                LIMIT 1
         ].Batch_Number__c,
                 'The Batch should have a Batch Number applied. AutoNumbers should' +
                         'be written to the target field regardless of the running' +
