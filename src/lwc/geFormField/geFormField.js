@@ -69,7 +69,6 @@ export default class GeFormField extends LightningElement {
                 value: this.value,
                 objectMappingDevName: objMappingDevName
             };
-            console.log(JSON.parse(JSON.stringify(lookupDetail)));
             const selectRecordEvent = new CustomEvent('lookuprecordselect', { detail: lookupDetail });
             this.dispatchEvent(selectRecordEvent);
         }
@@ -232,8 +231,6 @@ export default class GeFormField extends LightningElement {
             // If the displayed value of the picklist is '--None--' treat the value as blank.
             fieldAndValue[this.formElementName] =
                 (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
-        } else if (this.isLookup) {
-
         } else {
             fieldAndValue[this.formElementName] = this.value;
         }
@@ -401,10 +398,7 @@ export default class GeFormField extends LightningElement {
     @api
     clearCustomValidity() {
 
-        if (this.isLookup) {
-            let inputField = this.template.querySelector('[data-id="inputComponent"]');
-            // inputField.clearCustomValidity();
-        } else {
+        if (!this.isLookup) {
             this.setCustomValidity('');
         }
 
