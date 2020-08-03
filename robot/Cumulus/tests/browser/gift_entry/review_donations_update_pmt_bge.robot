@@ -24,6 +24,8 @@ Setup Test Data
     ...                  CloseDate=${DATE}    
     ...                  npe01__Do_Not_Automatically_Create_Payment__c=false    
     ...                  Name=${ACCOUNT}[Name] Donation
+    ${ui_date} =    Get Current Date                   result_format=%b %-d, %Y
+    Set suite variable    ${UI_DATE}
 
 *** Test Cases ***
 Review Donation And Update Payment For BGE
@@ -36,6 +38,7 @@ Review Donation And Update Payment For BGE
     Click Gift Entry Button              New Batch
     Wait Until Modal Is Open
     Select Template                      Default Gift Entry Template
+    Load Page Object                     Form                          Gift Entry
     Fill Gift Entry Form
     ...                                  Batch Name=${ACCOUNT}[Name]Automation Batch
     ...                                  Batch Description=This is a test batch created via automation script
@@ -47,9 +50,17 @@ Review Donation And Update Payment For BGE
     ...                                  Existing Donor Organization=${ACCOUNT}[Name]
     Click Button                         Review Donations
     Wait Until Modal Is Open
-    Click Button                         Update This Payment
+    Click Button                         Update this Payment
     Wait Until Modal Is Closed 
-    Fill Gift Entry Formy
-    ...                                  Donation Amount=499.50
-    Click Button                         Save
+    Fill Gift Entry Form                 Donation Amount=499.50
+    Click Button                         Save & Enter New Gift
+    Verify Gift Count                    1
+    Verify Table Field Values               Batch Gifts
+    ...                                     Donor Name=&{ACCOUNT}[Name]
+    ...                                     Opportunity: Amount=$499.50
+    ...                                     ${DATE}[Field Label]=${UI_DATE}
+    Click Gift Entry Button                 Process Batch
+    Click Data Import Button                NPSP Data Import                button       Begin Data Import Process
+    Wait For Batch To Process               BDI_DataImport_BATCH            Completed
+    Click Button With Value                 Close
     

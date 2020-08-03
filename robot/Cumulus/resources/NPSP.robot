@@ -460,3 +460,12 @@ Enable Gift Entry
     Open Main Menu                          System Tools
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
     Enable Gift Entry If Not Enabled    
+
+API Query Record
+    [Arguments]        ${object_name}             &{fields}
+    @{object} =        Salesforce Query           ${object_name}
+    ...                select=Id
+    ...                &{fields}
+    &{Id} =            Get From List  ${records}  0
+    &{myrecord} =      Salesforce Get  ${object_name}  ${Id}[Id]
+    [return]           &{myrecord}
