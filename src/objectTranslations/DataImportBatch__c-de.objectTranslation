@@ -74,6 +74,23 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
+        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot;</help>
+        <label>Batch Status</label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation><!-- Failed - Needs Review --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation><!-- Open --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help>Liste der API-Namen für die in der Schenkungs-Batchtabelle enthaltenen Felder. Als JSON gespeichert.</help>
         <label>Spalten der Batchtabelle</label>
         <name>Batch_Table_Columns__c</name>
@@ -187,11 +204,6 @@
         <help>Bei Akt. berechn. NPSP die Spender-Rollups, wenn Spenden verarbeitet werden. Wenn nicht, werden die Spender-Rollups während des nächtl. gepl. Stand‘auftrags berechnet. Die Verarbeitung dieses Batches kann durch Ausw. dieses Kontrollk. langsamer werden.</help>
         <label>Spenden-Rollups mit Batch berechnen</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</help>
-        <label>Batch Status</label>
-        <name>Batch_Status__c</name>
     </fields>
     <gender>Masculine</gender>
     <layouts>

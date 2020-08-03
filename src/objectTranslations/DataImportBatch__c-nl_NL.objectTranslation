@@ -42,6 +42,23 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
+        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot;</help>
+        <label>Batch Status</label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation><!-- Failed - Needs Review --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation><!-- Open --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help>Lijst met API-namen van velden die zijn opgenomen in de batch gifttabellen. Opgeslagen als JSON.</help>
         <label>Batchtabelkolommen</label>
         <name>Batch_Table_Columns__c</name>
@@ -155,11 +172,6 @@
         <help>Wanneer aangevinkt, berekent NPSP donortotaliseringen bij verwerking van donaties. Wanneer niet aangevinkt, worden donortotaliseringen berekend tijdens de standaard nachtelijke Geplande Opdracht. Deze selectie kan de verwerking van deze batch vertragen.</help>
         <label>Donatietotalisering met Batch berekenen</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</help>
-        <label>Batch Status</label>
-        <name>Batch_Status__c</name>
     </fields>
     <gender>Feminine</gender>
     <layouts>

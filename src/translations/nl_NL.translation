@@ -2587,6 +2587,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
         <label>Kaartnummer</label>
         <name>commonCreditNumber</name>
     </customLabels>
@@ -3636,6 +3640,10 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
     <customLabels>
         <label>Waarschuwing: met het verwijderen van deze sectie verwijdert u ook verplichte velden uit de sjabloon. Deze velden moeten worden toegevoegd aan een andere sectie voordat u de sjabloon kunt opslaan.</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning about some fields when donation already has a GAU Allocation assigned --></label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>Giftverwerking ondersteunt het Individuele (&apos;Bucket&apos;) Accountmodel niet.</label>

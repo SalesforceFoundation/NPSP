@@ -42,6 +42,23 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
+        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot;</help>
+        <label>Batch Status</label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation><!-- Failed - Needs Review --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation><!-- Open --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
         <help>Liste des noms d&apos;API pour les champs inclus dans le tableau des dons par lots. Stocké sous JSON.</help>
         <label>Colonnes de tableau par lots</label>
         <name>Batch_Table_Columns__c</name>
@@ -155,11 +172,6 @@
         <help>Si coché, NPSP calcule les cumuls de donateurs lorsque les dons sont traités. Si non coché, les cumuls de donateurs sont calculés lors de la tâche planifiée de nuit par défaut. La sélection de cette case peut ralentir le traitement de ce lot.</help>
         <label>Calculer les cumuls de dons par lots</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</help>
-        <label>Batch Status</label>
-        <name>Batch_Status__c</name>
     </fields>
     <gender>Masculine</gender>
     <layouts>
