@@ -62,6 +62,11 @@ public class AN_AutoNumberService {
         this.sObjType = records.isEmpty() ? null : records[0].getSObjectType();
     }
 
+    /**
+     * @description Activates the AutoNumber record associated with the passed in
+     * Id and inserts the AutoNumber Trigger Handler for the SObject if it does
+     * not already exist.
+     */
     public void activate(String autoNumberId) {
         List<AutoNumber__c> autoNumbersToUpdate = new List<AutoNumber__c>();
         for (AutoNumber__c autoNumber : activeAutoNumbers) {
@@ -77,11 +82,19 @@ public class AN_AutoNumberService {
         }
     }
 
+    /**
+     * @description Deactivates the AutoNumber record associated with the passed in Id.
+     */
     public void deactivate(String autoNumberId) {
         AutoNumber__c a = new AutoNumber__c(Id = autoNumberId, IsActive__c = false);
         update a;
     }
 
+    /**
+     * @description Attempts to convert the passed in JSON String to an AutoNumber record.
+     * The JSON object should have a property named "fields" that is an object with key
+     * value pairs of fieldApiName to fieldValue for fields on the AutoNumber__c object.
+     */
     public AutoNumber__c save(String autoNumberJSON) {
         AutoNumber an = new AutoNumber(autoNumberJSON, this);
         return an.save();
@@ -209,9 +222,9 @@ public class AN_AutoNumberService {
         private AutoNumber__c convertJSONToAutoNumber(String autoNumber) {
             Map<String, Object> anMap =
                     (Map<String, Object>) JSON.deserializeUntyped(autoNumber);
+            Map<String, Object> fields = (Map<String, Object>) anMap.get('fields');
 
             AutoNumber__c an = new AutoNumber__c();
-            Map<String, Object> fields = (Map<String, Object>) anMap.get('fields');
             an.Display_Format__c =
                     (String) fields.get(String.valueOf(
                             AutoNumber__c.Display_Format__c));
@@ -354,6 +367,10 @@ public class AN_AutoNumberService {
                     '":false}}';
         }
 
+        /**
+         * @description Utility method used to insert an AutoNumber record for tests
+         * and optionally insert a Trigger Handler entry.
+         */
         public Id setupAutoNumber(Boolean isActive, String displayFormat,
                 Integer startingNumber, Boolean insertTriggerHandler) {
             AutoNumber__c a = new AutoNumber__c(
