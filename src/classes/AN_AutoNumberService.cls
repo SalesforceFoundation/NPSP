@@ -56,6 +56,8 @@ public class AN_AutoNumberService {
     /**
      * @description This constructor is currently used by the Trigger Handler
      * framework when applying Auto Numbers to new records.
+     * @param records Inserted records that need AutoNumbers applied. Currently,
+     * this will be newList passed in in AfterInsert context by TDTM.
      */
     public AN_AutoNumberService(List<SObject> records) {
         this.records = records;
