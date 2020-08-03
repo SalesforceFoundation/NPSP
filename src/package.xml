@@ -3151,6 +3151,7 @@
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Einstein_OCR_Configuration__c</members>
+        <members>Einstein_OCR_Gift__c</members>
         <members>Engagement_Plan_Task__c</members>
         <members>Engagement_Plan_Template__c</members>
         <members>Engagement_Plan__c</members>
@@ -3676,6 +3677,7 @@
         <members>DataImportBatch__c-NPSP Data Import Batch Layout</members>
         <members>DataImport__c-Data Import Layout</members>
         <members>Einstein_OCR_Configuration__c-Einstein OCR Configuration Layout</members>
+        <members>Einstein_OCR_Gift__c-Einstein OCR Gift Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
