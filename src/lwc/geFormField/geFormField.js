@@ -592,6 +592,10 @@ export default class GeFormField extends LightningElement {
         return `${this.qaLocatorInputPrefix} ${this.qaLocatorBase}`;
     }
 
+    get qaLocatorLookup() {
+        return `autocomplete ${this.qaLocatorBase}`;
+    }
+
     get qaLocatorRichText() {
         return `richtext ${this.qaLocatorBase}`;
     }
