@@ -7,8 +7,4 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <webLinks>
-        <label><!-- ViewCampaignInfluenceReport --></label>
-        <name>ViewCampaignInfluenceReport</name>
-    </webLinks>
     </CustomObjectTranslation>
