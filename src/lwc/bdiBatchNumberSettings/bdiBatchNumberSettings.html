@@ -55,7 +55,7 @@
                                          label={labelDisplayFormat}
                                          field-level-help={inlineHelpTextDisplayFormat}
                                          value={displayFormat}
-                                         max-length="30"
+                                         max-length={maxLengthDisplayFormat}
                                          required
                                          placeholder={displayNumberPlaceholder}
                                          onchange={handleDisplayFormatChange}
@@ -72,7 +72,7 @@
                                          value={startingNumber}
                                          onchange={handleStartingNumberChange}
                                          data-qa-locator={qaLocatorStartingNumber}
-                                         max-length="10">
+                                         max-length={maxLengthStartingNumber}>
                         </lightning-input>
                     </lightning-layout-item>
                     <lightning-layout-item size="12" medium-device-size="4"

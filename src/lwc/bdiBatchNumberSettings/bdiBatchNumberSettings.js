@@ -51,6 +51,20 @@ export default class bdiBatchNumberSettings extends LightningElement {
     startingNumber;
     description;
 
+    // The target field, DataImportBatch__c.Batch_Number__c, is a 30 char
+    // text field.  These max length constraints allow a starting number
+    // of up to 999,999,999 by enforcing a max Starting Number length of
+    // 9 characters, and a max Display Format length of
+    // 23 characters.
+    // The Display Format requires opening and closing braces containing
+    // at least one zero (0). So after removing those the remaining
+    // Display Format length will be 20 char or less, and the total
+    // length of the formatted number when using the max Starting Number of
+    // 999,999,9999 would be 29 characters, with one character reserved
+    // for the increment to 1,000,000,000.
+    maxLengthDisplayFormat = 23;
+    maxLengthStartingNumber = 9;
+
     columns;
     autoNumberRecords;
 
