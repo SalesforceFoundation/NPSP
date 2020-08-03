@@ -11,7 +11,12 @@ import {
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { handleError, addKeyToCollectionItems } from 'c/utilTemplateBuilder';
-import { getNestedProperty } from 'c/utilCommon';
+import {
+    getNamespace,
+    getNestedProperty,
+    isNull,
+    stripNamespace
+} from 'c/utilCommon'
 import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
@@ -25,11 +30,14 @@ import DATA_IMPORT_BATCH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.G
 import DATA_IMPORT_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import DATA_IMPORT_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c';
 import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
+import DATA_IMPORT_BATCH_DONATION_MATCHING_RULE from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c';
 
 const NAME = 'name';
 const ID = 'id';
 const MAX_STEPS = 2;
 const CANCEL = 'cancel';
+const SEMI_COLON_SEPARATOR = ';';
+const PACKAGE_NAMESPACE_PREFIX = 'npsp';
 
 export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
@@ -352,6 +360,35 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             dataImportBatch.fields[DATA_IMPORT_BATCH_ID_INFO.fieldApiName] = this.recordId;
         }
 
+        dataImportBatch = this.stripNamespaceFromDonationMatchingRuleFields(dataImportBatch);
+
+        return dataImportBatch;
+    }
+
+    /***************************************************************************
+     * @description Strips namespace prefix from the Data Import Batch donation matching
+     * rule fields if in a namespaced context
+     * @param dataImportBatch
+     * @returns {object}
+     */
+    stripNamespaceFromDonationMatchingRuleFields (dataImportBatch) {
+        const donationMatchingRule = dataImportBatch.fields[
+          DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName];
+        const namespace = getNamespace(DATA_IMPORT_BATCH_INFO.objectApiName);
+        
+        if (isNull(namespace)) {
+            let strippedFields = '';
+            const matchingRuleFields = donationMatchingRule.split(
+              SEMI_COLON_SEPARATOR);
+            matchingRuleFields.forEach(field => {
+                strippedFields += stripNamespace(field,
+                  PACKAGE_NAMESPACE_PREFIX+'__') +
+                  SEMI_COLON_SEPARATOR;
+            });
+            dataImportBatch.fields[
+              DATA_IMPORT_BATCH_DONATION_MATCHING_RULE.fieldApiName] =
+              strippedFields.slice(0, -1);
+        }
         return dataImportBatch;
     }
 
