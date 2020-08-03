@@ -2504,6 +2504,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked else runs Validate Batch Process When CRLP UnChecked</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.robot.Run Recurring Donations Batch">
+                <td class="kwname">
+                  Run Recurring Donations Batch
+                </td>
+                <td class="kwargs">
+
+                  <i>type</i>
+
+                </td>
+                <td class="kwdoc"><p>Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type</p></td>
+              </tr>
+
               <tr class="kwrow" id="NPSP.robot.Scroll Page To Location">
                 <td class="kwname">
                   Scroll Page To Location
@@ -4015,20 +4027,6 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Verify that the no. of gifts on the page match with count</p></td>
               </tr>
               
-              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Table Field Values">
-                <td class="kwname">
-                  Verify Table Field Values
-                </td>
-                <td class="kwargs">
-                  
-                  <i>table</i>, 
-                  
-                  <i>**kwargs</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Verifies that table has given field name with value. Arguments are: table=table name, fieldname=fieldvalue Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |</p></td>
-              </tr>
-              
             </tbody>
           </table>
         </div> 
@@ -5334,7 +5332,13 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"><p>From the actions dropdown select edit action and edit the fields specified in the kwargs</p></td>
+                <td class="kwdoc"><p>From the actions dropdown select edit action and edit the fields specified in the kwargs</p>
+<pre>
+ Example
+    Edit Recurring Donation Status
+    ...                        Recurring Period=Advanced
+    ...                        Every=3
+</pre></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
@@ -5432,13 +5436,13 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Click Rd2 Modal Button
                 </td>
                 <td class="kwargs">
-                  
+
                   <i>name</i>
-                  
+
                 </td>
-                <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, select and click on the respective button</p></td>
+                <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button</p></td>
               </tr>
-              
+
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -5455,27 +5459,27 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Populate Rd2 Modal Form
                 </td>
                 <td class="kwargs">
-                  
+
                   <i>**kwargs</i>
-                  
+
                 </td>
                 <td class="kwdoc"><p>Populate the RD2 modal form fields with the respective fields and values</p></td>
               </tr>
-              
+
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Select Value From Rd2 Modal Dropdown">
                 <td class="kwname">
                   Select Value From Rd2 Modal Dropdown
                 </td>
                 <td class="kwargs">
-                  
-                  <i>dropdown</i>, 
-                  
+
+                  <i>dropdown</i>,
+
                   <i>value</i>
-                  
+
                 </td>
-                <td class="kwdoc"><p>Selects given value in the dropdown field on the rd2 modal</p></td>
+                <td class="kwdoc"><p>Selects given value from the dropdown field on the rd2 modal</p></td>
               </tr>
-              
+
             </tbody>
           </table>
         </div> 

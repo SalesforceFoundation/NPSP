@@ -136,4 +136,32 @@ public with sharing class BDI_DataImportBatch_TEST {
 
         return jobsApexBatch.size();
     }
+
+    /*********************************************************************************************************
+    * @description verifies that a new batch has the Open status
+    */
+    @IsTest
+    static void shouldMarkNewBatchesAsOpen() {
+        final Integer numberOfBatches = 10;
+        list<DataImportBatch__c> batches = new list<DataImportBatch__c>();
+
+        // create batches
+        for (integer i = 0; i < numberOfBatches; i++) {
+            DataImportBatch__c batch = BDI_DataImportAPI_TEST.newBatch('b' + i, true);
+            batches.add(batch);
+        }
+
+        Test.startTest();
+        batches = [SELECT Id, Batch_Status__c FROM DataImportBatch__c
+                    WHERE Id IN :batches];
+        Test.stopTest();
+
+        // check the status
+        for (DataImportBatch__c batch : batches) {
+            System.assertEquals(BDI_DataImportBatch_TDTM.BATCH_STATUS_OPEN, 
+                                batch.Batch_Status__c,
+                                'Batch Status should be Open for new batches.');
+        }
+        
+    }
 }

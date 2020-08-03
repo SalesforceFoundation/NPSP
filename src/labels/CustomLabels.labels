@@ -4969,6 +4969,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Clone</value>
     </labels>
     <labels>
+        <fullName>commonConcurrentBatchError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when a batch job is executed while the same batch job is already running.</shortDescription>
+        <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
+    </labels>
+    <labels>
         <fullName>commonCreditNumber</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7099,6 +7107,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Warning message for deleting a section if it contains required fields</shortDescription>
         <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
+    </labels>
+    <labels>
+        <fullName>geWarningGauAllocFieldUpdatesDisabled</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about some fields when donation already has a GAU Allocation assigned</shortDescription>
+        <value>Since this donation has at least one GAU Allocation assigned, you can&apos;t update certain fields.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>

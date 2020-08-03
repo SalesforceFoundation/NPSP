@@ -81,7 +81,7 @@ public with sharing class UTIL_BatchJobService {
     public Boolean isInProgress(Id batchId) {
         if (batchId == null) {
             return false;
-        }
+        } 
 
         return (Database.countQuery('SELECT Count() FROM AsyncApexJob WHERE Id = :batchId AND Status IN :IN_PROGRESS_STATUSES') > 0);
     }
@@ -93,6 +93,54 @@ public with sharing class UTIL_BatchJobService {
     */
     public Boolean isInProgress(String status) {
         return IN_PROGRESS_STATUSES.contains(status.toUpperCase());
+    }
+
+    /***
+    * @description Returns the list of batches that are in progress at this moment.
+    * @param className Apex class name
+    * @return List<AsuncApexJob>
+    */
+    public List<AsyncApexJob> getBatchesInProgress(String className) {        
+        String namespacePrefix = UTIL_Namespace.getNamespace();
+        List<AsyncApexJob> apexJobs = [
+            SELECT
+                Status, ApexClass.Name,
+                ExtendedStatus, NumberOfErrors,
+                TotalJobItems, JobItemsProcessed,
+                CreatedDate, CompletedDate
+            FROM AsyncApexJob
+            WHERE JobType = :JOB_TYPE_BATCH
+                AND ApexClass.Name = :className
+                AND ApexClass.NamespacePrefix = :namespacePrefix
+                AND Status IN :IN_PROGRESS_STATUSES
+            ORDER BY CreatedDate DESC];
+       
+        return apexJobs;
+    }
+
+    /***
+    * @description Logs an error when another same batch is running
+    * @param className Apex batch class name
+    * @param context Error context
+    * @return void
+    */
+    public void logConcurrentBatchError(String className, ERR_Handler_API.Context context) {
+        BatchException ex = new BatchException();
+        ex.setMessage(getConcurrentBatchMessage(className));
+
+        ERR_Handler.processError(ex, context);
+    }
+
+    /***
+    * @description Builds concurrent batch error message
+    * @param className Apex batch class name
+    * @return String
+    */
+    public String getConcurrentBatchMessage(String className) {
+        return String.format(
+            System.Label.commonConcurrentBatchError,
+            new List<String>{ className }
+        );
     }
 
     /***
@@ -182,7 +230,6 @@ public with sharing class UTIL_BatchJobService {
 
         return batchJob == null ? null : new BatchJob(batchJob);
     }
-
 
     /***
     * @description Batch job descriptor
