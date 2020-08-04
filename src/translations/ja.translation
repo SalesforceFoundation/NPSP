@@ -865,7 +865,7 @@
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
     <customLabels>
-        <label>(1) Lightning Experience を使用する準備ができたいない場合、画面上部の [Lightning Experience に切り替え] をクリックします。&lt;br/&gt;(2) [NPSP 設定] | [支援] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にします。&lt;br/&gt;&lt;br/&gt;ここに戻って、[拡張継続支援にアップグレード] ページに移動します。</label>
+        <label>(1) Lightning Experience を使用する準備ができていない場合、画面上部の [Lightning Experience に切り替え] をクリックします。&lt;br/&gt;(2) [NPSP 設定] | [支援] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にします。&lt;br/&gt;&lt;br/&gt;ここに戻って、[拡張継続支援にアップグレード] ページに移動します。</label>
         <name>RD2_EnablementDisabledMessage</name>
     </customLabels>
     <customLabels>
@@ -933,7 +933,7 @@
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <label>まだ拡張継続支援機能が有効化されていないため、継続支援を作成または更新することはできません。[NPSP 設定]、[継続支援]、[拡張継続支援にアップグレード] の順に選択して、有効化手順を完了してください。</label>
         <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
@@ -2593,6 +2593,10 @@
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
         <label>カード番号</label>
         <name>commonCreditNumber</name>
     </customLabels>
@@ -3528,7 +3532,7 @@
         <name>geSearchPlaceholder</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to select batch table columns --></label>
+        <label>バッチテーブル列を選択</label>
         <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3642,6 +3646,10 @@
     <customLabels>
         <label>警告: このセクションを削除すると、必須項目もテンプレートから削除されます。テンプレートを保存する前にこれらの項目を別のセクションに追加する必要があります。</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>この支援には 一般会計単位の割り当てが少なくとも 1 つ含まれているため、特定の項目を更新できません。</label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>支援処理は個人 (「バケット」) 取引先モデルをサポートしていません。</label>

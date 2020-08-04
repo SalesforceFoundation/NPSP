@@ -224,7 +224,7 @@
     </fields>
     <fields>
         <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s&apos;appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
-        <label>Date d&apos;entrée en vigueur</label>
+        <label>Date de début</label>
         <name>StartDate__c</name>
     </fields>
     <fields>

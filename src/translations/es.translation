@@ -928,7 +928,7 @@
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <label>No puede crear o actualizar Donaciones recurrentes porque no ha terminado de actualizar Donaciones recurrentes mejoradas. Vaya a Configuración de NPSP | Donaciones recurrentes | Actualizar a Donaciones recurrentes mejoradas y complete todos los pasos de activación.</label>
         <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
@@ -2591,6 +2591,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
         <label>Número de tarjeta</label>
         <name>commonCreditNumber</name>
     </customLabels>
@@ -3526,7 +3530,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geSearchPlaceholder</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to select batch table columns --></label>
+        <label>Seleccionar columnas de tabla de lote</label>
         <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3640,6 +3644,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Advertencia: Al eliminar esta sección también está retirando los campos obligatorios de la plantilla. Es necesario agregar estos campos a otra sección antes de que pueda guardar la plantilla.</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Ya que esta donación tiene al menos una Asignación de CCG, no puede actualizar ciertos campos.</label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>El procesamiento de regalos no admite el modelo de cuentas individual (&quot;Depósito&quot;).</label>
@@ -5595,7 +5603,7 @@ Este proceso puede tardar algún tiempo, pero puede cerrar esta página con segu
         <name>stgHelpRDBatch</name>
     </customLabels>
     <customLabels>
-        <label>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes falla debido a limites del sistema.</label>
+        <label>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes falla debido a límites del sistema.</label>
         <name>stgHelpRDBatchSize</name>
     </customLabels>
     <customLabels>
@@ -5631,7 +5639,7 @@ Este proceso puede tardar algún tiempo, pero puede cerrar esta página con segu
         <name>stgHelpRDMaxDonations</name>
     </customLabels>
     <customLabels>
-        <label>Dice a Salesforce que hacer con las oportunidades abiertas restantes cuando se marca el Estado de final abierto en la donación recurrente como Cerrada.</label>
+        <label>Indica a NPSP qué hacer con las oportunidades abiertas restantes cuando se marca el Estado de final abierto en la donación recurrente como Cerrada.</label>
         <name>stgHelpRDOpenOppBehavior</name>
     </customLabels>
     <customLabels>

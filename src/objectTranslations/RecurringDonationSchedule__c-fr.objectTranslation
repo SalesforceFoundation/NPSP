@@ -218,7 +218,7 @@
     </fields>
     <fields>
         <help>La date à laquelle l&apos;enregistrement de ce calendrier s&apos;applique.</help>
-        <label>Date d&apos;entrée en vigueur</label>
+        <label>Date de début</label>
         <name>StartDate__c</name>
     </fields>
     <gender>Masculine</gender>

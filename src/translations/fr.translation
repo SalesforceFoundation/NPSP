@@ -177,7 +177,7 @@
         <name>AssistiveTextWarning</name>
     </customLabels>
     <customLabels>
-        <label>Effectué :</label>
+        <label>Effectuée le :</label>
         <name>BatchProgressCompletedDate</name>
     </customLabels>
     <customLabels>
@@ -233,7 +233,7 @@
         <name>BatchProgressStatusSuccess</name>
     </customLabels>
     <customLabels>
-        <label>Temps écoulé :</label>
+        <label>Durée :</label>
         <name>BatchProgressTimeElapsed</name>
     </customLabels>
     <customLabels>
@@ -928,7 +928,7 @@
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <label>Vous ne pouvez pas créer ou mettre à jour des Dons récurrents, car vous n&apos;avez pas terminé l&apos;activation des Dons récurrents avancés. Accédez à Paramètres NPSP | Dons récurrents | Mettre à jour vers les Dons récurrents avancés, puis complétez toutes les étapes d&apos;activation.</label>
         <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
@@ -1114,7 +1114,7 @@
         <name>RD2_EntryFormScheduleEveryLabel</name>
     </customLabels>
     <customLabels>
-        <label>Informations sur l’état</label>
+        <label>Informations sur le statut</label>
         <name>RD2_EntryFormStatusSectionHeader</name>
     </customLabels>
     <customLabels>
@@ -1226,9 +1226,9 @@
         <name>RD2_StatusMappingColumnStatusAPIName</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;Définitions de l’état&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : le donateur fait des dons de façon active. NPSP crée des Opportunités de versement tel que défini par le calendrier de Dons récurrents.&lt;/li&gt;
-&lt;li&gt;Échelonné : les Dons ne sont pas reçus comme prévu, mais NPSP crée toujours des Opportunités de versement tel que défini par le calendrier de Dons récurrents.&lt;/li&gt;
-&lt;li&gt;Clôturé : le donateur a cessé de faire des dons pour ce Don récurrent. NPSP ne crée aucune nouvelle Opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
+        <label>&lt;b&gt;Définitions de l’état&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : les dons sont réguliers. NPSP crée des Opportunités de versement selon le calendrier de Dons récurrents.&lt;/li&gt;
+&lt;li&gt;Échelonné : les dons ne sont pas reçus comme prévu, mais NPSP crée toujours des Opportunités de versement selon le calendrier de Dons récurrents.&lt;/li&gt;
+&lt;li&gt;Clôturé : les dons récurrents ont été arrêtés. NPSP ne crée pas d&apos;autre Opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_StatusMappingDefinitions</name>
     </customLabels>
     <customLabels>
@@ -1240,7 +1240,7 @@
         <name>RD2_StatusMappingInProgressMessage</name>
     </customLabels>
     <customLabels>
-        <label>Lorsque vous créez des valeurs de liste de sélection personnalisées pour le Statut du Don récurrent, vous devez les mapper à un État pour que NPSP sache comment traiter les enregistrements avec ces valeurs de Statut personnalisées.
+        <label>Lorsque vous créez des valeurs de liste de sélection personnalisées pour le Statut du Don récurrent, vous devez les mapper à un État pour indiquer à NPSP comment traiter les enregistrements avec ces valeurs de Statut personnalisées.
         &lt;br/&gt;&lt;br/&gt;Si vous n’avez créé aucune valeur de liste de sélection personnalisée pour le Statut du Don récurrent, vous ne devez rien mapper.</label>
         <name>RD2_StatusMappingIntro</name>
     </customLabels>
@@ -2594,6 +2594,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
         <label>Numéro de carte</label>
         <name>commonCreditNumber</name>
     </customLabels>
@@ -3529,7 +3533,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geSearchPlaceholder</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to select batch table columns --></label>
+        <label>Sélectionner des colonnes de tableau par lots</label>
         <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3643,6 +3647,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <label>Avertissement : En supprimant cette section, vous retirez également des champs obligatoires du modèle. Ces champs doivent être ajoutés à une autre section avant d&apos;enregistrer le modèle.</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Cette donation a au moins une Allocation UCG attribuée. Par conséquent, vous ne pouvez pas mettre à jour certains champs.</label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>Le traitement du don ne prend pas en charge le modèle de compte individuel (« à compartiments »).</label>
@@ -5602,7 +5610,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
         <name>stgHelpRDBatch</name>
     </customLabels>
     <customLabels>
-        <label>Le nombre d’enregistrements à traiter en une fois lors de l’exécution du traitement par lots des dons réguliers. La taille par défaut est 50. Si le traitement par lots échoue à cause des limites du système, réduisez-le à un nombre moins élevé.</label>
+        <label>Le nombre d’enregistrements à traiter à la fois lors de l’exécution du traitement des dons réguliers par lots. La taille par défaut est de 50. Si le traitement par lots échoue en raison des limites du système, réduisez le nombre d’enregistrements.</label>
         <name>stgHelpRDBatchSize</name>
     </customLabels>
     <customLabels>
@@ -6289,7 +6297,7 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>stgNavPeople</name>
     </customLabels>
     <customLabels>
-        <label>Mettre à jour vers les Dons récurrents avancés</label>
+        <label>Mettre à niveau vers les dons récurrents avancés</label>
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
@@ -6373,7 +6381,7 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>stgRDNamingDescription</name>
     </customLabels>
     <customLabels>
-        <label>Désactiver la dénomination automatique</label>
+        <label>Désactiver le nommage automatique</label>
         <name>stgRDNamingDisable</name>
     </customLabels>
     <customLabels>

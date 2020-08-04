@@ -2568,6 +2568,10 @@
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Common label for credit card number --></label>
         <name>commonCreditNumber</name>
     </customLabels>
@@ -3594,6 +3598,10 @@
     <customLabels>
         <label><!-- Warning message for deleting a section if it contains required fields --></label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning about some fields when donation already has a GAU Allocation assigned --></label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label><!-- Gift Processing account model error --></label>

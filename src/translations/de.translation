@@ -2592,6 +2592,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonClone</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
         <label>Kartennummer</label>
         <name>commonCreditNumber</name>
     </customLabels>
@@ -3641,6 +3645,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Warnung: Wenn Sie diesen Abschnitt löschen, entfernen Sie zugleich erforderliche Felder aus der Vorlage. Diese Felder müssen zuerst einem anderen Abschnitt hinzugefügt werden, damit Sie die Vorlage speichern können.</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning about some fields when donation already has a GAU Allocation assigned --></label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>Die Schenkungsverarbeitung unterstützt nicht das Accountmodell &quot;Einzelperson&quot; (&quot;Bucket&quot;).</label>

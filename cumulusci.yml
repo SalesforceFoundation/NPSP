@@ -579,6 +579,9 @@ tasks:
                 # Strip field translations that should not be included in the package
                 - path: src/objectTranslations/Schedulable__c-**.objectTranslation
                   xpath: //ns:picklistValues[ns:masterLabel='Daily']|//ns:picklistValues[ns:masterLabel='Hourly']|//ns:picklistValues[ns:masterLabel='Monthly']|//ns:picklistValues[ns:masterLabel='Quarterly']|//ns:picklistValues[ns:masterLabel='Weekly']
+                # Strip Campaign translations that should not be included in the package
+                - path: src/objectTranslations/Campaign-**.objectTranslation
+                  xpath: //ns:webLinks[ns:name='ViewCampaignInfluenceReport']
                 # Strip out any help text translations in the DataImport__c object because HelpText on that object is used for legacy mapping
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Account1_City__c']|//ns:fields/ns:help[../ns:name='Account1_Country__c']

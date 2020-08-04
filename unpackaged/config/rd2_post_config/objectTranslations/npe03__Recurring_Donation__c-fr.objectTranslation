@@ -211,7 +211,7 @@
   <fields>
     <name>%%%NAMESPACE%%%StartDate__c</name>
     <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s&apos;appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
-    <label>Date d&apos;entrée en vigueur</label>
+    <label>Date de début</label>
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
