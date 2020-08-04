@@ -42,20 +42,20 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot;</help>
-        <label>Batch Status</label>
         <name>Batch_Status__c</name>
+        <help>El Estado del lote se basa en el Estado de importación de los registros de Importaciones de datos de NPSP dentro del lote. Si uno no se importa, el estado del lote es "Fallo - Necesita revisión".</help>
+        <label>Estado del lote</label>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Abierto</translation>
+        </picklistValues>
         <picklistValues>
             <masterLabel>Completed</masterLabel>
-            <translation><!-- Completed --></translation>
+            <translation>Completado</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Failed - Needs Review</masterLabel>
-            <translation><!-- Failed - Needs Review --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation><!-- Open --></translation>
+            <translation>Fallo - Necesita revisión</translation>
         </picklistValues>
     </fields>
     <fields>
