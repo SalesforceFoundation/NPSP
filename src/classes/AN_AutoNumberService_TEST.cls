@@ -37,6 +37,17 @@ private class AN_AutoNumberService_TEST {
     static SObjectType sObjType = DataImportBatch__c.SObjectType;
     static SObjectField autoNumberField = DataImportBatch__c.Batch_Number__c;
 
+    static String sObjTypeName {
+        get {
+            return String.valueOf(sObjType);
+        }
+    }
+    static String autoNumberFieldName {
+        get {
+            return String.valueOf(autoNumberField);
+        }
+    }
+
     static AN_AutoNumberService ans =
             new AN_AutoNumberService(sObjType);
     static AN_AutoNumberService.TestUtility utility =
@@ -107,12 +118,15 @@ private class AN_AutoNumberService_TEST {
         utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', 100, true);
 
-        DataImportBatch__c b = new DataImportBatch__c();
-        insert b;
+        SObject sobj = getSObjectInstance();
+        insert sobj;
 
-        b = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b.Id];
-        System.assertNotEquals(null, b.Batch_Number__c,
-                'The Batch should have a Batch Number applied.');
+        sobj = utility.getSObjectsById(new List<Id>{
+                sobj.Id
+        })[0];
+
+        System.assertNotEquals(null, sobj.get(autoNumberFieldName),
+                'The SObject should have an AutoNumber applied.');
     }
 
     @IsTest
@@ -120,49 +134,62 @@ private class AN_AutoNumberService_TEST {
         utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', 0, true);
 
-        DataImportBatch__c b = new DataImportBatch__c();
-        insert b;
+        SObject sobj = getSObjectInstance();
+        insert sobj;
 
-        b = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b.Id];
-        System.assertNotEquals(null, b.Batch_Number__c,
-                'The Batch should have a Batch Number applied.');
-        System.assertEquals('ABCZZZ-000', b.Batch_Number__c,
+        sobj = utility.getSObjectsById(new List<Id>{
+                sobj.Id
+        })[0];
+
+        System.assertNotEquals(null, sobj.get(autoNumberFieldName),
+                'The SObject should have an AutoNumber applied.');
+        System.assertEquals('ABCZZZ-000', sobj.get(autoNumberFieldName),
                 'The starting number 0 should be used for the first record.');
     }
-
 
     @IsTest
     static void shouldIncrementStartingNumberZeroCorrectly() {
         Id autoNumberId = utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', 0, true);
 
-        DataImportBatch__c b = new DataImportBatch__c();
-        insert b;
+        SObject sobj = getSObjectInstance();
+        insert sobj;
 
-        b = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b.Id];
-        System.assertNotEquals(null, b.Batch_Number__c,
-                'The Batch should have a Batch Number applied.');
-        System.assertEquals('ABCZZZ-000', b.Batch_Number__c,
+        sobj = utility.getSObjectsById(new List<Id>{
+                sobj.Id
+        })[0];
+
+        System.assertNotEquals(null, sobj.get(autoNumberFieldName),
+                'The SObject should have an AutoNumber applied.');
+        System.assertEquals('ABCZZZ-000', sobj.get(autoNumberFieldName),
                 'The starting number 0 should be used for the first record.');
-
         System.assertEquals(0, utility.getAutoNumberById(autoNumberId).Max_Used_Number__c,
                 'Max Used Number should be 0 after the first record is inserted when ' +
                         'the Starting Number was 0.');
 
-        DataImportBatch__c b1 = new DataImportBatch__c();
-        insert b1;
-        b1 = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b1.Id];
-        System.assertNotEquals(null, b1.Batch_Number__c,
-                'The Batch should have a Batch Number applied.');
-        System.assertEquals('ABCZZZ-001', b1.Batch_Number__c,
-                'The number 1 should be used for the next record.');
+        SObject sobj1 = getSObjectInstance();
+        insert sobj1;
 
+        sobj1 = utility.getSObjectsById(new List<Id>{
+                sobj1.Id
+        })[0];
+
+        System.assertNotEquals(null, sobj1.get(autoNumberFieldName),
+                'The SObject should have an AutoNumber applied.');
+        System.assertEquals('ABCZZZ-001', sobj1.get(autoNumberFieldName),
+                'The number 1 should be used for the next record.');
         System.assertEquals(1, utility.getAutoNumberById(autoNumberId).Max_Used_Number__c,
                 'Max Used Number should be 1 after the second record is inserted when ' +
                         'the Starting Number was 0.');
-
     }
 
+    /**
+     * @description Verifies that the AutoNumberService writes a value into the
+     * target field even if the running User does not have access to the target field.
+     * For consistent setup, this test explicitly uses the Batch Number field on the
+     * DataImportBatch object, which is inaccessible to the Standard User by default (before
+     * provisioning access via org permissions).
+     */
     @IsTest
     static void shouldApplyWithoutFieldAccess() {
         utility.setupAutoNumber(true,
@@ -196,24 +223,23 @@ private class AN_AutoNumberService_TEST {
         Id anId = utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', startingNumber, true);
 
-        DataImportBatch__c b = new DataImportBatch__c();
-        DataImportBatch__c b1 = new DataImportBatch__c();
-        DataImportBatch__c b2 = new DataImportBatch__c();
-        List<DataImportBatch__c> batches = new List<DataImportBatch__c>{
-                b, b1, b2
+        SObject sobj1 = getSObjectInstance();
+        SObject sobj2 = getSObjectInstance();
+        SObject sobj3 = getSObjectInstance();
+        List<SObject> sObjects = new List<SObject>{
+                sobj1, sobj2, sobj3
         };
-        insert batches;
+        insert sObjects;
 
         Set<String> batchNumbers = new Set<String>();
-        for (DataImportBatch__c dataImportBatch : [
-                SELECT Batch_Number__c
-                FROM DataImportBatch__c
-        ]) {
-            batchNumbers.add(dataImportBatch.Batch_Number__c);
+        for (SObject sobj : utility.getSObjectsById(new List<Id>{
+                sobj1.Id, sobj2.Id, sobj3.Id
+        })) {
+            batchNumbers.add(String.valueOf(sobj.get(autoNumberFieldName)));
         }
 
         List<Integer> numbersInSequence = new List<Integer>();
-        for (Integer i = 0; i < batches.size(); i++) {
+        for (Integer i = 0; i < sObjects.size(); i++) {
             numbersInSequence.add(startingNumber + i);
         }
 
@@ -225,7 +251,7 @@ private class AN_AutoNumberService_TEST {
                 }
             }
             System.assert(isUsed,
-                    'Batch Numbers should be incremented by 1 from the Starting Number and' +
+                    'Auto Numbers should be incremented by 1 from the Starting Number and' +
                             'use each number in the sequence without skipping any.');
         }
 
@@ -265,11 +291,15 @@ private class AN_AutoNumberService_TEST {
         utility.setupAutoNumber(true,
                 'ABCZZZ-{000}', startingNumber, true);
 
-        DataImportBatch__c b = new DataImportBatch__c();
-        insert b;
+        SObject sobj = getSObjectInstance();
+        insert sobj;
 
-        b = [SELECT Batch_Number__c FROM DataImportBatch__c WHERE Id = :b.Id];
-        System.assert(b.Batch_Number__c.contains(String.valueOf(startingNumber)),
+        sobj = utility.getSObjectsById(new List<Id>{
+                sobj.Id
+        })[0];
+
+        System.assert(String.valueOf(sobj.get(String.valueOf(autoNumberField)))
+                .contains(String.valueOf(startingNumber)),
                 'The Batch should have used the Starting Number from the active Auto ' +
                         'Number record.');
     }
@@ -326,6 +356,18 @@ private class AN_AutoNumberService_TEST {
 
         System.assertNotEquals(null, autoNumberException,
                 'A valid display format is required when creating an AutoNumber record.');
+    }
+
+    /**
+     * @description Utility method used to instantiate a new instance of the SObject under
+     * test.  If an SObject has required fields, they can be assigned here to use those
+     * field values for all records created in the test methods in this class.
+     */
+    static SObject getSObjectInstance() {
+        SObject sobj;
+        sobj = (SObject) Type.forName(sObjTypeName).newInstance();
+        sobj.put('Name', 'testSObjectRecord');
+        return sobj;
     }
 
 }

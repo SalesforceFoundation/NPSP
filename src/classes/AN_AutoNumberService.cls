@@ -341,7 +341,17 @@ public class AN_AutoNumberService {
     private class TestUtility {
 
         SObjectType sObjType;
+        String sObjTypeName {
+            get {
+                return String.valueOf(sObjType);
+            }
+        }
         SObjectField sObjField;
+        String sObjFieldName {
+            get {
+                return String.valueOf(sObjField);
+            }
+        }
 
         public TestUtility(SObjectType sObjType, SObjectField sObjField) {
             this.sObjType = sObjType;
@@ -350,7 +360,7 @@ public class AN_AutoNumberService {
 
         public String autoNumberJSON {
             get {
-                return getAutoNumberJSON(String.valueOf(sObjType), String.valueOf(sObjField));
+                return getAutoNumberJSON(sObjTypeName, sObjFieldName);
             }
         }
 
@@ -376,8 +386,8 @@ public class AN_AutoNumberService {
         public Id setupAutoNumber(Boolean isActive, String displayFormat,
                 Integer startingNumber, Boolean insertTriggerHandler) {
             AutoNumber__c a = new AutoNumber__c(
-                    Object_API_Name__c = String.valueOf(sObjType),
-                    Field_API_Name__c = String.valueOf(sObjField),
+                    Object_API_Name__c = sObjTypeName,
+                    Field_API_Name__c = sObjFieldName,
                     Display_Format__c = displayFormat,
                     Starting_Number__c = startingNumber,
                     IsActive__c = isActive,
@@ -398,6 +408,17 @@ public class AN_AutoNumberService {
                     FROM AutoNumber__c
                     WHERE Id = :id
             ];
+        }
+
+        public List<SObject> getSObjectsById(List<Id> ids) {
+            String queryString = new UTIL_Query()
+                    .withSelectFields(new List<String>{
+                            sObjFieldName
+                    })
+                    .withFrom(sObjTypeName)
+                    .withWhere('Id IN :ids')
+                    .build();
+            return Database.query(queryString);
         }
     }
 
