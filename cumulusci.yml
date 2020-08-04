@@ -210,13 +210,10 @@ tasks:
                   default: true
 
     test_performance:
-        description: Runs Robot Framework performance tests for BDI Complex Objects
-        class_path: cumulusci.tasks.robotframework.Robot
-        group: Performance Tests
+        description: Disabled for this branch
+        class_path: cumulusci.tasks.util.Sleep
         options:
-            suites: robot/Cumulus/perftests/
-            options:
-                outputdir: robot/Cumulus/results
+            seconds: 1
 
     platformencryption_deploy_permset:
         class_path: cumulusci.tasks.salesforce.Deploy
