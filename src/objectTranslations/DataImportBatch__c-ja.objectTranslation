@@ -38,20 +38,20 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot;</help>
-        <label>Batch Status</label>
         <name>Batch_Status__c</name>
+        <help>バッチ状況は、バッチ内の NPSP データインポートレコードのインポート状況に基づきます。いずれかのレコードがインポートできなかった場合、そのバッチの状況は「失敗 - レビューが必要」になります。</help>
+        <label>バッチ状況</label>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>オープン</translation>
+        </picklistValues>
         <picklistValues>
             <masterLabel>Completed</masterLabel>
-            <translation><!-- Completed --></translation>
+            <translation>完了</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Failed - Needs Review</masterLabel>
-            <translation><!-- Failed - Needs Review --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation><!-- Open --></translation>
+            <translation>失敗 - レビューが必要</translation>
         </picklistValues>
     </fields>
     <fields>

@@ -42,20 +42,20 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot;</help>
-        <label>Batch Status</label>
         <name>Batch_Status__c</name>
+        <help>De batchstatus wordt gebaseerd op de importstatus van de NPSP-gegevensimportrecords in de batch. Als één record niet wordt geïmporteerd, wordt de status van de batch Mislukt - Controle vereist.</help>
+        <label>Batchstatus</label>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Open</translation>
+        </picklistValues>
         <picklistValues>
             <masterLabel>Completed</masterLabel>
-            <translation><!-- Completed --></translation>
+            <translation>Voltooid</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Failed - Needs Review</masterLabel>
-            <translation><!-- Failed - Needs Review --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation><!-- Open --></translation>
+            <translation>Mislukt - Controle vereist</translation>
         </picklistValues>
     </fields>
     <fields>

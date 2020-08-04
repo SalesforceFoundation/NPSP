@@ -3647,7 +3647,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geWarningFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
-        <label><!-- Warning about some fields when donation already has a GAU Allocation assigned --></label>
+        <label>Da dieser Spende mindestens eine GAU-Zuweisung (Verwendungszweck) zugeordnet ist, können Sie bestimmte Felder nicht aktualisieren.</label>
         <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
