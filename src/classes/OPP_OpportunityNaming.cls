@@ -35,7 +35,7 @@
 * @description Main logic class for opportunity naming
 */
 //TODO: finish implementation of interface so other implementing classes can be used. this will require making classes global and a heirarchical setting that we don't yet have. TBD if this is necessary.
-public with sharing class OPP_OpportunityNaming implements OPP_INaming {
+public inherited sharing class OPP_OpportunityNaming implements OPP_INaming {
 
     private static final SObjectType recordTypeSObjectType = UTIL_Describe.getSObjectType('RecordType');
 
