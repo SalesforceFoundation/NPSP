@@ -8,6 +8,8 @@ public with sharing class EOCR_Utilities {
     public static final string ISSUER = 'developer.force.com';
     public static final Integer REQUEST_TIMEOUT = 30000;
 
+    public static final String GIFT_ID = 'a0r1g000001qXR8AAM';
+
     public class EinsteinAuthException extends Exception {}
 
     public static void connect() {
@@ -25,11 +27,28 @@ public with sharing class EOCR_Utilities {
         request.setMethod('POST');
         request.setEndpoint(OCR_URL);
 
+        // get the files
+        // List<Einstein_OCR_Gift__c> gifts = [SELECT Id FROM Einstein_OCR_Gift__c LIMIT 1];
+        // List<ContentDocument> files = [SELECT Description FROM ContentDocument
+        //                                   WHERE ParentId =: gifts[0].Id];
+
+        ContentDocumentLink cdl = [Select ContentDocumentId 
+                                  From ContentDocumentLink where 
+                                  LinkedEntityId = 'a0r1g000001qXR8AAM'];
+
+        ContentVersion cv = [select VersionData 
+                            From ContentVersion 
+                            where ContentDocumentId = '0691g000000jciYAAQ'];
+
+        String base64 = EncodingUtil.base64Encode(cv.VersionData);
+
+        system.debug('base64 = ' + base64);
+
         // set the body
         String fileName = '@/Users/vmartinov/Desktop/checks/check1.jpeg';
         RequestBody bodyObject = new RequestBody('OCRModel',
                                       'text', 
-                                      '');
+                                      base64);
         String body = bodyObject.getAsJson();
         request.setBody(body);
         
