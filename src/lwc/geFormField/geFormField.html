@@ -13,13 +13,13 @@
         </lightning-input>
     </template>
     <template if:true={isLookup}>
-        <lightning-record-edit-form object-api-name={objectApiName}>
+        <lightning-record-edit-form object-api-name={lookupObjectApiName}>
             <label class="slds-form-element__label">
                 <abbr class="slds-required" title="required" if:true={required}>* </abbr>
                 {fieldLabel}
             </label>
             <lightning-input-field
-                    field-name={fieldApiName}
+                    field-name={lookupFieldApiName}
                     onchange={handleValueChange}
                     required={required}
                     variant="label-hidden"

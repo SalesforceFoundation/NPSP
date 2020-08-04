@@ -7,7 +7,13 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import CONTACT1_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import ACCOUNT_ID from '@salesforce/schema/Opportunity.AccountId';
+import PRIMARY_CONTACT from '@salesforce/schema/Opportunity.Primary_Contact__c';
+import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
+import OPPORTUNITY from '@salesforce/schema/Opportunity';
 
 import {
     DI_DONATION_DONOR_INFO,
@@ -350,6 +356,30 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    // when using lightning-lookup-field, instead of binding to the Data Import fields or donor information
+    // we bind to Opportunity.AccountId / Opportunity.Primary_Contact__c
+    get lookupFieldApiName() {
+        if (this.objectApiName === DATA_IMPORT.objectApiName) {
+            if (this.fieldApiName === ACCOUNT1_IMPORTED.fieldApiName) {
+                return ACCOUNT_ID.fieldApiName;
+            } else if (this.fieldApiName === CONTACT1_IMPORTED.fieldApiName) {
+                return PRIMARY_CONTACT.fieldApiName;
+            }
+        }
+        return this.fieldApiName;
+    }
+
+    get lookupObjectApiName() {
+        if(this.objectApiName === DATA_IMPORT.objectApiName) {
+            if(this.fieldApiName === ACCOUNT1_IMPORTED.fieldApiName
+                || this.fieldApiName === CONTACT1_IMPORTED.fieldApiName) {
+                return OPPORTUNITY.objectApiName;
+            }
+        }
+
+        return this.objectApiName;
+    }
+
     @api
     get fieldLabel() {
         return this.element.customLabel;
@@ -491,10 +521,10 @@ export default class GeFormField extends LightningElement {
             this.value = null;
         }
 
-        if (this.isLookup) {
+        if (this.isLookup || this.isRecordType) {
             const lookup = this.template.querySelector('lightning-input-field');
             lookup.reset(setDefaults);
-            if (this.fieldApiName === 'RecordTypeId') {
+            if (this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName) {
                 // Using setTimeout here ensures that this recordTypeId
                 // will be set on sibling fields after they are reset by queueing the event.
                 setTimeout(() => {
