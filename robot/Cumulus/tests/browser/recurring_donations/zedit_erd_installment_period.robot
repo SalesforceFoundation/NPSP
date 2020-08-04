@@ -6,7 +6,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-#...             Enable RD2
+...             Enable RD2
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
