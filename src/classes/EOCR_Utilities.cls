@@ -10,12 +10,47 @@ public with sharing class EOCR_Utilities {
 
     public class EinsteinAuthException extends Exception {}
 
-    public static void analyzeText() {
+    public static void analyzeGift() {
         String giftName = 'Scanned Gift-00001';
         String base64ImageContent = getBase64ImageContent(giftName);
-
         system.debug('base64ImageContent = ' + base64ImageContent);
 
+        analyzeText(base64ImageContent);
+    }
+
+    public static void analyzeText(String base64ImageContent) {
+        String model = 'OCRModel';
+        String task = 'text';
+
+        makeRequest(model, task, base64ImageContent);
+    }
+
+    public static void makeRequest(String model, String task, String base64ImageContent) {
+        // get token
+        String accessToken = getAccessToken();
+
+        // create request
+        HttpRequest request = new HttpRequest();
+
+        // set the headers
+        request.setHeader('Authorization', 'Bearer ' + accessToken);
+        request.setHeader('Content-Type', 'application/json');
+        request.setHeader('Cache-Control', 'no-cache');
+        
+        // set the url
+        request.setTimeout(REQUEST_TIMEOUT);
+        request.setMethod('POST');
+        request.setEndpoint(OCR_URL);
+
+        // set the body
+        RequestBody bodyObject = new RequestBody(model, task, base64ImageContent);
+        String body = bodyObject.getAsJson();
+        request.setBody(body);
+        
+        // send the request
+        Http http = new Http();
+        HTTPResponse response = http.send(request);
+        System.debug('response = ' + response.getBody());
     }
 
     // gets the base 64 encoded image 
@@ -43,53 +78,7 @@ public with sharing class EOCR_Utilities {
         return null;
     }
 
-    public static void connect() {
-        String accessToken = getAccessToken();
-
-        HttpRequest request = new HttpRequest();
-
-        // set the headers
-        request.setHeader('Authorization', 'Bearer ' + accessToken);
-        request.setHeader('Content-Type', 'application/json');
-        request.setHeader('Cache-Control', 'no-cache');
-        
-        // set the url
-        request.setTimeout(REQUEST_TIMEOUT);
-        request.setMethod('POST');
-        request.setEndpoint(OCR_URL);
-
-        // get the files
-        // List<Einstein_OCR_Gift__c> gifts = [SELECT Id FROM Einstein_OCR_Gift__c LIMIT 1];
-        // List<ContentDocument> files = [SELECT Description FROM ContentDocument
-        //                                   WHERE ParentId =: gifts[0].Id];
-
-        ContentDocumentLink cdl = [Select ContentDocumentId 
-                                  From ContentDocumentLink where 
-                                  LinkedEntityId = 'a0r1g000001qXR8AAM'];
-
-        ContentVersion cv = [select VersionData 
-                            From ContentVersion 
-                            where ContentDocumentId = '0691g000000jciYAAQ'];
-
-        String base64 = EncodingUtil.base64Encode(cv.VersionData);
-
-        system.debug('base64 = ' + base64);
-
-        // set the body
-        RequestBody bodyObject = new RequestBody('OCRModel',
-                                      'text', 
-                                      base64);
-        String body = bodyObject.getAsJson();
-        request.setBody(body);
-        
-        // send the request
-        Http http = new Http();
-        HTTPResponse response = http.send(request);
-        System.debug('response = ' + response.getBody());
-
-
-    }
-
+    
     // gets the access token for Einstein OCR
     public static String getAccessToken() { 
         EOCR_JWT jwt = new EOCR_JWT(ALGORITHM, VALID_FOR_SECONDS);
