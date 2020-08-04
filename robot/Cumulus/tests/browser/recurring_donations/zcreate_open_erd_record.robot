@@ -3,14 +3,14 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/ContactPageObject.py
-...             robot/Cumulus/resources/RecurringDonationsPageObject.py
+...             robot/Cumulus/resources/RecurringDonationsPageObject.pyS
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable RD2
-Suite Teardown  Delete Records and Close Browser
+#...             Enable RD2
+#Suite Teardown  Delete Records and Close Browser
 
 
 ***Keywords***
@@ -56,6 +56,7 @@ Create Open Recurring Donation With Monthly Installment
     ...                                   Donor Type=Account
     ...                                   Account=${data}[account][Name]
     ...                                   Amount= ${amount}
+    ...                                   Recurring Donation Name=Automation RD
     ...                                   Payment Method=Credit Card
     ...                                   Day of Month=${day_of_month}
     Click Rd2 Modal Button                Save

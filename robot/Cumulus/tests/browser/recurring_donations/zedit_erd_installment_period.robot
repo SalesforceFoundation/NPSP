@@ -6,22 +6,24 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable RD2
+#...             Enable RD2
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
 Setup Test Data
+        ${ns} =             Get NPSP Namespace Prefix
+        Set Suite Variable  ${ns}
         #Create a Recurring Donation type Open and installment period Monthly Associated To a contact using API
         &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
         &{recurringdonation_fields} =	Create Dictionary           Name=ERD Open Recurring Donation
         ...                                                         npe03__Installment_Period__c=Monthly
         ...                                                         npe03__Amount__c=100
         ...                                                         npe03__Open_Ended_Status__c=Open
-        ...                                                         Status__c=Active
-        ...                                                         Day_of_Month__c=2
-        ...                                                         InstallmentFrequency__c=1
-        ...                                                         PaymentMethod__c=Credit Card
+        ...                                                         ${ns}Status__c=Active
+        ...                                                         ${ns}Day_of_Month__c=2
+        ...                                                         ${ns}InstallmentFrequency__c=1
+        ...                                                         ${ns}PaymentMethod__c=Credit Card
 
         Setupdata   contact         ${contact1_fields}             recurringdonation_data=${recurringdonation_fields}
 

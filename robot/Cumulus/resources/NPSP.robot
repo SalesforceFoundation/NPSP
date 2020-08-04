@@ -59,10 +59,11 @@ API Modify Recurring Donation
     ...              | Recurring Donation ID   |
 
     [Arguments]             ${rd_id}      &{fields}
+    ${ns} =                 Get NPSP Namespace Prefix
     Salesforce Update       npe03__Recurring_Donation__c     ${rd_id}
     ...                     &{fields}
     @{records} =  Salesforce Query      npe03__Recurring_Donation__c
-    ...              select=StartDate__c,npe03__Amount__c
+    ...              select=${ns}StartDate__c,npe03__Amount__c
     ...              Id=${rd_id}
     &{rd} =          Get From List  ${records}  0
     [return]         &{rd}
@@ -430,10 +431,8 @@ Enable RD2QA
 
 Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
-    Go To Page                Custom         NPSP_Settings
-    Open Main Menu            Recurring Donations
-    ${rd2_enabled} =          Check Rd2 Is Enabled
-    Run Keyword if            "${rd2_enabled}"!="True"
+    ${ns} =                   Get NPSP Namespace Prefix
+    Run Keyword if            "${ns}"!="npsp__"
     ...                       Enable RD2QA
 
 Run Recurring Donations Batch
