@@ -8,9 +8,40 @@ public with sharing class EOCR_Utilities {
     public static final string ISSUER = 'developer.force.com';
     public static final Integer REQUEST_TIMEOUT = 30000;
 
-    public static final String GIFT_ID = 'a0r1g000001qXR8AAM';
-
     public class EinsteinAuthException extends Exception {}
+
+    public static void analyzeText() {
+        String giftName = 'Scanned Gift-00001';
+        String base64ImageContent = getBase64ImageContent(giftName);
+
+        system.debug('base64ImageContent = ' + base64ImageContent);
+
+    }
+
+    // gets the base 64 encoded image 
+    public static String getBase64ImageContent(String giftName) {
+        // get the gift record
+        List<Einstein_OCR_Gift__c> gifts = [SELECT Id, Name
+                                            FROM Einstein_OCR_Gift__c
+                                            WHERE Name = :giftName];
+
+        if (!gifts.isEmpty()) {
+            // get the content document link
+            ContentDocumentLink cdl = [SELECT ContentDocumentId 
+                                       FROM ContentDocumentLink 
+                                       WHERE LinkedEntityId = :gifts[0].Id];
+
+            // get the content file (version)
+            ContentVersion cv = [SELECT VersionData 
+                                 FROM ContentVersion 
+                                 WHERE ContentDocumentId = :cdl.ContentDocumentId];
+
+            String base64ImageContent = EncodingUtil.base64Encode(cv.VersionData);
+            return base64ImageContent;
+        }
+
+        return null;
+    }
 
     public static void connect() {
         String accessToken = getAccessToken();
@@ -45,7 +76,6 @@ public with sharing class EOCR_Utilities {
         system.debug('base64 = ' + base64);
 
         // set the body
-        String fileName = '@/Users/vmartinov/Desktop/checks/check1.jpeg';
         RequestBody bodyObject = new RequestBody('OCRModel',
                                       'text', 
                                       base64);
@@ -60,7 +90,7 @@ public with sharing class EOCR_Utilities {
 
     }
 
-    //@AuraEnabled
+    // gets the access token for Einstein OCR
     public static String getAccessToken() { 
         EOCR_JWT jwt = new EOCR_JWT(ALGORITHM, VALID_FOR_SECONDS);
 
@@ -82,6 +112,7 @@ public with sharing class EOCR_Utilities {
         return accessToken;
     }
 
+    // the body for the request
     public class RequestBody {
         public String modelId;
         public String task;
