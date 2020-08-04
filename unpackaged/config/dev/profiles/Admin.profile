@@ -107,6 +107,10 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
+        <tab>EOCR_Gift_Entry</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
         <tab>Engagement_Plan_Template__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>

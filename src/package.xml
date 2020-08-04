@@ -3587,6 +3587,7 @@
         <members>Contact_Merge</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
+        <members>EOCR_Gift_Entry</members>
         <members>Engagement_Plan_Template__c</members>
         <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
@@ -3721,6 +3722,7 @@
         <members>bdiObjectMappings</members>
         <members>customDatatable</members>
         <members>customPicklistType</members>
+        <members>eocrGiftEntry</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
         <members>geBatchGiftEntryHeader</members>
