@@ -13,11 +13,11 @@
     AccountId:
     - object: Account
       fields:
-        name: Account <<id>> - 1
+        Name: Account <<id>> - 1
 
 - macro: OpportunityStuff
   fields:
-    name: Opportunity <<count>>
+    Name: Opportunity <<count>>
     AccountId: <<((count-1) % Account.id)+1>>
 
     CloseDate:

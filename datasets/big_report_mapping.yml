@@ -2,7 +2,7 @@ Insert Account:
   sf_object: Account
   table: Account
   fields:
-    name: name
+    Name: Name
   record_type: HH_Account
 Insert Contact:
   sf_object: Contact
@@ -27,7 +27,7 @@ Insert Opportunity:
   sf_object: Opportunity
   table: Opportunity
   fields:
-    name: name
+    Name: Name
     AccountId: AccountId
     CloseDate: CloseDate
     StageName: StageName
