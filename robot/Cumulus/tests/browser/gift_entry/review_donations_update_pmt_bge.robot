@@ -83,6 +83,7 @@ Review Donation And Update Payment For Batch Gift
     # check if this date should be updated or not, noticing update when tested
     ...                                  CloseDate=${CUR_DATE}
     ...                                  StageName=Prospecting
+    ...                                  npe01__Amount_Outstanding__c=0.5
     Verify Expected Values               nonns                          npe01__OppPayment__c    ${PAYMENT}[Id]
     ...                                  npe01__Payment_Amount__c=499.5
     ...                                  npe01__Payment_Date__c=${CUR_DATE}
