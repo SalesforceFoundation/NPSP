@@ -462,8 +462,9 @@ Enable Gift Entry
     Enable Gift Entry If Not Enabled    
 
 API Query Record
+    [Documentation]    Queries the given object table by using key,value pair passed and returns the entire record
     [Arguments]        ${object_name}             &{fields}
-    @{object} =        Salesforce Query           ${object_name}
+    @{records} =       Salesforce Query           ${object_name}
     ...                select=Id
     ...                &{fields}
     &{Id} =            Get From List  ${records}  0
