@@ -72,6 +72,7 @@ Review Donation And Update Payment For Batch Gift
     ...                                  Donation Amount=$499.50
     ...                                  Donation Name=${PAYMENT}[Name]
     ...                                  Donation Date=${UI_DATE}
+    Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
     Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
     Wait For Batch To Process            BDI_DataImport_BATCH            Completed
