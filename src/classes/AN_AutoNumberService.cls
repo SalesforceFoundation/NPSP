@@ -88,8 +88,7 @@ public class AN_AutoNumberService {
      * @description Deactivates the AutoNumber record associated with the passed in Id.
      */
     public void deactivate(String autoNumberId) {
-        AutoNumber__c a = new AutoNumber__c(Id = autoNumberId, IsActive__c = false);
-        update a;
+        update new AutoNumber__c(Id = autoNumberId, IsActive__c = false);
     }
 
     /**
@@ -98,8 +97,7 @@ public class AN_AutoNumberService {
      * value pairs of fieldApiName to fieldValue for fields on the AutoNumber__c object.
      */
     public AutoNumber__c save(String autoNumberJSON) {
-        AutoNumber an = new AutoNumber(autoNumberJSON, this);
-        return an.save();
+        return new AutoNumber(autoNumberJSON, this).save();
     }
 
     /**
