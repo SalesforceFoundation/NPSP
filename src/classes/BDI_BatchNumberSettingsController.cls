@@ -37,8 +37,9 @@
 */
 public class BDI_BatchNumberSettingsController {
 
+    static SObjectType sObjType = DataImportBatch__c.SObjectType;
     static AN_AutoNumberService autoNumberService =
-            new AN_AutoNumberService(DataImportBatch__c.SObjectType);
+            new AN_AutoNumberService(sObjType);
 
     @AuraEnabled
     public static Boolean isSysAdmin() {
@@ -66,7 +67,7 @@ public class BDI_BatchNumberSettingsController {
 
     @AuraEnabled
     public static List<AutoNumber__c> getAutoNumbers() {
-        return autoNumberService.getAutoNumbers(DataImportBatch__c.SObjectType);
+        return autoNumberService.getAutoNumbers(sObjType);
     }
 
     /**
