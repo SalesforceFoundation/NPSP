@@ -14,8 +14,8 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
-     ${ns} =             Get NPSP Namespace Prefix
-     Set Suite Variable  ${ns}
+     ${NS} =             Get NPSP Namespace Prefix
+     Set Suite Variable  ${NS}
      ${EFFECTIVE_DATE_INITIAL} =           Get Current Date      result_format=%-m/%-d/%Y
      ${DATE}=                              Get current date      result_format=%Y-%m-%d %H:%M:%S.%f      increment=30 days
      ${DATE_TO_UPDATE} =                   Convert Date          ${DATE}                                 result_format=%Y-%m-%d
@@ -36,10 +36,10 @@ Setup Test Data
      ...                                                         npe03__Installment_Period__c=Monthly
      ...                                                         npe03__Amount__c=100
      ...                                                         npe03__Open_Ended_Status__c=${TYPE}
-     ...                                                         ${ns}Status__c=Active
-     ...                                                         ${ns}Day_of_Month__c=${DAY_OF_MONTH}
-     ...                                                         ${ns}InstallmentFrequency__c=${FREQUENCY}
-     ...                                                         ${ns}PaymentMethod__c=${METHOD}
+     ...                                                         ${NS}Status__c=Active
+     ...                                                         ${NS}Day_of_Month__c=${DAY_OF_MONTH}
+     ...                                                         ${NS}InstallmentFrequency__c=${FREQUENCY}
+     ...                                                         ${NS}PaymentMethod__c=${METHOD}
 
      Setupdata   contact             ${contact1_fields}          recurringdonation_data=${recurringdonation_fields}
 
