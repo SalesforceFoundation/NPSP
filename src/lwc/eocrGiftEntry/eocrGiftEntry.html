@@ -1,4 +1,24 @@
 <template>
-    <h1>Welcome to Gift Entry!</h1>
+    <lightning-layout multiple-rows='true'
+                        class='ge-form-container slds-p-bottom_medium'>
+
+            <lightning-layout-item size='12'>
+                <c-util-page-header title='Welcome to Gift Entry!'>
+                </c-util-page-header>
+            </lightning-layout-item>
+
+    </lightning-layout>
+
+    <lightning-card title="Let's Enter Some Gifts">
+        
+        <lightning-button label='Add New Gifts'
+                        title='Add New Gifts'
+                        variant='brand'>
+                        <!-- onclick={navigateToForm}> -->
+        </lightning-button>
+    </lightning-card>
+
     
+   
+
 </template>
