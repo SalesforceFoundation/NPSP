@@ -41,7 +41,7 @@
 */
 public class AN_AutoNumberService {
     SObjectType sObjType;
-    List<SObject> records;
+    List<SObject> recordsToBeAutoNumbered;
     public class AutoNumberException extends Exception {}
 
     /**
@@ -60,7 +60,7 @@ public class AN_AutoNumberService {
      * this will be newList passed in in AfterInsert context by TDTM.
      */
     public AN_AutoNumberService(List<SObject> records) {
-        this.records = records;
+        this.recordsToBeAutoNumbered = records;
         this.sObjType = records.isEmpty() ? null : records[0].getSObjectType();
     }
 
@@ -112,7 +112,7 @@ public class AN_AutoNumberService {
 
         List<SObject> sObjectsToUpdate = new List<SObject>();
         Integer nextAutoNumberInSequence = an.nextAutoNumber;
-        for (SObject record : records) {
+        for (SObject record : recordsToBeAutoNumbered) {
             SObject clone = record.clone(true);
             clone.put(an.sObjField, an.getFormattedNumber(nextAutoNumberInSequence));
             sObjectsToUpdate.add(clone);
