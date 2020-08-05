@@ -362,19 +362,35 @@ public class AN_AutoNumberService {
             }
         }
 
+        /**
+         * @description Valid JSON representation of an AutoNumber record that
+         * uses the passed in sObjectName and fieldName as the Object and Field
+         * API Name values.  Used for setting up AutoNumberService tests.
+         */
         private String getAutoNumberJSON(String sObjectName, String fieldName) {
-            return '{"fields":{"' + String.valueOf(AutoNumber__c.fields.Object_API_Name__c) +
-                    '":"' + sObjectName
-                    + '","' + String.valueOf(AutoNumber__c.fields.Field_API_Name__c) +
-                    '":"' + fieldName
-                    + '","' + String.valueOf(AutoNumber__c.fields.Display_Format__c) +
-                    '":"abc-{000}","' +
-                    String.valueOf(AutoNumber__c.fields.Starting_Number__c) +
-                    '":100,"' +
-                    String.valueOf(AutoNumber__c.fields.Max_Used_Number__c) +
-                    '":105,"' +
-                    String.valueOf(AutoNumber__c.fields.IsActive__c) +
-                    '":false}}';
+            String displayFormat = 'abc-{000}';
+            Integer startingNumber = 100;
+
+            JSONGenerator gen = JSON.createGenerator(false);
+            gen.writeStartObject();
+            gen.writeFieldName('fields');
+            gen.writeStartObject();
+            gen.writeStringField(
+                    String.valueOf(AutoNumber__c.Object_API_Name__c),
+                    sObjectName);
+            gen.writeStringField(
+                    String.valueOf(AutoNumber__c.Field_API_Name__c),
+                    fieldName);
+            gen.writeStringField(
+                    String.valueOf(AutoNumber__c.Display_Format__c),
+                    displayFormat);
+            gen.writeStringField(
+                    String.valueOf(AutoNumber__c.Starting_Number__c),
+                    String.valueOf(startingNumber));
+            gen.writeEndObject();
+            gen.writeEndObject();
+
+            return gen.getAsString();
         }
 
         /**
