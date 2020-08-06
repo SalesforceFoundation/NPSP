@@ -139,6 +139,7 @@ public class UTIL_Describe {
             fieldTokens.put(objectName, objectDescribes.get(objectName).fields.getMap());
             fieldDescribes.put(objectName, new Map<String, Schema.DescribeFieldResult>());
         }
+        System.debug('DIEGO fieldDescribes ->' + fieldDescribes);
         if (!fieldDescribes.get(objectName).containsKey(fieldName)) {
             if (fieldTokens.get(objectName).containsKey(fieldName)) {
                 Schema.DescribeFieldResult dfr = fieldTokens.get(objectName).get(fieldName).getDescribe();
@@ -456,7 +457,8 @@ public class UTIL_Describe {
         try {
             objectName = objectName.toLowerCase();
             fieldName = fieldName.toLowerCase();
-
+            System.debug('Diego objectName -> ' + objectName);
+            System.debug('Diego fieldName -> ' + fieldName);
             if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
                 fillFieldMapsForObject(objectName, fieldName);
 
