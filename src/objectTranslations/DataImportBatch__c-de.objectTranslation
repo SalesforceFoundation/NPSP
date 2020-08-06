@@ -197,7 +197,7 @@
     </fields>
     <fields>
         <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Schenkungen und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
-        <label>Übereinst. d. erw. Gesamtbeträge erford.</label>
+        <label>Übereinstimmung der Summen erforderlich</label>
         <name>RequireTotalMatch__c</name>
     </fields>
     <fields>

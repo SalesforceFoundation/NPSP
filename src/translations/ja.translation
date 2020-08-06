@@ -2973,7 +2973,7 @@
         <name>geBatchGiftsTotal</name>
     </customLabels>
     <customLabels>
-        <label>他の高度なギフトエントリオプションについては、次のオブジェクトグループから項目を選択してください。</label>
+        <label>他の高度な支援エントリオプションについては、次のオブジェクトグループから項目を選択してください。</label>
         <name>geBodyAdvancedFieldMapping</name>
     </customLabels>
     <customLabels>
@@ -2997,7 +2997,7 @@
         <name>geBodyBatchHeaderWarning</name>
     </customLabels>
     <customLabels>
-        <label>バッチテーブルがギフトエントリフォームの下に表示され、バッチに含まれるギフトの一覧が表示されます。</label>
+        <label>バッチテーブルが支援エントリフォームの下に表示され、バッチに含まれるギフトの一覧が表示されます。</label>
         <name>geBodyBatchTableColumnsPart1</name>
     </customLabels>
     <customLabels>
@@ -3017,11 +3017,11 @@
         <name>geBodyEmptyFormSection</name>
     </customLabels>
     <customLabels>
-        <label>各項目バンドルは、さまざまなギフトエントリアクションをユーザが実行できるようにする管理された項目セットです。</label>
+        <label>各項目バンドルは、さまざまな支援エントリアクションをユーザが実行できるようにする管理された項目セットです。</label>
         <name>geBodyFieldBundlesLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>通常、これらの項目はギフトエントリフォームに含まれます。カスタムオブジェクトグループもこのセクションにあります。</label>
+        <label>通常、これらの項目は支援エントリフォームに含まれます。カスタムオブジェクトグループもこのセクションにあります。</label>
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3298,7 +3298,7 @@
         <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label>カードが課金されていない場合、ギフトエントリでギフトとカード支払を再入力してください。</label>
+        <label>カードが課金されていない場合、支援エントリでギフトとカード支払を再入力してください。</label>
         <name>geErrorUncertainCardChargePart2</name>
     </customLabels>
     <customLabels>

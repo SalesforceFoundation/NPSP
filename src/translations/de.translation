@@ -2468,7 +2468,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeGridTotalCount</name>
     </customLabels>
     <customLabels>
-        <label>&quot;Übereinst. d. erw. Gesamtbeträge erford.&quot; ist ausgewählt, aber die Felder &quot;Erwartete Anzahl an Schenkungen&quot; und &quot;Erwarteter Batch-Betrag insgesamt&quot; sind leer. Bearbeiten Sie die Batch-Details und deaktivieren Sie entweder &quot;Übereinst. d. erw. Gesamtbeträge erford.&quot; oder geben Sie Werte in die verbundenen Felder ein.</label>
+        <label>&quot;Übereinstimmung der Summen erforderlich&quot; ist ausgewählt, aber die Felder &quot;Erwartete Anzahl an Schenkungen&quot; und &quot;Erwarteter Batch-Betrag insgesamt&quot; sind leer. Bearbeiten Sie die Batch-Details und deaktivieren Sie entweder &quot;Übereinstimmung der Summen erforderlich&quot; oder geben Sie Werte in die verbundenen Felder ein.</label>
         <name>bgeGridWarningRequiredTotalsExpected</name>
     </customLabels>
     <customLabels>

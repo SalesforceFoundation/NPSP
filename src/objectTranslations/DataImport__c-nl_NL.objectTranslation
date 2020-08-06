@@ -336,7 +336,7 @@
     </fields>
     <fields>
         <help>Specificeert of de donatie een individuele donatie is van Contact1, of een organisatiedonatie is van Account1.</help>
-        <label>Donatiedonor</label>
+        <label>Donateur donatie</label>
         <name>Donation_Donor__c</name>
         <picklistValues>
             <masterLabel>Account1</masterLabel>

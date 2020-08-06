@@ -119,7 +119,7 @@
     </fields>
     <fields>
         <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
-        <label>Verwachte telling van giften</label>
+        <label>Verwachte aantal giften</label>
         <name>Expected_Count_of_Gifts__c</name>
     </fields>
     <fields>

@@ -1875,7 +1875,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
-        <label>Ongeldige Donatiedonor</label>
+        <label>Ongeldige Donateur Donatie</label>
         <name>bdiErrorInvalidDonor</name>
     </customLabels>
     <customLabels>
@@ -2463,7 +2463,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bgeGridTotalCount</name>
     </customLabels>
     <customLabels>
-        <label>Overeenkomst Verwachte Totalen Vereisen is aangevinkt, maar de velden Verwachte Telling van Giften en Verwachte Totale Batchgedrag zijn blanco. Bewerk de batchgegevens en neem het vinkje bij Overeenkomst Verwachte Totalen Vereisen weg of geef waarden op in de gerelateerde velden.</label>
+        <label>Overeenkomst Verwachte Totalen Vereisen is aangevinkt, maar de velden Verwachte aantal giften en Verwachte Totale Batchgedrag zijn blanco. Bewerk de batchgegevens en neem het vinkje bij Overeenkomst Verwachte Totalen Vereisen weg of geef waarden op in de gerelateerde velden.</label>
         <name>bgeGridWarningRequiredTotalsExpected</name>
     </customLabels>
     <customLabels>

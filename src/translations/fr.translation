@@ -2998,7 +2998,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>geBodyBatchHeaderWarning</name>
     </customLabels>
     <customLabels>
-        <label>Le tableau des lots s’affiche sous votre formulaire de saisie de dons et répertorie les dons inclus dans le lot.</label>
+        <label>Le tableau du lot est affiché sous forme de formulaire de saisie de dons et répertorie les dons inclus dans le lot.</label>
         <name>geBodyBatchTableColumnsPart1</name>
     </customLabels>
     <customLabels>
@@ -3006,9 +3006,9 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         Nous vous recommandons d’inclure les champs suivants :
         &lt;/br&gt;
         &lt;ul&gt;
-            &lt;li&gt; Nom du donateur—liens vers le compte ou le contact de l’organisation effectuant le don. &lt;/li&gt;
-            &lt;li&gt; Nom du don—liens vers l’opportunité ou le paiement du don. &lt;/li&gt;
-            &lt;li&gt; Informations sur l’état et l’échec—informations sur le traitement du lot. &lt;/li&gt;
+            &lt;li&gt; Nom du donateur : liens vers le compte ou le contact de l’organisation effectuant le don. &lt;/li&gt;
+            &lt;li&gt; Nom du don : liens vers l’opportunité ou le paiement du don. &lt;/li&gt;
+            &lt;li&gt; Informations sur l’état et l’échec : informations sur le traitement du lot. &lt;/li&gt;
         &lt;/ul&gt;
         </label>
         <name>geBodyBatchTableColumnsPart2</name>
@@ -3239,7 +3239,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geErrorExistingTemplateName</name>
     </customLabels>
     <customLabels>
-        <label>Vous ne pouvez pas modifier vos Colonnes de tableau par lots.</label>
+        <label>Vous ne pouvez pas modifier vos Colonnes du tableau du lot.</label>
         <name>geErrorFLSBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3355,7 +3355,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geHeaderFormFieldsDefaultSectionName</name>
     </customLabels>
     <customLabels>
-        <label>Champs de formulaire et paquets de champs</label>
+        <label>Champs du formulaire et paquets de champs</label>
         <name>geHeaderFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3533,7 +3533,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geSearchPlaceholder</name>
     </customLabels>
     <customLabels>
-        <label>Sélectionner des colonnes de tableau par lots</label>
+        <label>Sélectionner des colonnes du tableau du lot</label>
         <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3549,11 +3549,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geTabBatchSettings</name>
     </customLabels>
     <customLabels>
-        <label>Colonnes de tableau par lots</label>
+        <label>Colonnes du tableau du lot</label>
         <name>geTabBatchTableColumns</name>
     </customLabels>
     <customLabels>
-        <label>Champs de formulaire</label>
+        <label>Champs du formulaire</label>
         <name>geTabFormFields</name>
     </customLabels>
     <customLabels>
