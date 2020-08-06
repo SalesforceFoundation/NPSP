@@ -8,12 +8,14 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/AccountPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-...             Enable Gift Entry
+...             API Check And Enable Gift Entry
 ...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
+    [Documentation]      Creates the organiation account,opportunity and queries the payment record required for the test
+    ...                  along with getting dates and namespace required for test.
     &{account} =         API Create Organization Account    Name=${faker.company()}
     Set suite variable   &{ACCOUNT}
     ${fut_date} =            Get Current Date         result_format=%Y-%m-%d    increment=2 days
@@ -80,7 +82,7 @@ Review Donation And Update Payment For Batch Gift
     #verify same payment record is updated and paid but opportunity values did not change
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=500.0
-    # check if this date should be updated or not, noticing update when tested
+    #*** As per PM this date should not be updated, raised W-7921235 for this issue ***
     ...                                  CloseDate=${CUR_DATE}
     ...                                  StageName=Prospecting
     ...                                  npe01__Amount_Outstanding__c=0.5

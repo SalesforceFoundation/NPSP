@@ -470,3 +470,16 @@ API Query Record
     &{Id} =            Get From List  ${records}  0
     &{myrecord} =      Salesforce Get  ${object_name}  ${Id}[Id]
     [return]           &{myrecord}
+
+API Check And Enable Gift Entry
+    [Documentation]    Checks through API if Advanced Mapping and Gift Entry are already enabled. If yes then does nothing.
+    ...                If either of them are not enabled then calls the Enable Gift Entry keyword to enable them
+    @{records} =       Salesforce Query           Data_Import_Settings__c
+    ...                select=Field_Mapping_Method__c    
+    &{am} =            Get From List  ${records}  0
+    @{records} =       Salesforce Query           Gift_Entry_Settings__c
+    ...                select=Enable_Gift_Entry__c   
+    &{ge} =            Get From List  ${records}  0
+    Run Keyword if     '${am}[Field_Mapping_Method__c]'!='Data Import Field Mapping' or '${ge}[Enable_Gift_Entry__c]'!='True'
+    ...                Enable Gift Entry
+
