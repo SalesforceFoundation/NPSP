@@ -248,6 +248,32 @@ public class BDI_Donations {
     }
 
     /*******************************************************************************************************
+    * @description Determine if the data import batch number should be set on the opportunity or payment
+    * @param targetObject The opportunity or payment SObject record
+    * @return Boolean Whether or not the DI batch number should be set on opportunities or payments
+    */
+    private Boolean shouldSetDonationBatchNumber(SObject targetObject) {
+        SObjectType objectType = targetObject.getSObjectType();
+
+        if (objectType == Opportunity.SObjectType) {
+            return targetObject.get(Opportunity.Id) == null;
+        } else if (objectType == npe01__OppPayment__c.SObjectType) {
+            return targetObject.get(npe01__OppPayment__c.npe01__Paid__c) == true;
+        }
+        return false;
+    }
+
+    /*******************************************************************************************************
+    * @description Sets the batch number onto the target SObject record
+    * @param targetObject The opportunity or payment SObject record
+     * @param field The target field to populate
+     * @param value The target value to set in the target field
+    */
+    private void setBatchNumber(SObject targetObject, SObjectField field, String value) {
+        targetObject.put(field, value);
+    }
+
+    /*******************************************************************************************************
     * @description validate bdi records for donations and return those to process
     * @param matchBehavior The match behavior to validate against
     * @return List<DataImport__c> The list of BDI records that have donations to process
