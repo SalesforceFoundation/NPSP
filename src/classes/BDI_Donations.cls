@@ -185,6 +185,10 @@ public class BDI_Donations {
                         continue;
                     }
 
+//                    if (shouldSetDonationBatchNumber(opp)) {
+//                        setBatchNumber(opp, Opportunity.Batch_Number__c, 'batch-1234');
+//                    }
+
                     if (opp.Id == null) {
                         opportunitiesToInsert.add(opp);
                         dataImportsToInsert.add(dataImport);
@@ -245,6 +249,32 @@ public class BDI_Donations {
         
         // update payments with any data from the DI record
         updatePayments(dataImportDonations);
+    }
+
+    /*******************************************************************************************************
+    * @description Determine if the data import batch number should be set on the opportunity or payment
+    * @param targetObject The opportunity or payment SObject record
+    * @return Boolean Whether or not the DI batch number should be set on opportunities or payments
+    */
+    private Boolean shouldSetDonationBatchNumber(SObject targetObject) {
+        SObjectType objectType = targetObject.getSObjectType();
+
+        if (objectType == Opportunity.SObjectType) {
+            return targetObject.get(Opportunity.Id) == null;
+        } else if (objectType == npe01__OppPayment__c.SObjectType) {
+            return targetObject.get(npe01__OppPayment__c.npe01__Paid__c) == true;
+        }
+        return false;
+    }
+
+    /*******************************************************************************************************
+    * @description Sets the batch number onto the target SObject record
+    * @param targetObject The opportunity or payment SObject record
+     * @param field The target field to populate
+     * @param value The target value to set in the target field
+    */
+    private void setBatchNumber(SObject targetObject, SObjectField field, String value) {
+        targetObject.put(field, value);
     }
 
     /*******************************************************************************************************
@@ -644,6 +674,10 @@ public class BDI_Donations {
                     || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
+//                    if (shouldSetDonationBatchNumber(payment)) {
+//                        setBatchNumber(payment, npe01__OppPayment__c., 'batch-1234');
+//                    }
+
                     Integer numberOfCopiedFields = 0;
                     for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
                         if (BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
