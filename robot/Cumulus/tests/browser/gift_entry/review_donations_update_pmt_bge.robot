@@ -16,24 +16,24 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 Setup Test Data
     [Documentation]      Creates the organiation account,opportunity and queries the payment record required for the test
     ...                  along with getting dates and namespace required for test.
-    &{account} =         API Create Organization Account    Name=${faker.company()}
+    &{ACCOUNT} =         API Create Organization Account    Name=${faker.company()}
     Set suite variable   &{ACCOUNT}
-    ${fut_date} =            Get Current Date         result_format=%Y-%m-%d    increment=2 days
+    ${FUT_DATE} =            Get Current Date         result_format=%Y-%m-%d    increment=2 days
     Set suite variable   ${FUT_DATE}
-    ${cur_date} =            Get Current Date         result_format=%Y-%m-%d    
+    ${CUR_DATE} =            Get Current Date         result_format=%Y-%m-%d    
     Set suite variable   ${CUR_DATE}
-    &{opportunity} =     API Create Opportunity   ${ACCOUNT}[Id]              Donation  
+    &{OPPORTUNITY} =     API Create Opportunity   ${ACCOUNT}[Id]              Donation  
     ...                  StageName=Prospecting    
     ...                  Amount=500    
     ...                  CloseDate=${FUT_DATE}    
     ...                  npe01__Do_Not_Automatically_Create_Payment__c=false    
     ...                  Name=${ACCOUNT}[Name] Donation
     Set suite variable   &{OPPORTUNITY}
-    ${ui_date} =         Get Current Date                   result_format=%b %-d, %Y
+    ${UI_DATE} =         Get Current Date                   result_format=%b %-d, %Y
     Set suite variable   ${UI_DATE}
-    &{payment} =         API Query Record         npe01__OppPayment__c      npe01__Opportunity__c=${OPPORTUNITY}[Id]
+    &{PAYMENT} =         API Query Record         npe01__OppPayment__c      npe01__Opportunity__c=${OPPORTUNITY}[Id]
     Set suite variable   &{PAYMENT}
-    ${ns} =              Get NPSP Namespace Prefix
+    ${NS} =              Get NPSP Namespace Prefix
     Set suite variable   ${NS}
 
 *** Test Cases ***
