@@ -74,13 +74,9 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <name>Batch_Status__c</name>
-        <help>Der Batch-Status basiert auf dem Importstatus der NPSP-Datenimport-Datensätze im Batch. Wenn das Importieren eines Datensatzes fehlschlägt, ist der Status des gesamten Batches "Fehler – Überprüfung erforderlich".</help>
+        <help>Der Batch-Status basiert auf dem Importstatus der NPSP-Datenimport-Datensätze im Batch. Wenn das Importieren eines Datensatzes fehlschlägt, ist der Status des gesamten Batches &quot;Fehler – Überprüfung erforderlich&quot;.</help>
         <label>Batch-Status</label>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Offen</translation>
-        </picklistValues>
+        <name>Batch_Status__c</name>
         <picklistValues>
             <masterLabel>Completed</masterLabel>
             <translation>Abgeschlossen</translation>
@@ -88,6 +84,10 @@
         <picklistValues>
             <masterLabel>Failed - Needs Review</masterLabel>
             <translation>Fehler – Überprüfung erforderlich</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Offen</translation>
         </picklistValues>
     </fields>
     <fields>
