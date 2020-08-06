@@ -26,16 +26,20 @@
     <template if:true={readyToEnter}>
         <lightning-card title="Enter Gift">
 
-            <!-- <lightning-file-upload onuploadfinished={handleUploadFinished}>
-           
-            </lightning-file-upload> -->
+            <lightning-file-upload
+                    label="Upload Check"
+                    name="check-uploader"
+                    accept={acceptedFormats}
+                    onuploadfinished={handleCheckUploadFinished}>
+            </lightning-file-upload>
 
             <div style="margin-top: 1.75rem; margin-left: 1.75rem;" >
                 <label for="check-upload" class="custom-file-upload">
                     Check Upload
                 </label>
                 <input type="file" accept="image/*" id="check-upload" 
-                                                    data-id="check-upload" 
+                                                    data-id="check-upload"
+                                                    onclick={clearFileUpload}
                                                     onchange={uploadCheck}>
             </div>
 
