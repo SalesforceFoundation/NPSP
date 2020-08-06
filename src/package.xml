@@ -1417,6 +1417,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__OppPayment__c.Authorized_Date__c</members>
         <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Batch_Number__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Month__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Year__c</members>
         <members>npe01__OppPayment__c.Card_Last_4__c</members>
