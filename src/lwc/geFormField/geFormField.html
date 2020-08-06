@@ -19,10 +19,12 @@
                 {fieldLabel}
             </label>
             <lightning-input-field
+                    data-id='inputComponent'
                     field-name={lookupFieldApiName}
                     onchange={handleValueChange}
                     required={required}
                     variant="label-hidden"
+                    class="help-text-hidden"
                     value={element.defaultValue}
                     data-qa-locator={qaLocatorLookup}
             ></lightning-input-field>
