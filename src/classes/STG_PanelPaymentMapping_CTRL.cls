@@ -117,7 +117,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             targetTokenMap.remove(s);
         }
 
-        if ((targettokenMap.size() < 75) && (targettokenMap.size() > 0)){
+        if (targettokenMap.size() > 0){
 
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);
             for (string s : targetTokenMap.keyset()){
