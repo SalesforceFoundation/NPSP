@@ -1276,6 +1276,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>
+        <members>Opportunity.Batch_Number__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
         <members>Opportunity.CommitmentId__c</members>
