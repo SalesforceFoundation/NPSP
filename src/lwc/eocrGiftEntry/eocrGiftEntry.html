@@ -26,20 +26,39 @@
     <template if:true={readyToEnter}>
         <lightning-card title="Enter Gift">
 
-            <lightning-file-upload
-                    label="Upload Check"
-                    name="check-uploader"
-                    accept={acceptedFormats}
-                    onuploadfinished={handleCheckUploadFinished}>
-            </lightning-file-upload>
+            <div style="margin-top: 1.75rem; margin-left: 1.75rem;" >
+                <lightning-file-upload
+                        label="Upload Check"
+                        name="check-uploader"
+                        accept={acceptedFormats}
+                        onuploadfinished={handleCheckUploadFinished}>
+                </lightning-file-upload>
+            </div>
 
             <div style="margin-top: 1.75rem; margin-left: 1.75rem;" >
+                <lightning-file-upload
+                        label="Upload Reply Device"
+                        name="device-uploader"
+                        accept={acceptedFormats}
+                        onuploadfinished={handleDeviceUploadFinished}>
+                </lightning-file-upload>
+            </div>
+
+            <div style="margin-top: 1.75rem; margin-left: 1.75rem;" >
+                <lightning-file-upload
+                        label="Upload Other"
+                        name="other-uploader"
+                        accept={acceptedFormats}
+                        onuploadfinished={handleOtherUploadFinished}>
+                </lightning-file-upload>
+            </div>
+
+            <!-- <div style="margin-top: 1.75rem; margin-left: 1.75rem;" >
                 <label for="check-upload" class="custom-file-upload">
                     Check Upload
                 </label>
                 <input type="file" accept="image/*" id="check-upload" 
                                                     data-id="check-upload"
-                                                    onclick={clearFileUpload}
                                                     onchange={uploadCheck}>
             </div>
 
@@ -59,7 +78,7 @@
                 <input type="file" accept="image/*" id="other-upload"
                                                     data-id="other-upload" 
                                                     onchange={uploadOther}>
-            </div>
+            </div> -->
            
             <div style="margin-top: 3rem; margin-left: 1.75rem;">
                 <lightning-button-group>

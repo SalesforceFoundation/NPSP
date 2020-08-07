@@ -11,7 +11,7 @@ public with sharing class EOCR_Utilities {
     public class EinsteinAuthException extends Exception {}
 
     public static void analyzeGift() {
-        String giftName = 'Scanned Gift-00001';
+        String giftName = 'Scanned Gift-00003';
         String base64ImageContent = getBase64ImageContent(giftName);
         system.debug('base64ImageContent = ' + base64ImageContent);
 
