@@ -1587,7 +1587,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_special_button(self,title):
         """This keyword is similar to click button but uses set focus to button and javascript
         In the cases where javascript is being triggered on moving away from field, 
-        click button doesn't seem to work in headless mode"""
+        click button doesn't seem to work in headless mode, hence using actionchains moving focus out of field 
+        and clicking on screen before performing actual click for next element"""
+        actions = ActionChains(self.selenium.driver)
+        actions.move_by_offset(0, 20).click().perform()
         locator=npsp_lex_locators['button-with-text'].format(title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.scroll_element_into_view(locator)
