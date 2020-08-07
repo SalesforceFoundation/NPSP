@@ -429,7 +429,6 @@ Enable RD2QA
     Run Task       execute_anon
     ...            apex= ${apex3}
 
-
 API Query Recurrring Donation Settings For RD2 Enablement
     [Documentation]    Queries the Recurring Donation settings object for the RD2 Enabled status and returns the boolean status value
     ${ns} =            Get Npsp Namespace Prefix
