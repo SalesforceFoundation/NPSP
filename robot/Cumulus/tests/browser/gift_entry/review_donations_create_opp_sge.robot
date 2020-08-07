@@ -8,7 +8,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/AccountPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-...             Enable Gift Entry
+...             API Check And Enable Gift Entry
 ...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
