@@ -15,7 +15,7 @@ ${camp_id}
 *** Test Cases ***
 
 Create BGE Batch With Custom Fields
-    #Create a BGE batch with default values and selecting different types of custom fields for Donation and Payment
+    [Documentation]     Create a BGE batch with default values and selecting different types of custom fields for Donation and Payment
     [tags]  stable
     # --------------------------------
     # Create Batch With Custom Fields
@@ -27,7 +27,9 @@ Create BGE Batch With Custom Fields
     ...                       Name=${batch}
     ...                       Batch Description=This batch is created by Robot.
     Click BGE Button        Next
-    Select Multiple Values From Duellist    bge.duellist    Opportunity    Available Fields    new_lookup_campaign    custom_currency    custom_date    custom_number    custom_picklist    custom_text    custom_textarea    
+    Select Multiple Values From Duellist    bge.duellist    Opportunity    Available Fields
+    ...                                     new_lookup_campaign    custom_currency    custom_date
+    ...                                     custom_number    custom_picklist    custom_text    custom_textarea
     Click Duellist Button    Opportunity    Move selection to Selected Fields
     Execute JavaScript    document.getElementsByClassName('wideListbox slds-form-element')[1].scrollIntoView()
     Select Multiple Values From Duellist    bge.duellist    Payment    Available Fields    custom_email    custom_multipick    custom_phone    custom_url
@@ -36,7 +38,7 @@ Create BGE Batch With Custom Fields
     Click BGE Button        Next
     Click BGE Button        Save
     Wait For Locator    bge.title    Batch Gift Entry
-    Verify Title    Batch Gift Entry    ${batch}         
+    Verify Title    Batch Gift Entry    ${batch}
     ${ns} =  Get NPSP Namespace Prefix
     Set Global Variable     ${ns}       ${ns}
     Current Page Should Be    Details    DataImportBatch__c
@@ -71,7 +73,7 @@ Create New gift and process batch and validate
     ...    custom_phone=1234567890
     ...    custom_url=automation.com
     ...    custom_textarea=this is custom batch
-    Populate Campaign    Search Campaigns    ${campaign}[Name]    
+    Populate Campaign    Search Campaigns    ${campaign}[Name]
     Select Date From Datepicker    Donation Date    Today
     Select Date From Datepicker    custom_date    Today
     Select Value From BGE DD    custom_picklist    2
@@ -84,16 +86,15 @@ Create New gift and process batch and validate
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     Verify Row Count    1
-    
-    
+
 Verify Custom Fields on Payment and Donation
-    [tags]  stable 
-    ${date} =     Get Current Date    result_format=%Y-%m-%d       
+    [tags]  stable
+    ${date} =     Get Current Date    result_format=%Y-%m-%d
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
     Current Page Should Be    Details    npe01__OppPayment__c
-    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     ${org_ns} =  Get Org Namespace Prefix
     &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
@@ -115,5 +116,3 @@ Verify Custom Fields on Payment and Donation
     ...    ${org_ns}custom_picklist__c=2
     ...    ${org_ns}custom_textarea__c=this is custom batch
     ...    ${org_ns}custom_text__c=Robot
-    
-         

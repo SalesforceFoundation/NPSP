@@ -11,10 +11,11 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 BGE Batch With Custom Values
-    #Create a BGE batch with custom values (count/amount, new fields, new defaults, different settings)
+   [Documentation]  Create a BGE batch with custom values (count/amount, new fields, new defaults, different settings)
+   ...              and verify batch values via API
     [tags]  stable
     # --------------------------------
-    # Create Custom Batch 
+    # Create Custom Batch
     # --------------------------------
     ${batch} =           Generate Random String
     ${ns} =  Get NPSP Namespace Prefix
@@ -42,8 +43,8 @@ BGE Batch With Custom Values
     ${xpath}    Get NPSP Locator    bge.field-input    Batch Process Size
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Fill BGE Form
-    ...                       Batch Process Size=100 
-    ...                       Number of Days from Donation Date=2 
+    ...                       Batch Process Size=100
+    ...                       Number of Days from Donation Date=2
     ${xpath}    Get NPSP Locator    detail_page.section_header    Donation Matching
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Select Multiple Values From Duellist    bge.field-duellist    Donation Matching Rule    Selected Fields    Donation Date
@@ -74,6 +75,7 @@ BGE Batch With Custom Values
 
 ***Keywords***
 Click Field And Select Date
+    [Documentation]     Clicks on the field specified and selects specified month and date from datepicker
     [Arguments]    ${field}    ${month}    ${date}
     Click Element With Locator    bge.field-input    ${field}
     Click Element With Locator    bge.month    ${month}

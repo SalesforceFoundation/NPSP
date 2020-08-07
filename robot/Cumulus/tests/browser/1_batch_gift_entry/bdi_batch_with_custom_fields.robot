@@ -12,11 +12,12 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
+    [Documentation]       Generating names for accounts, contacts and setting up namespace prefix and date to use for test
     ${first_name1} =           Generate Random String
     Set suite variable    ${first_name1}
     ${last_name1} =            Generate Random String
     Set suite variable    ${last_name1}
-    ${acc1}=                   Generate Random String 
+    ${acc1}=                   Generate Random String
     Set suite variable    ${acc1}
     ${first_name2} =           Generate Random String
     Set suite variable    ${first_name2}
@@ -34,10 +35,11 @@ Setup Variables
 *** Test Cases ***
 
 Create Data Import Via API
+    [Documentation]     Create a data import record via API and process the batch via UI and verify that there are no errors
     [tags]  stable
-    &{data_import} =  API Create DataImport    
-    ...        ${ns}Account1_Name__c=${acc1}    
-    ...        ${ns}Account2_Name__c=${acc2} 
+    &{data_import} =  API Create DataImport
+    ...        ${ns}Account1_Name__c=${acc1}
+    ...        ${ns}Account2_Name__c=${acc2}
     ...        ${ns}Contact1_Firstname__c=${first_name1}
     ...        ${ns}Contact1_Lastname__c=${last_name1}
     ...        ${ns}Contact2_Firstname__c=${first_name2}
@@ -60,6 +62,7 @@ Create Data Import Via API
     Click Button With Value   Close
 
 Verify Custom Fields on Account Contact and Address Objects
+    [Documentation]         Verify via API that all contact, account and address records are created properly from the above batch process.
     [tags]  stable
     &{data_import_new} =     Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
     Verify Expected Values    nonns    Account    ${data_import_new}[${ns}Account1Imported__c]
@@ -82,4 +85,3 @@ Verify Custom Fields on Account Contact and Address Objects
     ...        ${ns}MailingCity__c=Toledo
     ...        ${ns}MailingState__c=Ohio
     ...        ${ns}MailingPostalCode__c=94326
-    

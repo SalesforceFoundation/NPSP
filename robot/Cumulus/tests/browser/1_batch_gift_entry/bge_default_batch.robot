@@ -10,7 +10,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 BGE Batch With Default Values
-    #Create a BGE batch with default values
+    [Documentation]      Create a BGE batch with default values and verifies batch values
     [tags]  stable
     ${batch} =           Generate Random String
     Go To Page                        Listing                      Batch_Gift_Entry
@@ -26,7 +26,7 @@ BGE Batch With Default Values
     Verify Title    Batch Gift Entry    ${batch}
     ${ns} =  Get NPSP Namespace Prefix
     Current Page Should Be    Details    DataImportBatch__c
-    ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c 
+    ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0
     ...    Donation_Date_Range__c=0.0
@@ -39,6 +39,7 @@ BGE Batch With Default Values
     ...    RequireTotalMatch__c=False
     ...    Run_Opportunity_Rollups_while_Processing__c=True
 Create New gift and process batch and validate
+    [Documentation]     Creates a new gift with donor as contact for the batch and verifies batch processed and payment record created
     [tags]  stable
     &{contact} =     API Create Contact
     Select Value From BGE DD    Donor Type    Contact
@@ -55,5 +56,3 @@ Create New gift and process batch and validate
     Wait Until Element Is Visible    text:All Gifts
     Verify Row Count    1
     Page Should Contain    PMT-
-    
-             
