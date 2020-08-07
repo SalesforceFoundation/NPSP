@@ -172,10 +172,9 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
            Returns true if both condtions are met, else returns false """
         ns = self.npsp.get_npsp_namespace_prefix()
         object = ns + "Rollup__mdt"
+        field = ns + "Active__c"
         status = False
-        query = "SELECT Id FROM {} WHERE Active__c = True AND Label = '{}'".format(
-            object, label
-        )
+        query = "SELECT Id FROM {} WHERE {} = True AND Label = '{}'".format(object, field, label)
         record = self.salesforce.soql_query(query).get("records", [])
         print(f"record is {record}")
         if len(record) > 0:
