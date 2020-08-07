@@ -460,3 +460,27 @@ Enable Gift Entry
     Open Main Menu                          System Tools
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
     Enable Gift Entry If Not Enabled    
+
+API Query Record
+    [Documentation]    Queries the given object table by using key,value pair passed and returns the entire record
+    [Arguments]        ${object_name}             &{fields}
+    @{records} =       Salesforce Query           ${object_name}
+    ...                select=Id
+    ...                &{fields}
+    &{Id} =            Get From List  ${records}  0
+    &{myrecord} =      Salesforce Get  ${object_name}  ${Id}[Id]
+    [return]           &{myrecord}
+
+API Check And Enable Gift Entry
+    [Documentation]    Checks through API if Advanced Mapping and Gift Entry are already enabled. If yes then does nothing.
+    ...                If either of them are not enabled then calls the Enable Gift Entry keyword to enable them
+    ${ns} =             Get NPSP Namespace Prefix
+    @{records} =       Salesforce Query           ${ns}Data_Import_Settings__c
+    ...                select=${ns}Field_Mapping_Method__c    
+    &{am} =            Get From List  ${records}  0
+    @{records} =       Salesforce Query           ${ns}Gift_Entry_Settings__c
+    ...                select=${ns}Enable_Gift_Entry__c   
+    &{ge} =            Get From List  ${records}  0
+    Run Keyword if     '${am}[${ns}Field_Mapping_Method__c]'!='Data Import Field Mapping' or '${ge}[${ns}Enable_Gift_Entry__c]'!='True'
+    ...                Enable Gift Entry
+
