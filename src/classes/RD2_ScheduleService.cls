@@ -226,7 +226,7 @@ public without sharing class RD2_ScheduleService {
 
 
     /***
-    * @description Calculates the dates of the next N Installment Opportunities for specified Recurring Donations
+    * @description Returns active projected installments for provided Recurring Donations.
     * @param rds Recurring Donation records
     * @param startDate Lower boundary date used to filter installments with Close Date >= startDate (if null, current date will be used)
     * @param numInstallments Number of installment Opportunities to return (if null, default number will be used)
@@ -257,13 +257,39 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the dates of the next N Installment Opportunities for a single Recurring Donation
+    * @description Returns active projected installments for the Recurring Donation.
+    * Installments within the Pause Schedule are excluded and not returned.
     * @param startDate Lower boundary date used to filter installments with Close Date >= startDate
-    * @param numInstallments Number of installment Opportunities
+    * @param numInstallments Number of installment Opportunities to return
     * @param schedules RD Schedules
     * @return List<Installment>
     */
     public List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
+        Boolean isIncludeAll = false;
+        return getVisualizedInstallments(startDate, numInstallments, schedules, isIncludeAll);
+    }
+
+    /***
+    * @description Returns all active and skipped projected installments for the Recurring Donation.
+    * @param startDate Lower boundary date used to filter installments with Close Date >= startDate
+    * @param numInstallments Number of installment Opportunities to return
+    * @param schedules RD Schedules
+    * @return List<Installment>
+    */
+    public List<Installment> getAllVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
+        Boolean isIncludeAll = true;
+        return getVisualizedInstallments(startDate, numInstallments, schedules, isIncludeAll);
+    }
+
+    /***
+    * @description Returns projected installments for the Recurring Donation.
+    * @param startDate Lower boundary date used to filter installments with Close Date >= startDate
+    * @param numInstallments Number of installment Opportunities to return
+    * @param schedules RD Schedules
+    * @param isIncludeAll Indicates if skipped Installments within a Pause Schedule date range should be returned
+    * @return List<Installment>
+    */
+    private List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules, Boolean isIncludeAll) {
         List<Installment> installments = new List<Installment>();
         if (schedules == null) {
             return installments;
@@ -281,7 +307,9 @@ public without sharing class RD2_ScheduleService {
                 break;
             }
 
-            installments.add(inst);
+            if (isIncludeAll || !inst.isSkipped) {
+                installments.add(inst);
+            }
             referenceDate = inst.nextDonationDate.addDays(1);
         }
 
@@ -289,7 +317,8 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the dates of the next N donations for a single Recurring Donation
+    * @description Returns projected installments for the Recurring Donation.
+    * Installments are used to calculate Current and Next Year Value fields on the RD.
     * @param startDate Lower boundary date used to filter installments with Close Date >= startDate
     * @param endDate Upper boundary date used to filter installments with Close Date <= endDate
     * @param schedules RD Schedules
@@ -311,7 +340,9 @@ public without sharing class RD2_ScheduleService {
                 break;
             }
 
-            installments.add(inst);
+            if (!inst.isSkipped) {
+                installments.add(inst);
+            }
             referenceDate = inst.nextDonationDate.addDays(1);
         }
 
@@ -441,7 +472,7 @@ public without sharing class RD2_ScheduleService {
 
         evaluateScheduleEndDate(rdRecord, rdSchedules);
 
-        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//TODO cache current matcher by RD Id
+        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
             .includeCurrent(rd.npe03__Donations__r);
 
         Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1;

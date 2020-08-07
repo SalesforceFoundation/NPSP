@@ -1851,7 +1851,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService.currentDate = pause.StartDate__c.addDays(-1);
 
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+        List<RD2_ScheduleService.Installment> installments = service.getAllVisualizedInstallments(
             RD2_ScheduleService.currentDate, NUM_INSTALLMENTS, schedules
         );
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
@@ -1886,7 +1886,7 @@ private with sharing class RD2_ScheduleService_TEST {
         RD2_ScheduleService.currentDate = pause.StartDate__c.addMonths(2);
         pause.EndDate__c = RD2_ScheduleService.currentDate.addDays(-1);
 
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+        List<RD2_ScheduleService.Installment> installments = service.getAllVisualizedInstallments(
             RD2_ScheduleService.currentDate, NUM_INSTALLMENTS, schedules
         );
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
