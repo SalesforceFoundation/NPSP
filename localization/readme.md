@@ -1,6 +1,6 @@
 # NPSP Localization
 
-* NPSP Localization Quip Doc: https://quip.com/ZIOBAYNcWx2s
+* NPSP Localization Quip Doc: https://salesforce.quip.com/l9iMAjlIUuui
 
 ## The Problem With Translated Metadata
 
@@ -11,17 +11,17 @@ The objectTranslation and translation metadata files as provided by the Core Tra
 
 ## The “Fix”
 
-The effective fix for the above scenarios is to do the following:
+The effective fix for the above scenarios is to do the following, all of which is handled by the bash script in this folder:
 
 1. Push the Translation Metadata [branch] into a Scratch Org
 2. Use the retrieve_unpackaged cci task to pull down the metadata from the scratch org in the “correct” format.
-3. Clean the metadata
+3. Clean the metadata using a CCI task
 4. Commit the changes to the branch
 
 ## Script in this folder
 
 The localization folder contains a `translation-cleanup.sh` bash script file that will perform the first 3 steps above.
 
-After executing the script, review the pending changes before committing.
+After executing the script, review the pending changes using an IDE such as VSCode before committing.
 
 **ONLY changes to the 'objectTranslation' and 'translation' files should be commited to the repository. ALL OTHER CHANGED FILES SHOULD BE IGNORED.**
