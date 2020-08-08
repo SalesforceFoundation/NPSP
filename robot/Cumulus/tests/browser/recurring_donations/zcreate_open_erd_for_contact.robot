@@ -43,6 +43,7 @@ ${METHOD}  Credit Card
     Populate Rd2 Modal Form
     ...                                    Contact=${data}[contact][LastName] Household
     ...                                    Amount=${AMOUNT}
+    ...                                    Recurring Donation Name=Automation RD
     ...                                    Payment Method=${METHOD}
     ...                                    Day of Month=${DAY_OF_MONTH}
     Click Rd2 Modal Button                 Save
