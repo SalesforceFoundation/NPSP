@@ -59,10 +59,11 @@ API Modify Recurring Donation
     ...              | Recurring Donation ID   |
 
     [Arguments]             ${rd_id}      &{fields}
+    ${ns} =                 Get NPSP Namespace Prefix
     Salesforce Update       npe03__Recurring_Donation__c     ${rd_id}
     ...                     &{fields}
     @{records} =  Salesforce Query      npe03__Recurring_Donation__c
-    ...              select=StartDate__c,npe03__Amount__c
+    ...              select=${ns}StartDate__c,npe03__Amount__c
     ...              Id=${rd_id}
     &{rd} =          Get From List  ${records}  0
     [return]         &{rd}
@@ -428,12 +429,18 @@ Enable RD2QA
     Run Task       execute_anon
     ...            apex= ${apex3}
 
+API Query Recurrring Donation Settings For RD2 Enablement
+    [Documentation]    Queries the Recurring Donation settings object for the RD2 Enabled status and returns the boolean status value
+    ${ns} =            Get Npsp Namespace Prefix
+    @{record} =   Salesforce Query      npe03__Recurring_Donations_Settings__c
+    ...                select=${ns}IsRecurringDonations2Enabled__c
+    &{rd2_enabled} =                 Get From List  ${record}  0
+    [return]                ${rd2_enabled}[IsRecurringDonations2Enabled__c]
+
 Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
-    Go To Page                Custom         NPSP_Settings
-    Open Main Menu            Recurring Donations
-    ${rd2_enabled} =          Check Rd2 Is Enabled
-    Run Keyword if            "${rd2_enabled}"!="True"
+    ${is_rd2_enabled} =       API Query Recurrring Donation Settings For RD2 Enablement
+    Run Keyword if            "${is_rd2_enabled}"!="True"
     ...                       Enable RD2QA
 
 Run Recurring Donations Batch
