@@ -851,7 +851,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
 
         //skip three donations
-        createPauseSchedule(rd.Id, Date.newInstance(2019, 9, 15), Date.newInstance(2019, 11, 15));
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, Date.newInstance(2019, 9, 15), Date.newInstance(2019, 11, 15));
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
@@ -887,7 +887,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
 
         //skip Sep 2019 - Feb 2020 donations
-        createPauseSchedule(rd.Id, Date.newInstance(2019, 9, 15), Date.newInstance(2020, 2, 15));
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, Date.newInstance(2019, 9, 15), Date.newInstance(2020, 2, 15));
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
@@ -1303,23 +1303,5 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should be null instead of zero');
 
         return rdGateway.getRecord(rd.Id);
-    }
-
-    /**
-     * @description Creates test pause schedule
-     * @param rdId Recurring Donation Id
-     * @return RecurringDonationSchedule__c
-     */
-    private static RecurringDonationSchedule__c createPauseSchedule(Id rdId, Date startDate, Date endDate) {
-        RecurringDonationSchedule__c existingPause = new RecurringDonationSchedule__c(
-            RecurringDonation__c = rdId,
-            StartDate__c = startDate,
-            EndDate__c = endDate,
-            IsPause__c = true,
-            StatusReason__c = 'Unknown'
-        );
-
-        insert existingPause;
-        return existingPause;
     }
 }

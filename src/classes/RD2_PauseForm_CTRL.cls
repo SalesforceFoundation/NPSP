@@ -185,34 +185,17 @@ public with sharing class RD2_PauseForm_CTRL {
 
             Boolean isNewPause = pause.startDate != null && pause.resumeAfterDate != null;
             if (isNewPause) {
+                //deactivate the current pause (if any) and create a new one
                 pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
 
             } else {//deactivate the current pause (if any)
                 pauseHandler.cancelPauseSchedule(pause.rdId);
             }
 
-            enqueueEvalService(pause.rdId);
+            RD2_QueueableService.enqueueOppEvalService(pause.rdId);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
-        }
-    }
-
-    /**
-     * @description Queue up Opp eval service to recalculate Next Donation Date,
-     * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
-     * @param rdId Recurring Donation Id
-     * @return void
-     */
-    private static void enqueueEvalService(Id rdId) { 
-        RD2_QueueableService.EvaluateInstallmentOpportunities service =
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(new Set<Id>{ rdId });
-
-        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-            System.enqueueJob(service);
-
-        } else {
-            service.executeOppEvaluationService();
         }
     }
 

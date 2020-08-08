@@ -37,6 +37,34 @@
 public class RD2_QueueableService {
 
     /**
+     * @description Queues up Opp eval service to recalculate Next Donation Date,
+     * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
+     * @param rdId Recurring Donation Id
+     * @return void
+     */
+    public static void enqueueOppEvalService(Id rdId) { 
+        enqueueOppEvalService(new Set<Id>{ rdId });
+    }
+
+    /**
+     * @description Queues up Opp eval service to recalculate Next Donation Date,
+     * Current/Next Year Value and re-evaluate Opportunities on specified Recurring Donations.
+     * @param rdIds Recurring Donation Ids
+     * @return void
+     */
+    public static void enqueueOppEvalService(Set<Id> rdIds) { 
+        RD2_QueueableService.EvaluateInstallmentOpportunities service =
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
+
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+            System.enqueueJob(service);
+
+        } else {
+            service.executeOppEvaluationService();
+        }
+    }
+
+    /**
      * @description Queueable service to process Installment Opportunities for a Recurring Donation
      * that was inserted or modified.
      */
