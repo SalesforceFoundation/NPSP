@@ -5,7 +5,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable Gift Entry
+...             API Check And Enable Gift Entry
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***

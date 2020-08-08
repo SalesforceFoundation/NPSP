@@ -3,7 +3,9 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
-Suite Setup     Open Test Browser
+Suite Setup     Run keywords
+...             Open Test Browser
+...             API Check And Enable Gift Entry
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
