@@ -37,9 +37,17 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def populate_rd2_modal_form(self, **kwargs):
         """Populates the RD2 modal form fields with the respective fields and values"""
+        ns=self.npsp.get_npsp_namespace_prefix()
         for key, value in kwargs.items():
+            locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
+            # Recurring Donation Name field only appears on a regression org hence this check
+            if key == "Recurring Donation Name" and ns=="npsp__":
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.salesforce._populate_field(locator, value)
+                else:
+                    self.builtin.log(f"Element {key} not found")
             if key in ("Amount", "Number of Planned Installments"):
-                locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.salesforce._populate_field(locator, value)
