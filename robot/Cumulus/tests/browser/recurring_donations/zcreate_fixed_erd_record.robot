@@ -52,6 +52,7 @@ Create Fixed Recurring Donation With Monthly Installment
     ...                                     Donor Type=Account
     ...                                     Account=${data}[account][Name]
     ...                                     Recurring Type=${type}
+    ...                                     Recurring Donation Name=Automation RD
     ...                                     Number of Planned Installments=${installments}
     ...                                     Amount=100
     ...                                     Payment Method=Credit Card
