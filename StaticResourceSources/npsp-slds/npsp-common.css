@@ -18,6 +18,10 @@ input.lookupInputSLDS {
     width: 100%;
     margin-right: -30px !important;
 }
+body .dateInput input[type="text"], .slds-vf-scope .dateInput input[type="text"] {
+    width: 100%;
+    margin-right: -30px;
+}
 
 /* Needed to eliminate excessive gap between label and info icon after conversion to lightning stylesheets */
 .slds-scope label {
