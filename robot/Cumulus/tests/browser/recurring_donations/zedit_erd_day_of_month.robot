@@ -13,6 +13,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Keywords ***
 
 Setup Test Data
+        [Documentation]     Creates a recurring donation of type open linked to a contact using backend API
         ${NS} =             Get NPSP Namespace Prefix
         Set Suite Variable  ${NS}
 
