@@ -56,6 +56,7 @@ Create Open Recurring Donation With Monthly Installment
     ...                                   Donor Type=Account
     ...                                   Account=${data}[account][Name]
     ...                                   Amount= ${amount}
+    ...                                   Recurring Donation Name=Automation RD
     ...                                   Payment Method=Credit Card
     ...                                   Day of Month=${day_of_month}
     Click Rd2 Modal Button                Save

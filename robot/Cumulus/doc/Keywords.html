@@ -634,7 +634,7 @@ pre {
                   <i>title</i>
                   
                 </td>
-                <td class="kwdoc"><p>This keyword is similar to click button but uses set focus to button and javascript In the cases where javascript is being triggered on moving away from field, click button doesn't seem to work in headless mode</p></td>
+                <td class="kwdoc"><p>This keyword is similar to click button but uses set focus to button and javascript In the cases where javascript is being triggered on moving away from field, click button doesn't seem to work in headless mode, hence using actionchains moving focus out of field and clicking on screen before performing actual click for next element</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Click Special Object Button">
@@ -1950,6 +1950,16 @@ pre {
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
               
+              <tr class="kwrow" id="NPSP.robot.API Check And Enable Gift Entry">
+                <td class="kwname">
+                  API Check And Enable Gift Entry
+                </td>
+                <td class="kwargs">
+
+                </td>
+                <td class="kwdoc"><p>Checks through API if Advanced Mapping and Gift Entry are already enabled. If yes then does nothing. If either of them are not enabled then calls the Enable Gift Entry keyword to enable them</p></td>
+              </tr>
+
               <tr class="kwrow" id="NPSP.robot.API Create Campaign">
                 <td class="kwname">
                   API Create Campaign
@@ -2349,7 +2359,31 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"></td>
               </tr>
-              
+
+              <tr class="kwrow" id="NPSP.robot.API Query Record">
+                <td class="kwname">
+                  API Query Record
+                </td>
+                <td class="kwargs">
+
+                  <i>object_name</i>,
+
+                  <i>**fields</i>
+
+                </td>
+                <td class="kwdoc"><p>Queries the given object table by using key,value pair passed and returns the entire record</p></td>
+              </tr>
+
+              <tr class="kwrow" id="NPSP.robot.API Query Recurrring Donation Settings For RD2 Enablement">
+                <td class="kwname">
+                  API Query Recurrring Donation Settings For RD2 Enablement
+                </td>
+                <td class="kwargs">
+
+                </td>
+                <td class="kwdoc"><p>Queries the Recurring Donation settings object for the RD2 Enabled status and returns the boolean status value</p></td>
+              </tr>
+
               <tr class="kwrow" id="NPSP.robot.Capture Screenshot and Delete Records and Close Browser">
                 <td class="kwname">
                   Capture Screenshot and Delete Records and Close Browser
@@ -5463,7 +5497,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   <i>**kwargs</i>
 
                 </td>
-                <td class="kwdoc"><p>Populate the RD2 modal form fields with the respective fields and values</p></td>
+                <td class="kwdoc"><p>Populates the RD2 modal form fields with the respective fields and values</p></td>
               </tr>
 
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Select Value From Rd2 Modal Dropdown">
@@ -5653,7 +5687,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Tuesday July 28, 11:41 AM - cumulusci v3.15.0
+      Generated on Friday August 07, 12:07 AM - cumulusci v3.16.0.dev3
     </div>
   </body>
 </html>
