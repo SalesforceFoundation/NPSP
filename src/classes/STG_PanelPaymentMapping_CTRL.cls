@@ -35,7 +35,6 @@
 */
 public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
 
-    private static final String PAYMENT_OBJECT_NAME = 'npe01__OppPayment__c';
     /*********************************************************************************************************
     * @description Returns the string Id of the Payment Mapping panel.
     */
@@ -96,7 +95,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @return List of SelectOption with available fields for mapping.
     */
     public List<SelectOption> getTargetFields(){
-
+        String paymentObjectName = Schema.SObjectType.npe01__OppPayment__c.getName();
         targetFields.clear();
         Set<String> paymentsFieldsToExclude = new Set<String>{
             'npe01__Opportunity__c', 'npe01__Paid__c', 'npe01__Payment_Amount__c', 'npe01__Payment_Date__c',
@@ -120,11 +119,11 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
 
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);
             for (String fieldName : targetTokenMap.keyset()){
-                if (fieldName.contains('__c') && UTIL_Describe.isValidField(PAYMENT_OBJECT_NAME, s)) {
-                    Schema.DescribeFieldResult field = UTIL_Describe.getFieldDescribe(PAYMENT_OBJECT_NAME, s);
+                if (fieldName.contains('__c') && UTIL_Describe.isValidField(paymentObjectName, fieldName)) {
+                    Schema.DescribeFieldResult field = UTIL_Describe.getFieldDescribe(paymentObjectName, fieldName);
 
                     // disallow formula fields and autonums
-                    if (field.isCalculated() || field.isAutoNumber()){
+                    if (field.isCalculated() || field.isAutoNumber()) {
                         continue;
                     }
                     // check for compatible displaytypes
