@@ -38,8 +38,13 @@
 *
 */
 global with sharing class BDI_DataImportService {
+    public static final String BATCH_NUMBER_QUERY_STR = String.join(new List<String>{
+        DataImport__c.NPSP_Data_Import_Batch__c.getDescribe().getRelationshipName(),
+        DataImportBatch__c.Batch_Number__c.getDescribe().getName()
+    }, '.');
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
+
 
     public BDI_MappingService mappingService;
 
@@ -82,6 +87,9 @@ global with sharing class BDI_DataImportService {
 
         // construct or SOQL for the batch
         dataImportQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
+
+        dataImportQuery += ',' + BATCH_NUMBER_QUERY_STR;
+
         dataImportQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
         dataImportQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
 
@@ -104,12 +112,7 @@ global with sharing class BDI_DataImportService {
         // construct or SOQL for the batch
         batchQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
 
-        List<String> batchNumberQueryStr = new List<String>{
-                SObjectType.DataImport__c.getName().replace('__c', '__r'),
-                SObjectType.DataImportBatch__c.getName(),
-                DataImportBatch__c.Batch_Number__c.getDescribe().getName()
-        };
-        batchQuery += String.join(batchNumberQueryStr, '.');
+        batchQuery += ',' + BATCH_NUMBER_QUERY_STR;
 
         batchQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
         batchQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
