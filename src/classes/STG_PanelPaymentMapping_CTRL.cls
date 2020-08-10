@@ -94,16 +94,16 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @description Initializes the targetFields SelectOption list for the selected object
     * @return List of SelectOption with available fields for mapping.
     */
-    public List<SelectOption> getTargetFields(){
+    public List<SelectOption> getTargetFields() {
         String paymentObjectName = Schema.SObjectType.npe01__OppPayment__c.getName();
         targetFields.clear();
-        Set<String> paymentsFieldsToExclude = new Set<String>{
+        Set<String> paymentsFieldsToExclude = new Set<String> {
             'npe01__Opportunity__c', 'npe01__Paid__c', 'npe01__Payment_Amount__c', 'npe01__Payment_Date__c',
             'npe01__Written_Off__c'};
         Map<String, Schema.SObjectField> targetTokenMap = Schema.SObjectType.npe01__OppPayment__c.fields.getMap().clone();
        
         //pop out the known fields
-        for (String fieldName : paymentsFieldsToExclude){
+        for (String fieldName : paymentsFieldsToExclude) {
             fieldName = fieldName.toLowerCase();
             targetTokenMap.remove(fieldName);
         }
@@ -118,7 +118,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         if (!targettokenMap.isEmpty()) {
 
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);
-            for (String fieldName : targetTokenMap.keyset()){
+            for (String fieldName : targetTokenMap.keyset()) {
                 if (fieldName.contains('__c') && UTIL_Describe.isValidField(paymentObjectName, fieldName)) {
                     Schema.DescribeFieldResult field = UTIL_Describe.getFieldDescribe(paymentObjectName, fieldName);
 
