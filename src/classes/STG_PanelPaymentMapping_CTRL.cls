@@ -35,7 +35,7 @@
 */
 public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
 
-    private static final String OPPORTUNITY_PAYMENT_OBJECT_NAME = 'npe01__OppPayment__c';
+    private static final String PAYMENT_OBJECT_NAME = 'npe01__OppPayment__c';
     /*********************************************************************************************************
     * @description Returns the string Id of the Payment Mapping panel.
     */
@@ -95,20 +95,18 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @description Initializes the targetFields SelectOption list for the selected object
     * @return List of SelectOption with available fields for mapping.
     */
-    public list<SelectOption> getTargetFields(){
+    public List<SelectOption> getTargetFields(){
 
         targetFields.clear();
-        Set<String> knownPaymentFieldsToExclude = new Set<String>{
+        Set<String> paymentsFieldsToExclude = new Set<String>{
             'npe01__Opportunity__c', 'npe01__Paid__c', 'npe01__Payment_Amount__c', 'npe01__Payment_Date__c',
             'npe01__Written_Off__c'};
-        Map<String, Schema.Sobjectfield> targetTokenMap = new Map<String, Schema.Sobjectfield>();
-
-        targetTokenMap = Schema.SObjectType.npe01__OppPayment__c.fields.getMap().clone();
+        Map<String, Schema.SObjectField> targetTokenMap = Schema.SObjectType.npe01__OppPayment__c.fields.getMap().clone();
        
         //pop out the known fields
-        for (String s : knownPaymentFieldsToExclude){
-            s = s.toLowerCase();
-            targetTokenMap.remove(s);
+        for (String fieldName : paymentsFieldsToExclude){
+            fieldName = fieldName.toLowerCase();
+            targetTokenMap.remove(fieldName);
         }
 
         // remove fields that are already used in a mapping
@@ -121,26 +119,26 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         if (!targettokenMap.isEmpty()) {
 
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);
-            for (String s : targetTokenMap.keyset()){
-                if (s.contains('__c') && UTIL_Describe.isValidField(OPPORTUNITY_PAYMENT_OBJECT_NAME, s)) {
-                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe(OPPORTUNITY_PAYMENT_OBJECT_NAME, s);
+            for (String fieldName : targetTokenMap.keyset()){
+                if (fieldName.contains('__c') && UTIL_Describe.isValidField(PAYMENT_OBJECT_NAME, s)) {
+                    Schema.DescribeFieldResult field = UTIL_Describe.getFieldDescribe(PAYMENT_OBJECT_NAME, s);
 
                     // disallow formula fields and autonums
-                    if (f.isCalculated() || f.isAutoNumber()){
+                    if (field.isCalculated() || field.isAutoNumber()){
                         continue;
                     }
                     // check for compatible displaytypes
-                    Schema.DisplayType payType = f.getType();
+                    Schema.DisplayType payType = field.getType();
                     if (UTIL_Describe.canDisplaytypesCopy(oppType, payType)) {
-                        targetFields.add(new SelectOption(f.getName(), f.getLabel()));
+                        targetFields.add(new SelectOption(field.getName(), field.getLabel()));
                     }
                 }
             }
 
-        targetFields.sort();
+            targetFields.sort();
         }
 
-        if (targetFields.size() < 1){
+        if (targetFields.isEmpty()) {
             targetFields.add(new SelectOption(strNoValidField, strNoValidField));
         }
         return targetFields;
