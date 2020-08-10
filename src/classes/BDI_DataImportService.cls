@@ -104,7 +104,12 @@ global with sharing class BDI_DataImportService {
         // construct or SOQL for the batch
         batchQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
 
-        batchQuery += DataImportBatch__c.Batch_Number__c.getDescribe().getName() + ',';
+        List<String> batchNumberQueryStr = new List<String>{
+                SObjectType.DataImport__c.getName().replace('__c', '__r'),
+                SObjectType.DataImportBatch__c.getName(),
+                DataImportBatch__c.Batch_Number__c.getDescribe().getName()
+        };
+        batchQuery += String.join(batchNumberQueryStr, '.');
 
         batchQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
         batchQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
