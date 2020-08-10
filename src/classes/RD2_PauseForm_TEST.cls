@@ -39,6 +39,8 @@ public with sharing class RD2_PauseForm_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway scheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+
     private static final Integer DAY_OF_MONTH = 15;
     private static final Date START_DATE = Date.newInstance(2019, 3, DAY_OF_MONTH);
     private static final String PAYMENT_CHECK = 'Check';
@@ -234,11 +236,54 @@ public with sharing class RD2_PauseForm_TEST {
     }
 
     /****
+    * @description Verifies the the existing Opp Close Date is updated to the Next Donation Date
+    * when the new Pause Schedule date range includes the Opp Close Date
+    */
+    @isTest
+    private static void shouldUpdateOppCloseDateToNewNextDonationDateWhenWithinPauseDateRange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = START_DATE.addDays(1);
+        Date nextDonationDate = START_DATE.addMonths(1);
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Opportunity nextDonationOpp = getOpportunityBuilder(rd)
+            .withOpenStage()
+            .withCloseDate(nextDonationDate)
+            .build();
+        insert nextDonationOpp;
+
+        Integer oppCount = 2;
+        Integer totalSkipped = 3;
+        Test.startTest();
+        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
+        pause.rdId = rd.Id;
+        pause.startDate = nextDonationDate;
+        pause.resumeAfterDate = nextDonationDate.addMonths(2);
+        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
+        pause.pausedReason.value = PAUSED_REASON_VALUE;
+
+        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.stopTest();
+
+        rd = rdGateway.getRecords()[0];
+
+        nextDonationDate = nextDonationDate.addMonths(totalSkipped);
+        assertNextDonationDateAndYearValues(rd.Id, totalSkipped, nextDonationDate);
+        
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(oppCount, oppById.size(),
+            'No new Opp should be created: ' + oppById.values());
+        System.assertEquals(nextDonationDate, oppById.get(nextDonationOpp.Id).CloseDate, 
+            'Close Date on the open Opp should be changed to the new Next Donation Date');
+    }
+
+    /****
     * @description Verifies the pause schedule is not returned when
     * its End Date is passed
     */
     @isTest
-    private static void shouldNotReturnPauseScheduleIdWhenPauseIsPassed() {
+    private static void shouldNotReturnPauseScheduleIdWhenPauseHasEnded() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
@@ -343,6 +388,7 @@ public with sharing class RD2_PauseForm_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
 
+        // the pause has started and one installment is skipped
         final Date today = existingPause.StartDate__c.addDays(1);
         RD2_ScheduleService.currentDate = today;
 
@@ -369,7 +415,7 @@ public with sharing class RD2_PauseForm_TEST {
     * @description Verifies installments are not skipped when the pause is completed
     */
     @isTest
-    private static void shouldNotSkipInstallmentsWhenPauseIsPassed() {
+    private static void shouldNotSkipInstallmentsWhenPauseHasEnded() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService.currentDate = START_DATE.addDays(1);
 
@@ -513,6 +559,19 @@ public with sharing class RD2_PauseForm_TEST {
             .withStartDate(START_DATE);
     }
 
+    /**
+     * @description Instantiate an Opp builder for the specified Recurring Donation
+     * @param rd Recurring Donation
+     * @return TEST_OpportunityBuilder New Opportunity builder
+     */
+    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
+        return new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1);
+    }
+
     /****
     * @description Returns contact record
     * @return Contact
@@ -546,7 +605,7 @@ public with sharing class RD2_PauseForm_TEST {
             'Next Year Value should include next year projected installments');
 
         System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 
-            'Next Donation should be in future from today: ' + today);
+            'Next Donation Date should be in future from today: ' + today);
     }
 
 }

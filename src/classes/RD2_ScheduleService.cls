@@ -68,7 +68,7 @@ public without sharing class RD2_ScheduleService {
     /**
     * @description Handles Pause Schedules
     */
-    private PauseScheduleHandler pauseHandler {
+    public PauseScheduleHandler pauseHandler {
         get {
             if (pauseHandler == null) {
                 pauseHandler = new PauseScheduleHandler();
@@ -968,6 +968,22 @@ public without sharing class RD2_ScheduleService {
     * @description Handles Pause Recurring Donation functionality
     */
     public class PauseScheduleHandler {
+
+        /***
+        * @description Indicates if the Recurring Donation is an active pause schedule
+        * @param schedules Recurring Donation Schedules
+        * @param referenceDate As of today to compare the Schedule Start and End Dates against
+        * @return Boolean
+        */
+        public Boolean hasActivePause(List<RecurringDonationSchedule__c> schedules, Date referenceDate) {
+            for (RecurringDonationSchedule__c schedule : schedules) {
+                if (isActivePause(schedule, referenceDate)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         /***
         * @description Simple check on the schedule to check if the "Is Pause" field is checked

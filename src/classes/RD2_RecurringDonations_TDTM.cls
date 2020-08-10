@@ -357,7 +357,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         Set<Id> rdIds = new Set<Id>();
-        Map<Id, Boolean> isScheduleChangedById = new Map<Id, Boolean>();
+        Set<Id> scheduleChangedRDIds = new Set<Id>();
+
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             rdIds = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
 
@@ -370,7 +371,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                     rdIds.add(rd.Id);
                 }
                 if (rd.npe03__Next_Payment_Date__c != oldRdsById.get(rd.Id).npe03__Next_Payment_Date__c) {
-                    isScheduleChangedById.put(rd.Id, true);
+                    scheduleChangedRDIds.add(rd.Id);
                 }
             }
         }
@@ -379,18 +380,13 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        RD2_QueueableService.EvaluateInstallmentOpportunities service =
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, isScheduleChangedById);
-
         if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
-            service.executeOppEvaluationService();
-
-        } else if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-            System.enqueueJob(service);
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, scheduleChangedRDIds)
+                .executeOppEvaluationService();
 
         } else {
-            service.executeOppEvaluationService();
-        }
+            RD2_QueueableService.enqueueOppEvalService(rdIds, scheduleChangedRDIds);
+        } 
     }
 
     /***

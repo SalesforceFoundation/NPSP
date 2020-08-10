@@ -585,9 +585,9 @@ private class RD2_RecurringDonationsOpp_TEST {
             'A new Opportunity should be created when the current Opp is closed: ' + oppById.values());
 
         Opportunity nextDonationDateOpp;
-        for (Opportunity actualOpp : oppById.values()) {
-            if (actualOpp.CloseDate == nextDonationDate) {
-                nextDonationDateOpp = actualOpp;
+        for (Opportunity opp : oppById.values()) {
+            if (opp.CloseDate == nextDonationDate) {
+                nextDonationDateOpp = opp;
             }
         }
         System.assertNotEquals(null, nextDonationDateOpp, 

@@ -192,7 +192,8 @@ public with sharing class RD2_PauseForm_CTRL {
                 pauseHandler.cancelPauseSchedule(pause.rdId);
             }
 
-            RD2_QueueableService.enqueueOppEvalService(pause.rdId);
+            Boolean isScheduleChanged = true;
+            RD2_QueueableService.enqueueOppEvalService(pause.rdId, isScheduleChanged);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
