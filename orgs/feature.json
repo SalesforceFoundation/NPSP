@@ -1,7 +1,7 @@
 {
   "orgName": "NPSP - Feature Test Org",
   "edition": "Developer",
-  "hasSampleData": false,
+  "hasSampleData": true,
   "settings": {
     "userManagementSettings": {
       "enableNewProfileUI": true
