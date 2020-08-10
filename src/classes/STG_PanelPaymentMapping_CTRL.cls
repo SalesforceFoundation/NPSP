@@ -110,9 +110,9 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
 
         // remove fields that are already used in a mapping
         for (npe01__Payment_Field_Mapping_Settings__c pfm : STG_Panel.stgService.listPMTFieldMapping) {
-            String s = pfm.npe01__Payment_Field__c;
-            s = s.toLowerCase();
-            targetTokenMap.remove(s);
+            String paymentFieldName = pfm.npe01__Payment_Field__c;
+            paymentFieldName = paymentFieldName.toLowerCase();
+            targetTokenMap.remove(paymentFieldName);
         }
 
         if (!targettokenMap.isEmpty()) {
