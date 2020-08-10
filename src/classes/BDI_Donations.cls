@@ -185,9 +185,9 @@ public class BDI_Donations {
                         continue;
                     }
 
-//                    if (shouldSetDonationBatchNumber(opp)) {
-//                        setBatchNumber(opp, Opportunity.Batch_Number__c, 'batch-1234');
-//                    }
+                    if (shouldSetDonationBatchNumber(opp)) {
+                        setBatchNumber(opp, Opportunity.Batch_Number__c, 'batch-1234');
+                    }
 
                     if (opp.Id == null) {
                         opportunitiesToInsert.add(opp);
@@ -674,9 +674,9 @@ public class BDI_Donations {
                     || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
-//                    if (shouldSetDonationBatchNumber(payment)) {
-//                        setBatchNumber(payment, npe01__OppPayment__c., 'batch-1234');
-//                    }
+                    if (shouldSetDonationBatchNumber(payment)) {
+                        setBatchNumber(payment, npe01__OppPayment__c.npsp__Batch_Number__c, 'batch-1234');
+                    }
 
                     Integer numberOfCopiedFields = 0;
                     for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
