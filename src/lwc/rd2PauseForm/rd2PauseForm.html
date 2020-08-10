@@ -28,16 +28,16 @@
         </template>
 
         <template if:false={isLoading}>
-            <template if:true={pauseProcess.isBlock}>
+            <template if:true={permissions.isBlock}>
                 <div class="slds-p-around_medium">
-                    <lightning-formatted-rich-text value={pauseProcess.blockReason} data-id="closedMessage"
+                    <lightning-formatted-rich-text value={permissions.blockReason} data-id="closedMessage"
                         data-qa-locator="richtext Closed Message">
                     </lightning-formatted-rich-text>
                 </div>
             </template>
 
-            <template if:false={pauseProcess.isBlock}>
-                <template if:true={hasAccess}>
+            <template if:false={permissions.isBlock}>
+                <template if:true={permissions.hasAccess}>
                     <lightning-layout multiple-rows="true">
 
                         <lightning-layout-item padding="horizontal-large" class="slds-p-top_medium" size="12">

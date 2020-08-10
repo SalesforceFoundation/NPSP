@@ -149,8 +149,8 @@ public with sharing class RD2_PauseForm_TEST {
     * @description Verifies the pause on Elevate Recurring Donation is not saved
     */
     @isTest
-    private static void shouldNotSavePauseIfRdIsElevateRecord() {
-        RD2_ElevateIntegrationService_TEST.configureElevateUserServiceWithPermission();
+    private static void shouldPreventSavePauseWhenRDIsElevateRecord() {
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
@@ -174,8 +174,8 @@ public with sharing class RD2_PauseForm_TEST {
         }
         List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
         System.assertEquals(0, pauseSchedules.size(), 'There should be no pause schedule');
-        System.assertEquals(System.Label.RD2_ElevateNotSupportErrorMessage, errorMessage,
-            'The elevate Rd error message should be thrown.');
+        System.assertEquals(System.Label.RD2_ElevateNotSupported, errorMessage,
+            'The Exception message should match.');
     }
 
     /****
@@ -419,7 +419,7 @@ public with sharing class RD2_PauseForm_TEST {
     */
     @isTest
     private static void shouldReturnPauseDataWhenRDIsNotElevateRecord() {
-        RD2_ElevateIntegrationService_TEST.configureElevateUserServiceWithPermission();
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_PauseForm_CTRL.PauseData pause = getPauseData(rdGateway.getRecords()[0].Id);
@@ -469,7 +469,7 @@ public with sharing class RD2_PauseForm_TEST {
     */
     @isTest
     private static void shouldReturnOnlyRequiredPauseDataWhenRDIsElevateRecord() {
-        RD2_ElevateIntegrationService_TEST.configureElevateUserServiceWithPermission();
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()

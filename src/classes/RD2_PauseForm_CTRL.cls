@@ -189,7 +189,7 @@ public with sharing class RD2_PauseForm_CTRL {
             
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
             if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()) {
-                throw new PauseRdException(System.Label.RD2_ElevateNotSupportErrorMessage);
+                throw new PauseException(System.Label.RD2_ElevateNotSupported);
             }
     
             Boolean isNewPause = pause.startDate != null && pause.resumeAfterDate != null;
@@ -234,9 +234,9 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-    * @description Custom exception for pause RD in order for try/catch blocks to get the exception messsage
+    * @description Custom exception for Pause Recurring Donation feature
     */
-    public class PauseRdException extends Exception {}
+    public class PauseException extends Exception {}
 
     /***
     * @description Contains pause data

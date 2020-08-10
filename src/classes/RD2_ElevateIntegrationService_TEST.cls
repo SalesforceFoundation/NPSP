@@ -582,12 +582,11 @@ public class RD2_ElevateIntegrationService_TEST {
 
     /****
     * @description Sets Elevate Integration service so the integration is enabled
-    * @return RD2_ElevateIntegrationService
     */
-    public static void configureElevateUserServiceWithPermission() {
+    public static void enableElevateUserPermissions() {
         PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-        .withIsIntegrationEnabled(true)
-        .withHasIntegrationPermissions(true);
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
         RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
             PS_IntegrationServiceConfig.class,
             configStub
