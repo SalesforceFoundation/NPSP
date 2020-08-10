@@ -95,8 +95,9 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @return List of SelectOption with available fields for mapping.
     */
     public List<SelectOption> getTargetFields() {
-        String paymentObjectName = Schema.SObjectType.npe01__OppPayment__c.getName();
         targetFields.clear();
+
+        String paymentObjectName = Schema.SObjectType.npe01__OppPayment__c.getName();
         Set<String> paymentsFieldsToExclude = new Set<String> {
             'npe01__Opportunity__c', 'npe01__Paid__c', 'npe01__Payment_Amount__c', 'npe01__Payment_Date__c',
             'npe01__Written_Off__c'};
