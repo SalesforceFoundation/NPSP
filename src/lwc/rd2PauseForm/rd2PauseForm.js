@@ -47,7 +47,7 @@ export default class Rd2PauseForm extends LightningElement {
 
     @track isLoading = true;
     @track hasAccess = true;
-    @track isProcessBlock = {
+    @track pauseProcess = {
         isBlock : false,
         blockReason : ''
     };
@@ -118,7 +118,7 @@ export default class Rd2PauseForm extends LightningElement {
                 const pauseData = JSON.parse(response);
 
                 this.hasAccess = pauseData.hasAccess;
-                this.isProcessBlock.isBlock = pauseData.isRDClosed || pauseData.isElevateRecord;
+                this.pauseProcess.isBlock = pauseData.isRDClosed || pauseData.isElevateRecord;
                 this.pausedReason = pauseData.pausedReason;
                 this.scheduleId = pauseData.scheduleId;
 
@@ -126,8 +126,8 @@ export default class Rd2PauseForm extends LightningElement {
                     this.error.detail = this.labels.permissionRequired;
                     this.handleErrorDisplay();
                 }
-                if (this.isProcessBlock.isBlock) {
-                    this.isProcessBlock.blockReason =(pauseData.isElevateRecord)
+                if (this.pauseProcess.isBlock) {
+                    this.pauseProcess.blockReason =(pauseData.isElevateRecord)
                         ? this.labels.elevateRdErrorMessage
                         : this.labels.rdClosedMessage;
                 }
@@ -291,7 +291,7 @@ export default class Rd2PauseForm extends LightningElement {
     * or RD closed error, [OK] button is displayed and [Save] button is not displayed.
     */
     handleButtonsDisplay() {
-        this.isSaveDisplayed = !this.isLoading && !this.isProcessBlock.isBlock && this.hasAccess;
+        this.isSaveDisplayed = !this.isLoading && !this.pauseProcess.isBlock && this.hasAccess;
 
         // Disable data display and Save button when installments are not returned
         if (this.installments == null && this.isSaveDisplayed) {
