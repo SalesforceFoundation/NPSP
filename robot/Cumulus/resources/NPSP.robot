@@ -432,10 +432,10 @@ Enable RD2QA
 API Query Recurrring Donation Settings For RD2 Enablement
     [Documentation]    Queries the Recurring Donation settings object for the RD2 Enabled status and returns the boolean status value
     ${ns} =            Get Npsp Namespace Prefix
-    @{record} =   Salesforce Query      npe03__Recurring_Donations_Settings__c
+    @{record} =        Salesforce Query      npe03__Recurring_Donations_Settings__c
     ...                select=${ns}IsRecurringDonations2Enabled__c
     &{rd2_enabled} =                 Get From List  ${record}  0
-    [return]                ${rd2_enabled}[IsRecurringDonations2Enabled__c]
+    [return]           ${rd2_enabled}[${ns}IsRecurringDonations2Enabled__c]
 
 Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
