@@ -154,7 +154,7 @@ public with sharing class RD2_PauseForm_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
-        rd.CommitmentId__c = 'TEST123';
+        rd.CommitmentId__c = 'TEST COMMITMENT';
         update rd;
 
         RD2_ScheduleService.currentDate = START_DATE.addDays(1);
@@ -444,7 +444,7 @@ public with sharing class RD2_PauseForm_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
-        rd.CommitmentId__c = 'TEST';
+        rd.CommitmentId__c = 'TEST COMMITMENT';
         update rd;
 
         RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);

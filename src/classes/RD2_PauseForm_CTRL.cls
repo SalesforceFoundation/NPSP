@@ -184,7 +184,7 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     @AuraEnabled
     public static void savePause(String jsonPauseData) {
-        try {    
+        try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
             
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
