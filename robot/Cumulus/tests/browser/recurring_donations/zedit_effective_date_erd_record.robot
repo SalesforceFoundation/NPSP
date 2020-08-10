@@ -14,13 +14,15 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
+     ${NS} =             Get NPSP Namespace Prefix
+     Set Suite Variable  ${NS}
      ${EFFECTIVE_DATE_INITIAL} =           Get Current Date      result_format=%-m/%-d/%Y
      ${DATE}=                              Get current date      result_format=%Y-%m-%d %H:%M:%S.%f      increment=30 days
      ${DATE_TO_UPDATE} =                   Convert Date          ${DATE}                                 result_format=%Y-%m-%d
      ${EFFECTIVE_MODIFIED_DATE}=           Get current date      result_format=%-m/%-d/%Y                increment=30 days
      ${CURRDATE}=                          Get Current Date      result_format=datetime
-     ${CURRENTVALUE} =                     Evaluate              (12-${CURRDATE.month}) * 100
-     ${NUM_MONTHS_NEW_VALUE} =             Evaluate              (12-${CURRDATE.month})-1
+     ${CURRENTVALUE} =                     Evaluate              (12-${CURRDATE.month}+1) * 100
+     ${NUM_MONTHS_NEW_VALUE} =             Evaluate              (12-${CURRDATE.month})
      ${CURRENTVALUE_EDITED}=               Evaluate              (${NUM_MONTHS_NEW_VALUE}*150) + 100
      Set Suite Variable  ${CURRENTVALUE}
      Set Suite Variable  ${DATE}
@@ -34,10 +36,10 @@ Setup Test Data
      ...                                                         npe03__Installment_Period__c=Monthly
      ...                                                         npe03__Amount__c=100
      ...                                                         npe03__Open_Ended_Status__c=${TYPE}
-     ...                                                         Status__c=Active
-     ...                                                         Day_of_Month__c=${DAY_OF_MONTH}
-     ...                                                         InstallmentFrequency__c=${FREQUENCY}
-     ...                                                         PaymentMethod__c=${METHOD}
+     ...                                                         ${NS}Status__c=Active
+     ...                                                         ${NS}Day_of_Month__c=${DAY_OF_MONTH}
+     ...                                                         ${NS}InstallmentFrequency__c=${FREQUENCY}
+     ...                                                         ${NS}PaymentMethod__c=${METHOD}
 
      Setupdata   contact             ${contact1_fields}          recurringdonation_data=${recurringdonation_fields}
 
@@ -61,7 +63,6 @@ Edit An Enhanced Recurring donation record of type open
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
-
     Validate Field Values Under Section
     ...                                      Amount=$100.00
     ...                                      Status=Active
@@ -84,7 +85,8 @@ Edit An Enhanced Recurring donation record of type open
     #Using backend API update the recurring donation record and modify the startDate field to next month's date
     API Modify Recurring Donation            ${data}[contact_rd][Id]
     ...                                      npe03__Amount__c=${AMOUNT_TO_UPDATE}
-    ...                                      StartDate__c=${DATE_TO_UPDATE}
+    ...                                      ${ns}StartDate__c=${DATE_TO_UPDATE}
+    Run Recurring Donations Batch            RD2
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
