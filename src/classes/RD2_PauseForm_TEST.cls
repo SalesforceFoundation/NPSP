@@ -146,6 +146,39 @@ public with sharing class RD2_PauseForm_TEST {
     }
 
     /****
+    * @description Verifies the pause on Elevate Recurring Donation is not saved
+    */
+    @isTest
+    private static void shouldNotSavePauseIfRdIsElevateRecord() {
+        RD2_ElevateIntegrationService_TEST.configureElevateUserServiceWithPermission();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        rd.CommitmentId__c = 'TEST123';
+        update rd;
+
+        RD2_ScheduleService.currentDate = START_DATE.addDays(1);
+
+        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
+        pause.rdId = rd.Id;
+        pause.startDate = START_DATE.addMonths(3);
+        pause.resumeAfterDate = START_DATE.addMonths(6);
+        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
+        pause.pausedReason.value = 'Unknown';
+        
+        String errorMessage = '';
+        try {
+            RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        } catch(Exception e) {
+            errorMessage = e.getMessage();
+        }
+        List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
+        System.assertEquals(0, pauseSchedules.size(), 'There should be no pause schedule');
+        System.assertEquals(System.Label.RD2_ElevateNotSupportErrorMessage, errorMessage,
+            'The elevate Rd error message should be thrown.');
+    }
+
+    /****
     * @description Verifies the existing pause is deactivated when a new one is created
     */
     @isTest
@@ -379,6 +412,75 @@ public with sharing class RD2_PauseForm_TEST {
             'Exception should be generated when no installment is returned');
         System.assertEquals(System.Label.RD2_ScheduleVisualizerMessageNoSchedule, actualException.getMessage(),
             'Exception message should match');
+    }
+
+    /****
+    * @description Verifies Pause Data contains property indicating the Recurring Donation is not an elevated record
+    */
+    @isTest
+    private static void shouldReturnPauseDataWhenRDIsNotElevateRecord() {
+        RD2_ElevateIntegrationService_TEST.configureElevateUserServiceWithPermission();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_PauseForm_CTRL.PauseData pause = getPauseData(rdGateway.getRecords()[0].Id);
+        System.assertEquals(false, pause.isElevateRecord, 'The Recurring Donation should not be a elevate record');
+        System.assertEquals(true, pause.hasAccess, 'The user should have access');
+
+        System.assertNotEquals(null, pause.pausedReason, 'The Paused Reason should be initialized');
+        System.assertEquals(System.Label.RD2_PausedReasonLabel, pause.pausedReason.label,
+            'The Paused Reason label should match');
+        System.assertNotEquals(null, pause.pausedReason.options,
+            'The Paused Reason options should be retrieved');
+        System.assertEquals(System.Label.commonSelectOptionPlaceholder, pause.pausedReason.placeholder,
+            'The Paused Reason label should match');
+        System.assertEquals(null, pause.pausedReason.value,
+            'The Paused Reason value should be empty when no pause exists on the RD');
+    }
+
+    /****
+    * @description Verifies Pause Data contains property indicating the Recurring Donation is an elevated record
+    */
+    private static void shouldReturnPauseDataForRdWithCommitmentIdWhenElevateIsNotEnabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        rd.CommitmentId__c = 'TEST';
+        update rd;
+
+        RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);
+
+        System.assertEquals(false, pause.isElevateRecord, 'The Recurring Donation should not be a elevate record');
+        System.assertEquals(true, pause.hasAccess, 'The user should have access');
+
+        System.assertNotEquals(null, pause.pausedReason, 'The Paused Reason should be initialized');
+        System.assertEquals(System.Label.RD2_PausedReasonLabel, pause.pausedReason.label,
+            'The Paused Reason label should match');
+        System.assertNotEquals(null, pause.pausedReason.options,
+            'The Paused Reason options should be retrieved');
+        System.assertEquals(System.Label.commonSelectOptionPlaceholder, pause.pausedReason.placeholder,
+            'The Paused Reason label should match');
+        System.assertEquals(null, pause.pausedReason.value,
+            'The Paused Reason value should be empty when no pause exists on the RD');
+    }
+
+    /****
+    * @description Verifies Pause Data contains property indicating the Recurring Donation is not an elevated record
+    *   when elevate service is not enabled in the org
+    */
+    @isTest
+    private static void shouldReturnOnlyRequiredPauseDataWhenRDIsElevateRecord() {
+        RD2_ElevateIntegrationService_TEST.configureElevateUserServiceWithPermission();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withCommitmentId('TEST')
+            .build();
+        insert rd;
+
+        RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);
+        System.assertEquals(true, pause.isElevateRecord, 'The Recurring Donation should be a elevate record');
+        System.assertEquals(true, pause.hasAccess, 'The user should have access');
+        System.assertEquals(null, pause.pausedReason, 'The Paused Reason should not be initialized for a closed RD');
     }
 
 

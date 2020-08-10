@@ -567,7 +567,7 @@ public class RD2_ElevateIntegrationService_TEST {
     * the user does not have Elevate permissions assigned
     * @return RD2_ElevateIntegrationService
     */
-    private static RD2_ElevateIntegrationService configureNonElevateUserService() {
+    public static RD2_ElevateIntegrationService configureNonElevateUserService() {
         PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
             .withIsIntegrationEnabled(true)
             .withHasIntegrationPermissions(false);
@@ -578,6 +578,20 @@ public class RD2_ElevateIntegrationService_TEST {
         );
 
         return new RD2_ElevateIntegrationService();
+    }
+
+    /****
+    * @description Sets Elevate Integration service so the integration is enabled
+    * @return RD2_ElevateIntegrationService
+    */
+    public static void configureElevateUserServiceWithPermission() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+        .withIsIntegrationEnabled(true)
+        .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
     }
 
     /****
