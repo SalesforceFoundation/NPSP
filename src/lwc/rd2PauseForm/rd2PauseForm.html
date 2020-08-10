@@ -30,8 +30,8 @@
         <template if:false={isLoading}>
             <template if:true={permissions.isBlocked}>
                 <div class="slds-p-around_medium">
-                    <lightning-formatted-rich-text value={permissions.blockedReason} data-id="closedMessage"
-                        data-qa-locator="richtext Closed Message">
+                    <lightning-formatted-rich-text value={permissions.blockedReason} data-id="blockedReason"
+                        data-qa-locator="richtext Blocked Reason">
                     </lightning-formatted-rich-text>
                 </div>
             </template>
