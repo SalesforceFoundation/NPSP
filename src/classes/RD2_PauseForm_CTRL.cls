@@ -60,10 +60,10 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     @AuraEnabled(cacheable=false)
     public static String getPauseData(Id rdId) {
-        RD2_RecurringDonation rd = getRecurringDonation(rdId);
         String jsonData;
- 
         try {
+            RD2_RecurringDonation rd = getRecurringDonation(rdId);
+
             PauseData pause = new PauseData();
             pause.rdId = rdId;
             pause.hasAccess = hasAccess();

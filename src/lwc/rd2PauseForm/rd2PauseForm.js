@@ -15,7 +15,7 @@ import selectedRowsSummarySingular from '@salesforce/label/c.RD2_PauseSelectedIn
 import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage';
 import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
 import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
-import RD2_ElevateNotSupported from '@salesforce/label/c.RD2_ElevateNotSupported';
+import elevateNotSupported from '@salesforce/label/c.RD2_ElevateNotSupported';
 import permissionRequired from '@salesforce/label/c.RD2_PausePermissionRequired';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 
@@ -30,7 +30,7 @@ export default class Rd2PauseForm extends LightningElement {
         description,
         loadingMessage,
         cancelButton,
-        RD2_ElevateNotSupported,
+        elevateNotSupported,
         saveButton,
         okButton,
         selectedRowsSummaryPlural,
@@ -48,8 +48,8 @@ export default class Rd2PauseForm extends LightningElement {
     @track isLoading = true;
     @track permissions = {
         hasAccess : false,
-        isBlock : false,
-        blockReason : ''
+        isBlocked : false,
+        blockedReason : ''
     };
     @track isSaveDisplayed;
     @track isSaveDisabled = false;
@@ -101,7 +101,7 @@ export default class Rd2PauseForm extends LightningElement {
             .catch(error => {
                 this.installments = null;
 
-                if (this.permissions.isBlock !== true && this.permissions.hasAccess !== false) {
+                if (this.permissions.isBlocked !== true && this.permissions.hasAccess !== false) {
                     this.handleError(error);
                 }
             });
@@ -118,7 +118,7 @@ export default class Rd2PauseForm extends LightningElement {
                 const pauseData = JSON.parse(response);
 
                 this.permissions.hasAccess = pauseData.hasAccess;
-                this.permissions.isBlock = pauseData.isRDClosed || pauseData.isElevateRecord;
+                this.permissions.isBlocked = pauseData.isRDClosed || pauseData.isElevateRecord;
                 this.pausedReason = pauseData.pausedReason;
                 this.scheduleId = pauseData.scheduleId;
 
@@ -126,9 +126,9 @@ export default class Rd2PauseForm extends LightningElement {
                     this.error.detail = this.labels.permissionRequired;
                     this.handleErrorDisplay();
                 }
-                if (this.permissions.isBlock) {
-                    this.permissions.blockReason =(pauseData.isElevateRecord)
-                        ? this.labels.RD2_ElevateNotSupported
+                if (this.permissions.isBlocked) {
+                    this.permissions.blockedReason = (pauseData.isElevateRecord)
+                        ? this.labels.elevateNotSupported
                         : this.labels.rdClosedMessage;
                 }
             })
@@ -291,7 +291,7 @@ export default class Rd2PauseForm extends LightningElement {
     * or RD closed error, [OK] button is displayed and [Save] button is not displayed.
     */
     handleButtonsDisplay() {
-        this.isSaveDisplayed = !this.isLoading && this.permissions.hasAccess && !this.permissions.isBlock;
+        this.isSaveDisplayed = !this.isLoading && this.permissions.hasAccess && !this.permissions.isBlocked;
 
         // Disable data display and Save button when installments are not returned
         if (this.installments == null && this.isSaveDisplayed) {
