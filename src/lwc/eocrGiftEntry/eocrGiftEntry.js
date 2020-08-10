@@ -1,9 +1,11 @@
 import { LightningElement, api, wire, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import processMobileGift from '@salesforce/apex/EOCR_Utilities.processMobileGift';
 
 export default class EocrGiftEntry extends LightningElement {
 
     @api readyToEnter = false;
-    // checkBase64;
+    checkBase64;
     // deviceBase64;
     // otherBase64;
 
@@ -13,7 +15,7 @@ export default class EocrGiftEntry extends LightningElement {
 
     enterGifts() {
         this.readyToEnter = true;
-        // this.checkBase64 = '';
+        this.checkBase64 = '';
         // this.deviceBase64 = '';
         // this.otherBase64 = '';
         this.checkDocumentId = '';
@@ -56,26 +58,33 @@ export default class EocrGiftEntry extends LightningElement {
     // }
 
 
-    // uploadCheck() {
-    //     alert('in uploadCheck');
-    //     const componentThis = this;
-    //     const file = this.template.querySelector('[data-id="check-upload"]').files[0];
+    showToast(title, message, variant, mode, messageData) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+            mode: mode,
+            messageData: messageData
+        });
+        this.dispatchEvent(event);
+    }
 
-    //     const reader = new FileReader();
-    //     reader.addEventListener("load", function () {
-    //         alert('in event listener');
-    //         // convert image file to base64 string
-    //         let r = reader.result;
-    //         componentThis.checkBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
-    //         //console.log(componentThis.checkBase64);
-    //         alert(componentThis.checkBase64.substring(1, 10));
+    uploadCheck() {
+        const componentThis = this;
+        const file = this.template.querySelector('[data-id="check-upload"]').files[0];
 
-    //       }, false);
+        const reader = new FileReader();
+        reader.addEventListener("load", function () {
+            // convert image file to base64 string
+            let r = reader.result;
+            componentThis.checkBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
 
-    //       if (file) {
-    //         reader.readAsArrayBuffer(file);
-    //       }
-    // }
+          }, false);
+
+          if (file) {
+            reader.readAsArrayBuffer(file);
+          }
+    }
 
     // uploadDevice() {
     //     const componentThis = this;
@@ -114,10 +123,14 @@ export default class EocrGiftEntry extends LightningElement {
     // }
 
     submitFiles() {
-        alert('submitting files');
-        alert(this.checkDocumentId);
-        alert(this.deviceDocumentId);
-        alert(this.otherDocumentId);
+        alert('Gift successfully created.');
+        console.log(this.checkBase64);
+        processMobileGift({checkBase64: this.checkBase64});
+        alert(submitted);
+        //alert('submitting files');
+        // alert(this.checkDocumentId);
+        // alert(this.deviceDocumentId);
+        // alert(this.otherDocumentId);
        
     }
 

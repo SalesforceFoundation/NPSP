@@ -10,6 +10,25 @@ public with sharing class EOCR_Utilities {
 
     public class EinsteinAuthException extends Exception {}
 
+    @AuraEnabled
+    public static void processMobileGift(String checkBase64) {
+
+        System.debug('submitted checkBase64 = ' + checkBase64);
+        
+    }
+
+
+    // process the gift made with the phone  
+    // @AuraEnabled
+    // public static void processMobileGift(String checkDocumentId, 
+    //                             String deviceDocumentId,
+    //                             String otherDocumentId) {
+
+    //     System.debug('checkDocumentId = ' + checkDocumentId);
+    //     System.debug('deviceDocumentId = ' + deviceDocumentId);
+    //     System.debug('otherDocumentId = ' + otherDocumentId);
+    // }
+
     public static void analyzeGift() {
         String giftName = 'Scanned Gift-00003';
         String base64ImageContent = getBase64ImageContent(giftName);
