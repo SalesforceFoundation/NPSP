@@ -1,4 +1,10 @@
-<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="true" title="{!$ObjectType.Level__c.labelPlural}">
+<apex:page standardController="Level__c"
+    extensions="LVL_LevelEdit_CTRL"
+    showHeader="true"
+    standardStylesheets="false"
+    lightningStylesheets="true"
+    title="{!$ObjectType.Level__c.labelPlural}">
+
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
@@ -20,7 +26,6 @@
                            $ObjectType.Level__c.fields.Previous_Level_Field__c.updateable,
                            $ObjectType.Level__c.fields.Source_Field__c.updateable,
                            $ObjectType.Level__c.Fields.Target__c.updateable)}" />
-
     <apex:form >
         <div class="slds-scope">
 

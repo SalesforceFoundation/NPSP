@@ -1,6 +1,15 @@
-<apex:page standardController="Allocation__c" recordSetVar="allocations" extensions="ALLO_ManageAllocations_CTRL" title="Manage Allocations"
-           tabStyle="Allocation__c" showHeader="true" sidebar="true" cache="false" action="{!getPageLoadValidationMessages}"
-           standardStylesheets="true" docType="html-5.0">
+<apex:page standardController="Allocation__c"
+    recordSetVar="allocations"
+    extensions="ALLO_ManageAllocations_CTRL"
+    title="Manage Allocations"
+    tabStyle="Allocation__c"
+    showHeader="true"
+    sidebar="true"
+    cache="false"
+    action="{!getPageLoadValidationMessages}"
+    standardStylesheets="false"
+    lightningStylesheets="true"
+    docType="html-5.0">
 
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
@@ -152,7 +161,6 @@
     </script>
 
     <apex:form id="theForm">
-        <div class="slds-scope">
             <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
@@ -229,7 +237,6 @@
                         </tr>
                    </tbody>
                 </table>
-
                  <!-- Add Row -->
                 <div class="slds-p-around_medium">
                         <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable, messages"
@@ -239,7 +246,6 @@
                     window.initOrReload();
                 </script>
                 </apex:outputPanel>
-            </div>
         </div>
     </apex:form>
 </apex:page>
