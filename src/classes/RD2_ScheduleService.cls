@@ -285,8 +285,8 @@ public without sharing class RD2_ScheduleService {
     * @return List<Installment>
     */
     public List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
-        Boolean isIncludeAll = false;
-        return getVisualizedInstallments(startDate, numInstallments, schedules, isIncludeAll);
+        Boolean isIncludeSkipped = false;
+        return getVisualizedInstallments(startDate, numInstallments, schedules, isIncludeSkipped);
     }
 
     /***
@@ -297,8 +297,8 @@ public without sharing class RD2_ScheduleService {
     * @return List<Installment>
     */
     public List<Installment> getAllVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
-        Boolean isIncludeAll = true;
-        return getVisualizedInstallments(startDate, numInstallments, schedules, isIncludeAll);
+        Boolean isIncludeSkipped = true;
+        return getVisualizedInstallments(startDate, numInstallments, schedules, isIncludeSkipped);
     }
 
     /***
@@ -306,10 +306,10 @@ public without sharing class RD2_ScheduleService {
     * @param startDate Lower boundary date used to filter installments with Close Date >= startDate
     * @param numInstallments Number of installment Opportunities to return
     * @param schedules RD Schedules
-    * @param isIncludeAll Indicates if skipped Installments within a Pause Schedule date range should be returned
+    * @param isIncludeSkipped Indicates if skipped Installments within a Pause Schedule date range should be returned
     * @return List<Installment>
     */
-    private List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules, Boolean isIncludeAll) {
+    private List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules, Boolean isIncludeSkipped) {
         List<Installment> installments = new List<Installment>();
         if (schedules == null) {
             return installments;
@@ -327,7 +327,7 @@ public without sharing class RD2_ScheduleService {
                 break;
             }
 
-            if (isIncludeAll || !inst.isSkipped) {
+            if (isIncludeSkipped || !inst.isSkipped) {
                 installments.add(inst);
             }
             referenceDate = inst.nextDonationDate.addDays(1);

@@ -43,11 +43,11 @@ public class RD2_QueueableService {
      * @return void
      */
     public static void enqueueOppEvalService(Id rdId, Boolean isScheduleChanged) { 
-        Set<Id> scheduleChangedRDIds = new Set<Id>();
+        Set<Id> rdIdsWhereScheduleChanged = new Set<Id>();
         if (isScheduleChanged) {
-            scheduleChangedRDIds.add(rdId);
+            rdIdsWhereScheduleChanged.add(rdId);
         }
-        enqueueOppEvalService(new Set<Id>{ rdId }, scheduleChangedRDIds);
+        enqueueOppEvalService(new Set<Id>{ rdId }, rdIdsWhereScheduleChanged);
     }
 
     /**
@@ -64,11 +64,11 @@ public class RD2_QueueableService {
      * @description Queues up Opp eval service to recalculate Next Donation Date,
      * Current/Next Year Value and re-evaluate Opportunities on specified Recurring Donations.
      * @param rdIds Recurring Donation Ids
-     * @param scheduleChangedRDIds - Ids of Recurring Donation for which a schedule has been changed
+     * @param rdIdsWhereScheduleChanged - Ids of Recurring Donation for which a schedule has been changed
      * @return void
      */
-    public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> scheduleChangedRDIds) { 
-        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(rdIds, scheduleChangedRDIds);
+    public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) { 
+        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);
@@ -89,12 +89,12 @@ public class RD2_QueueableService {
         * @description Contains Recurring Donation Ids for which schedule has been changed
         */
         @TestVisible
-        private Set<Id> scheduleChangedRDIds {
+        private Set<Id> rdIdsWhereScheduleChanged {
             get {
-                if (scheduleChangedRDIds == null) {
-                    scheduleChangedRDIds = new Set<Id>();
+                if (rdIdsWhereScheduleChanged == null) {
+                    rdIdsWhereScheduleChanged = new Set<Id>();
                 }
-                return scheduleChangedRDIds;
+                return rdIdsWhereScheduleChanged;
             } set;
         }
 
@@ -109,11 +109,11 @@ public class RD2_QueueableService {
         /***
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
-         * @param scheduleChangedRDIds - Ids of Recurring Donations that have a changed schedule
+         * @param rdIdsWhereScheduleChanged - Ids of Recurring Donations that have a changed schedule
          */
-        public EvaluateInstallmentOpportunities(Set<Id> rdIds, Set<Id> scheduleChangedRDIds) {
+        public EvaluateInstallmentOpportunities(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) {
             this.rdIds = rdIds;
-            this.scheduleChangedRDIds = scheduleChangedRDIds;
+            this.rdIdsWhereScheduleChanged = rdIdsWhereScheduleChanged;
         }
 
         /**
@@ -135,7 +135,7 @@ public class RD2_QueueableService {
         public void executeOppEvaluationService() {
             new RD2_OpportunityEvaluationService()
                 .withRds(rdIds)
-                .withScheduleChanged(scheduleChangedRDIds)
+                .withScheduleChanged(rdIdsWhereScheduleChanged)
                 .evaluateOpportunities();
         }
     }

@@ -232,11 +232,11 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Updates related future open installment Opps
     * @param rds Recurring Donations
-    * @param scheduleChangedRDIds Recurring Donation Ids for which a schedule has been changed
+    * @param rdIdsWhereScheduleChanged Recurring Donation Ids for which a schedule has been changed
     * schedule has changed
     * @return RD2_OpportunityService This Opportunity Service instance
     */
-    public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds, Set<Id> scheduleChangedRDIds) {
+    public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds, Set<Id> rdIdsWhereScheduleChanged) {
         Map<Id, Opportunity> updatedOppById = new Map<Id, Opportunity>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
@@ -287,7 +287,7 @@ public with sharing class RD2_OpportunityService {
                 }
             }
 
-            if (!isOpenOppMatched && scheduleChangedRDIds.contains(rd.Id)) {
+            if (!isOpenOppMatched && rdIdsWhereScheduleChanged.contains(rd.Id)) {
                 if (earliestUnmatchedOpp == null || earliestUnmatchedInstallment == null) {
                     continue;
                 }

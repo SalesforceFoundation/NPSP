@@ -254,12 +254,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     * @description Recurring Donation Ids for which schedule has been changed
     */
     @TestVisible
-    private Set<Id> scheduleChangedRDIds {
+    private Set<Id> rdIdsWhereScheduleChanged {
         get {
-            if (scheduleChangedRDIds == null) {
-                scheduleChangedRDIds = new Set<Id>();
+            if (rdIdsWhereScheduleChanged == null) {
+                rdIdsWhereScheduleChanged = new Set<Id>();
             }
-            return scheduleChangedRDIds;
+            return rdIdsWhereScheduleChanged;
         } 
         set;
     }
@@ -315,7 +315,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService withScheduleChanged(Set<Id> rdIds) {
-        this.scheduleChangedRDIds = rdIds;
+        this.rdIdsWhereScheduleChanged = rdIds;
         return this;
     }
 
@@ -412,7 +412,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         oppService
             .createOpportunities(newOppRDs)
-            .updateOpportunities(updateOppRDs, scheduleChangedRDIds)
+            .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)
             .voidOpenOpportunities(closedRDs);
 
         handleOutdatedRecurringDonations(rdRecords);
