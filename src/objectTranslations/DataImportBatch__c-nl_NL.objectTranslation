@@ -42,6 +42,28 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
+        <help>De batchstatus wordt gebaseerd op de importstatus van de NPSP-gegevensimportrecords in de batch. Als één record niet wordt geïmporteerd, wordt de status van de batch Mislukt - Controle vereist.</help>
+        <label>Batchstatus</label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation>Voltooid</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation>Mislukt - Controle vereist</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Open</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Lijst met API-namen van velden die zijn opgenomen in de batch gifttabellen. Opgeslagen als JSON.</help>
+        <label>Batchtabelkolommen</label>
+        <name>Batch_Table_Columns__c</name>
+    </fields>
+    <fields>
         <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Contactpersonen</help>
         <label>Aangepast Uniek ID voor Contactpersoon</label>
         <name>Contact_Custom_Unique_ID__c</name>
@@ -97,7 +119,7 @@
     </fields>
     <fields>
         <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
-        <label>Verwachte telling van giften</label>
+        <label>Verwachte aantal giften</label>
         <name>Expected_Count_of_Gifts__c</name>
     </fields>
     <fields>
@@ -150,11 +172,6 @@
         <help>Wanneer aangevinkt, berekent NPSP donortotaliseringen bij verwerking van donaties. Wanneer niet aangevinkt, worden donortotaliseringen berekend tijdens de standaard nachtelijke Geplande Opdracht. Deze selectie kan de verwerking van deze batch vertragen.</help>
         <label>Donatietotalisering met Batch berekenen</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</help>
-        <label>Batch Status</label>
-        <name>Batch_Status__c</name>
     </fields>
     <gender>Feminine</gender>
     <layouts>

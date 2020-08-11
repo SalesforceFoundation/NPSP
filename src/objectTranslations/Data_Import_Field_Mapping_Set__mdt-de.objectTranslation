@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssatz</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssätze</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssatz</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssätze</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssatzes</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssätze</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssatz</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Datenimport-Feldzuordnungssätzen</value>
     </caseValues>
     <fields>
         <help>Die Datenimport-Objektgruppe, die diesen Feldzuordnungssatz enthält.</help>
@@ -46,5 +46,5 @@
         <name>Data_Import_Object_Mapping_Set__c</name>
         <relationshipLabel>Datenimport-Feldzuordnungssätze</relationshipLabel>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
 </CustomObjectTranslation>

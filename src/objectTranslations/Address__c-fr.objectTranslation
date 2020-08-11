@@ -59,8 +59,8 @@
         <name>Default_Address__c</name>
     </fields>
     <fields>
-        <help><!-- If selected, this address won&apos;t be included in address updates from the NCOA or address verification vendor. --></help>
-        <label><!-- Exclude from Updates --></label>
+        <help>Si cette option est sélectionnée, cette adresse ne sera pas incluse dans les mises à jour des adresses du NCOA ou du fournisseur de vérification d’adresse.</help>
+        <label>Exclure des mises à jour</label>
         <name>Exclude_from_Updates__c</name>
     </fields>
     <fields>
@@ -117,13 +117,13 @@
         <name>MailingStreet__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was evaluated by the NCOA vendor. --></help>
-        <label><!-- NCOA Evaluation Date --></label>
+        <help>La date et l’heure les plus récentes auxquelles l’adresse a été évaluée par un fournisseur NCOA.</help>
+        <label>Date d&apos;évaluation du NCOA</label>
         <name>NCOA_Evaluation_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The result code form the NCOA vendor. --></help>
-        <label><!-- NCOA Result Code --></label>
+        <help>Le code de résultat du fournisseur NCOA.</help>
+        <label>Code de résultat NCOA</label>
         <name>NCOA_Result_Code__c</name>
     </fields>
     <fields>
@@ -511,8 +511,8 @@
         <name>Verification_Status__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was verified. --></help>
-        <label><!-- Verified Date --></label>
+        <help>La date et l’heure les plus récentes auxquelles l’adresse a été vérifiée.</help>
+        <label>Date vérifiée</label>
         <name>Verified_Date__c</name>
     </fields>
     <fields>
@@ -524,7 +524,7 @@
     <layouts>
         <layout>Address Layout</layout>
         <sections>
-            <label><!-- Address Verification --></label>
+            <label>Vérification de l’adresse</label>
             <section>Address Verification</section>
         </sections>
         <sections>

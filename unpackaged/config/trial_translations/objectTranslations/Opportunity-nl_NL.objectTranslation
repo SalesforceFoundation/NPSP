@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <recordTypes>
-    <description>Donatie ontvangen</description>
-    <label>Donatie</label>
     <name>Donation</name>
+    <label>Donatie</label>
+    <description>Donatie ontvangen</description>
   </recordTypes>
   <recordTypes>
-    <description>Toelage ontvangen</description>
-    <label>Toelage</label>
     <name>Grant</name>
+    <label>Toelage</label>
+    <description>Toelage ontvangen</description>
   </recordTypes>
   <recordTypes>
-    <description>Zaken of services ontvangen als soortgelijk</description>
-    <label>Soortgelijke gift</label>
     <name>InKindGift</name>
+    <label>Soortgelijke gift</label>
+    <description>Zaken of services ontvangen als soortgelijk</description>
   </recordTypes>
   <recordTypes>
-    <description>Grote donatie van hoofddonor</description>
-    <label>Belangrijke gift</label>
     <name>MajorGift</name>
+    <label>Belangrijke gift</label>
+    <description>Grote donatie van hoofddonor</description>
   </recordTypes>
   <recordTypes>
-    <description>Overeenkomende donatie van de werkgever van een donor of een andere organisatie</description>
-    <label>Overeenkomende gift</label>
     <name>MatchingGift</name>
+    <label>Overeenkomende gift</label>
+    <description>Overeenkomende donatie van de werkgever van een donor of een andere organisatie</description>
   </recordTypes>
   <recordTypes>
-    <description>Type lidmaatschapsrecord</description>
-    <label>Lidmaatschap</label>
     <name>Membership</name>
+    <label>Lidmaatschap</label>
+    <description>Type lidmaatschapsrecord</description>
   </recordTypes>
   <layouts>
-    <layout>%%%NAMESPACE%%%Major Gift Layout</layout>
+    <layout>___NAMESPACE___Major Gift Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -46,7 +46,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Donation Layout</layout>
+    <layout>___NAMESPACE___Donation Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -65,7 +65,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Membership Layout</layout>
+    <layout>___NAMESPACE___Membership Layout</layout>
     <sections>
       <label>Velden</label>
       <section>Fields</section>
@@ -80,7 +80,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Grant Layout</layout>
+    <layout>___NAMESPACE___Grant Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -95,7 +95,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%In-Kind Gift Layout</layout>
+    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -110,7 +110,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Matching Gift Layout</layout>
+    <layout>___NAMESPACE___Matching Gift Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>

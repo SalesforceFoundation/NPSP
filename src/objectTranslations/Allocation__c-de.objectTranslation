@@ -41,48 +41,48 @@
         <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
     </caseValues>
     <fields>
-        <help>Der Betrag der Opportunity, der dieser allgemeinen Verrechnungseinheit zugeordnet wird. Lassen Sie das Feld bei prozentualen Zuordnungen leer.</help>
+        <help>Der Betrag der Opportunity, der diesem Verwendungszweck zugewiesen ist. Lassen Sie das Feld bei prozentualen Zuweisungen leer.</help>
         <label>Betrag</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>Die mit dieser Zuordnung verbundene Kampagne. Verwenden Sie dieses Feld, wenn Sie möchten, dass neue mit dieser Kampagne verbundene Opportunities in derselben Weise zugeordnet werden sollen.</help>
+        <help>Die mit dieser Zuweisung verbundene Kampagne. Verwenden Sie dieses Feld, wenn Sie möchten, dass neue mit dieser Kampagne verbundene Opportunities in derselben Weise zugewiesen werden sollen.</help>
         <label>Kampagne</label>
         <name>Campaign__c</name>
-        <relationshipLabel>Zuordnungen zur allgemeinen Verrechnungseinheit</relationshipLabel>
+        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
     </fields>
     <fields>
-        <help>Die allgemeine Verrechnungseinheit, der diese Zuordnung zugewiesen ist. Für neue Zuordnungen sind nur allgemeine Verrechnungseinheiten verfügbar, die als aktiv gekennzeichnet sind.</help>
-        <label>Allgemeine Verrechnungseinheit</label>
+        <help>Der Verwendungszweck, dem diese Zuweisung zugeordnet ist. Für neue Zuweisungen sind nur Verwendungszwecke verfügbar, die als aktiv gekennzeichnet sind.</help>
+        <label>Verwendungszweck</label>
         <lookupFilter>
             <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
             <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
         </lookupFilter>
         <name>General_Accounting_Unit__c</name>
-        <relationshipLabel>Zuordnungen zur allgemeinen Verrechnungseinheit</relationshipLabel>
+        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
     </fields>
     <fields>
-        <help>Die Opportunity, der diese Zuordnung zugewiesen werden soll. NPSP fasst alle Opportunities in einer Phase, die &quot;abgeschlossen&quot; bzw. &quot;gewonnen“ ist, in der allgemeinen Verrechnungseinheit dieser Zuordnung zusammen.</help>
+        <help>Die Opportunity, der diese Zuweisung zugeordnet werden soll. NPSP fasst alle Opportunities in einer Phase, die &quot;abgeschlossen&quot; bzw. &quot;gewonnen“ ist, im Verwendungszweck dieser Zuweisung zusammen.</help>
         <label>Opportunity</label>
         <name>Opportunity__c</name>
-        <relationshipLabel>Zuordnungen zur allgemeinen Verrechnungseinheit</relationshipLabel>
+        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
     </fields>
     <fields>
-        <help>Weist einer Zahlung Zuordnungen zu.</help>
+        <help>Ordner einer Zahlung Zuweisungen zu.</help>
         <label>Zahlung</label>
         <name>Payment__c</name>
-        <relationshipLabel>Zahlungszuordnungen</relationshipLabel>
+        <relationshipLabel>Zahlungszuweisungen</relationshipLabel>
     </fields>
     <fields>
-        <help>Der Prozentsatz des Opportunity-Betrags, der der allgemeinen Verrechnungseinheit dieser Zuordnung zugeordnet ist. Wenn Sie den Opportunity-Betrag später ändern, aktualisiert NPSP den Zuordnungsbetrag in der allgemeinen Verrechnungseinheit.</help>
+        <help>Der Prozentsatz des Opportunity-Betrags, der dem Verwendungszweck dieser Zuweisung zugeordnet ist. Wenn Sie den Opportunity-Betrag später ändern, aktualisiert NPSP den Zuweisungsbetrag im Verwendungszweck.</help>
         <label>Prozent</label>
         <name>Percent__c</name>
     </fields>
     <fields>
-        <help>Die wiederkehrende Spende, der diese Zuordnung zugewiesen ist. NPSP ordnet automatisch alle mit der wiederkehrenden Spende verbundenen neuen Opportunities in derselben Weise zu.</help>
+        <help>Die wiederkehrende Spende, der diese Zuweisung zugeordnet ist. NPSP ordnet automatisch alle mit der wiederkehrenden Spende verbundenen neuen Opportunities in derselben Weise zu.</help>
         <label>Wiederkehrende Spende</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel>Zuordnungen zur allgemeinen Verrechnungseinheit</relationshipLabel>
+        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
     </fields>
     <gender>Feminine</gender>
     <layouts>
@@ -92,9 +92,9 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Name der Zuordnung zur allgemeinen Verre</nameFieldLabel>
+    <nameFieldLabel>Name der Verwendungszweck-Zuweisung</nameFieldLabel>
     <webLinks>
-        <label>Zuordnungen verwalten</label>
+        <label>Zuweisungen verwalten</label>
         <name>Manage_Allocations</name>
     </webLinks>
 </CustomObjectTranslation>

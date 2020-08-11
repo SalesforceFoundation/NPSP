@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Opportunity Stage To State Mapping --></value>
+        <value>Opportunityphase-zu-Status-Zuordnungen</value>
     </caseValues>
     <fields>
         <help>API-Name der Opportunity-Phase, die dem Status zugeordnet werden soll.</help>
@@ -58,5 +58,5 @@
             <translation>Abgeschlossen</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
 </CustomObjectTranslation>
