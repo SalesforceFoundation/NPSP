@@ -14,7 +14,7 @@
         <name>Acknowledgment_Date__c</name>
     </fields>
     <fields>
-        <help>この支援の受領確認の状況。</help>
+        <help>この商談の受領確認の状況。</help>
         <label>受領確認の状況</label>
         <name>Acknowledgment_Status__c</name>
         <picklistValues>
@@ -39,14 +39,14 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>団体が設定する支援完了日 (支援が最初に作成された日、または支援が成立した日) に対して、支援者が支援について具体的に質問された日付。</help>
+        <help>取引先が設定する支援完了日 (支援が最初に作成された日、または支援が成立した日) に対して、支援者が支援について具体的に質問された日付。</help>
         <label>質問日</label>
         <name>Ask_Date__c</name>
     </fields>
     <fields>
         <label>一括処理</label>
         <name>Batch__c</name>
-        <relationshipLabel>支援</relationshipLabel>
+        <relationshipLabel>商談</relationshipLabel>
     </fields>
     <fields>
         <help>支援の質問が成功しなかった理由に関するメモ。</help>
@@ -54,8 +54,13 @@
         <name>Closed_Lost_Reason__c</name>
     </fields>
     <fields>
-        <help>選択すると、一部の支援個人の役割の自動化が無効になり、不正なデータや重複データが発生することがあります。詳細は、商品ドキュメントを参照してください。</help>
-        <label>自動的な個人の役割の無効化</label>
+        <help>Salesforce.org 支払サービスインテグレーションの外部識別子。</help>
+        <label>Elevate 継続 ID</label>
+        <name>CommitmentId__c</name>
+    </fields>
+    <fields>
+        <help>選択すると、一部の商談取引先責任者の役割の自動化が無効になり、不正なデータや重複データが発生することがあります。詳細は、商品ドキュメントを参照してください。</help>
+        <label>自動的な取引先責任者の役割の無効化</label>
         <name>DisableContactRoleAutomation__c</name>
     </fields>
     <fields>
@@ -64,7 +69,7 @@
         <name>Fair_Market_Value__c</name>
     </fields>
     <fields>
-        <help>この支援の質問種別を分類します。</help>
+        <help>この商談の質問種別を分類します。</help>
         <label>支援の戦略</label>
         <name>Gift_Strategy__c</name>
         <picklistValues>
@@ -109,13 +114,13 @@
         <name>Grant_Requirements_Website__c</name>
     </fields>
     <fields>
-        <help>この支援の名誉会員の既存の個人レコード。</help>
-        <label>名誉会員個人</label>
+        <help>この支援の名誉会員の既存の取引先責任者レコード。</help>
+        <label>名誉会員取引先責任者</label>
         <name>Honoree_Contact__c</name>
-        <relationshipLabel>支援 (名誉会員個人)</relationshipLabel>
+        <relationshipLabel>商談 (名誉会員取引先責任者)</relationshipLabel>
     </fields>
     <fields>
-        <help>支援者によって指定される名誉会員名。この項目が空白のままで [名誉会員個人] 項目に値がある場合、その値がこの項目に自動的に入力されます。</help>
+        <help>支援者によって指定される名誉会員名。この項目が空白のままで [名誉会員取引先責任者] 項目に値がある場合、その値がこの項目に自動的に入力されます。</help>
         <label>名誉会員名</label>
         <name>Honoree_Name__c</name>
     </fields>
@@ -148,8 +153,8 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <help>この支援をマッチングする会社の団体レコードに対する参照。</help>
-        <label>マッチング支援の団体</label>
+        <help>この支援をマッチングする会社の取引先レコードに対する参照。</help>
+        <label>マッチング支援の取引先</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>マッチングされたギフト</relationshipLabel>
     </fields>
@@ -176,7 +181,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>この支援のマッチング支援の支援レコードに対する参照。</help>
+        <help>この支援のマッチング支援の商談レコードに対する参照。</help>
         <label>マッチング支援</label>
         <name>Matching_Gift__c</name>
         <relationshipLabel>マッチングされたギフト</relationshipLabel>
@@ -213,10 +218,10 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>この支援について通知される個人の既存の連絡先レコード。</help>
+        <help>この支援について通知される個人の既存の取引先責任者レコード。</help>
         <label>通知受信者の連絡先</label>
         <name>Notification_Recipient_Contact__c</name>
-        <relationshipLabel>支援 (通知受信者)</relationshipLabel>
+        <relationshipLabel>商談 (通知受信者)</relationshipLabel>
     </fields>
     <fields>
         <help>通知受信者の連絡先情報 (支援者によって提供される)。</help>
@@ -224,26 +229,26 @@
         <name>Notification_Recipient_Information__c</name>
     </fields>
     <fields>
-        <help>この支援について通知される個人の名前 (支援者によって提供される)。この項目が空白のままで、[通知受信者の連絡先] 項目に値が指定されている場合、この項目にその値が自動的に入力されます。</help>
+        <help>この支援について通知される個人の名前 (支援者によって提供される)。この項目が空白のままで、[通知受信者の取引先責任者] 項目に値が指定されている場合、この項目にその値が自動的に入力されます。</help>
         <label>通知受信者名</label>
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
         <help>この助成金が以前の助成金の更新である場合、この項目を使用してこのレコードを以前のレコードに関連付けます。</help>
-        <label>以前の助成金支援</label>
+        <label>以前の助成金商談</label>
         <name>Previous_Grant_Opportunity__c</name>
         <relationshipLabel>関連する助成金支援</relationshipLabel>
     </fields>
     <fields>
-        <help>この支援の主個人や主キャンペーンソースのキャンペーンメンバーを作成するときに使用する状況。デフォルト (成立した支援ではレスポンスありの状況、他の支援ではレスポンスなしの状況) に設定するには、空白のままにします。</help>
-        <label>主個人のキャンペーンメンバーの状況</label>
+        <help>この商談の主取引先責任者や主キャンペーンソースのキャンペーンメンバーを作成するときに使用する状況。デフォルト (成立した商談ではレスポンスありの状況、他の商談ではレスポンスなしの状況) に設定するには、空白のままにします。</help>
+        <label>主取引先責任者のキャンペーンメンバーの状況</label>
         <name>Primary_Contact_Campaign_Member_Status__c</name>
     </fields>
     <fields>
-        <help>この支援の主個人。主個人の役割は、この項目との同期が保たれます。個人の支援の場合、これはこの支援の帰属を意味します。</help>
-        <label>主個人</label>
+        <help>この商談の主取引先責任者。主取引先責任者の役割は、この項目との同期が保たれます。個人の支援の場合、これはこの支援の帰属を意味します。</help>
+        <label>主取引先責任者</label>
         <name>Primary_Contact__c</name>
-        <relationshipLabel>支援</relationshipLabel>
+        <relationshipLabel>商談</relationshipLabel>
     </fields>
     <fields>
         <help>この支援者がこの支援の資格があると認定された日付。</help>
@@ -251,12 +256,12 @@
         <name>Qualified_Date__c</name>
     </fields>
     <fields>
-        <help>支援の命名規則に含まれる各支払の名前。無期限の継続支援では括弧内に回数が表示され、規定回数が設定されている継続支援では回数/総数が表示されます。</help>
+        <help>商談の命名規則に含まれる各支払の名前。無期限の継続支援では括弧内に回数が表示され、規定回数が設定されている継続支援では回数/総数が表示されます。</help>
         <label>継続支援の各支払の名前</label>
         <name>Recurring_Donation_Installment_Name__c</name>
     </fields>
     <fields>
-        <help>この支援でスケジュールされている継続支援の回数。</help>
+        <help>この商談でスケジュールされている継続支援の割賦の回数。</help>
         <label>継続支援の回数</label>
         <name>Recurring_Donation_Installment_Number__c</name>
     </fields>

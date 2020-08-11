@@ -54,6 +54,11 @@
         <name>Closed_Lost_Reason__c</name>
     </fields>
     <fields>
+        <help>Externer Bezeichner für die Integration des Salesforce.org-Zahlungsservice.</help>
+        <label>Wiederholungs-ID in Elevate</label>
+        <name>CommitmentId__c</name>
+    </fields>
+    <fields>
         <help>Wenn dieses Kontrollkästchen aktiviert ist, werden mit diesem Feld mehrere Aspekte der NPSP-Opportunity-Kontaktrollen-Automatisierung deaktiviert, was ggf. zu falschen oder doppelten Daten führen kann. Nähere Einzelheiten enthält die Produktdokumentation.</help>
         <label>Kontaktrollenautom. deaktivieren</label>
         <name>DisableContactRoleAutomation__c</name>
@@ -91,11 +96,11 @@
         <name>Grant_Contract_Number__c</name>
     </fields>
     <fields>
-        <label>Enddatum des Fördergeldzahlungsszeitraums</label>
+        <label>Enddatum Fördergeldzahlungsszeitraum</label>
         <name>Grant_Period_End_Date__c</name>
     </fields>
     <fields>
-        <label>Startdatum des Fördergeldzahlungsszeitraums</label>
+        <label>Startdatum Fördergeldzahlungsszeitraum</label>
         <name>Grant_Period_Start_Date__c</name>
     </fields>
     <fields>
@@ -155,7 +160,7 @@
     </fields>
     <fields>
         <help>Der Name des Unternehmens, der diese Spende entspricht.</help>
-        <label>Arbeitgeber der übereinstimmenden Schenkung</label>
+        <label>Arbeitgeber der übereinstimm. Schenkung</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>

@@ -381,6 +381,10 @@
         <name>CONV_Contacts_Attached</name>
     </customLabels>
     <customLabels>
+        <label>No tiene los permisos necesarios para convertir. Póngase en contacto con su administrador para obtener ayuda.</label>
+        <name>CONV_ConversionAccessDenied</name>
+    </customLabels>
+    <customLabels>
         <label>Conversión del modelo de cuentas en curso</label>
         <name>CONV_Conversion_Process</name>
     </customLabels>
@@ -708,6 +712,10 @@
         <name>ConfirmDeleteAccount</name>
     </customLabels>
     <customLabels>
+        <label>{0} es el único contacto en la cuenta. La eliminación de este contacto dejaría una cuenta vacía.</label>
+        <name>ConfirmDeleteLeaveAccountEmpty</name>
+    </customLabels>
+    <customLabels>
         <label>Eliminar cuenta</label>
         <name>DeleteAccount</name>
     </customLabels>
@@ -748,11 +756,7 @@
         <name>EPTo</name>
     </customLabels>
     <customLabels>
-        <label>Salesforce reportó los siguientes errores ya que NPSP estaba intentando ejecutar sus trabajos en lote o en un momento en el que no era capaz de mostrar mensajes de error directamente al usuario. Es probable que NPSP estuviese intentando actualizar campos de resumen en cuentas y contactos, pero no pudo guardar ciertos registros. Este fallo podría venir provocado por diversos problemas no relacionados con NPSP, como código personalizado o reglas de validación.
-
-Lea este artículo en Power of Us Hub para aprender cómo funcionan estos trabajos programados: https://powerofus.force.com/NPSP_Scheduled_Jobs
-
-Si no está seguro de cómo resolver estos errores, publique un mensaje en el grupo Nonprofit Success Pack en Power of Us Hub: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce encontró estos errores de NPSP. Para conocer más detalles sobre errores comunes, consulte &quot;Solucionar problemas del Nonprofit Success Pack&quot; en Power of Us Hub. Si no está seguro de cómo resolver los errores, publique un mensaje en el grupo Nonprofit Success Pack: https://powerofus.force.com/HUB_NPSP_Group</label>
         <name>ErrorEmailMessage</name>
     </customLabels>
     <customLabels>
@@ -848,6 +852,10 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>No se pueden modificar las Donaciones recurrentes procedentes de Servicios de pago de Elevate en NPSP excepto por el usuario de Integración de Servicios de pago de Elevate.</label>
+        <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label>¡Casi hemos terminado! Solo hay que comprobar un par de cosas primero. . .</label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
@@ -908,12 +916,20 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
+        <label>Este paso cambia la lógica de procesamiento para que Donaciones recurrentes utilice la lógica de Donaciones recurrentes mejoradas. Las Donaciones recurrentes no funcionarán como antes.</label>
+        <name>RD2_EnablementEnableSimpleIntro</name>
+    </customLabels>
+    <customLabels>
         <label>Activar Donaciones recurrentes mejoradas</label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
         <label>&lt;b&gt;ADVERTENCIA: NPSP no proporciona un método para revertir a Donaciones recurrentes heredadas.&lt;/b&gt;</label>
         <name>RD2_EnablementEnableWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>No puede crear o actualizar Donaciones recurrentes porque no ha terminado de actualizar Donaciones recurrentes mejoradas. Vaya a Configuración de NPSP | Donaciones recurrentes | Actualizar a Donaciones recurrentes mejoradas y complete todos los pasos de activación.</label>
+        <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
         <label>¡Saludos! Donaciones recurrentes mejoradas es nuestra función de Donaciones recurrentes rediseñada y mejorada para Nonprofit Success Pack (NPSP). Damos las gracias calurosamente a los miembros de nuestra comunidad que ofrecieron sus comentarios y ayudaron a que Donaciones recurrentes mejoradas fuese posible.
@@ -942,6 +958,10 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
     </customLabels>
     <customLabels>
+        <label>Utilice nuestro servicio MetaDeploy para instalar los metadatos de Donaciones recurrentes mejoradas. Los metadatos incluyen: nuevos valores de lista de selección, texto de ayuda actualizado y un nuevo formato de página. MetaDeploy es un servicio externo a su organización de Salesforce.</label>
+        <name>RD2_EnablementMetaDeploySimpleIntro</name>
+    </customLabels>
+    <customLabels>
         <label>Instalar los metadatos de Donaciones recurrentes mejoradas</label>
         <name>RD2_EnablementMetaDeployTitle</name>
     </customLabels>
@@ -962,7 +982,7 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
-        <label>Su ejecución de migración tiene errores; estos tendrán que solucionarse para completar una migración satisfactoria. Vea los errores dirigiéndose a Configuración de NPSP &gt; Herramientas del sistema &gt; Registros de errores. Consulte la &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentación&lt;/a&gt; para obtener ayuda. Arregle los errores, luego vuelva e inténtelo de nuevo.</label>
+        <label>Su ejecución de migración tiene errores; estos tendrán que solucionarse para completar una migración satisfactoria. Vea los errores dirigiéndose a Configuración de NPSP &gt; Herramientas del sistema &gt; Registros de errores. Consulte la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentación&lt;/a&gt; para obtener ayuda. Arregle los errores, luego vuelva e inténtelo de nuevo.</label>
         <name>RD2_EnablementMigrationErrorMessage</name>
     </customLabels>
     <customLabels>
@@ -994,6 +1014,10 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
+        <label>Solo los administradores del sistema pueden realizar acciones de actualización de Donaciones recurrentes mejoradas.</label>
+        <name>RD2_EnablementPermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Para limitar potenciales errores y proteger sus datos, realice estas tareas de preparación antes de empezar a actualizar a Donaciones recurrentes mejoradas:</label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
@@ -1006,6 +1030,96 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
     <customLabels>
         <label>Tareas de preparación</label>
         <name>RD2_EnablementPrepTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Donaciones recurrentes mejoradas hace que las Donaciones recurrentes sean más flexibles y fáciles de gestionar que nunca. Para activar Donaciones recurrentes mejoradas, siga los pasos que aparecen a continuación. Debe completar TODOS los pasos para activar completamente Donaciones recurrentes mejoradas.
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Debido a que no tiene registros de Donaciones recurrentes, no es necesario que valide o migre datos.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;Para obtener más información, lea la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Documentación de Donaciones recurrentes mejoradas&lt;/a&gt;.</label>
+        <name>RD2_EnablementSimpleIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>La fecha de finalización debe ser posterior a la fecha de cierre de la última Oportunidad Cerrada ganada.</label>
+        <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>La fecha de finalización no puede estar en el futuro cuando Tipo de recurrencia es Fijo.</label>
+        <name>RD2_EndDateMustBeValidForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label>Campos personalizados</label>
+        <name>RD2_EntryFormCustomFieldsSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Información de la donación</label>
+        <name>RD2_EntryFormDonationSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Información de donante</label>
+        <name>RD2_EntryFormDonorSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Seleccione el tipo de donante para esta Donación recurrente. Si selecciona Cuenta, introduzca una Cuenta de organización, y opcionalmente un contacto relacionado. Si selecciona Contacto, introduzca un contacto relacionado con una Cuenta de hogar.</label>
+        <name>RD2_EntryFormDonorTypeHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>Tipo de donante</label>
+        <name>RD2_EntryFormDonorTypeLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nueva donación recurrente</label>
+        <name>RD2_EntryFormHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Se ha creado la donación recurrente &quot;{0}&quot;.</label>
+        <name>RD2_EntryFormInsertSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>No tiene los permisos necesarios para los campos de Donaciones recurrentes. Póngase en contacto con su administrador para obtener ayuda.</label>
+        <name>RD2_EntryFormMissingPermissions</name>
+    </customLabels>
+    <customLabels>
+        <label>Otra información</label>
+        <name>RD2_EntryFormOtherSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Avanzado</label>
+        <name>RD2_EntryFormPeriodAdvanced</name>
+    </customLabels>
+    <customLabels>
+        <label>Seleccione Avanzado para introducir otros tipos de programación como semanal, anual, semestral, etc.</label>
+        <name>RD2_EntryFormPeriodHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>Periodo de recurrencia</label>
+        <name>RD2_EntryFormPeriodLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Días</label>
+        <name>RD2_EntryFormPeriodPluralDaily</name>
+    </customLabels>
+    <customLabels>
+        <label>Meses</label>
+        <name>RD2_EntryFormPeriodPluralMonthly</name>
+    </customLabels>
+    <customLabels>
+        <label>Semanas</label>
+        <name>RD2_EntryFormPeriodPluralWeekly</name>
+    </customLabels>
+    <customLabels>
+        <label>Años</label>
+        <name>RD2_EntryFormPeriodPluralYearly</name>
+    </customLabels>
+    <customLabels>
+        <label>Todos</label>
+        <name>RD2_EntryFormScheduleEveryLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Información de estado</label>
+        <name>RD2_EntryFormStatusSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Se ha guardado la donación recurrente &quot;{0}&quot;.</label>
+        <name>RD2_EntryFormUpdateSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>Debe activar Donaciones recurrentes mejoradas antes de que pueda ejecutar el trabajo Migración de datos de Donaciones recurrentes mejoradas.</label>
@@ -1044,7 +1158,23 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
-        <label>Fecha de finalización</label>
+        <label>No puede poner en pausa una donación recurrente cerrada</label>
+        <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Seleccione las cuotas de la lista que aparece a continuación. Puede poner en pausa un máximo de 12 cuotas consecutivas.</label>
+        <name>RD2_PauseDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>La primera fecha de donación después del periodo de pausa será el {0}.</label>
+        <name>RD2_PauseFirstDonationDateDynamicText</name>
+    </customLabels>
+    <customLabels>
+        <label>Poner en pausa {0}</label>
+        <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Fecha de finalización de programación</label>
         <name>RD2_ScheduleLWCEndDate</name>
     </customLabels>
     <customLabels>
@@ -1068,6 +1198,14 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
     </customLabels>
     <customLabels>
+        <label>No tiene permiso para ver Cuotas próximas. Póngase en contacto con su administrador del sistema para obtener más información.</label>
+        <name>RD2_ScheduleVisualizerFLSInstallment</name>
+    </customLabels>
+    <customLabels>
+        <label>No tiene permiso para ver Programaciones activas. Póngase en contacto con su administrador del sistema para obtener más información.</label>
+        <name>RD2_ScheduleVisualizerFLSSchedule</name>
+    </customLabels>
+    <customLabels>
         <label>No hay una programación activa para esta Donación recurrente.</label>
         <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
     </customLabels>
@@ -1078,6 +1216,49 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
     <customLabels>
         <label>Cuotas próximas</label>
         <name>RD2_ScheduleVisualizerTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Situación</label>
+        <name>RD2_StatusMappingColumnState</name>
+    </customLabels>
+    <customLabels>
+        <label>Nombre de API</label>
+        <name>RD2_StatusMappingColumnStatusAPIName</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;Definiciones de situación&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Activo: El donante está realizando donaciones de forma activa. NPSP crea Oportunidades de cuotas según se define en la programación de Donación recurrente.&lt;/li&gt;
+&lt;li&gt;Transcurrido: Las donaciones no se están recibiendo como se espera, pero NPSP sigue creando Oportunidades de cuotas según se define en la programación de Donación recurrente.&lt;/li&gt;
+&lt;li&gt;Cerrado: El donante ha dejado de realizar donaciones para esta Donación recurrente. NPSP no crea Oportunidades de cuotas.&lt;/li&gt;&lt;/ul&gt;</label>
+        <name>RD2_StatusMappingDefinitions</name>
+    </customLabels>
+    <customLabels>
+        <label>No puede guardar una asignación mientras NPSP está procesando otra asignación de Estado a Situación.</label>
+        <name>RD2_StatusMappingDeploymentAlreadyInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>Guardando asignación de Estado a Situación.</label>
+        <name>RD2_StatusMappingInProgressMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Cuando crea valores de lista de selección personalizados para Estado de Donación recurrente, debe asignarlos a una Situación de modo que NPSP sepa cómo procesar registros con esos valores de estado personalizados.
+        &lt;br/&gt;&lt;br/&gt;Si aún no creó ningún valor de lista de selección personalizado para Estado de Donación recurrente, no tiene nada que asignar.</label>
+        <name>RD2_StatusMappingIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>-- Sin asignar --</label>
+        <name>RD2_StatusMappingStateUnmapped</name>
+    </customLabels>
+    <customLabels>
+        <label>Asignación de Estado a Situación guardada.</label>
+        <name>RD2_StatusMappingSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>El Estado &quot;{0}&quot; no se ha asignado a una Situación.</label>
+        <name>RD2_StatusMustBeMapped</name>
+    </customLabels>
+    <customLabels>
+        <label>Vaya a Configuración de NPSP | Donaciones recurrentes | Asignaciones de Estado a Situación o póngase en contacto con su administrador para obtener ayuda.</label>
+        <name>RD2_StatusMustBeMappedSolution</name>
     </customLabels>
     <customLabels>
         <label>Debe seleccionar un contacto asociado con esta cuenta Hogar.</label>
@@ -1100,7 +1281,7 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD_ErrorAddDonationMissingId</name>
     </customLabels>
     <customLabels>
-        <label>No tiene permiso para crear un registro de donación. Póngase en contacto con su administrador del sistema para obtener más información.</label>
+        <label>No tiene los permisos necesarios para Actualizar oportunidades. Póngase en contacto con su administrador para obtener ayuda.</label>
         <name>RD_ErrorAddDonationPermissionDenied</name>
     </customLabels>
     <customLabels>
@@ -1116,7 +1297,8 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
-        <label><!-- Confirmation message displayed to user before the process runs --></label>
+        <label>Este proceso actualiza todas las Oportunidades de cuotas futuras para que coincidan con los datos actuales de esta Donación recurrente. Para algunas cuotas, NPSP podría eliminar y volver a crear nuevas cuotas.
+&lt;br/&gt;&lt;br/&gt;Haga clic en Continuar para iniciar el proceso o Cancelar para volver a la página Donación recurrente.</label>
         <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
@@ -1256,6 +1438,14 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>SmartyStreets_Help_Text</name>
     </customLabels>
     <customLabels>
+        <label>Selector de fechas</label>
+        <name>UTIL_InputFormFormFieldAltLabelDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Búsqueda</label>
+        <name>UTIL_InputFormFormFieldAltLabelLookup</name>
+    </customLabels>
+    <customLabels>
         <label>Código postal no encontrado</label>
         <name>Zip_Not_Found</name>
     </customLabels>
@@ -1276,7 +1466,7 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>addrCopyConAddBtnConfirm</name>
     </customLabels>
     <customLabels>
-        <label>No tiene los permisos de campos requeridos. Póngase en contacto con su administrador del sistema para consultar la obtención de los permisos necesarios.</label>
+        <label>No tiene los permisos de objetos o campos requeridos. Póngase en contacto con su administrador del sistema para consultar la obtención de los permisos necesarios.</label>
         <name>addrCopyConAddBtnFls</name>
     </customLabels>
     <customLabels>
@@ -1350,6 +1540,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>alloDefaultGAUMissing</name>
     </customLabels>
     <customLabels>
+        <label>La Cuenta Contable General predeterminada no está activa, establezca la Cuenta Contable General {0} como Activa o cambie la Cuenta Contable General predeterminada a una que esté activa.</label>
+        <name>alloDefaultGAUNotActive</name>
+    </customLabels>
+    <customLabels>
         <label>Debe habilitar las Asignaciones predeterminadas para asignar en el nivel de pago.</label>
         <name>alloDefaultNotEnabled</name>
     </customLabels>
@@ -1402,8 +1596,24 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>alloObjectUnsupported</name>
     </customLabels>
     <customLabels>
+        <label>El total de asignaciones en este {0} supera su importe. Actualice las asignaciones de {0} para hacer que su total sea igual al importe de {0}.</label>
+        <name>alloOverallocatedError</name>
+    </customLabels>
+    <customLabels>
         <label>La asignación total de pagos realizados no puede superar la asignación de la oportunidad para una CCG.</label>
         <name>alloPaidPmtsExceedsOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>Se produjo un error al procesar el registro {0} asociado con la Asignación {1} ({2}). Detalles: {3}</label>
+        <name>alloPaymentAllocationBatchAllocationError</name>
+    </customLabels>
+    <customLabels>
+        <label>Se produjo un error al procesar {0} {1}. Detalles: {2}</label>
+        <name>alloPaymentAllocationBatchRecordError</name>
+    </customLabels>
+    <customLabels>
+        <label>Se produjo un error al procesar los registros que no dieron error en el primer intento. No se guardaron datos.</label>
+        <name>alloPaymentAllocationBatchRetriesExceeded</name>
     </customLabels>
     <customLabels>
         <label>Las asignaciones a nivel de pago no están habilitadas para su organización. Intente asignar en el nivel de oportunidad en su lugar.</label>
@@ -1436,6 +1646,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Cada asignación debe tener un solo objeto principal. Oportunidad, Donación Recurrente o Campaña.</label>
         <name>alloSingleParent</name>
+    </customLabels>
+    <customLabels>
+        <label>Se reintentó el procesamiento de estas asignaciones y se completó correctamente.</label>
+        <name>alloSuccessfulRecordRetry</name>
     </customLabels>
     <customLabels>
         <label>Los totales de asignaciones no pueden superar el importe del pago o la oportunidad relacionados.</label>
@@ -2325,6 +2539,18 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>Debe ser administrador del sistema para acceder a esta página.</label>
+        <name>commonAdminPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Comprobar sus permisos</label>
+        <name>commonAdminPermissionErrorTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Importe</label>
+        <name>commonAmount</name>
+    </customLabels>
+    <customLabels>
         <label>error</label>
         <name>commonAssistiveError</name>
     </customLabels>
@@ -2349,12 +2575,32 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonBatches</name>
     </customLabels>
     <customLabels>
+        <label>CVV</label>
+        <name>commonCVV</name>
+    </customLabels>
+    <customLabels>
         <label>Cancelar</label>
         <name>commonCancel</name>
     </customLabels>
     <customLabels>
+        <label>Tipo de tarjeta</label>
+        <name>commonCardType</name>
+    </customLabels>
+    <customLabels>
         <label>Duplicar</label>
         <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label>Número de tarjeta</label>
+        <name>commonCreditNumber</name>
+    </customLabels>
+    <customLabels>
+        <label>Error crítico</label>
+        <name>commonCriticalError</name>
     </customLabels>
     <customLabels>
         <label>Valor predeterminado</label>
@@ -2369,12 +2615,40 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonEdit</name>
     </customLabels>
     <customLabels>
+        <label>Se produjo un error al incorporar este cliente de Elevate</label>
+        <name>commonElevateFailedOnboarding</name>
+    </customLabels>
+    <customLabels>
         <label>Error</label>
         <name>commonError</name>
     </customLabels>
     <customLabels>
         <label>Etiqueta de campo</label>
         <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Asignaciones de CCG</label>
+        <name>commonGauAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>Cuenta contable general</label>
+        <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>La clave debe contener un valor y utilizar el formato base64.</label>
+        <name>commonJWTInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label>La carga de JSON debe contener un valor.</label>
+        <name>commonJWTInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label>Fecha de caducidad</label>
+        <name>commonMMYY</name>
+    </customLabels>
+    <customLabels>
+        <label>Deben cumplimentarse estos campos obligatorios: {0}</label>
+        <name>commonMissingRequiredFields</name>
     </customLabels>
     <customLabels>
         <label>Nuevo regalo</label>
@@ -2397,12 +2671,28 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonOpen</name>
     </customLabels>
     <customLabels>
+        <label>Salesforce.org Elevate</label>
+        <name>commonPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label>Porcentaje</label>
+        <name>commonPercent</name>
+    </customLabels>
+    <customLabels>
+        <label>No tiene el acceso necesario para utilizar esta función. Póngase en contacto con su administrador de Salesforce.</label>
+        <name>commonPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Más información</label>
         <name>commonReadMore</name>
     </customLabels>
     <customLabels>
         <label>Obligatorio</label>
         <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Revisar formulario</label>
+        <name>commonReviewForm</name>
     </customLabels>
     <customLabels>
         <label>Guardar</label>
@@ -2453,8 +2743,20 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>conMergeBtnLabel</name>
     </customLabels>
     <customLabels>
+        <label>Seleccionar</label>
+        <name>conMergeDRSPickBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Seleccione los conjuntos de registros duplicados que desea combinar</label>
+        <name>conMergeDRSStep1</name>
+    </customLabels>
+    <customLabels>
         <label>No se admiten cuentas personales.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;No hay conjuntos de registros duplicados.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No se encontraron conjuntos de registros duplicados. Asegúrese de que las reglas de duplicados están activadas. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Más información&lt;/a&gt;.</label>
+        <name>conMergeErrorNoDRSFound</name>
     </customLabels>
     <customLabels>
         <label>Debe tener permisos de eliminación sobre contactos para combinar los contactos.</label>
@@ -2465,8 +2767,16 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>conMergeErrorNoDeleteRecAccess</name>
     </customLabels>
     <customLabels>
+        <label>Debe tener permisos de lectura sobre Conjuntos de registros duplicados para combinar los contactos.</label>
+        <name>conMergeErrorNoReadDSRObjPermission</name>
+    </customLabels>
+    <customLabels>
         <label>Contactos encontrados</label>
         <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>Conjuntos de registros duplicados</label>
+        <name>conMergeFoundDRS</name>
     </customLabels>
     <customLabels>
         <label>Combinar contacto</label>
@@ -2481,8 +2791,20 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>conMergePortalUser</name>
     </customLabels>
     <customLabels>
+        <label>Busque contactos específicos para ver si tienen duplicados</label>
+        <name>conMergeSearchConText</name>
+    </customLabels>
+    <customLabels>
         <label>Buscar contactos</label>
         <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Ver contactos duplicados</label>
+        <name>conMergeSeeDupConDRS</name>
+    </customLabels>
+    <customLabels>
+        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Más información &lt;/b&gt;&lt;/a&gt;</label>
+        <name>conMergeSeeDupConText</name>
     </customLabels>
     <customLabels>
         <label>Seleccionar todo</label>
@@ -2499,6 +2821,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Etapa completa</label>
         <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>Hay demasiados contactos duplicados. Utilice la opción Buscar contactos para combinar contactos</label>
+        <name>conMergeTooManyContactError</name>
     </customLabels>
     <customLabels>
         <label>Seleccione esta columna como el registro principal</label>
@@ -2561,6 +2887,14 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>flsReadAccessError</name>
     </customLabels>
     <customLabels>
+        <label>Error de asignación de CCG</label>
+        <name>gauAllocationErrorGeneral</name>
+    </customLabels>
+    <customLabels>
+        <label>Agregar nueva asignación</label>
+        <name>geAddNewAllocation</name>
+    </customLabels>
+    <customLabels>
         <label>Sección activa.</label>
         <name>geAssistiveActiveSection</name>
     </customLabels>
@@ -2617,7 +2951,27 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Advanced Form Fields header --></label>
+        <label>Recuento de regalos</label>
+        <name>geBatchGiftsCount</name>
+    </customLabels>
+    <customLabels>
+        <label>El valor esperado no coincide con el recuento de regalos o el importe de los regalos. Estos valores deben coincidir antes de que pueda procesar este lote.</label>
+        <name>geBatchGiftsExpectedCountOrTotalMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>El número esperado y el total de regalos y el importe de los regalos deben coincidir antes de que pueda procesar este lote.</label>
+        <name>geBatchGiftsExpectedTotalsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Regalos introducidos para {0}</label>
+        <name>geBatchGiftsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Importe de lote total</label>
+        <name>geBatchGiftsTotal</name>
+    </customLabels>
+    <customLabels>
+        <label>Para más opciones de entrada de regalos avanzada, seleccione campos de los siguientes grupos de objetos.</label>
         <name>geBodyAdvancedFieldMapping</name>
     </customLabels>
     <customLabels>
@@ -2641,15 +2995,31 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geBodyBatchHeaderWarning</name>
     </customLabels>
     <customLabels>
+        <label>La tabla de lotes aparece bajo su formulario de entrada de regalos y enumera los regalos incluidos en el lote.</label>
+        <name>geBodyBatchTableColumnsPart1</name>
+    </customLabels>
+    <customLabels>
+        <label>
+        Recomendamos incluir los siguientes campos:
+        &lt;/br&gt;
+        &lt;ul&gt;
+            &lt;li&gt; Nombre del donante: vincula con la Cuenta de organización o Contacto que realiza la donación. &lt;/li&gt;
+            &lt;li&gt; Nombre de donación: vincula con la Oportunidad o Pago para la donación. &lt;/li&gt;
+            &lt;li&gt; Información de estado y fallo: información sobre el procesamiento de lotes. &lt;/li&gt;
+        &lt;/ul&gt;
+        </label>
+        <name>geBodyBatchTableColumnsPart2</name>
+    </customLabels>
+    <customLabels>
         <label>Seleccione campos para agregar a esta sección.</label>
         <name>geBodyEmptyFormSection</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Field Bundles header --></label>
+        <label>Cada paquete de campos es un conjunto gestionado de campos que permite a los usuarios realizar diferentes acciones de entrada de regalos.</label>
         <name>geBodyFieldBundlesLeftCol</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Form Fields header --></label>
+        <label>Estos campos se incluyen comúnmente en los formularios de entrada de regalos. Los grupos de objetos personalizados también se encuentran en esta sección.</label>
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
@@ -2682,7 +3052,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
 &lt;br/&gt;&lt;br/&gt;
 Utilice plantillas de Entrada de regalos para introducir regalos por separado o lotes de regalos. Todos los regalos introducidos a través de la herramienta Entrada de regalo en lote obsoleta no se muestran en Entrada de regalos y viceversa.
 &lt;br/&gt;&lt;br/&gt;
-Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta Entrada de regalo en lote obsoleta (o Entrada de regalo por separado único si utiliza GEM).</label>
+Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta Entrada de regalo en lote obsoleta (o Entrada de regalo por separado si utiliza GEM).</label>
         <name>geBodyGiftEntryHelp</name>
     </customLabels>
     <customLabels>
@@ -2710,12 +3080,20 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
+        <label>No está procesando un pago con tarjeta para este regalo.</label>
+        <name>geBodyPaymentNotProcessingTransaction</name>
+    </customLabels>
+    <customLabels>
         <label>Introduzca detalles sobre esta plantilla de entrada de regalos.</label>
         <name>geBodyTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
         <label>Una plantilla es un formato reutilizable de campos para la entrada de datos. Modifique una plantilla haciendo clic en el nombre de la plantilla. También puede crear una nueva plantilla o hacer clic en el menú desplegable de cualquier plantilla para obtener más opciones. No se puede eliminar ninguna plantilla que esté en uso.</label>
         <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>El paquete de campos {0} incluye los campos siguientes: </label>
+        <name>geBodyWidgetFields</name>
     </customLabels>
     <customLabels>
         <label>Atrás: Campos de formulario</label>
@@ -2726,7 +3104,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geButtonBuilderNavBackTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label>Siguiente: Encabezado de lote</label>
+        <label>Siguiente: Configuración de lote</label>
         <name>geButtonBuilderNavBatchHeader</name>
     </customLabels>
     <customLabels>
@@ -2744,6 +3122,14 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Contraer todo</label>
         <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Contraído: Todos los campos están ocultos</label>
+        <name>geButtonFormFieldsDisplayOptionCollapsed</name>
+    </customLabels>
+    <customLabels>
+        <label>Ampliado: Todos los campos están visibles</label>
+        <name>geButtonFormFieldsDisplayOptionExpanded</name>
     </customLabels>
     <customLabels>
         <label>Ampliar todo</label>
@@ -2786,6 +3172,14 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
+        <label>De manera alternativa, realice el cargo en una tarjeta ahora.</label>
+        <name>geButtonPaymentAlternate</name>
+    </customLabels>
+    <customLabels>
+        <label>No realizar cargo en tarjeta</label>
+        <name>geButtonPaymentDoNotCharge</name>
+    </customLabels>
+    <customLabels>
         <label>Guardar e introducir nuevo regalo</label>
         <name>geButtonSaveNewGift</name>
     </customLabels>
@@ -2798,11 +3192,11 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geDisableGiftEntryInfo</name>
     </customLabels>
     <customLabels>
-        <label>Donación</label>
+        <label>Nombre de donación</label>
         <name>geDonationColumnLabel</name>
     </customLabels>
     <customLabels>
-        <label>Donante</label>
+        <label>Nombre del donante</label>
         <name>geDonorColumnLabel</name>
     </customLabels>
     <customLabels>
@@ -2816,6 +3210,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>El importe total no coincide con {0}</label>
         <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Se ha realizado el cargo correctamente en la tarjeta pero el pago no se ha registrado en Salesforce. Corrija los errores y vuelva a enviar el formulario para registrar la donación en Salesforce.</label>
+        <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
         <label>Cumplimente este campo.</label>
@@ -2838,7 +3236,11 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geErrorExistingTemplateName</name>
     </customLabels>
     <customLabels>
-        <label>Debe tener permiso para modificar todos los campos del formulario. Consulte a su administrador de Salesforce sobre el acceso a los siguientes campos: {0}</label>
+        <label>No puede modificar sus Columnas de tabla de lote.</label>
+        <name>geErrorFLSBatchTableColumns</name>
+    </customLabels>
+    <customLabels>
+        <label>Compruebe con su administrador de Salesforce su acceso a nivel de campos. Debe tener permiso para modificar los siguientes campos: {0}</label>
         <name>geErrorFLSBody</name>
     </customLabels>
     <customLabels>
@@ -2850,7 +3252,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geErrorFieldPermission</name>
     </customLabels>
     <customLabels>
-        <label>Debe tener permiso para modificar todos los objetos del formulario. Consulte a su administrador de Salesforce sobre el acceso a los siguientes objetos: {0}</label>
+        <label>Compruebe con su administrador de Salesforce su acceso a objetos. Debe tener permiso para modificar los siguientes objetos: {0}</label>
         <name>geErrorObjectCRUDBody</name>
     </customLabels>
     <customLabels>
@@ -2882,15 +3284,31 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
+        <label>Se agotó el tiempo de espera para realizar el cargo en la tarjeta.</label>
+        <name>geErrorRequestTimedout</name>
+    </customLabels>
+    <customLabels>
         <label>Campo obligatorio</label>
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Name of GAU Allocations field bundle --></label>
-        <name>geGauAllocationsBundle</name>
+        <label>Se produjo un error del sistema para la donación {0} por parte de {1}. Su administrador debe revisar las transacciones en {2} y determinar si se realizó el cargo en la tarjeta.</label>
+        <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header for advanced form fields --></label>
+        <label>Si no se realizó el cargo en la tarjeta, vuelva a introducir el regalo y el pago con tarjeta en Entrada de regalos.</label>
+        <name>geErrorUncertainCardChargePart2</name>
+    </customLabels>
+    <customLabels>
+        <label>Si se realizó el cargo en la tarjeta, anote el Id. de Transacción en {0} y busque registros con ese Id. en Salesforce. Actualice los registros de regalo y donante según proceda.</label>
+        <name>geErrorUncertainCardChargePart3</name>
+    </customLabels>
+    <customLabels>
+        <label>Para obtener más información, consulte la documentación de solución de problemas de {0} en Power of Us Hub.</label>
+        <name>geErrorUncertainCardChargePart4</name>
+    </customLabels>
+    <customLabels>
+        <label>Campos de formulario avanzados</label>
         <name>geHeaderAdvancedFormFields</name>
     </customLabels>
     <customLabels>
@@ -2942,6 +3360,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geHeaderFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
+        <label>Opciones de visualización</label>
+        <name>geHeaderFormFieldsModalDisplayOptionsSection</name>
+    </customLabels>
+    <customLabels>
         <label>Cambiar nombre de sección</label>
         <name>geHeaderFormFieldsModalRenameSection</name>
     </customLabels>
@@ -2986,6 +3408,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geHeaderPageLevelError</name>
     </customLabels>
     <customLabels>
+        <label>Accionado por {0}</label>
+        <name>geHeaderPaymentServices</name>
+    </customLabels>
+    <customLabels>
         <label>Entrada de regalo por separado</label>
         <name>geHeaderSingleGiftEntry</name>
     </customLabels>
@@ -2994,27 +3420,27 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geHeaderTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Account1 Object Group --></label>
+        <label>Los campos de esta sección son solo para Cuentas de organización. Esta organización puede ser el donante o tener una Afiliación con Contacto1.</label>
         <name>geHelpTextAccount1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Account2 Object Group --></label>
+        <label>Los campos de esta sección son solo para Cuentas de organización. Esta organización puede tener una Afiliación con Contacto2.</label>
         <name>geHelpTextAccount2Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Address Object Group --></label>
+        <label>El registro Dirección que está asociado con la Cuenta de hogar de Contacto1. La automatización de NPSP podría también rellenar esta dirección con el hogar de Contacto1 y todos los contactos dentro del mismo hogar. Si está utilizando el objeto Dirección EDA, debe crear un nuevo grupo de objetos para el objeto y utilizar sus campos de su plantilla.</label>
         <name>geHelpTextAddressMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for GAU Allocation 1 object group --></label>
+        <label>Este grupo de objetos solo le permite introducir una única asignación de CCG. Utilice estos campos únicamente si está asignando campos personalizados en asignaciones de CCG. En caso contrario, utilice el Paquete de campos de asignaciones de CCG.</label>
         <name>geHelpTextAllocation1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for GAU Allocation 2 object group --></label>
+        <label>Este grupo de objetos solo le permite introducir una segunda asignación de CCG. Utilice estos campos únicamente si está asignando campos personalizados en asignaciones de CCG. En caso contrario, utilice el Paquete de campos de asignaciones de CCG.</label>
         <name>geHelpTextAllocation2Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text about GAU Allocation field bundle --></label>
+        <label>Utilice este paquete de campos para asignar donaciones entre varias Cuentas Contables Generales.</label>
         <name>geHelpTextAllocationBundle</name>
     </customLabels>
     <customLabels>
@@ -3022,11 +3448,11 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geHelpTextBatchHeaderFieldLabelLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Contact1 Object Group --></label>
+        <label>El contacto principal en una Cuenta de hogar. Este contacto puede ser el donante o tener una afiliación con la organización en Cuenta1.</label>
         <name>geHelpTextContact1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Contact2 Object Group --></label>
+        <label>El contacto secundario en una Cuenta de hogar de Contacto1. Este contacto puede tener también una afiliación con la organización en Cuenta2.</label>
         <name>geHelpTextContact2Mapping</name>
     </customLabels>
     <customLabels>
@@ -3038,8 +3464,20 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geHelpTextFormFieldsFieldLabelLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Household Object Group --></label>
+        <label>Información adicional sobre la Cuenta de hogar de Contacto1.</label>
         <name>geHelpTextHouseholdMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Nota: Este paquete de campos solo está disponible para regalos aislados y no se mostrará cuando se introduzcan lotes de regalos.</label>
+        <name>geHelpTextPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label>El formato base64 no es válido. El número de caracteres debe ser un múltiplo de 4 y solo puede contener estos caracteres: [a-z A-Z 0-9 + / =]</label>
+        <name>geJWTUtilInvalidBase64Message</name>
+    </customLabels>
+    <customLabels>
+        <label>El formato base64url no es válido. Solo puede contener estos caracteres: [a-z A-Z 0-9 _ -]</label>
+        <name>geJWTUtilInvalidBase64UrlMessage</name>
     </customLabels>
     <customLabels>
         <label>Campos visibles</label>
@@ -3048,6 +3486,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Campos disponibles</label>
         <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Mostrar sección como</label>
+        <name>geLabelDisplaySections</name>
     </customLabels>
     <customLabels>
         <label>Nombre de sección</label>
@@ -3062,8 +3504,34 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geLabelTemplateInfoNameField</name>
     </customLabels>
     <customLabels>
+        <label>Se ha proporcionado una clave de API no válida para este cliente de Elevate</label>
+        <name>gePS_IntegrationTestInvalidAPIKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Se han proporcionado parámetros de configuración no válidos</label>
+        <name>gePS_IntegrationTestInvalidConfigParams</name>
+    </customLabels>
+    <customLabels>
+        <label>Se produjo un error al procesar el pago. Revise el error e inténtelo de nuevo. De manera alternativa,
+            seleccione No realizar cargo en tarjeta para introducir una donación sin procesar un pago con tarjeta. {0} errores:
+            /0x0A/ {1} </label>
+        <name>gePaymentProcessError</name>
+    </customLabels>
+    <customLabels>
+        <label>Se ha producido un error al procesar la transacción.</label>
+        <name>gePaymentProcessingErrorBanner</name>
+    </customLabels>
+    <customLabels>
+        <label>Se agotó el tiempo de espera de la solicitud. Inténtelo de nuevo o póngase en contacto con su administrador de Salesforce.</label>
+        <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
         <label>Buscar...</label>
         <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Seleccionar columnas de tabla de lote</label>
+        <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
         <label>Seleccionar...</label>
@@ -3074,12 +3542,24 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geTabBatchHeader</name>
     </customLabels>
     <customLabels>
+        <label>Configuración del lote</label>
+        <name>geTabBatchSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>Columnas de tabla de lote</label>
+        <name>geTabBatchTableColumns</name>
+    </customLabels>
+    <customLabels>
         <label>Campos de formulario</label>
         <name>geTabFormFields</name>
     </customLabels>
     <customLabels>
         <label>Información de plantilla</label>
         <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Realizando cargo en tarjeta…</label>
+        <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
         <label>{0} elemento</label>
@@ -3096,6 +3576,26 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>• Actualizado {0}</label>
         <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label>Veamos la oportunidad…</label>
+        <name>geTextNavigateToOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Haga clic en Guardar para procesar el pago con tarjeta y registrar la donación en Salesforce.</label>
+        <name>geTextPaymentsSaveNotice</name>
+    </customLabels>
+    <customLabels>
+        <label>Procesando…</label>
+        <name>geTextProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>Guardando…</label>
+        <name>geTextSaving</name>
+    </customLabels>
+    <customLabels>
+        <label>Actualizando...</label>
+        <name>geTextUpdating</name>
     </customLabels>
     <customLabels>
         <label>La vista de lista se actualizó.</label>
@@ -3130,8 +3630,24 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geToastTemplateUpdateSuccess</name>
     </customLabels>
     <customLabels>
+        <label>Se proporcionó una clave no válida (vacía) pero no se lanzó ninguna excepción</label>
+        <name>geUtilJWTTestInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Se proporcionó una carga no válida pero no se lanzó ninguna excepción</label>
+        <name>geUtilJWTTestInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label>Se proporcionó una cadena no válida pero no se lanzó ninguna excepción</label>
+        <name>geUtilJWTTestInvalidString</name>
+    </customLabels>
+    <customLabels>
         <label>Advertencia: Al eliminar esta sección también está retirando los campos obligatorios de la plantilla. Es necesario agregar estos campos a otra sección antes de que pueda guardar la plantilla.</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Ya que esta donación tiene al menos una Asignación de CCG, no puede actualizar ciertos campos.</label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>El procesamiento de regalos no admite el modelo de cuentas individual (&quot;Depósito&quot;).</label>
@@ -3398,6 +3914,18 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
+        <label>No se realizaron comprobaciones de estado de datos de registros</label>
+        <name>healthLabelDataBatchNotRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Desactivar comprobaciones de estado de datos de registros</label>
+        <name>healthLabelDisableRecordBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Si se selecciona, Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas.</label>
+        <name>healthLabelDisableRecordBatchDescription</name>
+    </customLabels>
+    <customLabels>
         <label>Destinatario de notificaciones de errores válido.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -3422,7 +3950,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>healthLabelHHObjData</name>
     </customLabels>
     <customLabels>
-        <label>La comprobación de estado verifica que todos sus parámetros de NPSP son válidos y busca problemas en sus datos relacionados con cuentas. Cuando se completa, puede ver los resultados a continuación, incluyendo información detallada de cualquier fallo.</label>
+        <label>Comprobación de estado verifica que todos sus parámetros de NPSP son válidos y busca problemas en sus datos de registros. Cuando se completa, puede ver los resultados a continuación, incluyendo información detallada de cualquier fallo.</label>
         <name>healthLabelIntro</name>
     </customLabels>
     <customLabels>
@@ -3706,6 +4234,14 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>isARequiredField</name>
     </customLabels>
     <customLabels>
+        <label>Falso</label>
+        <name>labelBooleanFalse</name>
+    </customLabels>
+    <customLabels>
+        <label>Verdadero</label>
+        <name>labelBooleanTrue</name>
+    </customLabels>
+    <customLabels>
         <label>Primero</label>
         <name>labelListViewFirst</name>
     </customLabels>
@@ -3760,6 +4296,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>País</label>
         <name>lblCountry</name>
+    </customLabels>
+    <customLabels>
+        <label>Divisa</label>
+        <name>lblCurrency</name>
     </customLabels>
     <customLabels>
         <label>Eliminar contacto</label>
@@ -4266,7 +4806,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>pscManageSoftCreditsPercent</name>
     </customLabels>
     <customLabels>
-        <label>No tiene permiso para crear gestionar créditos blandos parciales. Póngase en contacto con su administrador del sistema para obtener más información.</label>
+        <label>No tiene permiso para gestionar créditos blandos parciales. Póngase en contacto con su administrador del sistema para obtener más información.</label>
         <name>pscManageSoftCreditsPermissionDenied</name>
     </customLabels>
     <customLabels>
@@ -4370,7 +4910,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>stgAddrMustChooseClass</name>
     </customLabels>
     <customLabels>
-        <label>No tiene permiso para crear gestionar parámetros de direcciones. Póngase en contacto con su administrador del sistema para obtener más información.</label>
+        <label>No tiene permiso para gestionar parámetros de direcciones. Póngase en contacto con su administrador del sistema para obtener más información.</label>
         <name>stgAddrPermissionDenied</name>
     </customLabels>
     <customLabels>
@@ -4545,7 +5085,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>stgDefaultValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- The user do not have delete permission to delete custom setting. --></label>
+        <label>No tiene los permisos necesarios para borrar esta configuración. Póngase en contacto con su administrador para obtener ayuda.</label>
         <name>stgDeletePermissionError</name>
     </customLabels>
     <customLabels>
@@ -4590,7 +5130,7 @@ La selección de No programar automáticamente trabajos de NPSP predeterminados 
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- The user do not have edit permission to edit custom setting. --></label>
+        <label>No tiene los permisos necesarios para modificar esta configuración. Póngase en contacto con su administrador para obtener ayuda.</label>
         <name>stgEditPermissionError</name>
     </customLabels>
     <customLabels>
@@ -4811,6 +5351,12 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     <customLabels>
         <label>Cuando se selecciona, totaliza los totales de oportunidades Cerradas/Ganadas con registros de Contacto basados en funciones de contacto de oportunidades. Las totalizaciones de créditos blandos solo se producen en lotes nocturnos, pero puede ejecutarlos manualmente desde la configuración de Lote de donaciones de totalización.</label>
         <name>stgHelpEnableSoftCreditRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>Esta utiliza ejecuta un proceso por lotes que crea las siguientes oportunidades de cuotas programadas para Donaciones recurrentes y actualiza los campos de Datos estadísticos de Donación recurrente.
+        &lt;br/&gt;&lt;br/&gt;
+        Este proceso puede tardar algún tiempo, pero puede cerrar esta página y el proceso continuará en segundo plano.</label>
+        <name>stgHelpEnhancedRDBatch</name>
     </customLabels>
     <customLabels>
         <label>El registro de errores muestra una lista detallada de los errores para fines de depuración. Los errores solo se registran si las opciones Control de errores y Almacenar errores están activadas en Herramientas del sistema | Notificaciones de errores.</label>
@@ -5057,7 +5603,7 @@ Este proceso puede tardar algún tiempo, pero puede cerrar esta página con segu
         <name>stgHelpRDBatch</name>
     </customLabels>
     <customLabels>
-        <label>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes falla debido a limites del sistema.</label>
+        <label>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes falla debido a límites del sistema.</label>
         <name>stgHelpRDBatchSize</name>
     </customLabels>
     <customLabels>
@@ -5093,7 +5639,7 @@ Este proceso puede tardar algún tiempo, pero puede cerrar esta página con segu
         <name>stgHelpRDMaxDonations</name>
     </customLabels>
     <customLabels>
-        <label>Dice a Salesforce que hacer con las oportunidades abiertas restantes cuando se marca el Estado de final abierto en la donación recurrente como Cerrada.</label>
+        <label>Indica a NPSP qué hacer con las oportunidades abiertas restantes cuando se marca el Estado de final abierto en la donación recurrente como Cerrada.</label>
         <name>stgHelpRDOpenOppBehavior</name>
     </customLabels>
     <customLabels>
@@ -5748,6 +6294,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
+        <label>Asignación de Estado a Situación</label>
+        <name>stgNavRD2StatusMapping</name>
+    </customLabels>
+    <customLabels>
         <label>Lote de las Donaciones Recurrentes</label>
         <name>stgNavRDBatch</name>
     </customLabels>
@@ -5818,6 +6368,18 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <label>Power of Us Hub</label>
         <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label>Cuando crea una Donación recurrente, NPSP rellena automáticamente el Nombre utilizando el formato de nombre especificado. Seleccione Desactivar asignación automática de nombres para desactivar esta función.</label>
+        <name>stgRDNamingDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Desactivar asignación automática de nombres</label>
+        <name>stgRDNamingDisable</name>
+    </customLabels>
+    <customLabels>
+        <label>Formato de nombre de Donación recurrente</label>
+        <name>stgRDNamingOptionLabel</name>
     </customLabels>
     <customLabels>
         <label>Restablecer</label>
