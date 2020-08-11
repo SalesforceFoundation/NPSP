@@ -36,7 +36,7 @@
 public with sharing class RD2_PauseForm_CTRL {
 
     /***
-    * @description Recurring Donation Schedule service
+    * @description Recurring Donation Pause Schedule Handler
     */
     @TestVisible
     private static RD2_ScheduleService.PauseScheduleHandler pauseHandler {

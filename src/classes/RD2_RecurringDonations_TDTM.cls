@@ -163,8 +163,12 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
+        Map<Id, npe03__Recurring_Donation__c> oldRdsById = triggerAction == TDTM_Runnable.Action.BeforeUpdate
+            ? new Map<Id, npe03__Recurring_Donation__c>(oldRds)
+            : new Map<Id, npe03__Recurring_Donation__c>();
+
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = triggerAction == TDTM_Runnable.Action.BeforeUpdate
-            ? scheduleService.getAllRecurringDonationSchedules(rds, oldRds)
+            ? scheduleService.getAllSchedules(rds, oldRds)
             : new Map<Id, List<RecurringDonationSchedule__c>>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -178,7 +182,52 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 rdRecord
                     .reviseStatus(currentDate)
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
+
+                preventScheduleChangeWhenPaused(rdRecord, oldRdsById.get(rd.Id), schedulesByRdId.get(rd.Id));
             }
+        }
+    }
+
+    /***
+    * @description Prevents Recurring Donation update when
+    * its schedule related fields are changed and the RD has an active Pause
+    * @param rd The Recurring Donation to validate
+    * @param oldRd The old Recurring Donation
+    * @param schedules All active Schedules on the Recurring Donation
+    * @return void
+    */
+    private void preventScheduleChangeWhenPaused(
+        RD2_RecurringDonation rdRecord, npe03__Recurring_Donation__c oldRd, List<RecurringDonationSchedule__c> schedules
+    ) {
+
+        if (rdRecord.isClosed()) {
+            return;
+        }
+
+        npe03__Recurring_Donation__c rd = rdRecord.getSObject();
+        List<String> changedFields = new List<String>();
+
+        if (rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c) {
+            changedFields.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Installment_Period__c.getLabel());
+        }
+        if (rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c) {
+            changedFields.add(SObjectType.npe03__Recurring_Donation__c.fields.InstallmentFrequency__c.getLabel());
+        }
+        if (rd.Day_of_Month__c != oldRd.Day_of_Month__c) {
+            changedFields.add(SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c.getLabel());
+        }
+
+        if (changedFields.isEmpty()) {
+            return;
+        }
+
+        if (scheduleService.pauseHandler.hasActivePause(schedules, currentDate)) {
+            rd.addError(
+                String.format(
+                    System.Label.RD2_PauseCannotExistOnScheduleChange,
+                    new String[]{ String.join(changedFields, ', ') }
+                )
+            );
         }
     }
 
@@ -247,7 +296,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             if (rd.npe03__Organization__c == null
                 && rd.npe03__Contact__c != null
                 && contactById.containsKey(rd.npe03__Contact__c)
-                ) {
+            ) {
                 rd.npe03__Organization__c = contactById.get(rd.npe03__Contact__c).AccountId;
             }
         }
@@ -277,7 +326,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 if (
                     newRd.isOpenEnded()
                     && newRd.isClosed()
-                    && rds[i].EndDate__c != null 
+                    && rds[i].EndDate__c != null
                     && rds[i].EndDate__c > currentDate
                 ) {
                     rds[i].Status__c = oldRds[i].Status__c;
@@ -386,7 +435,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         } else {
             RD2_QueueableService.enqueueOppEvalService(rdIds, scheduleChangedRDIds);
-        } 
+        }
     }
 
     /***
@@ -466,6 +515,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         DmlWrapper revisedSchedules;
         for (npe03__Recurring_Donation__c rd : filteredRecurringDonations.values()) {
             revisedSchedules = scheduleService.getUpdatedSchedules(rd, oldSchedules.get(rd.Id));
+
             dmlActions.objectsToInsert.addAll(revisedSchedules.objectsToInsert);
             dmlActions.objectsToUpdate.addAll(revisedSchedules.objectsToUpdate);
         }

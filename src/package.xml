@@ -1744,6 +1744,7 @@
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
+        <members>RD2_PauseCannotExistOnScheduleChange</members>
         <members>RD2_PauseClosedRDErrorMessage</members>
         <members>RD2_PauseDeactivationSuccessMessage</members>
         <members>RD2_PauseDescription</members>

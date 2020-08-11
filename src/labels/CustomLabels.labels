@@ -2288,6 +2288,14 @@
         <value>You&apos;ve selected 1 installment.</value>
     </labels>
     <labels>
+        <fullName>RD2_PauseCannotExistOnScheduleChange</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot change specific fields causing schedule change when a pause exists</shortDescription>
+        <value>You can&apos;&apos;t change the following fields when an active pause exists for a Recurring Donation: {0}.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
         <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
