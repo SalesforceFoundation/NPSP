@@ -54,6 +54,28 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
+        <help><!-- The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot; --></help>
+        <label><!-- Batch Status --></label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation><!-- Failed - Needs Review --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation><!-- Open --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- List of API names for fields included in the batch gift table. Stored as JSON. --></help>
+        <label><!-- Batch Table Columns --></label>
+        <name>Batch_Table_Columns__c</name>
+    </fields>
+    <fields>
         <help><!-- An optional Unique Id field to use for Contact matching --></help>
         <label><!-- Contact Custom Unique ID --></label>
         <name>Contact_Custom_Unique_ID__c</name>
@@ -162,11 +184,6 @@
         <help><!-- When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
         <label><!-- Calculate Donation Rollups with Batch --></label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <fields>
-        <help><!--The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."--></help>
-        <label><!--Batch Status--></label>
-        <name>Batch_Status__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
     <layouts>

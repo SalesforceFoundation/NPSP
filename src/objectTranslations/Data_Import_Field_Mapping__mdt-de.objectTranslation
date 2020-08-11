@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>Datenimport-Feldzuordnungen</value>
     </caseValues>
     <fields>
         <help>Der Datenimport-Feldzuordnungssatz, der diese Feldzuordnung enthält.</help>
@@ -80,7 +80,7 @@
         <name>Target_Object_Mapping__c</name>
         <relationshipLabel>Datenimport-Feldzuordnungen</relationshipLabel>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Data Import Field Mapping Layout</layout>
         <sections>

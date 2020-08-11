@@ -1,91 +1,293 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
-        <label>Desusado:Utilizar siempre último día del mes</label>
-        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <label>Desusado:Importe de cuota</label>
-        <name>npe03__Installment_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Para donaciones recurrentes sin finalización definida, es el importe total de todas las oportunidades.</help>
-        <label>Desusado:Total</label>
-        <name>npe03__Total__c</name>
-    </fields>
-    <fields>
-        <help>Elija Abierto para donaciones recurrentes sin finalización definida. Seleccione Ninguno para donaciones recurrentes con duración fija. Seleccione Cerrada para cerrar una donación recurrente.</help>
-        <label>Desusado:Estado sin finalización definida</label>
-        <name>npe03__Open_Ended_Status__c</name>
-    </fields>
-    <fields>
-        <help>Especifica como se debe calcular el importe de las oportunidades recurrentes, basado en el campo Importe. Solo para donaciones recurrentes con duración fija.</help>
-        <label>Desusado:Tipo de programación</label>
-        <name>npe03__Schedule_Type__c</name>
-    </fields>
-    <fields>
-        <help>El importe de cada oportunidad de cuota.</help>
-        <label>Importe</label>
-        <name>npe03__Amount__c</name>
-    </fields>
-    <fields>
-        <help>La fecha de efecto inicial de esta donación recurrente. El valor predeterminado es la fecha vigente.</help>
-        <label>Fecha establecida</label>
-        <name>npe03__Date_Established__c</name>
-    </fields>
-    <fields>
-        <help>Establece el día específico del mes para Oportunidades de cuota futuras cuando el Período de cuota es Mensualmente.</help>
-        <label>Día del mes</label>
-        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>Last Day Of Month</masterLabel>
-            <translation>Último día del mes</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Período de cuota junto con Frecuencia de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
-        <label>Frecuencia</label>
-        <name>npe03__Installment_Period__c</name>
-    </fields>
-    <fields>
-        <help>NPSP calcula este valor automáticamente en base a la última vez que una oportunidad de cuota se marcó como pagada (solo lectura).</help>
-        <label>Fecha de última donación</label>
-        <name>npe03__Last_Payment_Date__c</name>
-    </fields>
-    <fields>
-        <help>El importe total pagado en esta donación recurrente. Se calcula automáticamente como el importe total de todas las oportunidades de cuotas Cerradas/Ganadas.</help>
-        <label>Importe total pagado</label>
-        <name>npe03__Paid_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Número total de oportunidades de cuotas pagadas en esta donación recurrente (solo lectura)</help>
-        <label>Cantidad de cuotas pagadas</label>
-        <name>npe03__Total_Paid_Installments__c</name>
-    </fields>
-    <fields>
-        <help>Se calcula automáticamente empleando las programaciones recurrentes activas. Es de solo lectura.</help>
-        <label>Fecha de próxima donación</label>
-        <name>npe03__Next_Payment_Date__c</name>
-    </fields>
-    <layouts>
-        <layout>Enhanced Recurring Donations Layout</layout>
-        <sections>
-            <label>Detalles de programación</label>
-            <section>Schedule Details</section>
-        </sections>
-        <sections>
-            <label>Datos estadísticos de Donación recurrente</label>
-            <section>Recurring Donation Statistics</section>
-        </sections>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nombre de donación recurrente</nameFieldLabel>
-    <standardFields>
-        <name>Name</name>
-        <label>Nombre de donación recurrente</label>
-    </standardFields>
-</CustomObjectTranslation>
+
+  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
+  <fields>
+    <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
+    <label>Desusado:Utilizar siempre último día del mes</label>
+    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+  </fields>
+  <fields>
+    <label>Desusado:Importe de cuota</label>
+    <name>npe03__Installment_Amount__c</name>
+  </fields>
+  <fields>
+    <help>Para donaciones recurrentes sin finalización definida, es el importe total de todas las oportunidades.</help>
+    <label>Desusado:Total</label>
+    <name>npe03__Total__c</name>
+  </fields>
+  <fields>
+    <help>Elija Abierto para donaciones recurrentes sin finalización definida. Seleccione Ninguno para donaciones recurrentes con duración fija. Seleccione Cerrada para cerrar una donación recurrente.</help>
+    <label>Desusado:Estado sin finalización definida</label>
+    <name>npe03__Open_Ended_Status__c</name>
+  </fields>
+  <fields>
+    <help>Especifica como se debe calcular el importe de las oportunidades recurrentes, basado en el campo Importe. Solo para donaciones recurrentes con duración fija.</help>
+    <label>Desusado:Tipo de programación</label>
+    <name>npe03__Schedule_Type__c</name>
+  </fields>
+  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
+  <fields>
+    <name>npe03__Amount__c</name>
+    <help>El importe de cada oportunidad de cuota.</help>
+    <label>Importe</label>
+  </fields>
+  <fields>
+    <name>npe03__Date_Established__c</name>
+    <help>La fecha de efecto inicial de esta donación recurrente. El valor predeterminado es la fecha vigente.</help>
+    <label>Fecha establecida</label>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%ClosedReason__c</name>
+    <help>El motivo por el que esta Donación recurrente tiene su valor de Estado actual.</help>
+    <label>Motivo de estado</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>Tarjeta caducada</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>Compromiso completado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>Donante fallecido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>Dificultad financiera</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>Ya no interesa</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>Desconocido</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+    <help>Establece el día específico del mes para Oportunidades de cuota futuras cuando el Período de cuota es Mensualmente. Si selecciona 29 o 30, la fecha de la cuota será el último día del mes para los meses que no tengan ese número de días.</help>
+    <label>Día del mes</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Último día del mes</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%RecurringType__c</name>
+    <help>Seleccione Abierto para una Donación recurrente. Seleccione Fijo para una Donación recurrente que tiene un número específico de cuotas. Para Fijo también debe rellenar el campo Cantidad de cuotas planificadas.</help>
+    <label>Tipo de recurrencia</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Abierto</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>Fijo</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%StartDate__c</name>
+    <help>La fecha en la que entra en vigor esa información de programación nueva o actualizada (Importe, Día del mes, etc.) para esta Donación recurrente. El valor predeterminado es la fecha actual.</help>
+    <label>Fecha efectiva</label>
+  </fields>
+  <fields>
+    <name>npe03__Installment_Period__c</name>
+    <help>Período de cuota junto con Frecuencia de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
+    <label>Frecuencia</label>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Mensual</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Yearly</masterLabel>
+      <translation>Anual</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Semanal</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>1st and 15th</masterLabel>
+      <translation>El 1 y el 15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Trimestral</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
+    <help>Frecuencia de cuota junto con Período de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
+    <label>Frecuencia de cuota</label>
+  </fields>
+  <fields>
+    <name>npe03__Last_Payment_Date__c</name>
+    <help>NPSP calcula este valor automáticamente en base a la última vez que una oportunidad de cuota se marcó como pagada (solo lectura).</help>
+    <label>Fecha de última donación</label>
+  </fields>
+  <fields>
+    <name>npe03__Paid_Amount__c</name>
+    <help>El importe total pagado en esta donación recurrente. Se calcula automáticamente como el importe total de todas las oportunidades de cuotas Cerradas/Ganadas.</help>
+    <label>Importe total pagado</label>
+  </fields>
+  <fields>
+    <name>npe03__Total_Paid_Installments__c</name>
+    <help>Número total de oportunidades de cuotas pagadas en esta donación recurrente (solo lectura)</help>
+    <label>Cantidad de cuotas pagadas</label>
+  </fields>
+  <fields>
+    <name>npe03__Next_Payment_Date__c</name>
+    <help>Se calcula automáticamente empleando las programaciones recurrentes activas. Es de solo lectura.</help>
+    <label>Fecha de próxima donación</label>
+  </fields>
+  <layouts>
+    <layout>Enhanced Recurring Donations Layout</layout>
+    <sections>
+      <label>Información de donante</label>
+      <section>Donor Information</section>
+    </sections>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Otra información</label>
+      <section>Other Information</section>
+    </sections>
+    <sections>
+      <label>Datos estadísticos</label>
+      <section>Statistics</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  </CustomObjectTranslation>

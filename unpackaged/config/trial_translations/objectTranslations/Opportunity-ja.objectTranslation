@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <recordTypes>
-    <description>受領支援金</description>
-    <label>支援</label>
     <name>Donation</name>
+    <label>支援</label>
+    <description>受領支援金</description>
   </recordTypes>
   <recordTypes>
-    <description>受領助成金</description>
-    <label>助成金</label>
     <name>Grant</name>
+    <label>助成金</label>
+    <description>受領助成金</description>
   </recordTypes>
   <recordTypes>
-    <description>現物として受け取った商品またはサービス</description>
-    <label>現物支援</label>
     <name>InKindGift</name>
+    <label>現物支援</label>
+    <description>現物として受け取った商品またはサービス</description>
   </recordTypes>
   <recordTypes>
-    <description>大口支援者からの大口支援</description>
-    <label>大口支援</label>
     <name>MajorGift</name>
+    <label>大口支援</label>
+    <description>大口支援者からの大口支援</description>
   </recordTypes>
   <recordTypes>
-    <description>支援者の従業員またはその他の組織からのマッチング支援</description>
-    <label>マッチングギフト</label>
     <name>MatchingGift</name>
+    <label>マッチングギフト</label>
+    <description>支援者の従業員またはその他の団体からのマッチング支援</description>
   </recordTypes>
   <recordTypes>
-    <description>会員のレコードタイプ</description>
-    <label>会員</label>
     <name>Membership</name>
+    <label>会員</label>
+    <description>会員のレコードタイプ</description>
   </recordTypes>
   <layouts>
-    <layout>%%%NAMESPACE%%%Major Gift Layout</layout>
+    <layout>___NAMESPACE___Major Gift Layout</layout>
     <sections>
       <label>支援情報</label>
       <section>Donation Information</section>
@@ -46,7 +46,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Donation Layout</layout>
+    <layout>___NAMESPACE___Donation Layout</layout>
     <sections>
       <label>支援情報</label>
       <section>Donation Information</section>
@@ -65,7 +65,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Membership Layout</layout>
+    <layout>___NAMESPACE___Membership Layout</layout>
     <sections>
       <label>項目</label>
       <section>Fields</section>
@@ -80,7 +80,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Grant Layout</layout>
+    <layout>___NAMESPACE___Grant Layout</layout>
     <sections>
       <label>支援情報</label>
       <section>Donation Information</section>
@@ -95,7 +95,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%In-Kind Gift Layout</layout>
+    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
     <sections>
       <label>支援情報</label>
       <section>Donation Information</section>
@@ -110,7 +110,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Matching Gift Layout</layout>
+    <layout>___NAMESPACE___Matching Gift Layout</layout>
     <sections>
       <label>支援情報</label>
       <section>Donation Information</section>
