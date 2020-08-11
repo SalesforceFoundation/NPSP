@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlagen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlagen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlagen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlage</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Form Template --></value>
+        <value>Formularvorlagen</value>
     </caseValues>
     <fields>
         <help>Die Kurzbeschreibung, die Benutzer für eine Vorlage eingeben können.</help>
@@ -55,7 +55,7 @@
         <label>Vorlagen-JSON</label>
         <name>Template_JSON__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Form Template Layout</layout>
         <sections>

@@ -21,6 +21,11 @@
         <name>InstallmentOppAutoCreateOption__c</name>
     </fields>
     <fields>
+        <help><!-- Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous. --></help>
+        <label><!-- Installment Opportunity Async Behavior --></label>
+        <name>InstallmentOppFirstCreateMode__c</name>
+    </fields>
+    <fields>
         <help>L&apos;étape d&apos;opportunité que NPSP applique à chaque nouvelle opportunité de versement lors de la création d&apos;un Don récurrent.</help>
         <label>Nom étape des opportunités de versement</label>
         <name>InstallmentOppStageName__c</name>
@@ -36,6 +41,11 @@
         <name>NextDonationDateMatchRangeDays__c</name>
     </fields>
     <fields>
+        <help>Le format à utiliser pour la dénomination des dons récurrents.</help>
+        <label>Format de nom du don récurrent</label>
+        <name>RecurringDonationNameFormat__c</name>
+    </fields>
+    <fields>
         <help>Contient les confirmations et l&apos;état d&apos;activation du Don récurrent avancé.</help>
         <label>État d&apos;activation des dons récurrents</label>
         <name>RecurringDonations2EnablementState__c</name>
@@ -49,6 +59,11 @@
         <help>Le nombre d’enreg. à traiter en une fois lors de l’exécution du traitement par lots des dons réguliers. La taille par défaut est 50. Si le traitement par lots des dons réguliers échoue à cause des limites du système, réduisez-le à un nombre moins élevé.</help>
         <label>Taille du lot de dons réguliers</label>
         <name>Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>ID de déploiement des métadonnées personnalisées de mappage de statut</help>
+        <label>ID de déploiement de mappage de statut</label>
+        <name>StatusMappingDeploymentId__c</name>
     </fields>
     <fields>
         <help>Permet d&apos;activer l&apos;exercice fiscal pour le total des dons récurrents. Vous pouvez définir le mois de début de l&apos;exercice dans Configuration | Paramètres de la société | Exercice fiscal. REMARQUE : Utilisez uniquement l&apos;exercice standard, pas personnalisé.</help>

@@ -2,39 +2,39 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Configuración de Servicios de pago</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Configuraciones de Servicios de pago</value>
     </caseValues>
     <fields>
-        <label><!-- Is Secret --></label>
+        <label>Es Secreto</label>
         <name>Is_Secret__c</name>
     </fields>
     <fields>
-        <label><!-- Key --></label>
+        <label>Clave</label>
         <name>Key__c</name>
     </fields>
     <fields>
-        <label><!-- Service Key --></label>
+        <label>Clave de servicio</label>
         <name>Service_Key__c</name>
     </fields>
     <fields>
-        <label><!-- Service --></label>
+        <label>Servicio</label>
         <name>Service__c</name>
     </fields>
     <fields>
-        <label><!-- Value --></label>
+        <label>Valor</label>
         <name>Value__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Payment Configuration Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Vínculos personalizados</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Payment Services Configuration Name --></nameFieldLabel>
+    <nameFieldLabel>Nombre configuración Servicios de pago</nameFieldLabel>
 </CustomObjectTranslation>
