@@ -54,6 +54,11 @@
         <name>Closed_Lost_Reason__c</name>
     </fields>
     <fields>
+        <help><!-- External identifier for Salesforce.org payment service integration. --></help>
+        <label><!-- Elevate Recurring Id --></label>
+        <name>CommitmentId__c</name>
+    </fields>
+    <fields>
         <help><!-- When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details. --></help>
         <label><!-- Disable Contact Role Automation --></label>
         <name>DisableContactRoleAutomation__c</name>
