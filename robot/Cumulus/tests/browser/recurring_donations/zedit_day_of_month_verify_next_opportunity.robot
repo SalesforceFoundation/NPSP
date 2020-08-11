@@ -15,8 +15,8 @@ Suite Teardown  Delete Records and Close Browser
 *** Keywords ***
 
 Setup Test Data
-        [Documentation]     Data setup needed for the testcase. Creates a recurring donation of type open linked to a contact
-        ...                 using backend API
+        [Documentation]     Data setup needed for the testcase. Creates a recurring
+        ...                 donation of type open linked to a contact using backend API
         ${NS} =             Get NPSP Namespace Prefix
         Set Suite Variable  ${NS}
 
@@ -37,14 +37,16 @@ Setup Test Data
         Set Suite Variable          ${CURRENT_DATE}
 
 Validate Opportunity Details
-       [Documentation]         Navigate to opportunity details page of the specified opportunity and validate stage and Close date fields
+       [Documentation]         Navigate to opportunity details page of the specified
+       ...                     opportunity and validate stage and Close date fields
        [Arguments]                       ${opportunityid}          ${stage}        ${date}
        Go To Page                              Details                        Opportunity                    object_id=${opportunityid}
        Navigate To And Validate Field Value    Stage                          contains                      ${stage}
        Navigate To And Validate Field Value    Close Date                     contains                      ${date}
 
 Edit Opportunity Stage
-       [Documentation]         Navigate to opportunity details page of the specified opportunity and update the opportunity stage detail
+       [Documentation]         Navigate to opportunity details page of the specified
+       ...                     opportunity and update the opportunity stage detail
        [Arguments]                       ${opportunityid}          ${stage}
        Go To Page                              Details                        Opportunity                     object_id=${opportunityid}
        Wait Until Loading Is Complete
@@ -57,39 +59,38 @@ Edit Opportunity Stage
 *** Test Cases ***
 
 Edit An Enhanced Recurring donation record of type open
-    [Documentation]               After creating an open recurring donation using API, The test ensures that the record
-     ...                          can be edited from the ui. A status of closed and the reason for closure can be specified
-     ...                          Verifies the opportunity status reflects the right status after closing
+    [Documentation]               After creating an open recurring donation using API,
+     ...                          The test ensures that the record can be edited from the ui.
+     ...                          A status of closed and the reason for closure can be
+     ...                          Specified. Verifies the opportunity status reflects the
+     ...                          Right status after closing
 
 
-    [tags]                                 unstable               W-040346            feature:RD2
+    [tags]                             unstable               W-040346            feature:RD2
 
-    Go To Page                              Details
-    ...                                     npe03__Recurring_Donation__c
-    ...                                     object_id=${data}[contact_rd][Id]
+    Go To Page                         Details
+    ...                                npe03__Recurring_Donation__c
+    ...                                object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
-    Validate Related Record Count           Opportunities                                                  1
-    @{opportunities} =                      API Query Opportunity For Recurring Donation                   ${data}[contact_rd][Id]
-    Edit Opportunity Stage                  ${opportunities}[0][Id]                                        Closed Won
-    Go To Page                              Details
-    ...                                     npe03__Recurring_Donation__c
-    ...                                     object_id=${data}[contact_rd][Id]
+    Validate Related Record Count      Opportunities                                    1
+    @{opportunities} =                 API Query Opportunity For Recurring Donation     ${data}[contact_rd][Id]
+    Edit Opportunity Stage             ${opportunities}[0][Id]                          Closed Won
+    Go To Page                         Details
+    ...                                npe03__Recurring_Donation__c
+    ...                                object_id=${data}[contact_rd][Id]
     Edit Recurring Donation Status
-    ...                                     Recurring Period=Monthly
-    ...                                     Day of Month=1
-    Go To Page                              Details
-    ...                                     npe03__Recurring_Donation__c
-    ...                                     object_id=${data}[contact_rd][Id]
+    ...                                Recurring Period=Monthly
+    ...                                Day of Month=1
+    Go To Page                         Details
+    ...                                npe03__Recurring_Donation__c
+    ...                                object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
-    ${next_payment_date}                    get next payment date number                                   1
+    ${next_payment_date}               get next payment date number                    1
 
-    #Validate that the number of opportunities now show as 2 . Verify the details on the respective opportunities
-    Validate Related Record Count           Opportunities                                                  2
-    @{opportunity} =                        API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
-    Validate Opportunity Details            ${opportunity}[0][Id]        Closed Won                       ${CURRENT_DATE}
-    Validate Opportunity Details            ${opportunity}[1][Id]        Pledged                          ${next_payment_date}
-
-
-
-
+    #Validate that the number of opportunities now show as 2 .
+    Validate Related Record Count      Opportunities                                   2
+    @{opportunity} =                   API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
+    #Verify the details on the respective opportunities
+    Validate Opportunity Details       ${opportunity}[0][Id]        Closed Won                       ${CURRENT_DATE}
+    Validate Opportunity Details       ${opportunity}[1][Id]        Pledged                          ${next_payment_date}
