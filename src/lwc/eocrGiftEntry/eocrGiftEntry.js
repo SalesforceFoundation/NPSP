@@ -23,8 +23,8 @@ export default class EocrGiftEntry extends LightningElement {
         this.otherDocumentId = '';
     }
 
-    done() {
-        this.submitFiles();
+    done = async() => {
+        await this.submitFiles();
         this.readyToEnter = false;
     }
 
@@ -78,7 +78,7 @@ export default class EocrGiftEntry extends LightningElement {
             // convert image file to base64 string
             let r = reader.result;
             componentThis.checkBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
-
+            console.log(componentThis.checkBase64);
           }, false);
 
           if (file) {
@@ -122,11 +122,8 @@ export default class EocrGiftEntry extends LightningElement {
     //       }
     // }
 
-    submitFiles() {
-        alert('Gift successfully created.');
-        console.log(this.checkBase64);
-        processMobileGift({checkBase64: this.checkBase64});
-        alert(submitted);
+    submitFiles = async() => {
+        processMobileGift({checkBase64: this.checkBase64.substring(1, 10)});
         //alert('submitting files');
         // alert(this.checkDocumentId);
         // alert(this.deviceDocumentId);
