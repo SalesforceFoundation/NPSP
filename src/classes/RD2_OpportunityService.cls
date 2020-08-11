@@ -246,11 +246,7 @@ public with sharing class RD2_OpportunityService {
                 .includeCurrentOrOpen(rd.npe03__Donations__r);
 
             Integer numberOfInstallments = matcher.getNumberOfOpportunities();
-            if (scheduleService.pauseHandler.hasActivePause(rd.RecurringDonationSchedules__r, currentDate)) {
-                numberOfInstallments += RD2_Constants.MAX_PAUSED_INSTALLMENTS;
-            }
-
-            matcher.match(scheduleService.getAllVisualizedInstallments(
+            matcher.match(scheduleService.getVisualizedInstallments(
                 currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
             ));
 
