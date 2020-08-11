@@ -88,19 +88,21 @@ global with sharing class BDI_DataImportService {
     * @return String the soql String
     */
     public static String strSoqlForDataImportProcess(List<Id> dataImportIds) {
+        List<String> whereClauses = new List<String>{
+            'Status__c <> \' + BDI_DataImport_API.bdiImported + \'',
+            'Id =: dataImportIds'
+        };
         String dataImportQuery;
 
-        // construct or SOQL for the batch
-        dataImportQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
+        dataImportQuery = new UTIL_Query()
+            .withSelectFields(listStrDataImportFields)
+            .withFrom(DataImport__c.SObjectType)
+            .withWhere(whereClauses)
+            // this ensures consistency for our test code, but also should
+            // help users figure out import problems by importing in a consistent order.
+            .withOrderBy('Name')
+            .build();
 
-        dataImportQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
-        dataImportQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
-
-        dataImportQuery += ' AND Id =: dataImportIds';
-
-        // this ensures consistency for our test code, but also should
-        // help users figure out import problems by importing in a consistent order.
-        dataImportQuery += ' ORDER BY Name ';
         return dataImportQuery;
     }
 
@@ -110,24 +112,32 @@ global with sharing class BDI_DataImportService {
     * @return String the soql String
     */
     public static String strSoqlForBatchProcess(Id batchId) {
+        List<String> selectClause = new List<String>{
+            String.join(listStrDataImportFields, ','),
+            BATCH_NUMBER_QUERY_STR
+        };
+        String batchIdClause;
         String batchQuery;
 
-        // construct or SOQL for the batch
-        batchQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
-
-        batchQuery += ',' + BATCH_NUMBER_QUERY_STR;
-
-        batchQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
-        batchQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
-
         if (batchId != null) {
-            batchQuery += ' AND NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
+            batchIdClause = 'NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
         } else {
-            batchQuery += ' AND NPSP_Data_Import_Batch__c = NULL';
+            batchIdClause = 'NPSP_Data_Import_Batch__c = NULL';
         }
-        // this ensures consistency for our test code, but also should
-        // help users figure out import problems by importing in a consistent order.
-        batchQuery += ' ORDER BY Name ';
+        List<String> whereClauses = new List<String>{
+            'Status__c <> \' + BDI_DataImport_API.bdiImported + \'',
+            batchIdClause
+        };
+
+        batchQuery = new UTIL_Query()
+            .withSelectFields(selectClause)
+            .withFrom(DataImport__c.SObjectType)
+            .withWhere(whereClauses)
+                // this ensures consistency for our test code, but also should
+                // help users figure out import problems by importing in a consistent order.
+            .withOrderBy('Name')
+            .build();
+
         return batchQuery;
     }
 
