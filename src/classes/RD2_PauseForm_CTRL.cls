@@ -163,12 +163,12 @@ public with sharing class RD2_PauseForm_CTRL {
     /**
      * @description Returns future projected installments for the Recurring Donation
      * @param recordId Record Id
-     * @param maxRowDisplay Maximum number of installments to display
+     * @param numberOfInstallments Number of installments to return
      * @return Map<String, Object> Installments datatable value by 'dataTable' key
      */
     @AuraEnabled
-    public static Map<String, Object> getInstallments(Id recordId, Integer maxRowDisplay) {
-        return RD2_VisualizeScheduleController.getInstallments(recordId, maxRowDisplay);
+    public static Map<String, Object> getInstallments(Id recordId, Integer numberOfInstallments) {
+        return RD2_VisualizeScheduleController.getInstallments(recordId, numberOfInstallments);
     }
 
     /**

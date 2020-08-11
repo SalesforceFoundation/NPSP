@@ -15,6 +15,7 @@ import selectedRowsSummarySingular from '@salesforce/label/c.RD2_PauseSelectedIn
 import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage';
 import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
 import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
+import firstDonationDateMessage from '@salesforce/label/c.RD2_PauseFirstDonationDateDynamicText';
 import permissionRequired from '@salesforce/label/c.RD2_PausePermissionRequired';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 
@@ -36,6 +37,7 @@ export default class Rd2PauseForm extends LightningElement {
         saveSuccessMessage,
         deactivationSuccessMessage,
         rdClosedMessage,
+        firstDonationDateMessage,
         permissionRequired,
         insufficientPermissions
     });
@@ -52,12 +54,16 @@ export default class Rd2PauseForm extends LightningElement {
     @track pausedReason = {};
     scheduleId;
 
+    @track columns = [];
+    @track installments;
+
+    numberOfInstallments = 13;
     maxRowDisplay = 12;
     maxRowSelection = 12;
     selectedIds = [];
     @track selectedRowsSummary = null;
-    @track columns = [];
-    @track installments;
+    firstDonationDateBoundary = null;
+    @track firstDonationDateMessage = null;
 
     @track error = {};
 
@@ -88,7 +94,7 @@ export default class Rd2PauseForm extends LightningElement {
     * If the user does not have permission to create/edit RD, then installments are not rendered.
     */
     loadInstallments = async () => {
-        getInstallments({ recordId: this.recordId, maxRowDisplay: this.maxRowDisplay })
+        getInstallments({ recordId: this.recordId, numberOfInstallments: this.numberOfInstallments })
             .then(response => {
                 this.handleRecords(response);
                 this.handleColumns(response);
@@ -156,15 +162,24 @@ export default class Rd2PauseForm extends LightningElement {
             this.installments = response.dataTable.records;
 
             if (this.installments) {
-                this.selectedIds = [];
+                if (this.installments.length > this.maxRowDisplay) {
+                    //Remove the last installment in order to display maximum
+                    //number of rows that should be displayed.
 
+                    //Save the installment date to help with the first donation date calculations
+                    //when all displayed installments are selected
+                    this.firstDonationDateBoundary = this.installments.pop().donationDate;
+                }
+
+                //Get selected installments to skip
+                this.selectedIds = [];
                 for (let i = 0; i < this.installments.length; i++) {
                     if (this.installments[i].isSkipped === true) {
                         this.selectedIds.push(this.installments[i].installmentNumber);
                     }
                 }
 
-                this.refreshSelectedRowsSummary();
+                this.refreshSummaries();
             }
         }
     }
@@ -202,7 +217,7 @@ export default class Rd2PauseForm extends LightningElement {
             this.handleDeselect(selectedRows);
         }
 
-        this.refreshSelectedRowsSummary();
+        this.refreshSummaries();
     }
 
     /***
@@ -259,8 +274,17 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
+     * @description Refreshes notification messages displayed 
+     * based on the currently selected installments to skip
+     */
+    refreshSummaries() {
+        this.refreshSelectedRowsSummary();
+        this.refreshFirstDonationDate();
+    }
+
+    /***
      * @description Constructs the installment selection summary message
-     * notofying user how many installments has been selected
+     * notifying user how many installments has been selected
      */
     refreshSelectedRowsSummary() {
         const selectedCount = this.selectedIds.length;
@@ -274,6 +298,33 @@ export default class Rd2PauseForm extends LightningElement {
         }
 
         this.refreshSaveButton();
+    }
+
+    /***
+     * @description Constructs the message displaying the date 
+     * of the first installment *after* the pause ends.
+     * If the pause does not exist or it is being deactivated, no date message is displayed.
+     * If all 12 installments are selected, then first donation date is 
+     * the date of the 13th installment that is not displayed.
+     */
+    refreshFirstDonationDate() {
+        this.firstDonationDateMessage = null;
+        let firstDateAfterPause = null;
+
+        if (this.installments && this.selectedIds && this.selectedIds.length > 0) {
+            const lastSelectedId = this.selectedIds[this.selectedIds.length - 1];
+
+            if (lastSelectedId < this.installments.length) {
+                firstDateAfterPause = this.installments[lastSelectedId].donationDate;
+
+            } else if (lastSelectedId == this.installments.length) {
+                firstDateAfterPause = this.firstDonationDateBoundary;
+            }
+
+            if (firstDateAfterPause !== null) {
+                this.firstDonationDateMessage = this.labels.firstDonationDateMessage.replace('{0}', firstDateAfterPause);
+            }
+        }
     }
 
     /***
