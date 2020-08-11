@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Datenimport-Objektzuordnungen</value>
     </caseValues>
     <fields>
         <help>Wenn Felder für dieses Objekt mit benutzerdefinierter Apex-Logik zugeordnet werden sollen, sollte das Feld den Namen einer Klasse (ggf. mit Namespace) enthalten, die die BDI_ObjectMappingLogic-Klasse erweitert und die populateObject-Methode überschreibt.</help>
@@ -102,7 +102,7 @@
             <translation>Elternteil</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Data Import Object Mapping Layout</layout>
         <sections>

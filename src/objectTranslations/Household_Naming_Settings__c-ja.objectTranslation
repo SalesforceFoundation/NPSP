@@ -5,8 +5,8 @@
         <value><!-- Household Naming Settings --></value>
     </caseValues>
     <fields>
-        <help>明示的にリストする個人の名前の数を指定します。この数を超えると、[超過時の名前] が使用されます。</help>
-        <label>個人超過数</label>
+        <help>明示的にリストする取引先責任者の名前の数を指定します。この数を超えると、[超過時の名前] が使用されます。</help>
+        <label>取引先責任者超過数</label>
         <name>Contact_Overrun_Count__c</name>
     </fields>
     <fields>
