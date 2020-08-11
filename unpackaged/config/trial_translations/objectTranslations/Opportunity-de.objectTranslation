@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <recordTypes>
-    <description>Spende eingegangen</description>
-    <label>Spende</label>
     <name>Donation</name>
+    <label>Spende</label>
+    <description>Spende eingegangen</description>
   </recordTypes>
   <recordTypes>
-    <description>Fördergelder eingegangen</description>
-    <label>Fördergelder</label>
     <name>Grant</name>
+    <label>Fördergelder</label>
+    <description>Fördergelder eingegangen</description>
   </recordTypes>
   <recordTypes>
-    <description>Als Sachspende eingegangene Waren oder Dienstleistungen</description>
-    <label>Sachgeschenk</label>
     <name>InKindGift</name>
+    <label>Sachgeschenk</label>
+    <description>Als Sachspende eingegangene Waren oder Dienstleistungen</description>
   </recordTypes>
   <recordTypes>
-    <description>Große Spende von einem Großspender</description>
-    <label>Großschenkung</label>
     <name>MajorGift</name>
+    <label>Großschenkung</label>
+    <description>Große Spende von einem Großspender</description>
   </recordTypes>
   <recordTypes>
-    <description>Zugewiesene Spende vom Arbeitgeber eines Spenders oder einer anderen Organisation</description>
-    <label>Zugewiesene Schenkung</label>
     <name>MatchingGift</name>
+    <label>Zugewiesene Schenkung</label>
+    <description>Zugewiesene Spende vom Arbeitgeber eines Spenders oder einer anderen Organisation</description>
   </recordTypes>
   <recordTypes>
-    <description>Ein Mitgliedschaft-Datensatztyp</description>
-    <label>Mitgliedschaft</label>
     <name>Membership</name>
+    <label>Mitgliedschaft</label>
+    <description>Ein Mitgliedschaft-Datensatztyp</description>
   </recordTypes>
   <layouts>
-    <layout>%%%NAMESPACE%%%Major Gift Layout</layout>
+    <layout>___NAMESPACE___Major Gift Layout</layout>
     <sections>
       <label>Spendeninformationen</label>
       <section>Donation Information</section>
@@ -46,7 +46,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Donation Layout</layout>
+    <layout>___NAMESPACE___Donation Layout</layout>
     <sections>
       <label>Spendeninformationen</label>
       <section>Donation Information</section>
@@ -65,7 +65,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Membership Layout</layout>
+    <layout>___NAMESPACE___Membership Layout</layout>
     <sections>
       <label>Felder</label>
       <section>Fields</section>
@@ -80,7 +80,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Grant Layout</layout>
+    <layout>___NAMESPACE___Grant Layout</layout>
     <sections>
       <label>Spendeninformationen</label>
       <section>Donation Information</section>
@@ -95,7 +95,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%In-Kind Gift Layout</layout>
+    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
     <sections>
       <label>Spendeninformationen</label>
       <section>Donation Information</section>
@@ -110,7 +110,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Matching Gift Layout</layout>
+    <layout>___NAMESPACE___Matching Gift Layout</layout>
     <sections>
       <label>Spendeninformationen</label>
       <section>Donation Information</section>

@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Programación de Donación recurrente</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Programaciones de Donaciones recurrentes</value>
     </caseValues>
     <fields>
         <help>Establece si la programación de Donación recurrente está activa o inactiva en base a la fecha de finalización. Es de solo lectura.</help>
@@ -108,8 +108,16 @@
             <translation>28</translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>3</masterLabel>
             <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
@@ -142,7 +150,7 @@
     </fields>
     <fields>
         <help>La fecha de finalización, si se requiere, para este registro de programación.</help>
-        <label>Fecha de finalización</label>
+        <label>Fecha de Finalización de la Recurrencia</label>
         <name>EndDate__c</name>
     </fields>
     <fields>
@@ -213,7 +221,7 @@
         <label>Fecha efectiva</label>
         <name>StartDate__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
         <sections>

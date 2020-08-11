@@ -50,13 +50,13 @@
         <name>County_Name__c</name>
     </fields>
     <fields>
-        <help>このデフォルト住所は世帯およびその個人が使用しますか?</help>
+        <help>このデフォルト住所は世帯およびその取引先責任者が使用しますか?</help>
         <label>デフォルト住所</label>
         <name>Default_Address__c</name>
     </fields>
     <fields>
-        <help><!-- If selected, this address won&apos;t be included in address updates from the NCOA or address verification vendor. --></help>
-        <label><!-- Exclude from Updates --></label>
+        <help>選択した場合、この住所は NCOA または住所検証ベンダーからの住所更新に含まれなくなります。</help>
+        <label>更新から除外</label>
         <name>Exclude_from_Updates__c</name>
     </fields>
     <fields>
@@ -73,8 +73,8 @@
         <name>Geolocation__c</name>
     </fields>
     <fields>
-        <help>この住所を使用する団体。</help>
-        <label>団体</label>
+        <help>この住所を使用する取引先。</help>
+        <label>取引先</label>
         <name>Household_Account__c</name>
         <relationshipLabel>住所</relationshipLabel>
     </fields>
@@ -113,13 +113,13 @@
         <name>MailingStreet__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was evaluated by the NCOA vendor. --></help>
-        <label><!-- NCOA Evaluation Date --></label>
+        <help>NCOA ベンダーが住所を評価した最新の日時。</help>
+        <label>NCOA 評価日</label>
         <name>NCOA_Evaluation_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The result code form the NCOA vendor. --></help>
-        <label><!-- NCOA Result Code --></label>
+        <help>NCOA ベンダーからの結果コード。</help>
+        <label>NCOA 結果コード</label>
         <name>NCOA_Result_Code__c</name>
     </fields>
     <fields>
@@ -507,8 +507,8 @@
         <name>Verification_Status__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was verified. --></help>
-        <label><!-- Verified Date --></label>
+        <help>住所が検証された最新の日時。</help>
+        <label>検証日</label>
         <name>Verified_Date__c</name>
     </fields>
     <fields>
@@ -519,7 +519,7 @@
     <layouts>
         <layout>Address Layout</layout>
         <sections>
-            <label><!-- Address Verification --></label>
+            <label>住所検証</label>
             <section>Address Verification</section>
         </sections>
         <sections>
