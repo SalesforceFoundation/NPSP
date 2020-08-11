@@ -9,8 +9,8 @@
         <name>BatchGiftEntryTabColumns</name>
     </fieldSets>
     <fields>
-        <help>組織団体のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の団体カスタム ID</label>
+        <help>団体取引先のマッチングに使用する任意の一意の ID 項目</help>
+        <label>一意の取引先カスタム ID</label>
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
@@ -38,17 +38,39 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help>個人のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の個人カスタム ID</label>
+        <help>バッチ状況は、バッチ内の NPSP データインポートレコードのインポート状況に基づきます。いずれかのレコードがインポートできなかった場合、そのバッチの状況は「失敗 - レビューが必要」になります。</help>
+        <label>バッチ状況</label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation>完了</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation>失敗 - レビューが必要</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>オープン</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>バッチギフトテーブルに含まれる項目の API 参照名のリスト。JSON として保存されます。</help>
+        <label>バッチテーブル列</label>
+        <name>Batch_Table_Columns__c</name>
+    </fields>
+    <fields>
+        <help>取引先責任者のマッチングに使用する任意の一意の ID 項目</help>
+        <label>一意の取引先責任者カスタム ID</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help>既存の個人に対してデータインポートレコード内の個人を照合するときのルールを指定します。</help>
-        <label>個人マッチングルール</label>
+        <help>既存の取引先責任者に対してデータインポートレコード内の取引先責任者を照合するときのルールを指定します。</help>
+        <label>取引先責任者マッチングルール</label>
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help>マッチング支援または支払を探すときの [日付(支援)] からの日数を入力します。NPSP はその日数範囲内で最も近い、マッチングする支援または支払を選択します。</help>
+        <help>マッチング商談または支払を探すときの [日付(支援)] からの日数を入力します。NPSP はその日数範囲内で最も近い、マッチングする商談または支払を選択します。</help>
         <label>日付(支援)からの日数</label>
         <name>Donation_Date_Range__c</name>
     </fields>
@@ -87,7 +109,7 @@
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help>既存の支援および支払に対してバッチレコードの支援をマッチングするとき、どの項目をマッチングするかを指定します。</help>
+        <help>既存の商談および支払に対してバッチレコードの商談をマッチングするとき、どの項目をマッチングするかを指定します。</help>
         <label>支援マッチングルール</label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
@@ -147,15 +169,10 @@
         <label>バッチでの支援積み上げ集計の計算</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
-    <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</help>
-        <label>Batch Status</label>
-        <name>Batch_Status__c</name>
-    </fields>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
-            <label>個人 &amp; 団体マッチング</label>
+            <label>取引先責任者 &amp; 取引先マッチング</label>
             <section>Contact &amp; Account Matching</section>
         </sections>
         <sections>
