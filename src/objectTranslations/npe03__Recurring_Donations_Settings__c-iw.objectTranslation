@@ -21,6 +21,11 @@
         <name>InstallmentOppAutoCreateOption__c</name>
     </fields>
     <fields>
+        <help><!-- Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous. --></help>
+        <label><!-- Installment Opportunity Async Behavior --></label>
+        <name>InstallmentOppFirstCreateMode__c</name>
+    </fields>
+    <fields>
         <help><!-- The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation. --></help>
         <label><!-- Stage Name for Installment Opportunities --></label>
         <name>InstallmentOppStageName__c</name>
@@ -36,6 +41,11 @@
         <name>NextDonationDateMatchRangeDays__c</name>
     </fields>
     <fields>
+        <help><!-- The format to use for Recurring Donation naming. --></help>
+        <label><!-- Recurring Donation Name Format --></label>
+        <name>RecurringDonationNameFormat__c</name>
+    </fields>
+    <fields>
         <help><!-- Contains Enhanced Recurring Donation enablement confirmations and state. --></help>
         <label><!-- Recurring Donations Enablement State --></label>
         <name>RecurringDonations2EnablementState__c</name>
@@ -49,6 +59,11 @@
         <help><!-- The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits. --></help>
         <label><!-- Recurring Donation Batch Size --></label>
         <name>Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help><!-- Status mapping custom metadata deployment Id --></help>
+        <label><!-- Status Mapping Deployment Id --></label>
+        <name>StatusMappingDeploymentId__c</name>
     </fields>
     <fields>
         <help><!-- When checked, this option enables fiscal year for Recurring Donation value totals. To set the fiscal year start month, go to Setup | Company Settings | Fiscal Year. NOTE: Use Standard Fiscal Year only. Do not enable Custom Fiscal Year. --></help>
