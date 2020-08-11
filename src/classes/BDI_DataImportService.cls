@@ -88,8 +88,6 @@ global with sharing class BDI_DataImportService {
         // construct or SOQL for the batch
         dataImportQuery = 'SELECT ' + String.join(listStrDataImportFields, ',');
 
-        dataImportQuery += ',' + BATCH_NUMBER_QUERY_STR;
-
         dataImportQuery += ' FROM ' + UTIL_Describe.getObjectDescribe(DataImport__c.getSObjectType()).getName();
         dataImportQuery += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
 

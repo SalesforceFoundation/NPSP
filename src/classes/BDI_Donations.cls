@@ -264,7 +264,9 @@ public class BDI_Donations {
     private Boolean shouldSetDonationBatchNumber(SObject targetObject, DataImport__c dataImport) {
         SObjectType objectType = targetObject.getSObjectType();
 
-        if (String.isBlank(dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c)) {
+        if (bdi.isDryRun ||
+            String.isBlank(dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c)) {
+
             return false;
         }
 
