@@ -39,6 +39,11 @@ private class STG_PanelRDHealthCheck_TEST {
     private static final String BAD_PICKLIST_VALUE = 'Non Existent Value';
     private static final String PLEDGED_STAGE = UTIL_UnitTestData_TEST.getOpenStage();
 
+    private static final String STATUS_ACTIVE_LABEL = UTIL_Describe.getTranslatedPicklistLabel(
+        npe03__Recurring_Donation__c.SObjectType,
+        npe03__Recurring_Donation__c.Status__c,
+        RD2_Constants.STATUS_ACTIVE);
+
     /**
      * @description Validates that Legacy Recurring Donations is configured properly in the org
      */
@@ -297,7 +302,7 @@ private class STG_PanelRDHealthCheck_TEST {
 
         String errorMessage = String.format(
             System.Label.RD2_StatusMustBeMapped,
-            new String[] { RD2_Constants.STATUS_ACTIVE}
+            new String[] { STATUS_ACTIVE_LABEL }
         );
 
         System.assert(results.contains(errorMessage),

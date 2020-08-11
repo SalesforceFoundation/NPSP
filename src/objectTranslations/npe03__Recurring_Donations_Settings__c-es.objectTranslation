@@ -21,6 +21,11 @@
         <name>InstallmentOppAutoCreateOption__c</name>
     </fields>
     <fields>
+        <help><!-- Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous. --></help>
+        <label><!-- Installment Opportunity Async Behavior --></label>
+        <name>InstallmentOppFirstCreateMode__c</name>
+    </fields>
+    <fields>
         <help>La etapa de oportunidad que NPSP aplica a cada Oportunidad de cuota cuando crea una Donación recurrente.</help>
         <label>Nombre de etapa para oportunidades cuota</label>
         <name>InstallmentOppStageName__c</name>
@@ -36,6 +41,11 @@
         <name>NextDonationDateMatchRangeDays__c</name>
     </fields>
     <fields>
+        <help>El formato que se utiliza para la nomenclatura de las Donaciones recurrentes.</help>
+        <label>Formato de nombre de Donación recurrente</label>
+        <name>RecurringDonationNameFormat__c</name>
+    </fields>
+    <fields>
         <help>Contiene confirmaciones y estado de activación de Donaciones recurrentes mejoradas.</help>
         <label>Estado activación Donaciones recurrentes</label>
         <name>RecurringDonations2EnablementState__c</name>
@@ -49,6 +59,11 @@
         <help>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes de donaciones recurrentes falla debido a limites del sistema</help>
         <label>Tamaño lote de donaciones recurrentes</label>
         <name>Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>Id. de la implementación de metadatos personalizados de asignación de estado</help>
+        <label>Id. de Implementación asignación estado</label>
+        <name>StatusMappingDeploymentId__c</name>
     </fields>
     <fields>
         <help>Activa los totales de valores del año fiscal para Donaciones recurrentes. Para establecer el mes de inicio del año fiscal, vaya a Configuración | Configuración de empresa | Año fiscal. NOTA: Utilice solo el año fiscal estándar, no active el personalizado.</help>
