@@ -880,11 +880,6 @@ flows:
                         Callable apiClass = (Callable)t.newInstance();
                         apiClass.call('RD2.ExecuteDataMigration', params);
             6:
-                task: batch_apex_wait
-                # Wait until after the data migration job has completed
-                options:
-                    class_name: RD2_DataMigration_BATCH
-            7:
                 task: execute_anon
                 # Update enhanced Recurring Donation enablement page state
                 options:
@@ -892,6 +887,11 @@ flows:
                         npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
                         rdSettings.%%%NAMESPACE%%%RecurringDonations2EnablementState__c = '{"isReady":true,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
                         upsert rdSettings;
+            7:
+                task: batch_apex_wait
+                # Wait until after the data migration job has completed
+                options:
+                    class_name: RD2_DataMigration_BATCH
 
     enable_rd2_managed:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (managed package only)'
