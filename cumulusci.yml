@@ -886,7 +886,7 @@ flows:
                         String ns = ('%%%NAMESPACE%%%').replace('__','');
                         Type t = Type.forName(ns, 'Callable_Api');
                         Callable apiClass = (Callable)t.newInstance();
-                        apiClass.call('RD2.ExecuteDataMigration', params);                
+                        apiClass.call('RD2.ExecuteDataMigration', params);
             7:
                 task: batch_apex_wait
                 # Wait until after the data migration job has completed
