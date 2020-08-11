@@ -900,13 +900,16 @@ private with sharing class RD2_RecurringDonations_TEST {
     * @description Verifies that Day of Month field will be clear out on update when RD is not monthly 
     */
     @isTest
-    private static void shouldClearDayOfMonthIfRdUpdateToNotMonthly() {
+    private static void shouldClearDayOfMonthWhenSpecifiedOnUpdateAndRDIsNotMonthly() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .build();
         insert rd;
-
+        
+        rd = rdGateway.getRecord(rd.Id);
+        System.assert(String.isNotBlank(rd.Day_of_Month__c), 'Monthly Rd should have Day of Month field populated.');
+    
         Test.startTest();
         rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
         update rd;
@@ -914,14 +917,14 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
         
-        System.assertEquals(null, rd.Day_of_Month__c, 'Day of Month should be clear out when RD is not monthly');
+        System.assertEquals(null, rd.Day_of_Month__c, 'Day of Month should be clear out when RD is not monthly.');
     }
 
     /**
     * @description Verifies that Day of Month field will be clear out on insert when RD is not monthly 
     */
     @isTest
-    private static void shouldClearDayOfMonthIfNonMonhtlyRdIsInsert() {
+    private static void shouldClearDayOfMonthWhenSpecifiedOnInsertAndRDIsNotMonthly() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationWeeklyBuilder()
@@ -934,7 +937,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
         
-        System.assertEquals(null, rd.Day_of_Month__c, 'Day of Month should be clear out when RD is not monthly');
+        System.assertEquals(null, rd.Day_of_Month__c, 'Day of Month should be clear out when RD is not monthly.');
     }
 
 
