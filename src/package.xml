@@ -3246,6 +3246,11 @@
         <members>Batch__c-iw</members>
         <members>Batch__c-ja</members>
         <members>Batch__c-nl_NL</members>
+        <members>Campaign-de</members>
+        <members>Campaign-es</members>
+        <members>Campaign-fr</members>
+        <members>Campaign-ja</members>
+        <members>Campaign-nl_NL</members>
         <members>Contact-de</members>
         <members>Contact-es</members>
         <members>Contact-fr</members>

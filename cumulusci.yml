@@ -552,8 +552,10 @@ tasks:
         options:
             output_style: salesforce
             elements:
+                # Strip all underlying field translations, leaving translations for new fields in these objects
                 - path: src/*ranslations/**/*ranslation
                   xpath: /*/*[re:match(ns:name, '...+__..+')]
+                # Strip any underlying package object label translations
                 - path: src/objectTranslations/npe01**.objectTranslation
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
                 - path: src/objectTranslations/npo02**.objectTranslation
@@ -564,144 +566,80 @@ tasks:
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
                 - path: src/objectTranslations/npe5**.objectTranslation
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
+                # Strip RecordType translations from the Account and Opp because these are not in the package
                 - path: src/objectTranslations/Account-**.objectTranslation
                   xpath: //ns:recordTypes
                 - path: src/objectTranslations/Opportunity-**.objectTranslation
                   xpath: //ns:recordTypes
+                # Strip Report Type and SControl translations that should not be in the package
+                - path: src/translations/**.translation
+                  xpath: //ns:reportTypes[ns:name='screen_flows_prebuilt_crt']
                 - path: src/translations/**.translation
                   xpath: //ns:reportTypes[ns:name='Households_and_Donations']|//ns:scontrols
+                # Strip field translations that should not be included in the package
                 - path: src/objectTranslations/Schedulable__c-**.objectTranslation
                   xpath: //ns:picklistValues[ns:masterLabel='Daily']|//ns:picklistValues[ns:masterLabel='Hourly']|//ns:picklistValues[ns:masterLabel='Monthly']|//ns:picklistValues[ns:masterLabel='Quarterly']|//ns:picklistValues[ns:masterLabel='Weekly']
+                # Strip Campaign translations that should not be included in the package
+                - path: src/objectTranslations/Campaign-**.objectTranslation
+                  xpath: //ns:webLinks[ns:name='ViewCampaignInfluenceReport']
+                # Strip out any help text translations in the DataImport__c object because HelpText on that object is used for legacy mapping
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_City__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Account1_City__c']|//ns:fields/ns:help[../ns:name='Account1_Country__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_Country__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Account1_State_Province__c']|//ns:fields/ns:help[../ns:name='Account1_Street__c']|//ns:fields/ns:help[../ns:name='Account1_Zip_Postal_Code__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_Name__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Account1_Name__c']|//ns:fields/ns:help[../ns:name='Account1_Phone__c']|//ns:fields/ns:help[../ns:name='Account1_Website__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_Phone__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Account2_City__c']|//ns:fields/ns:help[../ns:name='Account2_Country__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_State_Province__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Account2_State_Province__c']|//ns:fields/ns:help[../ns:name='Account2_Street__c']|//ns:fields/ns:help[../ns:name='Account2_Zip_Postal_Code__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_Street__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Account2_Name__c']|//ns:fields/ns:help[../ns:name='Account2_Phone__c']|//ns:fields/ns:help[../ns:name='Account2_Website__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_Website__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Firstname__c']|//ns:fields/ns:help[../ns:name='Contact1_Lastname__c']|//ns:fields/ns:help[../ns:name='Contact1_Salutation__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_Zip_Postal_Code__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Birthdate__c']|//ns:fields/ns:help[../ns:name='Contact1_Title__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_City__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Home_Phone__c']|//ns:fields/ns:help[../ns:name='Contact1_Mobile_Phone__c']|//ns:fields/ns:help[../ns:name='Contact1_Other_Phone__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_Country__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Personal_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Preferred_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Preferred_Phone__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_Name__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Alternate_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Work_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Work_Phone__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_Phone__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Firstname__c']|//ns:fields/ns:help[../ns:name='Contact2_Lastname__c']|//ns:fields/ns:help[../ns:name='Contact2_Salutation__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_State_Province__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Birthdate__c']|//ns:fields/ns:help[../ns:name='Contact2_Title__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_Street__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Home_Phone__c']|//ns:fields/ns:help[../ns:name='Contact2_Mobile_Phone__c']|//ns:fields/ns:help[../ns:name='Contact2_Other_Phone__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_Website__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Personal_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Preferred_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Preferred_Phone__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_Zip_Postal_Code__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Alternate_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Work_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Work_Phone__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Alternate_Email__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Amount__c']|//ns:fields/ns:help[../ns:name='Donation_Date__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Birthdate__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Description__c']|//ns:fields/ns:help[../ns:name='Donation_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Firstname__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Member_Level__c']|//ns:fields/ns:help[../ns:name='Donation_Membership_End_Date__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Home_Phone__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Membership_Origin__c']|//ns:fields/ns:help[../ns:name='Donation_Membership_Start_Date__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Lastname__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Mobile_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Other_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Personal_Email__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Preferred_Email__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Preferred_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Salutation__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Title__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Work_Email__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Work_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Alternate_Email__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Birthdate__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Firstname__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Home_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Lastname__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Mobile_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Other_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Personal_Email__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Preferred_Email__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Preferred_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Salutation__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Title__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Work_Email__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Work_Phone__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Amount__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Date__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Description__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Member_Level__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Membership_End_Date__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Membership_Origin__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Membership_Start_Date__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Name__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']|//ns:fields/ns:help[../ns:name='Donation_Stage__c']|//ns:fields/ns:help[../ns:name='Donation_Type__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Stage__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Home_City__c']|//ns:fields/ns:help[../ns:name='Home_Country__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Type__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Home_City__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Home_Country__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Home_State_Province__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Home_Street__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Home_Zip_Postal_Code__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Home_State_Province__c']|//ns:fields/ns:help[../ns:name='Home_Street__c']|//ns:fields/ns:help[../ns:name='Home_Zip_Postal_Code__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Household_Phone__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Payment_Check_Reference_Number__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Payment_Method__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='DonationCampaignImported__c']
-                - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Payment_Check_Reference_Number__c']|//ns:fields/ns:help[../ns:name='Payment_Method__c']|//ns:fields/ns:help[../ns:name='DonationCampaignImported__c']
+                # Unpackaged Metadata Cleanup
+                - path: unpackaged/config/rd2_post_config/objectTranslations/**.objectTranslation
+                  xpath: //ns:gender|//ns:caseValues|//ns:nameFieldLabel|//ns:standardFields
+                - path: unpackaged/config/trial/objectTranslations/**.objectTranslation
+                  xpath: //ns:gender|//ns:caseValues|//ns:nameFieldLabel|//ns:standardFields
 
     set_user_language:
         description: Update the language of the Current User to the specified language as '-o param1 English' (Other languages are are Spanish, French, German and Dutch).

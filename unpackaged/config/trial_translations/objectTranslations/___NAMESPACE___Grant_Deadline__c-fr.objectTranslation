@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>%%%NAMESPACE%%%Opportunity__c</name>
+    <relationshipLabel>Livrables</relationshipLabel>
+    <label>Opportunité</label>
+  </fields>
+  <layouts>
+    <layout>Deliverable</layout>
+    <sections>
+      <label>Exigences en matière de livrables de subvention</label>
+      <section>Grant Deliverable Requirements</section>
+    </sections>
+  </layouts>
+  <startsWith>Consonant</startsWith>
+  </CustomObjectTranslation>

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
+        <name>RD2_Entry_Form_Custom_Fields</name>
+    </fieldSets>
     <fields>
         <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op laatste dag van de maand, onafh. van Volgende Donatiedatum. Termijnperiode moet Maandelijks of Driemaandelijks zijn, of een aangepaste periode met maanden.</help>
         <label>Altijd laatste dag van maand gebruiken</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <fields>
-        <help>De reden waarom deze terugkerende donatie is gesloten.</help>
-        <label>Reden voor Gesloten</label>
+        <help>De reden waarom deze terugkerende donatie de huidige statuswaarde heeft.</help>
+        <label>Statusreden</label>
         <name>ClosedReason__c</name>
         <picklistValues>
             <masterLabel>Card Expired</masterLabel>
@@ -19,7 +23,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Deceased Donor</masterLabel>
-            <translation>Donor overleden</translation>
+            <translation>Donateur overleden</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Financial Difficulty</masterLabel>
@@ -33,6 +37,11 @@
             <masterLabel>Unknown</masterLabel>
             <translation>Onbekend</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>Externe ID voor integratie van de Salesforce.org-betalingsservice.</help>
+        <label>Herhalings-ID Elevate</label>
+        <name>CommitmentId__c</name>
     </fields>
     <fields>
         <help>Het totaalbedrag van deze terugkerende donatie voor de huidige kalender of het huidige fiscale jaar (alleen-lezen). Omvat Gesloten Gewonnen opportunities plus toekomstige termijnen voor de rest van het jaar.</help>
@@ -169,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Na deze datum maakt NPSP geen termijnen meer voor de terugkerende donatie en wordt de status bijgewerkt naar Gesloten.</help>
+        <label>Einddatum</label>
+        <name>EndDate__c</name>
+    </fields>
+    <fields>
         <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
         <label>Frequentie van termijnen</label>
         <name>InstallmentFrequency__c</name>
@@ -196,7 +210,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Standaardwaarde is Open, hetgeen betekent dat het een terugkerende donatie zonder einddatum is.</help>
+        <help>Selecteer Open voor een doorlopende terugkerende donatie. Selecteer Vast voor een terugkerende donatie die een specifiek aantal termijnen heeft. Bij Vast moet u ook het veld Aantal geplande termijnen invullen.</help>
         <label>Type terugkeer</label>
         <name>RecurringType__c</name>
         <picklistValues>

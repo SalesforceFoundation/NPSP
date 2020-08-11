@@ -91,8 +91,8 @@
         <name>Default_Address__c</name>
     </fields>
     <fields>
-        <help><!-- If selected, this address won&apos;t be included in address updates from the NCOA or address verification vendor. --></help>
-        <label><!-- Exclude from Updates --></label>
+        <help>Wenn diese Option aktiviert ist, wird diese Adresse nicht in Adressaktualisierungen mithilfe von NCOA oder Anbietern geprüfter Adressen einbezogen.</help>
+        <label>Von Aktualisierungen ausschließen</label>
         <name>Exclude_from_Updates__c</name>
     </fields>
     <fields>
@@ -149,13 +149,13 @@
         <name>MailingStreet__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was evaluated by the NCOA vendor. --></help>
-        <label><!-- NCOA Evaluation Date --></label>
+        <help>Datum und Uhrzeit der aktuellsten Auswertung der Adresse durch den NCOA-Anbieter.</help>
+        <label>NCOA-Auswertungsdatum</label>
         <name>NCOA_Evaluation_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The result code form the NCOA vendor. --></help>
-        <label><!-- NCOA Result Code --></label>
+        <help>Der Ergebniscode des NCOA-Anbieters.</help>
+        <label>NCOA-Ergebniscode</label>
         <name>NCOA_Result_Code__c</name>
     </fields>
     <fields>
@@ -543,8 +543,8 @@
         <name>Verification_Status__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was verified. --></help>
-        <label><!-- Verified Date --></label>
+        <help>Datum und Uhrzeit der aktuellsten Überprüfung der Adresse.</help>
+        <label>Prüfdatum</label>
         <name>Verified_Date__c</name>
     </fields>
     <fields>
@@ -556,7 +556,7 @@
     <layouts>
         <layout>Address Layout</layout>
         <sections>
-            <label><!-- Address Verification --></label>
+            <label>Adressenüberprüfung</label>
             <section>Address Verification</section>
         </sections>
         <sections>
