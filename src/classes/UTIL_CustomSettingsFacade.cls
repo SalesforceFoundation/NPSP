@@ -558,9 +558,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         cs.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
         cs.Opp_RecTypes_Excluded_for_Payments__c = null;
         cs.Opp_Types_Excluded_for_Payments__c = null;
-        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        if(householdAccount != null)
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(CAO_Constants.HH_ACCOUNT_RT_DEVELOPER_NAME);
+        if (householdAccount != null) {
             cs.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
+        }
     }
 
     private static void configHouseholdSettings(npo02__Households_Settings__c hs) {

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
+        <name>RD2_Entry_Form_Custom_Fields</name>
+    </fieldSets>
     <fields>
         <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
         <label>Utilizar siempre último día del mes</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <fields>
-        <help>El motivo por el que se cerró esta Donación recurrente.</help>
-        <label>Motivo de cerrada</label>
+        <help>El motivo por el que esta Donación recurrente tiene su valor de Estado actual.</help>
+        <label>Motivo de estado</label>
         <name>ClosedReason__c</name>
         <picklistValues>
             <masterLabel>Card Expired</masterLabel>
@@ -33,6 +37,11 @@
             <masterLabel>Unknown</masterLabel>
             <translation>Desconocido</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>Identificador externo para la integración del servicio de pagos de Salesforce.org.</help>
+        <label>Id. de Recurrente de Elevate</label>
+        <name>CommitmentId__c</name>
     </fields>
     <fields>
         <help>El importe total de esta Donación recurrente para el año de calendario o fiscal corriente (solo lectura). Incluye Oportunidades Cerradas perdidas más cuotas futuras para el resto del año.</help>
@@ -169,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Después de esta fecha, NPSP deja de crear cuotas para esta Donación recurrente y actualiza Estado a Cerrado.</help>
+        <label>Fecha de finalización</label>
+        <name>EndDate__c</name>
+    </fields>
+    <fields>
         <help>Frecuencia de cuota junto con Período de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
         <label>Frecuencia de cuota</label>
         <name>InstallmentFrequency__c</name>
@@ -196,7 +210,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>El valor predeterminado es Abierto, lo que significa una donación recurrente si fecha de finalización.</help>
+        <help>Seleccione Abierto para una Donación recurrente. Seleccione Fijo para una Donación recurrente que tiene un número específico de cuotas. Para Fijo también debe rellenar el campo Cantidad de cuotas planificadas.</help>
         <label>Tipo de recurrencia</label>
         <name>RecurringType__c</name>
         <picklistValues>

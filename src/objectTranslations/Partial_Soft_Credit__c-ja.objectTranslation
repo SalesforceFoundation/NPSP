@@ -10,24 +10,24 @@
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>個人の氏名</help>
-        <label>個人名</label>
+        <help>取引先責任者の氏名</help>
+        <label>取引先責任者名</label>
         <name>Contact_Name__c</name>
     </fields>
     <fields>
         <help>このソフトクレジットが適用される OpportunityContactRole。</help>
-        <label>個人の役割 ID</label>
+        <label>取引先責任者の役割 ID</label>
         <name>Contact_Role_ID__c</name>
     </fields>
     <fields>
-        <help>このソフトクレジットを受け取る個人</help>
-        <label>個人</label>
+        <help>このソフトクレジットを受け取る取引先責任者</help>
+        <label>取引先責任者</label>
         <name>Contact__c</name>
         <relationshipLabel>部分的ソフトクレジット</relationshipLabel>
     </fields>
     <fields>
-        <help>このソフトクレジットが適用される支援。</help>
-        <label>支援</label>
+        <help>このソフトクレジットが適用される商談。</help>
+        <label>商談</label>
         <name>Opportunity__c</name>
         <relationshipLabel>部分的ソフトクレジット</relationshipLabel>
     </fields>
