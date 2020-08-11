@@ -32,7 +32,7 @@ private class STG_PanelRelAuto_CTRL_TEST {
 
     @IsTest
     static void userHasAccess() {
-       User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+       User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 
         System.runAs(adminUser) {
             STG_PanelRelAuto_CTRL controller = new STG_PanelRelAuto_CTRL();
@@ -45,7 +45,7 @@ private class STG_PanelRelAuto_CTRL_TEST {
 
     @IsTest
     static void userHasNoAccess() {
-        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Standard User');
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
         System.runAs(standardUser) {
             STG_PanelRelAuto_CTRL controller = new STG_PanelRelAuto_CTRL();

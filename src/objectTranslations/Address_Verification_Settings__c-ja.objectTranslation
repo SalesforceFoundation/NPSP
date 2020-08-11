@@ -30,7 +30,7 @@
         <name>Class__c</name>
     </fields>
     <fields>
-        <help>オンの場合、サービスが配信不可とマークされた米国の団体住所は自動的にクリアされます(住所レコードで無効なエントリを確認できます)。</help>
+        <help>オンの場合、サービスが配信不可とマークされた米国の取引先住所は自動的にクリアされます(住所レコードで無効なエントリを確認できます)。</help>
         <label>無効な住所のクリア-廃止</label>
         <name>Clear_Invalid_Addresses__c</name>
     </fields>

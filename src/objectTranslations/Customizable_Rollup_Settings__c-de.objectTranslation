@@ -98,7 +98,7 @@
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Soft Credit Spender-Rollups zum Account-Objekt verarbeitet werden.</help>
-        <label>Kontakt-Soft Credit zu Acct – Batch-Größe</label>
+        <label>Kontakt-Soft Credit zu Acct.-Batch-Größe</label>
         <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
     </fields>
     <fields>
@@ -117,17 +117,17 @@
         <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Objekt Allgemeine Verrechnungseinheit verarbeitet werden.</help>
-        <label>Allg. Verrechn‘einh. – Batch-Größe</label>
+        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Verwendungszweck-Objekt verarbeitet werden.</help>
+        <label>Batch-Größe Verwendungszweck</label>
         <name>Rollups_GAU_Batch_Size__c</name>
     </fields>
     <fields>
-        <help>Nur zur Verw. beim Überschr. inkrem. Rollups. Überschr. d. Feld z. Filtern verbund. Opp., um festzul., welche Acc., Kontakte, allg. Verrechnungseinh. o. RDs während eines nächtl. gepl. Auftrags neu berechn. werden. Stand.-Einst.: SystemModStamp.</help>
+        <help>Nur zur Verw. beim Überschr. inkrem. Rollups. Überschr. d. Feld z. Filtern verbund. Opp., um festzul., welche Acc., Kontakte, Verwendungszwecke. oder RDs während eines nächtl. geplanten Auftrags neu berechnet werden. Standardeinstellung.: SystemModStamp.</help>
         <label>Inkrem.: Überschr. d Felds Letzte N Tage</label>
         <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
     </fields>
     <fields>
-        <help>Nur zur Verw. b. Überschr. Inkrem. Rollups. Der Wert überschr. die berechn. Anz. an Tagen, die z. Filtern verb. Opp. verw. werden, um festzul., welche Acc‘s, Kont‘e, allg. Verrechn‘einh‘n oder RDs während eines nächtl. gepl. Auftrags neu berechn. werden.</help>
+        <help>Nur zur Verw. b. Überschr. Inkrem. Rollups. Der Wert überschr. die berechn. Anz. an Tagen, die z. Filtern verb. Opp. verw. werden, um festzulegen, welche Acc‘s, Kont‘e, Verwendungszwecke oder RDs während eines nächtl. gepl. Auftrags neu berechnet werden.</help>
         <label>Inkrem.: Überschr. d. W‘s Letzte N Tage</label>
         <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
     </fields>
@@ -137,8 +137,8 @@
         <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
     </fields>
     <fields>
-        <help>Anzahl an Account-, Kontakt- oder allgemeinen Verrechnungseinheits-Datensätzen pro Batch, die zur Verarbeitung im verzerrten Modus ausgewählt werden.</help>
-        <label>Verzerrter Modus, Disponent – Batch-Größe</label>
+        <help>Anzahl an Account-, Kontakt- oder Verwendungszweck-Datensätzen pro Batch, die zur Verarbeitung im verzerrten Modus ausgewählt werden.</help>
+        <label>Verzerrter Modus, Disponent-Batch-Größe</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
