@@ -48,17 +48,7 @@ span.dateFormat {
 .dependentMultiPicklistFixup select {
     display: inline-block !important;
 }
-.dependentPicklistFixup select,
-.dependentMultiPicklistFixup select {
-    background-color: white;
-    color: #16325c;
-    border: 1px solid #d8dde6;
-    border-radius: 4px;
-    width: 100%;
-    transition: border 0.1s linear, background-color 0.1s linear;
-    min-height: calc(1.875rem + (1px * 2));
-    height: calc(1.875rem + (1px * 2));
-}
+
 .dependentMultiPicklistFixup select {
     height: inherit;
 }
