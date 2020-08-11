@@ -5,13 +5,13 @@
         <value><!-- Data Import Settings --></value>
     </caseValues>
     <fields>
-        <help>組織団体のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の団体カスタム ID</label>
+        <help>団体取引先のマッチングに使用する任意の一意の ID 項目</help>
+        <label>一意の取引先カスタム ID</label>
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help>既存の団体に対してデータインポートレコード内の団体を照合するときのルールを指定します。</help>
-        <label>団体マッチングルール</label>
+        <help>既存の取引先に対してデータインポートレコード内の取引先を照合するときのルールを指定します。</help>
+        <label>取引先マッチングルール</label>
         <name>Account_Matching_Rule__c</name>
     </fields>
     <fields>
@@ -31,13 +31,13 @@
         <name>CMT_Deployment_ID__c</name>
     </fields>
     <fields>
-        <help>個人のマッチングに使用する任意の一意の ID 項目</help>
-        <label>一意の個人カスタム ID</label>
+        <help>取引先責任者のマッチングに使用する任意の一意の ID 項目</help>
+        <label>一意の取引先責任者カスタム ID</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help>既存の個人に対してデータインポートレコード内の個人を照合するときのルールを指定します。</help>
-        <label>個人マッチングルール</label>
+        <help>既存の取引先責任者に対してデータインポートレコード内の取引先責任者を照合するときのルールを指定します。</help>
+        <label>取引先責任者マッチングルール</label>
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
@@ -46,7 +46,7 @@
         <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
-        <help>マッチング支援または支払を探すときの [日付(支援)] からの日数を入力します。データインポーターはその日数範囲内で最も近い、マッチングする支援または支払を選択します。</help>
+        <help>マッチング商談または支払を探すときの [日付(商談)] からの日数を入力します。データインポーターはその日数範囲内で最も近い、マッチングする商談または支払を選択します。</help>
         <label>日付(支援)からの日数</label>
         <name>Donation_Date_Range__c</name>
     </fields>
@@ -61,7 +61,7 @@
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help>既存の支援および支払に対してデータインポートレコードの支援をマッチングするとき、どの項目をマッチングするかを指定します。複数の項目を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
+        <help>既存の商談および支払に対してデータインポートレコードの商談をマッチングするとき、どの項目をマッチングするかを指定します。複数の項目を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
         <label>支援マッチングルール</label>
         <name>Donation_Matching_Rule__c</name>
     </fields>

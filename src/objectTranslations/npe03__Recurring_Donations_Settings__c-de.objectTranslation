@@ -21,6 +21,11 @@
         <name>InstallmentOppAutoCreateOption__c</name>
     </fields>
     <fields>
+        <help><!-- Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous. --></help>
+        <label><!-- Installment Opportunity Async Behavior --></label>
+        <name>InstallmentOppFirstCreateMode__c</name>
+    </fields>
+    <fields>
         <help>Die Opportunity-Phase, die NPSP auf jede neue Raten-Opportunity anwendet, wenn eine neue wiederkehrende Spende erstellt wird.</help>
         <label>Phasenname für Raten-Opportunities</label>
         <name>InstallmentOppStageName__c</name>
@@ -36,6 +41,11 @@
         <name>NextDonationDateMatchRangeDays__c</name>
     </fields>
     <fields>
+        <help>Das Format für die Benennung von wiederkehrenden Spenden.</help>
+        <label>Namensformat für wiederkehrende Spenden</label>
+        <name>RecurringDonationNameFormat__c</name>
+    </fields>
+    <fields>
         <help>Enthält Bestätigungen und Status für die Aktivierung von Erweiterte wiederkehrende Spenden.</help>
         <label>Aktivierungsstatus wiederkehr. Spenden</label>
         <name>RecurringDonations2EnablementState__c</name>
@@ -46,9 +56,14 @@
         <name>RecurringDonations2MigrationState__c</name>
     </fields>
     <fields>
-        <help>Die Anz. d. Datensätze, die beim Ausführen des Wiederkehrende Spenden-Batch-Auftrags verarbeitet werden sollen. Die Standardgröße ist 50. Verringern Sie die Anzahl, wenn der Wiederkehrende Spenden-Batch-Auftrag aufgrund von Systembeschränkungen fehlschlägt.</help>
+        <help>Die Anzahl der zuverarbeitenden Datensätze beim Ausführen des Wiederkehrende Spenden-Batch-Auftrags. Die Standardgröße ist 50. Verringern Sie die Anzahl, wenn der Wiederkehrende Spenden-Batch-Auftrag aufgrund von Systembeschränkungen fehlschlägt.</help>
         <label>Batch-Größe Wiederkehrende Spende</label>
         <name>Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>Bereitstellungs-ID für benutzerdefinierte Metadaten der Statuszuordnung</help>
+        <label>Bereitstellungs-ID der Statuszuordnung</label>
+        <name>StatusMappingDeploymentId__c</name>
     </fields>
     <fields>
         <help>Diese Option legt für die Summen wiederkehrender Spenden das Geschäftsjahr zugrunde. Anfangsmonat festlegen: Einrichtung | Unternehmensprofil | Geschäftsjahr. HINWEIS: Nur Standard-Geschäftsjahr verwenden. Benutzerdef. Geschäftsjahr nicht aktivieren.</help>

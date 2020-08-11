@@ -71,6 +71,11 @@ public with sharing class CAO_Constants {
     public static final String HH_ACCOUNT_TYPE = 'Household Account';
 
     /*******************************************************************************************************
+    * @description Household Account Record Type Developer Name
+    */
+    public static final String HH_ACCOUNT_RT_DEVELOPER_NAME = 'HH_Account';
+
+    /*******************************************************************************************************
     * @description Household Account value for the standard Type field
     */
     public static final String HH_TYPE = 'Household';
