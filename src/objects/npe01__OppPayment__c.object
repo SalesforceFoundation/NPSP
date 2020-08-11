@@ -102,9 +102,9 @@
     </fields>
     <fields>
         <fullName>Batch_Number__c</fullName>
-        <description>The batch that created this Payment.</description>
+        <description>The batch that set this Payment as paid.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The batch that created this Payment.</inlineHelpText>
+        <inlineHelpText>The batch that set this Payment as paid.</inlineHelpText>
         <label>Batch Number</label>
         <length>30</length>
         <required>false</required>
