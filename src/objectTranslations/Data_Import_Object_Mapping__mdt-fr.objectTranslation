@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Mappage d&apos;objets d&apos;importation de données</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping --></value>
+        <value>Mappages d&apos;objets d&apos;importation de données</value>
     </caseValues>
     <fields>
         <help>Si une logique Apex personnalisée doit être utilisée pour mapper les champs de cet objet, un nom de classe (avec espace de noms si nécessaire) qui étend la classe BDI_ObjectMappingLogic et remplace la méthode populateObject doit être saisi dans ce champ.</help>
@@ -70,7 +70,7 @@
             <translation>Parent</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Masculine --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Data Import Object Mapping Layout</layout>
         <sections>
@@ -82,5 +82,5 @@
             <section>Custom Object Relationship Details</section>
         </sections>
     </layouts>
-    <startsWith><!-- Consonant --></startsWith>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
