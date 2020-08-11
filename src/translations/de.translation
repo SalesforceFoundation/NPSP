@@ -381,6 +381,10 @@
         <name>CONV_Contacts_Attached</name>
     </customLabels>
     <customLabels>
+        <label>Sie verfügen nicht über die erforderlichen Systemberechtigungen für die Konvertierung. Wenden Sie sich zur Unterstützung an Ihren Systemadministrator.</label>
+        <name>CONV_ConversionAccessDenied</name>
+    </customLabels>
+    <customLabels>
         <label>Accountmodell-Konvertierungsfortschritt</label>
         <name>CONV_Conversion_Process</name>
     </customLabels>
@@ -549,7 +553,7 @@
         <name>CRLP_CreateRollupTargetFieldHelpText</name>
     </customLabels>
     <customLabels>
-        <label>Mit dem Objekt wird festgelegt, welche Zielfelder Ihnen für den Rollup der Spendendaten zur Verfügung stehen. Als Zielobjekte stehen &quot;Account&quot;, &quot;Kontakt&quot;, &quot;Allgemeine Verrechnungseinheit&quot; und &quot;Wiederkehrende Spende&quot; zur Verfügung.</label>
+        <label>Mit dem Objekt wird festgelegt, welche Zielfelder Ihnen für den Rollup der Spendendaten zur Verfügung stehen. Als Zielobjekte stehen &quot;Account&quot;, &quot;Kontakt&quot;, &quot;Verwendungszweck&quot; und &quot;Wiederkehrende Spende&quot; zur Verfügung.</label>
         <name>CRLP_CreateRollupTargetObjectHelpText</name>
     </customLabels>
     <customLabels>
@@ -707,6 +711,10 @@
         <name>ConfirmDeleteAccount</name>
     </customLabels>
     <customLabels>
+        <label>{0} ist der einzige Kontakt im Account. Wenn Sie diesen Kontakt löschen, ist der Account leer.</label>
+        <name>ConfirmDeleteLeaveAccountEmpty</name>
+    </customLabels>
+    <customLabels>
         <label>Account löschen</label>
         <name>DeleteAccount</name>
     </customLabels>
@@ -747,11 +755,7 @@
         <name>EPTo</name>
     </customLabels>
     <customLabels>
-        <label>Salesforce hat die untenstehenden Fehler festgestellt, die bei dem Versuch auftraten, Batch-Aufträge in NPSP auszuführen, oder zu einem Zeitpunkt entstanden, an dem Fehlermeldungen dem Benutzer nicht direkt angezeigt werden konnten. NPSP hat wahrscheinlich versucht, Zusammenfassungsfelder für Accounts und Kontakte zu aktualisieren, konnte aber bestimmte Datensätze nicht speichern. Der Grund dafür können verschiedene Probleme sein, die nicht mit NPSP in Zusammenhang stehen, wie benutzerdefinierter Code oder Validierungsregeln.
-
-Lesen Sie diesen Artikel im &quot;Power of Us&quot;-Hub, um zu erfahren wie die geplanten Aufträge funktionieren: https://powerofus.force.com/NPSP_Scheduled_Jobs
-
-Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachricht an die Gruppe &quot;Nonprofit Success Pack&quot; im &quot;Power of Us&quot;-Hub: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce ist auf diese NPSP-Fehler gestoßen. Weitere Informationen zu häufigen Fehlern finden Sie unter &quot;Fehlerbehebung im Nonprofit Success Pack&quot; auf dem Power of Us Hub. Wenn Sie sich nicht sicher sind, wie Sie die Fehler beheben können, veröffentlichen Sie eine Nachricht in der Nonprofit Success Pack-Gruppe: https://powerofus.force.com/HUB_NPSP_Group</label>
         <name>ErrorEmailMessage</name>
     </customLabels>
     <customLabels>
@@ -847,6 +851,10 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Wiederkehrende Spenden von Elevate-Zahlungsservices können in NPSP nicht geändert werden., außer durch den Benutzer der Elevate-Zahlungsserviceintegration.</label>
+        <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Sie haben es fast geschafft! Sie müssen nur noch ein paar Dinge überprüfen...</label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
@@ -907,12 +915,20 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
+        <label>Mit diesem Schritt wird die Verarbeitungslogik für wiederkehrende Spenden geändert und die erweiterte Logik für wiederkehrende Spenden verwendet. Damit funktionieren wiederkehrende Spenden nicht mehr auf dieselbe Weise wie bisher.</label>
+        <name>RD2_EnablementEnableSimpleIntro</name>
+    </customLabels>
+    <customLabels>
         <label>Erweiterte wiederkehrende Spenden aktivieren</label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
         <label>&lt;b&gt;WARNUNG: NPSP bietet keine Möglichkeit, zur Legacyfunktionalität Wiederkehrende Spenden zurückzukehren.&lt;/b&gt;</label>
         <name>RD2_EnablementEnableWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
         <label>Herzlich Willkommen! Erweiterte wiederkehrende Spenden ist unsere neu gestaltete und verbesserte Funktion Wiederkehrende Spenden für das Nonprofit Success Pack (NPSP). Ein großes Dankeschön an unsere Community-Mitglieder, die ihr Feedback gegeben und ihren Beitrag zu Erweiterte wiederkehrende Spenden geleistet haben.
@@ -941,6 +957,10 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
     </customLabels>
     <customLabels>
+        <label>Verwenden Sie unseren MetaDeploy-Service, um die erweiterten Metadaten für wiederkehrende Spenden zu installieren. Die Metadaten umfassen: neue Auswahllistenwerte, aktualisierten Hilfetext und ein neues Seitenlayout. MetaDeploy ist ein Service außerhalb Ihrer Salesforce-Organisation.</label>
+        <name>RD2_EnablementMetaDeploySimpleIntro</name>
+    </customLabels>
+    <customLabels>
         <label>Metadaten für Erweiterte wiederkehrende Spenden installieren</label>
         <name>RD2_EnablementMetaDeployTitle</name>
     </customLabels>
@@ -961,7 +981,7 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
-        <label>In Ihrem Migrationslauf sind Fehler aufgetreten, diese müssen behoben werden, um eine erfolgreiche Migration durchzuführen. Zeigen Sie die Fehler an, in dem Sie zu NPSP-Einstellungen &gt; Systemtools &gt; Fehlerprotokolle wechseln. Wenn Sie Hilfe benötigen, ziehen Sie die &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;Dokumentation&lt;/a&gt; zu Rate. Beheben Sie die Fehler, kehren Sie dann hierher zurück, und versuchen Sie es erneut.</label>
+        <label>In Ihrem Migrationslauf sind Fehler aufgetreten, diese müssen behoben werden, um eine erfolgreiche Migration durchzuführen. Zeigen Sie die Fehler an, in dem Sie zu NPSP-Einstellungen &gt; Systemtools &gt; Fehlerprotokolle wechseln. Wenn Sie Hilfe benötigen, ziehen Sie die &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Dokumentation&lt;/a&gt; zu Rate. Beheben Sie die Fehler, kehren Sie dann hierher zurück, und versuchen Sie es erneut.</label>
         <name>RD2_EnablementMigrationErrorMessage</name>
     </customLabels>
     <customLabels>
@@ -993,6 +1013,10 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
+        <label>Nur Systemadministratoren können Upgrade-Aktionen für Erweiterte wiederkehrende Spenden durchführen.</label>
+        <name>RD2_EnablementPermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Um mögliche Fehler einzuschränken und Ihre Daten zu schützen, führen Sie diese vorbereitenden Aufgaben aus, bevor Sie mit der Migration zu Erweiterte wiederkehrende  Spenden beginnen:</label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
@@ -1005,6 +1029,96 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     <customLabels>
         <label>Vorbereitende Aufgaben</label>
         <name>RD2_EnablementPrepTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Durch &quot;Erweiterte wiederkehrende Spenden aktivieren&quot; lassen sich wiederkehrende Spenden flexibler und einfacher verwalten als je zuvor. Führen Sie die Schritte unten aus, um Erweiterte wiederkehrende Spenden zu aktivieren. Sie müssen ALLE Schritte ausführen, um Erweiterte wiederkehrende Spenden vollständig zu aktivieren.
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Da Sie nicht über Datensätze für wiederkehrende Spenden verfügen, brauchen Sie keinerlei Daten zu überprüfen oder zu migrieren.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;Weitere Informationen finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Dokumentation für Erweiterte wiederkehrende Spenden&lt;/a&gt;.</label>
+        <name>RD2_EnablementSimpleIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>Das Enddatum muss nach dem Schlussdatum der letzten geschlossenen gewonnenen Opportunitiy liegen.</label>
+        <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>Das Enddatum kann nicht in der Zukunft liegen, wenn der Wiederholungstyp &quot;Fest&quot; ist.</label>
+        <name>RD2_EndDateMustBeValidForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label>Benutzerdefinierte Felder</label>
+        <name>RD2_EntryFormCustomFieldsSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Spendeninformationen</label>
+        <name>RD2_EntryFormDonationSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Spenderinformationen</label>
+        <name>RD2_EntryFormDonorSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Wählen Sie den Spendertyp für diese wiederkehrende Spende aus. Wenn Sie &quot;Account&quot; auswählen, geben Sie einen Organisations-Account und optional einen zugehörigen Kontakt ein. Wenn Sie &quot;Kontakt&quot; auswählen, geben Sie einen Kontakt ein, der einem Haushalt-Account zugeordnet ist.</label>
+        <name>RD2_EntryFormDonorTypeHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>Spendertyp</label>
+        <name>RD2_EntryFormDonorTypeLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Neue wiederkehrende Spende</label>
+        <name>RD2_EntryFormHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Die wiederkehrende Spende &quot;{0}&quot; wurde erstellt.</label>
+        <name>RD2_EntryFormInsertSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie verfügen nicht über die erforderlichen Berechtigungen für das Feld &quot;Wiederkehrende Spende&quot;. Wenden Sie sich zur Unterstützung an Ihren Systemadministrator.</label>
+        <name>RD2_EntryFormMissingPermissions</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen</label>
+        <name>RD2_EntryFormOtherSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Erweitert</label>
+        <name>RD2_EntryFormPeriodAdvanced</name>
+    </customLabels>
+    <customLabels>
+        <label>Wählen Sie &quot;Erweitert&quot; aus, um andere Zeitplantypen, wie wöchentlich, jährlich, alle 6 Monate usw. auszuwählen.</label>
+        <name>RD2_EntryFormPeriodHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>Wiederholungshäufigkeit</label>
+        <name>RD2_EntryFormPeriodLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Tage</label>
+        <name>RD2_EntryFormPeriodPluralDaily</name>
+    </customLabels>
+    <customLabels>
+        <label>Monate</label>
+        <name>RD2_EntryFormPeriodPluralMonthly</name>
+    </customLabels>
+    <customLabels>
+        <label>Wochen</label>
+        <name>RD2_EntryFormPeriodPluralWeekly</name>
+    </customLabels>
+    <customLabels>
+        <label>Jahre</label>
+        <name>RD2_EntryFormPeriodPluralYearly</name>
+    </customLabels>
+    <customLabels>
+        <label>Alle</label>
+        <name>RD2_EntryFormScheduleEveryLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Statusinformationen</label>
+        <name>RD2_EntryFormStatusSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Die wiederkehrende Spende &quot;{0}&quot; wurde gespeichert.</label>
+        <name>RD2_EntryFormUpdateSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>Sie müssen Erweiterte wiederkehrende Spenden aktivieren, bevor Sie den Datenmigrationsauftrag zu Erweiterte wiederkehrende Spenden ausführen können.</label>
@@ -1043,7 +1157,23 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
-        <label>Enddatum</label>
+        <label>Sie können eine geschlossene wiederkehrende Spende nicht aufschieben</label>
+        <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Wählen Sie die Raten in der Liste unten aus. Sie können Raten bis zu 12 aufeinander folgende Raten lang aufschieben.</label>
+        <name>RD2_PauseDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Das erste Spendendatum nach dem Aufschubzeitraum ist der {0}.</label>
+        <name>RD2_PauseFirstDonationDateDynamicText</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} aufschieben</label>
+        <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Enddatum des Zeitplans</label>
         <name>RD2_ScheduleLWCEndDate</name>
     </customLabels>
     <customLabels>
@@ -1067,6 +1197,14 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
     </customLabels>
     <customLabels>
+        <label>Sie sind nicht zum Anzeigen bevorstehender Raten berechtigt. Wenden Sie sich an Ihren Systemadministrator, um weitere Informationen zu erhalten.</label>
+        <name>RD2_ScheduleVisualizerFLSInstallment</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie sind nicht zum Anzeigen der aktiven Zeitpläne berechtigt. Wenden Sie sich an Ihren Systemadministrator, um weitere Informationen zu erhalten.</label>
+        <name>RD2_ScheduleVisualizerFLSSchedule</name>
+    </customLabels>
+    <customLabels>
         <label>Es gibt keinen aktiven Zeitplan für diese wiederkehrende Spende.</label>
         <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
     </customLabels>
@@ -1077,6 +1215,49 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
     <customLabels>
         <label>Bevorstehende Raten</label>
         <name>RD2_ScheduleVisualizerTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Bundesland</label>
+        <name>RD2_StatusMappingColumnState</name>
+    </customLabels>
+    <customLabels>
+        <label>API-Name</label>
+        <name>RD2_StatusMappingColumnStatusAPIName</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;Statusdefinitionen&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Aktiv: Der Spender spendet aktiv. NPSP erstellt Raten-Opportunities gemäß der Definition im Zeitplan für wiederkehrende Spenden.&lt;/li&gt;
+&lt;li&gt;Ausgesetzt: Spenden werden nicht erwartungsgemäß empfangen, NPSP erstellt jedoch weiterhin Raten-Opportunities gemäß der Definition im Zeitplan für wiederkehrende Spenden.&lt;/li&gt;
+&lt;li&gt;Geschlossen: Der Spender hat das Spenden für diese wiederkehrende Spende eingestellt. NPSP erstellt keine weiteren Raten-Opportunities.&lt;/li&gt;&lt;/ul&gt;</label>
+        <name>RD2_StatusMappingDefinitions</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie können keine Zuordnung speichern, während NPSP einen anderen Status in der Statuszuordnung verarbeitet.</label>
+        <name>RD2_StatusMappingDeploymentAlreadyInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>Speichern des Status in der Statuszuordnung.</label>
+        <name>RD2_StatusMappingInProgressMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Wenn Sie benutzerdefinierte Werte in der Auswahlliste für den Status wiederkehrender Spenden erstellen, müssen Sie diese einem Status zuordnen, damit NPSP weiß, wie Datensätze mit diesen benutzerdefinierten Statuswerten verarbeitet werden sollen.
+        &lt;br/&gt;&lt;br/&gt;Wenn Sie keine benutzerdefinierten Werte in der Auswahlliste für den Status wiederkehrender Spenden erstellt haben, brauchen Sie nichts zuzuordnen.</label>
+        <name>RD2_StatusMappingIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>– Nicht zugeordnet –</label>
+        <name>RD2_StatusMappingStateUnmapped</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Status wurde in der Statuszuordnung gespeichert.</label>
+        <name>RD2_StatusMappingSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Status &quot;{0}&quot; wurde keinem Status zugeordnet.</label>
+        <name>RD2_StatusMustBeMapped</name>
+    </customLabels>
+    <customLabels>
+        <label>Navigieren Sie zu NPSP-Einstellungen | Wiederkehrende Spenden | Statuszuordnungen, oder bitten Sie Ihren Administrator um Hilfe.</label>
+        <name>RD2_StatusMustBeMappedSolution</name>
     </customLabels>
     <customLabels>
         <label>Sie müssen einen Kontakt auswählen, der diesem Haushalt-Account zugeordnet ist.</label>
@@ -1099,7 +1280,7 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD_ErrorAddDonationMissingId</name>
     </customLabels>
     <customLabels>
-        <label>Sie sind nicht zur Erstellung eines Spendendatensatzes berechtigt. Bitte kontaktieren Sie Ihren Systemadministrator, um weitere Informationen zu erhalten.</label>
+        <label>Sie verfügen nicht über die erforderlichen Berechtigungen zum Aktualisieren von Opportunities. Bitten Sie Ihren Systemadministrator um Hilfe.</label>
         <name>RD_ErrorAddDonationPermissionDenied</name>
     </customLabels>
     <customLabels>
@@ -1115,7 +1296,8 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
-        <label><!-- Confirmation message displayed to user before the process runs --></label>
+        <label>Bei diesem Vorgang werden alle zukünftigen Raten-Opportunities so aktualisiert, dass sie mit den aktuellen Daten für diese wiederkehrende Spende übereinstimmen. Für einige Raten löscht NPSP möglicherweise Raten und erstellt stattdessen neue.
+&lt;br/&gt;&lt;br/&gt;Klicken Sie auf &quot;Weiter&quot;, um den Vorgang zu starten, oder auf &quot;Abbrechen&quot;, um zur Seite Wiederkehrende Spenden zurückzukehren.</label>
         <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
@@ -1255,6 +1437,14 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>SmartyStreets_Help_Text</name>
     </customLabels>
     <customLabels>
+        <label>Datumsauswahl</label>
+        <name>UTIL_InputFormFormFieldAltLabelDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Nachschlagen</label>
+        <name>UTIL_InputFormFormFieldAltLabelLookup</name>
+    </customLabels>
+    <customLabels>
         <label>Postleitzahl nicht gefunden</label>
         <name>Zip_Not_Found</name>
     </customLabels>
@@ -1275,7 +1465,7 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>addrCopyConAddBtnConfirm</name>
     </customLabels>
     <customLabels>
-        <label>Sie verfügen nicht über die erforderlichen Feldberechtigungen. Wenden Sie sich an Ihren Systemadministrator und fragen Sie ihn nach den erforderlichen Berechtigungen.</label>
+        <label>Sie verfügen nicht über die erforderlichen Objekt- oder Feldberechtigungen. Wenden Sie sich an Ihren Systemadministrator, und fragen Sie ihn nach den erforderlichen Berechtigungen.</label>
         <name>addrCopyConAddBtnFls</name>
     </customLabels>
     <customLabels>
@@ -1315,17 +1505,17 @@ Wenn Sie nicht wissen, wie diese Fehler behoben werden, senden Sie eine Nachrich
         <name>alloAmountOrPercent</name>
     </customLabels>
     <customLabels>
-        <label>Batch-Erstellung von Standardzuordnungen</label>
+        <label>Batch-Erstellung von Standardzuweisungen</label>
         <name>alloBatchCreateDefault</name>
     </customLabels>
     <customLabels>
-        <label>Mit diesem Tool wird ein Batch-Vorgang ausgeführt, bei dem Standardzuordnungen für alle bestehenden Opportunities erstellt werden, mit Ausnahme der Opportunities, die in den Zuordnungs-Rollup-Einstellungen der allgemeinen Verrechnungseinheit ausgeschlossen sind.
+        <label>Mit diesem Tool wird ein Batch-Vorgang ausgeführt, bei dem Standardzuweisungen für alle bestehenden Opportunities erstellt werden, mit Ausnahme der Opportunities, die in den Zuweisungs-Rollup-Einstellungen des Verwendungszwecks ausgeschlossen sind.
 &lt;br/&gt;
 &lt;br/&gt;
-Zur Ausführung dieses Tools müssen Standardzuordnungen aktiviert und eine standardmäßige allgemeine Verrechnungseinheit ausgewählt sein. Sie müssen dieses Tool nur einmal ausführen, nachdem Sie die Standardzuordnungen aktiviert haben, weil alle neuen Opportunities eine Standardzuordnung erhalten, sobald sie aktiviert sind.
+Zur Ausführung dieses Tools müssen Standardzuweisungen aktiviert und ein Standard-Verwendungszweck ausgewählt sein. Sie müssen dieses Tool nur einmal ausführen, nachdem Sie die Standardzuweisungen aktiviert haben, weil alle neuen Opportunities eine Standardzuweisung erhalten, sobald sie aktiviert sind.
 &lt;br/&gt;
 &lt;br/&gt;
-Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinheit gehen Sie zum &quot;Spenden&quot; | &quot;Zuordnungen zur allgemeinen Verrechnungseinheit&quot;.</label>
+Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu &quot;Spenden&quot; | &quot;Zuweisungen Verwendungszweck&quot;.</label>
         <name>alloBatchDefaultInfo</name>
     </customLabels>
     <customLabels>
@@ -1337,23 +1527,27 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>alloBtnSaveAndClose</name>
     </customLabels>
     <customLabels>
-        <label>Ihre Kampagnenzuordnungen wurden nicht erstellt. Die Kampagnenzuordnungen für die Opportunity überschreiten den Opportunity-Betrag.</label>
+        <label>Ihre Kampagnenzuweisungen wurden nicht erstellt. Die Kampagnenzuweisungen für die Opportunity überschreiten den Opportunity-Betrag.</label>
         <name>alloCampaignExceedsOppAmount</name>
     </customLabels>
     <customLabels>
-        <label>Sie können keine Zuordnungen für Opportunities mit einem leeren Betrag oder dem Betrag Null erstellen.</label>
+        <label>Sie können keine Zuweisungen für Opportunities mit einem leeren Betrag oder dem Betrag Null erstellen.</label>
         <name>alloCantAllocateNothing</name>
     </customLabels>
     <customLabels>
-        <label>Sie haben Standardzuordnungen aktiviert. Sie müssen auch eine standardmäßige allgemeine Verrechnungseinheit auswählen.</label>
+        <label>Sie haben Standardzuweisungen aktiviert. Sie müssen auch einen Standard-Verwendungszweck auswählen.</label>
         <name>alloDefaultGAUMissing</name>
     </customLabels>
     <customLabels>
-        <label>Sie müssen die Standardzuordnungen aktivieren, um Zuordnungen auf Zahlungsebene ausführen zu können.</label>
+        <label>Der Standard-Verwendungszweck ist nicht aktiv. Legen Sie den Standard-Verwendungszweck &quot;{0}&quot; als aktiv fest, oder ändern Sie den Standard-Verwendungszweck in einen aktiven.</label>
+        <name>alloDefaultGAUNotActive</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie müssen die Standardzuweisungen aktivieren, um Zuweisungen auf Zahlungsebene ausführen zu können.</label>
         <name>alloDefaultNotEnabled</name>
     </customLabels>
     <customLabels>
-        <label>Die allgemeine Verrechnungseinheit, die in den NPSP-Einstellungen als Standard eingestellt ist, darf nur betragsbasierte und keine prozentsatzbasierten Zuordnungen haben.</label>
+        <label>Der Verwendungzweck, der in den NPSP-Einstellungen als Standard eingestellt ist, darf nur betragsbasierte und keine prozentsatzbasierten Zuweisungen haben.</label>
         <name>alloDefaultNotPercent</name>
     </customLabels>
     <customLabels>
@@ -1361,31 +1555,31 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>alloDeleteRow</name>
     </customLabels>
     <customLabels>
-        <label>Die Zuordnungen für diese Opportunity sind derzeit höher als der Opportunity-Betrag. Aktualisieren Sie zunächst Ihren Zuordnungsbetrag und dann den Opportunity-Betrag, sodass sie übereinstimmen. </label>
+        <label>Die Zuweisungen für diese Opportunity sind derzeit höher als der Opportunity-Betrag. Aktualisieren Sie zunächst Ihren Zuweisungsbetrag und dann den Opportunity-Betrag, sodass sie übereinstimmen. </label>
         <name>alloExceedsOppAmount</name>
     </customLabels>
     <customLabels>
-        <label>Die Zuordnungen dieser Bezahlung übersteigen den Zahlungsbetrag. Aktualisieren Sie Ihre Zuordnungsbeträge und passen Sie dann den Zahlungsbetrag an.</label>
+        <label>Die Zuweisungen dieser Bezahlung übersteigen den Zahlungsbetrag. Aktualisieren Sie Ihre Zuweisungsbeträge, und passen Sie dann den Zahlungsbetrag an.</label>
         <name>alloExceedsPmtAmount</name>
     </customLabels>
     <customLabels>
-        <label>Kampagnenzuordnungen verwalten</label>
+        <label>Kampagnenzuweisungen verwalten</label>
         <name>alloManageCampaignAllocations</name>
     </customLabels>
     <customLabels>
-        <label>Opportunity-Zuordnungen verwalten</label>
+        <label>Opportunity-Zuweisungen verwalten</label>
         <name>alloManageOppAllocations</name>
     </customLabels>
     <customLabels>
-        <label>Zahlungszuordnungen verwalten</label>
+        <label>Zahlungszuweisungen verwalten</label>
         <name>alloManagePaymentAllocations</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungen zu wiederkehrenden Spenden verwalten</label>
+        <label>Zuweisungen zu wiederkehrenden Spenden verwalten</label>
         <name>alloManageRecurringDonationAllocations</name>
     </customLabels>
     <customLabels>
-        <label>Sie können Zuordnungswährungen nicht direkt bearbeiten. NPSP aktualisiert Zuordnungswährungen, wenn Sie die Währung der übergeordneten Opportunity, Kampagne oder wiederkehrenden Spende aktualisieren.</label>
+        <label>Sie können Zuweisungswährungen nicht direkt bearbeiten. NPSP aktualisiert Zuweisungswährungen, wenn Sie die Währung der übergeordneten Opportunity, Kampagne oder wiederkehrenden Spende aktualisieren.</label>
         <name>alloModifyCurrency</name>
     </customLabels>
     <customLabels>
@@ -1397,27 +1591,43 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>alloNegativePercent</name>
     </customLabels>
     <customLabels>
-        <label>Die Schaltfläche &quot;Zuordnungen verwalten“ wird nur in den Datensätzen &quot;Kampagne&quot;, &quot;Opportunity&quot;, &quot;Zahlung&quot; und &quot;Wiederkehrende Spende&quot; unterstützt.</label>
+        <label>Die Schaltfläche &quot;Zuweisungen verwalten“ wird nur in den Datensätzen &quot;Kampagne&quot;, &quot;Opportunity&quot;, &quot;Zahlung&quot; und &quot;Wiederkehrende Spende&quot; unterstützt.</label>
         <name>alloObjectUnsupported</name>
     </customLabels>
     <customLabels>
-        <label>Die Gesamtzuordnung der erfolgten Zahlungen darf die Opportunity-Zuordnung für eine allgemeine Verrechnungseinheit nicht übersteigen.</label>
+        <label>Die Summe der Zuweisungen für diese {0} übersteigt deren Betrag. Aktualisieren Sie die {0}-Zuweisungen, damit ihre Summe mit dem Betrag von {0} übereinstimmt.</label>
+        <name>alloOverallocatedError</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Gesamtzuweisung der erfolgten Zahlungen darf die Opportunity-Zuweisung für einen Verwendungszweck nicht übersteigen.</label>
         <name>alloPaidPmtsExceedsOpp</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungen auf Zahlungsebene sind für Ihre Organisation nicht aktiviert. Versuchen Sie es stattdessen mit der Zuordnung auf Opportunity-Ebene.</label>
+        <label>Fehler beim Verarbeiten des {0}-Datensatzes, der Zuweisung {1} ({2}) zugeordnet ist. Details: {3}</label>
+        <name>alloPaymentAllocationBatchAllocationError</name>
+    </customLabels>
+    <customLabels>
+        <label>Fehler beim Verarbeiten von {0} {1}. Details: {2}</label>
+        <name>alloPaymentAllocationBatchRecordError</name>
+    </customLabels>
+    <customLabels>
+        <label>Fehler beim Verarbeiten von Datensätzen, für die beim ersten Versuch kein Fehler auftrat. Es wurden keine Daten gespeichert.</label>
+        <name>alloPaymentAllocationBatchRetriesExceeded</name>
+    </customLabels>
+    <customLabels>
+        <label>Zuweisungen auf Zahlungsebene sind für Ihre Organisation nicht aktiviert. Versuchen Sie es stattdessen mit der Zuweisung auf Opportunity-Ebene.</label>
         <name>alloPaymentNotEnabled</name>
     </customLabels>
     <customLabels>
-        <label>Der zugeordnete Betrag ist höher als der Zahlungsbetrag. Bitte aktualisieren Sie die Zuordnungsbeträge, sodass der Gesamtbetrag dem Zahlungsbetrag entspricht. Siehe Opportunity &quot;{0}, ID: {1}&quot;</label>
+        <label>Der zugewiesene Betrag ist höher als der Zahlungsbetrag. Bitte aktualisieren Sie die Zuweisungsbeträge, sodass der Gesamtbetrag dem Zahlungsbetrag entspricht. Siehe Opportunity &quot;{0}, ID: {1}&quot;</label>
         <name>alloPaymentOverallocatedError</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungen auf Basis eines Prozentwerts dürfen 100 % nicht überschreiten.</label>
+        <label>Zuweisungen auf Basis eines Prozentwerts dürfen 100 % nicht überschreiten.</label>
         <name>alloPercentExceed100</name>
     </customLabels>
     <customLabels>
-        <label>Opportunity- und Zahlungszuordnungen für denselben Opportunity-Datensatz können nicht gleichzeitig erstellt oder geändert werden.</label>
+        <label>Opportunity- und Zahlungszuweisungen für denselben Opportunity-Datensatz können nicht gleichzeitig erstellt oder geändert werden.</label>
         <name>alloPmtOppSingleTransaction</name>
     </customLabels>
     <customLabels>
@@ -1425,19 +1635,23 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>alloRemainder</name>
     </customLabels>
     <customLabels>
-        <label>Sie können keine Opportunity-Zuordnung für eine allgemeine Verrechnungseinheit entfernen, die über bezahlte Zahlungszuordnungen verfügt.</label>
+        <label>Sie können keine Opportunity-Zuweisung für einen Verwendungszweck entfernen, die bezahlte Zahlungszuweisungen aufweist.</label>
         <name>alloRemoveOppWithPmt</name>
     </customLabels>
     <customLabels>
-        <label>Negative Zuordnungen sind nur bei negativen Spenden zulässig, und positive Zuordnungen sind nicht bei negativen Spenden zulässig.</label>
+        <label>Negative Zuweisungen sind nur bei negativen Spenden zulässig, und positive Zuweisungen sind nicht bei negativen Spenden zulässig.</label>
         <name>alloSignMistmatch</name>
     </customLabels>
     <customLabels>
-        <label>Jede Zuordnung darf nur ein einziges übergeordnetes Objekt aufweisen: Zahlung, Opportunity, Wiederkehrende Spende oder Kampagne.</label>
+        <label>Jede Zuweisung darf nur ein einziges übergeordnetes Objekt aufweisen: Zahlung, Opportunity, Wiederkehrende Spende oder Kampagne.</label>
         <name>alloSingleParent</name>
     </customLabels>
     <customLabels>
-        <label>Die Summe der Zuordnungen darf den Betrag der verbundenen Zahlung oder Opportunity nicht überschreiten.</label>
+        <label>Die Verarbeitung dieser Zuweisungen wurde erneut versucht und erfolgreich abgeschlossen.</label>
+        <name>alloSuccessfulRecordRetry</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Summe der Zuweisungen darf den Betrag der verbundenen Zahlung oder Opportunity nicht überschreiten.</label>
         <name>alloTotalExceedsOppAmt</name>
     </customLabels>
     <customLabels>
@@ -1445,7 +1659,7 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>alloTotals</name>
     </customLabels>
     <customLabels>
-        <label>nicht zugeordnet</label>
+        <label>nicht zugewiesen</label>
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
@@ -1865,7 +2079,7 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>bdiMigrationLongDeployment</name>
     </customLabels>
     <customLabels>
-        <label>Wie das Zielobjekt mit der anderen Objektgruppe verknüpft ist. Beispielsweise ist eine GAU-Zuordnung ein untergeordnetes Objekt einer Opportunity, oder eine wiederkehrende Spende ist ein übergeordnetes Objekt einer Opportunity.</label>
+        <label>Wie das Zielobjekt mit der anderen Objektgruppe verknüpft ist. Beispielsweise ist eine Verwendungszweck-Zuweisung ein untergeordnetes Objekt einer Opportunity, oder eine wiederkehrende Spende ist ein übergeordnetes Objekt einer Opportunity.</label>
         <name>bdiOMUIChildParentHelp</name>
     </customLabels>
     <customLabels>
@@ -1969,10 +2183,10 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>bdiOMUIPageDescriptionPt2</name>
     </customLabels>
     <customLabels>
-        <label>Sehen wir uns als Beispiel die zwei Objektgruppen Zuordnung 1 und Zuordnung 2 der allgemeinen Verrechnungseinheit an. Diese Objektgruppen sind direkt mit dem Opportunity-Objekt verknüpft. Manchmal
-            kann es sinnvoll sein, zwei Zuordnungen der allgemeinen Verrechnungseinheit einer einzelnen Opportunity zuzuordnen. Geben Sie zu diesem Zweck in Ihrer Importdatei die Opportunity-Informationen in die Spalte &quot;Spenden&quot; ein,
-            schließen Sie dann die erste Zuordnung der allgemeinen Verrechnungseinheit in die Spalten für Zuordnungen 1 der allgemeinen Verrechnungseinheit und die zweite Zuordnung der allgemeinen Verrechnungseinheit in die Spalten für Zuordnungen 2 der allgemeinen Verrechnungseinheit ein. Aufgrund der Objektzuordnungen der Zuordnung 1 der allgemeinen Verrechnungseinheit und
-            der Zuordnung 2 der allgemeinen Verrechnungseinheit werden beim Import beide Zuordnungen der allgemeinen Verrechnungseinheit der Opportunity zugeordnet.</label>
+        <label>Sehen wir uns als Beispiel die zwei Objektgruppen Zuweisung 1 und Zuweisung 2 für den Verwendungszweck an. Diese Objektgruppen sind direkt mit dem Opportunity-Objekt verknüpft. Manchmal
+            kann es sinnvoll sein, zwei Zuweisungen zum Verwendungszweck einer einzelnen Opportunity zuzuordnen. Geben Sie zu diesem Zweck in Ihrer Importdatei die Opportunity-Informationen in die Spalte &quot;Spenden&quot; ein,
+            schließen Sie dann die erste Zuweisung zum Verwendungszweck in die Spalten für Zuweisungen 1 zum Verwendungszweck und die zweite Zuweisung zum Verwendungszweck in die Spalten für Zuweisungen 2 zum Verwendungszweck ein. Aufgrund der Objektzuordnungen von Zuweisung 1 zum Verwendungszweck und
+            von Zuweisung 2 zum Verwendungszweck werden beim Import beide Zuweisungen dem Verwendungszweck der Opportunity zugeordnet.</label>
         <name>bdiOMUIPageDescriptionPt3</name>
     </customLabels>
     <customLabels>
@@ -2254,7 +2468,7 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>bgeGridTotalCount</name>
     </customLabels>
     <customLabels>
-        <label>&quot;Übereinst. d. erw. Gesamtbeträge erford.&quot; ist ausgewählt, aber die Felder &quot;Erwartete Anzahl an Schenkungen&quot; und &quot;Erwarteter Batch-Betrag insgesamt&quot; sind leer. Bearbeiten Sie die Batch-Details und deaktivieren Sie entweder &quot;Übereinst. d. erw. Gesamtbeträge erford.&quot; oder geben Sie Werte in die verbundenen Felder ein.</label>
+        <label>&quot;Übereinstimmung der Summen erforderlich&quot; ist ausgewählt, aber die Felder &quot;Erwartete Anzahl an Schenkungen&quot; und &quot;Erwarteter Batch-Betrag insgesamt&quot; sind leer. Bearbeiten Sie die Batch-Details und deaktivieren Sie entweder &quot;Übereinstimmung der Summen erforderlich&quot; oder geben Sie Werte in die verbundenen Felder ein.</label>
         <name>bgeGridWarningRequiredTotalsExpected</name>
     </customLabels>
     <customLabels>
@@ -2326,6 +2540,18 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>Sie müssen ein Systemadministrator sein, um auf diese Seite zugreifen zu können.</label>
+        <name>commonAdminPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Überprüfen Sie Ihre Berechtigungen</label>
+        <name>commonAdminPermissionErrorTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Betrag</label>
+        <name>commonAmount</name>
+    </customLabels>
+    <customLabels>
         <label>Fehler</label>
         <name>commonAssistiveError</name>
     </customLabels>
@@ -2350,12 +2576,32 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>commonBatches</name>
     </customLabels>
     <customLabels>
+        <label>CVV</label>
+        <name>commonCVV</name>
+    </customLabels>
+    <customLabels>
         <label>Abbrechen</label>
         <name>commonCancel</name>
     </customLabels>
     <customLabels>
+        <label>Kartentyp</label>
+        <name>commonCardType</name>
+    </customLabels>
+    <customLabels>
         <label>Duplizieren</label>
         <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label>Kartennummer</label>
+        <name>commonCreditNumber</name>
+    </customLabels>
+    <customLabels>
+        <label>Kritischer Fehler</label>
+        <name>commonCriticalError</name>
     </customLabels>
     <customLabels>
         <label>Standardwert</label>
@@ -2370,12 +2616,40 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>commonEdit</name>
     </customLabels>
     <customLabels>
+        <label>Beim Onboarding dieses Elevate-Kunden ist ein Fehler aufgetreten</label>
+        <name>commonElevateFailedOnboarding</name>
+    </customLabels>
+    <customLabels>
         <label>Fehler</label>
         <name>commonError</name>
     </customLabels>
     <customLabels>
         <label>Feldbezeichnung</label>
         <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Zuweisungen zum Verwendungszweck</label>
+        <name>commonGauAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>Allgemeine Account-Einheit</label>
+        <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Schlüssel muss einen Wert enthalten und das base64-Format verwenden.</label>
+        <name>commonJWTInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Die JSON-Nutzlast muss einen Wert enthalten.</label>
+        <name>commonJWTInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label>Ablaufdatum</label>
+        <name>commonMMYY</name>
+    </customLabels>
+    <customLabels>
+        <label>Diese Pflichtfelder müssen ausgefüllt werden: {0}</label>
+        <name>commonMissingRequiredFields</name>
     </customLabels>
     <customLabels>
         <label>Neue Schenkung</label>
@@ -2398,12 +2672,28 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>commonOpen</name>
     </customLabels>
     <customLabels>
+        <label>Salesforce.org Elevate</label>
+        <name>commonPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label>Prozent</label>
+        <name>commonPercent</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie verfügen nicht über den erforderlichen Zugriff, um dieses Feature zu verwenden. Bitte wenden Sie sich an Ihren Salesforce-Administrator.</label>
+        <name>commonPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Weitere Informationen</label>
         <name>commonReadMore</name>
     </customLabels>
     <customLabels>
         <label>Erforderlich</label>
         <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Überprüfungsformular</label>
+        <name>commonReviewForm</name>
     </customLabels>
     <customLabels>
         <label>Speichern</label>
@@ -2454,8 +2744,20 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>conMergeBtnLabel</name>
     </customLabels>
     <customLabels>
+        <label>Auswählen</label>
+        <name>conMergeDRSPickBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Wählen Sie die doppelten Datensatzmengen aus, die Sie zusammenführen möchten</label>
+        <name>conMergeDRSStep1</name>
+    </customLabels>
+    <customLabels>
         <label>Personen-Accounts werden nicht unterstützt.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;Keine doppelten Datensatzmengen.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; Es wurden keine doppelten Datensatzmengen gefunden. Achten Sie darauf, dass die Duplikatregeln aktiviert sind. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Weitere Informationen&lt;/a&gt;.</label>
+        <name>conMergeErrorNoDRSFound</name>
     </customLabels>
     <customLabels>
         <label>Sie müssen über Löschberechtigungen in &quot;Kontakte&quot; verfügen, um Kontakte zusammenzuführen.</label>
@@ -2466,8 +2768,16 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>conMergeErrorNoDeleteRecAccess</name>
     </customLabels>
     <customLabels>
+        <label>Sie müssen über Leseberechtigungen für doppelte Datensatzmengen verfügen, um Kontakte zusammenzuführen.</label>
+        <name>conMergeErrorNoReadDSRObjPermission</name>
+    </customLabels>
+    <customLabels>
         <label>Kontakte gefunden</label>
         <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>Doppelte Datensatzmengen</label>
+        <name>conMergeFoundDRS</name>
     </customLabels>
     <customLabels>
         <label>Kontaktzusammenführung</label>
@@ -2482,8 +2792,20 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>conMergePortalUser</name>
     </customLabels>
     <customLabels>
+        <label>Nach bestimmten Kontakten suchen, um sie auf Duplikate zu prüfen</label>
+        <name>conMergeSearchConText</name>
+    </customLabels>
+    <customLabels>
         <label>Kontakte durchsuchen</label>
         <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Doppelte Kontakte anzeigen</label>
+        <name>conMergeSeeDupConDRS</name>
+    </customLabels>
+    <customLabels>
+        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Weitere Informationen &lt;/b&gt;&lt;/a&gt;</label>
+        <name>conMergeSeeDupConText</name>
     </customLabels>
     <customLabels>
         <label>Alle auswählen</label>
@@ -2500,6 +2822,10 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
     <customLabels>
         <label>Phase abgeschlossen</label>
         <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>Zu viele doppelte Kontakte. Verwenden Sie die Option &quot;Kontakte durchsuchen&quot;, um Kontakte zusammenzuführen</label>
+        <name>conMergeTooManyContactError</name>
     </customLabels>
     <customLabels>
         <label>Wählen Sie diese Spalte als Masterdatensatz aus.</label>
@@ -2562,6 +2888,14 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>flsReadAccessError</name>
     </customLabels>
     <customLabels>
+        <label>Fehler bei der Zuweisung zum Verwendungszweck</label>
+        <name>gauAllocationErrorGeneral</name>
+    </customLabels>
+    <customLabels>
+        <label>Neue Zuweisung hinzufügen</label>
+        <name>geAddNewAllocation</name>
+    </customLabels>
+    <customLabels>
         <label>Aktiver Abschnitt.</label>
         <name>geAssistiveActiveSection</name>
     </customLabels>
@@ -2618,7 +2952,27 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Advanced Form Fields header --></label>
+        <label>Anzahl der Schenkungen</label>
+        <name>geBatchGiftsCount</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Erwartung entspricht entweder nicht der Anzahl oder nicht dem Betrag der Schenkungen. Diese Werte müssen übereinstimmen, damit Sie diesen Batch verarbeiten können.</label>
+        <name>geBatchGiftsExpectedCountOrTotalMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Die erwartete und die Gesamtzahl der Schenkungen sowie der Betrag der Schenkungen müssen übereinstimmen, damit Sie diesen Batch verarbeiten können.</label>
+        <name>geBatchGiftsExpectedTotalsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Für {0} eingegebene Schenkungen</label>
+        <name>geBatchGiftsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Gesamtbetrag für den Batch</label>
+        <name>geBatchGiftsTotal</name>
+    </customLabels>
+    <customLabels>
+        <label>Erweiterte Optionen für Schenkungseinträge werden verfügbar, wenn Sie Felder aus den folgenden Objektgruppen auswählen.</label>
         <name>geBodyAdvancedFieldMapping</name>
     </customLabels>
     <customLabels>
@@ -2642,15 +2996,31 @@ Zum Überprüfen Ihrer Zuordnungseinstellungen der allgemeinen Verrechnungseinhe
         <name>geBodyBatchHeaderWarning</name>
     </customLabels>
     <customLabels>
+        <label>Die Batchtabelle wird unter dem Formular Ihres Schenkungseintrags angezeigt und listet die im Batch enthaltenen Schenkungen auf.</label>
+        <name>geBodyBatchTableColumnsPart1</name>
+    </customLabels>
+    <customLabels>
+        <label>
+        Wir empfehlen, die folgenden Felder aufzunehmen:
+        &lt;/br&gt;
+        &lt;ul&gt;
+            &lt;li&gt; Spendername: mit dem Organisations-Account oder dem Kontakt verknüpft, der die Spende gibt. &lt;/li&gt;
+            &lt;li&gt; Spendenname: mit der Opportunity oder der Zahlung für die Spende verknüpft. &lt;/li&gt;
+            &lt;li&gt; Status- und Fehlerinformationen: Informationen zur Batchverarbeitung. &lt;/li&gt;
+        &lt;/ul&gt;
+        </label>
+        <name>geBodyBatchTableColumnsPart2</name>
+    </customLabels>
+    <customLabels>
         <label>Wählen Sie Felder aus, die diesem Abschnitt hinzugefügt werden sollen.</label>
         <name>geBodyEmptyFormSection</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Field Bundles header --></label>
+        <label>Jedes Feldpaket ist eine verwaltete Menge von Feldern, die Benutzern das Ausführen verschiedener Aktionen für Schenkungseinträge ermöglichen.</label>
         <name>geBodyFieldBundlesLeftCol</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Form Fields header --></label>
+        <label>Diese Felder sind normalerweise auf Formularen für Schenkungseinträge vorhanden. Benutzerdefinierte Objektgruppen finden sich ebenfalls in diesem Abschnitt.</label>
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
@@ -2711,12 +3081,20 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
+        <label>Sie verarbeiten keine Kartenzahlung für diese Schenkung.</label>
+        <name>geBodyPaymentNotProcessingTransaction</name>
+    </customLabels>
+    <customLabels>
         <label>Geben Sie Details zu dieser Schenkungseingabe-Vorlage ein.</label>
         <name>geBodyTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
         <label>Eine Vorlage ist ein wiederverwendbares Layout von Feldern für die Dateneingabe. Bearbeiten Sie eine Vorlage, indem Sie auf den Namen der Vorlage klicken. Erstellen Sie alternativ eine neue Vorlage, oder klicken Sie auf das Dropdownmenü jeder Vorlage, um weitere Optionen anzuzeigen. Zurzeit verwendete Vorlagen können nicht gelöscht werden.</label>
         <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Das Feldpaket &quot;{0}&quot; enthält die folgenden Felder: </label>
+        <name>geBodyWidgetFields</name>
     </customLabels>
     <customLabels>
         <label>Zurück: Formularfelder</label>
@@ -2727,7 +3105,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geButtonBuilderNavBackTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label>Weiter: Batch-Header</label>
+        <label>Weiter: Batcheinstellungen</label>
         <name>geButtonBuilderNavBatchHeader</name>
     </customLabels>
     <customLabels>
@@ -2745,6 +3123,14 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Alle reduzieren</label>
         <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Reduziert: Alle Felder ausgeblendet</label>
+        <name>geButtonFormFieldsDisplayOptionCollapsed</name>
+    </customLabels>
+    <customLabels>
+        <label>Erweitert: Alle Felder sichtbar</label>
+        <name>geButtonFormFieldsDisplayOptionExpanded</name>
     </customLabels>
     <customLabels>
         <label>Alle erweitern</label>
@@ -2787,6 +3173,14 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
+        <label>Alternativ können Sie jetzt eine Karte belasten.</label>
+        <name>geButtonPaymentAlternate</name>
+    </customLabels>
+    <customLabels>
+        <label>Karte nicht belasten</label>
+        <name>geButtonPaymentDoNotCharge</name>
+    </customLabels>
+    <customLabels>
         <label>Speichern und neue Schenkung eingeben</label>
         <name>geButtonSaveNewGift</name>
     </customLabels>
@@ -2799,11 +3193,11 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geDisableGiftEntryInfo</name>
     </customLabels>
     <customLabels>
-        <label>Spende</label>
+        <label>Spendenname</label>
         <name>geDonationColumnLabel</name>
     </customLabels>
     <customLabels>
-        <label>Spender</label>
+        <label>Spendername</label>
         <name>geDonorColumnLabel</name>
     </customLabels>
     <customLabels>
@@ -2817,6 +3211,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Der Gesamtbetrag entspricht nicht dem {0}</label>
         <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Karte wurde erfolgreich belastet, die Zahlung wurde aber nicht in Salesforce erfasst. Bitte korrigieren Sie die Fehler, und reichen Sie das Formular erneut ein, um die Spende in Salesforce zu erfassen.</label>
+        <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
         <label>Füllen Sie dieses Feld aus.</label>
@@ -2839,7 +3237,11 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geErrorExistingTemplateName</name>
     </customLabels>
     <customLabels>
-        <label>Sie müssen über die Berechtigung verfügen, alle Felder auf dem Formular zu bearbeiten. Wenden Sie sich zwecks Zugriff auf die folgenden Felder an Ihre Salesforce-Administrator: {0}</label>
+        <label>Sie können die Spalten Ihrer Batchtabelle nicht ändern.</label>
+        <name>geErrorFLSBatchTableColumns</name>
+    </customLabels>
+    <customLabels>
+        <label>Erkundigen Sie sich bei Ihrem Salesforce-Administrator über Ihren Zugriff auf Feldebene. Sie müssen über die Berechtigung zum Bearbeiten der folgenden Felder verfügen: {0}</label>
         <name>geErrorFLSBody</name>
     </customLabels>
     <customLabels>
@@ -2851,7 +3253,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geErrorFieldPermission</name>
     </customLabels>
     <customLabels>
-        <label>Sie müssen über die Berechtigung verfügen, alle Objekte auf dem Formular zu bearbeiten. Wenden Sie sich zwecks Zugriff auf die folgenden Objekte an Ihren Salesforce-Administrator: {0}</label>
+        <label>Erkundigen Sie sich bei Ihrem Salesforce-Administrator über Ihren Objektzugriff. Sie müssen über die Berechtigung zum Bearbeiten der folgenden Objekte verfügen: {0}</label>
         <name>geErrorObjectCRUDBody</name>
     </customLabels>
     <customLabels>
@@ -2883,15 +3285,31 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
+        <label>Bei der Anforderung zum Belasten der Karte ist eine Zeitüberschreitung aufgetreten.</label>
+        <name>geErrorRequestTimedout</name>
+    </customLabels>
+    <customLabels>
         <label>Erforderliches Feld</label>
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Name of GAU Allocations field bundle --></label>
-        <name>geGauAllocationsBundle</name>
+        <label>Für die Spende {0} von {1} ist ein Systemfehler aufgetreten. Ihr Administrator sollte Transaktionen in {2} überprüfen und feststellen, ob die Karte belastet wurde.</label>
+        <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header for advanced form fields --></label>
+        <label>Wenn die Karte nicht belastet wurde, geben Sie Schenkung und Kartenzahlung im Schenkungseintrag erneut ein.</label>
+        <name>geErrorUncertainCardChargePart2</name>
+    </customLabels>
+    <customLabels>
+        <label>Wenn die Karte belastet wurde, notieren Sie die Transaktions-ID in {0}, und suchen Sie in Salesforce nach Datensätzen mit dieser ID. Aktualisieren Sie die Schenkungs- und Spenderdatensätze bei Bedarf.</label>
+        <name>geErrorUncertainCardChargePart3</name>
+    </customLabels>
+    <customLabels>
+        <label>Weitere Informationen finden Sie in der Dokumentation zur {0}-Fehlerbehebung auf dem Power of Us Hub.</label>
+        <name>geErrorUncertainCardChargePart4</name>
+    </customLabels>
+    <customLabels>
+        <label>Erweiterte Formularfelder</label>
         <name>geHeaderAdvancedFormFields</name>
     </customLabels>
     <customLabels>
@@ -2943,6 +3361,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHeaderFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
+        <label>Anzeigeoptionen</label>
+        <name>geHeaderFormFieldsModalDisplayOptionsSection</name>
+    </customLabels>
+    <customLabels>
         <label>Abschnitt umbenennen</label>
         <name>geHeaderFormFieldsModalRenameSection</name>
     </customLabels>
@@ -2987,6 +3409,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHeaderPageLevelError</name>
     </customLabels>
     <customLabels>
+        <label>Unterstützt von {0}</label>
+        <name>geHeaderPaymentServices</name>
+    </customLabels>
+    <customLabels>
         <label>Einzelner Schenkungseintrag</label>
         <name>geHeaderSingleGiftEntry</name>
     </customLabels>
@@ -2995,27 +3421,27 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHeaderTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Account1 Object Group --></label>
+        <label>Die Felder in diesem Abschnitt sind nur für Organisations-Accounts. Diese Organisation kann der Spender sein oder eine Zugehörigkeit zu Kontakt1 aufweisen.</label>
         <name>geHelpTextAccount1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Account2 Object Group --></label>
+        <label>Die Felder in diesem Abschnitt sind nur für Organisations-Accounts. Diese Organisation kann eine Zugehörigkeit zu Kontakt2 aufweisen.</label>
         <name>geHelpTextAccount2Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Address Object Group --></label>
+        <label>Der Adressdatensatz, der dem Haushalt-Account von Kontakt1 zugeordnet ist. Die NPSP-Automatisierung kann außerdem bewirken, dass diese Adresse für den Haushalt von Kontakt1 und alle Konten im gleichen Haushalt eingesetzt wird. Wenn Sie das EDA-Adressobjekt verwenden, sollten Sie eine neue Objektgruppe für das Objekt erstellen und seine Felder in Ihrer Vorlage verwenden.</label>
         <name>geHelpTextAddressMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for GAU Allocation 1 object group --></label>
+        <label>Diese Objektgruppe erlaubt Ihnen nur die Eingabe einer einzelnen Zuweisung zum Verwendungszweck. Verwenden Sie diese Felder nur beim Zuordnen benutzerdefinierter Felder zu Verwendungszweck-Zuweisungen. Verwenden Sie andernfalls das Feldpaket für Zuweisungen zum Verwendungszweck.</label>
         <name>geHelpTextAllocation1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for GAU Allocation 2 object group --></label>
+        <label>Diese Objektgruppe erlaubt Ihnen nur die Eingabe einer zweiten Verwendungszweck-Zuweisung. Verwenden Sie diese Felder nur beim Zuordnen benutzerdefinierter Felder für Verwendungszweck-Zuweisungen. Verwenden Sie andernfalls das Feldpaket für Zuweisungen zum Verwendungszweck.</label>
         <name>geHelpTextAllocation2Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text about GAU Allocation field bundle --></label>
+        <label>Verwenden Sie dieses Feldpaket zum Zuweisen von Spenden über mehrere Verwendungszwecke hinweg.</label>
         <name>geHelpTextAllocationBundle</name>
     </customLabels>
     <customLabels>
@@ -3023,11 +3449,11 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHelpTextBatchHeaderFieldLabelLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Contact1 Object Group --></label>
+        <label>Der primäre Kontakt eines Haushalt-Accounts. Dieser Kontakt kann der Spender sein oder eine Zugehörigkeit zur Organisation in Account1 besitzen.</label>
         <name>geHelpTextContact1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Contact2 Object Group --></label>
+        <label>Der sekundäre Kontakt im Haushalt-Account von Kontakt1. Dieser Kontakt kann ebenfalls eine Zugehörigkeit zur Organisation in Account2 aufweisen.</label>
         <name>geHelpTextContact2Mapping</name>
     </customLabels>
     <customLabels>
@@ -3039,8 +3465,20 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geHelpTextFormFieldsFieldLabelLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Household Object Group --></label>
+        <label>Weitere Informationen über den Haushalt-Account von Kontakt1.</label>
         <name>geHelpTextHouseholdMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Hinweis: Dieses Feldpaket steht nur für Einzelschenkungen zur Verfügung und wird bei der Eingabe von Schenkungen in Batches nicht angezeigt.</label>
+        <name>geHelpTextPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label>Das base64-Format ist ungültig. Die Zeichenanzahl muss ein Vielfaches von 4 sein, und nur diese Zeichen können verwendet werden: [a–z A–Z 0–9 + / =]</label>
+        <name>geJWTUtilInvalidBase64Message</name>
+    </customLabels>
+    <customLabels>
+        <label>Das base64url-Format ist ungültig. Es können nur diese Zeichen verwendet werden: [a–z A–Z 0–9 _ -]</label>
+        <name>geJWTUtilInvalidBase64UrlMessage</name>
     </customLabels>
     <customLabels>
         <label>Sichtbare Felder</label>
@@ -3049,6 +3487,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Verfügbare Felder</label>
         <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Abschnitt anzeigen als</label>
+        <name>geLabelDisplaySections</name>
     </customLabels>
     <customLabels>
         <label>Abschnittsname</label>
@@ -3063,8 +3505,34 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geLabelTemplateInfoNameField</name>
     </customLabels>
     <customLabels>
+        <label>Für diesen Elevate-Kunden wurde ein ungültiger API-Schlüssel angegeben</label>
+        <name>gePS_IntegrationTestInvalidAPIKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Es wurden ungültige Konfigurationsparameter angegeben</label>
+        <name>gePS_IntegrationTestInvalidConfigParams</name>
+    </customLabels>
+    <customLabels>
+        <label>Fehler beim Verarbeiten der Zahlung. Bitte überprüfen Sie den Fehler, und versuchen Sie es erneut. Wählen Sie
+            alternativ &quot;Karte nicht belasten aus&quot;, um eine Spende einzugeben, ohne eine Kartenzahlung zu verarbeiten. {0}-Fehler:
+            /0x0A/ {1} </label>
+        <name>gePaymentProcessError</name>
+    </customLabels>
+    <customLabels>
+        <label>Verarbeitungsfehler bei der Transaktion.</label>
+        <name>gePaymentProcessingErrorBanner</name>
+    </customLabels>
+    <customLabels>
+        <label>Zeitlimitüberschreitung bei der Anforderung. Versuchen Sie es noch einmal, oder wenden Sie sich an Ihren Salesforce-Administrator.</label>
+        <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
         <label>Suchen...</label>
         <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to select batch table columns --></label>
+        <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
         <label>Auswählen...</label>
@@ -3075,12 +3543,24 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geTabBatchHeader</name>
     </customLabels>
     <customLabels>
+        <label>Batcheinstellungen</label>
+        <name>geTabBatchSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>Spalten der Batchtabelle</label>
+        <name>geTabBatchTableColumns</name>
+    </customLabels>
+    <customLabels>
         <label>Formularfelder</label>
         <name>geTabFormFields</name>
     </customLabels>
     <customLabels>
         <label>Vorlagen-Informationen</label>
         <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Karte wird belastet...</label>
+        <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
         <label>{0} Element</label>
@@ -3097,6 +3577,26 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>• Aktualisiert {0}</label>
         <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label>Sehen wir uns die Opportunity an...</label>
+        <name>geTextNavigateToOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Klicken Sie auf &quot;Speichern&quot;, um die Kartenzahlung zu verarbeiten und die Spende in Salesforce zu erfassen.</label>
+        <name>geTextPaymentsSaveNotice</name>
+    </customLabels>
+    <customLabels>
+        <label>Verarbeitung...</label>
+        <name>geTextProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>Speichern...</label>
+        <name>geTextSaving</name>
+    </customLabels>
+    <customLabels>
+        <label>Aktualisieren...</label>
+        <name>geTextUpdating</name>
     </customLabels>
     <customLabels>
         <label>Listenansicht aktualisiert.</label>
@@ -3131,8 +3631,24 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geToastTemplateUpdateSuccess</name>
     </customLabels>
     <customLabels>
+        <label>Ein ungültiger (leerer) Schlüssel wurde angegeben, aber es wurde keine Ausnahme ausgelöst</label>
+        <name>geUtilJWTTestInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Es wurde eine ungültige Nutzlast bereitgestellt, aber es wurde keine Ausnahme ausgelöst</label>
+        <name>geUtilJWTTestInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label>Es wurde eine ungültige Zeichenfolge angegeben, aber es wurde keine Ausnahme ausgelöst</label>
+        <name>geUtilJWTTestInvalidString</name>
+    </customLabels>
+    <customLabels>
         <label>Warnung: Wenn Sie diesen Abschnitt löschen, entfernen Sie zugleich erforderliche Felder aus der Vorlage. Diese Felder müssen zuerst einem anderen Abschnitt hinzugefügt werden, damit Sie die Vorlage speichern können.</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Da dieser Spende mindestens eine GAU-Zuweisung (Verwendungszweck) zugeordnet ist, können Sie bestimmte Felder nicht aktualisieren.</label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>Die Schenkungsverarbeitung unterstützt nicht das Accountmodell &quot;Einzelperson&quot; (&quot;Bucket&quot;).</label>
@@ -3399,6 +3915,18 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
+        <label>Es wurde keine Statusprüfung der Daten im Datensatz durchgeführt.</label>
+        <name>healthLabelDataBatchNotRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Statusprüfungen für Daten in Datensätzen deaktivieren</label>
+        <name>healthLabelDisableRecordBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Wenn sie aktiviert ist, prüft die Statusprüfung lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme.</label>
+        <name>healthLabelDisableRecordBatchDescription</name>
+    </customLabels>
+    <customLabels>
         <label>Der Empfänger der Fehlerbenachrichtigung ist gültig.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -3423,7 +3951,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>healthLabelHHObjData</name>
     </customLabels>
     <customLabels>
-        <label>Bei der Statusprüfung wird überprüft, ob alle Ihre NPSP-Einstellungen gültig sind und es wird nach Problemen in den Daten zu Ihrem Account gesucht. Nach Abschluss der Prüfung können Sie unten die Ergebnisse einschließlich detaillierter Informationen zu etwaigen Fehlern anzeigen.</label>
+        <label>Bei der Statusprüfung wird überprüft, ob alle Ihre NPSP-Einstellungen gültig sind, und es wird nach Problemen in den Daten Ihrer Datensätze gesucht. Nach Abschluss der Prüfung können Sie unten die Ergebnisse einschließlich detaillierter Informationen zu etwaigen Fehlern anzeigen.</label>
         <name>healthLabelIntro</name>
     </customLabels>
     <customLabels>
@@ -3707,6 +4235,14 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>isARequiredField</name>
     </customLabels>
     <customLabels>
+        <label>Falsch</label>
+        <name>labelBooleanFalse</name>
+    </customLabels>
+    <customLabels>
+        <label>Wahr</label>
+        <name>labelBooleanTrue</name>
+    </customLabels>
+    <customLabels>
         <label>Vorname</label>
         <name>labelListViewFirst</name>
     </customLabels>
@@ -3761,6 +4297,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
     <customLabels>
         <label>Land</label>
         <name>lblCountry</name>
+    </customLabels>
+    <customLabels>
+        <label>Währung</label>
+        <name>lblCurrency</name>
     </customLabels>
     <customLabels>
         <label>Kontakt entfernen</label>
@@ -4375,7 +4915,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>stgAddrPermissionDenied</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungstyp</label>
+        <label>Zuweisungstyp</label>
         <name>stgAllocationLevel</name>
     </customLabels>
     <customLabels>
@@ -4546,7 +5086,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>stgDefaultValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- The user do not have delete permission to delete custom setting. --></label>
+        <label>Sie verfügen nicht über die erforderlichen Systemberechtigungen, um diese Einstellung zu löschen. Wenden Sie sich zur Unterstützung an Ihren Systemadministrator.</label>
         <name>stgDeletePermissionError</name>
     </customLabels>
     <customLabels>
@@ -4591,7 +5131,7 @@ Indem Sie &quot;NPSP-Standardaufträge n. automat. planen&quot; auswählen, teil
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- The user do not have edit permission to edit custom setting. --></label>
+        <label>Sie verfügen nicht über die erforderlichen Systemberechtigungen, um diese Einstellung zu bearbeiten. Wenden Sie sich zur Unterstützung an Ihren Systemadministrator.</label>
         <name>stgEditPermissionError</name>
     </customLabels>
     <customLabels>
@@ -4607,11 +5147,11 @@ Indem Sie &quot;NPSP-Standardaufträge n. automat. planen&quot; auswählen, teil
         <name>stgErrorInvalidNameFormat</name>
     </customLabels>
     <customLabels>
-        <label>Die zuvor konfigurierte standardmäßige allgemeine Verrechnungseinheit ist nicht mehr vorhanden und wurde entfernt. Um die Standardzuordnungen wieder zu aktivieren, öffnen Sie die Seite &quot;Zuordnungen der allgemeinen Verrechnungseinheit&quot; in den NPSP-Einstellungen.</label>
+        <label>Der zuvor konfigurierte Standard-Verwendungszweck ist nicht mehr vorhanden und wurde entfernt. Um die Standardzuweisungen wieder zu aktivieren, öffnen Sie die Seite &quot;Zuweisungen Verwendungszweck&quot; in den NPSP-Einstellungen.</label>
         <name>stgErrorMissingDefaultGauRecord</name>
     </customLabels>
     <customLabels>
-        <label>Die zuvor konfigurierte standardmäßige allgemeine Verrechnungseinheit ist nicht mehr vorhanden und wurde entfernt. Sie müssen die Standardzuordnungen wieder aktivieren und eine allgemeine Verrechnungseinheit als Standard festlegen, um Zahlungszuordnungen zu nutzen. Öffnen Sie die Seite &quot;Zuordnungen der allgemeinen Verrechnungseinheit&quot; in den NPSP-Einstellungen, um die Einstellungen für Standardzuordnungen zu aktualisieren.</label>
+        <label>Der zuvor konfigurierte Standard-Verwendungszweck ist nicht mehr vorhanden und wurde entfernt. Sie müssen die Standardzuweisungen wieder aktivieren und einen Verwendungszweck als Standard festlegen, um Zahlungszuweisungen zu nutzen. Öffnen Sie die Seite &quot;Zuweisungen Verwendungszweck&quot; in den NPSP-Einstellungen, um die Einstellungen für Standardzuweisungen zu aktualisieren.</label>
         <name>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</name>
     </customLabels>
     <customLabels>
@@ -4654,21 +5194,21 @@ Indem Sie &quot;NPSP-Standardaufträge n. automat. planen&quot; auswählen, teil
         <name>stgHelpAdvancedMappingTableHeader2</name>
     </customLabels>
     <customLabels>
-        <label>Wenn diese Option aktiviert ist, werden für die Summen des Zuordnungs-Rollups die Geschäftsjahreinstellungen statt der Kalenderjahreinstellungen aktiviert. Gehen Sie zur Festlegung der Geschäftsjahrinformationen zu Setup und suchen Sie nach dem Geschäftsjahr. HINWEIS: Das Nonprofit Success Pack unterstützt keine benutzerdefinierten Geschäftsjahreinstellungen.</label>
+        <label>Wenn diese Option aktiviert ist, werden für die Summen des Zuweisungs-Rollups die Geschäftsjahreinstellungen statt der Kalenderjahreinstellungen aktiviert. Gehen Sie zur Festlegung der Geschäftsjahrinformationen zu Setup und suchen Sie nach dem Geschäftsjahr. HINWEIS: Das Nonprofit Success Pack unterstützt keine benutzerdefinierten Geschäftsjahreinstellungen.</label>
         <name>stgHelpAlloFiscalYearRollups</name>
     </customLabels>
     <customLabels>
-        <label>Legt den Wert für &quot;N-Tage&quot;-Rollups fest, wobei &quot;N&quot; die Anzahl der Tage von heute in die Vergangenheit bezeichnet. Dieser Wert gilt standardmäßig für einen Rollup der Zuordnungen zur allgemeinen Verrechnungseinheit über die letzten 365 Tage.</label>
+        <label>Legt den Wert für &quot;N-Tage&quot;-Rollups fest, wobei &quot;N&quot; die Anzahl der Tage von heute in die Vergangenheit bezeichnet. Dieser Wert gilt standardmäßig für einen Rollup der Zuweisungen zum Verwendungszweck über die letzten 365 Tage.</label>
         <name>stgHelpAlloNDayValue</name>
     </customLabels>
     <customLabels>
-        <label>Eine Zuordnung ist der genaue Betrag einer Spende, die an eine allgemeine Verrechnungseinheit geht. Mit dieser Einstellung wird festgelegt, ob Gelder basierend auf dem Betrag der Opportunity oder dem Betrag der Zahlung zugeordnet werden.&lt;br/&gt;&lt;br/&gt;
+        <label>Eine Zuweisung ist der spezifische Betrag einer Spende, die an einen festgelegten Verwendungszweck geht. Mit dieser Einstellung wird festgelegt, ob Gelder basierend auf dem Betrag der Opportunity oder dem Betrag der Zahlung zugewiesen werden.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;WARNUNG:&lt;/b&gt; Wenn Sie sich entschließen, die Zahlungszuordnung zu verwenden, wird die Art und Weise, in der Opportunity-Zuordnungen in Ihrer Organisation funktionieren, geändert. Es ist wichtig, dass Sie diese Änderungen und die zusätzlichen Anforderungen verstehen, bevor Sie sie aktivieren.&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;WARNUNG:&lt;/b&gt; Wenn Sie sich entschließen, die Zahlungszuweisung zu verwenden, wird die Art und Weise, in der Opportunity-Zuweisungen in Ihrer Organisation funktionieren, geändert. Es ist wichtig, dass Sie diese Änderungen und die zusätzlichen Anforderungen verstehen, bevor Sie sie aktivieren.&lt;br/&gt;&lt;br/&gt;
 
-Wenn Sie Zahlungszuordnungen aktivieren, beginnen, sie zu verwenden, und sie dann wieder deaktivieren, müssen Sie Ihre Daten manuell abgleichen und die Opportunity-Zuordnungsdatensätze aktualisieren, damit sie die zuvor in den Zahlungszuordnungen zugewiesenen Informationen widerspiegeln. Lesen Sie die Dokumentation zur Zahlungszuordnung, um die möglichen Auswirkungen besser zu verstehen.&lt;br/&gt;&lt;br/&gt;
+Wenn Sie Zahlungszuweisungen aktivieren, beginnen, sie zu verwenden, und sie dann wieder deaktivieren, müssen Sie Ihre Daten manuell abgleichen und die Opportunity-Zuweisungsdatensätze aktualisieren, damit sie die zuvor in den Zahlungszuweisungen zugewiesenen Informationen widerspiegeln. Lesen Sie die Dokumentation zur Zahlungszuweisung, um die möglichen Auswirkungen besser zu verstehen.&lt;br/&gt;&lt;br/&gt;
 
-Wenn Sie Zahlungszuordnungen aktivieren, bleiben die vorhandenen Rollups dieselben. Wir ändern keine Rollups und erstellen keine neuen benutzerdefinierten Rollups. Sie können bei Bedarf neue Rollups erstellen, die nur auf Zahlungen basieren.</label>
+Wenn Sie Zahlungszuweisungen aktivieren, bleiben die vorhandenen Rollups dieselben. Wir ändern keine Rollups und erstellen keine neuen benutzerdefinierten Rollups. Sie können bei Bedarf neue Rollups erstellen, die nur auf Zahlungen basieren.</label>
         <name>stgHelpAllocationLevel</name>
     </customLabels>
     <customLabels>
@@ -4700,12 +5240,12 @@ Wenn Sie Zahlungszuordnungen aktivieren, bleiben die vorhandenen Rollups dieselb
         <name>stgHelpBDEOppNaming</name>
     </customLabels>
     <customLabels>
-        <label>Dieses Dienstprogramm berechnet Gesamt-Rollups für alle geschlossenen Opportunities mit Zuordnungen und aktualisiert die jeweiligen allgemeinen Verrechnungseinheits-Datensätze. 
+        <label>Dieses Dienstprogramm berechnet Gesamt-Rollups für alle geschlossenen Opportunities mit Zuweisungen und aktualisiert die jeweiligen Datensätze zum Verwendungszweck. 
 Dieser Vorgang kann einige Zeit dauern, aber Sie können diese Seite ruhig schließen, da der Vorgang im Hintergrund weiter ausgeführt wird.</label>
         <name>stgHelpBatchAlloRollup</name>
     </customLabels>
     <customLabels>
-        <label>Durch Klicken auf diese Schaltfläche wird ein Batch-Vorgang gestartet, bei dem Standardzuordnungen für alle bestehenden Opportunities erstellt werden, mit Ausnahme der Opportunities, die in den Zuordnungs-Rollup-Einstellungen ausgeschlossen sind. Zur Ausführung dieses Tools müssen Standardzuordnungen aktiviert und eine standardmäßige allgemeine Verrechnungseinheit ausgewählt sein.</label>
+        <label>Durch Klicken auf diese Schaltfläche wird ein Batch-Vorgang gestartet, bei dem Standardzuweisungen für alle bestehenden Opportunities erstellt werden, mit Ausnahme der Opportunities, die in den Zuweisungs-Rollup-Einstellungen ausgeschlossen sind. Zur Ausführung dieses Tools müssen Standardzuweisungen aktiviert und ein Standard-Verwendungszweck ausgewählt sein.</label>
         <name>stgHelpBatchCreateDefault</name>
     </customLabels>
     <customLabels>
@@ -4801,11 +5341,11 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
         <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
-        <label>Wenn diese Option ausgewählt ist, erstellt NPSP automatisch Zuordnungsdatensätze zur allgemeinen Verrechnungseinheit, die zu der im nachfolgenden Feld &quot;Standardmäßige allg. Verrechnungseinheit&quot; angegebenen allgemeinen Verrechnungseinheit zugeordnet werden. Dadurch wird eine bessere Berichterstellung zur standardmäßigen allgemeinen Verrechnungseinheit aktiviert, doch es wird auch mehr Datenspeicherplatz belegt.</label>
+        <label>Wenn diese Option ausgewählt ist, erstellt NPSP automatisch Zuweisungsdatensätze zum Verwendungszweck, die zu dem im nachfolgenden Feld &quot;Standard-Verwendungszweck&quot; angegebenen Verwendungszweck zugeordnet werden. Dies ermöglicht eine bessere Berichterstellung zum Standard-Verwendungszweck, doch es wird auch mehr Datenspeicherplatz belegt.</label>
         <name>stgHelpDefaultAllocationsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>Wenn &quot;Standardzuordnungen aktiviert&quot; ausgewählt ist, erstellt NPSP eine Zuordnung zur allgemeinen Verrechnungseinheit für alle neuen Opportunities, die nicht aus den Zuordnungs-Rollup-Einstellungen der allgemeinen Verrechnungseinheit ausgeschlossen sind, und weist sie dieser allgemeinen Verrechnungseinheit zu. HINWEIS: Dies schließt keine vorhandenen nicht zugeordneten Opportunities ein. Diese können Sie in den NPSP-Einstellungen zu der standardmäßigen allgemeinen Verrechnungseinheit zuordnen, indem Sie Bulk-Datenprozesse | Batch-Erstellung von Standardzuordnungen auswählen.</label>
+        <label>Wenn &quot;Standardzuweisungen aktiviert&quot; ausgewählt ist, erstellt NPSP eine Zuweisung zum Verwendungszweck für alle neuen Opportunities, die nicht aus den Zuweisungs-Rollup-Einstellungen des Verwendungszwecks ausgeschlossen sind, und weist sie diesem Verwendungszweck zu. HINWEIS: Dies schließt keine vorhandenen nicht zugewiesenen Opportunities ein. Diese können Sie in den NPSP-Einstellungen zum Standard-Verwendungszweck zuweisen, indem Sie Bulk-Datenprozesse | Batch-Erstellung von Standardzuweisungen auswählen.</label>
         <name>stgHelpDefaultGAU</name>
     </customLabels>
     <customLabels>
@@ -4815,6 +5355,12 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
     <customLabels>
         <label>Wenn diese Option ausgewählt ist, erfolgt basierend auf den zugewiesenen Opportunity-Kontaktrollen ein Rollup der Geschlossen/Gewonnenen Opportunity-Summen zu Kontaktdatensätzen. Rollups von Soft Credits werden immer bei Batch-Aufträgen in der Nacht durchgeführt, aber Sie können über die Registerkarte &quot;Rollup-Spenden-Batch&quot; manuell ausgeführt werden.</label>
         <name>stgHelpEnableSoftCreditRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>Dieses Dienstprogramm führt einen Batch-Prozess aus, der die nächsten geplanten Raten-Opportunities für wiederkehrende Spenden erstellt und die Statistikfelder für wiederkehrende Spenden aktualisiert.
+        &lt;br/&gt;&lt;br/&gt;
+        Dieser Prozess kann einige Zeit dauern, aber Sie können diese Seite schließen, und der Prozess wird im Hintergrund fortgesetzt.</label>
+        <name>stgHelpEnhancedRDBatch</name>
     </customLabels>
     <customLabels>
         <label>Das Fehlerprotokoll zeigt eine detaillierte Liste von Fehlern zur Fehlerbehandlung an. Fehler werden nur protokolliert, wenn unter &quot;Systemtools&quot; | &quot;Fehlerbenachrichtigungen&quot; die Optionen &quot;Fehlerbehandlung&quot; und &quot;Fehler speichern&quot; aktiviert sind.</label>
@@ -5186,11 +5732,11 @@ Um Ihre vorhandenen Einstellungen zu überprüfen, gehen Sie zu &quot;Setup&quot
         <name>stgHelpRollupExcludeAccountOppType</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungen zur allgemeinen Verrechnungseinheit von Opportunities mit den ausgewählten Datensatztypen werden nicht in Rollups in den Datensatz der allgemeinen Verrechnungseinheit einbezogen.</label>
+        <label>Zuweisungen zum Verwendungszweck von Opportunities mit den ausgewählten Datensatztypen werden nicht in Rollups zum Verwendungszweck-Datensatz einbezogen.</label>
         <name>stgHelpRollupExcludeAlloOppRecType</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungen zur allgemeinen Verrechnungseinheit von Opportunities mit diesem Wert in der Typ-Auswahlliste werden nicht in Rollups in den Datensatz der allgemeinen Verrechnungseinheit einbezogen.</label>
+        <label>Zuweisungen zum Verwendungszweck von Opportunities mit diesem Wert in der Typ-Auswahlliste werden nicht in Rollups zum Verwendungszweck-Datensatz einbezogen.</label>
         <name>stgHelpRollupExcludeAlloOppType</name>
     </customLabels>
     <customLabels>
@@ -5316,19 +5862,19 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgLabelAllRecordTypes</name>
     </customLabels>
     <customLabels>
-        <label>Rollup-Zuordnungen-Batch-Fortschritt</label>
+        <label>Rollup-Zuweisungen-Batch-Fortschritt</label>
         <name>stgLabelAlloBatchProgress</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungsverhalten-Einstellungen</label>
+        <label>Einstellungen Zuweisungsverhalten</label>
         <name>stgLabelAllocationBehaviorSettings</name>
     </customLabels>
     <customLabels>
-        <label>GAU-Zuordnungen-Rollup-Einstellungen</label>
+        <label>GAU-Zuweisungen-Rollup-Einstellungen</label>
         <name>stgLabelAllocationsRollupSettings</name>
     </customLabels>
     <customLabels>
-        <label>Einstellungen für Standardzuordnungen</label>
+        <label>Einstellungen für Standardzuweisungen</label>
         <name>stgLabelAllocationsSettings</name>
     </customLabels>
     <customLabels>
@@ -5676,7 +6222,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgNavAffiliations</name>
     </customLabels>
     <customLabels>
-        <label>Zuordnungen zur allgemeinen Verrechnungseinheit</label>
+        <label>Zuweisungen Verwendungszweck</label>
         <name>stgNavAllocations</name>
     </customLabels>
     <customLabels>
@@ -5752,6 +6298,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
+        <label>Statuszuordnung zu Status</label>
+        <name>stgNavRD2StatusMapping</name>
+    </customLabels>
+    <customLabels>
         <label>Batch für wiederkehrende Spenden</label>
         <name>stgNavRDBatch</name>
     </customLabels>
@@ -5822,6 +6372,18 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
     <customLabels>
         <label>Power of Us-Hub</label>
         <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label>Wenn Sie eine wiederkehrende Spende erstellen, füllt NPSP den Namen automatisch im angegebenen Namensformat auf. Wählen Sie &quot;Automatische Benennung deaktivieren&quot; aus, um dieses Feature zu deaktivieren.</label>
+        <name>stgRDNamingDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Automatische Benennung deaktivieren</label>
+        <name>stgRDNamingDisable</name>
+    </customLabels>
+    <customLabels>
+        <label>Namensformat für wiederkehrende Spenden</label>
+        <name>stgRDNamingOptionLabel</name>
     </customLabels>
     <customLabels>
         <label>Zurücksetzen</label>

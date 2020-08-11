@@ -3,44 +3,44 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssatz</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssätze</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssatz</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssätze</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssatzes</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssätze</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssatz</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Data Import Object Mapping Set --></value>
+        <value>Datenimport-Objektzuordnungssätzen</value>
     </caseValues>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Data Import Object Mapping Set Layout</layout>
         <sections>

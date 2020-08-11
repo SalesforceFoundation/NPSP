@@ -143,7 +143,7 @@ public class HH_HouseholdNaming_TEST {
             WHERE Id = :insertlist[0].Id];
         system.assertEquals('LastName0 ' +  system.label.npo02.DefaultHouseholdName, con.npo02__household__r.Name);
         system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
-        system.assertEquals('Mr. FirstName0 LastName0', con.npo02__household__r.npo02__Formal_Greeting__c);
+        system.assert(con.npo02__household__r.npo02__Formal_Greeting__c.endsWith('FirstName0 LastName0'));
 
     }
 

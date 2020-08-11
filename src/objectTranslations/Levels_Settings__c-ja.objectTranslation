@@ -5,11 +5,11 @@
         <value><!-- Levels Settings --></value>
     </caseValues>
     <fields>
-        <label>前回のジョブ開始時間 : 団体</label>
+        <label>前回のジョブ開始時間 : 取引先</label>
         <name>LastJobStartTimeAccount__c</name>
     </fields>
     <fields>
-        <label>前回のジョブ開始時間 : 個人</label>
+        <label>前回のジョブ開始時間 : 取引先責任者</label>
         <name>LastJobStartTimeContact__c</name>
     </fields>
     <fields>

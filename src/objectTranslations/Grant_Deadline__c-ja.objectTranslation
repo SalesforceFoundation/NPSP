@@ -20,7 +20,7 @@
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
     <fields>
-        <label>支援</label>
+        <label>商談</label>
         <name>Opportunity__c</name>
         <relationshipLabel>提出書類</relationshipLabel>
     </fields>
