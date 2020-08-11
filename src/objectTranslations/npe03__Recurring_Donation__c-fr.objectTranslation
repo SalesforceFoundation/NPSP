@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
+        <name>RD2_Entry_Form_Custom_Fields</name>
+    </fieldSets>
     <fields>
         <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au dernier jour du mois, indép. de la prochaine date de don. La période de versement doit être mens. ou trim., ou une période de versement personn. utilisant des mois.</help>
         <label>Toujours utiliser dernier jour du mois</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <fields>
-        <help>Le motif de ce Don récurrent a été fermé.</help>
-        <label>Motif de fermeture</label>
+        <help>La raison pour laquelle ce don récurrent a sa valeur de statut actuelle.</help>
+        <label>Motif du statut</label>
         <name>ClosedReason__c</name>
         <picklistValues>
             <masterLabel>Card Expired</masterLabel>
@@ -33,6 +37,11 @@
             <masterLabel>Unknown</masterLabel>
             <translation>Inconnu</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>Identifiant externe pour l’intégration du service de paiement Salesforce.org.</help>
+        <label>ID récurrent Elevate</label>
+        <name>CommitmentId__c</name>
     </fields>
     <fields>
         <help>Le montant total de ce Don récurrent pour le calendrier ou l&apos;exercice fiscal actuel (en lecture seule). Inclut les opportunités gagnées fermées plus les futurs versements pour le reste de l&apos;exercice fiscal.</help>
@@ -169,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Après cette date, NPSP ne créera plus de versements pour ce don récurrent et mettra à jour le Statut à Clôturé.</help>
+        <label>Date de fin</label>
+        <name>EndDate__c</name>
+    </fields>
+    <fields>
         <help>La Fréquence de versement et la Période de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
         <label>Fréquence de versement</label>
         <name>InstallmentFrequency__c</name>
@@ -196,7 +210,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>La valeur par défaut est Ouvert, qui signifie que le don récurrent n&apos;a pas de date de fin.</help>
+        <help>Sélectionnez Ouvert pour un Don récurrent en cours. Sélectionnez Fixe pour un Don récurrent qui a un nombre spécifique de versements. Pour Fixe, vous devez également compléter le champ Nombre de versements prévus.</help>
         <label>Type de récurrence</label>
         <name>RecurringType__c</name>
         <picklistValues>
@@ -210,7 +224,7 @@
     </fields>
     <fields>
         <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s&apos;appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
-        <label>Date d&apos;entrée en vigueur</label>
+        <label>Date de début</label>
         <name>StartDate__c</name>
     </fields>
     <fields>

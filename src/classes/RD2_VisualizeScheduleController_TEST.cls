@@ -38,8 +38,6 @@
 private with sharing class RD2_VisualizeScheduleController_TEST {
 
     private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 11, 1);
-    private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
-    private static final String PAYMENT_CHECK = 'Check';
 
     private static final String INSTALLMENT_DONATION_DATE = 'donationDate';
     private static final String INSTALLMENT_AMOUNT = 'amount';
@@ -60,6 +58,25 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     private static final String DATA_TYPE_CURRENCY = 'currency';
     private static final String DATA_TYPE_DATE = 'date-local';
     private static final String DATA_TYPE_CHECKBOX = 'checkbox';
+
+    private static final String PAYMENT_CREDIT_CARD_LABEL = UTIL_Describe.getTranslatedPicklistLabel(
+        npe03__Recurring_Donation__c.SObjectType,
+        npe03__Recurring_Donation__c.PaymentMethod__c,
+        'Credit Card');
+    private static final String PAYMENT_CHECK_LABEL = UTIL_Describe.getTranslatedPicklistLabel(
+        npe03__Recurring_Donation__c.SObjectType,
+        npe03__Recurring_Donation__c.PaymentMethod__c,
+        'Check');
+
+    private static final String INSTALLMENT_PERIOD_MONTHLY_LABEL = UTIL_Describe.getTranslatedPicklistLabel(
+        npe03__Recurring_Donation__c.SObjectType,
+        npe03__Recurring_Donation__c.npe03__Installment_Period__c,
+        RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
+
+    private static final String INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH_LABEL = UTIL_Describe.getTranslatedPicklistLabel(
+        npe03__Recurring_Donation__c.SObjectType,
+        npe03__Recurring_Donation__c.npe03__Installment_Period__c,
+        RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
 
     /****
     * @description Creates data required for unit tests
@@ -164,7 +181,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of installments should match');
 
         for (RD2_VisualizeScheduleController.Installment installment : installments) {
-            System.assertEquals(PAYMENT_CREDIT_CARD, installment.paymentMethod, 'Payment Method should be Credit Card.');
+            System.assertEquals(PAYMENT_CREDIT_CARD_LABEL, installment.paymentMethod, 'Payment Method should be Credit Card.');
             System.assertEquals(rd.npe03__Amount__c, installment.amount, 'Installment Amount should match RD Amount.');
         }
         System.assertEquals(installment5Date, installments[4].donationDate, 'Donation date should be 12/1/1968.');
@@ -189,7 +206,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         insert rd;
 
         Test.startTest();
-        rd.PaymentMethod__c = PAYMENT_CHECK;
+        rd.PaymentMethod__c = 'Check';
         rd.StartDate__c = newStartDate;
         update rd;
         Test.stopTest();
@@ -199,8 +216,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
-        System.assertEquals(PAYMENT_CREDIT_CARD, schedules[0].paymentMethod, 'First schedule Payment Method should be Credit Card.');
-        System.assertEquals(PAYMENT_CHECK, schedules[1].paymentMethod, 'Second schedule Payment Method should be Check.');
+        System.assertEquals(PAYMENT_CREDIT_CARD_LABEL, schedules[0].paymentMethod, 'First schedule Payment Method should be Credit Card.');
+        System.assertEquals(PAYMENT_CHECK_LABEL, schedules[1].paymentMethod, 'Second schedule Payment Method should be Check.');
     }
 
     /****
@@ -276,7 +293,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
         System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
         System.assertEquals(rd.npe03__Amount__c, schedules[0].amount, 'Schedule Amount should match RD Amount');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'Schedule Period should match RD Installment Period');
+        System.assertEquals(INSTALLMENT_PERIOD_MONTHLY_LABEL, schedules[0].period, 'Schedule Period should match RD Installment Period');
         System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'Schedule Day of Month should match');
         System.assertEquals(startDate, schedules[0].startDate, 'Schedule Start Date should be RD Effective Date');
         System.assertEquals(null, schedules[0].endDate, 'Schedule End Date should be undefined');
@@ -315,8 +332,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(100, schedules[0].amount, 'First schedule Amount should be old Amount');
         System.assertEquals(newAmount, schedules[1].amount, 'Second schedule Amount should be new Amount');
 
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'First schedule Period should be unchanged');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[1].period, 'Second schedule Period should match');
+        System.assertEquals(INSTALLMENT_PERIOD_MONTHLY_LABEL, schedules[0].period, 'First schedule Period should be unchanged');
+        System.assertEquals(INSTALLMENT_PERIOD_MONTHLY_LABEL, schedules[1].period, 'Second schedule Period should match');
 
         System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'First schedule Day of Month should be unchanged');
         System.assertEquals(dayOfMonth, schedules[1].dayOfMonth, 'Second schedule Day of Month should match');
@@ -382,8 +399,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(100, schedules[0].amount, 'First schedule Amount should be old Amount');
         System.assertEquals(newAmount, schedules[1].amount, 'Second schedule Amount should be new Amount');
 
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, schedules[0].period, 'First schedule Period should be 1st and 15th.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[1].period, 'Second schedule Period should be monthly.');
+        System.assertEquals(INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH_LABEL, schedules[0].period, 'First schedule Period should be 1st and 15th.');
+        System.assertEquals(INSTALLMENT_PERIOD_MONTHLY_LABEL, schedules[1].period, 'Second schedule Period should be monthly.');
 
         System.assertEquals(null, schedules[0].dayOfMonth, 'First schedule Day of Month should be undefined');
         System.assertEquals(dayOfMonth, schedules[1].dayOfMonth, 'Second schedule Day of Month should match');
@@ -423,8 +440,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(100, schedules[0].amount, 'First schedule Amount should be old Amount');
         System.assertEquals(newAmount, schedules[1].amount, 'Second schedule Amount should be new Amount');
 
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'First schedule Period should be monthly.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, schedules[1].period, 'Second schedule Period should be 1st and 15th.');
+        System.assertEquals(INSTALLMENT_PERIOD_MONTHLY_LABEL, schedules[0].period, 'First schedule Period should be monthly.');
+        System.assertEquals(INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH_LABEL, schedules[1].period, 'Second schedule Period should be 1st and 15th.');
 
         System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'First schedule Day of Month should match');
         System.assertEquals(null, schedules[1].dayOfMonth, 'Second schedule Day of Month should be undefined');
@@ -817,7 +834,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
         System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
         System.assertEquals(rd.npe03__Amount__c, schedules[0].amount, 'Schedule Amount should match RD Amount');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'Schedule Period should match RD Installment Period');
+        System.assertEquals(INSTALLMENT_PERIOD_MONTHLY_LABEL, schedules[0].period, 'Schedule Period should match RD Installment Period');
         System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'Schedule Day of Month should match');
         System.assertEquals(startDate, schedules[0].startDate, 'Schedule Start Date should be RD Effective Date');
         System.assertEquals(null, schedules[0].endDate, 'Schedule End Date should be undefined');
@@ -918,7 +935,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(getContact().Id)
             .withAmount(100)
-            .withPaymentMethod(PAYMENT_CREDIT_CARD)
+            .withPaymentMethod('Credit Card')
             .withInstallmentFrequency(1)
             .withDateEstablished(DATE_ESTABLISHED)
             .withStartDate(DATE_ESTABLISHED);

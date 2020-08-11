@@ -58,17 +58,17 @@
     </fields>
     <fields>
         <help>Der Name des Verwalters von übereinstimmenden Schenkungen des Unternehmens</help>
-        <label>Name d. Verwalters v. übereinst. Schenkungen</label>
+        <label>Administratorname übereinst. Schenkungen</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
         <help>Der maximale Betrag, den das Unternehmen mit jeder Schenkung abgleicht.</help>
-        <label>Übereinstimmender Schenkungsbetrag maximal</label>
+        <label>Max. Betrag übereinstimm. Schenkungen</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
         <help>Der kleinste Betrag, den das Unternehmen mit einer einzelnen Spende abgleicht.</help>
-        <label>Übereinstimmender Mindest-Schenkungsbetrag</label>
+        <label>Min. Betrag übereinstimm. Schenkungen</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
     <fields>
@@ -78,12 +78,12 @@
     </fields>
     <fields>
         <help>Weitere Hinweise zum Verwalter von übereinstimmenden Schenkungen im Unternehmen</help>
-        <label>Kommentare zu übereinstimmenden Schenkungen</label>
+        <label>Kommentare zu übereinstimm. Schenkungen</label>
         <name>Matching_Gift_Comments__c</name>
     </fields>
     <fields>
         <help>Gibt an, dass dies ein Unternehmen ist, das übereinstimmende Schenkungen anbietet.</help>
-        <label>Unternehmen mit übereinstimmenden Schenkungen</label>
+        <label>Firma mit übereinstimmenden Schenkungen</label>
         <name>Matching_Gift_Company__c</name>
     </fields>
     <fields>
@@ -93,12 +93,12 @@
     </fields>
     <fields>
         <help>Das Datum, an dem die Informationen über übereinstimmenden Schenkungen zuletzt aktualisiert wurden</help>
-        <label>Aktualis. Info über übereinst. Schenkungen</label>
+        <label>Aktualis. Info zu übereinst. Schenkungen</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
         <help>Der Anteil einer Schenkung, den das Unternehmen abgleicht</help>
-        <label>Prozentsatz von übereinstimmenden Schenkungen</label>
+        <label>Prozentsatz der übereinst. Schenkungen</label>
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
@@ -108,7 +108,7 @@
     </fields>
     <fields>
         <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für den Abgleich von Schenkungen zu vermerken.</help>
-        <label>Letzter Termin f. Anfr. n. übereinst. Schenkung</label>
+        <label>Stichtag für Anfr. übereinst. Schenkung</label>
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
