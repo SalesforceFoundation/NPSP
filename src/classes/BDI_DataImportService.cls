@@ -38,9 +38,14 @@
 *
 */
 global with sharing class BDI_DataImportService {
+    private static DescribeFieldResult batchNumberDescribe = UTIL_Describe.getFieldDescribe(
+        UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
+        UTIL_Namespace.StrTokenNSPrefix('NPSP_Data_Import_Batch__c')
+    );
+
     public static final String BATCH_NUMBER_QUERY_STR = String.join(new List<String>{
-        DataImport__c.NPSP_Data_Import_Batch__c.getDescribe().getRelationshipName(),
-        DataImportBatch__c.Batch_Number__c.getDescribe().getName()
+        batchNumberDescribe.getRelationshipName(),
+        String.valueOf(DataImportBatch__c.Batch_Number__c)
     }, '.');
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
