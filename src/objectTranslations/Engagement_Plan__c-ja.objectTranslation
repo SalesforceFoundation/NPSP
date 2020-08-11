@@ -5,7 +5,7 @@
         <value>エンゲージメント計画</value>
     </caseValues>
     <fields>
-        <label>団体</label>
+        <label>取引先</label>
         <name>Account__c</name>
         <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
@@ -24,7 +24,7 @@
         <name>Completed_Tasks__c</name>
     </fields>
     <fields>
-        <label>個人</label>
+        <label>取引先責任者</label>
         <name>Contact__c</name>
         <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
@@ -34,7 +34,7 @@
         <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
     <fields>
-        <label>支援</label>
+        <label>商談</label>
         <name>Opportunity__c</name>
         <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>

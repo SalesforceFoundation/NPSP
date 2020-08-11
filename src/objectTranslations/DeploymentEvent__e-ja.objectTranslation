@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Deployment Event --></value>
+        <value>リリースイベント</value>
     </caseValues>
     <fields>
         <label>完了日</label>

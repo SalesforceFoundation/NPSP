@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>マッチ支援者の個人の役割を選択します。</help>
+        <help>マッチ支援者の取引先責任者の役割を選択します。</help>
         <label>マッチ支援者の役割</label>
         <name>Matched_Donor_Role__c</name>
     </fields>
