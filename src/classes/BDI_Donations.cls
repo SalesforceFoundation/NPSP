@@ -186,11 +186,7 @@ public class BDI_Donations {
                     }
 
                     if (shouldSetDonationBatchNumber(opp, dataImport)) {
-                        setBatchNumber(
-                            opp,
-                            Opportunity.Batch_Number__c,
-                            dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c
-                        );
+                        opp.put(Opportunity.Batch_Number__c, dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c);
                     }
 
                     if (opp.Id == null) {
@@ -258,8 +254,9 @@ public class BDI_Donations {
     /*******************************************************************************************************
     * @description Determine if the data import batch number should be set on the opportunity or payment
     * @param targetObject The opportunity or payment SObject record
-     * @param dataImport The data import record being processed
-    * @return Boolean Whether or not the DI batch number should be set on opportunities or payments
+    * @param dataImport The data import record being processed
+    * @return Boolean TRUE when the Data Import Batch has a batch number, is not a dry run,
+    * and the current SObject is an Opportunity or Opportunity Payment
     */
     private Boolean shouldSetDonationBatchNumber(SObject targetObject, DataImport__c dataImport) {
         SObjectType objectType = targetObject.getSObjectType();
@@ -276,16 +273,6 @@ public class BDI_Donations {
             return targetObject.get(npe01__OppPayment__c.npe01__Paid__c) == true;
         }
         return false;
-    }
-
-    /*******************************************************************************************************
-    * @description Sets the batch number onto the target SObject record
-    * @param targetObject The opportunity or payment SObject record
-     * @param field The target field to populate
-     * @param value The target value to set in the target field
-    */
-    private void setBatchNumber(SObject targetObject, SObjectField field, String value) {
-        targetObject.put(field, value);
     }
 
     /*******************************************************************************************************
@@ -686,10 +673,8 @@ public class BDI_Donations {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
                     if (shouldSetDonationBatchNumber(payment, dataImport)) {
-                        setBatchNumber(payment,
-                            npe01__OppPayment__c.npsp__Batch_Number__c,
-                            dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c
-                        );
+                        payment.put(npe01__OppPayment__c.npsp__Batch_Number__c,
+                            dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c);
                     }
 
                     Integer numberOfCopiedFields = 0;
