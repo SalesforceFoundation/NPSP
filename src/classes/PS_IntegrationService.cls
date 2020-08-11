@@ -161,7 +161,7 @@ global class PS_IntegrationService {
         Set<String> existingConfigurationKeys = new Set<String> {};
 
         for (Payment_Services_Configuration__c configuration : existingConfigurations) {
-            if (!configuration.Service_Key__c.isEmpty()) {
+            if (configuration.Service_Key__c != null) {
                 existingConfigurationKeys.add(configuration.Service_Key__c);
             }
         }
