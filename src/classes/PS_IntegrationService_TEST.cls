@@ -132,10 +132,9 @@ private class PS_IntegrationService_TEST {
             .get('payments::sfdo.product')
             .get(Schema.Payment_Services_Configuration__c.Id);
 
-        System.assertEquals('CRM',
-            PS_IntegrationService.configurationsToUpsertByServiceKey
-                .get('payments::sfdo.product')
-                .get(Schema.Payment_Services_Configuration__c.Value__c));
+        System.assertEquals('CRM', PS_IntegrationService.configurationsToUpsertByServiceKey
+            .get('payments::sfdo.product')
+            .get(Schema.Payment_Services_Configuration__c.Value__c));
         System.assertEquals(2, PS_IntegrationService.configurationsToUpsertByServiceKey.keySet().size(),
             'Should have 2 configuration records to upsert.');
         System.assertEquals(2, PS_IntegrationService.configurationsToInsertByServiceKey.keySet().size(),
@@ -150,10 +149,9 @@ private class PS_IntegrationService_TEST {
         };
         PS_IntegrationService.setConfiguration(buildConfigurationParams(secondRunConfigParams));
 
-        System.assertEquals('TEST_CRM',
-            PS_IntegrationService.configurationsToUpsertByServiceKey
-                .get('payments::sfdo.product')
-                .get(Schema.Payment_Services_Configuration__c.Value__c));
+        System.assertEquals('TEST_CRM', PS_IntegrationService.configurationsToUpsertByServiceKey
+            .get('payments::sfdo.product')
+            .get(Schema.Payment_Services_Configuration__c.Value__c));
         System.assertEquals(2, PS_IntegrationService.configurationsToUpsertByServiceKey.keySet().size(),
             'Should have 2 configuration record to upsert.');
         System.assertEquals(1, PS_IntegrationService.configurationsToInsertByServiceKey.keySet().size(),
