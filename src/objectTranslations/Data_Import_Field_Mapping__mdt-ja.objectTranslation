@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping --></value>
+        <value>データインポート項目の対応付け</value>
     </caseValues>
     <fields>
         <help>この項目の対応付けが含まれるデータインポート項目の対応付けセット。</help>

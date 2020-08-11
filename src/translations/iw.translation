@@ -382,6 +382,10 @@
         <name>CONV_Contacts_Attached</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error displayed when user does not have permissions for the conversion process --></label>
+        <name>CONV_ConversionAccessDenied</name>
+    </customLabels>
+    <customLabels>
         <label>התקדמות המרת מודל חשבון</label>
         <name>CONV_Conversion_Process</name>
     </customLabels>
@@ -706,6 +710,10 @@
         <name>ConfirmDeleteAccount</name>
     </customLabels>
     <customLabels>
+        <label><!-- ConfirmDeleteAccount --></label>
+        <name>ConfirmDeleteLeaveAccountEmpty</name>
+    </customLabels>
+    <customLabels>
         <label><!-- DeleteAccount --></label>
         <name>DeleteAccount</name>
     </customLabels>
@@ -846,6 +854,10 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when user does not have a permission to change an RD originated in Elevate --></label>
+        <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Enablement page header displayed due to missing prerequisites --></label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
@@ -906,12 +918,20 @@
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- Simple enablement section introduction and details --></label>
+        <name>RD2_EnablementEnableSimpleIntro</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Enablement section title --></label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
         <label><!-- Enablement section warning --></label>
         <name>RD2_EnablementEnableWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
         <label><!-- Enablement page introduction and guidelines --></label>
@@ -936,6 +956,10 @@
     <customLabels>
         <label><!-- MetaDeploy link label --></label>
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Simple metaDeploy section introduction and guidelines --></label>
+        <name>RD2_EnablementMetaDeploySimpleIntro</name>
     </customLabels>
     <customLabels>
         <label><!-- MetaDeploy section title --></label>
@@ -982,6 +1006,10 @@
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error displayed when user does not have System Admin permissions --></label>
+        <name>RD2_EnablementPermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Enablement preparation task introduction and guidelines --></label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
@@ -992,6 +1020,94 @@
     <customLabels>
         <label><!-- Enablement preparation tasks title --></label>
         <name>RD2_EnablementPrepTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Simple enablement page introduction and guidelines --></label>
+        <name>RD2_EnablementSimpleIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation End Date must be valid. --></label>
+        <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fixed Length Recurring Donation End Date must be valid --></label>
+        <name>RD2_EndDateMustBeValidForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form Custom Field section header --></label>
+        <name>RD2_EntryFormCustomFieldsSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form Donation Information section header --></label>
+        <name>RD2_EntryFormDonationSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form Donor Information section header --></label>
+        <name>RD2_EntryFormDonorSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The Inline HelpText for the Donor Type picklist --></label>
+        <name>RD2_EntryFormDonorTypeHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The Label for the Donor Type picklist --></label>
+        <name>RD2_EntryFormDonorTypeLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form header --></label>
+        <name>RD2_EntryFormHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form message when record is inserted --></label>
+        <name>RD2_EntryFormInsertSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form Field Permissions Error --></label>
+        <name>RD2_EntryFormMissingPermissions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form Other Information section header --></label>
+        <name>RD2_EntryFormOtherSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Picklist value for the RD2 Entry Form custom period picklist --></label>
+        <name>RD2_EntryFormPeriodAdvanced</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Inline Help Text for the Monthly and Advanced Picklist --></label>
+        <name>RD2_EntryFormPeriodHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Custom Label for the Monthly and Advanced Picklist --></label>
+        <name>RD2_EntryFormPeriodLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Plural Picklist substitute for Daily --></label>
+        <name>RD2_EntryFormPeriodPluralDaily</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Plural Picklist substitute for Monthly --></label>
+        <name>RD2_EntryFormPeriodPluralMonthly</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Plural Picklist substitute for Weekly --></label>
+        <name>RD2_EntryFormPeriodPluralWeekly</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Plural Picklist substitute for Yearly --></label>
+        <name>RD2_EntryFormPeriodPluralYearly</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label to show as Every --></label>
+        <name>RD2_EntryFormScheduleEveryLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form Status Information section header --></label>
+        <name>RD2_EntryFormStatusSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Entry Form message when record is updated --></label>
+        <name>RD2_EntryFormUpdateSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label><!-- The job can only be executed when Enhanced RD is enabled in the org --></label>
@@ -1030,6 +1146,22 @@
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error message when trying to pause Closed Recurring Donation. --></label>
+        <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Pause description --></label>
+        <name>RD2_PauseDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2 Pause first donation date after the pause --></label>
+        <name>RD2_PauseFirstDonationDateDynamicText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2 Pause Header --></label>
+        <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
         <label><!-- The end date of the recurring donation schedule --></label>
         <name>RD2_ScheduleLWCEndDate</name>
     </customLabels>
@@ -1054,6 +1186,14 @@
         <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when no field can be displayed on the upcoming installments --></label>
+        <name>RD2_ScheduleVisualizerFLSInstallment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when no field can be displayed on the active schedules --></label>
+        <name>RD2_ScheduleVisualizerFLSSchedule</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Message when there is no active schedule to render --></label>
         <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
     </customLabels>
@@ -1064,6 +1204,46 @@
     <customLabels>
         <label><!-- Title of the Schedule Visualizer Component --></label>
         <name>RD2_ScheduleVisualizerTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Mapping datatable State field label --></label>
+        <name>RD2_StatusMappingColumnState</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Mapping datatable Status field containing the API Name --></label>
+        <name>RD2_StatusMappingColumnStatusAPIName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status to state mapping definitions --></label>
+        <name>RD2_StatusMappingDefinitions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message displayed when save action cannot start due to another deployment --></label>
+        <name>RD2_StatusMappingDeploymentAlreadyInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message displayed when mapping save action succeeds --></label>
+        <name>RD2_StatusMappingInProgressMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status to state mapping page introduction and guidelines --></label>
+        <name>RD2_StatusMappingIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- State label displayed when status is unmapped --></label>
+        <name>RD2_StatusMappingStateUnmapped</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message displayed when mapping save action succeeds --></label>
+        <name>RD2_StatusMappingSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validation and health check error message when status is not mapped to a state. --></label>
+        <name>RD2_StatusMustBeMapped</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validation and health check solution when status is not mapped to a state. --></label>
+        <name>RD2_StatusMustBeMappedSolution</name>
     </customLabels>
     <customLabels>
         <label><!-- Validate Recurring Donations data if contact is not found with HH Account --></label>
@@ -1086,7 +1266,7 @@
         <name>RD_ErrorAddDonationMissingId</name>
     </customLabels>
     <customLabels>
-        <label><!-- You do not have permission to create a donation record --></label>
+        <label><!-- You do not have permission to Refresh opportunities --></label>
         <name>RD_ErrorAddDonationPermissionDenied</name>
     </customLabels>
     <customLabels>
@@ -1242,6 +1422,14 @@
         <name>SmartyStreets_Help_Text</name>
     </customLabels>
     <customLabels>
+        <label><!-- Alt Text for the Date Picker icon --></label>
+        <name>UTIL_InputFormFormFieldAltLabelDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt Text for the Lookup icon --></label>
+        <name>UTIL_InputFormFormFieldAltLabelLookup</name>
+    </customLabels>
+    <customLabels>
         <label>המיקוד לא נמצא.</label>
         <name>Zip_Not_Found</name>
     </customLabels>
@@ -1262,7 +1450,7 @@
         <name>addrCopyConAddBtnConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- Label that appears when user does not pass FLS check to copy the address --></label>
+        <label><!-- When user does not have FLS or object level permissions to copy the address --></label>
         <name>addrCopyConAddBtnFls</name>
     </customLabels>
     <customLabels>
@@ -1336,6 +1524,10 @@
         <name>alloDefaultGAUMissing</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error message when the Default General Accounting Unit is not active --></label>
+        <name>alloDefaultGAUNotActive</name>
+    </customLabels>
+    <customLabels>
         <label><!-- You must enable Default Allocations in order to allocate at the payment level. --></label>
         <name>alloDefaultNotEnabled</name>
     </customLabels>
@@ -1388,8 +1580,24 @@
         <name>alloObjectUnsupported</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error message when a record’s Allocation total exceeds its Amount --></label>
+        <name>alloOverallocatedError</name>
+    </customLabels>
+    <customLabels>
         <label><!-- alloPaidPmtsExceedsOpp --></label>
         <name>alloPaidPmtsExceedsOpp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message wrapper for a specific Allocation in a batch --></label>
+        <name>alloPaymentAllocationBatchAllocationError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message wrapper for a batch when a specific Allocation can’t be identified --></label>
+        <name>alloPaymentAllocationBatchRecordError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message when the Accounting Scheduled Job retry can’t process Allocations --></label>
+        <name>alloPaymentAllocationBatchRetriesExceeded</name>
     </customLabels>
     <customLabels>
         <label><!-- Payment-level allocations are not enabled. --></label>
@@ -1422,6 +1630,10 @@
     <customLabels>
         <label>לכל הקצאה חייב להיות אובייקט הורה אחד: הזדמנות, תרומה חוזרת או מבצע.</label>
         <name>alloSingleParent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Success text added to Error Logs when retry successfully processes Allocations --></label>
+        <name>alloSuccessfulRecordRetry</name>
     </customLabels>
     <customLabels>
         <label>סכומים כוללים של הקצאות הזדמנות לא יכולים לחרוג מסכום ההזדמנות.</label>
@@ -2304,6 +2516,18 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label><!-- Page-level error message about permissions --></label>
+        <name>commonAdminPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error title about permissions --></label>
+        <name>commonAdminPermissionErrorTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Amount --></label>
+        <name>commonAmount</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Assistive text for the header of an error page level message. --></label>
         <name>commonAssistiveError</name>
     </customLabels>
@@ -2328,12 +2552,32 @@
         <name>commonBatches</name>
     </customLabels>
     <customLabels>
+        <label><!-- Common label for CVV code --></label>
+        <name>commonCVV</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Cancel --></label>
         <name>commonCancel</name>
     </customLabels>
     <customLabels>
+        <label><!-- Common label for credit card type --></label>
+        <name>commonCardType</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Clone --></label>
         <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Common label for credit card number --></label>
+        <name>commonCreditNumber</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Critical Error --></label>
+        <name>commonCriticalError</name>
     </customLabels>
     <customLabels>
         <label><!-- Default Value --></label>
@@ -2348,12 +2592,40 @@
         <name>commonEdit</name>
     </customLabels>
     <customLabels>
+        <label><!-- Failure message if a customer fails to get onboarded --></label>
+        <name>commonElevateFailedOnboarding</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error --></label>
         <name>commonError</name>
     </customLabels>
     <customLabels>
         <label><!-- Field Label --></label>
         <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Common label for GAU Allocations --></label>
+        <name>commonGauAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Common label for General Accounting Unit --></label>
+        <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure message if an invalid key was provided --></label>
+        <name>commonJWTInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure message if an invalid JSON payload was provided --></label>
+        <name>commonJWTInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Common label for expiration date (MM/YY) --></label>
+        <name>commonMMYY</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error message about missing required fields --></label>
+        <name>commonMissingRequiredFields</name>
     </customLabels>
     <customLabels>
         <label><!-- New Gift --></label>
@@ -2376,12 +2648,28 @@
         <name>commonOpen</name>
     </customLabels>
     <customLabels>
+        <label><!-- Common label for Elevate Payment Services --></label>
+        <name>commonPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Percent --></label>
+        <name>commonPercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error for database-level security check --></label>
+        <name>commonPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Read More --></label>
         <name>commonReadMore</name>
     </customLabels>
     <customLabels>
         <label><!-- Required --></label>
         <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Review Form --></label>
+        <name>commonReviewForm</name>
     </customLabels>
     <customLabels>
         <label><!-- Save --></label>
@@ -2432,8 +2720,20 @@
         <name>conMergeBtnLabel</name>
     </customLabels>
     <customLabels>
+        <label><!-- conMergeDRSPickBtnLabel --></label>
+        <name>conMergeDRSPickBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DRS Contact Merge Step 1 --></label>
+        <name>conMergeDRSStep1</name>
+    </customLabels>
+    <customLabels>
         <label>חשבונות אישיים אינם נתמכים.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error to be displayed when no DRS records are found --></label>
+        <name>conMergeErrorNoDRSFound</name>
     </customLabels>
     <customLabels>
         <label><!-- Delete permission on the Contact object is required to for merging --></label>
@@ -2444,8 +2744,16 @@
         <name>conMergeErrorNoDeleteRecAccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Read permission on the Contact object is required to for merging --></label>
+        <name>conMergeErrorNoReadDSRObjPermission</name>
+    </customLabels>
+    <customLabels>
         <label><!-- conMergeFoundContacts --></label>
         <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeFoundDRS --></label>
+        <name>conMergeFoundDRS</name>
     </customLabels>
     <customLabels>
         <label><!-- conMergePageTitle --></label>
@@ -2460,8 +2768,20 @@
         <name>conMergePortalUser</name>
     </customLabels>
     <customLabels>
+        <label><!-- Text to be display before the &apos;Search Contact&apos; button --></label>
+        <name>conMergeSearchConText</name>
+    </customLabels>
+    <customLabels>
         <label><!-- conMergeSearchPlaceholder --></label>
         <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSeeDupConDRS --></label>
+        <name>conMergeSeeDupConDRS</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text to be display before the &apos;See Duplicate Contact&apos; button --></label>
+        <name>conMergeSeeDupConText</name>
     </customLabels>
     <customLabels>
         <label><!-- conMergeSelectAll --></label>
@@ -2478,6 +2798,10 @@
     <customLabels>
         <label><!-- conMergeStageComplete --></label>
         <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error to be displayed when there are to many contact records --></label>
+        <name>conMergeTooManyContactError</name>
     </customLabels>
     <customLabels>
         <label><!-- conMergeWinnerAsstText --></label>
@@ -2540,6 +2864,14 @@
         <name>flsReadAccessError</name>
     </customLabels>
     <customLabels>
+        <label><!-- General error for accessbility text when an error occurs in the GAU widget --></label>
+        <name>gauAllocationErrorGeneral</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- GAU Widget: Add New Allocation --></label>
+        <name>geAddNewAllocation</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Alt text: Active section icon --></label>
         <name>geAssistiveActiveSection</name>
     </customLabels>
@@ -2596,6 +2928,26 @@
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for displaying the number of gifts in the batch --></label>
+        <name>geBatchGiftsCount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Notification about either number or total of gifts not matching expected --></label>
+        <name>geBatchGiftsExpectedCountOrTotalMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Notification about number and total of gifts not matching expected --></label>
+        <name>geBatchGiftsExpectedTotalsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for number of gifts entered in batch --></label>
+        <name>geBatchGiftsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for displaying the total value of the gifts in the batch --></label>
+        <name>geBatchGiftsTotal</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Body below the Advanced Form Fields header --></label>
         <name>geBodyAdvancedFieldMapping</name>
     </customLabels>
@@ -2618,6 +2970,14 @@
     <customLabels>
         <label><!-- Warning body of required field added to Batch Header --></label>
         <name>geBodyBatchHeaderWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for Batch Table Columns, part 1 --></label>
+        <name>geBodyBatchTableColumnsPart1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for Batch Table Columns, part 2 --></label>
+        <name>geBodyBatchTableColumnsPart2</name>
     </customLabels>
     <customLabels>
         <label><!-- Body for illustration card when a form section is empty --></label>
@@ -2676,12 +3036,20 @@
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
+        <label><!-- Text indicating card is not being charged --></label>
+        <name>geBodyPaymentNotProcessingTransaction</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Template Info sidebar text block --></label>
         <name>geBodyTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
         <label><!-- Template landing screen text block --></label>
         <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Field bundle body before list of fields --></label>
+        <name>geBodyWidgetFields</name>
     </customLabels>
     <customLabels>
         <label><!-- Button to go back to form fields --></label>
@@ -2692,7 +3060,7 @@
         <name>geButtonBuilderNavBackTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label><!-- Button to continue and configure the batch header --></label>
+        <label><!-- Button to continue and configure the batch settings --></label>
         <name>geButtonBuilderNavBatchHeader</name>
     </customLabels>
     <customLabels>
@@ -2710,6 +3078,14 @@
     <customLabels>
         <label><!-- Button to collapse all --></label>
         <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Radial label for the Collapse section option --></label>
+        <name>geButtonFormFieldsDisplayOptionCollapsed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Radial label for the Expand section option --></label>
+        <name>geButtonFormFieldsDisplayOptionExpanded</name>
     </customLabels>
     <customLabels>
         <label><!-- Button to expand all --></label>
@@ -2752,6 +3128,14 @@
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
+        <label><!-- Link to toggle and reactivate payment processing fields --></label>
+        <name>geButtonPaymentAlternate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to toggle payment processing off --></label>
+        <name>geButtonPaymentDoNotCharge</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Create gift and enter another one --></label>
         <name>geButtonSaveNewGift</name>
     </customLabels>
@@ -2764,11 +3148,11 @@
         <name>geDisableGiftEntryInfo</name>
     </customLabels>
     <customLabels>
-        <label><!-- Label for column in batch gift entry table that links to the matched Gift. --></label>
+        <label><!-- Label for batch gift table column that links to gift (Opportunity or Payment) --></label>
         <name>geDonationColumnLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Label for column in batch gift entry table that links to the Account or Contact. --></label>
+        <label><!-- Label for batch gift table column that links to the Account or Contact. --></label>
         <name>geDonorColumnLabel</name>
     </customLabels>
     <customLabels>
@@ -2782,6 +3166,10 @@
     <customLabels>
         <label><!-- Common error when a total doesn&apos;t match Donation Amount. --></label>
         <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure description if card is charged and donation record has not been created --></label>
+        <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
         <label><!-- Field level validation error message when a required field is not filled in --></label>
@@ -2802,6 +3190,10 @@
     <customLabels>
         <label><!-- Field-level error message when template name is not unique --></label>
         <name>geErrorExistingTemplateName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Additional information about why a user can&apos;t update batch table columns --></label>
+        <name>geErrorFLSBatchTableColumns</name>
     </customLabels>
     <customLabels>
         <label><!-- Body of full page error when insufficient field access to what&apos;s on the form --></label>
@@ -2848,12 +3240,28 @@
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
+        <label><!-- Reason for system error when uncertain if card charged --></label>
+        <name>geErrorRequestTimedout</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Field-level error message for required field missing on NPSP Data Import object --></label>
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Name of GAU Allocations field bundle --></label>
-        <name>geGauAllocationsBundle</name>
+        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 1 --></label>
+        <name>geErrorUncertainCardChargePart1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 2 --></label>
+        <name>geErrorUncertainCardChargePart2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 3 --></label>
+        <name>geErrorUncertainCardChargePart3</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure msg description for system error &amp; uncertain if card charged - Part 4 --></label>
+        <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
         <label><!-- Header for advanced form fields --></label>
@@ -2908,6 +3316,10 @@
         <name>geHeaderFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
+        <label><!-- Header for section display options --></label>
+        <name>geHeaderFormFieldsModalDisplayOptionsSection</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Header for renaming section in settings modal --></label>
         <name>geHeaderFormFieldsModalRenameSection</name>
     </customLabels>
@@ -2950,6 +3362,10 @@
     <customLabels>
         <label><!-- Header for page level errors --></label>
         <name>geHeaderPageLevelError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- iFrame header for Payment Services information --></label>
+        <name>geHeaderPaymentServices</name>
     </customLabels>
     <customLabels>
         <label><!-- Single Gift Entry Header --></label>
@@ -3008,12 +3424,28 @@
         <name>geHelpTextHouseholdMapping</name>
     </customLabels>
     <customLabels>
+        <label><!-- Temporary note about only being able to use Payment Services with single gifts --></label>
+        <name>geHelpTextPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure message if an invalid base64 string was provided --></label>
+        <name>geJWTUtilInvalidBase64Message</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure message if an invalid base64 url was provided --></label>
+        <name>geJWTUtilInvalidBase64UrlMessage</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Label for fields that are included as columns --></label>
         <name>geLabelCustomTableSelectedFields</name>
     </customLabels>
     <customLabels>
         <label><!-- Label for fields that aren&apos;t included as columns --></label>
         <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Setting text for how to display sections --></label>
+        <name>geLabelDisplaySections</name>
     </customLabels>
     <customLabels>
         <label><!-- Label for the Section Name field --></label>
@@ -3028,8 +3460,32 @@
         <name>geLabelTemplateInfoNameField</name>
     </customLabels>
     <customLabels>
+        <label><!-- Failure messge if an invalid apiKey was provided --></label>
+        <name>gePS_IntegrationTestInvalidAPIKey</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure messge if invalid configuration params was provided for onboarding --></label>
+        <name>gePS_IntegrationTestInvalidConfigParams</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure message description for tokenization or purchase errors --></label>
+        <name>gePaymentProcessError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Field Bundle banner failure message for tokenization or purchase errors --></label>
+        <name>gePaymentProcessingErrorBanner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Failure message description for when the tokenization request times out --></label>
+        <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Gift Entry lookup placeholder text --></label>
         <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to select batch table columns --></label>
+        <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
         <label><!-- Placeholder text for a picklist field --></label>
@@ -3040,12 +3496,24 @@
         <name>geTabBatchHeader</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for Batch Settings tab --></label>
+        <name>geTabBatchSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Batch Table Columns --></label>
+        <name>geTabBatchTableColumns</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Label for Form Fields navigation subtab --></label>
         <name>geTabFormFields</name>
     </customLabels>
     <customLabels>
         <label><!-- Label for Template Info navigation subtab --></label>
         <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text indicating the card is being charged --></label>
+        <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
         <label><!-- Text to show the record count in the list view, one record --></label>
@@ -3062,6 +3530,26 @@
     <customLabels>
         <label><!-- Displays how long ago the last record in the current list view was updated --></label>
         <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text telling the user they&apos;re being taken to the Opportunity --></label>
+        <name>geTextNavigateToOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Notification user will process a payment and record donation when clicking Save --></label>
+        <name>geTextPaymentsSaveNotice</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text indicating the Data Import record is being processed --></label>
+        <name>geTextProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text indicating the Data Import record is being saved --></label>
+        <name>geTextSaving</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text indicating the Data Import record is being updated --></label>
+        <name>geTextUpdating</name>
     </customLabels>
     <customLabels>
         <label><!-- List view successfully updated --></label>
@@ -3096,8 +3584,24 @@
         <name>geToastTemplateUpdateSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Unit test error: An invalid key (empty) was provided but no exception was thrown --></label>
+        <name>geUtilJWTTestInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Unit test error: An invalid payload provided but no exception was thrown --></label>
+        <name>geUtilJWTTestInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Unit test error: An invalid string was provided but no exception was thrown --></label>
+        <name>geUtilJWTTestInvalidString</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Warning message for deleting a section if it contains required fields --></label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning about some fields when donation already has a GAU Allocation assigned --></label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label><!-- Gift Processing account model error --></label>
@@ -3362,6 +3866,18 @@
     <customLabels>
         <label>נתוני איש קשר</label>
         <name>healthLabelContactData</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message when Data Health Check does not run --></label>
+        <name>healthLabelDataBatchNotRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Custom Setting label to disable Sobject batch --></label>
+        <name>healthLabelDisableRecordBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description for Disable Health Check Record Batch Setting --></label>
+        <name>healthLabelDisableRecordBatchDescription</name>
     </customLabels>
     <customLabels>
         <label>נמען הודעות השגיאה חוקי.</label>
@@ -3672,6 +4188,14 @@
         <name>isARequiredField</name>
     </customLabels>
     <customLabels>
+        <label><!-- Translatable label for False --></label>
+        <name>labelBooleanFalse</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Translatable label for True --></label>
+        <name>labelBooleanTrue</name>
+    </customLabels>
+    <customLabels>
         <label>ראשון</label>
         <name>labelListViewFirst</name>
     </customLabels>
@@ -3726,6 +4250,10 @@
     <customLabels>
         <label>ארץ</label>
         <name>lblCountry</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Override CurrencyIsoCode label --></label>
+        <name>lblCurrency</name>
     </customLabels>
     <customLabels>
         <label>הסר איש קשר</label>
@@ -4759,6 +5287,10 @@
         <name>stgHelpEnableSoftCreditRollups</name>
     </customLabels>
     <customLabels>
+        <label><!-- Page description displayed when enhanced RD batch is to be run --></label>
+        <name>stgHelpEnhancedRDBatch</name>
+    </customLabels>
+    <customLabels>
         <label>יומן השגיאות מציג רשימה מפורטת של שגיאות לצורך תיקון באגים. השגיאות נרשמות ביומן רק אם האפשרויות &apos;טיפול בשגיאות&apos; ו&apos;שמור שגיאות&apos; מופעלות ב&apos;כלי מערכת | הודעות שגיאה&apos;.</label>
         <name>stgHelpErrorLog</name>
     </customLabels>
@@ -5683,6 +6215,10 @@
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
+        <label><!-- Menu name for the status to state mapping settings --></label>
+        <name>stgNavRD2StatusMapping</name>
+    </customLabels>
+    <customLabels>
         <label>אצוות תרומות חוזרות</label>
         <name>stgNavRDBatch</name>
     </customLabels>
@@ -5753,6 +6289,18 @@
     <customLabels>
         <label><!-- stgPowerOfUsHub --></label>
         <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Auto Naming Description --></label>
+        <name>stgRDNamingDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Auto Naming disable option --></label>
+        <name>stgRDNamingDisable</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Auto Naming Option Label --></label>
+        <name>stgRDNamingOptionLabel</name>
     </customLabels>
     <customLabels>
         <label><!-- stgReset --></label>

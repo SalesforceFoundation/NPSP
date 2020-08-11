@@ -1,96 +1,289 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum auf den letzten Tag des Monats. Die Ratenlaufzeit muss monatl. o. vierteljährl. o. eine benutzerdef. Ratenlaufzeit in Monaten sein.</help>
-        <label>Ersetzt:Immer letzten Tag des Monats verwenden</label>
-        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <label>Ersetzt:Ratenbetrag</label>
-        <name>npe03__Installment_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Der Betrag für jede Raten-Opportunity.</help>
-        <label>Betrag</label>
-        <name>npe03__Amount__c</name>
-    </fields>
-    <fields>
-        <help>Das Datum der ersten Erfassung dieser wiederkehrenden Spende. Standardwert ist der aktuelle Tag.</help>
-        <label>Erstelldatum</label>
-        <name>npe03__Date_Established__c</name>
-    </fields>
-    <fields>
-        <help>Legt bei monatlicher Ratenlaufzeit den spezifischen Tag im Monat für zukünftige Raten-Opportunities fest.</help>
-        <label>Tag des Monats</label>
-        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>Last Day Of Month</masterLabel>
-            <translation>Letzter Tag des Monats</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Das Datum, zu dem die neuen oder aktualisierten Zeitplaninformationen (Betrag, Tag des Monats usw.) für diese wiederkehrende Spende in Kraft treten. Der Standardwert ist das aktuelle Datum.</help>
-        <label>Inkrafttreten</label>
-        <name>%%%NAMESPACE%%%StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Wählen Sie bei einer Wiederkehrenden Spende mit offenem Ende &quot;Offen&quot;. Wählen Sie &quot;Keine&quot; bei einer Wiederkehrenden Spende mit fester Dauer. Wählen Sie &quot;Geschlossen&quot;, um eine wiederkehrende Spende zu schließen.</help>
-        <label>Ersetzt:Status &quot;Unbefristet&quot;</label>
-        <name>npe03__Open_Ended_Status__c</name>
-    </fields>
-    <fields>
-        <help>Gibt Salesforce an, wie der Betrag für die einzelnen untergeordneten Opportunities auf der Grundlage dessen, was Sie in das Betragsfeld eingegeben haben, berechnet werden soll. Nur für Wiederkehrende Spenden mit fester Dauer.</help>
-        <label>Ersetzt:Zeitplantyp</label>
-        <name>npe03__Schedule_Type__c</name>
-    </fields>
-    <fields>
-        <help>Die Summe aller Opportunities für befristete wiederkehrende Spenden</help>
-        <label>Ersetzt:Gesamt</label>
-        <name>npe03__Total__c</name>
-    </fields>
-    <fields>
-        <help>Die Ratenlaufzeit definiert zusammen mit der Häufigkeit der Ratenzahlung den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als "alle 3 Monate".</help>
-        <label>Ratenlaufzeit</label>
-        <name>npe03__Installment_Period__c</name>
-    </fields>
-    <fields>
-        <help>NPSP berechnet diesen Wert automatisch danach, wann eine Raten-Opportunity beim letzten Mal als "Bezahlt" gekennzeichnet wurde (schreibgeschützt).</help>
-        <label>Letztes Spendendatum</label>
-        <name>npe03__Last_Payment_Date__c</name>
-    </fields>
-    <fields>
-        <help>Der für diese Wiederkehrende Spende bezahlte Gesamtbetrag. Berechnung automatisch als Gesamtbetrag aller Geschlossenen/gewonnenen Raten-Opportunities (schreibgeschützt).</help>
-        <label>Bezahlter Gesamtbetrag</label>
-        <name>npe03__Paid_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Gesamtzahl der für diese Wiederkehrende Spende gezahlten Raten-Opportunities (schreibgeschützt).</help>
-        <label>Summe der bezahlten Raten</label>
-        <name>npe03__Total_Paid_Installments__c</name>
-    </fields>
-    <fields>
-        <help>Wird automatisch anhand des aktiven Zeitplans/der aktiven Zeitpläne für wiederkehrende Spenden berechnet. Schreibgeschützt.</help>
-        <label>Nächstes Spendendatum</label>
-        <name>npe03__Next_Payment_Date__c</name>
-    </fields>
-    <layouts>
-        <layout>Enhanced Recurring Donations Layout</layout>
-        <sections>
-            <label>Zeitplandetails</label>
-            <section>Schedule Details</section>
-        </sections>
-        <sections>
-            <label>Statistik für wiederkehrende Spenden</label>
-            <section>Recurring Donation Statistics</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Name für wiederkehrende Spende</nameFieldLabel>
-    <standardFields>
-        <name>Name</name>
-        <label>Name für wiederkehrende Spende</label>
-    </standardFields>
-</CustomObjectTranslation>
+
+  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
+  <fields>
+    <label>Ersetzt:Immer letzten Tag des Monats verwenden</label>
+    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+  </fields>
+  <fields>
+    <label>Ersetzt:Ratenbetrag</label>
+    <name>npe03__Installment_Amount__c</name>
+  </fields>
+  <fields>
+    <label>Ersetzt:Status &quot;Unbefristet&quot;</label>
+    <name>npe03__Open_Ended_Status__c</name>
+  </fields>
+  <fields>
+    <label>Ersetzt:Zeitplantyp</label>
+    <name>npe03__Schedule_Type__c</name>
+  </fields>
+  <fields>
+    <label>Ersetzt:Gesamt</label>
+    <name>npe03__Total__c</name>
+  </fields>
+  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
+  <fields>
+    <name>npe03__Amount__c</name>
+    <help>Der Betrag für jede Raten-Opportunity.</help>
+    <label>Betrag</label>
+  </fields>
+  <fields>
+    <name>npe03__Date_Established__c</name>
+    <help>Das Datum der ersten Erfassung dieser wiederkehrenden Spende. Standardwert ist der aktuelle Tag.</help>
+    <label>Erstelldatum</label>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%ClosedReason__c</name>
+    <help>Der Grund, warum diese wiederkehrende Spende ihren aktuellen Statuswert hat.</help>
+    <label>Grund für Status</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>Karte abgelaufen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>Engagement abgeschlossen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>Spender verstorben</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>Finanzielle Schwierigkeiten</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>Kein Interesse mehr</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>Unbekannt</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+    <help>Legt den bestimmten Tag im Monat für künftige Raten-Opportunities bei monatlicher Ratenhäufigkeit fest. Wenn Sie 29 oder 30 auswählen, wird das Ratendatum in Monaten mit weniger Tagen auf den letzten Tag des Monats festgelegt.</help>
+    <label>Tag des Monats</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Letzter Tag des Monats</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%RecurringType__c</name>
+    <help>Wählen Sie für eine fortlaufende wiederkehrende Spende &quot;Offen&quot; aus. Wählen Sie für eine wiederkehrende Spende mit einer bestimmten Anzahl Raten &quot;Festgelegt&quot; aus. Bei &quot;Festgelegt&quot; müssen Sie außerdem das Feld &quot;Anzahl der geplanten Raten&quot; ausfüllen.</help>
+    <label>Wiederholungstyp</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Offen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>Festgelegt</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%StartDate__c</name>
+    <help>Das Datum, zu dem die neuen oder aktualisierten Zeitplaninformationen (Betrag, Tag des Monats usw.) für diese wiederkehrende Spende in Kraft treten. Der Standardwert ist das aktuelle Datum.</help>
+    <label>Inkrafttreten</label>
+  </fields>
+  <fields>
+    <name>npe03__Installment_Period__c</name>
+    <help>Die Ratenlaufzeit definiert zusammen mit der Häufigkeit der Ratenzahlung den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
+    <label>Ratenlaufzeit</label>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Monatlich</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Yearly</masterLabel>
+      <translation>Jährlich</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Wöchentlich</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>1st and 15th</masterLabel>
+      <translation>1. und 15.</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Vierteljährlich</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
+    <help>Die Häufigkeit der Ratenzahlung definiert zusammen mit der Ratenlaufzeit den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
+    <label>Häufigkeit der Ratenzahlung</label>
+  </fields>
+  <fields>
+    <name>npe03__Last_Payment_Date__c</name>
+    <help>NPSP berechnet diesen Wert automatisch danach, wann eine Raten-Opportunity beim letzten Mal als &quot;Bezahlt&quot; gekennzeichnet wurde (schreibgeschützt).</help>
+    <label>Letztes Spendendatum</label>
+  </fields>
+  <fields>
+    <name>npe03__Paid_Amount__c</name>
+    <help>Der für diese Wiederkehrende Spende bezahlte Gesamtbetrag. Berechnung automatisch als Gesamtbetrag aller Geschlossenen/gewonnenen Raten-Opportunities (schreibgeschützt).</help>
+    <label>Bezahlter Gesamtbetrag</label>
+  </fields>
+  <fields>
+    <name>npe03__Total_Paid_Installments__c</name>
+    <help>Gesamtzahl der für diese Wiederkehrende Spende gezahlten Raten-Opportunities (schreibgeschützt).</help>
+    <label>Summe der bezahlten Raten</label>
+  </fields>
+  <fields>
+    <name>npe03__Next_Payment_Date__c</name>
+    <help>Wird automatisch anhand des aktiven Zeitplans/der aktiven Zeitpläne für wiederkehrende Spenden berechnet. Schreibgeschützt.</help>
+    <label>Nächstes Spendendatum</label>
+  </fields>
+  <layouts>
+    <layout>Enhanced Recurring Donations Layout</layout>
+    <sections>
+      <label>Spenderinformationen</label>
+      <section>Donor Information</section>
+    </sections>
+    <sections>
+      <label>Spendeninformationen</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Weitere Informationen</label>
+      <section>Other Information</section>
+    </sections>
+    <sections>
+      <label>Statistik</label>
+      <section>Statistics</section>
+    </sections>
+    <sections>
+      <label>Benutzerdefinierte Links</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  </CustomObjectTranslation>

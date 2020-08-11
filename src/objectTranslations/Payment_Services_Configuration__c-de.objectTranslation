@@ -3,70 +3,70 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>Zahlungsservices-Konfiguration</value>
     </caseValues>
     <fields>
-        <label><!-- Is Secret --></label>
+        <label>Ist geheim</label>
         <name>Is_Secret__c</name>
     </fields>
     <fields>
-        <label><!-- Key --></label>
+        <label>Schlüssel</label>
         <name>Key__c</name>
     </fields>
     <fields>
-        <label><!-- Service Key --></label>
+        <label>Serviceschlüssel</label>
         <name>Service_Key__c</name>
     </fields>
     <fields>
-        <label><!-- Service --></label>
+        <label>Leistung</label>
         <name>Service__c</name>
     </fields>
     <fields>
-        <label><!-- Value --></label>
+        <label>Wert</label>
         <name>Value__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Payment Configuration Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Benutzerdefinierte Links</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Payment Services Configuration Name --></nameFieldLabel>
+    <nameFieldLabel>Konfigurationsname der Zahlungsservices</nameFieldLabel>
 </CustomObjectTranslation>

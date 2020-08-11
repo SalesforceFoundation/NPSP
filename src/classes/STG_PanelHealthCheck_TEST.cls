@@ -367,7 +367,7 @@ private with sharing class STG_PanelHealthCheck_TEST {
         System.assertEquals(System.Label.healthLabelAccountDefaultRT, panelHealthCheckController.listDR[0].strName);
         System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, panelHealthCheckController.listDR[0].strStatus);
         System.assertEquals(
-            String.format(System.Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountDefaultRecordTypeInfo.getName()}),
+            String.format(System.Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountDefaultRecordTypeInfo.getName().escapeEcmaScript()}),
             panelHealthCheckController.listDR[0].strDetails
         );
         System.assertEquals(
