@@ -18,39 +18,39 @@
         <name>Address_Verification_Status__c</name>
     </fields>
     <fields>
-        <help>この個人が作成されたバッチを参照します。</help>
+        <help>この取引先責任者が作成されたバッチを参照します。</help>
         <label>一括処理</label>
         <name>Batch__c</name>
-        <relationshipLabel>個人</relationshipLabel>
+        <relationshipLabel>取引先責任者</relationshipLabel>
     </fields>
     <fields>
-        <help>個人の郵送先項目が入力された現在の住所。</help>
+        <help>取引先責任者の郵送先項目が入力された現在の住所。</help>
         <label>現在の住所</label>
         <name>Current_Address__c</name>
-        <relationshipLabel>個人 (現在の住所)</relationshipLabel>
+        <relationshipLabel>取引先責任者 (現在の住所)</relationshipLabel>
     </fields>
     <fields>
-        <help>このオプションを選択すると、個人が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。</help>
+        <help>このオプションを選択すると、取引先責任者が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。</help>
         <label>死亡</label>
         <name>Deceased__c</name>
     </fields>
     <fields>
-        <help>このオプションを選択すると、個人がメールの送信および電話の発信から除外されます。</help>
+        <help>このオプションを選択すると、取引先責任者がメールの送信および電話の発信から除外されます。</help>
         <label>連絡不可</label>
         <name>Do_Not_Contact__c</name>
     </fields>
     <fields>
-        <help>このボックスをオンにすると、この個人が世帯の公式の挨拶から除外されます。</help>
+        <help>このボックスをオンにすると、この取引先責任者が世帯の公式の挨拶から除外されます。</help>
         <label>世帯の公式の挨拶から除外</label>
         <name>Exclude_from_Household_Formal_Greeting__c</name>
     </fields>
     <fields>
-        <help>このボックスをオンにすると、この個人が世帯の非公式の挨拶から除外されます。</help>
+        <help>このボックスをオンにすると、この取引先責任者が世帯の非公式の挨拶から除外されます。</help>
         <label>世帯の非公式の挨拶から除外</label>
         <name>Exclude_from_Household_Informal_Greeting__c</name>
     </fields>
     <fields>
-        <help>このボックスをオンにすると、この個人が世帯名から除外されます。</help>
+        <help>このボックスをオンにすると、この取引先責任者が世帯名から除外されます。</help>
         <label>世帯名から除外</label>
         <name>Exclude_from_Household_Name__c</name>
     </fields>
@@ -65,7 +65,7 @@
         <name>First_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>世帯団体または世帯オブジェクトの現在の世帯の ID を保持します。</help>
+        <help>世帯取引先または世帯オブジェクトの現在の世帯の ID を保持します。</help>
         <label>HHId</label>
         <name>HHId__c</name>
     </fields>
@@ -115,14 +115,14 @@
         <name>Number_of_Soft_Credits__c</name>
     </fields>
     <fields>
-        <help>「主」とマークされた個人の関係する団体レコードの団体を追跡するために使用します。</help>
+        <help>団体アフィリエーションの取引先責任者のリストで「主」とマークされた取引先を追跡するために使用します。</help>
         <label>主アフィリエーション</label>
         <name>Primary_Affiliation__c</name>
         <relationshipLabel>使用しないでください。[団体アフィリエーション] を使用します。</relationshipLabel>
     </fields>
     <fields>
-        <help>ユーザがユーザの団体の主個人である場合にオンにします。[団体] で [主個人] を編集できます。</help>
-        <label>主個人</label>
+        <help>ユーザがユーザの取引先の主取引先責任者である場合にオンにします。[取引先] で [主取引先責任者] を編集できます。</help>
+        <label>主取引先責任者</label>
         <name>Primary_Contact__c</name>
     </fields>
     <fields>
@@ -131,14 +131,14 @@
         <name>Soft_Credit_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>オンの場合、個人の現在の住所の検索で世帯のデフォルトが上書きされます。</help>
+        <help>オンの場合、取引先責任者の現在の住所の検索で世帯のデフォルトが上書きされます。</help>
         <label>住所の上書き</label>
         <name>is_Address_Override__c</name>
     </fields>
     <layouts>
         <layout>Contact Layout</layout>
         <sections>
-            <label>個人の詳細</label>
+            <label>取引先責任者の詳細</label>
             <section>Contact Details</section>
         </sections>
         <sections>
@@ -187,7 +187,7 @@
         <name>Quick_Update</name>
     </quickActions>
     <webLinks>
-        <label>個人のマージ</label>
+        <label>取引先責任者のマージ</label>
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
