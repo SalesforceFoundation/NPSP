@@ -54,6 +54,11 @@
         <name>Closed_Lost_Reason__c</name>
     </fields>
     <fields>
+        <help>Identifiant externe pour l’intégration du service de paiement Salesforce.org.</help>
+        <label>ID récurrent Elevate</label>
+        <name>CommitmentId__c</name>
+    </fields>
+    <fields>
         <help>Une fois sélectionné, ce champ désactive plusieurs aspects de l’automatisation des rôle de contact d’opportunité NPSP, ce qui peut entraîner des données incorrectes ou en double. Pour plus d&apos;informations, reportez-vous à la documentation du produit.</help>
         <label>Désactiver automatisation rôles contacts</label>
         <name>DisableContactRoleAutomation__c</name>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Payment_Status__c</name>
+    <label>Zahlungsstatus</label>
+  </fields>
+  <webLinks>
+    <name>Schedule_Payments</name>
+    <label>Zahlungen planen</label>
+  </webLinks>
+  <webLinks>
+    <name>Writeoff_Payments</name>
+    <label>Zahlungen abschreiben</label>
+  </webLinks>
+</CustomObjectTranslation>

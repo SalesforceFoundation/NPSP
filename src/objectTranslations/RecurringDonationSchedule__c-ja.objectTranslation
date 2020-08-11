@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>継続支援スケジュール</value>
     </caseValues>
     <fields>
         <help>終了日に基づいて継続支援スケジュールが有効なのか無効なのかを確認します。参照のみになります。</help>
@@ -16,7 +16,7 @@
         <relationshipLabel>継続支援スケジュール</relationshipLabel>
     </fields>
     <fields>
-        <help>[間隔] が [毎月] の場合、割賦支援の特定の日付を設定します。</help>
+        <help>[間隔] が [毎月] の場合、割賦商談の特定の日付を設定します。</help>
         <label>日付</label>
         <name>DayOfMonth__c</name>
         <picklistValues>
@@ -104,8 +104,16 @@
             <translation>28</translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>3</masterLabel>
             <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
@@ -138,7 +146,7 @@
     </fields>
     <fields>
         <help>このスケジュールレコードの終了日 (必要な場合)。</help>
-        <label>終了日</label>
+        <label>終了日のスケジュール</label>
         <name>EndDate__c</name>
     </fields>
     <fields>
@@ -147,7 +155,7 @@
         <name>ExternalId__c</name>
     </fields>
     <fields>
-        <help>継続支援の 1 回の支払額。</help>
+        <help>割賦商談の 1 回の支払額。</help>
         <label>金額</label>
         <name>InstallmentAmount__c</name>
     </fields>
