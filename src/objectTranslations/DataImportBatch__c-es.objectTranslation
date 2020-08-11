@@ -42,6 +42,28 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
+        <help>El Estado del lote se basa en el Estado de importación de los registros de Importaciones de datos de NPSP dentro del lote. Si uno no se importa, el estado del lote es &quot;Fallo - Necesita revisión&quot;.</help>
+        <label>Estado del lote</label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation>Completado</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation>Fallo - Necesita revisión</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Abierto</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Lista de nombres de API incluidos en la tabla de regalos por lotes. Se almacena como JSON.</help>
+        <label>Columnas de tabla de lote</label>
+        <name>Batch_Table_Columns__c</name>
+    </fields>
+    <fields>
         <help>Campo opcional de Id. exclusivo para la coincidencia de contactos.</help>
         <label>Id. de contacto exclusivo personalizado</label>
         <name>Contact_Custom_Unique_ID__c</name>
@@ -150,11 +172,6 @@
         <help>Cuando se marca, NPSP calcula las totalizaciones de donantes al procesar donaciones. Si no se marca, las totalizaciones se calculan durante el trabajo nocturno predeterminado. Tenga en cuenta que al seleccionar se ralentizará el procesamiento del lote.</help>
         <label>Calcular totalizaciones donaciones lote</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</help>
-        <label>Batch Status</label>
-        <name>Batch_Status__c</name>
     </fields>
     <gender>Masculine</gender>
     <layouts>

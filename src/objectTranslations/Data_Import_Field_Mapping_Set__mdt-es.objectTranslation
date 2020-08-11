@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Conjunto de asignación de campo de importación de datos</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Data Import Field Mapping Set --></value>
+        <value>Conjuntos de asignaciones de campos de importaciones de datos</value>
     </caseValues>
     <fields>
         <help>El grupo de objetos de importación de datos que contiene este conjunto de asignación de campos.</help>
@@ -14,5 +14,5 @@
         <name>Data_Import_Object_Mapping_Set__c</name>
         <relationshipLabel>Conjuntos de asignaciones de campos de importación de datos</relationshipLabel>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Masculine</gender>
 </CustomObjectTranslation>
