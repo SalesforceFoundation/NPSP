@@ -4,13 +4,14 @@
     standardStylesheets="false"
     lightningStylesheets="true"
     docType="html-5.0"
-    id="pg">
+    id="pg"
+    applyBodyTag="false">
 
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-
+    <body>
         <apex:form id="pbEdit" styleClass="slds-form_stacked">
             <div class="hide-when-modal-open">
 
@@ -30,7 +31,7 @@
                 <div class="slds-p-horizontal_large">
 
                     <div class="slds-form-element slds-is-required">
-                        <c:UTIL_FormField sObjType="Contact" sObj="{!dummyCon}" field="OwnerId" labelOverride="{!$Label.leadConvertOwner}" />
+                        <c:UTIL_FormField sObjType="Contact" sObj="{!dummyCon}" field="OwnerId" labelOverride="{!$Label.leadConvertOwner}" overrideRequired="true"/>
                     </div>
 
                     <div class="slds-form-element">
@@ -143,7 +144,7 @@
 
 
                     <div class="slds-form-element">
-                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" required="true" />
+                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" overrideRequired="true" />
                     </div>
                 </div>
             </div>
@@ -190,6 +191,7 @@
                 <div class="slds-backdrop" tabindex="-1"></div>
             </div>
         </apex:form>
+    </body>
 
     <script>
         // In order to respect the conversion status per record type, using the standard apex:input field for Status
