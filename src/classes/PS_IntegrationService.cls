@@ -70,7 +70,7 @@ global class PS_IntegrationService {
     */
     global static void setConfiguration(Map<String, List<Map<String, String>>> configParams) {
         configurationsToUpsertByServiceKey = createConfigurationsToUpsert(configParams);
-        Payment_Services_Configuration__c[] existingConfigurations =
+        List<Payment_Services_Configuration__c> existingConfigurations =
             getExistingRecords(configurationsToUpsertByServiceKey.keySet());
 
         if (!existingConfigurations.isEmpty()) {
@@ -121,14 +121,14 @@ global class PS_IntegrationService {
     *
     * @param serviceKeys A set of Payment_Services_Configuration__c.Service_Key__c values
     */
-    private static Payment_Services_Configuration__c[] getExistingRecords(Set<String> serviceKeys) {
+    private static List<Payment_Services_Configuration__c> getExistingRecords(Set<String> serviceKeys) {
         return [
             SELECT Id,
                 Service_Key__c,
                 Key__c,
                 Value__c
             FROM Payment_Services_Configuration__c
-            WHERE Service_Key__c = :serviceKeys
+            WHERE Service_Key__c IN :serviceKeys
         ];
     }
 
@@ -141,7 +141,7 @@ global class PS_IntegrationService {
     * from the parameters provided by the caller of 'setConfiguration'.
     */
     private static void applyExistingIdsToNewConfigurations(
-        Payment_Services_Configuration__c[] existingConfigurations,
+        List<Payment_Services_Configuration__c> existingConfigurations,
         Map<String, Payment_Services_Configuration__c> configurationsToUpsertByServiceKey) {
 
         for (Payment_Services_Configuration__c configuration : existingConfigurations) {
@@ -157,11 +157,13 @@ global class PS_IntegrationService {
     *
     * @param existingConfigurations List of existing Payment_Services_Configuration__c records
     */
-    private static Set<String> collectServiceKeys(Payment_Services_Configuration__c[] existingConfigurations) {
+    private static Set<String> collectServiceKeys(List<Payment_Services_Configuration__c> existingConfigurations) {
         Set<String> existingConfigurationKeys = new Set<String> {};
 
         for (Payment_Services_Configuration__c configuration : existingConfigurations) {
-            existingConfigurationKeys.add(configuration.Service_Key__c);
+            if (!configuration.Service_Key__c.isEmpty()) {
+                existingConfigurationKeys.add(configuration.Service_Key__c);
+            }
         }
 
         return existingConfigurationKeys;
@@ -172,7 +174,7 @@ global class PS_IntegrationService {
     *
     * @param configurationRecords List of Payment_Services_Configuration__c records
     */
-    private static void insertConfigurationRecords(Payment_Services_Configuration__c[] configurationRecords) {
+    private static void insertConfigurationRecords(List<Payment_Services_Configuration__c> configurationRecords) {
         try {
             insert configurationRecords;
         } catch (Exception ex) {
@@ -185,7 +187,7 @@ global class PS_IntegrationService {
     *
     * @param configurationRecords List of Payment_Services_Configuration__c records
     */
-    private static void updateConfigurationRecords(Payment_Services_Configuration__c[] configurationRecords) {
+    private static void updateConfigurationRecords(List<Payment_Services_Configuration__c> configurationRecords) {
         try {
             update configurationRecords;
         } catch (Exception ex) {
