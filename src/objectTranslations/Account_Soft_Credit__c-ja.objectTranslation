@@ -5,10 +5,10 @@
         <value>団体ソフトクレジット</value>
     </caseValues>
     <fields>
-        <help>このソフトクレジットを受け取る団体</help>
-        <label>団体</label>
+        <help>このソフトクレジットを受け取る取引先</help>
+        <label>取引先</label>
         <name>Account__c</name>
-        <relationshipLabel>団体ソフトクレジット</relationshipLabel>
+        <relationshipLabel>取引先ソフトクレジット</relationshipLabel>
     </fields>
     <fields>
         <help>ソフトクレジットされる金額</help>
@@ -16,13 +16,13 @@
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>このソフトクレジットが適用される支援。</help>
-        <label>支援</label>
+        <help>このソフトクレジットが適用される商談。</help>
+        <label>商談</label>
         <name>Opportunity__c</name>
-        <relationshipLabel>団体ソフトクレジット</relationshipLabel>
+        <relationshipLabel>取引先ソフトクレジット</relationshipLabel>
     </fields>
     <fields>
-        <help>このソフトクレジットに関連する役割。役割は、団体がどのように支援に関与したかを示します。</help>
+        <help>このソフトクレジットに関連する役割。役割は、取引先がどのように商談に関与したかを示します。</help>
         <label>役割</label>
         <name>Role__c</name>
         <picklistValues>
@@ -38,5 +38,5 @@
             <translation>マッチ</translation>
         </picklistValues>
     </fields>
-    <nameFieldLabel>団体ソフトクレジット名</nameFieldLabel>
+    <nameFieldLabel>取引先ソフトクレジット名</nameFieldLabel>
 </CustomObjectTranslation>

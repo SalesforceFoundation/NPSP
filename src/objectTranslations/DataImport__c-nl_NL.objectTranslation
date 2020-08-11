@@ -122,6 +122,16 @@
         <name>Contact1_Birthdate__c</name>
     </fields>
     <fields>
+        <help>Biedt informatie over waar de contactpersoon zich voor heeft aangemeld.</help>
+        <label>Contact1 Goedkeuringsbericht</label>
+        <name>Contact1_Consent_Message__c</name>
+    </fields>
+    <fields>
+        <help>Toont aan of een contactpersoon goedkeuring heeft gegeven voor aanmelding.</help>
+        <label>Contact1 Goedkeuring aanmelding</label>
+        <name>Contact1_Consent_Opt_In__c</name>
+    </fields>
+    <fields>
         <label>Contact1 Voornaam</label>
         <name>Contact1_Firstname__c</name>
     </fields>
@@ -326,7 +336,7 @@
     </fields>
     <fields>
         <help>Specificeert of de donatie een individuele donatie is van Contact1, of een organisatiedonatie is van Account1.</help>
-        <label>Donatiedonor</label>
+        <label>Donateur donatie</label>
         <name>Donation_Donor__c</name>
         <picklistValues>
             <masterLabel>Account1</masterLabel>
@@ -336,6 +346,11 @@
             <masterLabel>Contact1</masterLabel>
             <translation>Contact1</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>De externe, unieke ID van de terugkerende donatie in Elevate waaraan deze donatie-opportunity is gekoppeld.</help>
+        <label>Herhalings-ID donatie in Elevate</label>
+        <name>Donation_Elevate_Recurring_ID__c</name>
     </fields>
     <fields>
         <label>Niveau van Donatielid</label>
@@ -484,12 +499,12 @@
     </fields>
     <fields>
         <help>De status van de poging tot invoegen van de eerste Opportunitycontactpersoonsrol.</help>
-        <label>Opportunitycontactpersoonsrol 1: ImportStatus</label>
+        <label>Opportunitycont.pers.rol 1: ImportStatus</label>
         <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
     </fields>
     <fields>
         <help>De Salesforce-ID van de geïmporteerde Opportunitycontactpersoonsrol.</help>
-        <label>Opportunitycontactpersoonsrol 1: Geïmporteerd</label>
+        <label>Opportunitycont.pers.rol 1: Geïmporteerd</label>
         <name>Opportunity_Contact_Role_1_Imported__c</name>
     </fields>
     <fields>
@@ -499,12 +514,12 @@
     </fields>
     <fields>
         <help>De status van de poging tot invoegen van de tweede Opportunitycontactpersoonsrol.</help>
-        <label>Opportunitycontactpersoonsrol 2: ImportStatus</label>
+        <label>Opportunitycont.pers.rol 2: ImportStatus</label>
         <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
     </fields>
     <fields>
         <help>De Salesforce-ID van de geïmporteerde Opportunitycontactpersoonsrol.</help>
-        <label>Opportunitycontactpersoonsrol 2: Geïmporteerd</label>
+        <label>Opportunitycont.pers.rol 2: Geïmporteerd</label>
         <name>Opportunity_Contact_Role_2_Imported__c</name>
     </fields>
     <fields>
@@ -522,17 +537,112 @@
         <relationshipLabel>NPSP-Gegevensimports</relationshipLabel>
     </fields>
     <fields>
+        <help>Goedkeuringstoken van een transactie.</help>
+        <label>Token betalingsgoedkeuring</label>
+        <name>Payment_Authorization_Token__c</name>
+    </fields>
+    <fields>
+        <help>De datum en het tijdstip waarop de transactie is goedgekeurd.</help>
+        <label>Goedkeuringsdatum betaling</label>
+        <name>Payment_Authorized_Date__c</name>
+    </fields>
+    <fields>
+        <help>De datum en het exacte tijdstip (tot op de milliseconde) waarop deze transactie is goedgekeurd door de betalingsgateway.</help>
+        <label>UTC-tijdstempel van betalingsgoedkeuring</label>
+        <name>Payment_Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>De maand waarin de kaart die voor deze transactie is gebruikt, vervalt.</help>
+        <label>Vervalmaand betaalkaart</label>
+        <name>Payment_Card_Expiration_Month__c</name>
+    </fields>
+    <fields>
+        <help>Het jaar waarin de kaart die voor deze transactie is gebruikt, vervalt.</help>
+        <label>Verloopjaar betaalkaart</label>
+        <name>Payment_Card_Expiration_Year__c</name>
+    </fields>
+    <fields>
+        <help>De laatste vier cijfers van de kaart die voor deze transactie is gebruikt.</help>
+        <label>Laatste 4 betaalkaart</label>
+        <name>Payment_Card_Last_4__c</name>
+    </fields>
+    <fields>
+        <help>Het kaartnetwerk van de kaart die voor deze transactie is gebruikt.</help>
+        <label>Netwerk betaalkaart</label>
+        <name>Payment_Card_Network__c</name>
+    </fields>
+    <fields>
         <label>Betalingscheque/referentienummer</label>
         <name>Payment_Check_Reference_Number__c</name>
+    </fields>
+    <fields>
+        <help>Biedt informatie over waarom een transactie is geweigerd.</help>
+        <label>Reden betalingsweigering</label>
+        <name>Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help>De datum en het tijdstip waarop de transactie is gemaakt.</help>
+        <label>Aanmaakdatum betaling in Elevate</label>
+        <name>Payment_Elevate_Created_Date__c</name>
+    </fields>
+    <fields>
+        <help>De datum en het exacte tijdstip (tot op de milliseconde) waarop deze transactie is gemaakt in Elevate.</help>
+        <label>UTC-tijdstempel maken betaling Elevate</label>
+        <name>Payment_Elevate_Created_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>De unieke ID van deze transactie in Elevate.</help>
+        <label>Betalings-ID in Elevate</label>
+        <name>Payment_Elevate_ID__c</name>
+    </fields>
+    <fields>
+        <help>Alleen voor terugbetalingen. Toont de ID van de oorspronkelijke betalingstransactie uit Elevate.</help>
+        <label>Oorspronkelijke betalings-ID Elevate</label>
+        <name>Payment_Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>De ID van de betalingsgateway die deze transactie heeft verwerkt.</help>
+        <label>Gateway-ID voor betaling</label>
+        <name>Payment_Gateway_ID__c</name>
+    </fields>
+    <fields>
+        <help>De unieke ID van deze transactie in de betalingsgateway.</help>
+        <label>Betalingsgateway-ID voor betaling</label>
+        <name>Payment_Gateway_Payment_ID__c</name>
     </fields>
     <fields>
         <label>Betalingsmethode</label>
         <name>Payment_Method__c</name>
     </fields>
     <fields>
+        <help>De ID van het systeem waarin de transactie is geïnitieerd.</help>
+        <label>Herkomst-ID voor betaling</label>
+        <name>Payment_Origin_ID__c</name>
+    </fields>
+    <fields>
+        <help>De naam van het systeem waarin de transactie is geïnitieerd.</help>
+        <label>Naam betalingsherkomst</label>
+        <name>Payment_Origin_Name__c</name>
+    </fields>
+    <fields>
+        <help>Het type systeem dat is gebruikt om de transactie te initiëren. Beschikbare waarden zijn Engagement Hub, Giving Page, Payment-API en Salesforce.</help>
+        <label>Type herkomst voor betaling</label>
+        <name>Payment_Origin_Type__c</name>
+    </fields>
+    <fields>
         <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Betalingsovereenkomsten voor een Donatie.</help>
         <label>Mogelijke Overeenkomsten Betaling</label>
         <name>Payment_Possible_Matches__c</name>
+    </fields>
+    <fields>
+        <help>De API-status van de transactie in Elevate.</help>
+        <label>Status van betaling</label>
+        <name>Payment_Status__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan om welk type transactie het gaat.</help>
+        <label>Type betaling</label>
+        <name>Payment_Type__c</name>
     </fields>
     <fields>
         <help>De importstatus van deze record, bijvoorbeeld Geïmporteerd of Mislukt.</help>
@@ -553,6 +663,10 @@
         <picklistValues>
             <masterLabel>Imported</masterLabel>
             <translation>Geïmporteerd</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ready to Process</masterLabel>
+            <translation>Gereed voor verwerking</translation>
         </picklistValues>
     </fields>
     <gender>Feminine</gender>

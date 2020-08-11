@@ -1,5 +1,16 @@
 # Cumulus Automation Inventory
 
+## Namespace Tokens Reference:
+
+### File Names:
+- *___NAMESPACED_ORG___*: Replaced with a blank string unless in Namespaced Org mode
+- *___NAMESPACE___*: Replaced with a blank string in unmanaged or namespace__ in managed
+
+### File Contents:
+- *%%%NAMESPACE%%%*: Replaced with blank string in unmanaged or namespace__ in managed
+- *%%%NAMESPACE_OR_C%%%*: Replaced with c in unmanaged or namespace in managed
+- *%%%NAMESPACE_DOT%%%*: Replaced with blank string in unmanaged or namespace. in managed
+
 ## Key Workflows
 
 This section summarizes the key workflows for developers, QEs, and technical

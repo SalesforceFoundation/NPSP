@@ -41,37 +41,37 @@
         <value><!-- Allocations Settings --></value>
     </caseValues>
     <fields>
-        <help>Durch die Aktivierung von Standardzuord. wird für jede Opp. ein Zuordnungsobjekt erstellt. Dadurch wird die Berichterstellung zu Zuordnungen zu einer allg. Standardverrechnungseinheit aktiviert, doch es wird auch mehr Datenspeicherplatz belegt.</help>
-        <label>Standardzuordnungen aktiviert</label>
+        <help>Durch die Aktivierung von Standardzuweisungen wird für jede Opportunity ein Zuweisungsobjekt erstellt. Dadurch wird die Berichterstellung zu Zuweisungen zu einem Standard-Verwendungszweck aktiviert, doch es wird auch mehr Datenspeicherplatz belegt.</help>
+        <label>Standardzuweisungen aktiviert</label>
         <name>Default_Allocations_Enabled__c</name>
     </fields>
     <fields>
-        <help>Enthält die Kennung der standardmäßigen allgemeinen Verrechnungseinheit für die Erstellung der Standardzuordnungen oder für die Zuordnung nicht zugeordneter Beträge.</help>
-        <label>Standardmäßige allg. Verrechnungseinheit</label>
+        <help>Enthält die Kennung des Standard-Verwendungszwecks für die Erstellung der Standardzuweisungen oder für die Zuweisung nicht zugewiesener Beträge.</help>
+        <label>Standard-Verwendungszweck</label>
         <name>Default__c</name>
     </fields>
     <fields>
-        <help>Opportunity-Datensatztypen, die von den Berechnungen des Rollups von Zuordnungen ausgeschlossen werden sollen.</help>
+        <help>Opportunity-Datensatztypen, die von den Berechnungen des Rollups von Zuweisungen ausgeschlossen werden sollen.</help>
         <label>Ausgeschl. Opportunity-Datensatztypen</label>
         <name>Excluded_Opp_RecTypes__c</name>
     </fields>
     <fields>
-        <help>Von Rollups von Zuordnungen ausgeschlossene Opportunity-Typen</help>
+        <help>Von Rollups von Zuweisungen ausgeschlossene Opportunity-Typen</help>
         <label>Ausgeschl. Opportunity-Typen</label>
         <name>Excluded_Opp_Types__c</name>
     </fields>
     <fields>
-        <help>Gibt an, ob Zuordnungen auf Zahlungsebene festgelegt werden können. Lesen Sie die Dokumentation zu Zuordnungen auf Zahlungsebene, bevor Sie diese Einstellung ändern.</help>
-        <label>Zahlungszuordnungen aktiviert</label>
+        <help>Gibt an, ob Zuweisungen auf Zahlungsebene festgelegt werden können. Lesen Sie die Dokumentation zu Zuweisungen auf Zahlungsebene, bevor Sie diese Einstellung ändern.</help>
+        <label>Zahlungszuweisungen aktiviert</label>
         <name>Payment_Allocations_Enabled__c</name>
     </fields>
     <fields>
-        <help>Dieser Wert beeinflusst die Anzahl der Tage für die Rollup-Felder &quot;N-Tage-Zuordnungen&quot;.</help>
+        <help>Dieser Wert beeinflusst die Anzahl der Tage für die Rollup-Felder &quot;N-Tage-Zuweisungen&quot;.</help>
         <label>N-Tage-Wert für Rollup</label>
         <name>Rollup_N_Day_Value__c</name>
     </fields>
     <fields>
-        <help>Bei Akt. wird f. die Zuordn.-Rollup-Gesamtwerte das Geschäftsjahr statt der Einst. f. das Kalenderjahr verwendet. Festleg. der Gesch.jahrinf.: Setup -&gt; Unternehmensprofil -&gt; Geschäftsjahr. HINWEIS: Benutzerdef. Gesch.jahreinst. werden NICHT unterstützt.</help>
+        <help>Bei Akt. wird f. die Zuweis.-Rollup-Gesamtwerte das Geschäftsjahr statt der Einst. f. das Kalenderjahr verwendet. Festleg. der Gesch.jahrinf.: Setup -&gt; Unternehmensprofil -&gt; Geschäftsjahr. HINWEIS: Benutzerdef. Gesch.jahreinst. werden NICHT unterstützt.</help>
         <label>Geschäftsjahr für Rollups verwenden</label>
         <name>Use_Fiscal_Year_for_Rollups__c</name>
     </fields>

@@ -108,8 +108,16 @@
             <translation><!-- 28 --></translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation><!-- 29 --></translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>3</masterLabel>
             <translation><!-- 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation><!-- 30 --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
@@ -142,7 +150,7 @@
     </fields>
     <fields>
         <help><!-- The ending date, if required, for this schedule record. --></help>
-        <label><!-- End Date --></label>
+        <label><!-- Schedule End Date --></label>
         <name>EndDate__c</name>
     </fields>
     <fields>

@@ -466,28 +466,49 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests;
 
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, 
+                npo02__Enable_Opp_Rollup_Triggers__c = true
+            )
+        );
 
-        if (isOne2One)
-            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        else
-            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+        if (isOne2One) {
+            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        } else {
+            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+        }
 
-        system.assert(!CAO_Constants.isHHAccountModel());
-        if(isOne2One)
-            system.assert(CAO_Constants.isOneToOne());
-        else
-            system.assert(CAO_Constants.isBucketModel());
+        System.assert(!CAO_Constants.isHHAccountModel());
+        if (isOne2One) {
+            System.assert(CAO_Constants.isOneToOne());
+        } else {
+            System.assert(CAO_Constants.isBucketModel());
+        }
     }
 
     /*******************************************************************************************************
     * @description Sets up Household Account Model settings configurations
     */
     public static void setHHAccountModel(){
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR, 
+                npo02__Enable_Opp_Rollup_Triggers__c = true
+            )
+        );
+
         //get the HH account rectype
         Id hhAccountid = [select Id from RecordType where DeveloperName = 'HH_Account'].Id;
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01__HH_Account_RecordTypeID__c = HHAccountId));
-        system.assert(CAO_Constants.isHHAccountModel());
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, 
+                npe01__HH_Account_RecordTypeID__c = HHAccountId
+            )
+        );
+
+        System.assert(CAO_Constants.isHHAccountModel());
     }
 }

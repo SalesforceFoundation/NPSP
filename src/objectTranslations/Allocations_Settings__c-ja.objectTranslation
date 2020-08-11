@@ -5,7 +5,7 @@
         <value><!-- Allocations Settings --></value>
     </caseValues>
     <fields>
-        <help>デフォルト割り当てを有効にすると、各支援に割り当てオブジェクトが作成されます。これにより、デフォルト一般会計単位への割り当てに関するレポート作成が可能になりますが、より多くのデータストレージが使用されます。</help>
+        <help>デフォルト割り当てを有効にすると、各商談に割り当てオブジェクトが作成されます。これにより、デフォルト一般会計単位への割り当てに関するレポート作成が可能になりますが、より多くのデータストレージが使用されます。</help>
         <label>デフォルト割り当ての有効化</label>
         <name>Default_Allocations_Enabled__c</name>
     </fields>
@@ -15,12 +15,12 @@
         <name>Default__c</name>
     </fields>
     <fields>
-        <help>割り当て積み上げ集計の計算から除外する支援レコードタイプ。</help>
+        <help>割り当て積み上げ集計の計算から除外する商談レコードタイプ。</help>
         <label>除外する支援レコードタイプ</label>
         <name>Excluded_Opp_RecTypes__c</name>
     </fields>
     <fields>
-        <help>割り当て積み上げ集計から除外する支援種別。</help>
+        <help>割り当て積み上げ集計から除外する商談種別。</help>
         <label>除外する支援種別</label>
         <name>Excluded_Opp_Types__c</name>
     </fields>

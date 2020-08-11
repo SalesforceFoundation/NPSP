@@ -3,42 +3,42 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplan für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitpläne für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplan für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitpläne für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplans für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitpläne für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplan für wiederkehrende Spenden</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Zeitplänen für wiederkehrende Spenden</value>
     </caseValues>
     <fields>
         <help>Bestimmt anhand des Enddatums, ob der Zeitplan für wiederkehrende Spenden aktiv oder inaktiv ist. Schreibgeschützt.</help>
@@ -140,8 +140,16 @@
             <translation>28</translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>3</masterLabel>
             <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
@@ -174,7 +182,7 @@
     </fields>
     <fields>
         <help>Das Enddatum für diesen Zeitplan-Datensatz, sofern erforderlich.</help>
-        <label>Enddatum</label>
+        <label>Enddatum des Zeitplans</label>
         <name>EndDate__c</name>
     </fields>
     <fields>
@@ -245,7 +253,7 @@
         <label>Inkrafttreten</label>
         <name>StartDate__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
         <sections>
