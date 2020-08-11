@@ -122,6 +122,16 @@
         <name>Contact1_Birthdate__c</name>
     </fields>
     <fields>
+        <help>Fournit des détails sur les choix du contact.</help>
+        <label>Message de consentement du Contact1</label>
+        <name>Contact1_Consent_Message__c</name>
+    </fields>
+    <fields>
+        <help>Détermine si un contact a consenti à participer.</help>
+        <label>Activation du consentement du Contact1</label>
+        <name>Contact1_Consent_Opt_In__c</name>
+    </fields>
+    <fields>
         <label>Prénom du Contact1</label>
         <name>Contact1_Firstname__c</name>
     </fields>
@@ -338,6 +348,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>L’ID externe unique du don récurrent dans Elevate auquel cette opportunité de don est liée.</help>
+        <label>ID du don récurrent Elevate</label>
+        <name>Donation_Elevate_Recurring_ID__c</name>
+    </fields>
+    <fields>
         <label>Niveau de membre du don</label>
         <name>Donation_Member_Level__c</name>
     </fields>
@@ -522,17 +537,112 @@
         <relationshipLabel>Importations de données NPSP</relationshipLabel>
     </fields>
     <fields>
+        <help>Jeton d’autorisation pour une transaction.</help>
+        <label>Jeton d&apos;autorisation de paiement</label>
+        <name>Payment_Authorization_Token__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure auxquelles la transaction a été autorisée.</help>
+        <label>Date autorisée du paiement</label>
+        <name>Payment_Authorized_Date__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure exactes (jusqu’à la milliseconde) de la passerelle de paiement auxquelles cette transaction a été autorisée.</help>
+        <label>Horodatage UTC autorisé du paiement</label>
+        <name>Payment_Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>Le mois d’expiration de la carte utilisée pour cette transaction.</help>
+        <label>Mois d’expiration carte de paiement</label>
+        <name>Payment_Card_Expiration_Month__c</name>
+    </fields>
+    <fields>
+        <help>L’année d’expiration de la carte utilisée pour cette transaction.</help>
+        <label>Année d&apos;expiration carte de paiement</label>
+        <name>Payment_Card_Expiration_Year__c</name>
+    </fields>
+    <fields>
+        <help>Les quatre derniers chiffres de la carte utilisée pour cette transaction.</help>
+        <label>4 derniers chiffres carte de paiement</label>
+        <name>Payment_Card_Last_4__c</name>
+    </fields>
+    <fields>
+        <help>Le réseau de carte de la carte utilisée pour cette transaction.</help>
+        <label>Réseau carte de paiement</label>
+        <name>Payment_Card_Network__c</name>
+    </fields>
+    <fields>
         <label>Chèque de paiement/Numéro de référence</label>
         <name>Payment_Check_Reference_Number__c</name>
+    </fields>
+    <fields>
+        <help>Fournit des détails sur les raisons pour lesquelles une transaction a été refusée.</help>
+        <label>Motif de refus du paiement</label>
+        <name>Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure auxquelles la transaction a été créée.</help>
+        <label>Date de création du paiement Elevate</label>
+        <name>Payment_Elevate_Created_Date__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure exactes (jusqu’à la milliseconde) d’Elevate auxquelles la transaction a été créée.</help>
+        <label>Horodatage UTC création paiement Elevate</label>
+        <name>Payment_Elevate_Created_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>L’ID unique pour cette transaction d’Elevate.</help>
+        <label>ID de paiement Elevate</label>
+        <name>Payment_Elevate_ID__c</name>
+    </fields>
+    <fields>
+        <help>Uniquement pour les remboursements. Affiche l’ID de la transaction de paiement d’origine d’Elevate.</help>
+        <label>ID paiement d’origine paiement Elevate</label>
+        <name>Payment_Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>L’ID de la passerelle de paiement qui a traité cette transaction.</help>
+        <label>ID de passerelle de paiement</label>
+        <name>Payment_Gateway_ID__c</name>
+    </fields>
+    <fields>
+        <help>L’ID unique pour cette transaction de la passerelle de paiement.</help>
+        <label>ID de paiement de passerelle de paiement</label>
+        <name>Payment_Gateway_Payment_ID__c</name>
     </fields>
     <fields>
         <label>Mode de paiement</label>
         <name>Payment_Method__c</name>
     </fields>
     <fields>
+        <help>L’ID du système sur lequel la transaction a été initiée.</help>
+        <label>ID d’origine du paiement</label>
+        <name>Payment_Origin_ID__c</name>
+    </fields>
+    <fields>
+        <help>Le nom du système sur lequel la transaction a été initiée.</help>
+        <label>Nom d’origine du paiement</label>
+        <name>Payment_Origin_Name__c</name>
+    </fields>
+    <fields>
+        <help>Le type de système utilisé pour initier la transaction. Les valeurs disponibles incluent Engagement Hub, Page de dons, API de paiement, Salesforce.</help>
+        <label>Type d’origine du paiement</label>
+        <name>Payment_Origin_Type__c</name>
+    </fields>
+    <fields>
         <help>Une liste d’identifiants séparés par des virgules pour les 10 premières correspondances de paiement possibles pour un don.</help>
         <label>Correspondances possibles de paiements</label>
         <name>Payment_Possible_Matches__c</name>
+    </fields>
+    <fields>
+        <help>Le statut API de la transaction d’Elevate.</help>
+        <label>Statut du paiement</label>
+        <name>Payment_Status__c</name>
+    </fields>
+    <fields>
+        <help>Indique le type de transaction.</help>
+        <label>Type de paiement</label>
+        <name>Payment_Type__c</name>
     </fields>
     <fields>
         <help>Le statut de l’importation de l’enregistrement d’importation de données.</help>
@@ -553,6 +663,10 @@
         <picklistValues>
             <masterLabel>Imported</masterLabel>
             <translation>Importé</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ready to Process</masterLabel>
+            <translation>Prêt à traiter</translation>
         </picklistValues>
     </fields>
     <gender>Feminine</gender>

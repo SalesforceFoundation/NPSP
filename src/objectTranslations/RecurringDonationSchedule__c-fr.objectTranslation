@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Calendrier de dons récurrents</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value>Calendriers de dons récurrents</value>
     </caseValues>
     <fields>
         <help>Détermine si le Calendrier de dons récurrents est actif ou inactif en fonction de la Date de fin. En lecture seule.</help>
@@ -108,8 +108,16 @@
             <translation>28</translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>3</masterLabel>
             <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
@@ -142,7 +150,7 @@
     </fields>
     <fields>
         <help>La date de fin, si nécessaire, de l&apos;enregistrement de ce calendrier.</help>
-        <label>Date de fin</label>
+        <label>Date de fin du calendrier</label>
         <name>EndDate__c</name>
     </fields>
     <fields>
@@ -210,10 +218,10 @@
     </fields>
     <fields>
         <help>La date à laquelle l&apos;enregistrement de ce calendrier s&apos;applique.</help>
-        <label>Date d&apos;entrée en vigueur</label>
+        <label>Date de début</label>
         <name>StartDate__c</name>
     </fields>
-    <gender><!-- Masculine --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
         <sections>
@@ -226,5 +234,5 @@
         </sections>
     </layouts>
     <nameFieldLabel>Numéro de planification récurrente</nameFieldLabel>
-    <startsWith><!-- Consonant --></startsWith>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
