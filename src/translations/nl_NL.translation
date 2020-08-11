@@ -381,6 +381,10 @@
         <name>CONV_Contacts_Attached</name>
     </customLabels>
     <customLabels>
+        <label>U hebt niet de vereiste systeemmachtigingen om te kunnen converteren. Neem voor hulp contact op met de systeembeheerder.</label>
+        <name>CONV_ConversionAccessDenied</name>
+    </customLabels>
+    <customLabels>
         <label>Conversievoortgang van Accountmodel</label>
         <name>CONV_Conversion_Process</name>
     </customLabels>
@@ -707,6 +711,10 @@
         <name>ConfirmDeleteAccount</name>
     </customLabels>
     <customLabels>
+        <label>{0} is de enige contactpersoon in het account. Als u deze contactpersoon verwijdert, is het account leeg.</label>
+        <name>ConfirmDeleteLeaveAccountEmpty</name>
+    </customLabels>
+    <customLabels>
         <label>Account verwijderen</label>
         <name>DeleteAccount</name>
     </customLabels>
@@ -747,11 +755,7 @@
         <name>EPTo</name>
     </customLabels>
     <customLabels>
-        <label>Salesforce meldde de onderstaande fouten toen NPSP de batchtaken probeerde uit te voeren, of op een moment waarop het niet in staat was foutmeldingen rechtstreeks aan een gebruiker weer te geven. Het is waarschijnlijk dat NPSP probeerde om overzichtsvelden op Accounts en Contactpersonen bij te werken, maar niet in staat was bepaalde records op te slaan. Deze mislukking is mogelijk veroorzaakt door verscheidene problemen die niet gerelateerd zijn aan NPSP, zoals een aangepast code of validatieregels.
-
-Lees dit artikel over Power of Us Hub om te leren hoe deze Geplande Taken werken: https://powerofus.force.com/NPSP_Scheduled_Jobs
-
-Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in de groep Nonprofit Success Pack in de Power of Us Hub: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>De volgende NPSP-fouten zijn opgetreden in Salesforce. Voor meer informatie over veelvoorkomende fouten ziet u &apos;Probleemoplossing in het Non-profit Success Pack&apos; in de Power of Us Hub. Als u niet zeker weet hoe u de problemen kunt oplossen, plaatst u een bericht in de Non-profit Success Pack-groep: https://powerofus.force.com/HUB_NPSP_Group</label>
         <name>ErrorEmailMessage</name>
     </customLabels>
     <customLabels>
@@ -847,6 +851,10 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Terugkerende donaties uit de Elevate-betaalservices kunnen niet in NPSP worden gewijzigd. Dit kan alleen de integratiegebruiker van de Elevate-betaalservices.</label>
+        <name>RD2_ElevatePermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label>We zijn er bijna! U hoeft eerst alleen nog maar een paar dingen te controleren. . .</label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
@@ -907,12 +915,20 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
+        <label>Met deze stap wordt de verwerkingslogica voor terugkerende donaties gewijzigd zodat er gebruik wordt gemaakt van de logica voor uitgebreide terugkerende donaties. Terugkerende donaties werken dan niet meer hetzelfde.</label>
+        <name>RD2_EnablementEnableSimpleIntro</name>
+    </customLabels>
+    <customLabels>
         <label>Uitgebreide terugkerende donaties inschakelen</label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
         <label>&lt;b&gt;WAARSCHUWING: NPSP beschikt niet over een manier om te herstellen naar oudere Terugkerende donaties.&lt;/b&gt;</label>
         <name>RD2_EnablementEnableWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
         <label>Gegroet! Uitgebreide terugkerende donaties is onze nieuw ontworpen en verbeterde voorziening voor Terugkerende donaties voor het Nonprofit Success Pack (NPSP). Onze grote dank gaat naar communityleden die hun feedback hebben gegeven en hebben geholpen om Uitgebreide terugkerende donaties mogelijk te maken.
@@ -941,6 +957,10 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
     </customLabels>
     <customLabels>
+        <label>Gebruik de MetaDeploy-service om de metagegevens voor uitgebreide terugkerende donaties te gebruiken. De metagegevens omvatten: nieuwe waarden voor keuzelijsten, bijgewerkte Help-teksten en een nieuwe pagina-indeling. MetaDeploy is een service die buiten uw Salesforce.org bestaat.</label>
+        <name>RD2_EnablementMetaDeploySimpleIntro</name>
+    </customLabels>
+    <customLabels>
         <label>Metagegevens voor Uitgebreide terugkerende donaties installeren</label>
         <name>RD2_EnablementMetaDeployTitle</name>
     </customLabels>
@@ -950,18 +970,18 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
     </customLabels>
     <customLabels>
         <label>&lt;b&gt;Upgradeproces voltooid!&lt;/b&gt;&lt;br/&gt;
-        &lt;br/&gt;Voordat uw organisatie Uitgebreide terugkerende donaties gaat gebruiken:&lt;br/&gt;
+        &lt;br/&gt;Voordat uw organisatie uitgebreide terugkerende donaties gaat gebruiken:&lt;br/&gt;
         &lt;ul&gt;&lt;li&gt;Schakel werkstromen, processen, validatieregels en triggers in, die u vóór de upgrade hebt uitgeschakeld.&lt;/li&gt;
-        &lt;li&gt;Wijs de paginalay-out Uitgebreide terugkerende donaties toe aan alle gebruikersprofielen en verwijder de oude paginalay-out Terugkerende donaties.&lt;/li&gt;
-        &lt;li&gt;Wijs de Lightning-recordpagina Terugkerende donatie voor NPSP toe als Standaard van de organisatie.&lt;/li&gt;   
-        &lt;li&gt;Wijs de Apex-klasse RD2_VisualizeScheduleController toe aan uw klantenprofielen.&lt;/li&gt;    
-        &lt;li&gt;Pas beveiliging op veldniveau voor velden van Terugkerende donaties naar behoefte aan voor uw profielen en machtigingensets.&lt;/li&gt;
-        &lt;li&gt;Pas rapporten van Terugkerende donaties dusdanig aan dat deze werken bij Uitgebreide terugkerende donaties.&lt;/li&gt;
-        &lt;li&gt;Informeer uw personeel over Uitgebreide terugkerende donaties.&lt;/li&gt;</label>
+        &lt;li&gt;Wijs de pagina-indeling voor uitgebreide terugkerende donaties toe aan alle gebruikersprofielen en verwijder de oude pagina-indeling voor terugkerende donaties.&lt;/li&gt;
+        &lt;li&gt;Wijs de Lightning-recordpagina Terugkerende donatie voor NPSP toe als standaard van de organisatie.&lt;/li&gt;
+        &lt;li&gt;Wijs de Apex-klasse RD2_VisualizeScheduleController toe aan uw aangepaste profielen.&lt;/li&gt;
+        &lt;li&gt;Pas beveiliging op veldniveau voor velden van terugkerende donaties naar behoefte aan voor uw profielen en machtigingensets.&lt;/li&gt;
+        &lt;li&gt;Pas rapporten van terugkerende donaties dusdanig aan dat deze werken bij uitgebreide terugkerende donaties.&lt;/li&gt;
+        &lt;li&gt;Informeer uw personeel over de uitgebreide terugkerende donaties.&lt;/li&gt;</label>
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
-        <label>De uitvoering van uw migratie heeft fouten; deze moeten worden gecorrigeerd om het voltooien van een migratie te laten slagen. Bekijk de fouten door naar NPSP-instellingen &gt; Systeemtools &gt; Foutenlogboeken te gaan. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentatie&lt;/a&gt; voor hulp. Corrigeer de fouten, ga terug en probeer het opnieuw.</label>
+        <label>De uitvoering van uw migratie bevat fouten; deze moeten worden gecorrigeerd om de migratie te kunnen voltooien. Bekijk de fouten door naar NPSP-instellingen &gt; Systeemtools &gt; Foutenlogboeken te gaan. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie&lt;/a&gt; voor hulp. Corrigeer de fouten, ga terug en probeer het opnieuw.</label>
         <name>RD2_EnablementMigrationErrorMessage</name>
     </customLabels>
     <customLabels>
@@ -993,6 +1013,10 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
+        <label>Alleen systeembeheerders kunnen upgrade-acties uitvoeren voor uitgebreide terugkerende donaties.</label>
+        <name>RD2_EnablementPermissionRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Voer voor het beperken van potentiële fouten en ter bescherming van uw gegevens deze voorbereidingstaken uit voordat u begint met de upgrade naar Uitgebreide terugkerende donaties:</label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
@@ -1005,6 +1029,96 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
     <customLabels>
         <label>Voorbereidingstaken</label>
         <name>RD2_EnablementPrepTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Met uitgebreide terugkerende donaties worden terugkerende donaties flexibeler en eenvoudiger te beheren dan ooit tevoren. Als u uitgebreide terugkerende donaties wilt inschakelen, volgt u de onderstaande stappen. U moet ALLE stappen uitvoeren om uitgebreide terugkerende donaties volledig in te schakelen.
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Omdat er geen records zijn voor terugkerende donaties, hoeft u geen gegevens te valideren of migreren.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;Lees voor meer informatie de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie over uitgebreide terugkerende donaties&lt;/a&gt;.</label>
+        <name>RD2_EnablementSimpleIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>De einddatum moet later zijn dan de laatste sluitingsdatum voor gesloten, gewonnen opportunities.</label>
+        <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>De einddatum mag niet in de toekomst liggen als het type terugkeer vastligt.</label>
+        <name>RD2_EndDateMustBeValidForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label>Aangepaste velden</label>
+        <name>RD2_EntryFormCustomFieldsSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Gegevens over donatie</label>
+        <name>RD2_EntryFormDonationSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Gegevens donateur</label>
+        <name>RD2_EntryFormDonorSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer het type donateur voor deze terugkerende donatie. Als u Account selecteert, voert u een organisatieaccount in en optioneel ook een bijbehorende contactpersoon. Als u Contactpersoon selecteert, voert u een contactpersoon in die is gerelateerd aan een huishoudenaccount.</label>
+        <name>RD2_EntryFormDonorTypeHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>Type donateur</label>
+        <name>RD2_EntryFormDonorTypeLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe terugkerende donatie</label>
+        <name>RD2_EntryFormHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>De terugkerende donatie {0} is gemaakt.</label>
+        <name>RD2_EntryFormInsertSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>U hebt niet de vereiste veldmachtigingen voor terugkerende donaties. Neem voor hulp contact op met de systeembeheerder.</label>
+        <name>RD2_EntryFormMissingPermissions</name>
+    </customLabels>
+    <customLabels>
+        <label>Overige gegevens</label>
+        <name>RD2_EntryFormOtherSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Geavanceerd</label>
+        <name>RD2_EntryFormPeriodAdvanced</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer Geavanceerd om andere planningstypen in te voeren, zoals wekelijks, jaarlijks, elke 6 maanden, etc.</label>
+        <name>RD2_EntryFormPeriodHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label>Terugkerende periode</label>
+        <name>RD2_EntryFormPeriodLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Dagen</label>
+        <name>RD2_EntryFormPeriodPluralDaily</name>
+    </customLabels>
+    <customLabels>
+        <label>Maanden</label>
+        <name>RD2_EntryFormPeriodPluralMonthly</name>
+    </customLabels>
+    <customLabels>
+        <label>Weken</label>
+        <name>RD2_EntryFormPeriodPluralWeekly</name>
+    </customLabels>
+    <customLabels>
+        <label>Jaar</label>
+        <name>RD2_EntryFormPeriodPluralYearly</name>
+    </customLabels>
+    <customLabels>
+        <label>Elke</label>
+        <name>RD2_EntryFormScheduleEveryLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Statusinformatie</label>
+        <name>RD2_EntryFormStatusSectionHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>De terugkerende donatie {0} is opgeslagen.</label>
+        <name>RD2_EntryFormUpdateSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>U moet Uitgebreide terugkerende donaties inschakelen voordat u de taak Gegevensmigratie van Uitgebreide terugkerende donaties kunt uitvoeren.</label>
@@ -1043,7 +1157,23 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
-        <label>Einddatum</label>
+        <label>U kunt gesloten terugkerende donaties niet onderbreken</label>
+        <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer termijnen in de onderstaande lijst. U kunt tot 12 opeenvolgende termijnen onderbreken.</label>
+        <name>RD2_PauseDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>De eerste donatiedatum na de onderbrekingsperiode is {0}.</label>
+        <name>RD2_PauseFirstDonationDateDynamicText</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} onderbreken</label>
+        <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Einddatum planning</label>
         <name>RD2_ScheduleLWCEndDate</name>
     </customLabels>
     <customLabels>
@@ -1067,6 +1197,14 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
     </customLabels>
     <customLabels>
+        <label>U beschikt niet over de machtigingen om aanstaande termijnen te bekijken. Neem voor meer informatie contact op met uw systeembeheerder.</label>
+        <name>RD2_ScheduleVisualizerFLSInstallment</name>
+    </customLabels>
+    <customLabels>
+        <label>U beschikt niet over de machtigingen om actieve planningen weer te geven. Neem voor meer informatie contact op met uw systeembeheerder.</label>
+        <name>RD2_ScheduleVisualizerFLSSchedule</name>
+    </customLabels>
+    <customLabels>
         <label>Er is geen actieve planning voor deze terugkerende donatie.</label>
         <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
     </customLabels>
@@ -1077,6 +1215,49 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
     <customLabels>
         <label>Aanstaande termijnen</label>
         <name>RD2_ScheduleVisualizerTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Staat</label>
+        <name>RD2_StatusMappingColumnState</name>
+    </customLabels>
+    <customLabels>
+        <label>API-naam</label>
+        <name>RD2_StatusMappingColumnStatusAPIName</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;Statusdefinities&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actief: de donateur doneert actief. NPSP maakt termijnopportunities zoals wordt gedefinieerd in de planning voor de terugkerende donatie.&lt;/li&gt;
+&lt;li&gt;Verstreken: donaties worden niet naar verwachting ontvangen, maar NPSP maakt nog altijd termijnopportunities zoals wordt gedefinieerd in de planning voor de terugkerende donatie.&lt;/li&gt;
+&lt;li&gt;Gesloten: de donateur doneert niet meer voor deze terugkerende donatie. NPSP maakt geen nieuwe termijnopportunities.&lt;/li&gt;&lt;/ul&gt;</label>
+        <name>RD2_StatusMappingDefinitions</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt toewijzingen niet opslaan terwijl NPSP een andere status-naar-staat-toewijzing verwerkt.</label>
+        <name>RD2_StatusMappingDeploymentAlreadyInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>Status-naar-staat-toewijzing wordt opgeslagen.</label>
+        <name>RD2_StatusMappingInProgressMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Als u aangepaste keuzelijstwaarden maakt voor &apos;Status terugkerende donatie(s)&apos; moet u deze toewijzen aan een status, zodat NPSP weet hoe records met die aangepaste statuswaarden moeten worden verwerkt.
+        &lt;br/&gt;&lt;br/&gt;Als u nog geen aangepaste keuzelijstwaarden hebt gemaakt voor &apos;Status terugkerende donatie(s)&apos;, hoeft u niets toe te wijzen.</label>
+        <name>RD2_StatusMappingIntro</name>
+    </customLabels>
+    <customLabels>
+        <label>-- Niet toegewezen --</label>
+        <name>RD2_StatusMappingStateUnmapped</name>
+    </customLabels>
+    <customLabels>
+        <label>Status-naar-staat-toewijzing opgeslagen.</label>
+        <name>RD2_StatusMappingSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>De status {0} is niet toegewezen aan een staat.</label>
+        <name>RD2_StatusMustBeMapped</name>
+    </customLabels>
+    <customLabels>
+        <label>Ga naar NPSP-instellingen | Terugkerende donaties | Status-naar-staat-toewijzingen, of neem voor hulp contact op met de beheerder.</label>
+        <name>RD2_StatusMustBeMappedSolution</name>
     </customLabels>
     <customLabels>
         <label>U moet een contactpersoon selecteren, die is gekoppeld aan deze Account van huishouden.</label>
@@ -1099,7 +1280,7 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD_ErrorAddDonationMissingId</name>
     </customLabels>
     <customLabels>
-        <label>U beschikt niet over de machtiging om een donatierecord te maken. Neem voor meer informatie contact op met uw systeembeheerder.</label>
+        <label>U hebt niet de vereiste machtigingen om opportunities te vernieuwen. Neem voor hulp contact op met de systeembeheerder.</label>
         <name>RD_ErrorAddDonationPermissionDenied</name>
     </customLabels>
     <customLabels>
@@ -1115,7 +1296,8 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
-        <label><!-- Confirmation message displayed to user before the process runs --></label>
+        <label>Met dit proces worden alle toekomstige termijnopportunities bijgewerkt zodat ze overeenkomen met de huidige gegevens voor deze terugkerende donatie. In sommige gevallen verwijdert NPSP mogelijk de termijnen en worden er nieuwe aangemaakt.
+&lt;br/&gt;&lt;br/&gt;Klik op Doorgaan om te beginnen of op Annuleren om terug te gaan naar de pagina Terugkerende donatie.</label>
         <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
@@ -1255,6 +1437,14 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>SmartyStreets_Help_Text</name>
     </customLabels>
     <customLabels>
+        <label>Datumkiezer</label>
+        <name>UTIL_InputFormFormFieldAltLabelDate</name>
+    </customLabels>
+    <customLabels>
+        <label>Zoeken</label>
+        <name>UTIL_InputFormFormFieldAltLabelLookup</name>
+    </customLabels>
+    <customLabels>
         <label>Postcode niet gevonden.</label>
         <name>Zip_Not_Found</name>
     </customLabels>
@@ -1275,7 +1465,7 @@ Als u niet zeker bent hoe u deze fouten kunt oplossen, plaatst u een bericht in 
         <name>addrCopyConAddBtnConfirm</name>
     </customLabels>
     <customLabels>
-        <label>U beschikt niet over de nodige veldmachtigingen. Neem contact op met uw systeembeheerder om te weten hoe u de nodige machtigingen krijgt.</label>
+        <label>U beschikt niet over de vereiste object- of veldmachtigingen. Neem contact op met uw systeembeheerder om te weten hoe u de vereiste machtigingen krijgt.</label>
         <name>addrCopyConAddBtnFls</name>
     </customLabels>
     <customLabels>
@@ -1349,6 +1539,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>alloDefaultGAUMissing</name>
     </customLabels>
     <customLabels>
+        <label>De standaard-GAU is nog niet actief. Stel de {0} GAU in op Actief of wijzig de standaard-GAU in een GAU die actief is.</label>
+        <name>alloDefaultGAUNotActive</name>
+    </customLabels>
+    <customLabels>
         <label>U dient Standaardtoewijzingen in te schakelen om toe te wijzen op betalingsniveau.</label>
         <name>alloDefaultNotEnabled</name>
     </customLabels>
@@ -1401,8 +1595,24 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>alloObjectUnsupported</name>
     </customLabels>
     <customLabels>
+        <label>Het totale aantal toewijzingen voor dit/deze {0} overschrijdt de hoeveelheid. Werk de {0} toewijzingen bij om het totaal gelijk te maken aan de hoeveelheid ({0}).</label>
+        <name>alloOverallocatedError</name>
+    </customLabels>
+    <customLabels>
         <label>De totale toewijzing van betaalde betalingen kan niet groter zijn dan de opportunitytoewijzing voor een GAU.</label>
         <name>alloPaidPmtsExceedsOpp</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een fout opgetreden bij het verwerken van de {0}-record die is gekoppeld aan de toewijzing {1} ({2}). Details: {3}</label>
+        <name>alloPaymentAllocationBatchAllocationError</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een fout opgetreden bij het verwerken van {0} {1}. Details: {2}</label>
+        <name>alloPaymentAllocationBatchRecordError</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een fout opgetreden bij het verwerken van records waarbij bij de eerste poging geen fout is opgetreden. Er zijn geen gegevens opgeslagen.</label>
+        <name>alloPaymentAllocationBatchRetriesExceeded</name>
     </customLabels>
     <customLabels>
         <label>Toewijzingen op Betalingsniveau zijn niet ingeschakeld voor uw organisatie. Probeer in plaats daarvan toe te wijzen op Opportunityniveau.</label>
@@ -1435,6 +1645,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>Zorg ervoor dat deze Toewijzing slechts één bovenliggend object heeft: Betaling, Opportunity, Terugkerende Donatie, of Campagne.</label>
         <name>alloSingleParent</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is opnieuw geprobeerd de toewijzingen te verwerken. Deze keer is het proces voltooid.</label>
+        <name>alloSuccessfulRecordRetry</name>
     </customLabels>
     <customLabels>
         <label>Toewijzingstotalen mogen het bedrag van de gerelateerde Betaling of Opportunity niet overschrijden.</label>
@@ -1661,7 +1875,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
-        <label>Ongeldige Donatiedonor</label>
+        <label>Ongeldige Donateur Donatie</label>
         <name>bdiErrorInvalidDonor</name>
     </customLabels>
     <customLabels>
@@ -2249,7 +2463,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bgeGridTotalCount</name>
     </customLabels>
     <customLabels>
-        <label>Overeenkomst Verwachte Totalen Vereisen is aangevinkt, maar de velden Verwachte Telling van Giften en Verwachte Totale Batchgedrag zijn blanco. Bewerk de batchgegevens en neem het vinkje bij Overeenkomst Verwachte Totalen Vereisen weg of geef waarden op in de gerelateerde velden.</label>
+        <label>Overeenkomst Verwachte Totalen Vereisen is aangevinkt, maar de velden Verwachte aantal giften en Verwachte Totale Batchgedrag zijn blanco. Bewerk de batchgegevens en neem het vinkje bij Overeenkomst Verwachte Totalen Vereisen weg of geef waarden op in de gerelateerde velden.</label>
         <name>bgeGridWarningRequiredTotalsExpected</name>
     </customLabels>
     <customLabels>
@@ -2321,6 +2535,18 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label>U moet een systeembeheerder zijn om deze pagina te kunnen openen.</label>
+        <name>commonAdminPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Uw machtigingen controleren</label>
+        <name>commonAdminPermissionErrorTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Bedrag</label>
+        <name>commonAmount</name>
+    </customLabels>
+    <customLabels>
         <label>fout</label>
         <name>commonAssistiveError</name>
     </customLabels>
@@ -2345,12 +2571,32 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>commonBatches</name>
     </customLabels>
     <customLabels>
+        <label>CVV</label>
+        <name>commonCVV</name>
+    </customLabels>
+    <customLabels>
         <label>Annuleren</label>
         <name>commonCancel</name>
     </customLabels>
     <customLabels>
+        <label>Kaarttype</label>
+        <name>commonCardType</name>
+    </customLabels>
+    <customLabels>
         <label>Klonen</label>
         <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <name>commonConcurrentBatchError</name>
+    </customLabels>
+    <customLabels>
+        <label>Kaartnummer</label>
+        <name>commonCreditNumber</name>
+    </customLabels>
+    <customLabels>
+        <label>Kritieke fout</label>
+        <name>commonCriticalError</name>
     </customLabels>
     <customLabels>
         <label>Standaardwaarde</label>
@@ -2365,12 +2611,40 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>commonEdit</name>
     </customLabels>
     <customLabels>
+        <label>Er is een fout opgetreden bij het onboarden van deze Elevate-klant</label>
+        <name>commonElevateFailedOnboarding</name>
+    </customLabels>
+    <customLabels>
         <label>Fout</label>
         <name>commonError</name>
     </customLabels>
     <customLabels>
         <label>Veldlabel</label>
         <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>GAU-toewijzingen</label>
+        <name>commonGauAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>Algemene accountingeenheid (GAU)</label>
+        <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>De sleutel moet een waarde bevatten en de base64-indeling hebben.</label>
+        <name>commonJWTInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label>De JSON-payload moet een waarde bevatten.</label>
+        <name>commonJWTInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label>Vervaldatum</label>
+        <name>commonMMYY</name>
+    </customLabels>
+    <customLabels>
+        <label>Deze vereiste velden moeten worden ingevuld: {0}</label>
+        <name>commonMissingRequiredFields</name>
     </customLabels>
     <customLabels>
         <label>Nieuwe gift</label>
@@ -2393,12 +2667,28 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>commonOpen</name>
     </customLabels>
     <customLabels>
+        <label>Salesforce.org Elevate</label>
+        <name>commonPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label>Percentage</label>
+        <name>commonPercent</name>
+    </customLabels>
+    <customLabels>
+        <label>U hebt niet de vereiste toegang om deze functie te kunnen gebruiken. Neem contact op met uw Salesforce-beheerder.</label>
+        <name>commonPermissionErrorMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Meer lezen</label>
         <name>commonReadMore</name>
     </customLabels>
     <customLabels>
         <label>Verplicht</label>
         <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Controleformulier</label>
+        <name>commonReviewForm</name>
     </customLabels>
     <customLabels>
         <label>Opslaan</label>
@@ -2449,8 +2739,20 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>conMergeBtnLabel</name>
     </customLabels>
     <customLabels>
+        <label>Kiezen</label>
+        <name>conMergeDRSPickBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer de dubbele recordsets die u wilt samenvoegen</label>
+        <name>conMergeDRSStep1</name>
+    </customLabels>
+    <customLabels>
         <label>Persoonaccounts worden niet ondersteund.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label>&lt;b&gt;Geen dubbele recordsets.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; Er zijn geen dubbele recordsets gevonden. Zorg ervoor dat de regels voor duplicaten zijn ingeschakeld. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Meer informatie&lt;/a&gt;.</label>
+        <name>conMergeErrorNoDRSFound</name>
     </customLabels>
     <customLabels>
         <label>U moet de machtigingen Verwijderen hebben voor Contactpersonen om Contactpersonen te kunnen samenvoegen.</label>
@@ -2461,8 +2763,16 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>conMergeErrorNoDeleteRecAccess</name>
     </customLabels>
     <customLabels>
+        <label>U moet leesmachtigingen hebben voor dubbele recordsets om contactpersonen te kunnen samenvoegen.</label>
+        <name>conMergeErrorNoReadDSRObjPermission</name>
+    </customLabels>
+    <customLabels>
         <label>Gevonden Contactpersonen</label>
         <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label>Dubbele recordsets</label>
+        <name>conMergeFoundDRS</name>
     </customLabels>
     <customLabels>
         <label>Samenvoeging van Contactpersonen</label>
@@ -2477,8 +2787,20 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>conMergePortalUser</name>
     </customLabels>
     <customLabels>
+        <label>Zoek naar specifieke contactpersonen om te ontdekken of daar duplicaten van zijn</label>
+        <name>conMergeSearchConText</name>
+    </customLabels>
+    <customLabels>
         <label>Contactpersonen zoeken</label>
         <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label>Dubbele contactpersonen bekijken</label>
+        <name>conMergeSeeDupConDRS</name>
+    </customLabels>
+    <customLabels>
+        <label>Bekijk alle dubbele contactpersonen die zijn gevonden aan de hand van overeenkomstregels. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Meer informatie &lt;/b&gt;&lt;/a&gt;</label>
+        <name>conMergeSeeDupConText</name>
     </customLabels>
     <customLabels>
         <label>Alles selecteren</label>
@@ -2495,6 +2817,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>Fase Voltooid</label>
         <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label>Te veel dubbele contactpersonen. Gebruik de optie Contactpersonen zoeken om contactpersonen samen te voegen</label>
+        <name>conMergeTooManyContactError</name>
     </customLabels>
     <customLabels>
         <label>Kies deze kolom als de hoofdrecord</label>
@@ -2557,6 +2883,14 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>flsReadAccessError</name>
     </customLabels>
     <customLabels>
+        <label>GAU-toewijzingsfout</label>
+        <name>gauAllocationErrorGeneral</name>
+    </customLabels>
+    <customLabels>
+        <label>Nieuwe toewijzing toevoegen</label>
+        <name>geAddNewAllocation</name>
+    </customLabels>
+    <customLabels>
         <label>Actieve sectie.</label>
         <name>geAssistiveActiveSection</name>
     </customLabels>
@@ -2613,7 +2947,27 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Advanced Form Fields header --></label>
+        <label>Aantal giften</label>
+        <name>geBatchGiftsCount</name>
+    </customLabels>
+    <customLabels>
+        <label>De verwachte cijfers komen niet overeen met het aantal giften of de giftbedragen. Deze waarden moeten overeenkomen voordat u deze batch kunt verwerken.</label>
+        <name>geBatchGiftsExpectedCountOrTotalMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>De verwachte cijfers en het aantal giften en de giftbedragen moeten overeenkomen voordat u deze batch kunt verwerken.</label>
+        <name>geBatchGiftsExpectedTotalsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Ingevoerde giften voor {0}</label>
+        <name>geBatchGiftsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Totaalbedrag van batch</label>
+        <name>geBatchGiftsTotal</name>
+    </customLabels>
+    <customLabels>
+        <label>Voor meer geavanceerde opties voor het invoeren van giften selecteert u velden uit de volgende objectgroepen.</label>
         <name>geBodyAdvancedFieldMapping</name>
     </customLabels>
     <customLabels>
@@ -2637,15 +2991,31 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>geBodyBatchHeaderWarning</name>
     </customLabels>
     <customLabels>
+        <label>De batchtabel wordt onder het giftinvoerformulier weergegeven en bevat de giften uit de batch.</label>
+        <name>geBodyBatchTableColumnsPart1</name>
+    </customLabels>
+    <customLabels>
+        <label>
+        Het gebruik van de volgende velden wordt aanbevolen:
+        &lt;/br&gt;
+        &lt;ul&gt;
+            &lt;li&gt; Naam van donateur: biedt een koppeling naar het organisatieaccount of de contactpersoon die doneert. &lt;/li&gt;
+            &lt;li&gt; Donatienaam: biedt een koppeling naar de opportunity of de betaling van de donatie. &lt;/li&gt;
+            &lt;li&gt; Status- en foutgegevens: informatie over de verwerking van de batch. &lt;/li&gt;
+        &lt;/ul&gt;
+        </label>
+        <name>geBodyBatchTableColumnsPart2</name>
+    </customLabels>
+    <customLabels>
         <label>Selecteer aan deze sectie toe te voegen velden.</label>
         <name>geBodyEmptyFormSection</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Field Bundles header --></label>
+        <label>Elke veldbundel is een beheerde set velden waarmee gebruikers verschillende acties voor het invoeren van giften kunnen uitvoeren.</label>
         <name>geBodyFieldBundlesLeftCol</name>
     </customLabels>
     <customLabels>
-        <label><!-- Body below the Form Fields header --></label>
+        <label>Deze velden worden vaak gebruikt in formulieren voor het opgeven van giften. Aangepaste objectgroepen zijn ook in deze sectie terug te vinden.</label>
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
@@ -2706,12 +3076,20 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
+        <label>U verwerkt geen kaartbetaling voor deze gift.</label>
+        <name>geBodyPaymentNotProcessingTransaction</name>
+    </customLabels>
+    <customLabels>
         <label>Geef details op over deze Sjabloon Opgave van gift.</label>
         <name>geBodyTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
         <label>Een sjabloon is opnieuw bruikbare lay-out van velden voor gegevensinvoer. Bewerk een sjabloon door op de sjabloonnaam te klikken. Of maak anders een nieuwe sjabloon of klik op het vervolgkeuzemenu van een sjabloon voor meer opties. Sjablonen die in gebruik zijn, kunnen niet worden verwijderd.</label>
         <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>De {0}-veldbundel omvat de volgende velden:</label>
+        <name>geBodyWidgetFields</name>
     </customLabels>
     <customLabels>
         <label>Vorige: Formuliervelden</label>
@@ -2722,7 +3100,7 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geButtonBuilderNavBackTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label>Volgende: Koptekst van batch</label>
+        <label>Volgende: Batch-instellingen</label>
         <name>geButtonBuilderNavBatchHeader</name>
     </customLabels>
     <customLabels>
@@ -2740,6 +3118,14 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
     <customLabels>
         <label>Alles samenvouwen</label>
         <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Samengevouwen: Alle velden verborgen</label>
+        <name>geButtonFormFieldsDisplayOptionCollapsed</name>
+    </customLabels>
+    <customLabels>
+        <label>Uitgevouwen: Alle velden zichtbaar</label>
+        <name>geButtonFormFieldsDisplayOptionExpanded</name>
     </customLabels>
     <customLabels>
         <label>Alles uitvouwen</label>
@@ -2782,6 +3168,14 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
+        <label>U kunt het bedrag nu ook op een kaart in rekening laten brengen.</label>
+        <name>geButtonPaymentAlternate</name>
+    </customLabels>
+    <customLabels>
+        <label>Niet in rekening brengen op kaart</label>
+        <name>geButtonPaymentDoNotCharge</name>
+    </customLabels>
+    <customLabels>
         <label>Opslaan en nieuwe gift opgeven</label>
         <name>geButtonSaveNewGift</name>
     </customLabels>
@@ -2794,11 +3188,11 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geDisableGiftEntryInfo</name>
     </customLabels>
     <customLabels>
-        <label>Donaties</label>
+        <label>Donatienaam</label>
         <name>geDonationColumnLabel</name>
     </customLabels>
     <customLabels>
-        <label>Donor</label>
+        <label>Naam van donateur</label>
         <name>geDonorColumnLabel</name>
     </customLabels>
     <customLabels>
@@ -2812,6 +3206,10 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
     <customLabels>
         <label>Totaalbedrag komt niet overeen met {0}</label>
         <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Het bedrag is in rekening gebracht op de kaart, maar er is geen betaling geregistreerd in Salesforce. Los de fouten op en dien het formulier opnieuw in om de donatie in Salesforce te registreren.</label>
+        <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
         <label>Vul dit veld in.</label>
@@ -2834,7 +3232,11 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geErrorExistingTemplateName</name>
     </customLabels>
     <customLabels>
-        <label>U moet de machtiging hebben om alle velden in het formulier te bewerken. Overleg met uw Salesforce-beheerder over het openen van de volgende velden: {0}</label>
+        <label>U kunt uw batchtabelkolommen niet wijzigen.</label>
+        <name>geErrorFLSBatchTableColumns</name>
+    </customLabels>
+    <customLabels>
+        <label>Neem contact op met de Salesforce-beheerder om informatie op te vragen over uw toegang op veldniveau. U moet machtigingen hebben om de volgende velden te kunnen bewerken: {0}</label>
         <name>geErrorFLSBody</name>
     </customLabels>
     <customLabels>
@@ -2846,7 +3248,7 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geErrorFieldPermission</name>
     </customLabels>
     <customLabels>
-        <label>U moet de machtiging hebben om alle objecten in het formulier te bewerken. Overleg met uw Salesforce-beheerder over toegang voor de volgende objecten: {0}</label>
+        <label>Neem contact op met de Salesforce-beheerder om informatie op te vragen over de toegang tot objecten. U moet machtigingen hebben om de volgende objecten te kunnen bewerken: {0}</label>
         <name>geErrorObjectCRUDBody</name>
     </customLabels>
     <customLabels>
@@ -2878,15 +3280,31 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
+        <label>Er is een time-out opgetreden voor de aanvraag om het bedrag in rekening te laten brengen op de kaart.</label>
+        <name>geErrorRequestTimedout</name>
+    </customLabels>
+    <customLabels>
         <label>Verplicht veld</label>
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Name of GAU Allocations field bundle --></label>
-        <name>geGauAllocationsBundle</name>
+        <label>Er is een systeemfout opgetreden voor de donatie van {0} door {1}. Uw beheerder moet transacties controleren in {2} en bepalen of het bedrag in rekening is gebracht op de kaart.</label>
+        <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Header for advanced form fields --></label>
+        <label>Als het bedrag niet in rekening is gebracht op de kaart, voert u de gift en kaartbetaling opnieuw in in Opgave van gift.</label>
+        <name>geErrorUncertainCardChargePart2</name>
+    </customLabels>
+    <customLabels>
+        <label>Als het bedrag in rekening is gebracht op de kaart, noteert u de transactie-ID in {0} en zoekt u naar records met die ID in Salesforce. Werk de gift- en donateurrecords bij als dit nodig is.</label>
+        <name>geErrorUncertainCardChargePart3</name>
+    </customLabels>
+    <customLabels>
+        <label>Zie voor meer informatie de probleemoplossingsdocumentatie voor {0} in de Power of Us Hub.</label>
+        <name>geErrorUncertainCardChargePart4</name>
+    </customLabels>
+    <customLabels>
+        <label>Geavanceerde formuliervelden</label>
         <name>geHeaderAdvancedFormFields</name>
     </customLabels>
     <customLabels>
@@ -2938,6 +3356,10 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geHeaderFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
+        <label>Weergaveopties</label>
+        <name>geHeaderFormFieldsModalDisplayOptionsSection</name>
+    </customLabels>
+    <customLabels>
         <label>Naam van sectie wijzigen</label>
         <name>geHeaderFormFieldsModalRenameSection</name>
     </customLabels>
@@ -2982,6 +3404,10 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geHeaderPageLevelError</name>
     </customLabels>
     <customLabels>
+        <label>Aangeboden door {0}</label>
+        <name>geHeaderPaymentServices</name>
+    </customLabels>
+    <customLabels>
         <label>Opgave van eenmalige gift</label>
         <name>geHeaderSingleGiftEntry</name>
     </customLabels>
@@ -2990,27 +3416,27 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geHeaderTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Account1 Object Group --></label>
+        <label>De velden in deze sectie dienen alleen voor organisatieaccounts. Deze organisatie kan de donateur zijn of gelieerd zijn aan Contact1.</label>
         <name>geHelpTextAccount1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Account2 Object Group --></label>
+        <label>De velden in deze sectie dienen alleen voor organisatieaccounts. Deze organisatie kan gelieerd zijn aan Contact2.</label>
         <name>geHelpTextAccount2Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Address Object Group --></label>
+        <label>De adresrecord die is gekoppeld aan het huishoudenaccount van Contact1. Met NPSP-automatisering wordt dit adres mogelijk ook ingevuld voor het huishouden van Contact1 en alle contactpersonen binnen hetzelfde huishouden. Als u ook gebruikmaakt van het EDA-adresobject, moet u een nieuwe objectgroep maken voor het object en de velden hiervan gebruiken in uw sjabloon.</label>
         <name>geHelpTextAddressMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for GAU Allocation 1 object group --></label>
+        <label>Met deze objectgroep kunt u maar één GAU-toewijzing invoeren. Gebruik deze velden alleen als u aangepaste velden toewijst aan GAU-toewijzingen. Als dit niet het geval is, gebruikt u de veldbundel voor GAU-toewijzingen.</label>
         <name>geHelpTextAllocation1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for GAU Allocation 2 object group --></label>
+        <label>Met deze objectgroep kunt u een tweede GAU-toewijzing invoeren. Gebruik deze velden alleen als u aangepaste velden toewijst aan GAU-toewijzingen. Als dit niet het geval is, gebruikt u de veldbundel voor GAU-toewijzingen.</label>
         <name>geHelpTextAllocation2Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text about GAU Allocation field bundle --></label>
+        <label>Gebruik deze veldbundel om donaties toe te wijzen in meerdere algemene accountingeenheden (GAU).</label>
         <name>geHelpTextAllocationBundle</name>
     </customLabels>
     <customLabels>
@@ -3018,11 +3444,11 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geHelpTextBatchHeaderFieldLabelLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Contact1 Object Group --></label>
+        <label>De primaire contactpersoon in een huishoudenaccount. Deze contactpersoon kan de donateur zijn of gelieerd zijn aan de organisatie in Account1.</label>
         <name>geHelpTextContact1Mapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Contact2 Object Group --></label>
+        <label>De secundaire contactpersoon in het huishoudenaccount van Contact1. Deze contactpersoon kan ook gelieerd zijn aan de organisatie in Account2.</label>
         <name>geHelpTextContact2Mapping</name>
     </customLabels>
     <customLabels>
@@ -3034,8 +3460,20 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geHelpTextFormFieldsFieldLabelLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for Household Object Group --></label>
+        <label>Aanvullende informatie over het huishoudenaccount van Contact1.</label>
         <name>geHelpTextHouseholdMapping</name>
+    </customLabels>
+    <customLabels>
+        <label>Opmerking: deze veldbundel is alleen beschikbaar voor eenmalige giften en wordt niet weergegeven bij het invoeren van giftbatches.</label>
+        <name>geHelpTextPaymentServices</name>
+    </customLabels>
+    <customLabels>
+        <label>De base64-indeling is ongeldig. Het aantal tekens moet een meervoud zijn van 4 en mag alleen de volgende tekens bevatten: [a-z A-Z 0-9 + / =]</label>
+        <name>geJWTUtilInvalidBase64Message</name>
+    </customLabels>
+    <customLabels>
+        <label>De base64url-indeling is ongeldig. Deze mag alleen de volgende tekens bevatten: [a-z A-Z 0-9 _ -]</label>
+        <name>geJWTUtilInvalidBase64UrlMessage</name>
     </customLabels>
     <customLabels>
         <label>Zichtbare velden</label>
@@ -3044,6 +3482,10 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
     <customLabels>
         <label>Beschikbare velden</label>
         <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label>Sectie weergeven als</label>
+        <name>geLabelDisplaySections</name>
     </customLabels>
     <customLabels>
         <label>Naam sectie</label>
@@ -3058,8 +3500,34 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geLabelTemplateInfoNameField</name>
     </customLabels>
     <customLabels>
+        <label>Er is een ongeldige API-sleutel opgegeven voor deze Elevate-klant</label>
+        <name>gePS_IntegrationTestInvalidAPIKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Er zijn ongeldige configuratieparameters opgegeven</label>
+        <name>gePS_IntegrationTestInvalidConfigParams</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een fout opgetreden bij het verwerken van de betaling. Controleer de fout en probeer het opnieuw.
+            U kunt ook Niet in rekening brengen op kaart selecteren om een donatie in te voeren zonder een kaartbetaling te verwerken. {0} fouten:
+            /0x0A/ {1} </label>
+        <name>gePaymentProcessError</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een fout opgetreden bij het verwerken van de transactie.</label>
+        <name>gePaymentProcessingErrorBanner</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een time-out opgetreden voor de aanvraag. Probeer het opnieuw of neem contact op met de Salesforce-beheerder.</label>
+        <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
         <label>Zoeken...</label>
         <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to select batch table columns --></label>
+        <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
         <label>Selecteren...</label>
@@ -3070,12 +3538,24 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geTabBatchHeader</name>
     </customLabels>
     <customLabels>
+        <label>Batch-instellingen</label>
+        <name>geTabBatchSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>Batchtabelkolommen</label>
+        <name>geTabBatchTableColumns</name>
+    </customLabels>
+    <customLabels>
         <label>Formuliervelden</label>
         <name>geTabFormFields</name>
     </customLabels>
     <customLabels>
         <label>Sjablooninfo</label>
         <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Bedrag in rekening brengen op kaart...</label>
+        <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
         <label>{0} item</label>
@@ -3092,6 +3572,26 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
     <customLabels>
         <label>• {0} bijgewerkt</label>
         <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label>Laten we de opportunity bekijken...</label>
+        <name>geTextNavigateToOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label>Klik op Opslaan om de kaartbetaling te verwerken en de donatie te registreren in Salesforce.</label>
+        <name>geTextPaymentsSaveNotice</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwerken...</label>
+        <name>geTextProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label>Opslaan...</label>
+        <name>geTextSaving</name>
+    </customLabels>
+    <customLabels>
+        <label>Bijwerken...</label>
+        <name>geTextUpdating</name>
     </customLabels>
     <customLabels>
         <label>Lijstweergave bijgewerkt.</label>
@@ -3126,8 +3626,24 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geToastTemplateUpdateSuccess</name>
     </customLabels>
     <customLabels>
+        <label>Er is een ongeldige sleutel (leeg) opgegeven, maar er is geen uitzondering geregistreerd</label>
+        <name>geUtilJWTTestInvalidKey</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een ongeldige werkbelasting opgegeven, maar er is geen uitzondering geregistreerd</label>
+        <name>geUtilJWTTestInvalidPayload</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een ongeldige tekenreeks opgegeven, maar er is geen uitzondering geregistreerd</label>
+        <name>geUtilJWTTestInvalidString</name>
+    </customLabels>
+    <customLabels>
         <label>Waarschuwing: met het verwijderen van deze sectie verwijdert u ook verplichte velden uit de sjabloon. Deze velden moeten worden toegevoegd aan een andere sectie voordat u de sjabloon kunt opslaan.</label>
         <name>geWarningFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label>Omdat er aan deze donatie ten minste één GAU-toewijzing is toegewezen, kunnen bepaalde velden niet worden bijgewerkt.</label>
+        <name>geWarningGauAllocFieldUpdatesDisabled</name>
     </customLabels>
     <customLabels>
         <label>Giftverwerking ondersteunt het Individuele (&apos;Bucket&apos;) Accountmodel niet.</label>
@@ -3394,6 +3910,18 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
+        <label>Er zijn geen statuscontroles uitgevoerd voor de recordgegevens.</label>
+        <name>healthLabelDataBatchNotRun</name>
+    </customLabels>
+    <customLabels>
+        <label>Statuscontroles voor recordgegevens uitschakelen</label>
+        <name>healthLabelDisableRecordBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen.</label>
+        <name>healthLabelDisableRecordBatchDescription</name>
+    </customLabels>
+    <customLabels>
         <label>De ontvanger van Foutmeldingen is geldig.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
@@ -3418,7 +3946,7 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>healthLabelHHObjData</name>
     </customLabels>
     <customLabels>
-        <label>Controle van de Toestand verifieert of al uw NPSP-Instellingen geldig zijn en zoekt naar problemen in uw Account-gerelateerde gegevens. Na voltooiing kunt u de resultaten, met inbegrip van gedetailleerde informatie over enige mislukkingen, onderaan weergeven.</label>
+        <label>Controle van de Toestand verifieert of al uw NPSP-instellingen geldig zijn en zoekt naar problemen in uw recordgegevens. Na voltooiing kunt u de resultaten, met inbegrip van gedetailleerde informatie over mogelijke fouten, onderaan weergeven.</label>
         <name>healthLabelIntro</name>
     </customLabels>
     <customLabels>
@@ -3702,6 +4230,14 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>isARequiredField</name>
     </customLabels>
     <customLabels>
+        <label>Onjuist</label>
+        <name>labelBooleanFalse</name>
+    </customLabels>
+    <customLabels>
+        <label>Juist</label>
+        <name>labelBooleanTrue</name>
+    </customLabels>
+    <customLabels>
         <label>Eerste</label>
         <name>labelListViewFirst</name>
     </customLabels>
@@ -3756,6 +4292,10 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
     <customLabels>
         <label>Land</label>
         <name>lblCountry</name>
+    </customLabels>
+    <customLabels>
+        <label>Munteenheid</label>
+        <name>lblCurrency</name>
     </customLabels>
     <customLabels>
         <label>Contactpersoon verwijderen</label>
@@ -4540,7 +5080,7 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>stgDefaultValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- The user do not have delete permission to delete custom setting. --></label>
+        <label>U hebt niet de vereiste systeemmachtigingen om deze instelling te kunnen verwijderen. Neem voor hulp contact op met de systeembeheerder.</label>
         <name>stgDeletePermissionError</name>
     </customLabels>
     <customLabels>
@@ -4585,7 +5125,7 @@ Door Standaard NPSP-Taken Niet Automatisch Plannen te selecteren, laat u NPSP we
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- The user do not have edit permission to edit custom setting. --></label>
+        <label>U hebt niet de vereiste systeemmachtigingen om deze instelling te kunnen bewerken. Neem voor hulp contact op met de systeembeheerder.</label>
         <name>stgEditPermissionError</name>
     </customLabels>
     <customLabels>
@@ -4807,6 +5347,12 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
     <customLabels>
         <label>Indien aangevinkt, worden Gesloten/Gewonnen Opportunitytotalen getotaliseerd naar Contactpersoonrecords op basis van toegewezen Opportunitycontactpersoonrollen. Soft Credit-totaliseringen worden enkel uitgevoerd gedurende nachtelijke batches, maar u kunt ze handmatig uitvoeren vanuit de instellingen voor Batch Totaliseringsdonaties.</label>
         <name>stgHelpEnableSoftCreditRollups</name>
+    </customLabels>
+    <customLabels>
+        <label>Dit hulpprogramma voert een batchproces uit waarbij de volgende geplande termijnopportunities voor terugkerende donaties worden gemaakt en werkt het statistiekenveld voor terugkerende donaties bij.
+        &lt;br/&gt;&lt;br/&gt;
+        Dit proces kan enige tijd duren, maar u kunt deze pagina sluiten. Het proces wordt dan op de achtergrond uitgevoerd.</label>
+        <name>stgHelpEnhancedRDBatch</name>
     </customLabels>
     <customLabels>
         <label>Het Foutenlogboek toont een gedetailleerde lijst met fouten voor probleemoplossing. Fouten worden alleen geregistreerd als de opties voor Foutenafhandeling en Fouten Opslaan ingeschakeld zijn in Systeemhulpmiddelen | Foutmeldingen.</label>
@@ -5744,6 +6290,10 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
         <name>stgNavRD2Enablement</name>
     </customLabels>
     <customLabels>
+        <label>Status-naar-staat-toewijzing</label>
+        <name>stgNavRD2StatusMapping</name>
+    </customLabels>
+    <customLabels>
         <label>Batch Terugkerende Donaties</label>
         <name>stgNavRDBatch</name>
     </customLabels>
@@ -5814,6 +6364,18 @@ Opmerking: Het tabblad NPSP-Instellingen is zichtbaar in de toepassing Nonprofit
     <customLabels>
         <label>Power of Us Hub</label>
         <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label>Als u een terugkerende donatie maakt, vult NPSP het veld Naam automatisch in op basis van de opgegeven naamindeling. Kies Automatisch benoemen uitschakelen om deze functie uit te schakelen.</label>
+        <name>stgRDNamingDescription</name>
+    </customLabels>
+    <customLabels>
+        <label>Automatisch benoemen uitschakelen</label>
+        <name>stgRDNamingDisable</name>
+    </customLabels>
+    <customLabels>
+        <label>Indeling naam van terugkerende donatie</label>
+        <name>stgRDNamingOptionLabel</name>
     </customLabels>
     <customLabels>
         <label>Opnieuw instellen</label>

@@ -5,6 +5,81 @@
         <name>Payment_WizardFS</name>
     </fieldSets>
     <fields>
+        <help>La fecha y la hora en las que se autorizó la transacción.</help>
+        <label>Fecha de autorización</label>
+        <name>Authorized_Date__c</name>
+    </fields>
+    <fields>
+        <help>La fecha y hora exactas (hasta el milisegundo) procedente de la pasarela de pago en las que se autorizó correctamente esta transacción.</help>
+        <label>Marca de tiempo UTC de autorización</label>
+        <name>Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>El mes de caducidad de la tarjeta empleada para esta transacción.</help>
+        <label>Mes de caducidad de tarjeta</label>
+        <name>Card_Expiration_Month__c</name>
+    </fields>
+    <fields>
+        <help>El año de caducidad de la tarjeta empleada para esta transacción.</help>
+        <label>Año de caducidad de tarjeta</label>
+        <name>Card_Expiration_Year__c</name>
+    </fields>
+    <fields>
+        <help>Los últimos cuatro dígitos de la tarjeta empleada para esta transacción.</help>
+        <label>Últimos 4 dígitos de tarjeta</label>
+        <name>Card_Last_4__c</name>
+    </fields>
+    <fields>
+        <help>La red de tarjeta de la tarjeta empleada para esta transacción.</help>
+        <label>Red de tarjeta</label>
+        <name>Card_Network__c</name>
+    </fields>
+    <fields>
+        <help>Solo para reembolsos. Muestra el Id. de la transacción de pago original procedente de Elevate.</help>
+        <label>Id. de Pago original de Elevate</label>
+        <name>Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>La fecha y la hora en las que se creó la transacción.</help>
+        <label>Fecha de creación de pago de Elevate</label>
+        <name>Elevate_Payment_Created_Date__c</name>
+    </fields>
+    <fields>
+        <help>La fecha y hora exactas (hasta el milisegundo) procedente de Elevate en que se creó la transacción.</help>
+        <label>Marca tiempo UTC creación pago Elevate</label>
+        <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>El Id. exclusivo para esta transacción procedente de Elevate.</help>
+        <label>Id. de Pago de Elevate</label>
+        <name>Elevate_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>El Id. de la pasarela de pago que procesó esta transacción.</help>
+        <label>Id. de Pasarela</label>
+        <name>Gateway_ID__c</name>
+    </fields>
+    <fields>
+        <help>El Id. exclusivo para esta transacción procedente de la pasarela de pago.</help>
+        <label>Id. de Pago por pasarela</label>
+        <name>Gateway_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>El Id. del sistema donde se inició la transacción.</help>
+        <label>Id. de Origen</label>
+        <name>Origin_ID__c</name>
+    </fields>
+    <fields>
+        <help>El nombre del sistema donde se inició la transacción.</help>
+        <label>Nombre de origen</label>
+        <name>Origin_Name__c</name>
+    </fields>
+    <fields>
+        <help>El tipo de sistema utilizado para iniciar la transacción. Los valores disponibles incluyen Núcleo de participación, Página de donaciones, API de pagos, Salesforce.</help>
+        <label>Tipo de origen</label>
+        <name>Origin_Type__c</name>
+    </fields>
+    <fields>
         <help>Fecha de acuse de recibo</help>
         <label>Fecha de acuse de recibo del pago</label>
         <name>Payment_Acknowledged_Date__c</name>
@@ -25,6 +100,11 @@
             <masterLabel>To Be Acknowledged</masterLabel>
             <translation>Para acusar recibo</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>Indica el tipo de transacción.</help>
+        <label>Tipo</label>
+        <name>Type__c</name>
     </fields>
     <quickActions>
         <label>Actualización rápida</label>

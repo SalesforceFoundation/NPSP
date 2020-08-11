@@ -1,0 +1,23 @@
+
+  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
+  <fields>
+    <label>廃止:Always use last day of month</label>
+    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+  </fields>
+  <fields>
+    <label>廃止:単価</label>
+    <name>npe03__Installment_Amount__c</name>
+  </fields>
+  <fields>
+    <label>廃止:状況</label>
+    <name>npe03__Open_Ended_Status__c</name>
+  </fields>
+  <fields>
+    <label>廃止:スケジュールタイプ</label>
+    <name>npe03__Schedule_Type__c</name>
+  </fields>
+  <fields>
+    <label>廃止:合計</label>
+    <name>npe03__Total__c</name>
+  </fields>
+  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->

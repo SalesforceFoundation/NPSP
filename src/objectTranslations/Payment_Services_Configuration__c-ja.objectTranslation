@@ -2,34 +2,34 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Payment Services Configuration --></value>
+        <value>支払サービス設定</value>
     </caseValues>
     <fields>
-        <label><!-- Is Secret --></label>
+        <label>秘密</label>
         <name>Is_Secret__c</name>
     </fields>
     <fields>
-        <label><!-- Key --></label>
+        <label>キー</label>
         <name>Key__c</name>
     </fields>
     <fields>
-        <label><!-- Service Key --></label>
+        <label>サービスキー</label>
         <name>Service_Key__c</name>
     </fields>
     <fields>
-        <label><!-- Service --></label>
+        <label>サービス</label>
         <name>Service__c</name>
     </fields>
     <fields>
-        <label><!-- Value --></label>
+        <label>値</label>
         <name>Value__c</name>
     </fields>
     <layouts>
         <layout>Payment Configuration Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>カスタムリンク</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Payment Services Configuration Name --></nameFieldLabel>
+    <nameFieldLabel>支払サービス設定名</nameFieldLabel>
 </CustomObjectTranslation>
