@@ -39,8 +39,8 @@
 */
 global with sharing class BDI_DataImportService {
     private static DescribeFieldResult batchNumberDescribe = UTIL_Describe.getFieldDescribe(
-        UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
-        UTIL_Namespace.StrTokenNSPrefix('NPSP_Data_Import_Batch__c')
+        String.valueOf(DataImport__c.SObjectType),
+        String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c)
     );
 
     public static final String BATCH_NUMBER_QUERY_STR = String.join(new List<String>{
