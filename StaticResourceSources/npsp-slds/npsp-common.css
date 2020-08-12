@@ -19,8 +19,12 @@ input.lookupInputSLDS {
     margin-right: -30px !important;
 }
 body .dateInput input[type="text"], .slds-vf-scope .dateInput input[type="text"] {
+    margin-left: 0;
     width: 100%;
     margin-right: -30px;
+}
+.slds-vf-scope div + .lookupInput {
+    margin-left: 0; !important;
 }
 
 /* Needed to eliminate excessive gap between label and info icon after conversion to lightning stylesheets */
@@ -55,7 +59,7 @@ span.dateFormat {
 .dependentMultiPicklistFixup option {
     padding: 8px;
 }
-.datePicker {
+body .datePicker, .slds-vf-scope .datePicker {
     z-index: 10000;
 }
 
