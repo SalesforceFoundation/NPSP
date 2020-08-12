@@ -1,29 +1,41 @@
+/**
+* @author Salesforce.org
+* @date 2020
+* @group HGE
+* @group-content
+* @description class to create the Einstein OCR JWT
+*/
 public class EOCR_JWT {
     
-    public String alg {get;set;}
-    public String iss {get;set;}
-    public String sub {get;set;}
-    public String aud {get;set;}
-    public String exp {get;set;}
-    public String iat {get;set;}
-    public Map<String,String> claims {get;set;}
-    public Integer validFor {get;set;}
-    public String cert {get;set;}
-    public String pkcs8 {get;set;}
-    public String privateKey {get;set;}
-    
+    public String alg { get; set; }
+    public String iss { get; set; }
+    public String sub { get; set; }
+    public String aud { get; set; }
+    public String exp { get; set; }
+    public String iat { get; set; }
+    public Map<String,String> claims { get; set; }
+    public Integer validFor { get; set; }
+    public String cert { get; set; }
+    public String pkcs8 { get; set; }
+    public String privateKey { get; set; }
     
     public static final String HS256 = 'HS256';
     public static final String RS256 = 'RS256';
     public static final String NONE = 'none';
 
-    
+    /*
+    * @description constructor
+    * @param String the algorithm to be used 
+    * @param Integer the lifespan of the jwt in seconds
+    */
     public EOCR_JWT(String alg, Integer validFor) {
         this.alg = alg;
         this.validFor = validFor;
     }
     
-    
+    /*
+    * @description method to issue the JWT
+    */
     public String issue() {
     
         String jwt = '';
@@ -70,16 +82,19 @@ public class EOCR_JWT {
         }
         
         return jwt;
-    
     }
     
-
+    /*
+    * @description method to encode binary input into base64 string
+    * @param Blob the binary input
+    * @return String the base64 encoded string
+    */
     public String base64URLencode(Blob input){ 
         String output = encodingUtil.base64Encode(input);
         output = output.replace('+', '-');
         output = output.replace('/', '_');
-        while ( output.endsWith('=')){
-            output = output.subString(0,output.length()-1);
+        while (output.endsWith('=')) {
+            output = output.subString(0, output.length()-1);
         }
         return output;
     }
