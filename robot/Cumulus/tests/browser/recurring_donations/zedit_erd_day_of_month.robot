@@ -36,7 +36,7 @@ Setup Test Data
 
 Edit Day Of Month For Enhanced Recurring donation record of type open
     [Documentation]               After creating an open recurring donation using API, An edit action is performed
-     ...                          To update the day of month field . A validation is then performed to esure that the
+     ...                          To update the day of month field . A validation is then performed to ensure that the
      ...                          Edit did not result in duplicate opportunities getting created. Assert is made to
      ...                          Ensure there is only one Opportunity
 
@@ -56,7 +56,8 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     Wait Until Loading Is Complete
     #Update only Day Of Month Field on the edit modal
     Edit Recurring Donation Status
-    ...                                     Day Of Month=1
+        ...                                 Recurring Period=Monthly
+        ...                                 Day of Month=1
 
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
     Validate Related Record Count           Opportunities                                                    1
