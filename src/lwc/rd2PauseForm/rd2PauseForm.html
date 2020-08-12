@@ -68,22 +68,18 @@
 
                         <lightning-layout-item padding="horizontal-large" class="slds-p-top_large" size="12">
                             <template if:true={selectedRowsSummary}>
-                                <em style="font-style: italic;">
-                                    <lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
+                                <em><lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
                                         data-qa-locator="richtext Row Summary">
-                                    </lightning-formatted-rich-text>
-                                </em>
+                                </lightning-formatted-rich-text></em>
                             </template>
                         </lightning-layout-item>
 
                         <lightning-layout-item padding="horizontal-large" class="slds-p-top_small" size="12">
                             <template if:true={firstDonationDateMessage}>
-                                <em style="font-weight: bold;">
-                                    <lightning-formatted-rich-text value={firstDonationDateMessage}
+                                <b><lightning-formatted-rich-text value={firstDonationDateMessage}
                                         data-id="firstDonationDateMessage"
                                         data-qa-locator="richtext First Donation Date Message">
-                                    </lightning-formatted-rich-text>
-                                </em>
+                                </lightning-formatted-rich-text></b>
                             </template>
                         </lightning-layout-item>
 
