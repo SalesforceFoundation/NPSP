@@ -1,0 +1,186 @@
+# based on https://docs.google.com/spreadsheets/d/1Ve8UzPNpO6zx1Jd4Oy7Wg9o4HZWJ2wSopEOAqxR7H0I/edit?ts=5e2f4842#gid=1747801046
+
+- object: General_Accounting_Unit__c
+  nickname: theRdGau
+  just_once: True
+  fields:
+    name: The RD GAU
+    description__c: ${{fake.paragraph}}
+
+- object: General_Accounting_Unit__c
+  nickname: theOppGau
+  just_once: True
+  fields:
+    name: The Opp GAU
+    description__c: ${{fake.paragraph}}
+
+- object: General_Accounting_Unit__c
+  count: 20
+  fields:
+    name: The ${{fake.word}} ${{fake.word}} Program
+
+- object: Campaign
+  nickname: theCampaign
+  just_once: True
+  fields:
+    name: The ${{fake.word}} Campaign
+    IsActive: True
+
+# For each contact:
+#   - Create 0 or 1 Enhanced Recurring Donation
+#       - 95% of them are for this Household Contact
+#       - 5% of them have this Contact and an Organization Account
+#       - DateEstablished/EffectiveDate is within the last 2 years
+#       - 5% of them have an Allocation and/or a linked Campaign
+#       - 95% of RD's are Open, the other 5% is Fixed length
+#       - There is a random distribution of Installment Periods, DayOfMonth, etc.
+#   - Create 0 to 5 Opportunities
+#       - CloseDate between 3 years ago and 6 months in the future (ClosedWon if in the past)
+- object: Contact
+  fields:
+    FirstName:
+      fake: first_name
+    LastName:
+      fake: last_name
+    Email:
+      fake: free_email
+    Phone:
+      fake: phone_number
+  friends:
+    - object: npe03__Recurring_Donation__c
+      count:
+        random_number:
+          min: 0
+          max: 1
+      fields:
+        npe03__Contact__c:
+          reference: Contact
+        npe03__Organization__c:
+          random_choice:
+            - choice:
+                probability: 5%
+                pick:
+                  - object: Account
+                    fields:
+                      description: Account related to Recurring Donation
+                      Name:
+                        fake: company
+                      Phone:
+                        fake: phone_number
+        npe03__Amount__c:
+          random_number:
+            min: 1
+            max: 100
+        npe03__Date_Established__c:
+          date_between:
+            start_date: -800d
+            end_date: -14d
+        StartDate__c: ${{this.npe03__Date_Established__c}}
+        Status__c: Active
+        PaymentMethod__c:
+          random_choice:
+            - Credit Card
+            - Check
+        RecurringType__c:
+          random_choice:
+            - choice:
+                probability: 95%
+                pick: Open
+            - choice:
+                probability: 5%
+                pick: Fixed
+        npe03__Installment_Period__c:
+          random_choice:
+            - choice:
+                probability: 90%
+                pick: Monthly
+            - choice:
+                probability: 5%
+                pick: Weekly
+            - choice:
+                probability: 5%
+                pick: 1st and 15th
+        InstallmentFrequency__c: 1
+        Day_of_Month__c:
+          if:
+            - choice:
+                when: ${{npe03__Installment_Period__c=='Monthly'}}
+                pick:
+                  random_choice:
+                    - 1
+                    - 15
+                    - 30
+                    - Last_Day
+            - choice:
+                pick: ""
+        npe03__Installments__c:
+          if:
+            - choice:
+                when: ${{RecurringType__c=='Fixed'}}
+                pick: 24
+            - choice:
+                pick: 0
+        npe03__Recurring_Donation_Campaign__c:
+          random_choice:
+            - choice:
+                probability: 5%
+                pick:
+                  - reference: theCampaign
+            - choice:
+                probability: 95%
+                pick: ""
+      friends:
+        - object: __hidden_grouper
+          fields:
+            __fake_field:
+              - random_choice:
+                  - choice:
+                      probability: 5%
+                      pick:
+                        - object: Allocation__c
+                          fields:
+                            General_Accounting_Unit__c:
+                              reference: theRdGau
+                            Recurring_Donation__c:
+                              reference: npe03__Recurring_Donation__c
+                            Percent__c:
+                              random_number:
+                                min: 1
+                                max: 99
+                  - choice:
+                      probability: 95%
+                      pick: ${{None}}
+    - object: Opportunity
+      count:
+        random_number:
+          min: 0
+          max: 5
+      fields:
+        CloseDate:
+          date_between:
+            start_date: -900d
+            end_date: +90d
+        Amount:
+          random_number:
+            min: 10
+            max: 1000
+        Primary_Contact__c:
+          reference: Contact
+        Name: ${{Contact.LastName}} ${{Contact.FirstName}} - $${{this.Amount}}
+        StageName:
+          if:
+            - choice:
+                when: ${{CloseDate <= today}}
+                pick: "Closed Won"
+            - choice:
+                when:
+                pick: "Pledged"
+      friends:
+        - object: Allocation__c
+          fields:
+            General_Accounting_Unit__c:
+              reference: theOppGau
+            Opportunity__c:
+              reference: Opportunity
+            Amount__c: ${{Opportunity.Amount}}
+            Percent__c: 100
