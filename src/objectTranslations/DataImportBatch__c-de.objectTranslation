@@ -74,6 +74,28 @@
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
+        <help>Der Batch-Status basiert auf dem Importstatus der NPSP-Datenimport-Datensätze im Batch. Wenn das Importieren eines Datensatzes fehlschlägt, ist der Status des gesamten Batches &quot;Fehler – Überprüfung erforderlich&quot;.</help>
+        <label>Batch-Status</label>
+        <name>Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation>Abgeschlossen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation>Fehler – Überprüfung erforderlich</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Offen</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Liste der API-Namen für die in der Schenkungs-Batchtabelle enthaltenen Felder. Als JSON gespeichert.</help>
+        <label>Spalten der Batchtabelle</label>
+        <name>Batch_Table_Columns__c</name>
+    </fields>
+    <fields>
         <help>Ein optionales Feld mit einer eindeutigen Kennung zum Kontakt-Abgleich</help>
         <label>Benutzerdef. eindeutige Kontakt-Kennung</label>
         <name>Contact_Custom_Unique_ID__c</name>
@@ -144,7 +166,7 @@
         <relationshipLabel>NPSP-Datenimportbatches</relationshipLabel>
     </fields>
     <fields>
-        <help>Dieser Batch ist zur Verw. mit der Batch-Schenkungseingabe vorges. Batches werden autom. als Schenkungs-Batches gekennz., wenn sie über eine Batch-Schenkungseingabe-Registerkarte einger. werden. Die manuelle Änd. dieses Felds kann unerwünschte Konsequenzen haben.</help>
+        <help>Dieser Batch ist zur Verw. mit Batch-Schenkungseingabe vorges. Batches werden autom. als Schenkungs-Batches gekennz., wenn sie über eine Batch-Schenkungseingabe-Registerkarte einger. werden. Manuelles Ändern dieses Felds kann unerwünschte Folgen haben.</help>
         <label>Schenkungs-Batch</label>
         <name>GiftBatch__c</name>
     </fields>
@@ -175,18 +197,13 @@
     </fields>
     <fields>
         <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Schenkungen und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
-        <label>Übereinst. d. erw. Gesamtbeträge erford.</label>
+        <label>Übereinstimmung der Summen erforderlich</label>
         <name>RequireTotalMatch__c</name>
     </fields>
     <fields>
         <help>Bei Akt. berechn. NPSP die Spender-Rollups, wenn Spenden verarbeitet werden. Wenn nicht, werden die Spender-Rollups während des nächtl. gepl. Stand‘auftrags berechnet. Die Verarbeitung dieses Batches kann durch Ausw. dieses Kontrollk. langsamer werden.</help>
         <label>Spenden-Rollups mit Batch berechnen</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <fields>
-        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."</help>
-        <label>Batch Status</label>
-        <name>Batch_Status__c</name>
     </fields>
     <gender>Masculine</gender>
     <layouts>

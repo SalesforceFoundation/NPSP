@@ -13,10 +13,10 @@
         <name>Manage_Household_Custom</name>
     </fieldSets>
     <fields>
-        <help>この団体が作成されたバッチ。</help>
+        <help>この取引先が作成されたバッチ。</help>
         <label>一括処理</label>
         <name>Batch__c</name>
-        <relationshipLabel>団体</relationshipLabel>
+        <relationshipLabel>取引先</relationshipLabel>
     </fields>
     <fields>
         <help>この団体が資金調達する一般的プログラム領域。</help>
@@ -122,7 +122,7 @@
         <name>Membership_Status__c</name>
     </fields>
     <fields>
-        <help>世帯団体での世帯内の個人の数。</help>
+        <help>世帯内の取引先責任者の数。</help>
         <label>世帯メンバー数</label>
         <name>Number_of_Household_Members__c</name>
     </fields>
