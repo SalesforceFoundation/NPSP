@@ -1,5 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import LANG from '@salesforce/i18n/lang';
+import LOCALE from '@salesforce/i18n/locale';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 
@@ -324,7 +324,7 @@ export default class Rd2PauseForm extends LightningElement {
 
             if (firstDateAfterPause !== null) {
                 //Helps with converting the date into the format according to the user’s language.
-                const dateTimeFormat = new Intl.DateTimeFormat(LANG);
+                const dateTimeFormat = new Intl.DateTimeFormat(LOCALE);
 
                 //Convert the date 'YYYY-MM-DD' into the local time by appending ' 00:00',
                 //to keep the date value as specified in the string (no date offset due to timezone).
