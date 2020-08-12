@@ -1955,11 +1955,11 @@ pre {
                   API Check And Enable Gift Entry
                 </td>
                 <td class="kwargs">
-
+                  
                 </td>
                 <td class="kwdoc"><p>Checks through API if Advanced Mapping and Gift Entry are already enabled. If yes then does nothing. If either of them are not enabled then calls the Enable Gift Entry keyword to enable them</p></td>
               </tr>
-
+              
               <tr class="kwrow" id="NPSP.robot.API Create Campaign">
                 <td class="kwname">
                   API Create Campaign
@@ -2359,31 +2359,31 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"></td>
               </tr>
-
+              
               <tr class="kwrow" id="NPSP.robot.API Query Record">
                 <td class="kwname">
                   API Query Record
                 </td>
                 <td class="kwargs">
-
-                  <i>object_name</i>,
-
+                  
+                  <i>object_name</i>, 
+                  
                   <i>**fields</i>
-
+                  
                 </td>
                 <td class="kwdoc"><p>Queries the given object table by using key,value pair passed and returns the entire record</p></td>
               </tr>
-
+              
               <tr class="kwrow" id="NPSP.robot.API Query Recurrring Donation Settings For RD2 Enablement">
                 <td class="kwname">
                   API Query Recurrring Donation Settings For RD2 Enablement
                 </td>
                 <td class="kwargs">
-
+                  
                 </td>
                 <td class="kwdoc"><p>Queries the Recurring Donation settings object for the RD2 Enabled status and returns the boolean status value</p></td>
               </tr>
-
+              
               <tr class="kwrow" id="NPSP.robot.Capture Screenshot and Delete Records and Close Browser">
                 <td class="kwname">
                   Capture Screenshot and Delete Records and Close Browser
@@ -2543,13 +2543,13 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Run Recurring Donations Batch
                 </td>
                 <td class="kwargs">
-
+                  
                   <i>type</i>
-
+                  
                 </td>
                 <td class="kwdoc"><p>Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type</p></td>
               </tr>
-
+              
               <tr class="kwrow" id="NPSP.robot.Scroll Page To Location">
                 <td class="kwname">
                   Scroll Page To Location
@@ -4061,6 +4061,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Verify that the no. of gifts on the page match with count</p></td>
               </tr>
               
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Table Field Values">
+                <td class="kwname">
+                  Verify Table Field Values
+                </td>
+                <td class="kwargs">
+                  
+                  <i>table</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies that table has given field name with value. Arguments are: table=table name, fieldname=fieldvalue Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |</p></td>
+              </tr>
+              
             </tbody>
           </table>
         </div> 
@@ -5375,6 +5389,21 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 </pre></td>
               </tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Get Next Payment Date Number">
+                <td class="kwname">
+                  Get Next Payment Date Number
+                </td>
+                <td class="kwargs">
+                  
+                  <i>paynum</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Returns the next payment date from the list of payment schedules taking in the payment number as input |Example</p>
+<pre>
+ Get Next Payment Date Number   2   #gets the 2nd installment payment date form the list of payment dates
+</pre></td>
+              </tr>
+              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -5470,13 +5499,13 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Click Rd2 Modal Button
                 </td>
                 <td class="kwargs">
-
+                  
                   <i>name</i>
-
+                  
                 </td>
                 <td class="kwdoc"><p>Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button</p></td>
               </tr>
-
+              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Log Current Page Object">
                 <td class="kwname">
                   Log Current Page Object
@@ -5493,27 +5522,27 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   Populate Rd2 Modal Form
                 </td>
                 <td class="kwargs">
-
+                  
                   <i>**kwargs</i>
-
+                  
                 </td>
                 <td class="kwdoc"><p>Populates the RD2 modal form fields with the respective fields and values</p></td>
               </tr>
-
+              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Select Value From Rd2 Modal Dropdown">
                 <td class="kwname">
                   Select Value From Rd2 Modal Dropdown
                 </td>
                 <td class="kwargs">
-
-                  <i>dropdown</i>,
-
+                  
+                  <i>dropdown</i>, 
+                  
                   <i>value</i>
-
+                  
                 </td>
                 <td class="kwdoc"><p>Selects given value from the dropdown field on the rd2 modal</p></td>
               </tr>
-
+              
             </tbody>
           </table>
         </div> 
@@ -5687,7 +5716,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Friday August 07, 12:07 AM - cumulusci v3.16.0.dev3
+      Generated on Wednesday August 12, 10:54 AM - cumulusci v3.16.0
     </div>
   </body>
 </html>
