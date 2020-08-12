@@ -114,6 +114,8 @@ export default class EocrGiftEntry extends LightningElement {
     }
 
     submitFiles = async() => {
+        //TODO
+        // and device and other
         processMobileGift({checkBase64: this.checkBase64.substring(1, 10)});       
     }
 
