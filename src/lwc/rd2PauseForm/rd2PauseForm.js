@@ -1,4 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
+import LANG from '@salesforce/i18n/lang';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 
@@ -201,7 +202,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description Handles the row selection event fired on 
+     * @description Handles the row selection event fired on
      * both select and deselect of all and individual installments
      */
     handleRowSelection(event) {
@@ -274,7 +275,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description Refreshes notification messages displayed 
+     * @description Refreshes notification messages displayed
      * based on the currently selected installments to skip
      */
     refreshSummaries() {
@@ -301,10 +302,10 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-     * @description Constructs the message displaying the date 
+     * @description Constructs the message displaying the date
      * of the first installment *after* the pause ends.
      * If the pause does not exist or it is being deactivated, no date message is displayed.
-     * If all 12 installments are selected, then first donation date is 
+     * If all 12 installments are selected, then first donation date is
      * the date of the 13th installment that is not displayed.
      */
     refreshFirstDonationDate() {
@@ -322,7 +323,16 @@ export default class Rd2PauseForm extends LightningElement {
             }
 
             if (firstDateAfterPause !== null) {
-                this.firstDonationDateMessage = this.labels.firstDonationDateMessage.replace('{0}', firstDateAfterPause);
+                //Helps with converting the date into the format according to the user’s language.
+                const dateTimeFormat = new Intl.DateTimeFormat(LANG);
+
+                //Convert the date 'YYYY-MM-DD' into the local time by appending ' 00:00',
+                //to keep the date value as specified in the string (no date offset due to timezone).
+                const date = new Date(firstDateAfterPause + ' 00:00');
+
+                this.firstDonationDateMessage = this.labels.firstDonationDateMessage.replace(
+                    '{0}', dateTimeFormat.format(date)
+                );
             }
         }
     }
@@ -397,7 +407,7 @@ export default class Rd2PauseForm extends LightningElement {
     }
 
     /***
-    * @description Records the latest Paused Reason value 
+    * @description Records the latest Paused Reason value
     * and checks if the [Save] button should be enabled.
     */
     handlePausedReasonChange(event) {
