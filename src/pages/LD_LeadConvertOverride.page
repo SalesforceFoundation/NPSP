@@ -11,7 +11,7 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-    <body>
+    <body class="slds-scope">
         <apex:form id="pbEdit" styleClass="slds-form_stacked">
             <div class="hide-when-modal-open">
 

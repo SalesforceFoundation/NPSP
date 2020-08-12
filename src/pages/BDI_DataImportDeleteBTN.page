@@ -12,7 +12,7 @@
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-    <body>
+    <body class="slds-scope">
         <div class="slds-scope slds-p-bottom_x-large">
             <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
                 <c:UTIL_PageHeader headerLabel="{!$ObjectType.DataImport__c.Label}"

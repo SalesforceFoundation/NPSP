@@ -33,7 +33,7 @@
         }
     </style>
 
-    <body>
+    <body class="slds-scope">
         <div class="slds-scope">
             <apex:form >
 

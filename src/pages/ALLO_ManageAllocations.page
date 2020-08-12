@@ -161,7 +161,7 @@
 
     </script>
 
-    <body>
+    <body class="slds-scope">
         <apex:form id="theForm">
                 <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
                 <!-- PAGE HEADER -->

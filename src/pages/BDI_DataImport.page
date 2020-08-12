@@ -52,7 +52,7 @@
         }
     </script>
 
-    <body>
+    <body class="slds-scope">
         <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom_x-large">
 
             <!-- PAGE HEADER -->
