@@ -92,9 +92,8 @@ global with sharing class BDI_DataImportService {
             'Status__c <> \' + BDI_DataImport_API.bdiImported + \'',
             'Id =: dataImportIds'
         };
-        String dataImportQuery;
 
-        dataImportQuery = new UTIL_Query()
+        return new UTIL_Query()
             .withSelectFields(listStrDataImportFields)
             .withFrom(DataImport__c.SObjectType)
             .withWhere(whereClauses)
@@ -102,8 +101,6 @@ global with sharing class BDI_DataImportService {
             // help users figure out import problems by importing in a consistent order.
             .withOrderBy('Name')
             .build();
-
-        return dataImportQuery;
     }
 
     /*******************************************************************************************************
@@ -117,7 +114,6 @@ global with sharing class BDI_DataImportService {
             BATCH_NUMBER_QUERY_STR
         };
         String batchIdClause;
-        String batchQuery;
 
         if (batchId != null) {
             batchIdClause = 'NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
@@ -129,7 +125,7 @@ global with sharing class BDI_DataImportService {
             batchIdClause
         };
 
-        batchQuery = new UTIL_Query()
+        return new UTIL_Query()
             .withSelectFields(selectClause)
             .withFrom(DataImport__c.SObjectType)
             .withWhere(whereClauses)
@@ -137,8 +133,6 @@ global with sharing class BDI_DataImportService {
                 // help users figure out import problems by importing in a consistent order.
             .withOrderBy('Name')
             .build();
-
-        return batchQuery;
     }
 
     /*******************************************************************************************************
