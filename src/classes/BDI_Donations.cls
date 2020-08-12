@@ -258,6 +258,7 @@ public class BDI_Donations {
     * @return Boolean TRUE when the Data Import Batch has a batch number, is not a dry run,
     * and the current SObject is an Opportunity or Opportunity Payment
     */
+    @TestVisible
     private Boolean shouldSetDonationBatchNumber(SObject targetObject, DataImport__c dataImport) {
         SObjectType objectType = targetObject.getSObjectType();
 
