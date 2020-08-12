@@ -43,7 +43,7 @@ global with sharing class BDI_DataImportService {
         String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c)
     );
 
-    public static final String BATCH_NUMBER_QUERY_STR = String.join(new List<String>{
+    public static final String DATAIMPORT_BATCH_NUMBER_FIELD = String.join(new List<String>{
         batchNumberDescribe.getRelationshipName(),
         String.valueOf(DataImportBatch__c.Batch_Number__c)
     }, '.');
@@ -111,7 +111,7 @@ global with sharing class BDI_DataImportService {
     public static String strSoqlForBatchProcess(Id batchId) {
         List<String> selectClause = new List<String>{
             String.join(listStrDataImportFields, ','),
-            BATCH_NUMBER_QUERY_STR
+                DATAIMPORT_BATCH_NUMBER_FIELD
         };
         String batchIdClause;
 
