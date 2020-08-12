@@ -5604,6 +5604,24 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Move the {0} field down.</value>
     </labels>
     <labels>
+        <fullName>geAssistiveFieldRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field has been set as required</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>{0} is now required.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFieldNotRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field is no longer required</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>{0} is no longer required.</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveFieldUp</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5679,12 +5697,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Move the {0} section up.</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>geAssistiveShowMenu</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button/Picklist for selecting a list view</shortDescription>
+        <value>Show menu.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSetFieldOptional</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: explains the function of the required checkbox if set as required</shortDescription>
+        <value>Select to set {0} as optional.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSetFieldRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: explains the function of the required checkbox if set as required</shortDescription>
         <value>Show menu.</value>
     </labels>
     <labels>
