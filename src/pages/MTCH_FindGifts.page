@@ -1,6 +1,6 @@
 <apex:page standardController="Opportunity"
     extensions="MTCH_FindGifts_CTRL"
-    standardStylesheets="false"
+    standardStylesheets="true"
     lightningStylesheets="true"
     docType="html-5.0"
     applyBodyTag="false">
@@ -26,6 +26,10 @@
         #page-header-fixed {
             background-color: inherit;
             z-index: 100;
+        }
+
+        .margin-left-zero {
+            margin-left: 0 !important;
         }
     </style>
 
@@ -188,9 +192,9 @@
                                         <div class="slds-col_padded-medium slds-col_padded-around">
                                             <div class="slds-form_stacked">
                                                 <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="AccountId" styleClass="lookupInput slds-input_small" />
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="ReportsToId" styleClass="lookupInput slds-input_small"
+                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="ReportsToId" styleClass="lookupInput slds-input_small margin-left-zero"
                                                                   labelOverride="{!$ObjectType.Opportunity.fields.Primary_Contact__c.Label}"/>
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Amount__c" styleClass="lookupInput slds-input_small"
+                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Amount__c" styleClass="lookupInput slds-input_small margin-left-zero"
                                                                   labelOverride="{!$ObjectType.Opportunity.fields.Amount.Label}"/>
                                             </div>
                                         </div>
@@ -199,7 +203,7 @@
                                             <div class="slds-form_stacked">
                                                 <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
                                                                   labelOverride="{!$Label.mtchCloseDateStart}"/>
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="Last_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
+                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="Last_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small margin-left-zero"
                                                                   labelOverride="{!$Label.mtchCloseDateEnd}"/>
                                             </div>
                                         </div>
