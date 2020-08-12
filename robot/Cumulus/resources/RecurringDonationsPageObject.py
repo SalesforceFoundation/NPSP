@@ -182,6 +182,22 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     label, "contains", value, section
                 )
 
+    def get_next_payment_date_number(self, paynum):
+        """Returns the next payment date from the list of payment schedules taking in the payment number as input
+           |Example
+           |  Get Next Payment Date Number   2   #gets the 2nd installment payment date form the list of payment dates
+        """
+        datefield = npsp_lex_locators["erd"]["installment_date"].format(int(paynum))
+        installment_date = self.selenium.get_webelement(datefield).text
+        
+        # This is to format the date by removing the trailing 0 which is being the common format across
+        # 01/06/2020 -> 1/6/2020
+        tokens = installment_date.split('/')
+        dd = tokens[0].replace("0","")
+        mm = tokens[1].replace("0","")
+        newString = f"{dd}/{mm}/{tokens[2]}"
+        return newString
+
     @capture_screenshot_on_error
     def validate_upcoming_schedules(self, num_payments, startdate, dayofmonth):
         """Takes in the parameter (number of payments) and the donation start date
