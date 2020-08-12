@@ -40,7 +40,7 @@ class NPSP(SalesforceRobotLibraryBase):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
-
+# This  is a test comment
     def __init__(self, debug=False):
         self.debug = debug
         self.current_page = None
@@ -1316,6 +1316,7 @@ class NPSP(SalesforceRobotLibraryBase):
         self.builtin.set_suite_variable('${data}', data)
 
         return data
+
 
     def delete_record(self,value):
         """Select the row to be deleted on the listing page, click delete
