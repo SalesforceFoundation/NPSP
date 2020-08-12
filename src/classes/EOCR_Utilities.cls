@@ -17,6 +17,8 @@ public with sharing class EOCR_Utilities {
     public static final string ISSUER = 'developer.force.com';
     public static final Integer REQUEST_TIMEOUT = 30000;
 
+    public static final string MISSING_CONFIGURATION = 'Could not retrieve the Einstein OCR configuration.';
+
     // custom exception class for Einstein OCR
     public class EinsteinAuthException extends Exception {}
 
@@ -62,7 +64,7 @@ public with sharing class EOCR_Utilities {
     public static void analyzeGift() {
         String giftName = 'Scanned Gift-00003';
         String base64ImageContent = getBase64ImageContent(giftName);
-        //system.debug('base64ImageContent = ' + base64ImageContent);
+        // system.debug('base64ImageContent = ' + base64ImageContent);
 
         analyzeText(base64ImageContent);
 
@@ -94,7 +96,7 @@ public with sharing class EOCR_Utilities {
     * @param String task (template)
     * @param String encoded image
     */
-    public static void makeRequest(String model, String task, String base64ImageContent) {
+    public static HttpResponse makeRequest(String model, String task, String base64ImageContent) {
         // get token
         String accessToken = getAccessToken();
 
@@ -123,6 +125,7 @@ public with sharing class EOCR_Utilities {
         // TODO
         // add error handling
         // System.debug('response = ' + response.getBody());
+        return response;
     }
 
     /*
@@ -172,7 +175,7 @@ public with sharing class EOCR_Utilities {
         List<Einstein_OCR_Configuration__c> configs = [SELECT Id, Private_Key__c, Email__c
                                                         FROM Einstein_OCR_Configuration__c];
         if (configs.isEmpty()) {
-            throw new EinsteinAuthException('Could not retrieve the Einstein OCR configuration.');
+            throw new EinsteinAuthException(MISSING_CONFIGURATION);
         }
 
         Einstein_OCR_Configuration__c config = configs[0];
