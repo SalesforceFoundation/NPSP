@@ -58,12 +58,13 @@ Edit Opportunity Stage
 
 *** Test Cases ***
 
-Edit An Enhanced Recurring donation record of type open
+Edit Day Of Month For Enhanced Recurring donation record of type open
     [Documentation]               After creating an open recurring donation using API,
-     ...                          The test ensures that the record can be edited from the ui.
-     ...                          A status of closed and the reason for closure can be
-     ...                          Specified. Verifies the opportunity status reflects the
-     ...                          Right status after closing
+     ...                          The test ensures that there is only one opportunity.
+     ...                          Closes the exisitng opportunity and verifies there is
+     ...                          a new opportunity created. Edits the day of month on
+     ...                          the recurring donation and verifies the closing dates
+     ...                          for both the opportunities.
 
 
     [tags]                             unstable               W-040346            feature:RD2
