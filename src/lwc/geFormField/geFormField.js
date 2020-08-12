@@ -309,7 +309,7 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    get isRecordType() {
+    get isLookupRecordType() {
         return this.fieldType === LOOKUP_TYPE && this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
@@ -448,7 +448,7 @@ export default class GeFormField extends LightningElement {
             } else {
                 this.value = value.value || value;
 
-                if (this.isRecordType || this.isLookup) {
+                if (this.isLookupRecordType || this.isLookup) {
                     if (value && !value.displayName) {
                         // If the RecordTypeId field for a target record is being
                         // loaded with only the Id (like when a Lookup field is
@@ -492,7 +492,7 @@ export default class GeFormField extends LightningElement {
         lookup.reset();
         if(this.isLookup) {
             lookup.value = value;
-        } else if(this.isRecordType) {
+        } else if(this.isLookupRecordType) {
 
             let displayValue;
             const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
@@ -523,10 +523,10 @@ export default class GeFormField extends LightningElement {
         }
 
         // reset lookups and recordtype fields
-        if (this.isRecordType || this.isLookup) {
+        if (this.isLookupRecordType || this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if(this.isRecordType) {
+            if(this.isLookupRecordType) {
                 // Using setTimeout here ensures that this recordTypeId
                 // will be set on sibling fields after they are reset by queueing the event.
                 setTimeout(() => {
