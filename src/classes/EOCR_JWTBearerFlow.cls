@@ -1,4 +1,18 @@
+/**
+* @author Salesforce.org
+* @date 2020
+* @group GE
+* @group-content
+* @description class to get the Eistein OCR JWT using the AUTH endpoint
+*/
 public class EOCR_JWTBearerFlow {
+
+    /*
+    * @description method get the access token
+    * @param String the endpoint url
+    * @param EOCR_JWT the jwt
+    * @return String the access token
+    */
     public static String getAccessToken(String tokenEndpoint, EOCR_JWT jwt) {
     
         String access_token = null;

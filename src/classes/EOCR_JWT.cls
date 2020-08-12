@@ -1,9 +1,9 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group HGE
+* @group GE
 * @group-content
-* @description class to create the Einstein OCR JWT
+* @description class to store the Einstein OCR JWT
 */
 public class EOCR_JWT {
     
