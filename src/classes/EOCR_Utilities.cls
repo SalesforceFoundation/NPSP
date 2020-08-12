@@ -49,7 +49,7 @@ public with sharing class EOCR_Utilities {
     * @param String other document id
     */
     @AuraEnabled
-    public static void processMobileGift(String checkDocumentId, 
+    public static void processMobileGiftLightningFileUpload(String checkDocumentId, 
                                 String deviceDocumentId,
                                 String otherDocumentId) {
 
@@ -64,7 +64,7 @@ public with sharing class EOCR_Utilities {
     public static void analyzeGift() {
         String giftName = 'Scanned Gift-00003';
         String base64ImageContent = getBase64ImageContent(giftName);
-        // system.debug('base64ImageContent = ' + base64ImageContent);
+        //system.debug('base64ImageContent = ' + base64ImageContent);
 
         analyzeText(base64ImageContent);
 
@@ -124,7 +124,7 @@ public with sharing class EOCR_Utilities {
 
         // TODO
         // add error handling
-        // System.debug('response = ' + response.getBody());
+        //System.debug('response = ' + response.getBody());
         return response;
     }
 

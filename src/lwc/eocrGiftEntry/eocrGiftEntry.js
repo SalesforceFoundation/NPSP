@@ -6,8 +6,8 @@ export default class EocrGiftEntry extends LightningElement {
 
     @api readyToEnter = false;
     checkBase64;
-    // deviceBase64;
-    // otherBase64;
+    deviceBase64;
+    otherBase64;
 
     checkDocumentId;
     deviceDocumentId;
@@ -16,8 +16,8 @@ export default class EocrGiftEntry extends LightningElement {
     enterGifts() {
         this.readyToEnter = true;
         this.checkBase64 = '';
-        // this.deviceBase64 = '';
-        // this.otherBase64 = '';
+        this.deviceBase64 = '';
+        this.otherBase64 = '';
         this.checkDocumentId = '';
         this.deviceDocumentId = '';
         this.otherDocumentId = '';
@@ -51,12 +51,6 @@ export default class EocrGiftEntry extends LightningElement {
         this.otherDocumentId = file.documentId;
     }
 
-    // handler for lightning-upload
-    // handleUploadFinished(event) {
-    //     const files = event.detail.files;
-    //     alert(JSON.stringify(files));
-    // }
-
 
     showToast(title, message, variant, mode, messageData) {
         const event = new ShowToastEvent({
@@ -78,7 +72,6 @@ export default class EocrGiftEntry extends LightningElement {
             // convert image file to base64 string
             let r = reader.result;
             componentThis.checkBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
-            console.log(componentThis.checkBase64);
           }, false);
 
           if (file) {
@@ -86,49 +79,42 @@ export default class EocrGiftEntry extends LightningElement {
           }
     }
 
-    // uploadDevice() {
-    //     const componentThis = this;
-    //     const file = this.template.querySelector('[data-id="device-upload"]').files[0];
+    uploadDevice() {
+        const componentThis = this;
+        const file = this.template.querySelector('[data-id="device-upload"]').files[0];
 
-    //     const reader = new FileReader();
-    //     reader.addEventListener("load", function () {
-    //         // convert image file to base64 string
-    //         let r = reader.result;
-    //         componentThis.deviceBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
-    //         //console.log(componentThis.checkBase64);
+        const reader = new FileReader();
+        reader.addEventListener("load", function () {
+            // convert image file to base64 string
+            let r = reader.result;
+            componentThis.deviceBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
 
-    //       }, false);
+          }, false);
 
-    //       if (file) {
-    //         reader.readAsArrayBuffer(file);
-    //       }
-    // }
+          if (file) {
+            reader.readAsArrayBuffer(file);
+          }
+    }
 
-    // uploadOther() {
-    //     const componentThis = this;
-    //     const file = this.template.querySelector('[data-id="other-upload"]').files[0];
+    uploadOther() {
+        const componentThis = this;
+        const file = this.template.querySelector('[data-id="other-upload"]').files[0];
 
-    //     const reader = new FileReader();
-    //     reader.addEventListener("load", function () {
-    //         // convert image file to base64 string
-    //         let r = reader.result;
-    //         componentThis.otherBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
-    //         //console.log(componentThis.checkBase64);
+        const reader = new FileReader();
+        reader.addEventListener("load", function () {
+            // convert image file to base64 string
+            let r = reader.result;
+            componentThis.otherBase64 = btoa(String.fromCharCode(...new Uint8Array(r)));
 
-    //       }, false);
+          }, false);
 
-    //       if (file) {
-    //         reader.readAsArrayBuffer(file);
-    //       }
-    // }
+          if (file) {
+            reader.readAsArrayBuffer(file);
+          }
+    }
 
     submitFiles = async() => {
-        processMobileGift({checkBase64: this.checkBase64.substring(1, 10)});
-        //alert('submitting files');
-        // alert(this.checkDocumentId);
-        // alert(this.deviceDocumentId);
-        // alert(this.otherDocumentId);
-       
+        processMobileGift({checkBase64: this.checkBase64.substring(1, 10)});       
     }
 
 }
