@@ -98,6 +98,11 @@ private with sharing class CONV_Account_Conversion_CTRL_TEST {
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
+        // Force the household record type since i'll be needed for conversion
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(CAO_Constants.HH_ACCOUNT_RT_DEVELOPER_NAME);
+        npe01__Contacts_and_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
+        cs.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
+
         //create a new user w/ sysadmin profile
         User u = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
         u.IsActive = true;

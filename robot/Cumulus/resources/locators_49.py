@@ -62,6 +62,7 @@ npsp_lex_locators={
     'link-text':'//a[contains(text(),"{}")]',
     'link-title':'//a[@title="{}"]',
     'link-contains':'//button[.//span[contains(text(),"{}")]]',
+    'label':'//label[text()="{}"]',
     'checkbox':{
         'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
         'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/following-sibling::div//input',
@@ -273,16 +274,21 @@ npsp_lex_locators={
         'id':'//*[contains(@data-qa-locator,"{}")]',
         'button':'//*[contains(@data-qa-locator,"{}")]/button',
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
+        'field_span':'//*[contains(@data-qa-locator,"{}")]//child::span[text()="{}"]',
         'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
         'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
         'field_alert':"//*[contains(@data-qa-locator,'{}')]/div[@role='alert' and text()='{}']",
         'count':'//lightning-layout[.//span[text()="{}"]]//child::lightning-layout-item//strong[text()="{}"]',
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
+        'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
         'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",
+        'modal_dropdown_selector': "//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger') and @role='combobox']",
+        'modal_input_field': "//label[text()='{}']/following-sibling::div/input",
+        'modal_selection_value': "//lightning-base-combobox-item[@data-value='{}']",
         'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
         'text_message':'//span[contains(@class,"slds-text-color_error")]',
         'rd2_installed': "//c-progress-ring/following-sibling::lightning-formatted-text[text() = 'Enable Enhanced Recurring Donations']",

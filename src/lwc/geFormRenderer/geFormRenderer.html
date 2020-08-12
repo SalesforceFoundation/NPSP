@@ -52,16 +52,12 @@
 
             <template if:false={hasPurchaseCallTimedout}>
                 <template if:false={isPermissionError}>
-                    <template if:true={hasPendingDonations}>
-                        <lightning-layout-item size='12'>
-                            <c-ge-review-donations ontogglemodal={toggleModal}
-                                                   onchangeselecteddonation={handleChangeSelectedDonation}
-                                                   opportunities={opportunities}
-                                                   donor-id={selectedDonorId}
-                                                   selected-donation={selectedDonation}>
-                            </c-ge-review-donations>
-                        </lightning-layout-item>
-                    </template>
+                    <lightning-layout-item size='12'>
+                        <c-ge-review-donations ontogglemodal={toggleModal}
+                                               onchangeselecteddonation={handleChangeSelectedDonation}
+                                               donor-id={selectedDonorId}>
+                        </c-ge-review-donations>
+                    </lightning-layout-item>
                 </template>
 
                 <lightning-layout-item size='12'

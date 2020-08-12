@@ -59,10 +59,11 @@ API Modify Recurring Donation
     ...              | Recurring Donation ID   |
 
     [Arguments]             ${rd_id}      &{fields}
+    ${ns} =                 Get NPSP Namespace Prefix
     Salesforce Update       npe03__Recurring_Donation__c     ${rd_id}
     ...                     &{fields}
     @{records} =  Salesforce Query      npe03__Recurring_Donation__c
-    ...              select=StartDate__c,npe03__Amount__c
+    ...              select=${ns}StartDate__c,npe03__Amount__c
     ...              Id=${rd_id}
     &{rd} =          Get From List  ${records}  0
     [return]         &{rd}
@@ -428,13 +429,28 @@ Enable RD2QA
     Run Task       execute_anon
     ...            apex= ${apex3}
 
+API Query Recurrring Donation Settings For RD2 Enablement
+    [Documentation]    Queries the Recurring Donation settings object for the RD2 Enabled status and returns the boolean status value
+    ${ns} =            Get Npsp Namespace Prefix
+    @{record} =        Salesforce Query      npe03__Recurring_Donations_Settings__c
+    ...                select=${ns}IsRecurringDonations2Enabled__c
+    &{rd2_enabled} =                 Get From List  ${record}  0
+    [return]           ${rd2_enabled}[${ns}IsRecurringDonations2Enabled__c]
+
 Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
-    Go To Page                Custom         NPSP_Settings
-    Open Main Menu            Recurring Donations
-    ${rd2_enabled} =          Check Rd2 Is Enabled
-    Run Keyword if            "${rd2_enabled}"!="True"
+    ${is_rd2_enabled} =       API Query Recurrring Donation Settings For RD2 Enablement
+    Run Keyword if            "${is_rd2_enabled}"!="True"
     ...                       Enable RD2QA
+
+Run Recurring Donations Batch
+    [Documentation]              Triggers Recurring Donations Batch Job And Waits For the Batch Job To Complete Depending On the Type
+    [Arguments]                  ${type}
+    Open NPSP Settings           Bulk Data Processes               Recurring Donations Batch
+    Click Settings Button        idPanelRDBatch                    Run Batch
+    Run Keyword if               "${type}"!="RD2"
+    ...                          Wait For Batch To Process         RD_RecurringDonations_BATCH       Completed
+    ...     ELSE                 Wait For Batch To Process         RD2_OpportunityEvaluation_BATCH   Completed
 
 API Get Id
     [Documentation]         Returns the ID of a record identified by the given field_name and field_value input for a specific object
@@ -451,3 +467,27 @@ Enable Gift Entry
     Open Main Menu                          System Tools
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
     Enable Gift Entry If Not Enabled    
+
+API Query Record
+    [Documentation]    Queries the given object table by using key,value pair passed and returns the entire record
+    [Arguments]        ${object_name}             &{fields}
+    @{records} =       Salesforce Query           ${object_name}
+    ...                select=Id
+    ...                &{fields}
+    &{Id} =            Get From List  ${records}  0
+    &{myrecord} =      Salesforce Get  ${object_name}  ${Id}[Id]
+    [return]           &{myrecord}
+
+API Check And Enable Gift Entry
+    [Documentation]    Checks through API if Advanced Mapping and Gift Entry are already enabled. If yes then does nothing.
+    ...                If either of them are not enabled then calls the Enable Gift Entry keyword to enable them
+    ${ns} =             Get NPSP Namespace Prefix
+    @{records} =       Salesforce Query           ${ns}Data_Import_Settings__c
+    ...                select=${ns}Field_Mapping_Method__c    
+    &{am} =            Get From List  ${records}  0
+    @{records} =       Salesforce Query           ${ns}Gift_Entry_Settings__c
+    ...                select=${ns}Enable_Gift_Entry__c   
+    &{ge} =            Get From List  ${records}  0
+    Run Keyword if     '${am}[${ns}Field_Mapping_Method__c]'!='Data Import Field Mapping' or '${ge}[${ns}Enable_Gift_Entry__c]'!='True'
+    ...                Enable Gift Entry
+

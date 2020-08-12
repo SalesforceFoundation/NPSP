@@ -234,9 +234,9 @@ public with sharing class GE_FormRendererService {
         }
 
         String relationshipField;
-        if (donorType == 'Account1') {
+        if (donorType == SObjectType.Account.Name) {
             relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
-        } else if (donorType == 'Contact1') {
+        } else if (donorType == SObjectType.Contact.Name) {
             relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
         }
 
@@ -250,7 +250,8 @@ public with sharing class GE_FormRendererService {
                                 'FROM npe01__OppPayment__c ' +
                                 'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
                                 'AND npe01__Written_Off__c = false ' +
-                                'AND npe01__Paid__c = false';
+                                'AND npe01__Paid__c = false ' +
+                                'WITH SECURITY_ENFORCED';
 
         try {
             // CRUD / FLS of this operation already verified by checkCRUDFLS()
@@ -260,7 +261,6 @@ public with sharing class GE_FormRendererService {
                 oppIdsWithUnpaidPayments.add(payment.npe01__Opportunity__c);
             }
 
-            // We want to include Open Opportunities, as well as Closed Opportunities with unpaid payments
             String opportunitySOQL = 'SELECT Id, ' +
                 'Name, ' +
                 'StageName, ' +
@@ -282,7 +282,8 @@ public with sharing class GE_FormRendererService {
                 'FROM Opportunity ' +
                 'WHERE ' + relationshipField + ' = :donorId ' +
                 'AND IsClosed = false ' +
-                'ORDER BY CloseDate ASC ';
+                'WITH SECURITY_ENFORCED ' +
+                'ORDER BY CloseDate ASC';
 
             // CRUD / FLS of this operation already verified by checkCRUDFLS()
             List<Opportunity> openOpportunities = Database.query(opportunitySOQL);

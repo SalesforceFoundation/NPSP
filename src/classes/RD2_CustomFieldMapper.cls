@@ -94,6 +94,14 @@ public inherited sharing class RD2_CustomFieldMapper {
     }
 
     /**
+     * @description Returns mapped field names on Recurring Donation SObject
+     * @return Set<String>
+     */
+    public Set<String> getRdFieldNames() {
+        return rdFieldNames;
+    }
+
+    /**
      * @description Returns mapped field names on Opportunity SObject
      * @return Set<String>
      */

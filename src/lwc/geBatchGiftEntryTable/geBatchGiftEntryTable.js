@@ -24,9 +24,12 @@ import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_RECORD_TYPE_NAME
+    from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
+const REFERENCE = 'REFERENCE';
 
 const columnTypeByDescribeType = {
     'DATE': 'date-local',
@@ -423,7 +426,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getColumn(element, fieldWrapper) {
-        const isReferenceField = element.dataType === 'REFERENCE';
+        const isReferenceField = element.dataType === REFERENCE &&
+            fieldWrapper.Source_Field_API_Name !== DONATION_RECORD_TYPE_NAME.fieldApiName;
+
         const columnFieldName =
             fieldWrapper.Source_Field_API_Name.toLowerCase().endsWith('id') ?
             fieldWrapper.Source_Field_API_Name.slice(0, -2) :

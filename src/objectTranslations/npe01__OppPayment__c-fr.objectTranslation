@@ -5,6 +5,81 @@
         <name>Payment_WizardFS</name>
     </fieldSets>
     <fields>
+        <help>La date et l’heure auxquelles la transaction a été autorisée.</help>
+        <label>Date autorisée</label>
+        <name>Authorized_Date__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure exactes (jusqu’à la milliseconde) de la passerelle de paiement auxquelles cette transaction a été autorisée.</help>
+        <label>Horodatage UTC autorisé</label>
+        <name>Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>Le mois d’expiration de la carte utilisée pour cette transaction.</help>
+        <label>Mois d’expiration de la carte</label>
+        <name>Card_Expiration_Month__c</name>
+    </fields>
+    <fields>
+        <help>L’année d’expiration de la carte utilisée pour cette transaction.</help>
+        <label>Année d’expiration de la carte</label>
+        <name>Card_Expiration_Year__c</name>
+    </fields>
+    <fields>
+        <help>Les quatre derniers chiffres de la carte utilisée pour cette transaction.</help>
+        <label>4 derniers chiffres de la carte</label>
+        <name>Card_Last_4__c</name>
+    </fields>
+    <fields>
+        <help>Le réseau de carte de la carte utilisée pour cette transaction.</help>
+        <label>Réseau de la carte</label>
+        <name>Card_Network__c</name>
+    </fields>
+    <fields>
+        <help>Uniquement pour les remboursements. Affiche l’ID de la transaction de paiement d’origine d’Elevate.</help>
+        <label>ID de paiement d’origine d’Elevate</label>
+        <name>Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure auxquelles la transaction a été créée.</help>
+        <label>Date de création du paiement Elevate</label>
+        <name>Elevate_Payment_Created_Date__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure exactes (jusqu’à la milliseconde) d’Elevate auxquelles la transaction a été créée.</help>
+        <label>Horodatage UTC création paiement Elevate</label>
+        <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>L’ID unique pour cette transaction d’Elevate.</help>
+        <label>ID de paiement Elevate</label>
+        <name>Elevate_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>L’ID de la passerelle de paiement qui a traité cette transaction.</help>
+        <label>ID de passerelle</label>
+        <name>Gateway_ID__c</name>
+    </fields>
+    <fields>
+        <help>L’ID unique pour cette transaction de la passerelle de paiement.</help>
+        <label>ID de la passerelle de paiement</label>
+        <name>Gateway_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>L’ID du système sur lequel la transaction a été initiée.</help>
+        <label>ID d’origine</label>
+        <name>Origin_ID__c</name>
+    </fields>
+    <fields>
+        <help>Le nom du système sur lequel la transaction a été initiée.</help>
+        <label>Nom d’origine</label>
+        <name>Origin_Name__c</name>
+    </fields>
+    <fields>
+        <help>Le type de système utilisé pour initier la transaction. Les valeurs disponibles incluent Engagement Hub, Page de dons, API de paiement, Salesforce.</help>
+        <label>Type d’origine</label>
+        <name>Origin_Type__c</name>
+    </fields>
+    <fields>
         <help>Date de confirmation</help>
         <label>Date de confirmation du paiement</label>
         <name>Payment_Acknowledged_Date__c</name>
@@ -25,6 +100,11 @@
             <masterLabel>To Be Acknowledged</masterLabel>
             <translation>À confirmer</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>Indique le type de transaction.</help>
+        <label>Type</label>
+        <name>Type__c</name>
     </fields>
     <quickActions>
         <label>Mise à jour rapide</label>

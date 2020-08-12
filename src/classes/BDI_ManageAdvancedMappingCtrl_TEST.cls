@@ -101,7 +101,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     */
     @isTest
     static void userIsAdmin() {
-        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 
         System.runAs(adminUser) {
             Boolean isAdmin = BDI_ManageAdvancedMappingCtrl.isAdminUser(UserInfo.getUserId());
@@ -115,7 +115,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     */
     @isTest
     static void userIsNotAdmin() {
-        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Standard User');
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
         System.runAs(standardUser) {
             Boolean isAdmin = BDI_ManageAdvancedMappingCtrl.isAdminUser(UserInfo.getUserId());

@@ -1,6 +1,5 @@
 import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { format, getNamespace } from 'c/utilCommon';
@@ -104,13 +103,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * registerPostMessageListener method.
     */
     buildVisualforceOriginUrl(domain) {
-        let url = `https://${domain}--c.visualforce.com`
-        if (TemplateBuilderService.namespaceWrapper) {
-            const currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+        let url = `https://${domain}--c.visualforce.com`;
 
-            if (currentNamespace) {
-                url = url.replace('--c', `--${currentNamespace}`);
-            }
+        const currentNamespace = getNamespace(DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
+        if (currentNamespace) {
+            url = url.replace('--c', `--${currentNamespace}`);
         }
 
         return url;

@@ -20,6 +20,7 @@ from simple_salesforce import SalesforceResourceNotFound
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 from cumulusci.robotframework.utils import capture_screenshot_on_error
+from cumulusci.robotframework import locator_manager
 from email.mime import text
 
 from cumulusci.tasks.apex.anon import AnonymousApexTask
@@ -52,6 +53,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
         self._init_locators()
+        locator_manager.register_locators("npsp",npsp_lex_locators)
 
     def _init_locators(self):
         try:
@@ -360,7 +362,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Validates header value"""   
         locator= npsp_lex_locators['header'].format(value)
         self.selenium.page_should_contain_element(locator)    
-        
+
+    @capture_screenshot_on_error    
     def verify_related_list(self,list_name,status,name):   
         """If status is 'contains' then the specified related list should contain name
                         'does not contain' then the specified related list should not contain name"""
@@ -1430,8 +1433,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                                 print ("class name for key {} did not match with field type supported by this keyword".format(key))
                                      
             else:
-                raise Exception("Locator for {} is not found on the page".format(key))   
-     
+                raise Exception("Locator for {} is not found on the page".format(key))
+
+
     def verify_toast_message(self,value):
         """Verifies that toast contains specified value"""       
         locator=npsp_lex_locators["toast-msg"]
@@ -1583,7 +1587,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_special_button(self,title):
         """This keyword is similar to click button but uses set focus to button and javascript
         In the cases where javascript is being triggered on moving away from field, 
-        click button doesn't seem to work in headless mode"""
+        click button doesn't seem to work in headless mode, hence using actionchains moving focus out of field 
+        and clicking on screen before performing actual click for next element"""
+        actions = ActionChains(self.selenium.driver)
+        actions.move_by_offset(0, 20).click().perform()
         locator=npsp_lex_locators['button-with-text'].format(title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.scroll_element_into_view(locator)
