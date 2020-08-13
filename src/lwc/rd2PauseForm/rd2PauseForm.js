@@ -13,10 +13,11 @@ import saveButton from '@salesforce/label/c.stgBtnSave';
 import okButton from '@salesforce/label/c.stgLabelOK';
 import selectedRowsSummaryPlural from '@salesforce/label/c.RD2_PauseSelectedInstallmentTextPlural';
 import selectedRowsSummarySingular from '@salesforce/label/c.RD2_PauseSelectedInstallmentTextSingular';
+import firstDonationDateMessage from '@salesforce/label/c.RD2_PauseFirstDonationDateDynamicText';
 import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage';
 import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
 import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
-import firstDonationDateMessage from '@salesforce/label/c.RD2_PauseFirstDonationDateDynamicText';
+import elevateNotSupported from '@salesforce/label/c.RD2_ElevateNotSupported';
 import permissionRequired from '@salesforce/label/c.RD2_PausePermissionRequired';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 
@@ -31,6 +32,7 @@ export default class Rd2PauseForm extends LightningElement {
         description,
         loadingMessage,
         cancelButton,
+        elevateNotSupported,
         saveButton,
         okButton,
         selectedRowsSummaryPlural,
@@ -47,8 +49,11 @@ export default class Rd2PauseForm extends LightningElement {
     recordName;
 
     @track isLoading = true;
-    @track hasAccess = true;
-    @track isRDClosed;
+    @track permissions = {
+        hasAccess: false,
+        isBlocked: false,
+        blockedReason: ''
+    };
     @track isSaveDisplayed;
     @track isSaveDisabled = false;
     @track pageHeader = '';
@@ -103,7 +108,7 @@ export default class Rd2PauseForm extends LightningElement {
             .catch(error => {
                 this.installments = null;
 
-                if (this.isRDClosed !== true && this.hasAccess !== false) {
+                if (this.permissions.isBlocked !== true && this.permissions.hasAccess !== false) {
                     this.handleError(error);
                 }
             });
@@ -119,14 +124,19 @@ export default class Rd2PauseForm extends LightningElement {
             .then(response => {
                 const pauseData = JSON.parse(response);
 
-                this.hasAccess = pauseData.hasAccess;
-                this.isRDClosed = pauseData.isRDClosed;
+                this.permissions.hasAccess = pauseData.hasAccess;
+                this.permissions.isBlocked = pauseData.isRDClosed || pauseData.isElevateRecord;
                 this.pausedReason = pauseData.pausedReason;
                 this.scheduleId = pauseData.scheduleId;
 
-                if (!this.hasAccess) {
+                if (!this.permissions.hasAccess) {
                     this.error.detail = this.labels.permissionRequired;
                     this.handleErrorDisplay();
+                }
+                if (this.permissions.isBlocked) {
+                    this.permissions.blockedReason = (pauseData.isElevateRecord)
+                        ? this.labels.elevateNotSupported
+                        : this.labels.rdClosedMessage;
                 }
             })
             .catch(error => {
@@ -342,7 +352,7 @@ export default class Rd2PauseForm extends LightningElement {
     * or RD closed error, [OK] button is displayed and [Save] button is not displayed.
     */
     handleButtonsDisplay() {
-        this.isSaveDisplayed = !this.isLoading && !this.isRDClosed && this.hasAccess;
+        this.isSaveDisplayed = !this.isLoading && this.permissions.hasAccess && !this.permissions.isBlocked;
 
         // Disable data display and Save button when installments are not returned
         if (this.installments == null && this.isSaveDisplayed) {
@@ -480,10 +490,10 @@ export default class Rd2PauseForm extends LightningElement {
 
         const isApexClassDisabled = errorDetail && errorDetail.includes("RD2_PauseForm_CTRL");
         if (isApexClassDisabled) {
-            this.hasAccess = false;
+            this.permissions.hasAccess = false;
         }
 
-        if (errorDetail && this.hasAccess === false) {
+        if (errorDetail && this.permissions.hasAccess === false) {
             this.error.header = this.labels.insufficientPermissions;
         }
 
