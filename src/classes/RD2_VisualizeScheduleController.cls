@@ -119,7 +119,7 @@ public with sharing class RD2_VisualizeScheduleController {
         Integer counter = 1;
         scheduleService.evaluateScheduleEndDate(rd, rd.getSobject().RecurringDonationSchedules__r);
 
-        for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
+        for (RD2_ScheduleService.Installment installment : scheduleService.getAllVisualizedInstallments(
             RD2_ScheduleService.currentDate, displayNum, rd.getSobject().RecurringDonationSchedules__r
         )) {
             dataTable.addRecord(new Installment(counter++, installment));

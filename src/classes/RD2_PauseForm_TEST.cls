@@ -39,9 +39,13 @@ public with sharing class RD2_PauseForm_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway scheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
-    private static final Date START_DATE = Date.newInstance(2020, 3, 15);
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+
+    private static final Integer DAY_OF_MONTH = 15;
+    private static final Date START_DATE = Date.newInstance(2019, 3, DAY_OF_MONTH);
     private static final String PAYMENT_CHECK = 'Check';
     private static final Integer MAX_ROW_DISPLAY = 12;
+    private static final String PAUSED_REASON_VALUE = 'Financial Difficulty';
 
     /****
     * @description Creates data required for unit tests
@@ -127,22 +131,29 @@ public with sharing class RD2_PauseForm_TEST {
     */
     @isTest
     private static void shouldSavePause() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService.currentDate = START_DATE.addDays(1);
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
+        Integer totalSkipped = 4;
+        Test.startTest();
         RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
         pause.rdId = rd.Id;
         pause.startDate = START_DATE.addMonths(3);
         pause.resumeAfterDate = START_DATE.addMonths(6);
         pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
-        pause.pausedReason.value = 'Unknown';
+        pause.pausedReason.value = PAUSED_REASON_VALUE;
 
         RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.stopTest();
 
         List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
         System.assertEquals(1, pauseSchedules.size(), 'There should be one pause schedule');
         assertPauseSchedule(pause, pauseSchedules[0]);
+
+        Date nextDonationDate = START_DATE.addMonths(1);
+        assertNextDonationDateAndYearValues(rd.Id, totalSkipped, nextDonationDate);
     }
 
     /****
@@ -150,6 +161,7 @@ public with sharing class RD2_PauseForm_TEST {
     */
     @isTest
     private static void shouldDeactivateExistingPauseWhenANewOneIsCreated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
@@ -158,23 +170,29 @@ public with sharing class RD2_PauseForm_TEST {
         RD2_ScheduleService.currentDate = today;
 
         //Extend the pause for the next two months
+        Integer totalSkipped = 4;
+        Test.startTest();
         RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
         pause.rdId = rd.Id;
         pause.startDate = existingPause.StartDate__c.addMonths(2);
         pause.resumeAfterDate = existingPause.EndDate__c.addMonths(2);
         pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
-        pause.pausedReason.value = 'Financial Difficulty';
+        pause.pausedReason.value = PAUSED_REASON_VALUE;
 
         RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.stopTest();
 
         Map<Id, RecurringDonationSchedule__c> pauseScheduleById = new Map<Id, RecurringDonationSchedule__c>(getPauseSchedules(rd));
-        System.assertEquals(2, pauseScheduleById.size(), 'There should be old and new pause schedules');
+        System.assertEquals(2, pauseScheduleById.size(), 'There should be one decativated and one new pause schedule');
 
         existingPause = pauseScheduleById.remove(existingPause.Id);
         System.assertEquals(today.addDays(-1), existingPause.EndDate__c,
             'Existing pause schedule End Date should be yesterday');
 
         assertPauseSchedule(pause, pauseScheduleById.values()[0]);
+
+        Date nextDonationDate = pause.resumeAfterDate.addMonths(1);
+        assertNextDonationDateAndYearValues(rd.Id, totalSkipped, nextDonationDate);
     }
 
     /****
@@ -184,6 +202,7 @@ public with sharing class RD2_PauseForm_TEST {
     */
     @isTest
     private static void shouldDeactivateExistingPauseWhenUserDeselectsAllInstallments() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
@@ -193,14 +212,16 @@ public with sharing class RD2_PauseForm_TEST {
 
         // Pass in PauseData without setting Start and End Dates since
         // no installment is selected and the current pause is deactivated.
+        Test.startTest();
         RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
         pause.rdId = rd.Id;
         pause.startDate = null;
         pause.resumeAfterDate = null;
         pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
-        pause.pausedReason.value = 'Financial Difficulty';
+        pause.pausedReason.value = PAUSED_REASON_VALUE;
 
         RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.stopTest();
 
         Map<Id, RecurringDonationSchedule__c> pauseScheduleById = new Map<Id, RecurringDonationSchedule__c>(getPauseSchedules(rd));
         System.assertEquals(1, pauseScheduleById.size(), 'No new schedule should be created');
@@ -208,6 +229,53 @@ public with sharing class RD2_PauseForm_TEST {
         existingPause = pauseScheduleById.remove(existingPause.Id);
         System.assertEquals(today.addDays(-1), existingPause.EndDate__c,
             'Existing pause schedule End Date should be yesterday');
+
+        Integer totalSkipped = 0;
+        Date nextDonationDate = Date.newInstance(today.year(), today.month() + 1, DAY_OF_MONTH);
+        assertNextDonationDateAndYearValues(rd.Id, totalSkipped, nextDonationDate);
+    }
+
+    /****
+    * @description Verifies the the existing Opp Close Date is updated to the Next Donation Date
+    * when the new Pause Schedule date range includes the Opp Close Date
+    */
+    @isTest
+    private static void shouldUpdateOppCloseDateToNewNextDonationDateWhenWithinPauseDateRange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = START_DATE.addDays(1);
+        Date nextDonationDate = START_DATE.addMonths(1);
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Opportunity nextDonationOpp = getOpportunityBuilder(rd)
+            .withOpenStage()
+            .withCloseDate(nextDonationDate)
+            .build();
+        insert nextDonationOpp;
+
+        Integer oppCount = 2;
+        Integer totalSkipped = 3;
+        Test.startTest();
+        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
+        pause.rdId = rd.Id;
+        pause.startDate = nextDonationDate;
+        pause.resumeAfterDate = nextDonationDate.addMonths(2);
+        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
+        pause.pausedReason.value = PAUSED_REASON_VALUE;
+
+        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.stopTest();
+
+        rd = rdGateway.getRecords()[0];
+
+        nextDonationDate = nextDonationDate.addMonths(totalSkipped);
+        assertNextDonationDateAndYearValues(rd.Id, totalSkipped, nextDonationDate);
+        
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(oppCount, oppById.size(),
+            'No new Opp should be created: ' + oppById.values());
+        System.assertEquals(nextDonationDate, oppById.get(nextDonationOpp.Id).CloseDate, 
+            'Close Date on the open Opp should be changed to the new Next Donation Date');
     }
 
     /****
@@ -215,7 +283,8 @@ public with sharing class RD2_PauseForm_TEST {
     * its End Date is passed
     */
     @isTest
-    private static void shouldNotReturnPauseScheduleIdWhenPauseIsPassed() {
+    private static void shouldNotReturnPauseScheduleIdWhenPauseHasEnded() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
@@ -238,8 +307,10 @@ public with sharing class RD2_PauseForm_TEST {
     @isTest
     private static void shouldNotSkipInstallmentsWhenPauseDoesNotExist() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = START_DATE;
 
-        List<RD2_VisualizeScheduleController.Installment> installments = getInstallments(rdGateway.getRecords()[0].Id);
+        Id rdId = rdGateway.getRecords()[0].Id;
+        List<RD2_VisualizeScheduleController.Installment> installments = getInstallments(rdId);
         System.assertEquals(MAX_ROW_DISPLAY, installments.size(), 'Number of installments should match');
 
         for (RD2_VisualizeScheduleController.Installment installment : installments) {
@@ -310,33 +381,41 @@ public with sharing class RD2_PauseForm_TEST {
     * @description Verifies installments are not skipped when an active current pause is deactivated
     */
     @isTest
-    private static void shouldNotSkipInstallmentsAfterThePauseIsDeactivated() {
+    private static void shouldNotSkipInstallmentsAfterDateThePauseIsDeactivated() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService.currentDate = START_DATE.addDays(1);
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         RecurringDonationSchedule__c existingPause = createPauseSchedule(rd.Id);
 
-        RD2_ScheduleService.currentDate = existingPause.StartDate__c.addDays(1);
+        // the pause has started and one installment is skipped
+        final Date today = existingPause.StartDate__c.addDays(1);
+        RD2_ScheduleService.currentDate = today;
 
         //Deactivate the current Pause
+        Test.startTest();
         RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
         pause.rdId = rd.Id;
         pause.startDate = null;
         pause.resumeAfterDate = null;
         RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.stopTest();
 
         for (RD2_VisualizeScheduleController.Installment installment : getInstallments(rd.Id)) {
             System.assertEquals(false, installment.isSkipped,
                 'No installment should be skipped when the pause is deactivated');
         }
+
+        Integer totalSkipped = 0;
+        Date nextDonationDate = Date.newInstance(today.year(), today.month() + 1, DAY_OF_MONTH);
+        assertNextDonationDateAndYearValues(rd.Id, totalSkipped, nextDonationDate);
     }
 
     /****
     * @description Verifies installments are not skipped when the pause is completed
     */
     @isTest
-    private static void shouldNotSkipInstallmentsWhenPauseIsPassed() {
+    private static void shouldNotSkipInstallmentsWhenPauseHasEnded() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService.currentDate = START_DATE.addDays(1);
 
@@ -431,16 +510,7 @@ public with sharing class RD2_PauseForm_TEST {
      * @return RecurringDonationSchedule__c
      */
     private static RecurringDonationSchedule__c createPauseSchedule(Id rdId) {
-        RecurringDonationSchedule__c existingPause = new RecurringDonationSchedule__c(
-            RecurringDonation__c = rdId,
-            StartDate__c = START_DATE.addMonths(3),
-            EndDate__c = START_DATE.addMonths(6),
-            IsPause__c = true,
-            StatusReason__c = 'Unknown'
-        );
-
-        insert existingPause;
-        return existingPause;
+        return RD2_ScheduleService_TEST.createPauseSchedule(rdId, START_DATE.addMonths(3), START_DATE.addMonths(6));
     }
 
     /**
@@ -489,6 +559,19 @@ public with sharing class RD2_PauseForm_TEST {
             .withStartDate(START_DATE);
     }
 
+    /**
+     * @description Instantiate an Opp builder for the specified Recurring Donation
+     * @param rd Recurring Donation
+     * @return TEST_OpportunityBuilder New Opportunity builder
+     */
+    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
+        return new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1);
+    }
+
     /****
     * @description Returns contact record
     * @return Contact
@@ -499,6 +582,30 @@ public with sharing class RD2_PauseForm_TEST {
             FROM Contact
             LIMIT 1
         ];
+    }
+
+    /****
+    * @description Verifies Current/Next Year Value fields on the Recurring Donation
+    * @param rdId Recurring Donation Id
+    * @param totalSkipped Number of skipped installments
+    * @param nextDonationDate The expected Next Donation Date
+    * @return void
+    */
+    private static void assertNextDonationDateAndYearValues(Id rdId, Integer totalSkipped, Date nextDonationDate) {
+        final Date today = RD2_ScheduleService.currentDate;
+        npe03__Recurring_Donation__c rd = rdGateway.getRecord(rdId);
+
+        Integer projectedMonths = today.monthsBetween(
+            Date.newInstance(today.year(), 12, DAY_OF_MONTH)
+        );
+
+        System.assertEquals(rd.npe03__Amount__c * (1 + projectedMonths - totalSkipped), rd.CurrentYearValue__c,
+            'Current Year Value should include current year Opp and active projected installments: ' + getInstallments(rdId));
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should include next year projected installments');
+
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 
+            'Next Donation Date should be in future from today: ' + today);
     }
 
 }

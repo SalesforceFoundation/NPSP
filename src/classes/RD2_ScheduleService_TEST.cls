@@ -35,7 +35,7 @@
 *
 */
 @isTest(IsParallel=true)
-private with sharing class RD2_ScheduleService_TEST {
+public with sharing class RD2_ScheduleService_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway scheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 9, 15);
@@ -1851,7 +1851,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService.currentDate = pause.StartDate__c.addDays(-1);
 
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+        List<RD2_ScheduleService.Installment> installments = service.getAllVisualizedInstallments(
             RD2_ScheduleService.currentDate, NUM_INSTALLMENTS, schedules
         );
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
@@ -1886,7 +1886,7 @@ private with sharing class RD2_ScheduleService_TEST {
         RD2_ScheduleService.currentDate = pause.StartDate__c.addMonths(2);
         pause.EndDate__c = RD2_ScheduleService.currentDate.addDays(-1);
 
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+        List<RD2_ScheduleService.Installment> installments = service.getAllVisualizedInstallments(
             RD2_ScheduleService.currentDate, NUM_INSTALLMENTS, schedules
         );
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
@@ -2219,7 +2219,27 @@ private with sharing class RD2_ScheduleService_TEST {
      * @return RecurringDonationSchedule__c
      */
     private static RecurringDonationSchedule__c createPauseSchedule(Id rdId) {
-        RecurringDonationSchedule__c pause = buildPauseSchedule(rdId);
+        return createPauseSchedule(rdId, Date.newInstance(2020, 1, 1), Date.newInstance(2020, 4, 1));
+    }
+
+    /**
+     * @description Builds a pause schedule
+     * @param rdId Recurring Donation Id
+     * @return RecurringDonationSchedule__c
+     */
+    private static RecurringDonationSchedule__c buildPauseSchedule(Id rdId) {
+        return buildPauseSchedule(rdId, Date.newInstance(2020, 1, 1), Date.newInstance(2020, 4, 1));
+    }
+
+    /**
+     * @description Creates test pause schedule
+     * @param rdId Recurring Donation Id
+     * @param startDate Start Date of the pause schedule
+     * @param endDate End Date of the pause schedule
+     * @return RecurringDonationSchedule__c
+     */
+    public static RecurringDonationSchedule__c createPauseSchedule(Id rdId, Date startDate, Date endDate) {
+        RecurringDonationSchedule__c pause = buildPauseSchedule(rdId, startDate, endDate);
 
         insert pause;
         return pause;
@@ -2227,14 +2247,15 @@ private with sharing class RD2_ScheduleService_TEST {
     
     /**
      * @description Builds a pause schedule
-     * @param rdId Recurring Donation Id
+     * @param startDate Start Date of the pause schedule
+     * @param endDate End Date of the pause schedule
      * @return RecurringDonationSchedule__c
      */
-    private static RecurringDonationSchedule__c buildPauseSchedule(Id rdId) {
+    public static RecurringDonationSchedule__c buildPauseSchedule(Id rdId, Date startDate, Date endDate) {
         return new RecurringDonationSchedule__c(
             RecurringDonation__c = rdId,
-            StartDate__c = Date.newInstance(2020, 1, 1),
-            EndDate__c = Date.newInstance(2020, 4, 1),
+            StartDate__c = startDate,
+            EndDate__c = endDate,
             IsPause__c = true,
             StatusReason__c = 'Unknown'
         );

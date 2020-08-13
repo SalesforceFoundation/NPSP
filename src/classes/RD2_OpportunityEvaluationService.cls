@@ -251,18 +251,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     };
 
     /**
-    * @description Contains Map of Recurring Donation Ids to Boolean indicating a schedule change
-    * @return Map<Id, Boolean> isScheduleChangedById maps Recurring Donation Id to a boolean
-    * indicating whether the Recurring Donation update results in a new schedule.
+    * @description Recurring Donation Ids for which schedule has been changed
     */
     @TestVisible
-    private Map<Id, Boolean> isScheduleChangedById {
+    private Set<Id> rdIdsWhereScheduleChanged {
         get {
-            if (isScheduleChangedById == null) {
-                isScheduleChangedById = new Map<Id, Boolean>();
+            if (rdIdsWhereScheduleChanged == null) {
+                rdIdsWhereScheduleChanged = new Set<Id>();
             }
-            return isScheduleChangedById;
-        } set;
+            return rdIdsWhereScheduleChanged;
+        } 
+        set;
     }
 
     /**
@@ -311,12 +310,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Map of Recurring Donation Ids to Boolean indicating a changed schedule
-     * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean
+     * @description Set Recurring Donation Ids to indicate a changed schedule
+     * @param rdIds Recurring Donation Ids for which schedule has been changed
      * @return RD2_OpportunityEvaluationService The service instance
      */
-    public RD2_OpportunityEvaluationService withIsScheduleChangedById(Map<Id, Boolean> isScheduleChangedById) {
-        this.isScheduleChangedById = isScheduleChangedById;
+    public RD2_OpportunityEvaluationService withScheduleChanged(Set<Id> rdIds) {
+        this.rdIdsWhereScheduleChanged = rdIds;
         return this;
     }
 
@@ -413,7 +412,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         oppService
             .createOpportunities(newOppRDs)
-            .updateOpportunities(updateOppRDs, isScheduleChangedById)
+            .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)
             .voidOpenOpportunities(closedRDs);
 
         handleOutdatedRecurringDonations(rdRecords);
