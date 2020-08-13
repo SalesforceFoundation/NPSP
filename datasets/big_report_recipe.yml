@@ -19,6 +19,10 @@
   fields:
     Name: Opportunity <<count>>
     AccountId: <<((count-1) % Account.id)+1>>
+    Amount:
+      random_number:
+        min: 1
+        max: 500
 
     CloseDate:
       random_choice:
@@ -142,6 +146,38 @@
 - object: npe03__Recurring_Donation__c
   count: << 1300 >>
   fields:
+    Status__c: Active
+    PaymentMethod__c:
+          random_choice:
+            - Credit Card
+            - Check
+    RecurringType__c:
+          random_choice:
+            - choice:
+                probability: 95%
+                pick: Open
+            - choice:
+                probability: 5%
+                pick: Fixed
+    npe03__Installment_Period__c: Monthly
+    InstallmentFrequency__c: 1
+    Day_of_Month__c:
+          if:
+            - choice:
+                when: ${{npe03__Installment_Period__c=='Monthly'}}
+                pick:
+                  random_choice:
+                    - 1
+                    - 15
+                    - 30
+                    - Last_Day
+            - choice:
+                pick: ""
+    npe03__Installments__c: ${{ (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 }}
+    npe03__Amount__c:
+      random_number:
+        min: 1
+        max: 100
     npe03__Contact__c: <<((count -1 )% Contact.id)+1>>  # pseudo-randomly select Account
     npe03__Date_Established__c:
       date_between:
@@ -150,7 +186,7 @@
   friends:
     - object: Opportunity
       include: OpportunityStuff
-      count: << (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 >>
+      count: ${{npe03__Recurring_Donation__c.npe03__Installments__c}}
       fields:
         AccountId: <<npe03__Recurring_Donation__c.npe03__Organization__c>>
         CloseDate: << date(npe03__Recurring_Donation__c.npe03__Date_Established__c) + relativedelta(months=child_index) >>
