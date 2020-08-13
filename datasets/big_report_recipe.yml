@@ -151,6 +151,7 @@
           random_choice:
             - Credit Card
             - Check
+    npe03__Schedule_Type__c: Multiply By
     RecurringType__c:
           random_choice:
             - choice:
@@ -164,7 +165,7 @@
     Day_of_Month__c:
           if:
             - choice:
-                when: ${{npe03__Installment_Period__c=='Monthly'}}
+                when: <<npe03__Installment_Period__c=='Monthly'>>
                 pick:
                   random_choice:
                     - 1
@@ -173,7 +174,7 @@
                     - Last_Day
             - choice:
                 pick: ""
-    npe03__Installments__c: ${{ (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 }}
+    npe03__Installments__c: << (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 >>
     npe03__Amount__c:
       random_number:
         min: 1
@@ -186,13 +187,14 @@
   friends:
     - object: Opportunity
       include: OpportunityStuff
-      count: ${{npe03__Recurring_Donation__c.npe03__Installments__c}}
+      count: <<npe03__Recurring_Donation__c.npe03__Installments__c>>
       fields:
         AccountId: <<npe03__Recurring_Donation__c.npe03__Organization__c>>
         CloseDate: << date(npe03__Recurring_Donation__c.npe03__Date_Established__c) + relativedelta(months=child_index) >>
         npe03__Recurring_Donation__c:
           reference:
             npe03__Recurring_Donation__c
+        Amount: <<npe03__Recurring_Donation__c.npe03__Organization__c>>
       friends:
         - object: npe01__OppPayment__c
           fields:
