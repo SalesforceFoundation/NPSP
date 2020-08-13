@@ -50,3 +50,5 @@ Snowfakery Documentation: https://snowfakery.readthedocs.io/en/docs/#function-bl
 - Run the standard RD2 batch job after the import completes to allow the first installment opportunity to be created.
   
 `cci task run generate_and_load_from_yaml -o generator_yaml datasets/rd2/data_factory_with_rd2.yml -o num_records 100 -o num_records_tablename Contact --org {org_alias}`
+
+`cci flow run test_data_rd2 --org {orgname} -o generate_and_load_from_yaml__num_records 500`

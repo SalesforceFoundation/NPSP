@@ -8,6 +8,10 @@ public static void initialize_RD2_Settings() {
 
     npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
 
+    if (rdSettings.IsRecurringDonations2Enabled__c == false) {
+        throw new InitException('Enhanced Recurring Donations must be enabled to continue. Execute the "enable_rd2" first.');
+    }
+
     // Block the first installment from being created to avoid lock errors during the bulk insert
     rdSettings.DisableRollupsWhenCreatingInstallments__c = true;
     rdSettings.InstallmentOppFirstCreateMode__c = 'Asynchronous_When_Bulk';
@@ -23,3 +27,5 @@ public static void initialize_RD2_Settings() {
 
     upsert rdSettings;
 }
+
+public class InitException extends Exception {}

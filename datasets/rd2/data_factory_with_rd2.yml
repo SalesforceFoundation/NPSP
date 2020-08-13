@@ -1,5 +1,3 @@
-# based on https://docs.google.com/spreadsheets/d/1Ve8UzPNpO6zx1Jd4Oy7Wg9o4HZWJ2wSopEOAqxR7H0I/edit?ts=5e2f4842#gid=1747801046
-
 - object: General_Accounting_Unit__c
   nickname: theRdGau
   just_once: True
@@ -15,7 +13,7 @@
     description__c: ${{fake.paragraph}}
 
 - object: General_Accounting_Unit__c
-  count: 20
+  count: 1
   fields:
     name: The ${{fake.word}} ${{fake.word}} Program
 
@@ -49,14 +47,21 @@
   friends:
     - object: npe03__Recurring_Donation__c
       count:
-        random_number:
-          min: 0
-          max: 1
+        random_choice:
+          - choice:
+              probability: 90%
+              pick: 1
+          - choice:
+              probability: 10%
+              pick: 0
       fields:
         npe03__Contact__c:
           reference: Contact
         npe03__Organization__c:
           random_choice:
+            - choice:
+                probability: 95%
+                pick: ""
             - choice:
                 probability: 5%
                 pick:
