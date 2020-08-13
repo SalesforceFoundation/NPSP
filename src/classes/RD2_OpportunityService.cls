@@ -41,6 +41,7 @@ public with sharing class RD2_OpportunityService {
      */
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
 
+
     /***
     * @description Determines if multi-currency is enabled for the org
     */
@@ -225,18 +226,18 @@ public with sharing class RD2_OpportunityService {
     * @return RD2_OpportunityService This Opportunity Service instance
     */
     public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds) {
-        return updateOpportunities(rds, new Map<Id, Boolean>());
+        return updateOpportunities(rds, new Set<Id>());
     }
 
     /***
     * @description Updates related future open installment Opps
     * @param rds Recurring Donations
-    * @param isScheduleChangedById Map of Recurring Donation Ids to Boolean indicating whether
+    * @param rdIdsWhereScheduleChanged Recurring Donation Ids for which a schedule has been changed
     * schedule has changed
     * @return RD2_OpportunityService This Opportunity Service instance
     */
-    public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds, Map<Id, Boolean> isScheduleChangedById) {
-        List<Opportunity> oppsToUpdate = new List<Opportunity>();
+    public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds, Set<Id> rdIdsWhereScheduleChanged) {
+        Map<Id, Opportunity> updatedOppById = new Map<Id, Opportunity>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
         //Synchronize Opps with matching Schedule installments
@@ -244,18 +245,22 @@ public with sharing class RD2_OpportunityService {
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
                 .includeCurrentOrOpen(rd.npe03__Donations__r);
 
+            Integer numberOfInstallments = matcher.getNumberOfOpportunities();
             matcher.match(scheduleService.getVisualizedInstallments(
-                currentDate, matcher.getNumberOfOpportunities(), rd.RecurringDonationSchedules__r
+                currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
             ));
 
             // Track unmatched matcher records so we can connect Opps and RDs from RDs with altered schedules
-            Boolean openOpportunityMatched = false;
-            Opportunity earliestUnmatchedOpportunity;
+            Boolean isOpenOppMatched = false;
+            Opportunity earliestUnmatchedOpp;
             RD2_ScheduleService.Installment earliestUnmatchedInstallment;
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
+                isOpenOppMatched = false;
 
-                if (record.hasInstallment() && record.isNew()) {
+                if (record.hasInstallment() 
+                    && (record.isNew() || !record.getInstallment().isSkipped)
+                ) {
                     earliestUnmatchedInstallment = getEarliestInstallment(record.getInstallment(), earliestUnmatchedInstallment);
                 }
 
@@ -264,38 +269,33 @@ public with sharing class RD2_OpportunityService {
                 }
 
                 Opportunity opp = record.getOpportunity();
-                if (record.hasInstallment()) {
+                if (record.hasInstallment() && !record.getInstallment().isSkipped) {
                     installmentByOppId.put(opp.Id, record.getInstallment());
-                    openOpportunityMatched = true;
-                }
+                    isOpenOppMatched = true;
 
-                if (!record.hasInstallment()) {
-                    earliestUnmatchedOpportunity = getEarliestOpportunity(record.getOpportunity(), earliestUnmatchedOpportunity);
+                } else {
+                    earliestUnmatchedOpp = getEarliestOpportunity(record.getOpportunity(), earliestUnmatchedOpp);
                 }
 
                 Opportunity updatedOpp = updateOpportunity(opp, record.getInstallment(), rd);
                 if (updatedOpp != null) {
-                    oppsToUpdate.add(updatedOpp);
+                    updatedOppById.put(updatedOpp.Id, updatedOpp);
                 }
             }
 
-            if (!openOpportunityMatched) {
-                if (earliestUnmatchedOpportunity == null || earliestUnmatchedInstallment == null) {
+            if (!isOpenOppMatched && rdIdsWhereScheduleChanged.contains(rd.Id)) {
+                if (earliestUnmatchedOpp == null || earliestUnmatchedInstallment == null) {
                     continue;
                 }
 
-                if (isScheduleChangedById.get(rd.Id) != true) {
-                    continue;
-                }
-
-                Opportunity updatedOpp = updateOpportunity(earliestUnmatchedOpportunity, earliestUnmatchedInstallment, rd);
+                Opportunity updatedOpp = updateOpportunity(earliestUnmatchedOpp, earliestUnmatchedInstallment, rd);
                 if (updatedOpp != null) {
-                    oppsToUpdate.add(updatedOpp);
+                    updatedOppById.put(updatedOpp.Id, updatedOpp);
                 }
             }
         }
 
-        dbService.updateRecords(oppsToUpdate);
+        dbService.updateRecords(updatedOppById.values());
 
         updatePaymentRecords(installmentByOppId);
         return this;
@@ -308,27 +308,32 @@ public with sharing class RD2_OpportunityService {
     * @return RD2_ScheduleService.Installment Earlier of the two installments
     */
     private RD2_ScheduleService.Installment getEarliestInstallment(RD2_ScheduleService.Installment currentInstallment, RD2_ScheduleService.Installment earliestInstallment) {
-        if (earliestInstallment == null ||
-            earliestInstallment.nextDonationDate > currentInstallment.nextDonationDate
-        ) {
+        Boolean isEarlier = earliestInstallment == null
+            || currentInstallment.nextDonationDate < earliestInstallment.nextDonationDate;
+
+        if (isEarlier && !currentInstallment.isSkipped) {
             earliestInstallment = currentInstallment;
         }
+
         return earliestInstallment;
     }
 
     /***
     * @description Compares two Opportunities and returns the earliest of the two
-    * @param currentOpportunity Opportunity
-    * @param earliestUnmatchedOpportunity Opportunity
+    * @param currentOpp Opportunity
+    * @param earliestUnmatchedOpp Opportunity
     * @return Opportunity Earlier of the two Opportunities
     */
-    private Opportunity getEarliestOpportunity(Opportunity currentOpportunity, Opportunity earliestUnmatchedOpportunity) {
-        if (earliestUnmatchedOpportunity == null ||
-            earliestUnmatchedOpportunity.CloseDate > currentOpportunity.CloseDate
-        ) {
-            earliestUnmatchedOpportunity = currentOpportunity;
+    private Opportunity getEarliestOpportunity(Opportunity currentOpp, Opportunity earliestUnmatchedOpp) {
+        Boolean isEarlier = earliestUnmatchedOpp == null ||
+            currentOpp.CloseDate < earliestUnmatchedOpp.CloseDate;
+        Boolean isPast = currentOpp.CloseDate < currentDate;
+
+        if (isEarlier && !isPast) {
+            earliestUnmatchedOpp = currentOpp;
         }
-        return earliestUnmatchedOpportunity;
+
+        return earliestUnmatchedOpp;
     }
 
     /***
@@ -339,9 +344,10 @@ public with sharing class RD2_OpportunityService {
     * @return Opportunity Updated Opportunity or null if no update
     */
     private Opportunity updateOpportunity(Opportunity opp, RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {
-        Boolean wasOpportunityChanged = syncOppWithRecurringDonation(opp, rd);
-        wasOpportunityChanged = syncOppWithInstallment(opp, installment) || wasOpportunityChanged;
-        if (wasOpportunityChanged) {
+        Boolean isChanged = syncOppWithRecurringDonation(opp, rd);
+        isChanged = syncOppWithInstallment(opp, installment) || isChanged;
+
+        if (isChanged) {
             opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
             return opp;
         }

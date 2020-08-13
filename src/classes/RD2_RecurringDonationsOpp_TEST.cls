@@ -49,6 +49,7 @@ private class RD2_RecurringDonationsOpp_TEST {
     private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
+    private static final Integer EXISTING_OPP_COUNT = 2;//number of Opps created in the setUp()
 
 
     /****
@@ -117,7 +118,7 @@ private class RD2_RecurringDonationsOpp_TEST {
      * when open Opportunity is set to Closed Lost stage
      */
     @IsTest
-    private static void shouldUpdateCurrentYearValueWhenOppIsUpdatedToClosedLost() {
+    private static void shouldUpdateCurrentYearValueWhenOppIsClosedLost() {
         final Date nextDonationDate = START_DATE.addMonths(1);
         RD2_ScheduleService.currentDate = TODAY;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -226,7 +227,7 @@ private class RD2_RecurringDonationsOpp_TEST {
         Test.stopTest();
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(3, oppById.size(), 'A new Opp should be created: ' + oppById.values());
+        System.assertEquals(EXISTING_OPP_COUNT + 1, oppById.size(), 'A new Opp should be created: ' + oppById.values());
         System.assertEquals(oppNewAmount, oppById.get(opp.Id).Amount, 
             'The Opp Amount can be changed when the Opp is closed');
 
@@ -405,7 +406,7 @@ private class RD2_RecurringDonationsOpp_TEST {
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         Opportunity opp = getOpenOpportunity(rd);
-        System.assertEquals(opp.CloseDate, nextDonationDate, 'Opp Close Date should match');
+        System.assertEquals(nextDonationDate, opp.CloseDate, 'Opp Close Date should match');
 
         Test.startTest();
         opp.CloseDate = nextDonationDate.addDays(-2);//The new Close Date < today < RD Next Donation Date
@@ -437,7 +438,7 @@ private class RD2_RecurringDonationsOpp_TEST {
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         Opportunity opp = getOpenOpportunity(rd);
-        System.assertEquals(opp.CloseDate, nextDonationDate, 'Opp Close Date should match');
+        System.assertEquals(nextDonationDate, opp.CloseDate, 'Opp Close Date should match');
 
         Test.startTest();
         opp.CloseDate = today;
@@ -472,7 +473,7 @@ private class RD2_RecurringDonationsOpp_TEST {
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         Opportunity opp = getOpenOpportunity(rd);
-        System.assertEquals(opp.CloseDate, nextDonationDate, 'Opp Close Date should match');
+        System.assertEquals(nextDonationDate, opp.CloseDate, 'Opp Close Date should match');
 
         Test.startTest();
         opp.CloseDate = today;
@@ -491,11 +492,106 @@ private class RD2_RecurringDonationsOpp_TEST {
             'Next Year Value should be unchanged');
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-
         System.assertEquals(RD_AMOUNT + 30, oppById.get(opp.Id).Amount, 
             'The Amount on the closed Opp Amount should be as user specified it');
-        System.assertEquals(3, oppById.size(), 
+        System.assertEquals(EXISTING_OPP_COUNT + 1, oppById.size(), 
             'A new Opportunity should be created for the Next Donation Date: ' + oppById.values());
+    }
+
+    /**
+     * @description Verifies the Next Donation Date (NDD) is advanced to the first open
+     * projected installment when the current NDD open Opp is closed
+     * and the next installment after it is skipped.
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenTheCurrentOppIsClosedAndTheNextInstallmentIsSkipped() {
+        final Date nextDonationDate = START_DATE.addMonths(1);
+        final Date skippedInstallmentDate = nextDonationDate.addMonths(1);
+        final Date newNextDonationDate = skippedInstallmentDate.addMonths(1);
+        final Date today = nextDonationDate.addDays(-3);
+
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Opportunity opp = getOpenOpportunity(rd);
+        System.assertEquals(nextDonationDate, opp.CloseDate, 'Opp Close Date should match the Next Donation Date');
+
+        //skip the next month installment
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, skippedInstallmentDate, skippedInstallmentDate);
+
+        //close the current next donation date open Opp
+        Test.startTest();
+        opp.CloseDate = today;
+        opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update opp;
+        Test.stopTest();
+
+        assertNextDonationDateWhenInstallmentIsSkipped(rd.Id, newNextDonationDate);
+    }
+
+    /**
+     * @description Verifies the Next Donation Date (NDD) is advanced to the first open
+     * projected installment when the current NDD open Opp is closed
+     * and the next installment is not skipped.
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenTheCurrentOppIsClosedAndTheNextInstallmentIsNotSkipped() {
+        final Date nextDonationDate = START_DATE.addMonths(1);
+        final Date newNextDonationDate = nextDonationDate.addMonths(1);
+        final Date skippedInstallmentDate = nextDonationDate.addMonths(2);
+        final Date today = nextDonationDate.addDays(-3);
+
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Opportunity opp = getOpenOpportunity(rd);
+        System.assertEquals(nextDonationDate, opp.CloseDate, 'Opp Close Date should match the Next Donation Date');
+
+        //skip the second installment after the current the open Opp
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, skippedInstallmentDate, skippedInstallmentDate);
+
+        //close the current open Opp
+        Test.startTest();
+        opp.CloseDate = today;
+        opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update opp;
+        Test.stopTest();
+
+        assertNextDonationDateWhenInstallmentIsSkipped(rd.Id, newNextDonationDate);
+    }
+
+    /**
+     * @description Verifies the Next Donation Date on the RD matches the expected date.
+     * Verifies the new Opp Close Date matches the Next Donation Date.
+     * Verifies the Current Year Value excludes the skipped installment.
+     * @param rdId Recurring Donation Id
+     * @param nextDonationDate Expected Next Donation Date
+     * @return void
+     */
+    private static void assertNextDonationDateWhenInstallmentIsSkipped(Id rdId, Date nextDonationDate) {
+        npe03__Recurring_Donation__c rd = rdGateway.getRecord(rdId);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 
+            'Next Donation Date should advance to the next installment after the skipped installment');
+
+        System.assertEquals(rd.npe03__Amount__c * (MONTHS_TO_YEAR_END - 1), rd.CurrentYearValue__c,
+            'Current Year Value should exclude the skipped installment');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be unchanged');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(EXISTING_OPP_COUNT + 1, oppById.size(), 
+            'A new Opportunity should be created when the current Opp is closed: ' + oppById.values());
+
+        Opportunity nextDonationDateOpp;
+        for (Opportunity opp : oppById.values()) {
+            if (opp.CloseDate == nextDonationDate) {
+                nextDonationDateOpp = opp;
+            }
+        }
+        System.assertNotEquals(null, nextDonationDateOpp, 
+            'Close Date on the new Opp should match the Next Donation Date: ' + oppById.values());
     }
 
 
