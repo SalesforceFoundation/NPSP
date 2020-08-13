@@ -61,16 +61,21 @@ public with sharing class RD2_PauseForm_CTRL {
     @AuraEnabled(cacheable=false)
     public static String getPauseData(Id rdId) {
         String jsonData;
-
         try {
+            RD2_RecurringDonation rd = getRecurringDonation(rdId);
+
             PauseData pause = new PauseData();
             pause.rdId = rdId;
             pause.hasAccess = hasAccess();
-            pause.isRDClosed = pause.hasAccess ? isClosed(rdId) : null;
+            pause.isElevateRecord = pause.hasAccess
+                ? RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()
+                : null; 
+            pause.isRDClosed = pause.hasAccess ? rd.isClosed() : null;
 
-            if (pause.isRDClosed == false) {
+            if (pause.isRDClosed == false && pause.isElevateRecord == false) {
                 pause.pausedReason = buildPausedReason();
                 populateScheduleData(pause, rdId);
+               
             }
 
             jsonData = JSON.serialize(pause);
@@ -95,19 +100,18 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
-     * @description Determines if the Recurring Donation is closed
-     * @param rdId Recurring Donation Id
-     * @return Boolean
-     */
-    private static Boolean isClosed(Id rdId) {
-        npe03__Recurring_Donation__c rd = [
-            SELECT Status__c
+    * @description Query and Construct Recurring Donation Record
+    * @param rdId Recurring Donation Id
+    * @return RD2_RecurringDonation
+    */
+    private static RD2_RecurringDonation getRecurringDonation(Id rdId) {
+        return new RD2_RecurringDonation([
+            SELECT Status__c,
+                CommitmentId__c
             FROM npe03__Recurring_Donation__c
             WHERE Id = :rdId
             LIMIT 1
-        ];
-
-        return (new RD2_RecurringDonation(rd)).isClosed();
+        ]);
     }
 
     /**
@@ -182,7 +186,12 @@ public with sharing class RD2_PauseForm_CTRL {
     public static void savePause(String jsonPauseData) {
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
-
+            
+            RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
+            if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()) {
+                throw new PauseException(System.Label.RD2_ElevateNotSupported);
+            }
+    
             Boolean isNewPause = pause.startDate != null && pause.resumeAfterDate != null;
             if (isNewPause) {
                 //deactivate the current pause (if any) and create a new one
@@ -229,17 +238,24 @@ public with sharing class RD2_PauseForm_CTRL {
         throw e;
     }
 
+    /**
+    * @description Custom exception for Pause Recurring Donation feature
+    */
+    public class PauseException extends Exception {}
+
     /***
     * @description Contains pause data
     */
     public class PauseData {
         public Id rdId;
+        public Boolean hasAccess;
         public Boolean isRDClosed;
+        public Boolean isElevateRecord;
         public Date startDate;
         public Date resumeAfterDate;
         public PausedReason pausedReason;
         public Id scheduleId;
-        public Boolean hasAccess;
+        
     }
 
     /***
