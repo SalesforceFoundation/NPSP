@@ -5719,7 +5719,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: explains the function of the required checkbox if set as required</shortDescription>
-        <value>Show menu.</value>
+        <value>Select to set {0} as required.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>

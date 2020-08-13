@@ -154,6 +154,22 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldDown, [this.field.label]);
     }
 
+    get labelGeAssistiveRequiredCheckbox() {
+        if(this.isRequired) {
+            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSetFieldOptional, [this.field.label]);
+        } else {
+            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSetFieldRequired, [this.field.label]);
+        }
+    }
+
+    get labelGeAssistiveRequiredCheckboxDescription() {
+        if(this.isRequired) {
+            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldRequired, [this.field.label]);
+        } else {
+            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldNotRequired, [this.field.label]);
+        }
+    }
+
     /*******************************************************************************
     * Start getters for data-qa-locator attributes
     */

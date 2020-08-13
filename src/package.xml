@@ -2171,6 +2171,8 @@
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>
+        <members>geAssistiveFieldNotRequired</members>
+        <members>geAssistiveFieldRequired</members>
         <members>geAssistiveFieldUp</members>
         <members>geAssistiveFormFieldsCollapseAll</members>
         <members>geAssistiveFormFieldsExpandAll</members>
@@ -2178,6 +2180,8 @@
         <members>geAssistiveFormFieldsSectionEdit</members>
         <members>geAssistiveModalCancelAndDiscard</members>
         <members>geAssistiveRemoveSelectedOption</members>
+        <members>geAssistiveSetFieldOptional</members>
+        <members>geAssistiveSetFieldRequired</members>
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
