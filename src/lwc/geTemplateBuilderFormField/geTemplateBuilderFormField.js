@@ -155,7 +155,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get labelGeAssistiveRequiredCheckbox() {
-        if(this.isRequired) {
+        if (this.isRequired) {
             return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSetFieldOptional, [this.field.label]);
         } else {
             return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSetFieldRequired, [this.field.label]);
@@ -163,7 +163,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get labelGeAssistiveRequiredCheckboxDescription() {
-        if(this.isRequired) {
+        if (this.isRequired) {
             return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldRequired, [this.field.label]);
         } else {
             return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldNotRequired, [this.field.label]);
