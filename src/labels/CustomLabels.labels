@@ -2216,6 +2216,14 @@
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>RD2_PauseCannotExistOnScheduleChange</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot change specific fields causing schedule change when a pause exists</shortDescription>
+        <value>You can&apos;&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;&apos;d like to update the field(s), you must deactivate the pause.</value>
+    </labels>
+    <labels>
         <fullName>RD2_PauseClosedRDErrorMessage</fullName>
         <categories>Recurring-Donations, Pause</categories>
         <language>en_US</language>

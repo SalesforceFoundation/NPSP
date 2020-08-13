@@ -36,7 +36,7 @@
 public with sharing class RD2_PauseForm_CTRL {
 
     /***
-    * @description Recurring Donation Schedule service
+    * @description Recurring Donation Pause Schedule Handler
     */
     @TestVisible
     private static RD2_ScheduleService.PauseScheduleHandler pauseHandler {
@@ -194,10 +194,15 @@ public with sharing class RD2_PauseForm_CTRL {
     
             Boolean isNewPause = pause.startDate != null && pause.resumeAfterDate != null;
             if (isNewPause) {
+                //deactivate the current pause (if any) and create a new one
                 pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
+
             } else {//deactivate the current pause (if any)
                 pauseHandler.cancelPauseSchedule(pause.rdId);
             }
+
+            Boolean isScheduleChanged = true;
+            RD2_QueueableService.enqueueOppEvalService(pause.rdId, isScheduleChanged);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
