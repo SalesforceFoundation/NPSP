@@ -55,7 +55,8 @@
                         </lightning-layout-item>
                     </lightning-layout>
 
-                    <div class="installments slds-p-left_medium slds-p-top_large slds-p-right_medium" if:true={installments}>
+                    <div class="installments slds-p-left_medium slds-p-top_large slds-p-right_medium"
+                        if:true={installments}>
                         <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
                             is-loading={isLoading} max-row-selection={maxRowSelection}
                             onrowselection={handleRowSelection} selected-rows={selectedIds} resize-column-disabled
@@ -67,14 +68,21 @@
 
                         <lightning-layout-item padding="horizontal-large" class="slds-p-top_large" size="12">
                             <template if:true={selectedRowsSummary}>
-                                <lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
-                                    data-qa-locator="richtext Row Summary">
-                                </lightning-formatted-rich-text>
+                                <em><lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
+                                        data-qa-locator="richtext Row Summary">
+                                </lightning-formatted-rich-text></em>
                             </template>
-
-                            <div if:false={selectedRowsSummary} class="slds-p-top_medium">
-                            </div>
                         </lightning-layout-item>
+
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_small" size="12">
+                            <template if:true={firstDonationDateMessage}>
+                                <b><lightning-formatted-rich-text value={firstDonationDateMessage}
+                                        data-id="firstDonationDateMessage"
+                                        data-qa-locator="richtext First Donation Date Message">
+                                </lightning-formatted-rich-text></b>
+                            </template>
+                        </lightning-layout-item>
+
                     </lightning-layout>
 
                 </template>
@@ -90,12 +98,12 @@
 
                 <template if:true={isSaveDisplayed}>
                     <lightning-button label={labels.cancelButton} title={labels.cancelButton} variant="neutral"
-                        class="slds-m-right_small" onclick={handleCancel} 
-                        data-id="cancelButton" data-qa-locator="button Cancel">
+                        class="slds-m-right_small" onclick={handleCancel} data-id="cancelButton"
+                        data-qa-locator="button Cancel">
                     </lightning-button>
                     <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand"
-                        onclick={handleSave} disabled={isSaveDisabled} 
-                        data-id="saveButton" data-qa-locator="button Save">
+                        onclick={handleSave} disabled={isSaveDisabled} data-id="saveButton"
+                        data-qa-locator="button Save">
                     </lightning-button>
                 </template>
 
