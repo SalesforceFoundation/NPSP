@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <recordTypes>
-      <description>Donación recibida</description>
-      <label>Donación</label>
-      <name>Donation</name>
+    <name>Donation</name>
+    <label>Donación</label>
+    <description>Donación recibida</description>
   </recordTypes>
   <recordTypes>
-      <description>Beca recibida</description>
-      <label>Beca</label>
-      <name>Grant</name>
+    <name>Grant</name>
+    <label>Beca</label>
+    <description>Beca recibida</description>
   </recordTypes>
   <recordTypes>
-      <description>Bienes o servicios recibidos como en especie</description>
-      <label>Regalo en especie</label>
-      <name>InKindGift</name>
+    <name>InKindGift</name>
+    <label>Regalo en especie</label>
+    <description>Bienes o servicios recibidos como en especie</description>
   </recordTypes>
   <recordTypes>
-      <description>Donación de gran calibre de un donante importante</description>
-      <label>Regalo importante</label>
-      <name>MajorGift</name>
+    <name>MajorGift</name>
+    <label>Regalo importante</label>
+    <description>Donación de gran calibre de un donante importante</description>
   </recordTypes>
   <recordTypes>
-      <description>Donación complementaria procedente del empleador de un donante u otra organización</description>
-      <label>Regalo que iguala</label>
-      <name>MatchingGift</name>
+    <name>MatchingGift</name>
+    <label>Regalo que iguala</label>
+    <description>Donación complementaria procedente del empleador de un donante u otra organización</description>
   </recordTypes>
   <recordTypes>
-      <description>Un tipo de registro de afiliación</description>
-      <label>Afiliación</label>
-      <name>Membership</name>
+    <name>Membership</name>
+    <label>Afiliación</label>
+    <description>Un tipo de registro de afiliación</description>
   </recordTypes>
   <layouts>
-    <layout>%%%NAMESPACE%%%Major Gift Layout</layout>
+    <layout>___NAMESPACE___Major Gift Layout</layout>
     <sections>
       <label>Información de donación</label>
       <section>Donation Information</section>
@@ -46,7 +46,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Donation Layout</layout>
+    <layout>___NAMESPACE___Donation Layout</layout>
     <sections>
       <label>Información de donación</label>
       <section>Donation Information</section>
@@ -65,7 +65,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Membership Layout</layout>
+    <layout>___NAMESPACE___Membership Layout</layout>
     <sections>
       <label>Campos</label>
       <section>Fields</section>
@@ -80,7 +80,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Grant Layout</layout>
+    <layout>___NAMESPACE___Grant Layout</layout>
     <sections>
       <label>Información de donación</label>
       <section>Donation Information</section>
@@ -95,7 +95,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%In-Kind Gift Layout</layout>
+    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
     <sections>
       <label>Información de donación</label>
       <section>Donation Information</section>
@@ -110,7 +110,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>%%%NAMESPACE%%%Matching Gift Layout</layout>
+    <layout>___NAMESPACE___Matching Gift Layout</layout>
     <sections>
       <label>Información de donación</label>
       <section>Donation Information</section>

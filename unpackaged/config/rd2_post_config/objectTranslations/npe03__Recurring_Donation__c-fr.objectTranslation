@@ -1,91 +1,290 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au dernier jour du mois, indép. de la prochaine date de don. La période de versement doit être mens. ou trim., ou une période de versement personn. utilisant des mois.</help>
-        <label>Déprécié:Toujours utiliser dernier jour du mois</label>
-        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <label>Déprécié:Montant du versement</label>
-        <name>npe03__Installment_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Choisissez Ouvert pour les dons récurrents sans date de fin. Choisissez Aucun pour un don récurrent avec une date de fin. Choisissez Fermé pour fermer un don récurrent.</help>
-        <label>Déprécié:Statut de date de fin</label>
-        <name>npe03__Open_Ended_Status__c</name>
-    </fields>
-    <fields>
-        <help>Indique à Salesforce comment calculer le montant pour chaque opportunité enfant, en fonction de ce que vous avez saisi dans le champ compte. Uniquement utilisé avec des dons récurrents avec date de fin.</help>
-        <label>Déprécié:Critère</label>
-        <name>npe03__Schedule_Type__c</name>
-    </fields>
-    <fields>
-        <help>Pour les dons récurrents avec date de fin, le montant total de toutes les opportunités.</help>
-        <label>Déprécié:Total</label>
-        <name>npe03__Total__c</name>
-    </fields>
-    <fields>
-        <help>Le montant de chaque opportunité de versement.</help>
-        <label>Montant</label>
-        <name>npe03__Amount__c</name>
-    </fields>
-    <fields>
-        <help>La date de prise d’effet de ce don récurrent. La valeur par défaut est la date actuelle.</help>
-        <label>Date de première échéance</label>
-        <name>npe03__Date_Established__c</name>
-    </fields>
-    <fields>
-        <help>Définit le jour spécifique du mois des futures opportunités de versement lorsque la Période de versement est Mensuelle.</help>
-        <label>Jour du mois</label>
-        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>Last Day Of Month</masterLabel>
-            <translation>Dernier jour du mois</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La Période de versement et la Fréquence de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
-        <label>Période de versement</label>
-        <name>npe03__Installment_Period__c</name>
-    </fields>
-    <fields>
-        <help>NPSP calcule automatiquement cette valeur en fonction de la dernière fois qu'une opportunité de versement a été marquée comme payée (lecture seule).</help>
-        <label>Date du dernier don</label>
-        <name>npe03__Last_Payment_Date__c</name>
-    </fields>
-    <fields>
-        <help>Montant total payé pour ce don récurrent. Calculé automatiquement en tant que montant total de toutes les opportunités de versement fermées/gagnées (lecture seule).</help>
-        <label>Montant total payé</label>
-        <name>npe03__Paid_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Nombre total d'opportunités de versement payées pour ce don récurrent (lecture seule).</help>
-        <label>Nombre de versements payés</label>
-        <name>npe03__Total_Paid_Installments__c</name>
-    </fields>
-    <fields>
-        <help>Automatiquement calculée en utilisant le ou les calendriers récurrents actifs. En lecture seule.</help>
-        <label>Date du prochain don</label>
-        <name>npe03__Next_Payment_Date__c</name>
-    </fields>
-    <layouts>
-        <layout>Enhanced Recurring Donations Layout</layout>
-        <sections>
-            <label>Détails de planification</label>
-            <section>Schedule Details</section>
-        </sections>
-        <sections>
-            <label>Statistiques des dons récurrents</label>
-            <section>Recurring Donation Statistics</section>
-        </sections>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du don récurrent</nameFieldLabel>
-    <standardFields>
-        <name>Name</name>
-        <label>Nom du don récurrent</label>
-    </standardFields>
-</CustomObjectTranslation>
+
+  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
+  <fields>
+    <label>Déprécié:Toujours utiliser dernier jour du mois</label>
+    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+  </fields>
+  <fields>
+    <label>Déprécié:Montant du versement</label>
+    <name>npe03__Installment_Amount__c</name>
+  </fields>
+  <fields>
+    <label>Déprécié:Statut de date de fin</label>
+    <name>npe03__Open_Ended_Status__c</name>
+  </fields>
+  <fields>
+    <label>Déprécié:Critère</label>
+    <name>npe03__Schedule_Type__c</name>
+  </fields>
+  <fields>
+    <label>Déprécié:Total</label>
+    <name>npe03__Total__c</name>
+  </fields>
+  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
+  <fields>
+    <name>npe03__Amount__c</name>
+    <help>Le montant de chaque opportunité de versement.</help>
+    <label>Montant</label>
+  </fields>
+  <fields>
+    <name>npe03__Date_Established__c</name>
+    <help>La date de prise d’effet de ce don récurrent. La valeur par défaut est la date actuelle.</help>
+    <label>Date de première échéance</label>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%ClosedReason__c</name>
+    <help>La raison pour laquelle ce don récurrent a sa valeur de statut actuelle.</help>
+    <label>Motif du statut</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>Carte expirée</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>Engagement terminé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>Donateur décédé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>Difficulté financière</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>N&apos;est plus intéressé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>Inconnu</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+    <help>Définit le jour précis du mois des futures opportunités de versement lorsque la période de versement est mensuelle. Si vous sélectionnez 29 ou 30, la date de versement sera le dernier jour du mois pour les mois qui n’ont pas autant de jours.</help>
+    <label>Jour du mois</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Dernier jour du mois</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%RecurringType__c</name>
+    <help>Sélectionnez Ouvert pour un Don récurrent. Sélectionnez Fixe pour un Don récurrent qui a un nombre de versements spécifique. Pour Fixe, vous devez également compléter le champ Nombre de versements prévus.</help>
+    <label>Type de récurrence</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Ouvert</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>Fixe</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%StartDate__c</name>
+    <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s&apos;appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
+    <label>Date de début</label>
+  </fields>
+  <fields>
+    <name>npe03__Installment_Period__c</name>
+    <help>La Période de versement et la Fréquence de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
+    <label>Période de versement</label>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Mensuelle</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Yearly</masterLabel>
+      <translation>Annuelle</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Hebdomadaire</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>1st and 15th</masterLabel>
+      <translation>1er et 15e jours du mois</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Trimestrielle</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
+    <help>La Fréquence de versement et la Période de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
+    <label>Fréquence de versement</label>
+  </fields>
+  <fields>
+    <name>npe03__Last_Payment_Date__c</name>
+    <help>NPSP calcule automatiquement cette valeur en fonction de la dernière fois qu&apos;une opportunité de versement a été marquée comme payée (lecture seule).</help>
+    <label>Date du dernier don</label>
+  </fields>
+  <fields>
+    <name>npe03__Paid_Amount__c</name>
+    <help>Montant total payé pour ce don récurrent. Calculé automatiquement en tant que montant total de toutes les opportunités de versement fermées/gagnées (lecture seule).</help>
+    <label>Montant total payé</label>
+  </fields>
+  <fields>
+    <name>npe03__Total_Paid_Installments__c</name>
+    <help>Nombre total d&apos;opportunités de versement payées pour ce don récurrent (lecture seule).</help>
+    <label>Nombre de versements payés</label>
+  </fields>
+  <fields>
+    <name>npe03__Next_Payment_Date__c</name>
+    <help>Automatiquement calculée en utilisant le ou les calendriers récurrents actifs. En lecture seule.</help>
+    <label>Date du prochain don</label>
+  </fields>
+  <layouts>
+    <layout>Enhanced Recurring Donations Layout</layout>
+    <sections>
+      <label>Informations sur le donateur</label>
+      <section>Donor Information</section>
+    </sections>
+    <sections>
+      <label>Informations sur les dons</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Autres informations</label>
+      <section>Other Information</section>
+    </sections>
+    <sections>
+      <label>Statistiques</label>
+      <section>Statistics</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <startsWith>Consonant</startsWith>
+  </CustomObjectTranslation>

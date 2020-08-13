@@ -5,12 +5,12 @@
         <value>一般会計単位の割り当て</value>
     </caseValues>
     <fields>
-        <help>この一般会計単位に割り当てられる支援金額。パーセントベースの割り当ての場合は空白のままにします。</help>
+        <help>この一般会計単位に割り当てられる商談金額。パーセントベースの割り当ての場合は空白のままにします。</help>
         <label>金額</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>この割り当てに関連付けられたキャンペーン。キャンペーンに関連する新規支援を同じように割り当てる場合、この項目を使用します。</help>
+        <help>この割り当てに関連付けられたキャンペーン。キャンペーンに関連する新規商談を同じように割り当てる場合、この項目を使用します。</help>
         <label>キャンペーン</label>
         <name>Campaign__c</name>
         <relationshipLabel>一般会計単位の割り当て</relationshipLabel>
@@ -26,8 +26,8 @@
         <relationshipLabel>一般会計単位の割り当て</relationshipLabel>
     </fields>
     <fields>
-        <help>この割り当ての対象となる支援。成立フェーズのすべての支援が、この割り当ての一般会計単位に積み上げ集計されます。</help>
-        <label>支援</label>
+        <help>この割り当ての対象となる商談。成立フェーズのすべての商談が、この割り当ての一般会計単位に積み上げ集計されます。</help>
+        <label>商談</label>
         <name>Opportunity__c</name>
         <relationshipLabel>一般会計単位の割り当て</relationshipLabel>
     </fields>
@@ -38,12 +38,12 @@
         <relationshipLabel>支払の割り当て</relationshipLabel>
     </fields>
     <fields>
-        <help>この割り当ての一般会計単位に割り当てる支援金額のパーセント。支援金額を変更すると、一般会計単位の割当金額が更新されます。</help>
+        <help>この割り当ての一般会計単位に割り当てる商談金額のパーセント。商談金額を変更すると、一般会計単位の割当金額が更新されます。</help>
         <label>パーセント</label>
         <name>Percent__c</name>
     </fields>
     <fields>
-        <help>この割り当ての対象となる継続支援。継続支援と関連付けられたすべての新規支援は、自動的に同じように割り当てられます。</help>
+        <help>この割り当ての対象となる継続支援。継続支援と関連付けられたすべての新規商談は、自動的に同じように割り当てられます。</help>
         <label>継続支援</label>
         <name>Recurring_Donation__c</name>
         <relationshipLabel>一般会計単位の割り当て</relationshipLabel>
