@@ -419,6 +419,8 @@
         <members>RD2_OpportunityMatcher_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
+        <members>RD2_PauseForm_CTRL</members>
+        <members>RD2_PauseForm_TEST</members>
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonation</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
@@ -816,6 +818,7 @@
         <members>RD2_EnablementDelegateSimple</members>
         <members>RD2_EnhancementEnabledEvent</members>
         <members>RD2_EntryForm</members>
+        <members>RD2_PauseForm</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -1323,9 +1326,11 @@
         <members>RecurringDonationSchedule__c.InstallmentAmount__c</members>
         <members>RecurringDonationSchedule__c.InstallmentFrequency__c</members>
         <members>RecurringDonationSchedule__c.InstallmentPeriod__c</members>
+        <members>RecurringDonationSchedule__c.IsPause__c</members>
         <members>RecurringDonationSchedule__c.PaymentMethod__c</members>
         <members>RecurringDonationSchedule__c.RecurringDonation__c</members>
         <members>RecurringDonationSchedule__c.StartDate__c</members>
+        <members>RecurringDonationSchedule__c.StatusReason__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -1666,6 +1671,7 @@
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateNotSupported</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>
@@ -1733,15 +1739,23 @@
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_InstallmentStatusSkipped</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
+        <members>RD2_PauseCannotExistOnScheduleChange</members>
         <members>RD2_PauseClosedRDErrorMessage</members>
+        <members>RD2_PauseDeactivationSuccessMessage</members>
         <members>RD2_PauseDescription</members>
         <members>RD2_PauseFirstDonationDateDynamicText</members>
         <members>RD2_PauseHeader</members>
+        <members>RD2_PausePermissionRequired</members>
+        <members>RD2_PauseSaveSuccessMessage</members>
+        <members>RD2_PauseSelectedInstallmentTextPlural</members>
+        <members>RD2_PauseSelectedInstallmentTextSingular</members>
+        <members>RD2_PausedReasonLabel</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -2103,6 +2117,7 @@
         <members>commonFieldLabel</members>
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
+        <members>commonInsufficientPermissions</members>
         <members>commonJWTInvalidKey</members>
         <members>commonJWTInvalidPayload</members>
         <members>commonMMYY</members>
@@ -2120,6 +2135,7 @@
         <members>commonReviewForm</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
+        <members>commonSelectOptionPlaceholder</members>
         <members>commonTemplate</members>
         <members>commonTemplates</members>
         <members>commonUnknownError</members>
@@ -3759,6 +3775,7 @@
         <members>rd2EntryFormCustomFieldsSection</members>
         <members>rd2EntryFormDonorSection</members>
         <members>rd2EntryFormScheduleSection</members>
+        <members>rd2PauseForm</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
@@ -3829,6 +3846,7 @@
         <members>npe01__OppPayment__c.Quick_Update</members>
         <members>npe03__Recurring_Donation__c.Close_Recurring_Donation</members>
         <members>npe03__Recurring_Donation__c.New_Opportunity</members>
+        <members>npe03__Recurring_Donation__c.Pause</members>
         <members>npe03__Recurring_Donation__c.Quick_Update</members>
         <members>npo02__Household__c.Update_Household</members>
         <name>QuickAction</name>
