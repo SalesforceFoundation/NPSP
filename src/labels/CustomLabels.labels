@@ -1610,6 +1610,14 @@
         <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateNotSupported</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the functionality is not supported for Elevate Recurring Donation.</shortDescription>
+        <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2159,6 +2167,14 @@
         <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
         <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
     </labels>
+     <labels>
+        <fullName>RD2_InstallmentStatusSkipped</fullName>
+        <categories>Recurring-Donations, Info</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status of an installment that is skipped</shortDescription>
+        <value>Paused</value>
+    </labels>
     <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -2200,12 +2216,28 @@
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>RD2_PauseCannotExistOnScheduleChange</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot change specific fields causing schedule change when a pause exists</shortDescription>
+        <value>You can&apos;&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;&apos;d like to update the field(s), you must deactivate the pause.</value>
+    </labels>
+    <labels>
         <fullName>RD2_PauseClosedRDErrorMessage</fullName>
         <categories>Recurring-Donations, Pause</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message when trying to pause Closed Recurring Donation.</shortDescription>
         <value>You can&apos;t Pause a Closed Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseDeactivationSuccessMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating a pause has been removed successfully</shortDescription>
+        <value>Pause on {0} was removed.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseDescription</fullName>
@@ -2216,12 +2248,20 @@
         <value>Select installments from the list below. You can pause for up to 12 consecutive installments.</value>
     </labels>
     <labels>
-        <fullName>RD2_PauseHeader</fullName>
+        <fullName>RD2_PausePermissionRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>User does not have a permission to edit or create Recurring Donations</shortDescription>
+        <value>You don&apos;t have the required permissions to pause a Recurring Donation. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PausedReasonLabel</fullName>
         <categories>Recurring-Donations, Pause</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2 Pause Header</shortDescription>
-        <value>Pause {0}</value>
+        <shortDescription>Paused Reason field label on the Recurring Donation Pause page</shortDescription>
+        <value>Paused Reason</value>
     </labels>
     <labels>
         <fullName>RD2_PauseFirstDonationDateDynamicText</fullName>
@@ -2230,6 +2270,38 @@
         <protected>true</protected>
         <shortDescription>RD2 Pause first donation date after the pause</shortDescription>
         <value>The first donation date after the pause period will be {0}.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseHeader</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause Header containing the Recurring Donation name</shortDescription>
+        <value>Pause {0}</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseSaveSuccessMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating a pause has been saved successfully</shortDescription>
+        <value>Pause on {0} was saved.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseSelectedInstallmentTextPlural</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating multiple installments have been selected to skip</shortDescription>
+        <value>You&apos;ve selected {0} installments.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseSelectedInstallmentTextSingular</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains message indicating one installment has been selected to skip</shortDescription>
+        <value>You&apos;ve selected 1 installment.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleLWCEndDate</fullName>
@@ -5049,6 +5121,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>General Account Unit</value>
     </labels>
     <labels>
+        <fullName>commonInsufficientPermissions</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Indicates user does not have permissions for the action</shortDescription>
+        <value>Insufficient Permissions</value>
+    </labels>
+    <labels>
         <fullName>commonJWTInvalidKey</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5199,6 +5279,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Save and Close</shortDescription>
         <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>commonSelectOptionPlaceholder</fullName>
+        <categories>Combobox</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contains value for a placeholder on a dropdown field</shortDescription>
+        <value>Select an Option</value>
     </labels>
     <labels>
         <fullName>commonTemplate</fullName>
