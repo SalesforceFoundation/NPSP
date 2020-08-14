@@ -36,12 +36,13 @@ Setup Test Data
 
 *** Test Cases ***
 Review Donation And Update Opportunity For Batch Gift
-    # [Documentation]                      Create an organization account with open opportunity (with payment record) via API. Go to SGE form
-    # ...                                  select the donor as account and the account created. Verify review donations modal and select to update payment.
-    # ...                                  Change date to today and payment amount to be less than opp amount. Verify that same payment record got updated
-    # ...                                  with new amount and date but opportunity is still prospecting and amount is not updated.
+    [Documentation]                      Create a contact with open opportunity (with payment record) via API. Create a batch with default template
+    ...                                  select donor as the contact created. Verify review donations modal has update opportunity disabled.
+    ...                                  Create a new payment record for opp via API and verify update opp link is enabled.
+    ...                                  Change date to today and payment amount to be less than opp amount and process gift. Verify that
+    ...                                  opportunity is closedwon, amount and date match with values entered on form.
     [tags]                               unstable      feature:GE                    W-042803
-    #verify Review Donations link is available and update a payment
+    #verify Review Donations link is available and update a payment link is active and update opportunity is disabled
     Go To Page                           Landing                       GE_Gift_Entry
     Click Gift Entry Button              New Batch
     Wait Until Modal Is Open
@@ -62,6 +63,7 @@ Review Donation And Update Opportunity For Batch Gift
     Verify Link Status
     ...                                  Update this Payment=enabled
     ...                                  Update this Opportunity=disabled
+    #create a new payment for same opp and verify update opportunity link is enabled
     &{new_payment} =                     API Create Payment            ${OPPORTUNITY}[Id]
     ...                                  npe01__Payment_Amount__c=50.0
     ...                                  npe01__Scheduled_Date__c=${CUR_DATE}
@@ -75,6 +77,7 @@ Review Donation And Update Opportunity For Batch Gift
     Verify Link Status                   Update this Opportunity=enabled
     Click Button                         Update this Opportunity
     Wait Until Modal Is Closed
+    #update opportunity with new values
     Fill Gift Entry Form
     ...                                  Donation Amount=80
     ...                                  Donation Date=Today
