@@ -940,7 +940,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         
         System.assertEquals(null, rd.Day_of_Month__c, 'Day of Month should be clear out when RD is not monthly.');
     }
-    
+
     /***
     * @description Verifies RD "Day of Month" can be modified
     * when a pause does not exist on the RD
@@ -1051,6 +1051,8 @@ private with sharing class RD2_RecurringDonations_TEST {
         Test.startTest();
         Exception actualException;
         try {
+            // Change of the "Installment Period" from Monthly to Weekly will nullify the "Day of Month" field,
+            // thus the field will be displayed in the list of fields that cannot be changed when a pause exists.
             rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
             rd.InstallmentFrequency__c = 2;
             update rd;
@@ -1065,6 +1067,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             new String[]{ 
                 SObjectType.npe03__Recurring_Donation__c.fields.npe03__Installment_Period__c.getLabel() 
                 + ', ' + SObjectType.npe03__Recurring_Donation__c.fields.InstallmentFrequency__c.getLabel() 
+                + ', ' + SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c.getLabel() 
             }
         );
         System.assert(actualException.getMessage().contains(expectedMessage), 
