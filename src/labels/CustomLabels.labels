@@ -5608,9 +5608,9 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Alt text: label for the checkbox that controls requiring a field</shortDescription>
-        <!-- {0} is a string. Name of a form field. -->
-        <value>Require {0}</value>
+        <shortDescription>Alt text: explains the function of the required checkbox</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>Require {0}.</value>
     </labels>
     <labels>
         <fullName>geAssistiveFieldUp</fullName>
@@ -5701,16 +5701,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Alt text: explains the function of the required checkbox if set as required</shortDescription>
-        <value>{0} is required.</value>
+        <shortDescription>Alt text: indicates a form field has been set as required</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as required.</value>
     </labels>
     <labels>
         <fullName>geAssistiveDescriptionFieldOptional</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Alt text: explains the function of the required checkbox if set as optional</shortDescription>
-        <value>{0} is optional.</value>
+        <shortDescription>Alt text: indicates a form field is optional</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as optional.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
