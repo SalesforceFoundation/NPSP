@@ -7,7 +7,7 @@
 - object: Contact
   count: 1300
   fields:
-    record_type: HH_Account
+    RecordType: HH_Account
     FirstName: Contact <<id>> - 1
     LastName: Contact
     AccountId:
@@ -161,29 +161,16 @@
                 probability: 5%
                 pick: Fixed
     npe03__Installment_Period__c: Monthly
-    InstallmentFrequency__c: 1
-    Day_of_Month__c:
-          if:
-            - choice:
-                when: <<npe03__Installment_Period__c=='Monthly'>>
-                pick:
-                  random_choice:
-                    - 1
-                    - 15
-                    - 30
-                    - Last_Day
-            - choice:
-                pick: ""
+    npe03__Date_Established__c:
+      date_between:
+        start_date: 2016-08-01
+        end_date: 2020-01-01
     npe03__Installments__c: << (date("2020-01-01") - date(npe03__Recurring_Donation__c.npe03__Date_Established__c)).days / 30 >>
     npe03__Amount__c:
       random_number:
         min: 1
         max: 100
     npe03__Contact__c: <<((count -1 )% Contact.id)+1>>  # pseudo-randomly select Account
-    npe03__Date_Established__c:
-      date_between:
-        start_date: 2014-08-01
-        end_date: 2020-01-01
   friends:
     - object: Opportunity
       include: OpportunityStuff

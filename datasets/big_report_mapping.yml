@@ -18,7 +18,14 @@ Insert npe03__Recurring_Donation__c:
   sf_object: npe03__Recurring_Donation__c
   table: npe03__Recurring_Donation__c
   fields:
-    npe03__Date_Established__c: npe03__Date_Established__c
+    - npe03__Date_Established__c
+    - Status__c
+    - PaymentMethod__c
+    - npe03__Schedule_Type__c
+    - RecurringType__c
+    - npe03__Installment_Period__c
+    - npe03__Installments__c
+    - npe03__Amount__c
   lookups:
     npe03__Contact__c:
       table: Contact
