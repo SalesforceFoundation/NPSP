@@ -70,34 +70,15 @@ public class TEST_SObjectGateway {
         * @return List<npe03__Recurring_Donation__c>
         */
         public List<npe03__Recurring_Donation__c> getRecords(Set<Id> rdIds) {
-            return [
-                SELECT
-                    Name,
-                    npe03__Recurring_Donation_Campaign__c,
-                    npe03__Organization__c,
-                    npe03__Contact__c,
-                    npe03__Donor_Name__c,
-                    npe03__Amount__c,
-                    npe03__Paid_Amount__c,
-                    npe03__Date_Established__c,
-                    Day_of_Month__c,
-                    StartDate__c,
-                    npe03__Next_Payment_Date__c,
-                    npe03__Last_Payment_Date__c,
-                    npe03__Installment_Period__c,
-                    InstallmentFrequency__c,
-                    npe03__Total_Paid_Installments__c,
-                    npe03__Installments__c,
-                    PaymentMethod__c,
-                    RecurringType__c,
-                    Status__c,
-                    ClosedReason__c,
-                    CurrentYearValue__c,
-                    NextYearValue__c,
-                    EndDate__c
-                FROM npe03__Recurring_Donation__c
-                WHERE Id IN :rdIds
-            ];
+            List<npe03__Recurring_Donation__c> records = new List<npe03__Recurring_Donation__c>();
+            
+            for (npe03__Recurring_Donation__c rd : getRecords()) {
+                if (rdIds.contains(rd.Id)) {
+                    records.add(rd);
+                }
+            }
+            
+            return records;
         }
 
         /***
@@ -117,15 +98,19 @@ public class TEST_SObjectGateway {
                     npe03__Date_Established__c,
                     Day_of_Month__c,
                     StartDate__c,
+                    EndDate__c,
                     npe03__Next_Payment_Date__c,
                     npe03__Last_Payment_Date__c,
                     npe03__Installment_Period__c,
                     InstallmentFrequency__c,
                     npe03__Total_Paid_Installments__c,
+                    npe03__Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c,
-                    EndDate__c
+                    ClosedReason__c,
+                    CurrentYearValue__c,
+                    NextYearValue__c
                 FROM npe03__Recurring_Donation__c
             ];
         }
@@ -159,13 +144,17 @@ public class TEST_SObjectGateway {
             return [
                 SELECT
                     Campaign__c,
+                    Campaign__r.Name,
                     DayOfMonth__c,
+                    StartDate__c,
                     EndDate__c,
                     InstallmentAmount__c,
                     InstallmentFrequency__c,
                     InstallmentPeriod__c,
+                    PaymentMethod__c,
                     RecurringDonation__c,
-                    StartDate__c
+                    IsPause__c,
+                    StatusReason__c
                 FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :rds
             ];
