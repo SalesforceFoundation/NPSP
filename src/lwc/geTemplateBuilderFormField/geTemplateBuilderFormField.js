@@ -159,7 +159,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get labelGeAssistiveRequiredCheckboxDescription() {
-        if(this.isRequired) {
+        if (this.isRequired) {
             return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveDescriptionFieldRequired, [this.field.label]);
         } else {
             return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveDescriptionFieldOptional, [this.field.label]);
