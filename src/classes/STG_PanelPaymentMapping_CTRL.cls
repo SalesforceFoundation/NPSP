@@ -91,59 +91,57 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Initializes the targetfields SelectOption list for the selected object
+    * @description Initializes the targetFields SelectOption list for the selected object
+    * @return List of SelectOption with available fields for mapping.
     */
-    public list<SelectOption> getTargetFields(){
+    public List<SelectOption> getTargetFields() {
+        targetFields.clear();
 
-        targetfields.clear();
-        set<string> knownfields;
-        map<string, Schema.Sobjectfield> targetTokenMap = new map<string, Schema.Sobjectfield>();
-
-        targetTokenMap = Schema.SObjectType.npe01__OppPayment__c.fields.getMap().clone();
-        knownfields = new set<string>{
+        String paymentObjectName = Schema.SObjectType.npe01__OppPayment__c.getName();
+        Set<String> paymentsFieldsToExclude = new Set<String> {
             'npe01__Opportunity__c', 'npe01__Paid__c', 'npe01__Payment_Amount__c', 'npe01__Payment_Date__c',
             'npe01__Written_Off__c'};
-
+        Map<String, Schema.SObjectField> targetTokenMap = Schema.SObjectType.npe01__OppPayment__c.fields.getMap().clone();
+       
         //pop out the known fields
-        for (string s : knownfields){
-            s = s.toLowerCase();
-            targetTokenMap.remove(s);
+        for (String fieldName : paymentsFieldsToExclude) {
+            fieldName = fieldName.toLowerCase();
+            targetTokenMap.remove(fieldName);
         }
 
         // remove fields that are already used in a mapping
         for (npe01__Payment_Field_Mapping_Settings__c pfm : STG_Panel.stgService.listPMTFieldMapping) {
-            string s = pfm.npe01__Payment_Field__c;
-            s = s.toLowerCase();
-            targetTokenMap.remove(s);
+            String paymentFieldName = pfm.npe01__Payment_Field__c;
+            paymentFieldName = paymentFieldName.toLowerCase();
+            targetTokenMap.remove(paymentFieldName);
         }
 
-        if ((targettokenMap.size() < 75) && (targettokenMap.size() > 0)){
+        if (!targettokenMap.isEmpty()) {
 
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);
-            for (string s : targetTokenMap.keyset()){
-                if (s.contains('__c') && UTIL_Describe.isValidField('npe01__OppPayment__c', s)) {
-                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe01__OppPayment__c', s);
+            for (String fieldName : targetTokenMap.keyset()) {
+                if (fieldName.contains('__c') && UTIL_Describe.isValidField(paymentObjectName, fieldName)) {
+                    Schema.DescribeFieldResult field = UTIL_Describe.getFieldDescribe(paymentObjectName, fieldName);
 
                     // disallow formula fields and autonums
-                    if (f.isCalculated() || f.isAutoNumber())
+                    if (field.isCalculated() || field.isAutoNumber()) {
                         continue;
-
+                    }
                     // check for compatible displaytypes
-                    Schema.DisplayType payType = f.getType();
+                    Schema.DisplayType payType = field.getType();
                     if (UTIL_Describe.canDisplaytypesCopy(oppType, payType)) {
-                        targetfields.add(new SelectOption(f.getName(), f.getLabel()));
+                        targetFields.add(new SelectOption(field.getName(), field.getLabel()));
                     }
                 }
-
             }
 
-        targetfields.sort();
+            targetFields.sort();
         }
 
-        if (targetfields.size() < 1){
-            targetfields.add(new SelectOption(strNoValidField, strNoValidField));
+        if (targetFields.isEmpty()) {
+            targetFields.add(new SelectOption(strNoValidField, strNoValidField));
         }
-        return targetfields;
+        return targetFields;
     }
 
     /*********************************************************************************************************
