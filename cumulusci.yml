@@ -1074,7 +1074,7 @@ flows:
             1:
                 flow: qa_org
             2:
-                flow: rd_load_for_mbeatty
+                flow: rd_load_for_mbeaty
 
     test_performance_LDV:
         description: 'Runs BDI performance tests against a pre-existing org'
@@ -1127,7 +1127,7 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
-    rd_load_for_mbeatty:
+    rd_load_for_mbeaty:
         steps:
             1:
                 task: disable_triggers
