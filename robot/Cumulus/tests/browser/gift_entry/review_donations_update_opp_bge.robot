@@ -29,18 +29,22 @@ Setup Test Data
     ...                  npe01__Do_Not_Automatically_Create_Payment__c=false
     ...                  Name=${CONTACT}[Name] Donation
     Set suite variable   &{OPPORTUNITY}
+    &{PAYMENT} =         API Query Record         npe01__OppPayment__c      npe01__Opportunity__c=${OPPORTUNITY}[Id]
+    Set suite variable   &{PAYMENT}
     ${UI_DATE} =         Get Current Date                   result_format=%b %-d, %Y
     Set suite variable   ${UI_DATE}
     ${NS} =              Get NPSP Namespace Prefix
     Set suite variable   ${NS}
 
+
 *** Test Cases ***
 Review Donation And Update Opportunity For Batch Gift
-    [Documentation]                      Create a contact with open opportunity (with payment record) via API. Create a batch with default template
-    ...                                  select donor as the contact created. Verify review donations modal has update opportunity disabled.
-    ...                                  Create a new payment record for opp via API and verify update opp link is enabled.
-    ...                                  Change date to today and payment amount to be less than opp amount and process gift. Verify that
-    ...                                  opportunity is closedwon, amount and date match with values entered on form.
+    [Documentation]                      Create a contact with open opportunity (with payment record) via API. Create a batch
+    ...                                  with default template and donor as contact. Verify review donations modal has
+    ...                                  update opportunity disabled. Create a new payment record for opp via API and verify
+    ...                                  update opp link is enabled. Change date to today and amount less than opp amount, process gift.
+    ...                                  Verify opportunity is closedwon, amount and date match with values entered on form but
+    ...                                  no new payment created or existing payment records are not updated.
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and update a payment link is active and update opportunity is disabled
     Go To Page                           Landing                       GE_Gift_Entry
@@ -99,3 +103,15 @@ Review Donation And Update Opportunity For Batch Gift
     ...                                  Amount=80.0
     ...                                  CloseDate=${CUR_DATE}
     ...                                  StageName=Closed Won
+    #verify new payment is not created and existing payment records are not updated
+    Verify Record Count For Object       npe01__OppPayment__c           2
+    ...                                  npe01__Opportunity__c=${OPPORTUNITY}[Id]
+    Verify Expected Values               nonns                          npe01__OppPayment__c    ${PAYMENT}[Id]
+    ...                                  npe01__Payment_Amount__c=100.0
+    ...                                  npe01__Scheduled_Date__c=${FUT_DATE}
+    ...                                  npe01__Paid__c=False
+    Verify Expected Values               nonns                          npe01__OppPayment__c    ${new_payment}[Id]
+    ...                                  npe01__Payment_Amount__c=50.0
+    ...                                  npe01__Scheduled_Date__c=${CUR_DATE}
+    ...                                  npe01__Paid__c=False
+
