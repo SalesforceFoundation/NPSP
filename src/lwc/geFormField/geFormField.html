@@ -30,7 +30,7 @@
             ></lightning-input-field>
         </lightning-record-edit-form>
     </template>
-    <template if:true={isRecordType}>
+    <template if:true={isLookupRecordType}>
         <c-ge-form-field-lookup data-id='inputComponent'
                                 field-api-name={fieldApiName}
                                 object-api-name={objectApiName}
