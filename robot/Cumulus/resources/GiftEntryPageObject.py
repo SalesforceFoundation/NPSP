@@ -288,11 +288,16 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             type=self.selenium.get_element_attribute(locator,"data-qa-locator")
             field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             print(f"type is {type}")
-            if 'autocomplete' in type :
+            if 'input autocomplete' in type :
                 self.salesforce._populate_field(locator,value)
                 value_locator=npsp_lex_locators["gift_entry"]["id"].format("Select "+value)
                 self.selenium.wait_until_page_contains_element(value_locator)
                 self.selenium.click_element(value_locator)
+            elif type.startswith("autocomplete"):
+                self.salesforce._populate_field(field_locator,value)
+                option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
+                self.selenium.wait_until_page_contains_element(option)
+                self.selenium.click_element(option)
             elif 'combobox' in type :
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["flexipage-popup"]
