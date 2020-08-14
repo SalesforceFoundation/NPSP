@@ -111,15 +111,7 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
             return;
         }
 
-        RD2_QueueableService.EvaluateInstallmentOpportunities service =
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
-
-        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-            System.enqueueJob(service);
-
-        } else {
-            service.executeOppEvaluationService();
-        }
+        RD2_QueueableService.enqueueOppEvalService(rdIds);
     }
 
     /***
