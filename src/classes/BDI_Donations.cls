@@ -674,7 +674,7 @@ public class BDI_Donations {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
                     if (shouldSetDonationBatchNumber(payment, dataImport)) {
-                        payment.put(npe01__OppPayment__c.npsp__Batch_Number__c,
+                        payment.put(npe01__OppPayment__c.Batch_Number__c,
                             dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c);
                     }
 
