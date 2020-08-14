@@ -581,6 +581,19 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /****
+    * @description Sets Elevate Integration service so the integration is enabled
+    */
+    public static void enableElevateUserPermissions() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+    }
+
+    /****
     * @description Sets up RD restricted field change and verifies if user is permitted to update it
     * @param configStub Elevate Integration Service stub
     * @param hasPermission Expected output from the service when checking the permission
