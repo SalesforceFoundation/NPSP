@@ -96,26 +96,26 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Integer numberOfInstallments = null;
         Id rdId = null;
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         try {
             RD2_VisualizeScheduleController.getInstallments(rdId, numberOfInstallments);
         } catch (Exception e) {
             actualException = e;
         }
 
-        assertScheduleVisualizerException(actualException);
+        assertComponentOnInvalidPageException(actualException);
     }
 
     /****
     * @description Validates that AuraHandledException is thrown when zero installments are requested
     */
     @IsTest
-    private static void shouldThrowAuraHandledExceptionWhenZeroInstallmentsRequested() {
+    private static void shouldThrowExceptionWhenZeroInstallmentsRequested() {
         Exception actualException;
         Integer numberOfInstallments = 0;
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
-
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
         Test.startTest();
         insert rd;
         Test.stopTest();
@@ -126,20 +126,19 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             actualException = e;
         }
 
-        assertScheduleVisualizerException(actualException);
+        assertNoInstallmentReturnedException(actualException);
     }
 
     /****
     * @description Validates that AuraHandledException is thrown when negative number of installments are requested
     */
     @IsTest
-    private static void shouldThrowAuraHandledExceptionWhenNegativeNumberOfInstallmentsRequested() {
+    private static void shouldThrowExceptionWhenNegativeNumberOfInstallmentsRequested() {
         Exception actualException;
         Integer numberOfInstallments = -5;
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
-
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
         Test.startTest();
         insert rd;
         Test.stopTest();
@@ -150,7 +149,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             actualException = e;
         }
 
-        assertScheduleVisualizerException(actualException);
+        assertNoInstallmentReturnedException(actualException);
     }
 
     /****
@@ -163,7 +162,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Date today = Date.newInstance(1968, 7, 19);
         Date installment5Date = Date.newInstance(1968, 12, 1);
         Date installment10Date = Date.newInstance(1969, 5, 1);
-  
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
@@ -175,7 +174,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         insert rd;
         Test.stopTest();
 
-        RD2_ScheduleService.currentDate = today;      
+        RD2_ScheduleService.currentDate = today;
         List<RD2_VisualizeScheduleController.Installment> installments = getInstallments(rd.Id, numberOfInstallments);
 
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of installments should match');
@@ -244,7 +243,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             actualException = e;
         }
 
-        assertScheduleVisualizerException(actualException);
+        assertRD2IsNotEnabledException(actualException);
     }
 
     /****
@@ -254,6 +253,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     private static void shouldThrowAuraHandledExceptionWhenNonRDSObjectUsed() {
         Exception actualException;
         Integer numberOfInstallments = 12;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Account acc = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         insert acc;
@@ -264,7 +264,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             actualException = e;
         }
 
-        assertScheduleVisualizerException(actualException);
+        assertComponentOnInvalidPageException(actualException);
     }
 
     /****
@@ -362,7 +362,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             actualException = e;
         }
 
-        assertScheduleVisualizerException(actualException);
+        assertNoActiveScheduleReturnedException(actualException);
     }
 
     /****
@@ -509,7 +509,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Verifies a field value is set to null when the field is not accessible
     */
     @IsTest
-    private static void shouldNullValueWhenAnInstallmentFieldIsNotAccessible() {  
+    private static void shouldNullValueWhenAnInstallmentFieldIsNotAccessible() {
         Integer numberOfInstallments = 3;
         Date today = DATE_ESTABLISHED.addMonths(2);
         RD2_ScheduleService.currentDate = today;
@@ -538,7 +538,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         }
 
         RD2_VisualizeScheduleController.sanitizeInstallments(dataTable);
-        
+
         for (Object obj : dataTable.getRecords()) {
             RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
             System.assertNotEquals(null, record.donationDate, 'Date should be specified');
@@ -551,14 +551,14 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Verifies all field values are set to null when no field is accessible
     */
     @IsTest
-    private static void shouldNullValueWhenAllInstallmentFieldsAreNotAccessible() {  
+    private static void shouldNullValueWhenAllInstallmentFieldsAreNotAccessible() {
         Integer numberOfInstallments = 3;
         Date today = DATE_ESTABLISHED.addMonths(2);
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();        
-        
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
         Boolean isAccessible = false;
         RD2_VisualizeScheduleController.DataTable dataTable = buildInstallmentDataTable(isAccessible);
 
@@ -585,14 +585,14 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Verifies a field value is left as is when the field is accessible
     */
     @IsTest
-    private static void shouldLeaveValueAsIsWhenAllInstallmentFieldsAreAccessible() {  
+    private static void shouldLeaveValueAsIsWhenAllInstallmentFieldsAreAccessible() {
         Integer numberOfInstallments = 3;
         Date today = DATE_ESTABLISHED.addMonths(2);
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
-        
+
         RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildInstallmentDataTable(rd);
 
         dataTable.setRecords(buildInstallments(rd, numberOfInstallments));
@@ -612,7 +612,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Verifies expected columns are added to the installment data table
     */
     @IsTest
-    private static void shouldAddInstallmentObjectColumnsIntoInstallmentDataTable() {  
+    private static void shouldAddInstallmentObjectColumnsIntoInstallmentDataTable() {
         Date today = DATE_ESTABLISHED.addMonths(2);
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -641,7 +641,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Verifies expected columns are added to the schedule data table
     */
     @IsTest
-    private static void shouldAddScheduleColumnsIntoScheduleDataTable() {  
+    private static void shouldAddScheduleColumnsIntoScheduleDataTable() {
         Date today = DATE_ESTABLISHED.addMonths(2);
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -693,7 +693,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Verifies a field value is left as is when the field is accessible
     */
     @IsTest
-    private static void shouldLeaveValueAsIsWhenAllScheduleFieldsAreAccessible() {  
+    private static void shouldLeaveValueAsIsWhenAllScheduleFieldsAreAccessible() {
         Date today = DATE_ESTABLISHED.addMonths(2);
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -753,7 +753,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Verifies a field value is set to null when the field is not accessible
     */
     @IsTest
-    private static void shouldNullValueWhenAScheduleFieldIsNotAccessible() { 
+    private static void shouldNullValueWhenAScheduleFieldIsNotAccessible() {
         Date today = DATE_ESTABLISHED.addMonths(2);
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -763,7 +763,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         RD2_VisualizeScheduleController.DataTable dataTable = new RD2_VisualizeScheduleController.DataTable();
         for (String fieldName : new String[] {
             SCHEDULE_IS_CURRENT,
-            SCHEDULE_AMOUNT, 
+            SCHEDULE_AMOUNT,
             SCHEDULE_PAYMENT_METHOD,
             SCHEDULE_CAMPAIGN,
             SCHEDULE_START_DATE,
@@ -824,11 +824,11 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         RD2_VisualizeScheduleController.cachedRd = new RD2_RecurringDonation(rd);
         RD2_ScheduleService.currentDate = today;
-        
+
         Test.startTest();
         List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
         Test.stopTest();
-        
+
         System.assertEquals(newStatus, RD2_VisualizeScheduleController.cachedRd.getSObject().Status__c, 'Cached RD status should be New');
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, RD2_VisualizeScheduleController.cachedRd.getState(), 'RD state should be mapped to Active');
         System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
@@ -873,7 +873,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         }
         Test.stopTest();
 
-        assertScheduleVisualizerException(actualException);
+        assertNoActiveScheduleReturnedException(actualException);
     }
 
     /***
@@ -1076,18 +1076,59 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     }
 
     /****
-    * @description Verifies exception has been generated and its type and message are as expected
+    * @description Asserts schedules and installments cannot be displayed
+    * when RD2 is not enabled.
     * @param actualException Actual exception (if any)
     * @return void
     */
-    private static void assertScheduleVisualizerException(Exception actualException) {
-        Exception expectedException = new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
-
+    private static void assertRD2IsNotEnabledException(Exception actualException) {
+        // The label name does not match the label value.
+        // The label value: "You must enable Enhanced Recurring Donations to use this component."
+        // This switch will be fixed in another WI.
         System.assertNotEquals(null, actualException, 'An exception should be generated');
-        System.assertEquals(expectedException.getTypeName(), actualException.getTypeName(),
-                'Exception type should be System.AuraHandledException');
-        System.assertEquals(expectedException.getMessage(), actualException.getMessage(),
-                'Exception message should match');
+
+        System.assertEquals(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage, actualException.getMessage(),
+            'Exception message should match');
+    }
+
+    /****
+    * @description Asserts the schedule or installment component is added on a detail page
+    * that is not a Recurring Donation detail page.
+    * @param actualException Actual exception (if any)
+    * @return void
+    */
+    private static void assertComponentOnInvalidPageException(Exception actualException) {
+        // The label name does not match the label value.
+        // The label value: "This component must be used on a Recurring Donations record page."
+        // This switch will be fixed in another WI.
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+
+        System.assertEquals(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot, actualException.getMessage(),
+            'Exception message should match');
+    }
+
+    /****
+    * @description Asserts error message indicating no active schedule can be displayed on the component
+    * @param actualException Actual exception (if any)
+    * @return void
+    */
+    private static void assertNoActiveScheduleReturnedException(Exception actualException) {
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+
+        System.assertEquals(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule, actualException.getMessage(),
+            'Exception message should match');
+    }
+
+    /****
+    * @description Asserts error message indicating no installment can be displayed on the component
+    * @param actualException Actual exception (if any)
+    * @return void
+    */
+    private static void assertNoInstallmentReturnedException(Exception actualException) {
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+
+        System.assertEquals(System.Label.RD2_ScheduleVisualizerMessageNoSchedule, actualException.getMessage(),
+            'Exception message should match');
     }
 
     /****
@@ -1102,7 +1143,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         System.assertEquals(true, schedules[0].isCurrent, 'First schedule should be current');
         System.assertEquals(false, schedules[1].isCurrent, 'Second schedule should not be current');
-        
+
         System.assertEquals(startDate, schedules[0].startDate, 'First schedule Start Date should be unchanged');
         System.assertEquals(newStartDate.addDays(-1), schedules[0].endDate, 'First schedule should end before the second starts');
         System.assertEquals(newStartDate, schedules[1].startDate, 'Second schedule Start Date should be new Effective Date');
