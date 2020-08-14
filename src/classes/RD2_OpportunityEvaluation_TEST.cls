@@ -43,6 +43,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
+    private static final Integer MONTHS_TO_DEC = START_DATE.monthsBetween(Date.newInstance(2019, 12, 15));
     private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
 
     /****
@@ -829,6 +830,78 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
+     * @description The Current Year Value should exclude skipped installments within the current year.
+     */
+    @IsTest
+    private static void shouldUpdateCurrentYearValueToExcludeSkippedInstallments() { 
+        final Date startDate = Date.newInstance(2019, 6, 15);
+        Date today = startDate.addMonths(1).addDays(-1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withDateEstablished(startDate)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(startDate)
+            .build();
+
+        //skip three donations
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, Date.newInstance(2019, 9, 15), Date.newInstance(2019, 11, 15));
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(rd.npe03__Amount__c * 4, rd.CurrentYearValue__c,
+            'Current Year Value should exclude skipped installments');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should include next year projected installments');
+    }
+
+    /**
+     * @description The Next Year Value should exclude skipped installments within the next year.
+     */
+    @IsTest
+    private static void shouldUpdateNextYearValueToExcludeSkippedInstallments() { 
+        final Date startDate = Date.newInstance(2019, 6, 15);
+        Date today = startDate.addMonths(1).addDays(-1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withDateEstablished(startDate)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(startDate)
+            .build();
+
+        //skip Sep 2019 - Feb 2020 donations
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, Date.newInstance(2019, 9, 15), Date.newInstance(2020, 2, 15));
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(rd.npe03__Amount__c * 3, rd.CurrentYearValue__c,
+            'Current Year Value should exclude skipped installments in the current year');
+        System.assertEquals(rd.npe03__Amount__c * 10, rd.NextYearValue__c,
+            'Next Year Value should exclude skipped installments in the next year');
+    }
+
+    /**
     * @description Verifies that a Fixed Length RD stays active when the number of paid installments is less
     * than the number of planned installments..
     */
@@ -1231,5 +1304,4 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         return rdGateway.getRecord(rd.Id);
     }
-
 }

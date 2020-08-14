@@ -1013,7 +1013,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * with their matching projected installments
      */
     @IsTest
-    private static void yearValuesShouldExcludeInstallmentWhenMatchingOppExists() {
+    private static void yearValuesShouldNotDoubleCountInstallmentWhenMatchingOppExists() {
         //set current date override
         final Date nextCloseDate = START_DATE.addMonths(MONTHS_TO_DEC);
         final Date today = nextCloseDate.addDays(-1);
