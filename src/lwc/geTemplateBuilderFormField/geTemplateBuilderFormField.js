@@ -154,19 +154,15 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldDown, [this.field.label]);
     }
 
-    get labelGeAssistiveRequiredCheckbox() {
-        if(this.isRequired) {
-            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSetFieldOptional, [this.field.label]);
-        } else {
-            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSetFieldRequired, [this.field.label]);
-        }
+    get labelGeAssistiveRequireField() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveRequireField, [this.field.label]);
     }
 
     get labelGeAssistiveRequiredCheckboxDescription() {
         if(this.isRequired) {
-            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldRequired, [this.field.label]);
+            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveDescriptionFieldRequired, [this.field.label]);
         } else {
-            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldNotRequired, [this.field.label]);
+            return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveDescriptionFieldOptional, [this.field.label]);
         }
     }
 

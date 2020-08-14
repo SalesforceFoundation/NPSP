@@ -5604,22 +5604,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Move the {0} field down.</value>
     </labels>
     <labels>
-        <fullName>geAssistiveFieldRequired</fullName>
+        <fullName>geAssistiveRequireField</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Alt text: indicates a form field has been set as required</shortDescription>
+        <shortDescription>Alt text: label for the checkbox that controls requiring a field</shortDescription>
         <!-- {0} is a string. Name of a form field. -->
-        <value>{0} is now required.</value>
-    </labels>
-    <labels>
-        <fullName>geAssistiveFieldNotRequired</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Alt text: indicates a form field is no longer required</shortDescription>
-        <!-- {0} is a string. Name of a form field. -->
-        <value>{0} is no longer required.</value>
+        <value>Require {0}</value>
     </labels>
     <labels>
         <fullName>geAssistiveFieldUp</fullName>
@@ -5706,20 +5697,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Show menu.</value>
     </labels>
     <labels>
-        <fullName>geAssistiveSetFieldOptional</fullName>
+        <fullName>geAssistiveDescriptionFieldRequired</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: explains the function of the required checkbox if set as required</shortDescription>
-        <value>Select to set {0} as optional.</value>
+        <value>{0} is required.</value>
     </labels>
     <labels>
-        <fullName>geAssistiveSetFieldRequired</fullName>
+        <fullName>geAssistiveDescriptionFieldOptional</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Alt text: explains the function of the required checkbox if set as required</shortDescription>
-        <value>Select to set {0} as required.</value>
+        <shortDescription>Alt text: explains the function of the required checkbox if set as optional</shortDescription>
+        <value>{0} is optional.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
