@@ -5,7 +5,7 @@
         variant="narrow"
         icon-name="action:defer">
 
-        <div class="slds-m-around_medium" if:true={error}>
+        <div class="slds-m-around_medium" if:true={error} data-qa-locator="error">
             <span class="slds-text-color_error">{error}</span>
         </div>
 
@@ -15,8 +15,10 @@
                 key-field="installmentNumber"
                 data={installments}
                 columns={columns}
-                class="visualized-installments slds-table_striped"
                 is-loading={isLoading}
+                selected-rows={selectedIds}
+                data-id="installments"
+                data-qa-locator="datatable Installments"
                 hide-checkbox-column>
             </lightning-datatable>
         </div>
