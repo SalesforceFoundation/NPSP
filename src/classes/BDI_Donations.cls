@@ -185,6 +185,10 @@ public class BDI_Donations {
                         continue;
                     }
 
+                    if (shouldSetDonationBatchNumber(opp, dataImport)) {
+                        opp.put(Opportunity.Batch_Number__c, dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c);
+                    }
+
                     if (opp.Id == null) {
                         opportunitiesToInsert.add(opp);
                         dataImportsToInsert.add(dataImport);
@@ -207,7 +211,7 @@ public class BDI_Donations {
             setDryRunDonationStatuses(dataImportDonations);
             return;
         }
-        
+
         // insert our new Opps
         List<Database.SaveResult> results = UTIL_DMLService.insertRecords(opportunitiesToInsert, false);
         for (Integer i = 0; i < results.size(); i++) {
@@ -221,7 +225,7 @@ public class BDI_Donations {
                 }
             }
         }
-        
+
         // update our matched Opps
         results = UTIL_DMLService.updateRecords(opportunitiesToUpdate, false);
         for (Integer i = 0; i < results.size(); i++) {
@@ -236,22 +240,47 @@ public class BDI_Donations {
 
         // add any new payments to our map
         trackPayments(dataImportDonations);
-        
+
         // when we mark Payments paid, ensure they will close our Opp.
         npe01__Contacts_And_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
         if (cs.Payments_Auto_Close_Stage_Name__c == null) {
             cs.Payments_Auto_Close_Stage_Name__c = defaultClosedWonStage;
         }
-        
+
         // update payments with any data from the DI record
         updatePayments(dataImportDonations);
+    }
+
+    /*******************************************************************************************************
+    * @description Determine if the data import batch number should be set on the opportunity or payment
+    * @param targetObject The opportunity or payment SObject record
+    * @param dataImport The data import record being processed
+    * @return Boolean TRUE when the Data Import Batch has a batch number, is not a dry run,
+    * and the current SObject is an Opportunity or Opportunity Payment
+    */
+    @TestVisible
+    private Boolean shouldSetDonationBatchNumber(SObject targetObject, DataImport__c dataImport) {
+        if (bdi.isDryRun ||
+            String.isBlank(dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c)) {
+            return false;
+        }
+
+        SObjectType objectType = targetObject.getSObjectType();
+
+
+        if (objectType == Opportunity.SObjectType) {
+            return targetObject.get(Opportunity.Id) == null;
+        } else if (objectType == npe01__OppPayment__c.SObjectType) {
+            return targetObject.get(npe01__OppPayment__c.npe01__Paid__c) == true;
+        }
+        return false;
     }
 
     /*******************************************************************************************************
     * @description validate bdi records for donations and return those to process
     * @param matchBehavior The match behavior to validate against
     * @return List<DataImport__c> The list of BDI records that have donations to process
-    */ 
+    */
     private List<DataImport__c> validateDonationsToProcess(String matchBehavior) {
         List<DataImport__c> dataImportDonations = new List<DataImport__c>();
         for (DataImport__c dataImport : bdi.listDI) {
@@ -260,7 +289,7 @@ public class BDI_Donations {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                continue;
             }
-            
+
             // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
             // they must have already been created for this di on a previous run, and we don't want to create another.
             if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null) && matchBehavior == BDI_DataImport_API.DoNotMatch) {
@@ -274,7 +303,7 @@ public class BDI_Donations {
                     || dataImport.DonationImportStatus__c == System.Label.bdiMatched)) {
                 continue;
             }
-                
+
             if (dataImport.Donation_Donor__c == 'Contact1' || (dataImport.Donation_Donor__c == null && dataImport.Donation_Amount__c != null)) {
                 dataImport.Donation_Donor__c = 'Contact1';
                 Contact con = bdi.ContactFromDi(dataImport, 1);
@@ -309,7 +338,7 @@ public class BDI_Donations {
     * @param dataImport The DataImport record to validate
     * @param matchBehavior The match behavior to validate against
     * @return boolean True if valid, False if not
-    */ 
+    */
     private Boolean isValidMatchBehavior(DataImport__c dataImport, String matchBehavior) {
         String errorMessage;
 
@@ -340,7 +369,7 @@ public class BDI_Donations {
         } else if (matchBehavior == BDI_DataImport_API.RequireBestMatch && dataImport.DonationImported__c == null) {
             errorMessage = System.Label.bdiErrorDonationNoMatch;
         }
-        else { 
+        else {
             // valid behavior
             return true;
         }
@@ -349,10 +378,10 @@ public class BDI_Donations {
         if(errorMessage.length() > 255) {
             errorMessage = errorMessage.substring(0,255);
         }
-               
+
         // clear the match so it won't be used (but only if we think the user didn't put it in themselves!)
         if (errorMessage != System.Label.bdiErrorDonationLookupMatch) {
-    
+
             // move any match that we reject to possible matches
             if (dataImport.Donation_Possible_Matches__c == null) {
                 dataImport.Donation_Possible_Matches__c = dataImport.DonationImported__c;
@@ -450,7 +479,7 @@ public class BDI_Donations {
             // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
             if (dataImportField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
                 String customCurrencyIsoCodeFieldOnDataImport = (String) dataImport.get(dataImportField);
-                if (!String.isEmpty(customCurrencyIsoCodeFieldOnDataImport)) {                    
+                if (!String.isEmpty(customCurrencyIsoCodeFieldOnDataImport)) {
                     useCustomMappingInsteadOfCurrencyIsoCode = true;
                     break;
                 }
@@ -481,9 +510,9 @@ public class BDI_Donations {
             if (dataImportField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
-            BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, 
-                    dataImportField, 
-                    opp, 
+            BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport,
+                    dataImportField,
+                    opp,
                     dataImportFieldToOpportunityField);
         }
 
@@ -554,9 +583,9 @@ public class BDI_Donations {
     * when we created new Opps, or pmt's for matched Opps that we haven't yet tracked.
     * @param dataImportDonations The DI Records that have donations to import
     * @return void
-    */ 
+    */
     public void trackPayments(List<DataImport__c> dataImportDonations) {
-        
+
         // find the Opps for our missing payments and mark existing Payments paid.
         List<Id> opportunityIds = new List<Id>();
         for (DataImport__c dataImport : dataImportDonations) {
@@ -633,7 +662,7 @@ public class BDI_Donations {
 
         List<npe01__OppPayment__c> paymentsToUpdate = new List<npe01__OppPayment__c>();
         List<DataImport__c> dataImportsToUpdate = new List<DataImport__c>();
-        
+
         // update payments
         for (DataImport__c dataImport : dataImportsWithDonations) {
             // skip di's that already have an error
@@ -644,6 +673,11 @@ public class BDI_Donations {
                     || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
+                    if (shouldSetDonationBatchNumber(payment, dataImport)) {
+                        payment.put(npe01__OppPayment__c.Batch_Number__c,
+                            dataImport.NPSP_Data_Import_Batch__r.Batch_Number__c);
+                    }
+
                     Integer numberOfCopiedFields = 0;
                     for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
                         if (BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {

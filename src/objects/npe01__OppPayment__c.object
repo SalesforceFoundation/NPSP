@@ -101,6 +101,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Batch_Number__c</fullName>
+        <description>The batch that set this Payment as paid. This field is automatically populated based on your Batch Number Settings in NPSP Settings.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The batch that set this Payment as paid. This field is automatically populated based on your Batch Number Settings in NPSP Settings.</inlineHelpText>
+        <label>Batch Number</label>
+        <length>30</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Card_Expiration_Month__c</fullName>
         <description>The expiration month of the card used for this transaction.</description>
         <externalId>false</externalId>
