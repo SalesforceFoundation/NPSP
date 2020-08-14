@@ -1,0 +1,120 @@
+<template>
+
+    <header class="slds-modal__header slds-clearfix slds-align_absolute-center" data-qa-locator="heading">
+        <h2
+            class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium">
+            {pageHeader}
+        </h2>
+    </header>
+
+    <div class="slds-p-horizontal_small" if:true={error.detail}>
+        <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
+            icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
+            subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" data-id="error"
+            data-qa-locator="error">
+        </c-util-page-level-message>
+    </div>
+
+    <div class="slds-modal__content">
+        <template if:true={isLoading}>
+            <div class="slds-grid slds-grid_align-center">
+                <div class="slds-is-relative slds-size_1-of-1">
+                    <lightning-spinner alternative-text={labels.loadingMessage} variant="brand" data-id="spinner"
+                        data-qa-locator="spinner">
+                    </lightning-spinner>
+                    <c-util-stencil row-count="20" column-count="3"></c-util-stencil>
+                </div>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:true={permissions.isBlocked}>
+                <div class="slds-p-around_medium">
+                    <lightning-formatted-rich-text value={permissions.blockedReason} data-id="blockedReason"
+                        data-qa-locator="richtext Blocked Reason">
+                    </lightning-formatted-rich-text>
+                </div>
+            </template>
+
+            <template if:false={permissions.isBlocked}>
+                <template if:true={permissions.hasAccess}>
+                    <lightning-layout multiple-rows="true">
+
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_medium" size="12">
+                            <lightning-formatted-rich-text value={labels.description} data-id="description"
+                                data-qa-locator="richtext Description">
+                            </lightning-formatted-rich-text>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_medium" size="8">
+                            <lightning-combobox data-id="pausedReason" name="pausedReason"
+                                data-qa-locator="combobox Paused Reason" label={pausedReason.label}
+                                value={pausedReason.value} placeholder={pausedReason.placeholder}
+                                options={pausedReason.options} onchange={handlePausedReasonChange} required>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                    <div class="installments slds-p-left_medium slds-p-top_large slds-p-right_medium"
+                        if:true={installments}>
+                        <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
+                            is-loading={isLoading} max-row-selection={maxRowSelection}
+                            onrowselection={handleRowSelection} selected-rows={selectedIds} resize-column-disabled
+                            data-id="installments" data-qa-locator="datatable Installments">
+                        </lightning-datatable>
+                    </div>
+
+                    <lightning-layout multiple-rows="true">
+
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_large" size="12">
+                            <template if:true={selectedRowsSummary}>
+                                <em><lightning-formatted-rich-text value={selectedRowsSummary} data-id="rowSummary"
+                                        data-qa-locator="richtext Row Summary">
+                                </lightning-formatted-rich-text></em>
+                            </template>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_small" size="12">
+                            <template if:true={firstDonationDateMessage}>
+                                <b><lightning-formatted-rich-text value={firstDonationDateMessage}
+                                        data-id="firstDonationDateMessage"
+                                        data-qa-locator="richtext First Donation Date Message">
+                                </lightning-formatted-rich-text></b>
+                            </template>
+                        </lightning-layout-item>
+
+                    </lightning-layout>
+
+                </template>
+            </template>
+
+            <div class="slds-p-bottom_large"></div>
+        </template>
+    </div>
+
+    <div if:false={isLoading}>
+        <footer class="slds-modal__footer slds-clearfix">
+            <div class="slds-x-small-buttons_horizontal slds-float_right">
+
+                <template if:true={isSaveDisplayed}>
+                    <lightning-button label={labels.cancelButton} title={labels.cancelButton} variant="neutral"
+                        class="slds-m-right_small" onclick={handleCancel} data-id="cancelButton"
+                        data-qa-locator="button Cancel">
+                    </lightning-button>
+                    <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand"
+                        onclick={handleSave} disabled={isSaveDisabled} data-id="saveButton"
+                        data-qa-locator="button Save">
+                    </lightning-button>
+                </template>
+
+                <template if:false={isSaveDisplayed}>
+                    <lightning-button label={labels.okButton} title={labels.okButton} variant="brand"
+                        onclick={handleCancel} data-id="okButton" data-qa-locator="button OK">
+                    </lightning-button>
+                </template>
+
+            </div>
+        </footer>
+    </div>
+
+</template>
