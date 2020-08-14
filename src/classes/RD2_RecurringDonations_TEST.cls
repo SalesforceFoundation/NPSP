@@ -40,7 +40,8 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
 
     private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 9, 15);
-    private static final String COMMITMENT_ID= RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+    private static final String COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+    private static final String DAY_OF_MONTH = '1';
 
     /****
     * @description Creates data required for unit tests
@@ -440,8 +441,8 @@ private with sharing class RD2_RecurringDonations_TEST {
         insert rd;
         Test.stopTest();
 
-        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(Date.today(), rd2.npe03__Next_Payment_Date__c, 'Next Donation date should equal today');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(Date.today(), rd.npe03__Next_Payment_Date__c, 'Next Donation date should equal today');
     }
 
     /***
@@ -469,8 +470,8 @@ private with sharing class RD2_RecurringDonations_TEST {
         update rd;
         Test.stopTest();
 
-        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(rd2.npe03__Next_Payment_Date__c.day(), 20, 'Next Donation day should equal 20');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(20, rd.npe03__Next_Payment_Date__c.day(), 'Next Donation day should equal 20');
     }
 
     /***
@@ -598,8 +599,8 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         Test.stopTest();
 
-        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(newEffectiveDate, rd2.StartDate__c, 'New Effective Date should be 15 days after today');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(newEffectiveDate, rd.StartDate__c, 'New Effective Date should be 15 days after today');
     }
 
     /***
@@ -624,8 +625,8 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         Test.stopTest();
 
-        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(newEffectiveDate, rd2.StartDate__c, 'New Effective Date should be 15 days before today');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(newEffectiveDate, rd.StartDate__c, 'New Effective Date should be 15 days before today');
     }
 
     /***
@@ -896,6 +897,176 @@ private with sharing class RD2_RecurringDonations_TEST {
             'The RD End Date should be null out when RD is reopened');
     }
 
+    /***
+    * @description Verifies RD "Day of Month" can be modified
+    * when a pause does not exist on the RD
+    */
+    @isTest
+    private static void shouldAllowRDUpdateWhenPauseDoesNotExist() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        final Date nextDonationDate = Date.newInstance(2019, 10, 1);
+        final String dayOfMonth = '1';
+        final String newDayOfMonth = '2';
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDayOfMonth(dayOfMonth)
+            .build();
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(dayOfMonth, rd.Day_of_Month__c, 'Day of Month should match');
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should match');
+
+        Test.startTest();
+        Exception actualException;
+        try {
+            rd.Day_of_Month__c = newDayOfMonth;
+            update rd;
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        System.assertEquals(null, actualException, 'No exception should be generated');
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(newDayOfMonth, rd.Day_of_Month__c, 'Day of Month should be updated');
+        System.assertEquals(nextDonationDate.addDays(1), rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be changed');
+    }
+
+    /***
+    * @description Verifies RD "Day of Month" cannot be changed 
+    * when an active pause exists on the RD
+    */
+    @isTest
+    private static void shouldPreventRDUpdateWhenPauseExistsAndDayOfMonthIsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        final Date nextDonationDate = Date.newInstance(2019, 10, 1);
+        final String dayOfMonth = '1';
+        final String newDayOfMonth = '2';
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDayOfMonth(dayOfMonth)
+            .build();
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(dayOfMonth, rd.Day_of_Month__c, 'Day of Month should match');
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should match');
+
+        //add a future pause
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, nextDonationDate.addMonths(1), nextDonationDate.addMonths(2));
+
+        Test.startTest();
+        Exception actualException;
+        try {
+            rd.Day_of_Month__c = newDayOfMonth;
+            update rd;
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        String expectedMessage = String.format(
+            System.Label.RD2_PauseCannotExistOnScheduleChange,
+            new String[]{ SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c.getLabel() }
+        );
+        System.assert(actualException.getMessage().contains(expectedMessage), 
+            'An exception message should match. Expected: ' + expectedMessage + '| Actual: ' + actualException.getMessage());
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(dayOfMonth, rd.Day_of_Month__c, 'Day of Month should be unchanged');
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be unchanged');
+    }
+
+    /***
+    * @description Verifies RD "Installment Frequency" and/or "Installment Period" cannot be changed 
+    * when an active pause exists on the RD
+    */
+    @isTest
+    private static void shouldPreventRDUpdateWhenPauseExistsAndRDFrequencyIsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        final Date nextDonationDate = Date.newInstance(2019, 10, 1);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should match');
+
+        //add a future pause
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, nextDonationDate.addMonths(1), nextDonationDate.addMonths(2));
+
+        Test.startTest();
+        Exception actualException;
+        try {
+            rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
+            rd.InstallmentFrequency__c = 2;
+            update rd;
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        String expectedMessage = String.format(
+            System.Label.RD2_PauseCannotExistOnScheduleChange,
+            new String[]{ 
+                SObjectType.npe03__Recurring_Donation__c.fields.npe03__Installment_Period__c.getLabel() 
+                + ', ' + SObjectType.npe03__Recurring_Donation__c.fields.InstallmentFrequency__c.getLabel() 
+            }
+        );
+        System.assert(actualException.getMessage().contains(expectedMessage), 
+            'An exception message should match. Expected: ' + expectedMessage + '| Actual: ' + actualException.getMessage());
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be unchanged');
+    }
+
+    /***
+    * @description Verifies RD Amount can be modified
+    * when an active pause exists on the RD
+    */
+    @isTest
+    private static void shouldAllowRDUpdateWhenPauseExistsAndAmountIsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        final Date nextDonationDate = Date.newInstance(2019, 10, 1);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should match');
+
+        //add a future pause
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, nextDonationDate.addMonths(1), nextDonationDate.addMonths(2));
+
+        Test.startTest();
+        Exception actualException;
+        Decimal newAmount = rd.npe03__Amount__c + 10;
+        try {
+            rd.npe03__Amount__c = newAmount;
+            update rd;
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        System.assertEquals(null, actualException, 'No exception should be generated');
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(newAmount, rd.npe03__Amount__c, 'Amount should be changed');
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be unchanged');
+    }
+
 
 
     // Helpers
@@ -915,7 +1086,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static TEST_RecurringDonationBuilder getRecurringDonationMonthlyBuilder() {
         return getRecurringDonationBaseBuilder()
             .withInstallmentPeriodMonthly()
-            .withDayOfMonth('1');
+            .withDayOfMonth(DAY_OF_MONTH);
     }
 
     /****
