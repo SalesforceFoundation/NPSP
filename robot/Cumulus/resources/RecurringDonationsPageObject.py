@@ -37,9 +37,17 @@ class RDListingPage(BaseNPSPPage, ListingPage):
     @capture_screenshot_on_error
     def populate_rd2_modal_form(self, **kwargs):
         """Populates the RD2 modal form fields with the respective fields and values"""
+        ns=self.npsp.get_npsp_namespace_prefix()
         for key, value in kwargs.items():
+            locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
+            # Recurring Donation Name field only appears on a regression org hence this check
+            if key == "Recurring Donation Name" and ns=="npsp__":
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.salesforce._populate_field(locator, value)
+                else:
+                    self.builtin.log(f"Element {key} not found")
             if key in ("Amount", "Number of Planned Installments"):
-                locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.salesforce._populate_field(locator, value)
@@ -173,6 +181,22 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                 self.npsp.navigate_to_and_validate_field_value(
                     label, "contains", value, section
                 )
+
+    def get_next_payment_date_number(self, paynum):
+        """Returns the next payment date from the list of payment schedules taking in the payment number as input
+           |Example
+           |  Get Next Payment Date Number   2   #gets the 2nd installment payment date form the list of payment dates
+        """
+        datefield = npsp_lex_locators["erd"]["installment_date"].format(int(paynum))
+        installment_date = self.selenium.get_webelement(datefield).text
+        
+        # This is to format the date by removing the trailing 0 which is being the common format across
+        # 01/06/2020 -> 1/6/2020
+        tokens = installment_date.split('/')
+        dd = tokens[0].replace("0","")
+        mm = tokens[1].replace("0","")
+        newString = f"{dd}/{mm}/{tokens[2]}"
+        return newString
 
     @capture_screenshot_on_error
     def validate_upcoming_schedules(self, num_payments, startdate, dayofmonth):

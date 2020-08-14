@@ -59,8 +59,8 @@
         <name>Default_Address__c</name>
     </fields>
     <fields>
-        <help><!-- If selected, this address won&apos;t be included in address updates from the NCOA or address verification vendor. --></help>
-        <label><!-- Exclude from Updates --></label>
+        <help>Als dit wordt geselecteerd, wordt dit adres niet opgenomen in de adresupdates van de NCOA of de adresverificatie-aanbieder.</help>
+        <label>Uitsluiten voor updates</label>
         <name>Exclude_from_Updates__c</name>
     </fields>
     <fields>
@@ -117,13 +117,13 @@
         <name>MailingStreet__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was evaluated by the NCOA vendor. --></help>
-        <label><!-- NCOA Evaluation Date --></label>
+        <help>De meest recente datum en het meest recente tijdstip waarop het adres is beoordeeld door de NCOA-aanbieder.</help>
+        <label>NCOA-beoordelingsdatum</label>
         <name>NCOA_Evaluation_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The result code form the NCOA vendor. --></help>
-        <label><!-- NCOA Result Code --></label>
+        <help>De resultaatcode van de NCOA-aanbieder.</help>
+        <label>NCOA-resultaatcode</label>
         <name>NCOA_Result_Code__c</name>
     </fields>
     <fields>
@@ -511,8 +511,8 @@
         <name>Verification_Status__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent date and time the address was verified. --></help>
-        <label><!-- Verified Date --></label>
+        <help>De meest recente datum en het meest recente tijdstip waarop het adres is geverifieerd.</help>
+        <label>Datum verificatie</label>
         <name>Verified_Date__c</name>
     </fields>
     <fields>
@@ -524,7 +524,7 @@
     <layouts>
         <layout>Address Layout</layout>
         <sections>
-            <label><!-- Address Verification --></label>
+            <label>Adresverificatie</label>
             <section>Address Verification</section>
         </sections>
         <sections>

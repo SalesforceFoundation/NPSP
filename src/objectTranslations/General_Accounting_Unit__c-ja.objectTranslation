@@ -20,7 +20,7 @@
         <name>Description__c</name>
     </fields>
     <fields>
-        <help>この一般会計単位に関連付けられた割り当ての最初の支援完了日。</help>
+        <help>この一般会計単位に関連付けられた割り当ての最初の商談完了日。</help>
         <label>最初の割り当て日</label>
         <name>First_Allocation_Date__c</name>
     </fields>
@@ -30,27 +30,27 @@
         <name>Largest_Allocation__c</name>
     </fields>
     <fields>
-        <help>この一般会計単位に関連付けられた割り当ての前回の支援完了日。</help>
+        <help>この一般会計単位に関連付けられた割り当ての前回の商談完了日。</help>
         <label>前回の割り当て日</label>
         <name>Last_Allocation_Date__c</name>
     </fields>
     <fields>
-        <help>過去 N 日間の成立フェーズにある支援の割り当ての総数。N の値は設定で変更できます。</help>
+        <help>過去 N 日間の成立フェーズにある商談の割り当ての総数。N の値は設定で変更できます。</help>
         <label>過去 N 日間の割り当て数</label>
         <name>Number_of_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>昨年の成立フェーズにある支援の割り当ての総数。</help>
+        <help>昨年の成立フェーズにある商談の割り当ての総数。</help>
         <label>昨年の割り当て数</label>
         <name>Number_of_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help>今年の成立フェーズにある支援の割り当ての総数。夜間スケジュール済みジョブ時に更新されます。</help>
+        <help>今年の成立フェーズにある商談の割り当ての総数。夜間スケジュール済みジョブ時に更新されます。</help>
         <label>今年の割り当て数</label>
         <name>Number_of_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help>2 年前の成立フェーズにある支援の割り当ての総数。</help>
+        <help>2 年前の成立フェーズにある商談の割り当ての総数。</help>
         <label>2 年前の割り当て数</label>
         <name>Number_of_Allocations_Two_Years_Ago__c</name>
     </fields>
@@ -60,32 +60,32 @@
         <name>Smallest_Allocation__c</name>
     </fields>
     <fields>
-        <help>過去 N 日間の成立フェーズにある支援のすべての割り当て数の合計。N の値は設定で変更できます。</help>
+        <help>過去 N 日間の成立フェーズにある商談のすべての割り当て数の合計。N の値は設定で変更できます。</help>
         <label>過去 N 日間の合計割り当て数</label>
         <name>Total_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>昨年の成立フェーズにある支援のすべての割り当て数の合計。</help>
+        <help>昨年の成立フェーズにある商談のすべての割り当て数の合計。</help>
         <label>昨年の合計割り当て数</label>
         <name>Total_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help>今年の成立フェーズにある支援のすべての割り当て数の合計。</help>
+        <help>今年の成立フェーズにある商談のすべての割り当て数の合計。</help>
         <label>今年の合計割り当て数</label>
         <name>Total_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help>2 年前の成立フェーズにある支援のすべての割り当て数の合計。</help>
+        <help>2 年前の成立フェーズにある商談のすべての割り当て数の合計。</help>
         <label>2 年前の合計割り当て数</label>
         <name>Total_Allocations_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>成立フェーズにある支援のすべての割り当て数の合計。</help>
+        <help>成立フェーズにある商談のすべての割り当て数の合計。</help>
         <label>合計割り当て</label>
         <name>Total_Allocations__c</name>
     </fields>
     <fields>
-        <help>成立フェーズにある支援の割り当ての総数。</help>
+        <help>成立フェーズにある商談の割り当ての総数。</help>
         <label>割り当ての総数</label>
         <name>Total_Number_of_Allocations__c</name>
     </fields>
