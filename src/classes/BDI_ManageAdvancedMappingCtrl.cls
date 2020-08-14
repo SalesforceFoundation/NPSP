@@ -74,7 +74,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * when creating a new object mappping.  This is necessary since there are hundreds of standard objects
     * and including them all would negatively impact performance and make the list unusable.
     */ 
-    private static final Set<String> STANDARD_OBJECT_WHITELIST = new Set<String>{'account', 'asset', 'assetrelationship', 
+    private static final Set<String> STANDARD_OBJECT_ALLOWED_LIST = new Set<String>{'account', 'asset', 'assetrelationship', 
                                                             'campaign', 'campaignmember', 'case', 
                                                             'contact', 'contract', 'event', 'lead', 
                                                             'opportunity', 'opportunitylineitem', 
@@ -675,7 +675,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         // Also restricting to only an predefined list of standard objects to keep the list manageable
         for (String objectName : allObjectMap.keySet()) { 
             if (!objectName.endsWith('__mdt') && !objectName.endsWith('__kav') 
-                && (objectName.endsWith('__c') || STANDARD_OBJECT_WHITELIST.contains(objectName))) {
+                && (objectName.endsWith('__c') || STANDARD_OBJECT_ALLOWED_LIST.contains(objectName))) {
                 filteredObjectNames.add(objectName);
             }
         }
