@@ -13,12 +13,7 @@ Suite Setup     Run keywords
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
-# &{method}         Default Value=Check
-# &{check}          Default Value=abc11233
-# &{date_default}   Default Value=Today
-# &{custom}         Required=checked
-# ${amount}         50
-# ${msg}            Automation test
+${placeholder}  yes
 
 *** Keywords ***
 
@@ -33,4 +28,13 @@ Reorder and Modify GE Template Fields
   Go to Page                            Landing                      npsp__GE_Gift_Entry
   Click Link                            Templates
   Select Template Action                Default Gift Entry Template  Edit
-  Click Gift Entry Button
+  Click Gift Entry Button               Next: Form Fields
+  Perform Action On Object Field        select  AccountSoftCredits  Role
+
+  #Moves the CustomObject1Imported field up in the field order
+  Click Gift Entry Button               button Up Data Import: CustomObject1Imported
+
+  #Deletes the Delete Payment: Check/Reference Number field from the template
+  Click Gift Entry Button               button Delete Payment: Check/Reference Number
+
+  Sleep                                 3s
