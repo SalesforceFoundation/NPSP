@@ -13,6 +13,24 @@
         </lightning-input>
     </template>
     <template if:true={isLookup}>
+        <lightning-record-edit-form object-api-name={lookupObjectApiName}>
+            <label class="slds-form-element__label">
+                <abbr class="slds-required" title="required" if:true={required}>* </abbr>
+                {fieldLabel}
+            </label>
+            <lightning-input-field
+                    data-id='inputComponent'
+                    field-name={lookupFieldApiName}
+                    onchange={handleValueChange}
+                    required={required}
+                    variant="label-hidden"
+                    class="help-text-hidden"
+                    value={element.defaultValue}
+                    data-qa-locator={qaLocatorLookup}
+            ></lightning-input-field>
+        </lightning-record-edit-form>
+    </template>
+    <template if:true={isLookupRecordType}>
         <c-ge-form-field-lookup data-id='inputComponent'
                                 field-api-name={fieldApiName}
                                 object-api-name={objectApiName}
