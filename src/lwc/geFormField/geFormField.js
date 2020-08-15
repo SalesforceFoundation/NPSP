@@ -7,6 +7,13 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import CONTACT1_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import ACCOUNT_ID from '@salesforce/schema/Opportunity.AccountId';
+import PRIMARY_CONTACT from '@salesforce/schema/Opportunity.Primary_Contact__c';
+import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
+import OPPORTUNITY from '@salesforce/schema/Opportunity';
 
 import {
     DI_DONATION_DONOR_INFO,
@@ -62,15 +69,13 @@ export default class GeFormField extends LightningElement {
                     GeFormService.getObjectMappingWrapperByImportedFieldName(this.fieldApiName)
                         .DeveloperName :
                     this.objectMappingDevName;
-
-            const detail = {
+            const lookupDetail = {
                 ...event.detail,
+                fieldApiName: this.element.fieldApiName,
+                value: this.value,
                 objectMappingDevName: objMappingDevName
             };
-
-            const selectRecordEvent = new CustomEvent(
-                'lookuprecordselect',
-                { detail: detail });
+            const selectRecordEvent = new CustomEvent('lookuprecordselect', { detail: lookupDetail });
             this.dispatchEvent(selectRecordEvent);
         }
 
@@ -137,6 +142,13 @@ export default class GeFormField extends LightningElement {
             return event.detail.checked.toString();
         } else if(this.isRichText) {
             return event.target.value;
+        } else if(this.isLookup && event.detail.value) {
+            const val = event.detail.value;
+            if(typeof val === 'string') {
+                return val;
+            } else if(Array.isArray(val)) {
+                return val[0] ? val[0] : null;
+            }
         }
 
         return event.detail.value;
@@ -297,9 +309,13 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    get isLookupRecordType() {
+        return this.fieldType === LOOKUP_TYPE && this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
+    }
+
     @api
     get isLookup() {
-        return this.fieldType === LOOKUP_TYPE;
+        return this.fieldType === LOOKUP_TYPE && this.fieldApiName !== RECORD_TYPE_FIELD.fieldApiName;
     }
 
     @api
@@ -338,6 +354,30 @@ export default class GeFormField extends LightningElement {
         if(isNotEmpty(this.fieldInfo)) {
             return this.fieldInfo.Source_Field_API_Name;
         }
+    }
+
+    // when using lightning-lookup-field, instead of binding to the Data Import fields or donor information
+    // we bind to Opportunity.AccountId / Opportunity.Primary_Contact__c
+    get lookupFieldApiName() {
+        if (this.objectApiName === DATA_IMPORT.objectApiName) {
+            if (this.fieldApiName === ACCOUNT1_IMPORTED.fieldApiName) {
+                return ACCOUNT_ID.fieldApiName;
+            } else if (this.fieldApiName === CONTACT1_IMPORTED.fieldApiName) {
+                return PRIMARY_CONTACT.fieldApiName;
+            }
+        }
+        return this.fieldApiName;
+    }
+
+    get lookupObjectApiName() {
+        if(this.objectApiName === DATA_IMPORT.objectApiName) {
+            if(this.fieldApiName === ACCOUNT1_IMPORTED.fieldApiName
+                || this.fieldApiName === CONTACT1_IMPORTED.fieldApiName) {
+                return OPPORTUNITY.objectApiName;
+            }
+        }
+
+        return this.objectApiName;
     }
 
     @api
@@ -388,10 +428,7 @@ export default class GeFormField extends LightningElement {
     @api
     clearCustomValidity() {
 
-        if (this.isLookup) {
-            let inputField = this.template.querySelector('[data-id="inputComponent"]');
-            inputField.clearCustomValidity();
-        } else {
+        if (!this.isLookup) {
             this.setCustomValidity('');
         }
 
@@ -411,18 +448,16 @@ export default class GeFormField extends LightningElement {
             } else {
                 this.value = value.value || value;
 
-                if (this.isLookup) {
-                    if (this.fieldApiName === 'RecordTypeId') {
-                        if (value && !value.displayName) {
-                            // If the RecordTypeId field for a target record is being
-                            // loaded with only the Id (like when a Lookup field is
-                            // selected/populated on the form), get the RecordType Name
-                            // and pass it with the Id to loadLookup
-                            data[this.sourceFieldAPIName] = {
-                                value: value,
-                                displayValue: this.getRecordTypeNameById(value)
-                            };
-                        }
+                if (this.isLookupRecordType || this.isLookup) {
+                    if (value && !value.displayName) {
+                        // If the RecordTypeId field for a target record is being
+                        // loaded with only the Id (like when a Lookup field is
+                        // selected/populated on the form), get the RecordType Name
+                        // and pass it with the Id to loadLookup
+                        data[this.sourceFieldAPIName] = {
+                            value: value,
+                            displayValue: this.getRecordTypeNameById(value)
+                        };
                     }
                     this.loadLookUp(data, this.value);
                 }
@@ -453,25 +488,30 @@ export default class GeFormField extends LightningElement {
      * @param value A form field value
      */
     loadLookUp(data, value) {
-        const lookup = this.template.querySelector('c-ge-form-field-lookup');
+        const lookup = this.template.querySelector('[data-id="inputComponent"]');
+        lookup.reset();
+        if(this.isLookup) {
+            lookup.value = value;
+        } else if(this.isLookupRecordType) {
 
-        let displayValue;
-        const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
+            let displayValue;
+            const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
 
-        if (data[relationshipFieldName] &&
-            data[relationshipFieldName]['Name']) {
-            displayValue = data[relationshipFieldName].Name;
+            if (data[relationshipFieldName] &&
+                data[relationshipFieldName]['Name']) {
+                displayValue = data[relationshipFieldName].Name;
 
-        } else if (data[this.sourceFieldAPIName] &&
-            data[this.sourceFieldAPIName]['displayValue']) {
-            displayValue = data[this.sourceFieldAPIName].displayValue;
+            } else if (data[this.sourceFieldAPIName] &&
+                data[this.sourceFieldAPIName]['displayValue']) {
+                displayValue = data[this.sourceFieldAPIName].displayValue;
 
-        } else if (data.displayValue) {
-            displayValue = data.displayValue;
+            } else if (data.displayValue) {
+                displayValue = data.displayValue;
 
+            }
+
+            lookup.setSelected({value, displayValue});
         }
-
-        lookup.setSelected({value, displayValue});
     }
 
     @api
@@ -482,10 +522,11 @@ export default class GeFormField extends LightningElement {
             this.value = null;
         }
 
-        if (this.isLookup) {
-            const lookup = this.template.querySelector('c-ge-form-field-lookup');
+        // reset lookups and recordtype fields
+        if (this.isLookupRecordType || this.isLookup) {
+            const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if (this.fieldApiName === 'RecordTypeId') {
+            if(this.isLookupRecordType) {
                 // Using setTimeout here ensures that this recordTypeId
                 // will be set on sibling fields after they are reset by queueing the event.
                 setTimeout(() => {
@@ -581,6 +622,10 @@ export default class GeFormField extends LightningElement {
 
     get qaLocatorInput() {
         return `${this.qaLocatorInputPrefix} ${this.qaLocatorBase}`;
+    }
+
+    get qaLocatorLookup() {
+        return `autocomplete ${this.qaLocatorBase}`;
     }
 
     get qaLocatorRichText() {
