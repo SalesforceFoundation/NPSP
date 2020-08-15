@@ -68,8 +68,8 @@ npsp_lex_locators={
         'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/following-sibling::div//input',
         'table_checkbox':'//tbody/tr[./td[2]/a[text()="{}"]]/td/input[@type="checkbox"]',
         'id':'//input[@type="checkbox" and contains(@id,"{}")]',
-    }, 
-    'tabs':{   
+    },
+    'tabs':{
         'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
         'spl-tab':"//div[@class='slds-tabs_default']//ul[@class='slds-tabs_default__nav']/li[contains(@class,'slds-tabs_default__item')]/a[text()= '{}']",
     },
@@ -129,13 +129,13 @@ npsp_lex_locators={
             'section_header':'//div[contains(@class,"forcePageBlockSectionEdit")]/h3//span[text()="{}"]',
             },
     },
-    
+
     'manage_hh_page':{
         'address_link':'//h4[text()="{}"]',
         'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
         'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
         'button':'//*[text()="{}"]',
-        
+
     },
     'opportunity':{
         'contact_role':'//div[contains(@class,"listItemBody")][./h3//a[text()="{}"]]//parent::h3/following-sibling::ul/li/div[contains(@class,"forceListRecordItem")]/div[@title="Role:"]/following-sibling::div/span[text()="{}"]',
@@ -159,13 +159,13 @@ npsp_lex_locators={
     'levels':{
         'id':'//input[contains(@id,"{}")]',
         'select':'//select[contains(@id,"{}")]',
-        
+
     },
     'custom_objects':{
         'actions-link':'//a[@title="{}" or @name="{}"]',
         },
     'payments':{
-        'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",       
+        'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",
         'no_payments':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[3]',
         'pays':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[.//span[text()="{}"]]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
@@ -223,12 +223,12 @@ npsp_lex_locators={
         'gift-amount':'//div[./label[text()="{}"]]',
         'modal-link':'//tbody/tr/td/a[text()="{}"]',
         'datepicker_open':"//div[contains(@class,'slds-is-open')][./label[contains(text(),'{}')]]",
-        },    
+        },
     'bge-lists':{
         'list1':"//div[./label[text()='{}']]/div//select",
         'list2':"//div[contains(@class,'slds-grid')]/div[contains(@class,'slds-text-align_left')]/span[text()='{}']/../following-sibling::div//select",
         'list3':"//div[./label/span[text()='{}']]/div//select",
-        
+
         },
     'bge-duellist-btn':{
         'select-button':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
@@ -255,7 +255,7 @@ npsp_lex_locators={
         'modal_open':'//div[contains(@class,"slds-backdrop_open")]',
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
-        'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
+        'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']",
         'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
         },
     'modal-form':{
@@ -281,7 +281,8 @@ npsp_lex_locators={
         'field_alert':"//*[contains(@data-qa-locator,'{}')]/div[@role='alert' and text()='{}']",
         'count':'//lightning-layout[.//span[text()="{}"]]//child::lightning-layout-item//strong[text()="{}"]',
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
-        'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]'
+        'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]',
+        'lookup-option':'//li/lightning-base-combobox-item[.//*[@title="{}"]]',
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
@@ -297,9 +298,9 @@ npsp_lex_locators={
         'formatted_date':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-date-time",
         'formatted_text':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text"
         },
-    
+
 }
-    
+
 extra_locators={
     'related_list_items1':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "Relationships"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]',
 }
