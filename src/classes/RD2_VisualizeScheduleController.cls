@@ -39,6 +39,7 @@ public with sharing class RD2_VisualizeScheduleController {
     private static final String INSTALLMENT_DONATION_DATE = 'donationDate';
     private static final String INSTALLMENT_AMOUNT = 'amount';
     private static final String INSTALLMENT_PAYMENT_METHOD = 'paymentMethod';
+    private static final String INSTALLMENT_PAUSE_STATUS = 'pauseStatus';
 
     private static final String SCHEDULE_IS_CURRENT = 'isCurrent';
     private static final String SCHEDULE_AMOUNT = 'amount';
@@ -88,13 +89,13 @@ public with sharing class RD2_VisualizeScheduleController {
         DataTable dataTable = buildInstallmentDataTable(rd.getSObject());
 
         if (dataTable.getColumns().isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSInstallment);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerFLSInstallment);
         }
 
         getInstallmentRecords(rd, displayNum, dataTable);
 
         if (dataTable.getRecords().isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
         }
 
         sanitizeInstallments(dataTable);
@@ -118,7 +119,7 @@ public with sharing class RD2_VisualizeScheduleController {
         Integer counter = 1;
         scheduleService.evaluateScheduleEndDate(rd, rd.getSobject().RecurringDonationSchedules__r);
 
-        for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
+        for (RD2_ScheduleService.Installment installment : scheduleService.getAllVisualizedInstallments(
             RD2_ScheduleService.currentDate, displayNum, rd.getSobject().RecurringDonationSchedules__r
         )) {
             dataTable.addRecord(new Installment(counter++, installment));
@@ -138,7 +139,7 @@ public with sharing class RD2_VisualizeScheduleController {
         DataTable dataTable = buildScheduleDataTable(rd.getSObject());
 
         if (dataTable.getColumns().size() <= 1) {//"isCurrent" field is always part of the data table fields
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
         }
 
         Integer counter = 1;
@@ -149,14 +150,13 @@ public with sharing class RD2_VisualizeScheduleController {
         }
 
         if (dataTable.getRecords().isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule);
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule);
         }
 
         sanitizeSchedules(dataTable);
 
         return new Map<String, Object>{ 'dataTable' => dataTable };
     }
-
 
     /**
      * @description Constructs the data table columns for the projected installments display
@@ -237,21 +237,39 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     @TestVisible
     private static void sanitizeInstallments(DataTable dataTable) {
-        if (dataTable.getColumns().size() == 3) {
-            return;//all columns are visible
-        }
-
+        Boolean hasPauseStatus = false;
         for (Object obj : dataTable.getRecords()) {
             Installment record = (Installment) obj;
+            Integer hiddenFieldCounter = 0;
+
             if (!dataTable.isAccessible(INSTALLMENT_DONATION_DATE)) {
                 record.donationDate = null;
+                hiddenFieldCounter++;
             }
             if (!dataTable.isAccessible(INSTALLMENT_AMOUNT)) {
                 record.amount = null;
+                hiddenFieldCounter++;
             }
             if (!dataTable.isAccessible(INSTALLMENT_PAYMENT_METHOD)) {
                 record.paymentMethod = null;
+                hiddenFieldCounter++;
             }
+            if (hiddenFieldCounter == 3) {//all fields are hidden
+                record.pauseStatus = null;
+            }
+
+            if (String.isNotBlank(record.pauseStatus)) {
+                hasPauseStatus = true;
+            }
+        }
+
+        if (hasPauseStatus) {
+            dataTable.addColumn(new DataTableColumn()
+                .withFieldName(INSTALLMENT_PAUSE_STATUS)
+                .withLabel(null)
+                .withIsAccessible(true)
+                .withType(Schema.DisplayType.STRING)
+            );
         }
     }
 
@@ -347,12 +365,27 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     private static void validate(Id recordId) {
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
+            // The label value: "You must enable Enhanced Recurring Donations to use this component."
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
         }
 
         if (recordId == null || recordId.getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
+            // The label value: "This component must be used on a Recurring Donations record page."
+            throwAuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
         }
+    }
+
+    /***
+    * @description Throws AuraHandledException
+    * The wrapping of the error message again is required
+    * so the specific message is displayed instead of generic "Script thrown exception".
+    * @param errMessage Exception message that needs to be set again
+    * @return void
+    */
+    private static void throwAuraHandledException(String errMessage) {
+        AuraHandledException e = new AuraHandledException(errMessage);
+        e.setMessage(errMessage);
+        throw e;
     }
 
     /**
@@ -376,14 +409,20 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public Date donationDate;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
+        @AuraEnabled public Boolean isSkipped;
+        @AuraEnabled public String pauseStatus;
 
         public Installment(Integer num, RD2_ScheduleService.Installment installment) {
             this.installmentNumber = num;
-            this.paymentMethod =
-                UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
-                    npe03__Recurring_Donation__c.PaymentMethod__c, installment.paymentMethod);
+            this.paymentMethod = UTIL_Describe.getTranslatedPicklistLabel(
+                npe03__Recurring_Donation__c.SObjectType,
+                npe03__Recurring_Donation__c.PaymentMethod__c,
+                installment.paymentMethod
+            );
             this.donationDate = installment.nextDonationDate;
             this.amount = installment.installmentAmount;
+            this.isSkipped = installment.isSkipped;
+            this.pauseStatus = installment.isSkipped ? System.Label.RD2_InstallmentStatusSkipped : '';
         }
     }
 
@@ -515,9 +554,10 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String fieldName;
         @AuraEnabled public String label;
         @AuraEnabled public String type;
-        @AuraEnabled public Boolean sortable = false;
+        @AuraEnabled public Boolean sortable = false; // records are not sortable in the datatable
         @AuraEnabled public Map<String, Object> typeAttributes = new Map<String, Object>();
         @AuraEnabled public Boolean isAccessible = false;
+        @AuraEnabled public Boolean hideDefaultActions = true;
 
         /**
          * @description Default constructor
@@ -533,7 +573,6 @@ public with sharing class RD2_VisualizeScheduleController {
             this.label = field.getLabel();
             this.type = getType(field.getType());
             this.typeAttributes = getTypeAttributes(field.getType());
-            this.sortable = field.isSortable();
             this.isAccessible = field.isAccessible();
         }
 
