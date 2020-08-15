@@ -1670,8 +1670,8 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
-        <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>
