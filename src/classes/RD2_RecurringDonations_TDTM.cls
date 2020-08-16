@@ -163,23 +163,25 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        Map<Id, npe03__Recurring_Donation__c> oldRdsById = triggerAction == TDTM_Runnable.Action.BeforeUpdate
-            ? new Map<Id, npe03__Recurring_Donation__c>(oldRds)
-            : new Map<Id, npe03__Recurring_Donation__c>();
+        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
+        Map<Id, List<Opportunity>> oppsByRDId = new Map<Id, List<Opportunity>>();
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = new Map<Id, List<RecurringDonationSchedule__c>>();
+        
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
+            oppsByRDId = new RD2_OpportunityEvaluationService().getOpportunitiesByRDId(UTIL_SObject.extractIds(rds));
+            schedulesByRdId = scheduleService.getAllSchedules(rds, oldRds);
+        }
 
-        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = triggerAction == TDTM_Runnable.Action.BeforeUpdate
-            ? scheduleService.getAllSchedules(rds, oldRds)
-            : new Map<Id, List<RecurringDonationSchedule__c>>();
-
-        for (npe03__Recurring_Donation__c rd : rds) {
-            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
-                .revisePlannedInstallments();
-
+        for (npe03__Recurring_Donation__c rd : rds) { 
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                rdRecord.reviseNextDonationDateBeforeInsert(scheduleService);
+                RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
+                    .revisePlannedInstallments()
+                    .reviseNextDonationDateBeforeInsert(scheduleService);
 
-            } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                rdRecord
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                
+                RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd, oppsByRDId.get(rd.Id))
+                    .revisePlannedInstallments()
                     .reviseStatus(currentDate)
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
 
@@ -205,6 +207,25 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         npe03__Recurring_Donation__c rd = rdRecord.getSObject();
+        List<String> changedFields = getFieldsChangingSchedule(rd, oldRd);
+
+        if (!changedFields.isEmpty() && scheduleService.pauseHandler.hasActivePause(schedules, currentDate)) {
+            rd.addError(
+                String.format(
+                    System.Label.RD2_PauseCannotExistOnScheduleChange,
+                    new String[]{ String.join(changedFields, ', ') }
+                )
+            );
+        }
+    }
+
+    /***
+    * @description Get changed fields on the RD that impact schedule date change
+    * @param rd The Recurring Donation to validate
+    * @param oldRd The old Recurring Donation
+    * @return List<String>
+    */
+    private List<String> getFieldsChangingSchedule(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         List<String> changedFields = new List<String>();
 
         if (rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c) {
@@ -217,18 +238,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             changedFields.add(SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c.getLabel());
         }
 
-        if (changedFields.isEmpty()) {
-            return;
-        }
-
-        if (scheduleService.pauseHandler.hasActivePause(schedules, currentDate)) {
-            rd.addError(
-                String.format(
-                    System.Label.RD2_PauseCannotExistOnScheduleChange,
-                    new String[]{ String.join(changedFields, ', ') }
-                )
-            );
-        }
+        return changedFields;
     }
 
     /***
@@ -418,10 +428,15 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
 
             for (npe03__Recurring_Donation__c rd : rds) {
-                if (evalService.hasKeyFieldChanged(rd, oldRdsById.get(rd.Id))) {
+                npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
+
+                if (evalService.hasKeyFieldChanged(rd, oldRd)) {
                     rdIds.add(rd.Id);
                 }
-                if (rd.npe03__Next_Payment_Date__c != oldRdsById.get(rd.Id).npe03__Next_Payment_Date__c) {
+
+                if (rd.npe03__Next_Payment_Date__c != oldRd.npe03__Next_Payment_Date__c 
+                    || !getFieldsChangingSchedule(rd, oldRd).isEmpty()
+                ) {
                     rdIdsWhereScheduleChanged.add(rd.Id);
                 }
             }
