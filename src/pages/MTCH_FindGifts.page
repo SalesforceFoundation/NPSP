@@ -2,8 +2,7 @@
     extensions="MTCH_FindGifts_CTRL"
     standardStylesheets="true"
     lightningStylesheets="true"
-    docType="html-5.0"
-    applyBodyTag="false">
+    docType="html-5.0">
 
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
@@ -33,199 +32,197 @@
         }
     </style>
 
-    <body class="slds-scope">
-        <div class="slds-scope">
-            <apex:form >
+    <div class="slds-scope">
+        <apex:form >
 
-                <!-- PAGE HEADER -->
-                <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!$ObjectType.Opportunity.label}"
-                                   parentAction="/006" parentRecordName="{!Opportunity.Name}"
-                                   parentRecordAction="/{!Opportunity.Id}" headerLabel="{!$Label.mtchFindMatchedGiftsSectionHeader}"
-                                   icon="opportunity" iconCategory="standard"
-                                   saveAction="{!saveAndClose}" cancelAction="{!cancel}"/>
+            <!-- PAGE HEADER -->
+            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!$ObjectType.Opportunity.label}"
+                               parentAction="/006" parentRecordName="{!Opportunity.Name}"
+                               parentRecordAction="/{!Opportunity.Id}" headerLabel="{!$Label.mtchFindMatchedGiftsSectionHeader}"
+                               icon="opportunity" iconCategory="standard"
+                               saveAction="{!saveAndClose}" cancelAction="{!cancel}"/>
 
-                <br/>
+            <br/>
 
-                <!-- SUMMARY INFO PANEL -->
-                <div class="slds-grid slds-p-around_medium">
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalMatchingGift}">
-                                    {!$Label.mtchTotalMatchingGift}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                    <apex:outputText value="{0, number, ###,##0.00}">
-                                        <apex:param value="{!opp.Amount}"/>
-                                    </apex:outputText>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}">
-                                    {!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <apex:outputText value="{0,number,0}%" id="txtMatchPercent">
-                                        <apex:param value="{!matchingGiftPercent}"/>
-                                    </apex:outputText>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalSelected}">
-                                    {!$Label.mtchTotalSelected}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                    <apex:outputText value="{0, number, ###,##0.00}" id="totalSelected">
-                                        <apex:param value="{!oppTotalSelected.Amount}"/>
-                                    </apex:outputText>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="slds-col_padded slds-size_1-of-4">
-                        <dl>
-                            <dt>
-                                <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalUnaccounted}">
-                                    {!$Label.mtchTotalUnaccounted}
-                                </p>
-                            </dt>
-                            <dd>
-                                <p class="slds-text-body_regular slds-truncate">
-                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                    <apex:outputText value="{0, number, ###,##0.00}" id="totalUn">
-                                        <apex:param value="{!oppTotalUnaccounted.Amount}"/>
-                                    </apex:outputText>
-                                </p>
-                            </dd>
-                        </dl>
-                    </div>
-                </div> <!-- slds-grid -->
-                <!-- /SUMMARY INFO PANEL -->
-
-                <c:UTIL_PageMessages />
-
-                <!-- PAGE CONTENT -->
-                <div class="myBodyContent slds-m-top_large">
-
-                    <div class="slds-grid">
-                        <div class="slds-col slds-col_padded ">
-                            <p class="slds-text-body_small">
-                                <apex:outputText value="{!$Label.mtchItems}"><apex:param value="{!numberOfOpps}" /></apex:outputText>
+            <!-- SUMMARY INFO PANEL -->
+            <div class="slds-grid slds-p-around_medium">
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalMatchingGift}">
+                                {!$Label.mtchTotalMatchingGift}
                             </p>
-                        </div>
-                    </div>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}">
+                                    <apex:param value="{!opp.Amount}"/>
+                                </apex:outputText>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}">
+                                {!$ObjectType.Account.Fields.Matching_Gift_Percent__c.Label}
+                            </p>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <apex:outputText value="{0,number,0}%" id="txtMatchPercent">
+                                    <apex:param value="{!matchingGiftPercent}"/>
+                                </apex:outputText>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalSelected}">
+                                {!$Label.mtchTotalSelected}
+                            </p>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}" id="totalSelected">
+                                    <apex:param value="{!oppTotalSelected.Amount}"/>
+                                </apex:outputText>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="slds-col_padded slds-size_1-of-4">
+                    <dl>
+                        <dt>
+                            <p class="slds-text-heading_label slds-truncate" title="{!$Label.mtchTotalUnaccounted}">
+                                {!$Label.mtchTotalUnaccounted}
+                            </p>
+                        </dt>
+                        <dd>
+                            <p class="slds-text-body_regular slds-truncate">
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}" id="totalUn">
+                                    <apex:param value="{!oppTotalUnaccounted.Amount}"/>
+                                </apex:outputText>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+            </div> <!-- slds-grid -->
+            <!-- /SUMMARY INFO PANEL -->
 
-                    <!-- DATA TABLE -->
-                    <table class="slds-table slds-table_bordered" id="findGiftsTable">
-                        <thead>
-                        <tr class="slds-text-heading_label">
-                            <th>{!$Label.mtchSelectCbxTitle}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.Name.Label}</th>
-                            <th>{!$ObjectType.Account.Label}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.Amount.Label}</th>
-                            <th>{!$ObjectType.Opportunity.Fields.CloseDate.Label}</th>
+            <c:UTIL_PageMessages />
+
+            <!-- PAGE CONTENT -->
+            <div class="myBodyContent slds-m-top_large">
+
+                <div class="slds-grid">
+                    <div class="slds-col slds-col_padded ">
+                        <p class="slds-text-body_small">
+                            <apex:outputText value="{!$Label.mtchItems}"><apex:param value="{!numberOfOpps}" /></apex:outputText>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- DATA TABLE -->
+                <table class="slds-table slds-table_bordered" id="findGiftsTable">
+                    <thead>
+                    <tr class="slds-text-heading_label">
+                        <th>{!$Label.mtchSelectCbxTitle}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.Name.Label}</th>
+                        <th>{!$ObjectType.Account.Label}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.Primary_Contact__c.Label}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.Amount.Label}</th>
+                        <th>{!$ObjectType.Opportunity.Fields.CloseDate.Label}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <apex:repeat value="{!potentialGifts}" var="g">
+                        <tr>
+                            <td>
+                                <apex:inputCheckbox value="{!selection[g.Id]}" id="cbGift">
+                                    <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
+                                </apex:inputCheckbox>
+                            </td>
+                            <td><apex:outputLink value="/{!g.Id}">{!g.Name}</apex:outputLink></td>
+                            <td><apex:outputField value="{!g.Account.Name}" /></td>
+                            <td><apex:outputField value="{!g.Primary_Contact__c}" /></td>
+                            <td>
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}">
+                                    <apex:param value="{!g.Amount}"/>
+                                </apex:outputText>
+                            </td>
+                            <td><apex:outputField value="{!g.CloseDate}" /></td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <apex:repeat value="{!potentialGifts}" var="g">
-                            <tr>
-                                <td>
-                                    <apex:inputCheckbox value="{!selection[g.Id]}" id="cbGift">
-                                        <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
-                                    </apex:inputCheckbox>
-                                </td>
-                                <td><apex:outputLink value="/{!g.Id}">{!g.Name}</apex:outputLink></td>
-                                <td><apex:outputField value="{!g.Account.Name}" /></td>
-                                <td><apex:outputField value="{!g.Primary_Contact__c}" /></td>
-                                <td>
-                                    <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                    <apex:outputText value="{0, number, ###,##0.00}">
-                                        <apex:param value="{!g.Amount}"/>
-                                    </apex:outputText>
-                                </td>
-                                <td><apex:outputField value="{!g.CloseDate}" /></td>
-                            </tr>
-                        </apex:repeat>
-                        </tbody>
-                    </table>
-                    <!-- /DATA TABLE -->
+                    </apex:repeat>
+                    </tbody>
+                </table>
+                <!-- /DATA TABLE -->
 
-                    <div class="slds-p-around_medium">
-                        <a href="#" class="slds-button slds-button_brand" data-toggle="modal" data-target="searchPopup">{!$Label.mtchFindMoreGifts}</a>
-                    </div>
+                <div class="slds-p-around_medium">
+                    <a href="#" class="slds-button slds-button_brand" data-toggle="modal" data-target="searchPopup">{!$Label.mtchFindMoreGifts}</a>
+                </div>
 
-                    <!-- SEARCH POPUP -->
-                    <div>
-                        <div id="searchPopup" tabindex="-1" aria-hidden="true" aria-labelledby="searchPopupLabel" role="dialog" class="slds-modal">
-                            <div class="slds-modal__container">
+                <!-- SEARCH POPUP -->
+                <div>
+                    <div id="searchPopup" tabindex="-1" aria-hidden="true" aria-labelledby="searchPopupLabel" role="dialog" class="slds-modal">
+                        <div class="slds-modal__container">
 
-                                <div class="slds-modal__header">
-                                    <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.mtchFindMoreGifts}</h2>
-                                    <p>{!$Label.mtchFindMoreGiftsInfo}</p>
-                                    <button type="button" class="slds-button slds-button_icon-inverse slds-modal__close" data-dismiss="modal" data-target="searchPopup">
-                                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" viewBox="0 0 24 24" data-target="searchPopup">
-                                            <path data-target="searchPopup" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
-                                        </svg>
-                                        <span class="slds-assistive-text">Close</span>
-                                    </button>
-                                </div>
+                            <div class="slds-modal__header">
+                                <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.mtchFindMoreGifts}</h2>
+                                <p>{!$Label.mtchFindMoreGiftsInfo}</p>
+                                <button type="button" class="slds-button slds-button_icon-inverse slds-modal__close" data-dismiss="modal" data-target="searchPopup">
+                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" viewBox="0 0 24 24" data-target="searchPopup">
+                                        <path data-target="searchPopup" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
+                                    </svg>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                            </div>
 
-                                <div class="slds-modal__content">
-                                    <div class="slds-grid">
-                                        <div class="slds-col_padded-medium slds-col_padded-around">
-                                            <div class="slds-form_stacked">
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="AccountId" styleClass="lookupInput slds-input_small" />
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="ReportsToId" styleClass="lookupInput slds-input_small margin-left-zero"
-                                                                  labelOverride="{!$ObjectType.Opportunity.fields.Primary_Contact__c.Label}"/>
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Amount__c" styleClass="lookupInput slds-input_small margin-left-zero"
-                                                                  labelOverride="{!$ObjectType.Opportunity.fields.Amount.Label}"/>
-                                            </div>
+                            <div class="slds-modal__content">
+                                <div class="slds-grid">
+                                    <div class="slds-col_padded-medium slds-col_padded-around">
+                                        <div class="slds-form_stacked">
+                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="AccountId" styleClass="lookupInput slds-input_small" />
+                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="ReportsToId" styleClass="lookupInput slds-input_small margin-left-zero"
+                                                              labelOverride="{!$ObjectType.Opportunity.fields.Primary_Contact__c.Label}"/>
+                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Amount__c" styleClass="lookupInput slds-input_small margin-left-zero"
+                                                              labelOverride="{!$ObjectType.Opportunity.fields.Amount.Label}"/>
                                         </div>
-
-                                        <div class="slds-col_padded-medium slds-col_padded-around">
-                                            <div class="slds-form_stacked">
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
-                                                                  labelOverride="{!$Label.mtchCloseDateStart}"/>
-                                                <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="Last_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small margin-left-zero"
-                                                                  labelOverride="{!$Label.mtchCloseDateEnd}"/>
-                                            </div>
-                                        </div>
-                                    </div> <!-- /slds-grid -->
-                                </div> <!-- /slds-modal__content -->
-                                <div class="slds-modal__footer">
-                                    <div class="slds-x-small-buttons_horizontal">
-                                        <button type="button" class="slds-button slds-button_neutral" data-dismiss="modal" data-target="searchPopup" id="cancelSearchBtn">{!$Label.stgBtnCancel}</button>
-                                        <apex:commandButton styleClass="slds-button slds-button_neutral slds-button_brand" action="{!searchMore}" value="{!$Label.mtchBtnSearch}" id="searchBtn"/>
                                     </div>
+
+                                    <div class="slds-col_padded-medium slds-col_padded-around">
+                                        <div class="slds-form_stacked">
+                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="First_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small"
+                                                              labelOverride="{!$Label.mtchCloseDateStart}"/>
+                                            <c:UTIL_FormField sObj="{!searchFieldsWrapper}" sObjType="Contact" field="Last_Soft_Credit_Date__c" styleClass="lookupInput slds-input_small margin-left-zero"
+                                                              labelOverride="{!$Label.mtchCloseDateEnd}"/>
+                                        </div>
+                                    </div>
+                                </div> <!-- /slds-grid -->
+                            </div> <!-- /slds-modal__content -->
+                            <div class="slds-modal__footer">
+                                <div class="slds-x-small-buttons_horizontal">
+                                    <button type="button" class="slds-button slds-button_neutral" data-dismiss="modal" data-target="searchPopup" id="cancelSearchBtn">{!$Label.stgBtnCancel}</button>
+                                    <apex:commandButton styleClass="slds-button slds-button_neutral slds-button_brand" action="{!searchMore}" value="{!$Label.mtchBtnSearch}" id="searchBtn"/>
                                 </div>
-                            </div> <!-- /slds-modal__container -->
-                        </div> <!-- /slds-modal -->
-                        <div class="slds-backdrop" tabindex="-1"></div>
-                    </div>
-                    <!-- /SEARCH POPUP -->
+                            </div>
+                        </div> <!-- /slds-modal__container -->
+                    </div> <!-- /slds-modal -->
+                    <div class="slds-backdrop" tabindex="-1"></div>
+                </div>
+                <!-- /SEARCH POPUP -->
 
-                </div> <!--  /myBodyContent -->
-            </apex:form>
+            </div> <!--  /myBodyContent -->
+        </apex:form>
 
-        </div> <!-- /slds -->
-    </body>
+    </div> <!-- /slds -->
 
     <script type="text/javascript">
         (function () {

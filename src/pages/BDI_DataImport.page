@@ -5,8 +5,7 @@
     sidebar="false"
     docType="html-5.0"
     standardStylesheets="false"
-    lightningStylesheets="true"
-    applyBodyTag="false">
+    lightningStylesheets="true">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -52,7 +51,7 @@
         }
     </script>
 
-    <body class="slds-scope">
+    <div class="slds-scope">
         <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom_x-large">
 
             <!-- PAGE HEADER -->
@@ -213,5 +212,5 @@
                 </div>
             </apex:outputText>
         </apex:form>
-    </body>
+    </div>
 </apex:page>

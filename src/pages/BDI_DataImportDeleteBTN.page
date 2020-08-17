@@ -6,34 +6,31 @@
     action="{!buttonClick}"
     docType="html-5.0"
     standardStylesheets="false"
-    lightningStylesheets="true"
-    applyBodyTag="false">
+    lightningStylesheets="true">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-    <body class="slds-scope">
-        <div class="slds-scope slds-p-bottom_x-large">
-            <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
-                <c:UTIL_PageHeader headerLabel="{!$ObjectType.DataImport__c.Label}"
-                    header="NPSP Data Import Delete"
-                    icon="custom67" iconCategory="custom"
-                    showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
-                    cancelAction="{!close}" />
+    <div class="slds-scope slds-p-bottom_x-large">
+        <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
+            <c:UTIL_PageHeader headerLabel="{!$ObjectType.DataImport__c.Label}"
+                header="NPSP Data Import Delete"
+                icon="custom67" iconCategory="custom"
+                showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
+                cancelAction="{!close}" />
 
-                <!-- PAGE MESSAGE -->
-                <c:UTIL_PageMessages escMsg="false" allowClose="false" />
+            <!-- PAGE MESSAGE -->
+            <c:UTIL_PageMessages escMsg="false" allowClose="false" />
 
-                <div class="slds-p-around_small" id="btnDiv">
-                    <apex:commandButton value="{!$Label.bdiMassDelete}"
-                        id="delBtn"
-                        action="{!deleteFoundRecords}"
-                        rendered="{!canDelete}"
-                        rerender="idForm"
-                        styleClass="slds-button slds-button_brand" />
-                </div>
+            <div class="slds-p-around_small" id="btnDiv">
+                <apex:commandButton value="{!$Label.bdiMassDelete}"
+                    id="delBtn"
+                    action="{!deleteFoundRecords}"
+                    rendered="{!canDelete}"
+                    rerender="idForm"
+                    styleClass="slds-button slds-button_brand" />
+            </div>
 
-            </apex:form>
-        </div>
-    </body>
+        </apex:form>
+    </div>
 </apex:page>
