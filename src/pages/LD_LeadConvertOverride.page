@@ -218,7 +218,7 @@
     </script>
 
     <script>
-        const requiredInputElements = document.getElementById("pg:pbEdit").getElementsByClassName("requiredInput");
+        const requiredInputElements = document.getElementsByClassName("requiredInput");
         Array.prototype.forEach.call(requiredInputElements, function(element) {
             element.classList.remove('requiredInput');
         });

@@ -92,8 +92,7 @@
                     <tr>
                         <td>
                             <c:UTIL_FormField sObj="{!credit.contactRole}" sObjType="OpportunityContactRole" field="ContactId"
-                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn"
-                                  overrideRequired="true"/>
+                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn" />
 
                         </td>
                         <td>
@@ -143,4 +142,5 @@
         </apex:outputPanel> <!-- myBodyContent -->
     </div> <!-- slds -->
     </apex:form>
+
 </apex:page>

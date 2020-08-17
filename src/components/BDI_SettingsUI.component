@@ -254,4 +254,11 @@
         }, false);
     </script>
 
+    <script>
+        const requiredInputElements = document.getElementsByClassName("requiredInput");
+        Array.prototype.forEach.call(requiredInputElements, function(element) {
+            element.classList.remove('requiredInput');
+        });
+    </script>
+
 </apex:component>
