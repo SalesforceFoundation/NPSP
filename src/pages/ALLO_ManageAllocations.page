@@ -9,8 +9,7 @@
     action="{!getPageLoadValidationMessages}"
     standardStylesheets="false"
     lightningStylesheets="true"
-    docType="html-5.0"
-    applyBodyTag="false">
+    docType="html-5.0">
 
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
@@ -161,7 +160,7 @@
 
     </script>
 
-    <body class="slds-scope">
+    <div class="slds-scope">
         <apex:form id="theForm">
                 <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
                 <!-- PAGE HEADER -->
@@ -250,5 +249,5 @@
                     </apex:outputPanel>
             </div>
         </apex:form>
-    </body>
+    </div>
 </apex:page>
