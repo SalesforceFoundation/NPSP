@@ -216,4 +216,12 @@
             filterStatus();
         }
     </script>
+
+    <script>
+        const requiredInputElements = document.getElementById("pg:pbEdit").getElementsByClassName("requiredInput");
+        Array.prototype.forEach.call(requiredInputElements, function(element) {
+            element.classList.remove('requiredInput');
+        });
+    </script>
+
 </apex:page>
