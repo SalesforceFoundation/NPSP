@@ -25,9 +25,10 @@ Reorder and Modify GE Template Fields
   ...                                   from the default GE template.
 
   [tags]                                unstable                    feature:GE          W-039563
-  Go to Page                            Landing                      npsp__GE_Gift_Entry
+  Go to Page                            Landing                     npsp__GE_Gift_Entry
   Click Link                            Templates
   Select Template Action                Default Gift Entry Template  Edit
+  Current Page Should Be                Template                    GE_Gift_Entry
   Click Gift Entry Button               Next: Form Fields
   Perform Action On Object Field        select  AccountSoftCredits  Role
 
