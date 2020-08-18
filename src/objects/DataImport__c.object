@@ -1672,7 +1672,9 @@
     </fields>
     <fields>
         <fullName>Recurring_Donation_Name__c</fullName>
+        <description>Leave blank if you have a Recurring Donation Name Format selected. Otherwise, enter your own name.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Leave blank if you have a Recurring Donation Name Format selected. Otherwise, enter your own name.</inlineHelpText>
         <label>Recurring Donation Name</label>
         <length>80</length>
         <required>false</required>
