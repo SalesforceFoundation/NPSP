@@ -577,6 +577,11 @@ global with sharing class BDI_DataImportService {
             importCampaigns();
             pl.stop();
 
+            pl = perfLogger.newPerfLog('importRecurringDonations');
+            BDI_RecurringDonations bdiRDs= new BDI_RecurringDonations(this);
+            bdiRDs.importRecurringDonations();
+            pl.stop();
+
             pl = perfLogger.newPerfLog('importDonations');
             BDI_Donations bdiDonations = new BDI_Donations(this);
             bdiDonations.importDonations();

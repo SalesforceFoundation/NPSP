@@ -387,6 +387,14 @@ public class BDI_Donations {
         if (isNew) {
             opp = new Opportunity();
             opportunitiesByDataImportId.put(dataImport.Id, opp);
+
+            if (dataImport.RecurringDonationImported__c != null
+                && (dataImport.RecurringDonationImportStatus__c == System.label.bdiMatched ||
+                    dataImport.RecurringDonationImportStatus__c == System.label.bdiCreated ||
+                    dataImport.RecurringDonationImportStatus__c == System.label.bdiUpdated)) {
+                opp.npe03__Recurring_Donation__c = dataImport.RecurringDonationImported__c;
+            }
+            
             if (dataImport.Donation_Donor__c == 'Account1') {
                 Account acc = bdi.AccountFromDi(dataImport, 1);
                 opp.AccountId = acc.Id;
