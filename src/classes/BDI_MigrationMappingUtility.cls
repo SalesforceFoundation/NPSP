@@ -42,12 +42,12 @@ public without sharing class BDI_MigrationMappingUtility {
         new List<Metadata.CustomMetadata>();
 
     /*******************************************************************************************************
-    * @description Name of default packaged Object Mapping Set
+    * @description Current context namespace
     */
     public static final String NAMESPACE = UTIL_Namespace.getNamespace();
 
     /*******************************************************************************************************
-    * @description Name of default packaged Object Mapping Set
+    * @description Data Import object api name
     */
     public static final String DATA_IMPORT_OBJECT_NAME = 'DataImport__c';
 
@@ -94,7 +94,7 @@ public without sharing class BDI_MigrationMappingUtility {
     */
     private final Set<String> HELP_TEXT_EXCEPTIONS = new Set<String>{
         'The role that the Opportunity Contact Role should be created with.  For example enter \'Soft Credit\' '+
-                'to create a soft credit opportunity contact role.',
+            'to create a soft credit opportunity contact role.',
             'Indicates the type of transaction.'
     };
 
@@ -333,7 +333,8 @@ public without sharing class BDI_MigrationMappingUtility {
 
     /*******************************************************************************************************
     * @description Go through all fields in Data Import object and populate relevant lists from help text
-    * mappings
+    * mappings, lists for potentially bad help text mappings and list of data import field mappings generated
+    * from help text mappings.
     */
     @TestVisible
     private void populateListsFromHelpTextMappings() {
