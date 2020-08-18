@@ -343,7 +343,9 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
 
     def verify_link_status(self, **kwargs):
         """ Verify the link is disabled/enabled, pass the name of the link
-        and the expected status of the link as either enabled or disabled"""
+        and the expected status of the link as either enabled or disabled
+        Eg: |Verify Link Status  |  Update this Payment=enabled
+             ...                    Update this Opportunity=disabled  |"""
         for key,value in kwargs.items():
             locator = npsp_lex_locators["button-with-text"].format(key)
             self.selenium.wait_until_element_is_visible(locator,error= f"'{key}' is not displayed on the page")
