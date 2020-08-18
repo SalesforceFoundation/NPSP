@@ -110,11 +110,6 @@ public without sharing class BDI_MigrationMappingUtility {
     private Data_Import_Settings__c dataImportSettings;
 
     /*******************************************************************************************************
-    * @description List of reference data import object mappings
-    */
-    private Map<String, Data_Import_Object_Mapping__mdt> referenceObjectMappingsByDeveloperName;
-
-    /*******************************************************************************************************
     * @description Map of migrated Data Import Object Mapping developer names by legacy data import object
     * names
     */
@@ -169,8 +164,6 @@ public without sharing class BDI_MigrationMappingUtility {
     public BDI_MigrationMappingUtility(BDI_MigrationMappingHelper helper) {
         this.helper = helper;
         this.dataImportSettings = Data_Import_Settings__c.getInstance();
-        this.referenceObjectMappingsByDeveloperName =
-            helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
     }
 
     /*******************************************************************************************************
@@ -241,6 +234,8 @@ public without sharing class BDI_MigrationMappingUtility {
         DataImportObjectMapping[] objectMappings = new List<DataImportObjectMapping>();
         Map<String, String> developerNamesByPredecessor = new Map<String, String>();
 
+        Map<String, Data_Import_Object_Mapping__mdt> referenceObjectMappingsByDeveloperName =
+            helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
         for (String name : referenceObjectMappingsByDeveloperName.keySet()) {
 
             String legacyDataImportObjectName;
