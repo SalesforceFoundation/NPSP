@@ -704,9 +704,25 @@ public class UTIL_UnitTestData_TEST {
 
     /**
       * @description Generate a unique string to append to indexed fields to make them unique
+      * @return A unique string that uses the crypto class to generate a unique long value
       */
     public static String getUniqueString() {
-        return String.valueOf(Math.abs(Crypto.getRandomLong()));
+        return String.valueOf(Math.abs(getRandomLong));
+    }
+
+    /**
+     * @description Rather than call the Crypto class multiple times, call it only once and then
+     * increment the random long value to keep it unique without incurring the extra CPU cycles.
+     */
+    private static Long getRandomLong {
+        get {
+            if (getRandomLong == null) {
+                getRandomLong = Crypto.getRandomLong();
+            } else {
+                getRandomLong += 1;
+            }
+            return getRandomLong;
+        } set;
     }
 
     /**
