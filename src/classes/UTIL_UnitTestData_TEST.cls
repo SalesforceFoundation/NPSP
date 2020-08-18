@@ -902,8 +902,8 @@ public class UTIL_UnitTestData_TEST {
         createDefaultTDTMHandlers();
         TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Addresses_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Validator_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Validator_TDTM', false);
         turnOffAutomaticHHNaming();
     }
 
