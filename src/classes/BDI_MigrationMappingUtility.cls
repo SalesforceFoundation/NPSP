@@ -47,11 +47,6 @@ public without sharing class BDI_MigrationMappingUtility {
     public static final String NAMESPACE = UTIL_Namespace.getNamespace();
 
     /*******************************************************************************************************
-    * @description Data Import object api name
-    */
-    public static final String DATA_IMPORT_OBJECT_NAME = 'DataImport__c';
-
-    /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
     */
     public static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME = 'Default_Object_Mapping_Set';
