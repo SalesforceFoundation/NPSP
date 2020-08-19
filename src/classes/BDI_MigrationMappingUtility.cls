@@ -903,14 +903,6 @@ public without sharing class BDI_MigrationMappingUtility {
                 }
             }
 
-            if (hasLegacyDataImportObjectName == true) {
-                Integer countWhitespaces = helpText.countMatches(' ');
-
-                if (countWhitespaces <= 4) {
-                    return helpText.split('', 2);
-                }
-            }
-
             return null;
         }
 
