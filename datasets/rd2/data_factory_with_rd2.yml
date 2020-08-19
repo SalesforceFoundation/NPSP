@@ -47,6 +47,14 @@
       fake: free_email
     Phone:
       fake: phone_number
+    MailingStreet:
+      fake: street_address
+    MailingCity:
+      fake: city
+    MailingState:
+      fake: state_abbr
+    MailingPostalCode:
+      fake: zipcode
   friends:
     - object: npe03__Recurring_Donation__c
       ## 90% of the Contacts will have RD and 10% will not
@@ -73,10 +81,20 @@
                   - object: Account
                     fields:
                       description: Org Account related to Recurring Donation
-                      Name:
-                        fake: company
+                      Name: ${{ fake.company }} ${{ fake.company_suffix }}
                       Phone:
                         fake: phone_number
+                    friends:
+                      - object: npe5__Affiliation__c
+                        ## Create an Affiliation between the Contact and this Org Account
+                        fields:
+                          npe5__Primary__c: true
+                          npe5__Contact__c:
+                            reference: Contact
+                          npe5__Organization__c:
+                            reference: Account
+                          npe5__Role__c: Employee
+                          Related_Opportunity_Contact_Role__c: Soft Credit
         npe03__Amount__c:
           random_number:
             min: 1
@@ -236,3 +254,21 @@
               reference: Opportunity
             Amount__c: ${{Opportunity.Amount}}
             Percent__c: 100
+
+- object: npe4__Relationship__c
+  fields:
+    npe4__Contact__c:
+      random_number:
+        min: 0
+        max: ${{ (Contact.id / 2) - 1 }}
+    npe4__RelatedContact__c:
+      random_number:
+        min: ${{Contact.id / 2}}
+        max: ${{Contact.id}}
+    npe4__Type__c:
+      random_choice:
+        - Friend
+        - Father
+        - Mother
+        - Wife
+        - Husband
