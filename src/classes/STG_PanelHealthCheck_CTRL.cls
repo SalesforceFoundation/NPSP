@@ -62,6 +62,39 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         } private set;
     }
 
+    public override PageReference saveSettings() {
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        Savepoint sp = Database.setSavepoint();
+        try {
+            List<SObject> toUpdate = new List<SObject>();
+
+            if (STG_Panel.stgService.stgErr != null && !Test.isRunningTest()) {
+                toUpdate.add(STG_Panel.stgService.stgErr);
+            }
+
+            Boolean hasUpdatePermission = UTIL_Describe.getObjectDescribe(
+                String.valueOf(Error_Settings__c.SObjectType)
+            ).IsUpdateable();
+
+            if (!hasUpdatePermission) {
+                throw new DmlException(
+                    String.format(
+                        System.Label.flsError,
+                        new List<String>{System.Label.stgLabelErrorSettings})
+                );
+            }
+
+            update toUpdate;
+
+        } catch (Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }
+
+        return null;
+    }
+
     /*********************************************************************************************************
     * @description Whether all tests passed Health Check
     */

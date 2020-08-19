@@ -1186,6 +1186,23 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    @isTest
+    private static void shouldPreventUpateErrorSettingsWhenUserDoesNotHaveUpdatePermission() {
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelHealthCheck);
+            STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
+
+            STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
+            panel.saveSettings();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgLabelErrorSettings);
+        }
+
+        Test.stopTest();
+    }
+
     /**
     * @description Verify if admin users can delete relationship auto create settings
     */
@@ -1827,8 +1844,14 @@ private with sharing class STG_SettingsManager_TEST {
     @isTest
     private static void testPanelHealthCheck() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
+        
         system.assertEquals('idPanelHealthCheck', panel.idPanel());
         system.assertEquals(null, panel.runDetector());
+
+        STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
+        system.assertEquals(null, panel.saveSettings(), 'Page reference should not be returned');
+        system.assertEquals(true, STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c,
+            'Error Settings Disable Record Data Health Check should be set to true');
     }
 
     /*********************************************************************************************************

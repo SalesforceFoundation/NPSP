@@ -11633,6 +11633,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Error Notification Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelErrorSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelErrorSettings</shortDescription>
+        <value>Error Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelExamplesFGFormat</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
