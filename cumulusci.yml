@@ -1110,6 +1110,8 @@ flows:
                     path: datasets/rd2/configure_rd2_settings.cls
                     apex: initialize_RD2_Settings();
             2:
+                task: test_data_delete
+            3:
                 task: generate_and_load_from_yaml
                 options:
                     generator_yaml: datasets/rd2/data_factory_with_rd2.yml
