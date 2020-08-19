@@ -30,6 +30,7 @@ Remove Secondary Affiliation for Contact
     Click Related Item Popup Link     Organization Affiliations    ${account}[Name]        Delete
     Wait For Modal                    New                          Affiliation             expected_heading=Delete Affiliation
     Click Modal Button                Delete
+    Wait Until Modal Is Closed
     Go To Page                        Details                      Account                 object_id=${account}[Id]
     Select Tab                        Related
     Verify Related List               Affiliated Contacts          does not contain        ${contact}[FirstName] ${contact}[LastName]
