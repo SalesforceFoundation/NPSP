@@ -109,7 +109,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """
         locator = npsp_lex_locators["bge"]["button"].format("Edit")
         edit_button = self.selenium.get_webelement(locator)
-        self.selenium.wait_until_page_contains_element(edit_button, error="Show more actions dropdown didn't open in 30 sec")
+        self.selenium.wait_until_element_is_visible(edit_button)
         self.selenium.click_element(locator)
         self.salesforce.wait_until_modal_is_open()
         self._populate_edit_status_values(**kwargs)
@@ -217,26 +217,29 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         installmentrow = npsp_lex_locators["erd"]["installment_row"]
         installments = self.selenium.get_webelements(installmentrow)
         count = len(installments)
-        print(f"Number of installments created is {count}")
-        i = 1
-        curr_year_value = 0
-        next_year_value = 0
-        values = {}
-        while i < count:
-            datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
-            installment_date = self.selenium.get_webelement(datefield)
-            actual_date = self.selenium.get_webelement(installment_date).text
-            year = datetime.strptime(actual_date, "%m/%d/%Y").year
-            curr_year = datetime.now().year
-            next_year = (datetime.now() + relativedelta(years=1)).year
-            if curr_year == year:
-                curr_year_value = curr_year_value + int(amount)
-            if next_year == year:
-                next_year_value = next_year_value + int(amount)
-            i = i + 1
-        values['Current Year Value']=f"${curr_year_value}.00"
-        values['Next Year Value']=f"${ next_year_value}.00"
-        self.validate_field_values_under_section("Statistics",**values)
+        if count == 0:
+            raise Exception("Zero installments found")
+        else:
+            print(f"Number of installments created is {count}")
+            i = 1
+            curr_year_value = 0
+            next_year_value = 0
+            values = {}
+            while i < count:
+                datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
+                installment_date = self.selenium.get_webelement(datefield)
+                actual_date = self.selenium.get_webelement(installment_date).text
+                year = datetime.strptime(actual_date, "%m/%d/%Y").year
+                curr_year = datetime.now().year
+                next_year = (datetime.now() + relativedelta(years=1)).year
+                if curr_year == year:
+                    curr_year_value = curr_year_value + int(amount)
+                elif next_year == year:
+                    next_year_value = next_year_value + int(amount)
+                i = i + 1
+            values['Current Year Value']=f"${curr_year_value}.00"
+            values['Next Year Value']=f"${ next_year_value}.00"
+            self.validate_field_values_under_section("Statistics",**values)
 
     @capture_screenshot_on_error
     def validate_upcoming_schedules(self, num_payments, startdate, dayofmonth):
