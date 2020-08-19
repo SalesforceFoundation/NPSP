@@ -451,5 +451,28 @@ public with sharing class BDE_BatchEntry_CTRL {
         pageRef.getParameters().put('obj', objName);
         pageRef.setRedirect(true);
         return pageRef;         
-    }             
+    }
+
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isEmpty(namespace)) return 'c';
+        return namespace;
+    }
+
+
+   @AuraEnabled(Cacheable=true)
+   public static Batch_Data_Entry_Settings__c getBatchDataEntrySettings () {
+      Batch_Data_Entry_Settings__c settings = Batch_Data_Entry_Settings__c.getInstance(UserInfo.getUserId());
+      return settings;
+   }
+
+   @AuraEnabled
+   public static void upsertBatchDataEntrySettings () {
+      Batch_Data_Entry_Settings__c settings = getBatchDataEntrySettings();
+      if (!settings.Viewed_Retirement_Alert__c) {
+         settings.Viewed_Retirement_Alert__c = true;
+         upsert settings;
+      }
+   }
+
 }
