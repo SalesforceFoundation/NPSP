@@ -1,6 +1,6 @@
 # Using the RD SnowFakery Data Factories
 
-Snowfakery Documentation: https://snowfakery.readthedocs.io/en/docs/#function-blocks
+Snowfakery Documentation: https://snowfakery.readthedocs.io/en/docs/
 
 ## YML Files:
 
