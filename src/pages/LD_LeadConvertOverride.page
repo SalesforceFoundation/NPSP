@@ -10,6 +10,11 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/remove-duplicate-required-mark.js')}"/>
+    <script>
+        window.onload = stripDuplicateAsterisk;
+    </script>
+
     <div class="slds-scope">
         <apex:form id="pbEdit" styleClass="slds-form_stacked">
             <div class="hide-when-modal-open">
@@ -215,13 +220,6 @@
             }
             filterStatus();
         }
-    </script>
-
-    <script>
-        const requiredInputElements = document.getElementsByClassName("requiredInput");
-        Array.prototype.forEach.call(requiredInputElements, function(element) {
-            element.classList.remove('requiredInput');
-        });
     </script>
 
 </apex:page>
