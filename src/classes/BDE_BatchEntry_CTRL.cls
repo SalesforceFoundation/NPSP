@@ -467,7 +467,7 @@ public with sharing class BDE_BatchEntry_CTRL {
    }
 
    @AuraEnabled
-   public static void upsertBatchDataEntrySettings () {
+   public static void upsertRetirementAlert () {
       Batch_Data_Entry_Settings__c settings = getBatchDataEntrySettings();
       if (!settings.Viewed_Retirement_Alert__c) {
          settings.Viewed_Retirement_Alert__c = true;

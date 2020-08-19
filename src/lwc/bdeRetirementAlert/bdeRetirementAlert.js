@@ -3,8 +3,8 @@ import BATCH_DATA_ENTRY_SETTING_RETIREMENT_ALERT from
        '@salesforce/schema/Batch_Data_Entry_Settings__c.Viewed_Retirement_Alert__c';
 import getBatchDataEntrySettings from
        '@salesforce/apex/BDE_BatchEntry_CTRL.getBatchDataEntrySettings';
-import upsertBatchDataEntrySettings from
-       '@salesforce/apex/BDE_BatchEntry_CTRL.upsertBatchDataEntrySettings';
+import upsertRetirementAlert from
+       '@salesforce/apex/BDE_BatchEntry_CTRL.upsertRetirementAlert';
 import { handleError } from 'c/utilTemplateBuilder';
 
 export default class bdeRetirementAlert extends LightningElement {
@@ -29,7 +29,7 @@ export default class bdeRetirementAlert extends LightningElement {
    }
 
    handleOnConfirm() {
-      upsertBatchDataEntrySettings().then(response => {
+      upsertRetirementAlert().then(response => {
          this.showPrompt = false;
       }).catch(error => {
          handleError(error)
