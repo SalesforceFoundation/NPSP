@@ -4,7 +4,15 @@
 * @author Michael Smith
 * @date 2020-08-11
 */
-public static void initialize_RD2_Settings() {
+
+/**
+ * @description Before the data load:
+ * - Validate the RD2 is enabled in the org
+ * - Set "First Installment" to never to allow bulk data loading without impacting cpu
+ * - Configure automatic naming so that all new RD's are named nicely
+ * - Mock the migration just to avoid any validation errors
+ */
+public static void before_data_load() {
 
     npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
 
@@ -24,6 +32,22 @@ public static void initialize_RD2_Settings() {
     // Mock the migration/enablement state so that the application "thinks" RD2 was fully enabled
     rdSettings.RecurringDonations2MigrationState__c = '{"run":{"total":1,"processed":0,"failed":1,"batchId":"7076300001YReRcAAL"}}';
     rdSettings.RecurringDonations2EnablementState__c = '{"isReady":false,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
+
+    upsert rdSettings;
+}
+
+/**
+ * @description: After the data load:
+ * - Update RD2 settings to Always create the next installment
+ */
+public static void after_data_load() {
+
+    npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+
+    // Reset first installment to always
+    rdSettings.DisableRollupsWhenCreatingInstallments__c = false;
+    rdSettings.InstallmentOppFirstCreateMode__c = 'Asynchronous_When_Bulk';
+    rdSettings.InstallmentOppAutoCreateOption__c = 'Always_Create_Next_Installment';
 
     upsert rdSettings;
 }

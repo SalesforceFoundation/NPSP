@@ -61,8 +61,8 @@
       fields:
         npe03__Contact__c:
           reference: Contact
-        ## 95% of the RDs will use a Household Contact and 5% will use an Organization Account
         npe03__Organization__c:
+          ## 95% of the RDs will use a Household Contact and 5% will use an Organization Account
           random_choice:
             - choice:
                 probability: 95%
@@ -81,8 +81,8 @@
           random_number:
             min: 1
             max: 100
-        ## Set the DateEstablished and StartDate to a random date up to 2 years ago
         npe03__Date_Established__c:
+          ## Set the DateEstablished and StartDate to a random date up to 2 years ago
           date_between:
             start_date: -2y
             end_date: -14d
@@ -92,8 +92,9 @@
           random_choice:
             - Credit Card
             - Check
-        ## 95% of the RD's will be Open Ended and 5% will be Fixed Length
+            - ACH/EFT
         RecurringType__c:
+          ## 95% of the RD's will be Open Ended and 5% will be Fixed Length
           random_choice:
             - choice:
                 probability: 95%
@@ -101,8 +102,8 @@
             - choice:
                 probability: 5%
                 pick: Fixed
-        ## 90% of the RD's are Monthly, 5% Weekly, and 5% 1st & 15th
         npe03__Installment_Period__c:
+          ## 90% of the RD's are Monthly, 5% Weekly, and 5% 1st & 15th
           random_choice:
             - choice:
                 probability: 90%
@@ -114,8 +115,8 @@
                 probability: 5%
                 pick: 1st and 15th
         InstallmentFrequency__c: 1
-        ## For Monthly RD's, set the DayOfMonth randomly to either 1, 15, 30 or LastDay
         Day_of_Month__c:
+          ## For Monthly RD's, set the DayOfMonth randomly to either 1, 15, 30 or LastDay
           if:
             - choice:
                 when: ${{npe03__Installment_Period__c=='Monthly'}}
@@ -127,16 +128,16 @@
                     - Last_Day
             - choice:
                 pick: ""
-        ## Fixed Length RD's will all get 24 installments
         npe03__Installments__c:
+          ## Fixed Length RD's will all get 24 installments
           if:
             - choice:
                 when: ${{RecurringType__c=='Fixed'}}
                 pick: 24
             - choice:
-                pick: 0
-        ## 5% of the RD's will be linked to a Campaign
+                pick:
         npe03__Recurring_Donation_Campaign__c:
+          ## 5% of the RD's will be linked to a Campaign
           random_choice:
             - choice:
                 probability: 5%

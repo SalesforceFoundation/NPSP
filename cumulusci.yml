@@ -1107,8 +1107,8 @@ flows:
             1:
                 task: execute_anon
                 options:
-                    path: datasets/rd2/configure_rd2_settings.cls
-                    apex: initialize_RD2_Settings();
+                    path: datasets/rd2/config_rd2_for_data_factory.cls
+                    apex: before_data_load();
             2:
                 task: test_data_delete
             3:
@@ -1119,6 +1119,11 @@ flows:
                     num_records_tablename: Contact
                     batch_size: 500
                     bulk_mode: serial
+            4:
+                task: execute_anon
+                options:
+                    path: datasets/rd2/config_rd2_for_data_factory.cls
+                    apex: after_data_load();
 
 
 orgs:
