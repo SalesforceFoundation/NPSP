@@ -186,7 +186,7 @@
                 </label>
                 <c:UTIL_Tooltip tooltip="{!$ObjectType.DataImportBatch__c.Fields.Donation_Date_Range__c.InlineHelpText}" />
                 <div class="slds-form-element__control">
-                    <apex:inputField id="fldDonationDateRange" value="{!diBatch.Donation_Date_Range__c}" type="number" styleClass="slds-input" rendered="{!isEditMode}" required="false"/>
+                    <apex:inputField id="fldDonationDateRange" value="{!diBatch.Donation_Date_Range__c}" type="number" styleClass="slds-input" rendered="{!isEditMode}" />
                     <apex:outputField id="fldDonationDateRangeRO" value="{!diBatch.Donation_Date_Range__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
                 </div>
             </div>
@@ -255,8 +255,8 @@
     </script>
 
     <script>
-        const requiredInputElements = document.getElementsByClassName("requiredInput");
-        Array.prototype.forEach.call(requiredInputElements, function(element) {
+        [...document.getElementsByClassName("requiredInput")].forEach( function(element) {
+            console.log(element);
             element.classList.remove('requiredInput');
         });
     </script>
