@@ -46,6 +46,7 @@
                                     <apex:outputLabel for="fldName" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                         <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Name.Label}
                                     </apex:outputLabel>
+                                    <!-- required="true" changed to "false" to eliminate redundant asterisk after switch to lightningStylesheets -->
                                     <apex:inputField id="fldName" required="false" value="{!Level__c.Name}" label="" styleClass="slds-input" />
                                 </div>
                                 <div class="slds-form-element slds-size_1-of-2">

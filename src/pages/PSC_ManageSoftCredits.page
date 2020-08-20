@@ -91,6 +91,7 @@
                     <apex:repeat value="{!softCredits}" var="credit">
                     <tr>
                         <td>
+                            <!-- overrideRequired set true to eliminate redundant asterisk after switch to lightningStylesheets -->
                             <c:UTIL_FormField sObj="{!credit.contactRole}" sObjType="OpportunityContactRole" field="ContactId"
                                   showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn"
                                   overrideRequired="true" />

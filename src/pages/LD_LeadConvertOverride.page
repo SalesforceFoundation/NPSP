@@ -35,6 +35,7 @@
                 <div class="slds-p-horizontal_large">
 
                     <div class="slds-form-element slds-is-required">
+                        <!-- overrideRequired set true to eliminate redundant asterisk after switch to lightningStylesheets -->
                         <c:UTIL_FormField sObjType="Contact" sObj="{!dummyCon}" field="OwnerId" labelOverride="{!$Label.leadConvertOwner}" overrideRequired="true"/>
                     </div>
 
@@ -148,6 +149,7 @@
 
 
                     <div class="slds-form-element">
+                        <!-- required="true" removed to eliminate redundant asterisk after switch to lightningStylesheets -->
                         <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" />
                     </div>
                 </div>
