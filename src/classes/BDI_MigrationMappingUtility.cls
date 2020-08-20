@@ -854,6 +854,9 @@ public without sharing class BDI_MigrationMappingUtility {
         public String dataImportFieldAPIName { get;set; }
         public String helpText { get;set; }
         private final UTIL_Describe describeService = UTIL_Describe.getInstance();
+        private final Set<String> LEGACY_DATA_IMPORT_OBJECT_NAMES = new Set<String> {
+            'account1', 'account2', 'address', 'contact1', 'contact2',
+                'household','opportunity','donation','payment','gau','role'};
 
         public HelpTextFieldMapping() {}
 
@@ -865,59 +868,44 @@ public without sharing class BDI_MigrationMappingUtility {
 
             if (this.helpText != null) {
 
-                List<String> parts = splitHelpText(this.helpText);
-                if (parts != null) {
-                    this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
-                    this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
-
-                    if (UTIL_Namespace.shouldAlignNamespace) {
-                        this.targetFieldAPIName =
-                            UTIL_Namespace.alignSchemaNSWithEnvironment(this.targetFieldAPIName);
-                    }
+                List<String> mappingValuesFromHelpText = retrieveObjectAndFieldApiNames(this.helpText);
+                if (mappingValuesFromHelpText != null) {
+                    this.dataImportObjectName = mappingValuesFromHelpText[0];
+                    this.targetFieldAPIName =
+                        UTIL_Namespace.shouldAlignNamespace ?
+                            UTIL_Namespace.alignSchemaNSWithEnvironment(mappingValuesFromHelpText[1]) :
+                            mappingValuesFromHelpText[1];
 
                     checkRequiredFields();
                 }
             }
         }
 
-        private List<String> splitHelpText(String helpText) {
-            String symbol;
-            Boolean hasSpecialChar = helpText.containsAny('$&+,:;=?@#|\'<>.-^*()%!_');
-            Boolean hasLegacyDataImportObjectName = checkHelpTextForLegacyDataImportObjectNames(helpText);
+        /*******************************************************************************************************
+        * @description Retrieves an object and field api name from a DataImport__c field help text mapping.
+        *
+        * @param helpText Help text value of a DataImport__c field
+        * @return A list of strings containing an object api name and a field api name OR null if help text
+        * value doesn't contain a valid help text mapping.
+        */
+        private List<String> retrieveObjectAndFieldApiNames(String helpText) {
+            if (helpText.contains('.')) {
+                List<String> parts = helpText.split('\\.', 2);
 
-            if (hasSpecialChar == true) {
-                String[] specialCharacters =
-                    new List<String>{'$', '&', '\\+', ',', ':', ';', '=', '\\?', '@',
-                                     '#', '\\|', '\'', '<', '>', '\\.', '-', '^', '\\*',
-                                     '\\(', '\\)', '%', '!', '_'};
+                if (parts.size() == 2) {
+                    String possibleObjectApiName = parts[0];
+                    String possibleFieldApiName = parts[1];
+                    Boolean isLegacyObjectApiName =
+                        LEGACY_DATA_IMPORT_OBJECT_NAMES.contains(possibleObjectApiName.toLowerCase());
+                    Boolean isUsableFieldApiName = !possibleFieldApiName.contains(' ');
 
-                for (String sc : specialCharacters) {
-                    List<String> parts = helpText.split(sc, 2);
-                    Integer countWhitespaces = helpText.countMatches(' ');
-
-                    if (parts.size() >= 2 && countWhitespaces <= 4) {
-                        if (String.isNotBlank(parts[0]) && String.isNotBlank(parts[1])) {
-                            return parts;
-                        }
+                    if (isLegacyObjectApiName && isUsableFieldApiName) {
+                        return parts;
                     }
                 }
             }
 
             return null;
-        }
-
-        private Boolean checkHelpTextForLegacyDataImportObjectNames(String helpText) {
-            Set<String> legacyDataImportObjectNames = new Set<String> {
-                'Account1', 'Account2', 'Address', 'Contact1', 'Contact2',
-                'Household','Opportunity','Donation','Payment','GAU','Role'};
-
-            for (String legacyName : legacyDataImportObjectNames) {
-                if (helpText.contains(legacyName)) {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private void checkRequiredFields() {
