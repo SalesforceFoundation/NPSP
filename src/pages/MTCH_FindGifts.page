@@ -27,6 +27,7 @@
             z-index: 100;
         }
 
+        /* added to deal with shift right in 2nd and 3rd rows of modal dialog */
         .margin-left-zero {
             margin-left: 0 !important;
         }
