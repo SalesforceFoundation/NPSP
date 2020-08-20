@@ -47,6 +47,8 @@ import commonYes from '@salesforce/label/c.commonYes';
 import geAddNewAllocation from '@salesforce/label/c.geAddNewAllocation';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
+import geAssistiveDescriptionFieldRequired from '@salesforce/label/c.geAssistiveDescriptionFieldRequired';
+import geAssistiveDescriptionFieldOptional from '@salesforce/label/c.geAssistiveDescriptionFieldOptional';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
 import geAssistiveFieldUp from '@salesforce/label/c.geAssistiveFieldUp';
 import geAssistiveFormFieldsCollapseAll from '@salesforce/label/c.geAssistiveFormFieldsCollapseAll';
@@ -55,6 +57,7 @@ import geAssistiveFormFieldsRemoveField from '@salesforce/label/c.geAssistiveFor
 import geAssistiveFormFieldsSectionEdit from '@salesforce/label/c.geAssistiveFormFieldsSectionEdit';
 import geAssistiveModalCancelAndDiscard from '@salesforce/label/c.geAssistiveModalCancelAndDiscard';
 import geAssistiveRemoveSelectedOption from '@salesforce/label/c.geAssistiveRemoveSelectedOption';
+import geAssistiveRequireField from '@salesforce/label/c.geAssistiveRequireField';
 import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
@@ -265,6 +268,8 @@ class GeLabelService {
         geAddNewAllocation,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
+        geAssistiveDescriptionFieldOptional,
+        geAssistiveDescriptionFieldRequired,
         geAssistiveFieldDown,
         geAssistiveFieldUp,
         geAssistiveFormFieldsCollapseAll,
@@ -275,6 +280,7 @@ class GeLabelService {
         geAssistiveRemoveSelectedOption,
         geAssistiveSectionDown,
         geAssistiveSectionUp,
+        geAssistiveRequireField,
         geAssistiveShowMenu,
         geAssistiveSpinner,
         geBodyAdvancedFieldMapping,
