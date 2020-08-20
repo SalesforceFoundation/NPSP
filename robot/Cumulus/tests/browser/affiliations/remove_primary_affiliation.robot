@@ -32,12 +32,13 @@ Remove Primary Affiliation for Contact
     [Documentation]                   Creates a contact, organization account and primary affiliation via API
     ...                               Open contact and delete affiliation from organization affiliation related list
     ...                               Verifies that contact does not show under affiliated contacts in the account page
-    [tags]                            unstable                     W-037651                     feature:Affiliations
+    [tags]                            W-037651                     feature:Affiliations
     Go To Page                        Details                      Contact                 object_id=${contact1}[Id]
     Select Tab                        Related
     Click Related Item Popup Link     Organization Affiliations    ${account1}[Name]       Delete
     Wait For Modal                    New                          Affiliation             expected_heading=Delete Affiliation
     Click Modal Button                Delete
+    Wait Until Modal Is Closed
     Go To Page                        Details                      Account                 object_id=${account1}[Id]
     Select Tab                        Related
     Verify Related List               Affiliated Contacts          does not contain        ${contact1}[FirstName] ${contact1}[LastName]
@@ -47,7 +48,7 @@ Remove Primary Affiliation for Contact2
     ...                               Edit Primary Affiliation field and delete affiliation to organization account.
     ...                               Verifies that affiliation to account shows under organization affiliation as former
     ...                               Verifies that on account page contact shows under affiliated contacts as former
-    [tags]                            W-037651                     feature:Affiliations    unstable
+    [tags]                            W-037651                     feature:Affiliations
     Go To Page                        Details                      Contact                 object_id=${contact2}[Id]
     Select Tab                        Details
     Delete Record Field Value         Primary Affiliation          ${account2}[Name]
