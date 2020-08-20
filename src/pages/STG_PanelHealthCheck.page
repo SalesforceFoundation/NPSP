@@ -34,13 +34,13 @@
             <apex:outputText value="{!$Label.healthLabelIntro}" />
         </p>
         <c:UTIL_PageMessages />
-            <div class="slds-form-element slds-m-top_x-small">
+            <div class="slds-form-element slds-m-top_large slds-m-bottom_large">
                     <apex:inputCheckbox id="disableDataHealthCheck" value="{!stgService.stgErr.Disable_Record_Data_Health_Checks__c}" html-aria-describedby="{!$Component.disableHeathCheckHelp}" styleClass="slds-checkbox" html-data-qa-locator="checkbox Disable Data Health Check">
                         <apex:actionSupport event="onchange" action="{!saveSettings}" rerender="form"  status="statusLoad"/>
                     </apex:inputCheckbox>
                     <apex:outputLabel value="{!$Label.healthLabelDisableRecordBatch}" for="disableDataHealthCheck" styleClass="slds-form-element__label slds-m-left_small" />
                     <apex:outputPanel id="disableHeathCheckHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.healthLabelDisableRecordBatchDescription}" />
+                        <apex:outputText styleClass="slds-form-element__help slds-m-left_large" value="{!$Label.healthLabelDisableRecordBatchDescription}" />
                     </apex:outputPanel>
             </div>
 

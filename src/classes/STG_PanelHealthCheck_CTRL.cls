@@ -62,6 +62,10 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         } private set;
     }
 
+    /*********************************************************************************************************
+    * @description Override saveSettings from STG_Panel to update Custom Setting Error Setting
+    * @return PageReference 
+    */
     public override PageReference saveSettings() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
