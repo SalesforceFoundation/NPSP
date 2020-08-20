@@ -39,14 +39,21 @@
  * These tests validate that all expected functionality completes properly even when the triggers are executed twice
  * as described (i.e., we're testing that our static flag recursion control logic works properly in this scenario).
  *
-***/
+ * Refactored slightly in Aug 2020 to use different techniques to create data to marginally improve test performance
+ **/
 @isTest
 private class TDTM_DMLgt200_TEST {
 
-    /* @description The number of records to insert for these tests. Inserting more than 200 records at once
+    /**
+    * @description The number of records to insert for these tests. Inserting more than 200 records at once
     * will cause triggers to be called twice - once for the first group of 200 and then again for the remainder.
     */
-    private static Integer insertCnt = 210;
+    private static final Integer insertCnt = 210;
+
+    /**
+    * @description The test zipcode to use for addresses; compatible with the address validation mock
+    */
+    private static final String testZipCode = '95014';
 
     /*********************************************************************************************************
     * @description Test creating 200+ Contacts with Affiliations
@@ -59,26 +66,20 @@ private class TDTM_DMLgt200_TEST {
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableAddressTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
 
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
 
-        Account orgAcct = new Account(Name='TestOrganization');
-        insert orgAcct;
+        Account orgAcct = getNewOrgAccount();
 
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        for (Contact c : contacts) {
-            c.OtherCity = null;
-            c.LastName = c.LastName;
-            c.Title = 'TestTitle';
-        }
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.duplicateRuleHeader.allowSave = true;
-        Database.insert(contacts, dml);
+        List<Contact> contacts = createMultipleTestContacts(insertCnt);
+        insertWithAllowDupes(contacts);
+
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
@@ -99,7 +100,7 @@ private class TDTM_DMLgt200_TEST {
         System.assertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
             'There should be exactly ' + insertCnt.format() + ' Affiliations records');
         System.assertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
-            'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
+            'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affiliation');
     }
 
 
@@ -113,28 +114,24 @@ private class TDTM_DMLgt200_TEST {
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
+        UTIL_UnitTestData_TEST.disableAddressTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
 
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
                 new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
 
-        Account orgAcct = new Account(Name='TestOrganization');
-        insert orgAcct;
+        Account orgAcct = getNewOrgAccount();
 
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         // as well as all the related Affiliation recorsd
-        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
+        List<Contact> contacts = createMultipleTestContacts(insertCnt);
         for (Contact c : contacts) {
-            c.OtherCity = null;
-            c.LastName = c.LastName;
-            c.Title = 'TestTitle';
             c.Primary_Affiliation__c = orgAcct.Id;
         }
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.duplicateRuleHeader.allowSave = true;
-        Database.insert(contacts, dml);
+        insertWithAllowDupes(contacts);
+
         Test.stopTest();
 
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
@@ -142,7 +139,7 @@ private class TDTM_DMLgt200_TEST {
         System.assertEquals(insertCnt, [SELECT Count() FROM npe5__Affiliation__c WHERE npe5__Organization__c = :orgAcct.Id],
             'There should be exactly ' + insertCnt.format() + ' Affiliations records');
         System.assertEquals(insertCnt, [SELECT Count() FROM Contact WHERE Primary_Affiliation__c = :orgAcct.Id],
-            'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affilition');
+            'There should be exactly ' + insertCnt.format() + ' Contacts with a Primary Affiliation');
     }
 
     /*********************************************************************************************************
@@ -155,19 +152,15 @@ private class TDTM_DMLgt200_TEST {
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
+        UTIL_UnitTestData_TEST.disableAddressTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
 
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        for (Contact c : contacts) {
-            c.OtherCity = null;
-            c.Title = 'TestTitle';
-        }
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.duplicateRuleHeader.allowSave = true;
-        Database.insert(contacts, dml);
+        List<Contact> contacts = createMultipleTestContacts(insertCnt);
+        insertWithAllowDupes(contacts);
+
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Household Account records');
 
@@ -202,21 +195,17 @@ private class TDTM_DMLgt200_TEST {
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableRollupTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
+        UTIL_UnitTestData_TEST.disableAddressTriggers();
         UTIL_UnitTestData_TEST.disableOppNonOCRTriggers();
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, AccountId FROM Contact WHERE Id = :c.Id];
 
-        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(
-            Name = 'DefaultSettingsGau',
-            Active__c = True
-        );
-        General_Accounting_Unit__c campaignGau = new General_Accounting_Unit__c(
-            Name = 'CampaignGau',
-            Active__c = True
-        );
-        insert new List<General_Accounting_Unit__c>{ defaultGau, campaignGau };
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(2);
+        insert gaus;
+        General_Accounting_Unit__c defaultGau = gaus[0];
+        General_Accounting_Unit__c campaignGau = gaus[1];
 
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
             new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id)
@@ -285,6 +274,7 @@ private class TDTM_DMLgt200_TEST {
         UTIL_UnitTestData_TEST.disableRollupTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
         UTIL_UnitTestData_TEST.disableOCRTriggers();
+        UTIL_UnitTestData_TEST.disableAddressTriggers();
         UTIL_UnitTestData_TEST.disableOppNonOCRTriggers();
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
@@ -336,30 +326,18 @@ private class TDTM_DMLgt200_TEST {
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
         UTIL_UnitTestData_TEST.disableHHNamingTriggers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'CON_DoNotContact_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Validator_TDTM', false);
 
-        Test.startTest();
-
-        // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        for (Contact c : contacts) {
-            c.LastName = c.LastName;
-            c.OtherCity = null;
-            c.MailingStreet = '1313 Mockingbird Lane';
-            c.MailingCity = 'Munsterville';
-            c.MailingState = 'Illinois';
-            c.MailingPostalCode = '06123';
-            c.MailingCountry = 'United States';
-        }
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.duplicateRuleHeader.allowSave = true;
-        Database.insert(contacts, dml);
-        Test.stopTest();
+        // Create more than 200 Contact records and then validate that all of the Addresses were verified
+        List<Contact> contacts = createMultipleTestContactsWithAddress(insertCnt);
+        insertWithAllowDupes(contacts);
 
         System.assertEquals(insertCnt, [SELECT Count() FROM Contact],
             'There should be exactly ' + insertCnt.format() + ' Contact records');
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
             'There should be exactly ' + insertCnt.format() + ' Household Account records');
-        System.assertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE MailingPostalCode__c = '06123'],
+        System.assertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE MailingPostalCode__c = :testZipCode],
             'There should be exactly ' + insertCnt.format() + ' Address Records');
     }
 
@@ -381,10 +359,8 @@ private class TDTM_DMLgt200_TEST {
         Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
-        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.duplicateRuleHeader.allowSave = true;
-        Database.insert(contacts, dml);
+        List<Contact> contacts = createMultipleTestContacts(insertCnt);
+        insertWithAllowDupes(contacts);
 
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Accounts');
@@ -424,22 +400,13 @@ private class TDTM_DMLgt200_TEST {
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
         UTIL_UnitTestData_TEST.disableHHNamingTriggers();
+        TDTM_ProcessControl.toggleTriggerState('Contact', 'CON_DoNotContact_TDTM', false);
 
         // Create more than 200 Contact records and then validate that all of the Addresses were verified
-        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(insertCnt);
-        for (Contact c : contacts) {
-            c.LastName = c.LastName;
-            c.OtherCity = null;
-            c.MailingStreet = 'multiple-address';
-            c.MailingCity = 'Cupertino';
-            c.MailingState = 'California';
-            c.MailingPostalCode = '95014';
-            c.MailingCountry = 'United States';
-        }
+        List<Contact> contacts = createMultipleTestContactsWithAddress(insertCnt);
+
         Test.startTest();
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.duplicateRuleHeader.allowSave = true;
-        Database.insert(contacts, dml);
+        insertWithAllowDupes(contacts);
         Test.stopTest();
 
         // check household created for contacts
@@ -452,7 +419,7 @@ private class TDTM_DMLgt200_TEST {
 
         // validate that all contact addresses were fixed
         for (Contact record : [SELECT MailingPostalCode FROM Contact WHERE Id IN :contacts]) {
-            System.assertEquals('95014-2083', record.MailingPostalCode, 'Each contact\'s address should be updated');
+            System.assertEquals(testZipCode + '-2083', record.MailingPostalCode, 'Each contact\'s address should be updated');
         }
     }
 
@@ -465,6 +432,7 @@ private class TDTM_DMLgt200_TEST {
     static void testAllocationsCreatedForManyOpenEndedRecurringDonations() {
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
+        UTIL_UnitTestData_TEST.disableAddressTriggers();
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
@@ -476,9 +444,7 @@ private class TDTM_DMLgt200_TEST {
                 npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
             ));
 
-        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(
-            Name = 'Test GAU'
-        );
+        General_Accounting_Unit__c defaultGau = UTIL_UnitTestData_TEST.createGAUs(1)[0];
         insert defaultGau;
 
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
@@ -513,4 +479,80 @@ private class TDTM_DMLgt200_TEST {
             'There should be 240 generated default allocations records');
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    // Helper Methods
+    //////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @description Create test contacts. Does not use the UTIL_UnitTestData_TEST.getContact() method to
+     * avoid additional (cpu consuming) logic such as unique strings and other fields that aren't needed
+     * for this specific set of tests.
+     * @param numContactsToCreate
+     * @return List<Contact>
+     */
+    private static List<Contact> createMultipleTestContacts(Integer numContactsToCreate) {
+        return createMultipleTestContacts(numContactsToCreate, null, null, null, null);
+    }
+
+    /**
+     * @description Create test contacts WITH address data.
+     * Does not use the UTIL_UnitTestData_TEST.getContact() method to avoid additional (cpu consuming)
+     * logic such as unique strings and other fields that aren't needed for this specific set of tests.
+     * @param numContactsToCreate
+     * @return List<Contact>
+     */
+    private static List<Contact> createMultipleTestContactsWithAddress(Integer numContactsToCreate) {
+        return createMultipleTestContacts(numContactsToCreate,
+            'multiple-address',
+            'Cupertino',
+            'California',
+            testZipCode
+        );
+    }
+
+    /**
+     * @description Return a list of Contact SObjects for tests with a unique first and last name
+     * @param numContactsToCreate The number of Contact records to create
+     * @param streetAddress
+     * @param city
+     * @param state
+     * @param zipcode
+     * @return List<Contact>
+     */
+    private static List<Contact> createMultipleTestContacts(Integer numContactsToCreate, String streetAddress, String city, String state, String zipcode) {
+
+        List<Contact> contacts = new List<Contact>();
+        for (Integer counter = 0; counter < numContactsToCreate; counter++) {
+            contacts.add(new Contact(
+                FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + '-' + counter.format(),
+                Title = 'Test',
+                MailingStreet = streetAddress,
+                MailingCity = city,
+                MailingState = state,
+                MailingPostalCode = zipcode,
+                MailingCountry = 'United States'
+            ));
+        }
+        return contacts;
+    }
+
+    /**
+     * @return new Organization Account
+     */
+    private static Account getNewOrgAccount() {
+        Account orgAcct = new Account(Name='TestOrganization');
+        insert orgAcct;
+        return orgAcct;
+    }
+
+    /**
+     * @description Insert Contacts with the DML Option to allow duplicates
+     * @param contacts List of Contacts to insert
+     */
+    private static void insertWithAllowDupes(List<Contact> contacts) {
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.duplicateRuleHeader.allowSave = true;
+        Database.insert(contacts, dml);
+    }
 }
