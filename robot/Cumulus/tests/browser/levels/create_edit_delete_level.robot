@@ -131,13 +131,17 @@ Create and edit level to verify fields
 
 3. Delete a Level
     [Documentation]                      Delete the Level from the levels listing page
-    [tags]                                  unstable    W-038641                 feature:Level
+    [tags]                                  W-038641                 feature:Level
 
     Go To Page                              Details
     ...                                     Level__c
     ...                                     object_id=${level_id}
+    Wait Until Loading Is Complete
+    Current Page Should be                  Details    Level__c
     Click Show More Actions Button          Delete
+    Wait Until Modal Is Open
     Click Modal Button                      Delete
+    Wait Until Modal Is Closed
     Go To Page                              Details
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
