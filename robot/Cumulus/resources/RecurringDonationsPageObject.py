@@ -91,13 +91,15 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             
     def go_to_recurring_donation_related_opportunities_page(self,rd_id):
 
-        """ Navigates to the related opportunities page of the given recurring donation """
+        """ Navigates to the related opportunities page of the given recurring donation ID """
         objectname = "npe03__Donations__r"
         values =  self.npsp.get_url_formatted_object_name(objectname)
         url = "{}/lightning/r/{}/related/{}/view".format(values['baseurl'],rd_id,objectname)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-        self.selenium.wait_until_location_contains("/view",timeout=60, message="Page not loaded")
+        locator = npsp_lex_locators["link-title"].format("New")
+        new_button = self.selenium.get_webelement(locator)
+        self.selenium.wait_until_page_contains_element(new_button, error="Recurring Donations related opportunities page did not load fully")
     
     @capture_screenshot_on_error
     def edit_recurring_donation_status(self, **kwargs):

@@ -21,7 +21,7 @@ Setup Test Data
         Set Suite Variable  ${NS}
 
         #Create a Recurring Donation
-        &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
+        &{contact1_fields}=             Create Dictionary           Email=rd2tester@example.com
         &{recurringdonation_fields} =	Create Dictionary           Name=ERD With Manual Donation
         ...                                                         npe03__Installment_Period__c=Yearly
         ...                                                         npe03__Amount__c=100
@@ -59,7 +59,7 @@ Create An Opportunity Related to Recurring Donation
        [Documentation]         Create a manual related opportunity from the
        ...                     Recurring Donation's opportunity related list
        [Arguments]                       ${rd_id}                            ${Stage_Type}
-       go to recurring donation related opportunities page                   ${rd_id}
+       Go To Recurring Donation Related Opportunities Page                   ${rd_id}
        Wait Until Loading Is Complete
        Click Object Button                     New
        Select Record Type                      Donation
