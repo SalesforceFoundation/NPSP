@@ -897,9 +897,9 @@ public without sharing class BDI_MigrationMappingUtility {
                     String possibleFieldApiName = parts[1];
                     Boolean isLegacyObjectApiName =
                         LEGACY_DATA_IMPORT_OBJECT_NAMES.contains(possibleObjectApiName.toLowerCase());
-                    Boolean isUsableFieldApiName = !possibleFieldApiName.contains(' ');
+                    Boolean isPossibleFieldApiName = !possibleFieldApiName.contains(' ');
 
-                    if (isLegacyObjectApiName && isUsableFieldApiName) {
+                    if (isLegacyObjectApiName && isPossibleFieldApiName) {
                         return parts;
                     }
                 }
