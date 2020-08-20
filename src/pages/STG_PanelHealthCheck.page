@@ -34,20 +34,16 @@
             <apex:outputText value="{!$Label.healthLabelIntro}" />
         </p>
         <c:UTIL_PageMessages />
-        <div class=" slds-form_horizontal slds-m-top_large">
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$Label.healthLabelDisableRecordBatch}" for="disableDataHealthCheck" styleClass="slds-form-element__label" />
-                <div class="slds-form-element__control">
+            <div class="slds-form-element slds-m-top_x-small">
                     <apex:inputCheckbox id="disableDataHealthCheck" value="{!stgService.stgErr.Disable_Record_Data_Health_Checks__c}" html-aria-describedby="{!$Component.disableHeathCheckHelp}" styleClass="slds-checkbox" html-data-qa-locator="checkbox Disable Data Health Check">
                         <apex:actionSupport event="onchange" action="{!saveSettings}" rerender="form"  status="statusLoad"/>
                     </apex:inputCheckbox>
+                    <apex:outputLabel value="{!$Label.healthLabelDisableRecordBatch}" for="disableDataHealthCheck" styleClass="slds-form-element__label slds-m-left_small" />
                     <apex:outputPanel id="disableHeathCheckHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.healthLabelDisableRecordBatchDescription}" />
                     </apex:outputPanel>
-                </div>
             </div>
-        </div>
-        {!stgService.stgErr.Disable_Record_Data_Health_Checks__c}
+
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="runHealthCheck" value="{!$Label.healthButtonRun}" status="statusLoad"
                                 action="{!runDetector}" immediate="true" rerender="form"
