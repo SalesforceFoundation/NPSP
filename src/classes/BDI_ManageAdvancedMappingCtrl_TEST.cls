@@ -324,33 +324,6 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test that we're able to create a Deployment Container containing Custom Metadata records
-    */
-    @isTest
-    static void shouldCreateDeploymentContainerWithCustomMetadataRecords() {
-        Data_Import_Object_Mapping__mdt objectMapping =
-            (Data_Import_Object_Mapping__mdt)JSON.deserialize(
-                BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping(OBJECT_MAPPING_MDT),
-                Data_Import_Object_Mapping__mdt.class);
-        Data_Import_Field_Mapping__mdt fieldMapping =
-            (Data_Import_Field_Mapping__mdt)JSON.deserialize(
-                BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping(FIELD_MAPPING_MDT),
-                Data_Import_Field_Mapping__mdt.class);
-
-        sObject[] customMetadataList = new List<sObject>{objectMapping, fieldMapping};
-        String deploymentContainerString =
-            BDI_ManageAdvancedMappingCtrl.enqueueMetadataRecords(customMetadataList);
-
-        Metadata.DeployContainer deploymentContainer =
-            (Metadata.DeployContainer)JSON.deserialize(
-                deploymentContainerString,
-                Metadata.DeployContainer.class);
-
-        Metadata.Metadata[] metadataList = deploymentContainer.getMetadata();
-        System.assertEquals(metadataList.size(), 2);
-    }
-
-    /*******************************************************************************************************
     * @description Test that our Deployment Callback creates a Platform Event
     */
     @IsTest
