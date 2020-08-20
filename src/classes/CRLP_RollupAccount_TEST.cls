@@ -36,6 +36,9 @@
 @IsTest
 public class CRLP_RollupAccount_TEST {
 
+    private static final String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+    private static final Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
+
     /** @description The 6 testing types supported by the test engine */
     private Enum TestType {
         TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch, TestReparentOpp
@@ -204,10 +207,6 @@ public class CRLP_RollupAccount_TEST {
     static testMethod void test_Rollups_Trigger() {
         testRollupsServices(TestType.TestTrigger);
     }
-    /** @description Test the Trigger method of rolling up when reparenting an Opp to a different Account */
-    static testMethod void test_Rollups_ReparentOppAccount() {
-        testRollupsServices(TestType.TestReparentOpp);
-    }
 
     /* @description Default currency for the current user (if MC is enabled in the Org) */
     private static String defaultCurrCode = UserInfo.getDefaultCurrency();
@@ -270,27 +269,7 @@ public class CRLP_RollupAccount_TEST {
     private static void testRollupsServices(TestType tt) {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.TestSkewBatch ? 50 : 200),
-                Rollups_Account_SkewMode_Batch_Size__c = 200,
-                Rollups_Contact_SkewMode_Batch_Size__c = 200,
-                Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
-                Rollups_Account_Batch_Size__c = 20,
-                Rollups_Contact_Batch_Size__c = 20
-        ));
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
-                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE,
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                npe01__Payments_Enabled__c = true
-        ));
-
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
-                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE,
-                npo02__Household_Contact_Roles_On__c = true,
-                npo02__Always_Rollup_to_Primary_Contact__c = false
-        ));
+        configureCustomSettings(tt);
 
         // Create the test data
         mockRollupCMTValues();
@@ -298,17 +277,14 @@ public class CRLP_RollupAccount_TEST {
         // Disable all legacy rollup triggers
         UTIL_UnitTestData_TEST.disableRollupTriggers();
 
-        if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
+        if (tt != TestType.TestTrigger) {
             // disable customizable rollup triggers to test the Batch & Queueuable logic
             UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
         }
 
         // Retrieve the dummy Contact and then insert 100 Opportunity records
-        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        Contact c = getContact();
         Id hardCreditAccId = c.AccountId;
-
-        String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-        Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         List<Opportunity> opps = new List<Opportunity>();
         final Date closeDate = Date.Today().addMonths(-100);
@@ -425,7 +401,7 @@ public class CRLP_RollupAccount_TEST {
         Account hardCreditAcc = Database.query(hardCreditAccQuery);
 
         // Make sure everything is null first!
-        if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
+        if (tt != TestType.TestTrigger) {
             System.assertEquals(0, hardCreditAcc.npo02__OppAmountThisYear__c);
             System.assertEquals(0, hardCreditAcc.npo02__OppAmountLastYear__c);
             System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c);
@@ -440,7 +416,7 @@ public class CRLP_RollupAccount_TEST {
         }
 
         // Now test the rollups to the Account from the Opportunity
-        if (tt == TestType.TestTrigger || tt == TestType.TestReparentOpp) {
+        if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch || tt == TestType.TestMultiCurrBatch) {
@@ -493,25 +469,109 @@ public class CRLP_RollupAccount_TEST {
             Account mcAccount = Database.query(baseAccountQuery + ' WHERE Id != :hardCreditAccId LIMIT 1');
             System.assertEquals(2000, mcAccount.npo02__TotalOppAmount__c);
         }
-
-        if (tt == TestType.TestReparentOpp) {
-            // Get the "other" household account to reparent all the opportunities to it
-            Id otherAcctId = [SELECT Id FROM Account WHERE Id != :hardCreditAccId].Id;
-            for (Opportunity opp : opps) {
-                opp.AccountId = otherAcctId;
-            }
-            Database.update(opps);
-
-            // Query the old and new Accounts
-            String otherAccountQuery = baseAccountQuery + ' WHERE Id = :otherAcctId LIMIT 1';
-            Account otherAccount = Database.query(otherAccountQuery);
-            hardCreditAcc = Database.query(hardCreditAccQuery);
-
-            // Verify that the rollups have run and updated both Accounts.
-            System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c, 'The original Account should have its rollups at zero');
-            System.assertEquals(totalDonations, otherAccount.npo02__TotalOppAmount__c, 'The new parent Account should now have a rollup');
-        }
     }
+
+    /**
+     * @description Test the Trigger method of rolling up when reparenting an Opp to a different Account
+     */
+    @IsTest
+    private static void rollupShouldHandleReparentOfOppAccount() {
+
+        // Enabling Customizable Rollups
+        configureCustomSettings(TestType.TestReparentOpp);
+
+        // Create the test data
+        mockRollupCMTValues();
+
+        // Disable all rollup triggers
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+
+        // Retrieve the dummy Contact and then insert 100 Opportunity records
+        Contact c = getContact();
+        Id hardCreditAccId = c.AccountId;
+
+        final Decimal baseAmt = 100;
+        final Date closeDate = Date.Today().addMonths(-1);
+
+        Opportunity opp = new Opportunity (
+            Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
+            Amount = baseAmt,
+            CloseDate = closeDate,
+            StageName = closedStage,
+            Primary_Contact__c = c.Id,
+            RecordTypeId = rtId
+        );
+        Decimal totalDonations = baseAmt;
+
+        Test.startTest();
+
+        Database.insert(opp);
+
+        String baseAccountQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
+        String hardCreditAccQuery = baseAccountQuery + ' WHERE Id = :hardCreditAccId LIMIT 1';
+        Account hardCreditAcc = Database.query(hardCreditAccQuery);
+
+        // Query the Accounts with all the target fields specified in the rollups
+        hardCreditAcc = Database.query(hardCreditAccQuery);
+
+        // Basic rollup asserts using existing NPSP rollup fields.
+        System.assertEquals(totalDonations, hardCreditAcc.npo02__TotalOppAmount__c);
+
+        // Get the "other" household account to reparent all the opportunities to it
+        Id otherAcctId = [SELECT Id FROM Account WHERE Id != :hardCreditAccId].Id;
+        opp.AccountId = otherAcctId;
+        Database.update(opp);
+
+        Test.stopTest();
+
+        // Query the old and new Accounts
+        String otherAccountQuery = baseAccountQuery + ' WHERE Id = :otherAcctId LIMIT 1';
+        Account otherAccount = Database.query(otherAccountQuery);
+        hardCreditAcc = Database.query(hardCreditAccQuery);
+
+        // Verify that the rollups have run and updated both Accounts.
+        System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c, 'The original Account should have its rollups at zero');
+        System.assertEquals(totalDonations, otherAccount.npo02__TotalOppAmount__c, 'The new parent Account should now have a rollup');
+    }
+
+    /**
+     * @description Enabling Customizable Rollups (which disables all legacy rollup operations) and configure
+     * all other require custom settings
+     * @param tt TestType
+     */
+    private static void configureCustomSettings(TestType tt) {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true,
+            Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.TestSkewBatch ? 50 : 200),
+            Rollups_Account_SkewMode_Batch_Size__c = 200,
+            Rollups_Contact_SkewMode_Batch_Size__c = 200,
+            Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
+            Rollups_Account_Batch_Size__c = 20,
+            Rollups_Contact_Batch_Size__c = 20
+        ));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
+            npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE,
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+            npe01__Payments_Enabled__c = true
+        ));
+
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+            npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE,
+            npo02__Household_Contact_Roles_On__c = true,
+            npo02__Always_Rollup_to_Primary_Contact__c = false
+        ));
+    }
+
+    /**
+     * @description Retrieve the Contact created by the Test Setup Method
+     * @return Contact
+     */
+    private static Contact getContact() {
+        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        return c;
+    }
+
 
     /**
      * @description A mock implementation of UTIL_CurrencyCache.Interface_x that can
