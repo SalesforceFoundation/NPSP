@@ -251,7 +251,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         autoPopulateAccounts(rds);
 
         for (npe03__Recurring_Donation__c rd : rds) {
-
+            if (rd.npe03__Installment_Period__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && rd.Day_of_Month__c != null) {
+                rd.Day_of_Month__c = null;
+            }
             //map the Day of Month value of "31" to the Last_Day value
             if (rd.Day_of_Month__c == '31') {
                 rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
