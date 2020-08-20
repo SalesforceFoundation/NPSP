@@ -890,7 +890,7 @@ public without sharing class BDI_MigrationMappingUtility {
         */
         private List<String> retrieveObjectAndFieldApiNames(String helpText) {
             if (helpText.contains('.')) {
-                List<String> parts = helpText.split('\\.', 2);
+                List<String> parts = helpText.trim().split('\\.', 2);
 
                 if (parts.size() == 2) {
                     String possibleObjectApiName = parts[0];
