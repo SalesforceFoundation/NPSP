@@ -74,13 +74,15 @@ public class BDI_ManageAdvancedMappingCtrl {
     * when creating a new object mappping.  This is necessary since there are hundreds of standard objects
     * and including them all would negatively impact performance and make the list unusable.
     */ 
-    private static final Set<String> STANDARD_OBJECT_WHITELIST = new Set<String>{'account', 'asset', 'assetrelationship', 
-                                                            'campaign', 'campaignmember', 'case', 
-                                                            'contact', 'contract', 'event', 'lead', 
-                                                            'opportunity', 'opportunitylineitem', 
-                                                            'order', 'orderitem', 'pricebook2', 
-                                                            'pricebookEntry', 'product2', 'task', 
-                                                            'user','opportunitycontactrole','contactrole','workorder'};
+    private static final Set<String> STANDARD_OBJECT_ALLOWED_LIST = new Set<String>{
+        'account', 'asset', 'assetrelationship', 
+        'campaign', 'campaignmember', 'case', 
+        'contact', 'contract', 'event', 'lead', 
+        'opportunity', 'opportunitylineitem', 
+        'order', 'orderitem', 'pricebook2', 
+        'pricebookEntry', 'product2', 'task', 
+        'user','opportunitycontactrole','contactrole','workorder'
+    };
 
     /**
      * @description Checks if the running user has system admin permissions
@@ -674,8 +676,10 @@ public class BDI_ManageAdvancedMappingCtrl {
         // Removing custom metadata types and knowledge article versions from the list of object names
         // Also restricting to only an predefined list of standard objects to keep the list manageable
         for (String objectName : allObjectMap.keySet()) { 
-            if (!objectName.endsWith('__mdt') && !objectName.endsWith('__kav') 
-                && (objectName.endsWith('__c') || STANDARD_OBJECT_WHITELIST.contains(objectName))) {
+            if (!objectName.endsWith('__mdt')
+                && !objectName.endsWith('__kav') 
+                && (objectName.endsWith('__c') || STANDARD_OBJECT_ALLOWED_LIST.contains(objectName))
+            ) {
                 filteredObjectNames.add(objectName);
             }
         }
