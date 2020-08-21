@@ -456,17 +456,17 @@ public without sharing class RD2_ScheduleService {
     * @return Date
     */
     public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
-        return getNextDonationDate(rd, buildNewSchedules(rd));
+        return getNextDonationDate(new RD2_RecurringDonation(rd), buildNewSchedules(rd));
     }
 
     /***
     * @description Calculates the date of the next donation for an existing Recurring Donation
-    * @param rd Recurring Donation record
+    * @param rdRecord Recurring Donation record
     * @param rdSchedules Schedules on the Recurring Donation record
     * @return Date
     */
-    public Date getNextDonationDate(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(rd, rdSchedules);
+    public Date getNextDonationDate(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
+        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(rdRecord, rdSchedules);
 
         return record != null && record.getInstallment() != null
             ? record.getInstallment().nextDonationDate
@@ -476,12 +476,11 @@ public without sharing class RD2_ScheduleService {
     /***
     * @description Calculates the date of the next donation and returns the Opportunity matcher record
     * that contains the next donation installment and might contain the matching open Opportunity.
-    * @param rd Recurring Donation record
+    * @param rdRecord Recurring Donation record
     * @param rdSchedules Schedules on the Recurring Donation record
     * @return RD2_OpportunityMatcher.Record
     */
-    public RD2_OpportunityMatcher.Record getNextDonationDateRecord(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+    public RD2_OpportunityMatcher.Record getNextDonationDateRecord(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
 
         if (rdSchedules == null || rdSchedules.isEmpty()
             || rdRecord.isClosed()
@@ -493,7 +492,7 @@ public without sharing class RD2_ScheduleService {
         evaluateScheduleEndDate(rdRecord, rdSchedules);
 
         RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-            .includeCurrent(rd.npe03__Donations__r);
+            .includeCurrent(rdRecord.getOpportunities());
 
         Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1;
         matcher.match(getVisualizedInstallments(
@@ -857,10 +856,10 @@ public without sharing class RD2_ScheduleService {
     public void evaluateScheduleEndDateForFixedLength(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
         Integer plannedInstallments = rdRecord.getPlannedInstallments();
         Integer paidInstallments = rdRecord.getPaidInstallments();
-        Integer estimatedOpenSlots = plannedInstallments - paidInstallments + rdRecord.getSobject().npe03__Donations__r.size();
+        Integer estimatedOpenSlots = plannedInstallments - paidInstallments + rdRecord.getOpportunities().size();
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(currentDate)
-            .include(rdRecord.getSobject().npe03__Donations__r)
+            .include(rdRecord.getOpportunities())
             .match(
                 getVisualizedInstallments(currentDate, estimatedOpenSlots, rdSchedules)
             )

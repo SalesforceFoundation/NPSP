@@ -300,6 +300,20 @@ public without sharing class TEST_OpportunityBuilder {
     }
 
     /**
+     * @description Instantiate an Opportunity builder for the specified Recurring Donation
+     * @param rd Recurring Donation
+     * @return TEST_OpportunityBuilder New Opportunity builder
+     */
+    public static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
+        return new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAccount(rd.npe03__Organization__c)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1);
+    }
+
+    /**
      * @description Sets IsClosed and IsWon fields where applicable for specified Opportunities
      * @param opps Opportunities
      * @return void
