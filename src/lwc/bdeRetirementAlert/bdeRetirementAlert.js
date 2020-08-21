@@ -15,13 +15,13 @@ export default class bdeRetirementAlert extends LightningElement {
    @api confirmButtonTitle;
    @api confirmButtonVariant;
    @api position;
-   showPrompt;
+   _showPrompt;
 
 
    connectedCallback() {
       getBatchDataEntrySettings()
       .then(response => {
-         this.showPrompt =
+         this._showPrompt =
              !response[BATCH_DATA_ENTRY_SETTING_RETIREMENT_ALERT.fieldApiName];
       }).catch(error =>{
          handleError(error);
@@ -30,7 +30,7 @@ export default class bdeRetirementAlert extends LightningElement {
 
    handleOnConfirm() {
       upsertRetirementAlert().then(response => {
-         this.showPrompt = false;
+         this._showPrompt = false;
       }).catch(error => {
          handleError(error)
       });

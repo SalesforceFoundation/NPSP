@@ -2129,6 +2129,7 @@
         <members>commonNext</members>
         <members>commonNo</members>
         <members>commonNoItems</members>
+        <members>commonOkay</members>
         <members>commonOpen</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>

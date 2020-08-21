@@ -5209,6 +5209,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>No items to display.</value>
     </labels>
     <labels>
+        <fullName>commonOkay</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Okay</shortDescription>
+        <value>Okay</value>
+    </labels>
+    <labels>
         <fullName>commonOpen</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
