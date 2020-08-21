@@ -311,7 +311,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.batchHeaderFields = formTemplate.batchHeaderFields;
             this.formLayout = formTemplate.layout;
             this.formSections = this.formLayout.sections;
-            this.selectedBatchTableColumnOptions = formTemplate.defaultBatchTableColumns;
+
+            this.selectedBatchTableColumnOptions = isEmpty(formTemplate.defaultBatchTableColumns) ?
+                [] : formTemplate.defaultBatchTableColumns;
 
             this.catalogFieldsForTemplateEdit();
         }
