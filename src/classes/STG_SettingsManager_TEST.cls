@@ -1938,6 +1938,43 @@ private with sharing class STG_SettingsManager_TEST {
 
     }
 
+    /**
+    * @description Verifies that when Disable_Record_Data_Health_Checks__c is enabled,
+    *    all data record health checks should be disabled and have warning records created
+    */
+    @isTest
+    private static void shouldCreateWarningRecordsWhenDisabledRecordHealthCheckIsEnabled() {
+        STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
+
+        STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
+        
+        Test.startTest();
+        panel.runDetector();
+        Test.stopTest();
+
+        List<STG_PAnelHealthCheck_CTRL.DetectResult> results = panel.listDR;
+
+        Set<String> healthChecksNotRun = new Set<String> {
+            System.Label.healthLabelAccountModelData,
+            System.Label.healthLabelContactData,
+            System.Label.healthLabelHHAccData,
+            System.Label.healthLabelAccountData,
+            System.Label.healthLabelOCRCheck,
+            System.Label.healthLabelOppPayments
+        };
+
+        for (STG_PAnelHealthCheck_CTRL.DetectResult result : results) {
+            if (result.strStatus == STG_PanelHealthCheck_CTRL.statusWarning && healthChecksNotRun.contains(result.strName)) {
+                healthChecksNotRun.remove(result.strName);
+            }
+        }
+
+        System.assertEquals(0, healthChecksNotRun.size(),
+            'All Record Data Health Checks should generate health check not run warning records. Missing Health Checks:'
+            + healthChecksNotRun
+        );
+    }
+
     //Helper Methods
     /**
      * @description Builds a read only user with readonly profile

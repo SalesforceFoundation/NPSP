@@ -198,12 +198,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
         verifyRecordTypes();
         verifyAccountModel();
-        verifyAccountData();
-        verifyAccountData2();
         verifyAccountModelRecordType();
-        verifyContactData();
-        verifyNoOrphanedHouseholds();
-        verifyNoOrphanedOne2OneAccounts();
         verifyReports();
         verifyFields();
         new STG_PanelADDRVerification_CTRL().verifyAddressVerificationService(this);
@@ -217,15 +212,50 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         STG_PanelOpps_CTRL.verifyOpportunityStageForPaymentAutoCloseIsActiveClosedWon(this);
         verifyScheduledJobs();
         STG_PanelERR_CTRL.verifyErrorSettings(this);
-        verifyOppContactRoles();
         verifyOppContactRolesSettings();
         verifyTriggerHandlers();
-        verifyNoMissingOppPayments();
         verifyLevels();
+
+        if (STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c == false) {
+            executeDataRecordsHealthChecks();
+        } else {
+            generateDisableRecordHealthCheckMessages();
+        }
 
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
         strTime = string.valueOf(double.valueOf(msec / 1000));
+    }
+
+    /*********************************************************************************************************
+    * @description Execute all the record data health checks
+    */
+    private void executeDataRecordsHealthChecks() {
+        verifyAccountData();
+        verifyAccountData2();
+        verifyContactData();
+        verifyNoOrphanedHouseholds();
+        verifyNoOrphanedOne2OneAccounts();
+        verifyOppContactRoles();
+        verifyNoMissingOppPayments();
+    }
+
+    /*********************************************************************************************************
+    * @description Generate warning messages for disabled record health checks
+    */
+    private void generateDisableRecordHealthCheckMessages() {
+        Set<String> healthChecksNotRun = new Set<String> {
+            System.Label.healthLabelAccountModelData,
+            System.Label.healthLabelContactData,
+            System.Label.healthLabelHHAccData,
+            System.Label.healthLabelAccountData,
+            System.Label.healthLabelOCRCheck,
+            System.Label.healthLabelOppPayments
+        };
+
+        for (String healthCheck : healthChecksNotRun) {
+            createDR(healthCheck, statusWarning, null, System.Label.healthLabelDataBatchNotRun);
+        }
     }
 
     /*********************************************************************************************************
@@ -449,7 +479,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         rptId = STG_Panel.stgService.stgHH.npo02__Household_Mailing_List_ID__c;
         string strField = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Household_Mailing_List_ID__c');
         if (rptId != null && rptId != '') {
-            list<Report> listRpt = [select Id from Report where Id = :rptId];
+            List<Report> listRpt = [select Id from Report where Id = :rptId];
             if (listRpt.size() == 0) {
                 createDR(strField, statusError,
                     string.format(Label.healthDetailsBadReportId, new string[]{rptId}),
@@ -457,7 +487,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                 return;
             }
         } else {
-            list<Report> listRpt = [select id from Report where DeveloperName = 'NPSP_Campaign_Household_Mailing_List'];
+            List<Report> listRpt = [select id from Report where DeveloperName = 'NPSP_Campaign_Household_Mailing_List'];
             if (listRpt.size() == 0) {
                 createDR(strField, statusError, Label.healthDetailsMailingListReportMissing,
                    string.format(Label.healthSolutionMailingListReportMissing, new string[]{Label.stgNavPeople, Label.stgNavHouseholds}));
