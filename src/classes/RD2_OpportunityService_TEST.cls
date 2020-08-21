@@ -272,7 +272,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         //create an installment Opp since installment Opps are not created
         //due to async call to opp service
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
@@ -306,7 +306,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
@@ -342,7 +342,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(TODAY)
             .withOpenStage()
             .build();
@@ -376,7 +376,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(TODAY)
             .withClosedLostStage()
             .build();
@@ -415,7 +415,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withInstallmentNumber(1)
@@ -475,7 +475,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd)
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withOpenStage();
 
         List<Opportunity> opps = new List<Opportunity>{
@@ -529,7 +529,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
             .withCloseDate(CLOSE_DATE)
             .withClosedWonStage()
@@ -559,7 +559,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
@@ -584,6 +584,54 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
+    * @description Verifies open Opp Close Date is correctly updated when
+    * the RD has a current/future closed Opp and a future open Opp
+    * and the RD Schedule is changed
+    */
+    @isTest
+    private static void shouldUpdateOpenOppCloseDateWhenClosedOppExistsAndRDScheduleIsModified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_Settings_TEST.configureForASyncFirstOpportunityCreate();
+        setUpConfiguration();
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        Date nextCloseDate = CLOSE_DATE.addMonths(1);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withCloseDate(CLOSE_DATE)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withCloseDate(nextCloseDate)
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        //update Day of Month on the RD
+        Integer newDayOfMonth = 3;
+        Date nextDonationDate = Date.newInstance(nextCloseDate.year(), nextCloseDate.month(), newDayOfMonth);
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(newDayOfMonth);
+        rd.StartDate__c = nextDonationDate;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 
+            'Next Donation Date should be updated on the RD');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(),
+            'Number of expected Opps should match: ' + oppById.values());
+        System.assertEquals(nextDonationDate, oppById.get(opps[1].Id).CloseDate, 
+            'Close Date on the open Opp should be changed to the new Next Donation Date: ' + oppById.values());
+    }
+
+    /***
     * @description Verify Opportunity's campaign is updated when
     * there is update to the campaign on the RD
     * and add campaign is enabled in RD custom settings
@@ -596,7 +644,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
@@ -629,7 +677,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Id rdCampaignId = rd.npe03__Recurring_Donation_Campaign__c;
         System.assertNotEquals(null, rdCampaignId, 'Campaign Id should be set on the RD');
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCampaign(rdCampaignId)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
@@ -704,8 +752,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(accts[0]);
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
-
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps =  new List<Opportunity>{
             oppBuilder
                 .withCloseDate(TODAY.addMonths(-2))
@@ -788,7 +835,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withCurrencyIsoCode(CURRENCY_CAD)
@@ -820,7 +867,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withCurrencyIsoCode(CURRENCY_CAD)
@@ -853,7 +900,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withCurrencyIsoCode(CURRENCY_CAD)
@@ -898,7 +945,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withCurrencyIsoCode(CURRENCY_CAD)
@@ -1015,7 +1062,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(acc);
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
@@ -1055,7 +1102,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(organizations[0]);
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
@@ -1096,7 +1143,7 @@ private with sharing class RD2_OpportunityService_TEST {
             .build();
         insert rd;
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
@@ -1143,7 +1190,7 @@ private with sharing class RD2_OpportunityService_TEST {
             .build();
         insert rd;
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
@@ -1313,20 +1360,6 @@ private with sharing class RD2_OpportunityService_TEST {
             System.Label.npe03.RecurringDonationPrefix + ' (' +
             (rd.npe03__Total_Paid_Installments__c != null ? rd.npe03__Total_Paid_Installments__c + 1 : 1) + ') ' +
             closeDate.format();
-    }
-
-    /**
-     * @description Instantiate an Opportunity builder for the specified Recurring Donation
-     * @param rd Recurring Donation
-     * @return TEST_OpportunityBuilder New Opportunity builder
-     */
-    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
-        return new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAccount(rd.npe03__Organization__c)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1);
     }
 
     /***
