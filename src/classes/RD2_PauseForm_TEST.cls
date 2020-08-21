@@ -138,14 +138,9 @@ public with sharing class RD2_PauseForm_TEST {
 
         Integer totalSkipped = 4;
         Test.startTest();
-        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
-        pause.rdId = rd.Id;
-        pause.startDate = START_DATE.addMonths(3);
-        pause.resumeAfterDate = START_DATE.addMonths(6);
-        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
-        pause.pausedReason.value = PAUSED_REASON_VALUE;
-
-        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Date pauseStartDate = START_DATE.addMonths(3);
+        Date pauseEndDate = START_DATE.addMonths(6);
+        RD2_PauseForm_CTRL.PauseData pause = savePauseOnTheForm(rd.Id, pauseStartDate, pauseEndDate);
         Test.stopTest();
 
         List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
@@ -205,14 +200,9 @@ public with sharing class RD2_PauseForm_TEST {
         //Extend the pause for the next two months
         Integer totalSkipped = 4;
         Test.startTest();
-        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
-        pause.rdId = rd.Id;
-        pause.startDate = existingPause.StartDate__c.addMonths(2);
-        pause.resumeAfterDate = existingPause.EndDate__c.addMonths(2);
-        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
-        pause.pausedReason.value = PAUSED_REASON_VALUE;
-
-        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Date pauseStartDate = existingPause.StartDate__c.addMonths(2);
+        Date pauseEndDate = existingPause.EndDate__c.addMonths(2);
+        RD2_PauseForm_CTRL.PauseData pause = savePauseOnTheForm(rd.Id, pauseStartDate, pauseEndDate);
         Test.stopTest();
 
         Map<Id, RecurringDonationSchedule__c> pauseScheduleById = new Map<Id, RecurringDonationSchedule__c>(getPauseSchedules(rd));
@@ -246,14 +236,9 @@ public with sharing class RD2_PauseForm_TEST {
         // Pass in PauseData without setting Start and End Dates since
         // no installment is selected and the current pause is deactivated.
         Test.startTest();
-        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
-        pause.rdId = rd.Id;
-        pause.startDate = null;
-        pause.resumeAfterDate = null;
-        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
-        pause.pausedReason.value = PAUSED_REASON_VALUE;
-
-        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Date pauseStartDate = null;
+        Date pauseEndDate = null;
+        savePauseOnTheForm(rd.Id, pauseStartDate, pauseEndDate);
         Test.stopTest();
 
         Map<Id, RecurringDonationSchedule__c> pauseScheduleById = new Map<Id, RecurringDonationSchedule__c>(getPauseSchedules(rd));
@@ -280,7 +265,7 @@ public with sharing class RD2_PauseForm_TEST {
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
-        Opportunity nextDonationOpp = getOpportunityBuilder(rd)
+        Opportunity nextDonationOpp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(nextDonationDate)
             .build();
@@ -288,15 +273,9 @@ public with sharing class RD2_PauseForm_TEST {
 
         Integer oppCount = 2;
         Integer totalSkipped = 3;
-        Test.startTest();
-        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
-        pause.rdId = rd.Id;
-        pause.startDate = nextDonationDate;
-        pause.resumeAfterDate = nextDonationDate.addMonths(2);
-        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
-        pause.pausedReason.value = PAUSED_REASON_VALUE;
 
-        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.startTest();
+        savePauseOnTheForm(rd.Id, nextDonationDate, nextDonationDate.addMonths(2));
         Test.stopTest();
 
         rd = rdGateway.getRecords()[0];
@@ -562,10 +541,130 @@ public with sharing class RD2_PauseForm_TEST {
         System.assertEquals(null, pause.pausedReason, 'The Paused Reason should not be initialized for a closed RD');
     }
 
+    /***
+    * @description Verifies the open Opp Close Date is correctly updated when
+    * the RD has a current/future closed Opp and a future open Opp
+    * and the Pause is modified
+    */
+    @isTest
+    private static void shouldUpdateOpenOppCloseDateWhenPauseIsModified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = START_DATE;
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        //skip second and third installments
+        Date pauseStartDate = START_DATE.addMonths(1);
+        Date pauseEndDate = pauseStartDate.addMonths(1);
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStartDate, pauseEndDate);
+
+        //Close the first Opp and create an open Opp after the pause ends
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        opps[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update opps[0];
+
+        Opportunity openOpp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+            .withCloseDate(pauseEndDate.addMonths(1))
+            .withOpenStage()
+            .build();
+        insert openOpp;
+
+        opps = oppGateway.getRecords(rd);
+        System.assertEquals(2, opps.size(), 'Number of expected Opps should match: ' + opps);
+
+        //deselect the third installment and keep the second as paused
+        Test.startTest();
+        savePauseOnTheForm(rd.Id, pauseStartDate, pauseStartDate);
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        Date nextDonationDate = pauseStartDate.addMonths(1);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 
+            'Next Donation Date should be the first installment after the pause');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(),
+            'Number of expected Opps should match: ' + oppById.values());
+        System.assertEquals(nextDonationDate, oppById.get(openOpp.Id).CloseDate, 
+            'Close Date on the open Opp should be changed to the new Next Donation Date');
+    }
+
+    /***
+    * @description Verifies the open Opp Close Date is correctly updated when
+    * the RD has a current/future closed Opp and a future open Opp
+    * and the Pause is deactivated
+    */
+    @isTest
+    private static void shouldUpdateOpenOppCloseDateWhenPauseIsDeactivated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = START_DATE;
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        //skip second and third installments
+        Date pauseStartDate = START_DATE.addMonths(1);
+        Date pauseEndDate = pauseStartDate.addMonths(1);
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStartDate, pauseEndDate);
+
+        //Close the first Opp and create an open Opp after the pause ends
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        opps[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update opps[0];
+
+        Opportunity openOpp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+            .withCloseDate(pauseEndDate.addMonths(1))
+            .withOpenStage()
+            .build();
+        insert openOpp;
+
+        opps = oppGateway.getRecords(rd);
+        System.assertEquals(2, opps.size(), 'Number of expected Opps should match: ' + opps);
+
+        //deactivate the current pause
+        Test.startTest();
+        pauseStartDate = null;
+        pauseEndDate = null;
+        savePauseOnTheForm(rd.Id, pauseStartDate, pauseStartDate);
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        Date nextDonationDate = START_DATE.addMonths(1);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 
+            'Next Donation Date should be the second installment date');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(),
+            'Number of expected Opps should match: ' + oppById.values());
+        System.assertEquals(nextDonationDate, oppById.get(openOpp.Id).CloseDate, 
+            'Close Date on the open Opp should be changed to the new Next Donation Date');
+    }
+
 
 
     //Helpers
     /////////////
+
+    /**
+     * @description Saves the pause
+     * @param rdId Recurring Donation Id
+     * @param pauseStartDate Pause Start Date
+     * @param pauseEndDate Pause End Date
+     * @return RD2_PauseForm_CTRL.PauseData
+     */
+    private static RD2_PauseForm_CTRL.PauseData savePauseOnTheForm(Id rdId, Date pauseStartDate, Date pauseEndDate) {
+        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
+        pause.rdId = rdId;
+        pause.startDate = pauseStartDate;
+        pause.resumeAfterDate = pauseEndDate;
+        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
+        pause.pausedReason.value = PAUSED_REASON_VALUE;
+
+        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+
+        return pause;
+    }
 
     /**
      * @description Retrieves pause data
@@ -659,19 +758,6 @@ public with sharing class RD2_PauseForm_TEST {
             .withPaymentMethod(PAYMENT_CHECK)
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE);
-    }
-
-    /**
-     * @description Instantiate an Opp builder for the specified Recurring Donation
-     * @param rd Recurring Donation
-     * @return TEST_OpportunityBuilder New Opportunity builder
-     */
-    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
-        return new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1);
     }
 
     /****

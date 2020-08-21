@@ -1230,7 +1230,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
-        Date nextDonationDate = service.getNextDonationDate(rd, rdSchedules);
+        Date nextDonationDate = service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules);
         System.assertEquals(startDate, nextDonationDate, 
             'The Next Donation Date should be the first installment Opp Close Date');
     }
@@ -1258,7 +1258,7 @@ public with sharing class RD2_ScheduleService_TEST {
             .withPaidInstallments(paidInstallments)
             .build();
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd)
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withMockId()
             .withClosedWonStage();
 
@@ -1280,7 +1280,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
-        Date nextDonationDate = service.getNextDonationDate(rd, rdSchedules);
+        Date nextDonationDate = service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules);
         System.assertEquals(scheduleEndDate, nextDonationDate, 
             'The Next Donation Date should be the same as the schedule end date');
     }
@@ -1309,7 +1309,7 @@ public with sharing class RD2_ScheduleService_TEST {
             .withPaidInstallments(paidInstallments)
             .build();
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd)
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedLostStage()
             .withMockId();
 
@@ -1342,7 +1342,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd, rdSchedules), 
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules), 
             'The Next Donation Date should be the next installment Next Donation Date');
     }
 
@@ -1369,7 +1369,7 @@ public with sharing class RD2_ScheduleService_TEST {
             .withPaidInstallments(paidInstallments)
             .build();
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd)
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withMockId()
             .withClosedWonStage();
 
@@ -1402,7 +1402,7 @@ public with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 
             'The End Date should be the last planned Opp Close Date');
 
-        Date nextDonationDate = service.getNextDonationDate(rd, rdSchedules);
+        Date nextDonationDate = service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules);
         System.assertEquals(null, nextDonationDate, 
             'The Next Donation Date should be empty when number of planned installments has been reached');
     }
@@ -1461,7 +1461,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(nextDonationDate, rd.RecurringDonationSchedules__r[0].EndDate__c,
             'The schedule end date should be set to the next installment after the current Opp is Closed Lost');
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd, rdSchedules), 
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules), 
             'The Next Donation Date should be the next installment Next Donation Date');
     }
 
@@ -1517,7 +1517,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(Date.newInstance(2020, plannedInstallments + 1, 1), rd.RecurringDonationSchedules__r[0].EndDate__c,
             'The schedule end date should be moved one month forward since one Opp is Closed Lost');
-        System.assertEquals(opps[4].CloseDate, service.getNextDonationDate(rd, rdSchedules), 
+        System.assertEquals(opps[4].CloseDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules), 
             'The Next Donation Date should be the first open Opp installment');
     }
 
@@ -2198,19 +2198,6 @@ public with sharing class RD2_ScheduleService_TEST {
         RD2_ScheduleService.currentDate = currentDate;
 
         return new RD2_ScheduleService();
-    }
-
-    /**
-     * @description Instantiate an Opp builder for the specified Recurring Donation
-     * @param rd Recurring Donation
-     * @return TEST_OpportunityBuilder New Opp builder
-     */
-    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
-        return new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1);
     }
 
     /**
