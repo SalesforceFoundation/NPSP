@@ -76,7 +76,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
     /*******************************************************************************************************
-    * @description these data types have been whitelisted since they already work with BGE
+    * @description these data types have been allowed since they already work with BGE
     */ 
     private static Set<Schema.DisplayType> allowedDataTypes = new Set<Schema.DisplayType>{
             Schema.DisplayType.CURRENCY,
