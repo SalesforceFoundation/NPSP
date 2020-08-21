@@ -543,6 +543,31 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return Database.query(soql);
     }
 
+    /***
+    * @description Retrieves Recurring Donation current and future closed and open Opportunities
+    * required to calculate Next Donation Date
+    * @param rdIds Recurring Donation Ids
+    * @return Map<Id, List<Opportunity>>
+    */
+    public Map<Id, List<Opportunity>> getOpportunitiesByRDId(Set<Id> rdIds) { 
+        Map<Id, List<Opportunity>> oppsByRDId = new Map<Id, List<Opportunity>>();
+
+        Set<String> queryFields = new Set<String>{ 'Id' };
+        queryFields.add(getOpportunitySubQuery());
+
+        String soql = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere('Id IN :rdIds')
+            .build();
+
+        for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
+            oppsByRDId.put(rd.Id, rd.npe03__Donations__r);
+        }
+    
+        return oppsByRDId;
+    }
+
     /**
      * @description Returns query on Recurring Donation Schedule
      * Return all schedules for the RD Schedule visualization.
