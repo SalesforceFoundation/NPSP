@@ -39,7 +39,8 @@
 
                 <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
                     <template if:false={isWidget}>
-                        <lightning-input aria-label="Required"
+                        <lightning-input aria-label={labelGeAssistiveRequireField}
+                                         aria-describedby="requiredCheckboxDescription"
                                          checked={isRequired}
                                          data-name="required"
                                          disabled={field.isRequiredFieldDisabled}
@@ -49,6 +50,7 @@
                                          variant="label-hidden"
                                          data-qa-locator={qaLocatorCheckboxRequired}>
                         </lightning-input>
+                        <span class="slds-assistive-text" id="requiredCheckboxDescription">{labelGeAssistiveRequiredCheckboxDescription}</span>
                     </template>
                 </div>
 
