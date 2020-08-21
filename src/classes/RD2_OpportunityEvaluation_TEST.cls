@@ -105,7 +105,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(START_DATE)
             .build();
@@ -167,7 +167,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(today)
             .build();
@@ -199,7 +199,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(nextCloseDate)
             .build();
@@ -234,7 +234,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -282,7 +282,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(prevCloseDate)
             .build();
@@ -345,7 +345,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(prevCloseDate)
             .build();
@@ -378,7 +378,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(prevCloseDate)
             .build();
@@ -417,7 +417,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(prevCloseDate)
             .build();
@@ -506,7 +506,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(START_DATE)
             .build();
@@ -652,7 +652,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withInstallmentNumberMigrationFlag()
             .withClosedLostStage()
             .withCloseDate(nextCloseDate)
@@ -693,7 +693,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        Opportunity opp = getOpportunityBuilder(rd)
+        Opportunity opp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedLostStage()
             .withCloseDate(nextCloseDate)
             .build();
@@ -812,7 +812,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(START_DATE)
             .build();
@@ -845,7 +845,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(startDate)
             .build();
@@ -881,7 +881,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(startDate)
             .build();
@@ -917,7 +917,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(START_DATE)
             .build();
@@ -959,7 +959,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
 
         for (Integer month = 0; month < plannedInstallments; month++){
@@ -1019,7 +1019,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         insert rd;
 
         List<Opportunity> opps = new List<Opportunity>();
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         for (Integer month = 0; month < paidInstallments; month++){
             opps.add(oppBuilder
                 .withName()
@@ -1069,7 +1069,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         insert rd;
 
         List<Opportunity> opps = new List<Opportunity>();
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         for (Integer month = 0; month < paidInstallments; month++){
             opps.add(oppBuilder
                 .withName()
@@ -1179,19 +1179,6 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .withDayOfMonth('15')
             .withContact(getContact().Id)
             .withAmount(100);
-    }
-
-    /**
-     * @description Instantiate an Opp builder for the specified Recurring Donation
-     * @param rd Recurring Donation
-     * @return TEST_OpportunityBuilder New Opportunity builder
-     */
-    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
-        return new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1);
     }
 
     /****
