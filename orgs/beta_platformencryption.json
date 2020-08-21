@@ -4,7 +4,7 @@
   "features": [
     "PlatformEncryption"
   ],
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
     "chatterSettings": {
       "enableChatter": true
