@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group Utilities
-* @description The UTIL_HtmlOutput_CTRL is used to safely unescape any whitelisted tags and urls
+* @description The UTIL_HtmlOutput_CTRL is used to safely unescape any allowed tags and urls
 */
 public with sharing class UTIL_HtmlOutput_CTRL {
 
@@ -87,22 +87,22 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     }
 
     /*******************************************************************************************************************
-    * @description Returns the escaped html with the unescaped whitelisted tags and url
+    * @description Returns the escaped html with the unescaped allowed tags and url
     */
     public String getSafeHtml() {
         if (String.isBlank(unsafeHtml)) {
             return '';
         }
 
-        String safeHtml = replaceWhitelist(unsafeHtml);
+        String safeHtml = replaceAllowedList(unsafeHtml);
         safeHtml = safeHtml.escapeHtml4();
-        safeHtml = resetWhitelist(safeHtml);
+        safeHtml = resetAllowedList(safeHtml);
 
         return safeHtml;
     }
 
     /*******************************************************************************************************************
-    * @description Strips un-whitelisted javascript from string
+    * @description Strips un-allowed javascript from string
     */
     public String sanitizeInlineJavaScript(String unsanitaryLink) {
         if (String.isBlank(unsanitaryLink)) {
@@ -117,9 +117,9 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     }
 
     /*******************************************************************************************************************
-    * @description Returns the unescaped html with the whitelisted tags and url replaced with temporary values
+    * @description Returns the unescaped html with the allowed tags and url replaced with temporary values
     */
-    private String replaceWhitelist(String unescapedHtml) {
+    private String replaceAllowedList(String unescapedHtml) {
         String replacedHtml = unescapedHtml.normalizeSpace();
 
         for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {
@@ -138,9 +138,9 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     }
 
     /*******************************************************************************************************************
-    * @description Returns the escaped html with the temporary tags and url to their original whitelisted values
+    * @description Returns the escaped html with the temporary tags and url to their original allowed values
     */
-    private String resetWhitelist(String escapedHtml) {
+    private String resetAllowedList(String escapedHtml) {
         String html = escapedHtml;
 
         for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {
