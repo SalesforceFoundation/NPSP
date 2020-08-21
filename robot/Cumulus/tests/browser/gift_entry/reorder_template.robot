@@ -13,7 +13,7 @@ Suite Setup     Run keywords
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
-${placeholder}  yes
+${template}  Generated Template
 
 *** Keywords ***
 
@@ -27,15 +27,30 @@ Reorder and Modify GE Template Fields
   [tags]                                unstable                    feature:GE          W-039563
   Go to Page                            Landing                     npsp__GE_Gift_Entry
   Click Link                            Templates
-  Select Template Action                Default Gift Entry Template  Edit
+  Click Gift Entry Button               Create Template
   Current Page Should Be                Template                    GE_Gift_Entry
+  Enter Value in Field
+  ...                                   Template Name=${template}
+  ...                                   Description=This is created by automation script 
   Click Gift Entry Button               Next: Form Fields
+
+  #Adds 'Role' form field from the AccountSoftCredits section
   Perform Action On Object Field        select  AccountSoftCredits  Role
+
+  Perform Action On Object Field        select  CustomObject1  CustomObject1Imported
 
   #Moves the CustomObject1Imported field up in the field order
   Click Gift Entry Button               button Up Data Import: CustomObject1Imported
 
-  #Deletes the Delete Payment: Check/Reference Number field from the template
+  #Deletes the Payment: Check/Reference Number field from the template
   Click Gift Entry Button               button Delete Payment: Check/Reference Number
-
+  Verify Template Builder               conains  AccountSoftCredits: Role
+  Verify Template Builder               does not contain  Payment: Check/Reference Number
   Sleep                                 3s
+  #Click Gift Entry Button               Save & Close
+  #Current Page Should Be                Landing                     npsp__GE_Gift_Entry
+  #Click Gift Entry Button               New Batch
+  #Select Template                       ${template}
+
+
+ 
