@@ -42,8 +42,5 @@ Create Organization Foundation
     Verify Record                          ${account_name}
     Change View To                         Organization Accounts
     Verify Record   	                   ${account_name}
-    Change View To                         My Accounts
-    Search Field By Value                  Search this list                      ${account_name}
-    Verify Record   	                   ${account_name}
     Change View To                         Household Accounts
     Wait Until Page Does Not Contain       ${account_name}
