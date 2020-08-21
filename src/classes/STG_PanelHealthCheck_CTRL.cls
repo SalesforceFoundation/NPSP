@@ -89,6 +89,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             }
 
             update toUpdate;
+            listDR = new List<DetectResult>();
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -244,7 +245,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @description Generate warning messages for disabled record health checks
     */
     private void generateDisableRecordHealthCheckMessages() {
-        Set<String> healthChecksNotRun = new Set<String> {
+        List<String> healthChecksNotRun = new List<String> {
             System.Label.healthLabelAccountModelData,
             System.Label.healthLabelContactData,
             System.Label.healthLabelHHAccData,
@@ -253,9 +254,8 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             System.Label.healthLabelOppPayments
         };
 
-        for (String healthCheck : healthChecksNotRun) {
-            createDR(healthCheck, statusWarning, null, System.Label.healthLabelDataBatchNotRun);
-        }
+        createDR(System.Label.healthLabelDataBatchNotRun, statusWarning, null, String.join(healthChecksNotRun, '; '));
+        
     }
 
     /*********************************************************************************************************
