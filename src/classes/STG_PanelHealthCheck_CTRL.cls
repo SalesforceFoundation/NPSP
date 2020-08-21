@@ -254,8 +254,12 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             System.Label.healthLabelOppPayments
         };
 
-        createDR(System.Label.healthLabelDataBatchNotRun, statusWarning, null, String.join(healthChecksNotRun, '; '));
-        
+        createDR(
+            System.Label.healthLabelDataBatchNotRun,
+            statusWarning,
+            null,
+            String.join(healthChecksNotRun, '; ')
+        );
     }
 
     /*********************************************************************************************************

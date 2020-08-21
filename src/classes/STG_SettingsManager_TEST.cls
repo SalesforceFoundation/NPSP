@@ -1186,6 +1186,9 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verifies that the user cannot update Error Settings without update permission 
+    */
     @isTest
     private static void shouldPreventUpateErrorSettingsWhenUserDoesNotHaveUpdatePermission() {
         Test.startTest();
@@ -1953,25 +1956,16 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         List<STG_PAnelHealthCheck_CTRL.DetectResult> results = panel.listDR;
-
-        Set<String> healthChecksNotRun = new Set<String> {
-            System.Label.healthLabelAccountModelData,
-            System.Label.healthLabelContactData,
-            System.Label.healthLabelHHAccData,
-            System.Label.healthLabelAccountData,
-            System.Label.healthLabelOCRCheck,
-            System.Label.healthLabelOppPayments
-        };
+        Boolean hasDisabledHealthCheckWarningMessage = false;
 
         for (STG_PAnelHealthCheck_CTRL.DetectResult result : results) {
-            if (result.strStatus == STG_PanelHealthCheck_CTRL.statusWarning && healthChecksNotRun.contains(result.strName)) {
-                healthChecksNotRun.remove(result.strName);
+            if (result.strStatus == STG_PanelHealthCheck_CTRL.statusWarning && result.strName == System.Label.healthLabelDataBatchNotRun) {
+                hasDisabledHealthCheckWarningMessage = true;               
             }
         }
 
-        System.assertEquals(0, healthChecksNotRun.size(),
-            'All Record Data Health Checks should generate health check not run warning records. Missing Health Checks:'
-            + healthChecksNotRun
+        System.assert(hasDisabledHealthCheckWarningMessage,
+            'A Warning message indicates Record Data Health Checks are not run should exist'
         );
     }
 
