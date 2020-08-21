@@ -3924,10 +3924,6 @@
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>選択した場合、状態チェックでは、NPSP 設定に問題がないかどうかのみが確認されます。</label>
-        <name>healthLabelDisableRecordBatchDescription</name>
-    </customLabels>
-    <customLabels>
         <label>エラー通知受信者は有効です。</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
