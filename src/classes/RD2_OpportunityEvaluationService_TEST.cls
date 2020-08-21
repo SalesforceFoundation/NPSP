@@ -207,7 +207,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
 
         List<Opportunity> opps = new List<Opportunity>{
-            getOpportunityBuilder(rdOld)
+            TEST_OpportunityBuilder.getOpportunityBuilder(rdOld)
                 .withMockId()
                 .withAccount(rdOld.npe03__Organization__c)
                 .withOpenStage()
@@ -300,7 +300,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
 
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
@@ -399,7 +399,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withName()
             .withCloseDate(START_DATE.addMonths(1))
             .withClosedWonStage()
@@ -661,7 +661,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(today.addDays(1))
             .withOpenStage()
             .build();
@@ -701,7 +701,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCloseDate(START_DATE)
             .withOpenStage()
             .build();
@@ -737,7 +737,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -816,7 +816,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer i = 0; i < MONTHS_TO_YEAR_END + 2; i++) {
             oppBuilder = oppBuilder
@@ -865,7 +865,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer i = 0; i < MONTHS_TO_YEAR_END + 1; i++) {
             oppBuilder = oppBuilder
@@ -913,7 +913,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -977,7 +977,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>();
 
         Date closeDate = startDate;
@@ -1025,7 +1025,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer i = 0; i < MONTHS_TO_YEAR_END + 2; i++) {
             oppBuilder = oppBuilder
@@ -1074,7 +1074,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -1126,7 +1126,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer i = 0; i < MONTHS_TO_YEAR_END; i++) { //create closed own opps till the end of the year
             opps.add(oppBuilder
@@ -1208,7 +1208,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
 
         Date closeDate = startDate;
@@ -1273,7 +1273,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer i = 0; i < 2; i++) {
             opps.add(oppBuilder
@@ -1385,7 +1385,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer month = 1; month <= 3; month++) {
             opps.add(oppBuilder
@@ -1456,7 +1456,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withName()
             .withCloseDate(START_DATE.addMonths(1))
             .withOpenStage()
@@ -1499,7 +1499,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer month = 0; month < paidInstallments; month++){
             opps.add(oppBuilder
@@ -1545,7 +1545,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
 
         for (Integer month = 0; month < paidInstallments; month++){
@@ -1672,7 +1672,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd.npe03__Next_Payment_Date__c = today;
         update rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -1728,7 +1728,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd.npe03__Next_Payment_Date__c = nextDonationDate;
         update rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -1793,7 +1793,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd.npe03__Next_Payment_Date__c = today;
         update rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
@@ -1876,19 +1876,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             FROM Contact
             LIMIT 1
         ];
-    }
-
-    /**
-     * @description Instantiate an Opp builder for the specified Recurring Donation
-     * @param rd Recurring Donation
-     * @return TEST_OpportunityBuilder New Opp builder
-     */
-    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
-        return new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1);
     }
 
     /**
