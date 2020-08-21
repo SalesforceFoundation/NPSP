@@ -464,7 +464,7 @@ public with sharing class BDE_BatchEntry_CTRL {
     * user
    * @return Batch_Data_Entry_Settings__c
    */
-   @AuraEnabled(Cacheable=true)
+   @AuraEnabled
    public static Batch_Data_Entry_Settings__c getBatchDataEntrySettings () {
       Batch_Data_Entry_Settings__c settings = Batch_Data_Entry_Settings__c.getInstance(UserInfo.getUserId());
       return settings;

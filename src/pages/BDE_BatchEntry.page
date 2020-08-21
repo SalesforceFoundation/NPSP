@@ -296,5 +296,5 @@
         </apex:outputPanel>
     </apex:form>
 
-    <div style="padding-top: 10rem;" id='retirementPrompt'/>
+    <div id="retirementPrompt" style="position: fixed; right: 0; bottom: 0; padding-right: 1rem;"/>
 </apex:page>
