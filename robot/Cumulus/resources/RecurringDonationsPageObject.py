@@ -87,7 +87,20 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             self.selenium.click_link(button_name)
         else:
             self.selenium.click_button(button_name)
+            
+            
+    def go_to_recurring_donation_related_opportunities_page(self,rd_id):
 
+        """ Navigates to the related opportunities page of the given recurring donation ID """
+        objectname = "npe03__Donations__r"
+        values =  self.npsp.get_url_formatted_object_name(objectname)
+        url = "{}/lightning/r/{}/related/{}/view".format(values['baseurl'],rd_id,objectname)
+        self.selenium.go_to(url)
+        self.salesforce.wait_until_loading_is_complete()
+        locator = npsp_lex_locators["link-title"].format("New")
+        new_button = self.selenium.get_webelement(locator)
+        self.selenium.wait_until_page_contains_element(new_button, error="Recurring Donations related opportunities page did not load fully")
+    
     @capture_screenshot_on_error
     def edit_recurring_donation_status(self, **kwargs):
         """From the actions dropdown select edit action and edit the fields specified in the kwargs
@@ -98,7 +111,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """
         locator = npsp_lex_locators["bge"]["button"].format("Edit")
         edit_button = self.selenium.get_webelement(locator)
-        self.selenium.wait_until_page_contains_element(edit_button, error="Show more actions dropdown didn't open in 30 sec")
+        self.selenium.wait_until_element_is_visible(edit_button)
         self.selenium.click_element(locator)
         self.salesforce.wait_until_modal_is_open()
         self._populate_edit_status_values(**kwargs)
@@ -197,6 +210,38 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         mm = tokens[1].replace("0","")
         newString = f"{dd}/{mm}/{tokens[2]}"
         return newString
+
+    @capture_screenshot_on_error
+    def validate_current_and_next_year_values(self, amount):
+        """Takes in the parameter current installment payment (amount)
+        calculates the current and next year value payments and
+        validates them with the values displayed on the UI. """
+        installmentrow = npsp_lex_locators["erd"]["installment_row"]
+        installments = self.selenium.get_webelements(installmentrow)
+        count = len(installments)
+        if count == 0:
+            raise Exception("Zero installments found")
+        else:
+            print(f"Number of installments created is {count}")
+            i = 1
+            curr_year_value = 0
+            next_year_value = 0
+            values = {}
+            while i < count:
+                datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
+                installment_date = self.selenium.get_webelement(datefield)
+                actual_date = self.selenium.get_webelement(installment_date).text
+                year = datetime.strptime(actual_date, "%m/%d/%Y").year
+                curr_year = datetime.now().year
+                next_year = (datetime.now() + relativedelta(years=1)).year
+                if curr_year == year:
+                    curr_year_value = curr_year_value + int(amount)
+                elif next_year == year:
+                    next_year_value = next_year_value + int(amount)
+                i = i + 1
+            values['Current Year Value']=f"${curr_year_value}.00"
+            values['Next Year Value']=f"${ next_year_value}.00"
+            self.validate_field_values_under_section("Statistics",**values)
 
     @capture_screenshot_on_error
     def validate_upcoming_schedules(self, num_payments, startdate, dayofmonth):
