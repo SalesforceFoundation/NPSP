@@ -69,7 +69,7 @@ private class RD2_RecurringDonationsOpp_TEST {
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd)
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withCurrencyIsoCode(CURRENCY_CAD);
         insert new List<Opportunity>{
             oppBuilder
@@ -259,7 +259,7 @@ private class RD2_RecurringDonationsOpp_TEST {
         Exception actualException;
         try {
             Test.startTest();
-            insert getOpportunityBuilder(rd)
+            insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
                 .withCurrencyIsoCode(CURRENCY_USD)
                 .withCloseDate(START_DATE)
                 .withOpenStage()
@@ -293,7 +293,7 @@ private class RD2_RecurringDonationsOpp_TEST {
         Exception actualException;
         try {
             Test.startTest();
-            insert getOpportunityBuilder(rd)
+            insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
                 .withCurrencyIsoCode(CURRENCY_CAD)
                 .withCloseDate(START_DATE)
                 .withOpenStage()
@@ -644,19 +644,6 @@ private class RD2_RecurringDonationsOpp_TEST {
 
         System.assert(false, 'The Recurring Donation should have Opportunity to return');
         return null;
-    }
-
-    /**
-     * @description Instantiate an Opp builder for the specified Recurring Donation
-     * @param rd Recurring Donation
-     * @return TEST_OpportunityBuilder New Opp builder
-     */
-    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
-        return new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1);
     }
 
     /**
