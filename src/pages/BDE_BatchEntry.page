@@ -196,7 +196,7 @@
                   hasBackDrop : false,
                   variant: "{!$Label.commonAssistiveError}",
                   position: "right",
-                  confirmButtonTitle: "Okay",
+                  confirmButtonTitle: "{!$Label.commonOkay}",
                   confirmButtonVariant: "neutral",
                   promptMessage: "{!$Label.bdeRetirementWarningBody}"
                },
