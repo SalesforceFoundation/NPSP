@@ -36,7 +36,7 @@
 @isTest(IsParallel=true)
 public with sharing class UTIL_HtmlOutput_TEST {
     /*******************************************************************************************************
-    * @description Verifies a string with whitelisted tag with extra space is returned without escaping
+    * @description Verifies a string with allowed tag with extra space is returned without escaping
     */
     @isTest
     private static void shouldReturnOriginalTagWithSpace() {
@@ -50,7 +50,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies a string with whitelisted tag is returned without escaping
+    * @description Verifies a string with allowed tag is returned without escaping
     */
     @isTest
     private static void shouldReturnOriginalTag() {
@@ -64,7 +64,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies a string with a tag that is not whitelisted is returned escaped
+    * @description Verifies a string with a tag that is not allowed is returned escaped
     */
     @isTest
     private static void shouldReturnEscapedTag() {
@@ -80,7 +80,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies a string with whitelisted url is returned without escaping
+    * @description Verifies a string with allowed url is returned without escaping
     */
     @isTest
     private static void shouldReturnOriginalUrl() {
@@ -94,7 +94,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies a string with whitelisted url with extra space is returned without escaping
+    * @description Verifies a string with allowed url with extra space is returned without escaping
     */
     @isTest
     private static void shouldReturnOriginalUrlWithSpace() {
@@ -108,7 +108,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies a string with a url that is not whitelisted is returned escaped
+    * @description Verifies a string with a url that is not allowed is returned escaped
     */
     @isTest
     private static void shouldReturnEscapedUrl() {
@@ -124,7 +124,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies that non-whitelisted javascript event code is stripped from url
+    * @description Verifies that non-allowed javascript event code is stripped from url
     */
     @isTest
     private static void shouldStripJavaScriptFromUrl() {
