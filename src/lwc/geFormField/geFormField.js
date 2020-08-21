@@ -63,7 +63,7 @@ export default class GeFormField extends LightningElement {
         const evt = new CustomEvent('valuechange', {detail, bubbles: true});
         this.dispatchEvent(evt);
 
-        if (this.isLookup) {
+        if (this.isLookup || this.isLookupRecordType) {
             const objMappingDevName =
                 GeFormService.importedRecordFieldNames.includes(this.fieldApiName) ?
                     GeFormService.getObjectMappingWrapperByImportedFieldName(this.fieldApiName)
