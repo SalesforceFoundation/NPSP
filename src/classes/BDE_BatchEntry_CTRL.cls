@@ -459,13 +459,21 @@ public with sharing class BDE_BatchEntry_CTRL {
         return namespace;
     }
 
-
+   /*********************************************************************************************************
+   * @description Method that retrieves the batch data entry custom setting based on the currently logged in
+    * user
+   * @return Batch_Data_Entry_Settings__c
+   */
    @AuraEnabled(Cacheable=true)
    public static Batch_Data_Entry_Settings__c getBatchDataEntrySettings () {
       Batch_Data_Entry_Settings__c settings = Batch_Data_Entry_Settings__c.getInstance(UserInfo.getUserId());
       return settings;
    }
 
+   /*********************************************************************************************************
+    * @description Method that upserts the retirement alert custom setting
+    *
+    */
    @AuraEnabled
    public static void upsertRetirementAlert () {
       Batch_Data_Entry_Settings__c settings = getBatchDataEntrySettings();
