@@ -5692,6 +5692,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Move the {0} field down.</value>
     </labels>
     <labels>
+        <fullName>geAssistiveRequireField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: explains the function of the required checkbox</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>Require {0}.</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveFieldUp</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5767,13 +5776,31 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Move the {0} section up.</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>geAssistiveShowMenu</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button/Picklist for selecting a list view</shortDescription>
         <value>Show menu.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveDescriptionFieldRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field has been set as required</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as required.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveDescriptionFieldOptional</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field is optional</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as optional.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
