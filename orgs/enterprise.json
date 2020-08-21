@@ -1,7 +1,7 @@
 {
   "orgName": "NPSP - Enterprise Workspace",
   "edition": "Enterprise",
-  "hasSampleData": "true",
+  "hasSampleData": "false",
   "settings": {
     "chatterSettings": {
       "enableChatter": true
