@@ -2186,6 +2186,8 @@
         <members>geAddNewAllocation</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
+        <members>geAssistiveDescriptionFieldOptional</members>
+        <members>geAssistiveDescriptionFieldRequired</members>
         <members>geAssistiveFieldDown</members>
         <members>geAssistiveFieldUp</members>
         <members>geAssistiveFormFieldsCollapseAll</members>
@@ -2194,6 +2196,7 @@
         <members>geAssistiveFormFieldsSectionEdit</members>
         <members>geAssistiveModalCancelAndDiscard</members>
         <members>geAssistiveRemoveSelectedOption</members>
+        <members>geAssistiveRequireField</members>
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
