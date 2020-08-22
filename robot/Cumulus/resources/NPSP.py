@@ -1135,7 +1135,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.salesforce._jsclick(locator)
         locator = npsp_lex_locators["popup-link"].format(link)
         self.salesforce._jsclick(locator)
-        self.salesforce.wait_until_loading_is_complete()    
+        self.salesforce.wait_until_loading_is_complete()
         
     def verify_field_values(self,**kwargs):
         """Verifies values in the specified fields""" 
@@ -1596,6 +1596,5 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.set_focus_to_element(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
-
 
     

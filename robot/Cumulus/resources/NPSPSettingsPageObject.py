@@ -27,7 +27,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                                                error=f"{title} link was not found on the page")  
         self.npsp.click_link_with_text(title)
         locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
-        self.selenium.wait_until_page_contains_element(locator, 
+        self.selenium.wait_until_element_is_visible(locator,
                                                error=f"click on {title} link was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()                                        
         
@@ -37,7 +37,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                                                error=f"{title} link was not found on the page")  
         self.npsp.click_link_with_text(title)    
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
-        self.selenium.wait_until_page_contains_element(locator,
+        self.selenium.wait_until_element_is_visible(locator,
                                                        error=f"click on {title} sublink was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()
     
@@ -46,11 +46,22 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
     def click_settings_button (self,panel_id,btn_value):  
         """clicks on the buttons on npsp settings object using panel id and button value"""      
         locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
+        settings_header=npsp_lex_locators['npsp_settings']['header'].format("Nonprofit Success Pack Application Settings")
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"{btn_value} did not appear on page")
         self.selenium.wait_until_element_is_visible(locator, timeout=60)
-        self.salesforce._jsclick(locator)   
-    
+
+        for i in range(3):
+            i += 1
+            self.salesforce._jsclick(locator)
+            time.sleep(1) # This is needed as the DOM elements needs to be updated in edit mode
+            self.selenium.wait_until_element_is_not_visible(settings_header,
+                                                            error="Page did not load")
+
+            if self.selenium.wait_until_element_is_not_visible(settings_header):
+                return
+
+
     def select_value_from_list(self,list_name,value): 
         '''Selects value from list identified by list_name.
            uses selenium select from list by label keyword 
