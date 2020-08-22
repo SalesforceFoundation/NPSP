@@ -1104,13 +1104,13 @@ flows:
         description: Creates 100 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each.
         group: NPSP
         steps:
-#            1:
-#                task: execute_anon
-#                options:
-#                    path: datasets/rd2/config_rd2_for_data_factory.cls
-#                    apex: before_data_load();
-#            2:
-#                task: test_data_delete
+            1:
+                task: execute_anon
+                options:
+                    path: datasets/rd2/config_rd2_for_data_factory.cls
+                    apex: before_data_load();
+            2:
+                task: test_data_delete
             3:
                 task: generate_and_load_from_yaml
                 options:

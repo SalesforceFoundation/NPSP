@@ -11,10 +11,13 @@
  * - Set "First Installment" to never to allow bulk data loading without impacting cpu
  * - Configure automatic naming so that all new RD's are named nicely
  * - Mock the migration just to avoid any validation errors
+ * - Configuring the Household Naming format as "{Lastname} {FirstName} Household" so that it's easier to.
+ *   read when there are duplicate households with the same last name.
  */
 public static void before_data_load() {
 
     npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+    %%%NAMESPACE%%%Household_Naming_Settings__c namingSettings = %%%NAMESPACE%%%Household_Naming_Settings__c.getOrgDefaults();
 
     if (rdSettings.IsRecurringDonations2Enabled__c == false) {
         throw new InitException('Enhanced Recurring Donations must be enabled to continue. Execute the "enable_rd2" first.');
@@ -34,6 +37,10 @@ public static void before_data_load() {
     rdSettings.RecurringDonations2EnablementState__c = '{"isReady":false,"isMigrationEnabled":true,"isMetaLaunched":true,"isMetaConfirmed":true,"isEnabled":true,"isDryRun2":false,"isConfirmed":true,"dryRunLimit":7}';
 
     upsert rdSettings;
+
+    // Configure the Household Naming default
+    namingSettings.Household_Name_Format__c = '{!LastName} {!{!FirstName}} Household';
+    upsert namingSettings;
 }
 
 /**
