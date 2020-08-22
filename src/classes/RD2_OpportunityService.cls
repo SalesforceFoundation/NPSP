@@ -143,7 +143,9 @@ public with sharing class RD2_OpportunityService {
 
         Integer numberOfInstallments = 1;
         for (npe03__Recurring_Donation__c rd : rds) {
-            RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(rd, rd.RecurringDonationSchedules__r);
+            RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(
+                new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r
+            );
 
             if (nextDonationDateRecord == null
                 || !nextDonationDateRecord.isNew()
@@ -256,11 +258,8 @@ public with sharing class RD2_OpportunityService {
             RD2_ScheduleService.Installment earliestUnmatchedInstallment;
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
-                isOpenOppMatched = false;
 
-                if (record.hasInstallment() 
-                    && (record.isNew() || !record.getInstallment().isSkipped)
-                ) {
+                if (record.hasInstallment() && record.isNew()) {
                     earliestUnmatchedInstallment = getEarliestInstallment(record.getInstallment(), earliestUnmatchedInstallment);
                 }
 
@@ -269,7 +268,7 @@ public with sharing class RD2_OpportunityService {
                 }
 
                 Opportunity opp = record.getOpportunity();
-                if (record.hasInstallment() && !record.getInstallment().isSkipped) {
+                if (record.hasInstallment()) {
                     installmentByOppId.put(opp.Id, record.getInstallment());
                     isOpenOppMatched = true;
 
@@ -311,7 +310,7 @@ public with sharing class RD2_OpportunityService {
         Boolean isEarlier = earliestInstallment == null
             || currentInstallment.nextDonationDate < earliestInstallment.nextDonationDate;
 
-        if (isEarlier && !currentInstallment.isSkipped) {
+        if (isEarlier) {
             earliestInstallment = currentInstallment;
         }
 
