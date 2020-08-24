@@ -21,13 +21,9 @@ Setup Test Data
      ${DATE_TO_UPDATE} =                   Convert Date          ${DATE}                                 result_format=%Y-%m-%d
      ${EFFECTIVE_MODIFIED_DATE}=           Get current date      result_format=%-m/%-d/%Y                increment=30 days
      ${CURRDATE}=                          Get Current Date      result_format=datetime
-     ${CURRENTVALUE} =                     Evaluate              (12-${CURRDATE.month}+1) * 100
-     ${NUM_MONTHS_NEW_VALUE} =             Evaluate              (12-${CURRDATE.month})
-     ${CURRENTVALUE_EDITED}=               Evaluate              (${NUM_MONTHS_NEW_VALUE}*150) + 100
-     Set Suite Variable  ${CURRENTVALUE}
+
      Set Suite Variable  ${DATE}
      Set Suite Variable  ${EFFECTIVE_MODIFIED_DATE}
-     Set Suite Variable  ${CURRENTVALUE_EDITED}
      Set Suite Variable  ${EFFECTIVE_DATE_INITIAL}
      Set Suite Variable  ${DATE_TO_UPDATE}
 
@@ -73,10 +69,6 @@ Edit An Enhanced Recurring donation record of type open
     ...                                      Effective Date=${EFFECTIVE_DATE_INITIAL}
     ...                                      Installment Period=Monthly
     ...                                      Day of Month=15
-    # validate recurring donation statistics current and next year value
-    Validate Field Values Under Section      Statistics
-    ...                                      Current Year Value=$${CURRENTVALUE}.00
-    ...                                      Next Year Value=$1,200.00
     #Query the opportunity ID associated with the recurring donation. Navigate to the opportunity and validate the status
     @{opportunity1} =                        API Query Opportunity For Recurring Donation                   ${data}[contact_rd][Id]
     Store Session Record                     Opportunity                                                    ${opportunity1}[0][Id]
@@ -100,9 +92,6 @@ Edit An Enhanced Recurring donation record of type open
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c
     ...                                      object_id=${data}[contact_rd][Id]
-    Validate Field Values Under Section      Statistics
-    ...                                      Current Year Value=$${CURRENTVALUE_EDITED}.00
-    ...                                      Next Year Value=$1,800.00
     @{opportunity1} =                        API Query Opportunity For Recurring Donation                   ${data}[contact_rd][Id]
     Store Session Record                     Opportunity                                                    ${opportunity1}[0][Id]
     Go To Page                               Details                        Opportunity                     object_id=${opportunity1}[0][Id]
