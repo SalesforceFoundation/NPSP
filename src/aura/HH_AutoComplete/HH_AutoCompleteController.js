@@ -19,10 +19,14 @@
         evt.setParams({ "contact" : con });
         evt.fire();
     },
-    
+    handleReachFooter : function(component, event, helper) {
+        document.querySelector(".listFooter").focus();
+    },
+
     clearList: function(component) {
         var autocomplete = component.find('autocomplete');
         autocomplete.clearList();
     }
+
 
 })

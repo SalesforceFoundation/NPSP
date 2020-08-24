@@ -10,6 +10,7 @@
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactNewEvent" type="c:HH_ContactNewEvent" />
+    <aura:handler name="reachFooter" event="c:HH_reachFooter" action="{!c.handleReachFooter}" />
 
     <!-- markup follows... -->
 
@@ -20,7 +21,7 @@
                     searchContext="{!$Label.c.lblFindInContacts}">
 
         <aura:set attribute="itemTemplate">
-            <c:HH_AutoCompleteOption value="{!item.value}"/>
+            <c:HH_AutoCompleteOption value="{!item.value}" index="{!index}"/>
         </aura:set>
 
         <aura:set attribute="dataProvider">
@@ -28,8 +29,8 @@
         </aura:set>
 
         <aura:set attribute="listFooter">
-            <div class="slds-lookup__item">
-                <lightning:button variant="bare" label="{!$Label.npo02.NewContact}"
+            <div class="slds-lookup__item ">
+                <lightning:button variant="bare" class="listFooter" label="{!$Label.npo02.NewContact}" aura:id="listFooter"
                     iconName="utility:add" iconPosition="left" onclick="{!c.handleNewContact}" />
             </div>
         </aura:set>

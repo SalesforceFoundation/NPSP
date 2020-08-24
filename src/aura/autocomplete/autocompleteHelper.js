@@ -71,5 +71,90 @@
         var listComponent = component.find('list');
         $A.util.toggleClass(listComponent, "slds-hide", !visible);
         component.set('v.isListVisible', visible);
+    },
+
+    // Handle the pressing of the arrow key down.
+    // It updates the aria-activedescendant and notify the child elements
+    handleArrowDownKey: function (component, helper) {
+        const listbox = document.querySelector('[role="listbox"]');
+        const elements = component.get("v.items");
+        let currentFocussedElement = listbox.getAttribute('aria-activedescendant');
+        
+        if (currentFocussedElement == null || currentFocussedElement == '') {
+            currentFocussedElement = elements[0].value.Id
+            listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+        }
+
+        let newFocussedElement = null; 
+        
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].value.Id == currentFocussedElement) {
+                // I am in the middle of the list, setting the next descendant to the next element
+                if (i < elements.length - 1) {
+                    newFocussedElement = elements[i + 1].value.Id;
+                    listbox.setAttribute('aria-activedescendant', newFocussedElement);
+                    break;
+                } else {
+                    // reach the last element of the list, next one is footer(if present) or the first element if not present.
+                    let showFooter = component.get('v.showListFooter');
+                    if (showFooter) {
+                        helper.fireFocusOnFooter(component, listbox);
+                        return;
+                    } else {
+                        newFocussedElement =  elements[0].value.Id;
+                        listbox.setAttribute('aria-activedescendant', newFocussedElement);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        helper.fireNewItemFocus(newFocussedElement);
+    },
+    // Handles the pressing of the arrow up key.
+    // It updates the aria-activedescendant and notify the child elements
+    handleArrowUpKey: function (component, helper) {
+        const listbox = document.querySelector('[role="listbox"]');
+        const elements = component.get("v.items");
+        var currentFocussedElement = listbox.getAttribute('aria-activedescendant');
+        if (currentFocussedElement == null || currentFocussedElement == '') {
+            currentFocussedElement = elements[0].value.Id
+            listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+        }
+        var newFocussedElement = null; 
+        if (currentFocussedElement == null || currentFocussedElement == '') {
+            currentFocussedElement = elements[elements.length - 1].value.Id
+            listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+        }
+
+        for (var i = 0; i < elements.length; i++) { 
+            if (elements[i].value.Id == currentFocussedElement) {
+                if (i == 0) {
+                    let showFooter = component.get('v.showListFooter');
+                    if (showFooter) {
+                        helper.fireFocusOnFooter(component, listbox);
+                        return;
+                    }
+                } else {
+                    newFocussedElement = elements[i - 1].value.Id;
+                    listbox.setAttribute('aria-activedescendant', newFocussedElement);
+                    break;
+                }
+            }
+        }
+        helper.fireNewItemFocus(newFocussedElement);
+    },
+
+    //Fires an event to notify the new focussed element
+    fireNewItemFocus: function(id) {
+        var event = $A.get("e.c:HH_newFocussedElement");
+        event.setParam("id", id);
+        event.fire();
+    },
+
+    fireFocusOnFooter: function(component, listbox) {
+        let event = component.getEvent('reachFooter');
+        listbox.setAttribute('aria-activedescendant', "");
+        event.fire();
     }
 })
