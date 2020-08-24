@@ -1848,12 +1848,12 @@ private with sharing class STG_SettingsManager_TEST {
     private static void testPanelHealthCheck() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
         
-        system.assertEquals('idPanelHealthCheck', panel.idPanel());
-        system.assertEquals(null, panel.runDetector());
+        System.assertEquals('idPanelHealthCheck', panel.idPanel());
+        System.assertEquals(null, panel.runDetector());
 
         STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
-        system.assertEquals(null, panel.saveSettings(), 'Page reference should not be returned');
-        system.assertEquals(true, STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c,
+        System.assertEquals(null, panel.saveSettings(), 'Page reference should not be returned');
+        System.assertEquals(true, STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c,
             'Error Settings Disable Record Data Health Check should be set to true');
     }
 
@@ -1960,7 +1960,8 @@ private with sharing class STG_SettingsManager_TEST {
 
         for (STG_PAnelHealthCheck_CTRL.DetectResult result : results) {
             if (result.strStatus == STG_PanelHealthCheck_CTRL.statusWarning && result.strName == System.Label.healthLabelDataBatchNotRun) {
-                hasDisabledHealthCheckWarningMessage = true;               
+                hasDisabledHealthCheckWarningMessage = true;
+                break;
             }
         }
 
