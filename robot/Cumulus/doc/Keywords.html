@@ -1729,6 +1729,22 @@ pre {
                 <td class="kwdoc"><p>Checks for the record in the object page and returns true if found else returns false</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Verify Record Count For Object">
+                <td class="kwname">
+                  Verify Record Count For Object
+                </td>
+                <td class="kwargs">
+                  
+                  <i>object</i>, 
+                  
+                  <i>count</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Queries the given object table by using key,value pair passed and verifies that the record count matches with expected count</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Verify Record Is Created In Database">
                 <td class="kwname">
                   Verify Record Is Created In Database
@@ -2126,6 +2142,20 @@ pre {
 <td>Ex: MobilePhone=1234567098</td>
 </tr>
 </table></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.robot.API Create Payment">
+                <td class="kwname">
+                  API Create Payment
+                </td>
+                <td class="kwargs">
+                  
+                  <i>opportunity</i>, 
+                  
+                  <i>**fields</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Creates a payment record for the specified opportunity record with given parameters passed</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Create Primary Affiliation">
@@ -4059,6 +4089,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Verify that the no. of gifts on the page match with count</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="GiftEntryPageObject.py.Verify Link Status">
+                <td class="kwname">
+                  Verify Link Status
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Verify the link is disabled/enabled, pass the name of the link and the expected status of the link as either enabled or disabled Eg: |Verify Link Status  |  Update this Payment=enabled ...                    Update this Opportunity=disabled  |</p></td>
               </tr>
               
               <tr class="kwrow" id="GiftEntryPageObject.py.Verify Table Field Values">
