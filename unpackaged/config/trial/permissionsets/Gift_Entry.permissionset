@@ -961,12 +961,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>%%%NAMESPACE%%%Form_Template__c.Description__c</field>
+        <field>%%%NAMESPACE%%%Form_Template__c.%%%NAMESPACE%%%Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>%%%NAMESPACE%%%Form_Template__c.Template_JSON__c</field>
+        <field>%%%NAMESPACE%%%Form_Template__c.Name</field>
+        <readable>true</readable>
+    </fieldPermissions>           
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>%%%NAMESPACE%%%Form_Template__c.%%%NAMESPACE%%%Template_JSON__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
