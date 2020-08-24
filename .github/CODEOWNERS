@@ -11,3 +11,6 @@
 /app.json             @SalesforceFoundation/release-engineering-reviewers
 /requirements.txt     @SalesforceFoundation/release-engineering-reviewers
 /runtime.txt          @SalesforceFoundation/release-engineering-reviewers
+
+# GitHub Actions
+.github/workflows/    @SalesforceFoundation/release-engineering-reviewers
