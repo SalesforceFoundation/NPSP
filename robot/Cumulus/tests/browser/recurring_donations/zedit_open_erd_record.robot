@@ -54,6 +54,7 @@ Edit An Enhanced Recurring donation record of type open
     ...                                    npe03__Recurring_Donation__c
     ...                                    object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
+    Current Page Should be                 Details    npe03__Recurring_Donation__c
     Edit Recurring Donation Status
     ...                                    Status=Closed
     ...                                    Status Reason=Commitment Completed

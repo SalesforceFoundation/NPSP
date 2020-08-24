@@ -30,36 +30,43 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_element_is_visible(locator,
                                                error=f"click on {title} link was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()                                        
-        
-    def open_sub_link(self,title):  
-        """Waits for the link to load and clicks to make a part of page active"""  
-        self.selenium.wait_until_page_contains(title, 
-                                               error=f"{title} link was not found on the page")  
-        self.npsp.click_link_with_text(title)    
-        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
-        self.selenium.wait_until_element_is_visible(locator,
-                                                       error=f"click on {title} sublink was not successful even after 30 seconds")
-        self.selenium.capture_page_screenshot()
     
+    @capture_screenshot_on_error
+    def open_sub_link(self,title):  
+        """Waits for the link to load and clicks to make a part of page active"""
+        # Adding in retry logic to accomodate the unexplaining page reloads on Metaci for settings page
+        for i in range(3):
+            self.selenium.wait_until_page_contains(title,
+                                               error=f"{title} link was not found on the page")  
+            self.npsp.click_link_with_text(title)
+            locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
+            self.selenium.wait_until_element_is_visible(locator,
+                                                       error=f"click on {title} sublink was not successful even after 30 seconds")
+            if self.npsp.check_if_element_displayed(locator):
+                return
+            else:
+                i += 1
     
     @capture_screenshot_on_error
     def click_settings_button (self,panel_id,btn_value):  
-        """clicks on the buttons on npsp settings object using panel id and button value"""      
+        """clicks on the buttons on npsp settings object using panel id and button value"""
+        # Adding in retry logic to accomodate the unexplaining page reloads on Metaci for settings page
         locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
         settings_header=npsp_lex_locators['npsp_settings']['header'].format("Nonprofit Success Pack Application Settings")
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"{btn_value} did not appear on page")
         self.selenium.wait_until_element_is_visible(locator, timeout=60)
-
         for i in range(3):
-            i += 1
+            
             self.salesforce._jsclick(locator)
             time.sleep(1) # This is needed as the DOM elements needs to be updated in edit mode
+            self.builtin.log_to_console(i)
             self.selenium.wait_until_element_is_not_visible(settings_header,
-                                                            error="Page did not load")
-
-            if self.selenium.wait_until_element_is_not_visible(settings_header):
+                                                            error="Page did not load fully")
+            if not self.npsp.check_if_element_displayed(settings_header):
                 return
+            else:
+                i += 1
 
 
     def select_value_from_list(self,list_name,value): 

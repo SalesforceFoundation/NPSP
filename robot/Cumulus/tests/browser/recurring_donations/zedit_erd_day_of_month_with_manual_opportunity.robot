@@ -100,6 +100,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
+    Current Page Should be             Details    npe03__Recurring_Donation__c
     Edit Recurring Donation Status
     ...                                Recurring Period=Monthly
     ...                                Day of Month=1

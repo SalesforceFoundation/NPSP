@@ -55,6 +55,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     ...                                     object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
     #Update only Day Of Month Field on the edit modal
+    Current Page Should be                  Details    npe03__Recurring_Donation__c
     Edit Recurring Donation Status
         ...                                 Recurring Period=Monthly
         ...                                 Day of Month=1
