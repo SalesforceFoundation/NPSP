@@ -51,6 +51,11 @@ Reorder and Modify GE Template Fields
   #Current Page Should Be                Landing                     npsp__GE_Gift_Entry
   #Click Gift Entry Button               New Batch
   #Select Template                       ${template}
+  #Click Button                          Next
+  #Enter Value in Field
+  #...                                   Batch Name=${template}
+  #Click Button                          Next
+  #Click Button                          Save
 
 
  
