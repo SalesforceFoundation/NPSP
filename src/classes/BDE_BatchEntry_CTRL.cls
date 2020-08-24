@@ -453,10 +453,12 @@ public with sharing class BDE_BatchEntry_CTRL {
         return pageRef;         
     }
 
+   /*********************************************************************************************************
+    * @description Retrieves the namespace string for the visualforce page
+     * @return {String}
+     */
     public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isEmpty(namespace)) return 'c';
-        return namespace;
+        return UTIL_Namespace.getComponentNamespace();
     }
 
    /*********************************************************************************************************
@@ -471,14 +473,15 @@ public with sharing class BDE_BatchEntry_CTRL {
    }
 
    /*********************************************************************************************************
-    * @description Method that upserts the retirement alert custom setting
-    *
+    * @description Method that upserts the retirement alert custom setting if the alert
+    * gets dismissed
+    * @param hasViewedAlert Flag that indicates the alert dismissal
     */
    @AuraEnabled
-   public static void upsertRetirementAlert () {
+   public static void upsertRetirementAlert (Boolean hasViewedAlert) {
       Batch_Data_Entry_Settings__c settings = getBatchDataEntrySettings();
       if (!settings.Viewed_Retirement_Alert__c) {
-         settings.Viewed_Retirement_Alert__c = true;
+         settings.Viewed_Retirement_Alert__c = hasViewedAlert;
          upsert settings;
       }
    }

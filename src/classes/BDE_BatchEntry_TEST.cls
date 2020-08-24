@@ -190,7 +190,7 @@ private class BDE_BatchEntry_TEST {
 
     @IsTest
     private static void shouldUpsertRetirementAlert () {
-        BDE_BatchEntry_CTRL.upsertRetirementAlert();
+        BDE_BatchEntry_CTRL.upsertRetirementAlert(true);
         Batch_Data_Entry_Settings__c settings = Batch_Data_Entry_Settings__c.getValues(UserInfo.getUserId());
         System.assertEquals(settings.Viewed_Retirement_Alert__c, true, 'The retirement alert should be checked');
     }

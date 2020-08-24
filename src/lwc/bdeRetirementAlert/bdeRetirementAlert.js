@@ -29,7 +29,9 @@ export default class bdeRetirementAlert extends LightningElement {
    }
 
    handleOnConfirm() {
-      upsertRetirementAlert().then(response => {
+      upsertRetirementAlert({
+         hasViewedAlert : true
+      }).then(response => {
          this._showPrompt = false;
       }).catch(error => {
          handleError(error)
