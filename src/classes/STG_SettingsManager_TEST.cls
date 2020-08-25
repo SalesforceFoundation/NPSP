@@ -1944,7 +1944,7 @@ private with sharing class STG_SettingsManager_TEST {
     private static void shouldCreateWarningRecordsWhenDisabledRecordHealthCheckIsEnabled() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
 
-        STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
+        STG_Panel.stgService.stgErr.DisableRecordDataHealthChecks__c = true;
         
         Test.startTest();
         panel.runDetector();
