@@ -63,8 +63,8 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Override saveSettings from STG_Panel to update Custom Setting Error Setting
-    *   DisableRecordDataHealthChecks__c field, which allows user to only run config related health checks
+    * @description Save Error Settings "Disable Record Data Health Checks" checkbox
+    *   related to the data Health Check verification.
     * @return PageReference 
     */
     public override PageReference saveSettings() {
@@ -76,7 +76,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             ).isUpdateable();
 
             if (!hasUpdatePermission) {
-                throw new NoPermissionException(
+                throw new HealthCheckException(
                     String.format(
                         System.Label.flsError,
                         new List<String>{Schema.SObjectType.Error_Settings__c.getLabel()})
@@ -87,8 +87,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                 update STG_Panel.stgService.stgErr;
             }
 
-            // Health Checks reulst will be clear out when Error Setting DisableRecordDataHealthChecks__c field
-            // is successfully updated because the result will not be relevant anymore.
+            //Clear out health check results when configuration changes.
             listDR = new List<DetectResult>();
 
         } catch (Exception e) {
@@ -100,7 +99,11 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         return null;
     }
 
-    public class NoPermissionException extends Exception {}
+    /*********************************************************************************************************
+    * @description Custom exception for NPSP Health Check page
+    */
+    public class HealthCheckException extends Exception {}
+
     /*********************************************************************************************************
     * @description Whether all tests passed Health Check
     */
