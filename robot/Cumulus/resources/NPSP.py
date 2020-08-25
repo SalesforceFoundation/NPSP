@@ -1200,8 +1200,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
          field = self.selenium.get_webelement(xpath)
          self.selenium.clear_element_text(field)
          field.send_keys(value)
-         time.sleep(2)
+         time.sleep(3)
          field.send_keys(Keys.ENTER)
+         time.sleep(3)
         
     def save_current_record_id_for_deletion(self,object_name): 
         """Gets the current page record id and stores it for specified object 
