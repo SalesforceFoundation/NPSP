@@ -2914,7 +2914,6 @@
         <members>stgLabelCurrentUDR</members>
         <members>stgLabelDoNotRename</members>
         <members>stgLabelErrorNotify</members>
-        <members>stgLabelErrorSettings</members>
         <members>stgLabelExamplesFGFormat</members>
         <members>stgLabelExamplesHHNameFOrmat</members>
         <members>stgLabelExamplesIGFormat</members>

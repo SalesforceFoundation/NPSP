@@ -1200,7 +1200,7 @@ private with sharing class STG_SettingsManager_TEST {
             STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
             panel.saveSettings();
 
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgLabelErrorSettings);
+            UTIL_UnitTestData_TEST.assertPageHasError(Schema.SObjectType.Error_Settings__c.getLabel());
         }
 
         Test.stopTest();

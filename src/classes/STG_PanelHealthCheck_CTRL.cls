@@ -79,7 +79,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                 throw new NoPermissionException(
                     String.format(
                         System.Label.flsError,
-                        new List<String>{System.Label.stgLabelErrorSettings})
+                        new List<String>{Schema.SObjectType.Error_Settings__c.getLabel()})
                 );
             }
 
