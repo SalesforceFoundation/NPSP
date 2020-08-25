@@ -32,8 +32,8 @@
         <div class="slds-card slds-card_extension">
             <lightning-tabset active-tab-value={activeTab}
                               class="extension_test">
-                <lightning-tab value={TabEnums.INFO_TAB}
-                               label={TabEnums.INFO_TAB}
+                <lightning-tab value={tabs.INFO.id}
+                               label={tabs.INFO.label}
                                class="slds-p-around_none"
                                onactive={handleOnActiveTab}
                                show-error-indicator={hasTemplateInfoTabError}>
@@ -47,8 +47,8 @@
                     </c-ge-template-builder-template-info>
                 </lightning-tab>
 
-                <lightning-tab value={TabEnums.FORM_FIELDS_TAB}
-                               label={TabEnums.FORM_FIELDS_TAB}
+                <lightning-tab value={tabs.FORM_FIELDS.id}
+                               label={tabs.FORM_FIELDS.label}
                                class="slds-p-around_none"
                                onactive={handleOnActiveTab}
                                show-error-indicator={hasSelectFieldsTabError}>
@@ -74,8 +74,8 @@
                     </c-ge-template-builder-form-fields>
                 </lightning-tab>
 
-                <lightning-tab value={TabEnums.BATCH_SETTINGS_TAB}
-                               label={TabEnums.BATCH_SETTINGS_TAB}
+                <lightning-tab value={tabs.BATCH_SETTINGS.id}
+                               label={tabs.BATCH_SETTINGS.label}
                                class="slds-p-around_none"
                                onactive={handleOnActiveTab}
                                show-error-indicator={hasBatchSettingsTabError}>
@@ -108,7 +108,7 @@
                                               title={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
                                               onclick={handleGoToTab}
                                               variant="outline-brand"
-                                              data-tab-value={TabEnums.INFO_TAB}
+                                              data-tab-value={tabs.INFO.id}
                                               data-qa-locator={qaLocatorBackTemplateInfo}>
                             </lightning-button>
                         </template>
@@ -118,7 +118,7 @@
                                               onclick={handleGoToTab}
                                               variant="outline-brand"
                                               class="slds-m-right_small"
-                                              data-tab-value={TabEnums.FORM_FIELDS_TAB}
+                                              data-tab-value={tabs.FORM_FIELDS.id}
                                               data-qa-locator={qaLocatorBackFormFields}>
                             </lightning-button>
                         </template>
@@ -127,17 +127,17 @@
                         <lightning-progress-indicator current-step={activeTab}
                                                       type="base"
                                                       variant="base">
-                            <lightning-progress-step label={CUSTOM_LABELS.geTabTemplateInfo}
-                                                     aria-label={CUSTOM_LABELS.geTabTemplateInfo}
-                                                     value={TabEnums.INFO_TAB}>
+                            <lightning-progress-step label={tabs.INFO.label}
+                                                     aria-label={tabs.INFO.label}
+                                                     value={tabs.INFO.id}>
                             </lightning-progress-step>
-                            <lightning-progress-step label={CUSTOM_LABELS.geTabFormFields}
-                                                     aria-label={CUSTOM_LABELS.geTabFormFields}
-                                                     value={TabEnums.FORM_FIELDS_TAB}>
+                            <lightning-progress-step label={tabs.FORM_FIELDS.label}
+                                                     aria-label={tabs.FORM_FIELDS.label}
+                                                     value={tabs.FORM_FIELDS.id}>
                             </lightning-progress-step>
-                            <lightning-progress-step label="Batch Header"
-                                                     aria-label="Batch Header"
-                                                     value={TabEnums.BATCH_SETTINGS_TAB}>
+                            <lightning-progress-step label={tabs.BATCH_SETTINGS.label}
+                                                     aria-label={tabs.BATCH_SETTINGS.label}
+                                                     value={tabs.BATCH_SETTINGS.id}>
                             </lightning-progress-step>
                         </lightning-progress-indicator>
                     </div>
@@ -148,7 +148,7 @@
                                               variant="brand"
                                               class="slds-float_right"
                                               onclick={handleGoToTab}
-                                              data-tab-value={TabEnums.FORM_FIELDS_TAB}
+                                              data-tab-value={tabs.FORM_FIELDS.id}
                                               data-qa-locator={qaLocatorNextFormFields}>
                             </lightning-button>
                         </template>
@@ -158,7 +158,7 @@
                                               class="slds-float_right"
                                               onclick={handleGoToTab}
                                               variant="brand"
-                                              data-tab-value={TabEnums.BATCH_SETTINGS_TAB}
+                                              data-tab-value={tabs.BATCH_SETTINGS.id}
                                               data-qa-locator={qaLocatorNextBatchHeaderFields}>
                             </lightning-button>
                         </template>
