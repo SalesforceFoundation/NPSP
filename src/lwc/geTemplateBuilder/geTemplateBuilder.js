@@ -529,6 +529,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             case this.tabs.INFO.id:
             case this.tabs.FORM_FIELDS.id:
             case this.tabs.BATCH_SETTINGS.id:
+                // intentional fall-through
+                // if clicked tab id matches any of the above, switch to that tab
                 this.activeTab = tabValue;
                 break;
             default:
