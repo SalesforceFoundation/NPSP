@@ -3923,6 +3923,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
+        <label>Wenn sie aktiviert ist, prüft die Statusprüfung lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme.</label>
+        <name>healthLabelDisableRecordBatchDescription</name>	
+    </customLabels>
+    <customLabels>
         <label>Der Empfänger der Fehlerbenachrichtigung ist gültig.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
