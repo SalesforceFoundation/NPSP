@@ -3,9 +3,6 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
-...             robot/Cumulus/resources/OpportunityPageObject.py
-...             robot/Cumulus/resources/PaymentPageObject.py
-...             robot/Cumulus/resources/AccountPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             API Check And Enable Gift Entry
@@ -14,8 +11,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
-    [Documentation]      Creates the contact,opportunity and queries the payment record required for the test
-    ...                  along with getting dates and namespace required for test.
+    [Documentation]      Creates the contact,opportunity along with getting dates and namespace required for test.
     &{CONTACT} =         API Create Contact    FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     Set suite variable   &{CONTACT}
     ${FUT_DATE} =            Get Current Date         result_format=%Y-%m-%d    increment=2 days
@@ -31,17 +27,15 @@ Setup Test Data
     Set suite variable   &{OPPORTUNITY}
     ${UI_DATE} =         Get Current Date                   result_format=%b %-d, %Y
     Set suite variable   ${UI_DATE}
-    # &{PAYMENT} =         API Query Record         npe01__OppPayment__c      npe01__Opportunity__c=${OPPORTUNITY}[Id]
-    # Set suite variable   &{PAYMENT}
     ${NS} =              Get NPSP Namespace Prefix
     Set suite variable   ${NS}
 
 *** Test Cases ***
 Review Donation And Create Payment For Batch Gift
-    [Documentation]                      Create an organization account with open opportunity (with payment record) via API. Go to SGE form
-    ...                                  select the donor as account and the account created. Verify review donations modal and select to update payment.
-    ...                                  Change date to today and payment amount to be less than opp amount. Verify that same payment record got updated
-    ...                                  with new amount and date but opportunity is still prospecting and amount is not updated.
+    [Documentation]       Create a contact with open opportunity (with payment record) via API. Go to GE create a batch with default template.
+    ...                   With donor as contact created, open review donations modal and select add payment. Change date to today and payment amt < opp amt.
+    ...                   Verify that opp shows in table and on processing creates a paymment but opp is still prospecting and amt is not updated.
+    ...                   Create another payment with total > opp amt and verify opp is closed and opp date is payment date
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and create a payment
     Go To Page                           Landing                       GE_Gift_Entry
