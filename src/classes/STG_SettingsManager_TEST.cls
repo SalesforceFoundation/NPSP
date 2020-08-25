@@ -1197,7 +1197,7 @@ private with sharing class STG_SettingsManager_TEST {
             Test.setCurrentPage(Page.STG_PanelHealthCheck);
             STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
 
-            STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
+            STG_Panel.stgService.stgErr.DisableRecordDataHealthChecks__c = true;
             panel.saveSettings();
 
             UTIL_UnitTestData_TEST.assertPageHasError(Schema.SObjectType.Error_Settings__c.getLabel());
@@ -1937,7 +1937,7 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
-    * @description Verifies that when Disable_Record_Data_Health_Checks__c is enabled,
+    * @description Verifies that when DisableRecordDataHealthChecks__c is enabled,
     *    all data record health checks should be disabled and have warning records created
     */
     @isTest
