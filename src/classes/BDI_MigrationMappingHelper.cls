@@ -69,8 +69,7 @@ public class BDI_MigrationMappingHelper {
     public List<BDI_MigrationMappingUtility.HelpTextFieldMapping> getAllHelpTextFieldMappings() {
 
         Map<String, Schema.DescribeFieldResult> describeFieldResultsByFieldName =
-            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(
-                BDI_MigrationMappingUtility.DATA_IMPORT_OBJECT_NAME));
+            UTIL_Describe.getAllFieldsDescribe(SObjectType.DataImport__c.Name);
 
         List<BDI_MigrationMappingUtility.HelpTextFieldMapping> helpTextFieldMappings =
             new List<BDI_MigrationMappingUtility.HelpTextFieldMapping>();
