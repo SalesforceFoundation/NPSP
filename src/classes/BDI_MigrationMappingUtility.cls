@@ -42,14 +42,9 @@ public without sharing class BDI_MigrationMappingUtility {
         new List<Metadata.CustomMetadata>();
 
     /*******************************************************************************************************
-    * @description Name of default packaged Object Mapping Set
+    * @description Current context namespace
     */
     public static final String NAMESPACE = UTIL_Namespace.getNamespace();
-
-    /*******************************************************************************************************
-    * @description Name of default packaged Object Mapping Set
-    */
-    public static final String DATA_IMPORT_OBJECT_NAME = 'DataImport__c';
 
     /*******************************************************************************************************
     * @description Name of default packaged Object Mapping Set
@@ -94,7 +89,7 @@ public without sharing class BDI_MigrationMappingUtility {
     */
     private final Set<String> HELP_TEXT_EXCEPTIONS = new Set<String>{
         'The role that the Opportunity Contact Role should be created with.  For example enter \'Soft Credit\' '+
-                'to create a soft credit opportunity contact role.',
+            'to create a soft credit opportunity contact role.',
             'Indicates the type of transaction.'
     };
 
@@ -108,11 +103,6 @@ public without sharing class BDI_MigrationMappingUtility {
     * field mapping method, and default data import field mapping set.
     */
     private Data_Import_Settings__c dataImportSettings;
-
-    /*******************************************************************************************************
-    * @description List of reference data import object mappings
-    */
-    private Map<String, Data_Import_Object_Mapping__mdt> referenceObjectMappingsByDeveloperName;
 
     /*******************************************************************************************************
     * @description Map of migrated Data Import Object Mapping developer names by legacy data import object
@@ -169,8 +159,6 @@ public without sharing class BDI_MigrationMappingUtility {
     public BDI_MigrationMappingUtility(BDI_MigrationMappingHelper helper) {
         this.helper = helper;
         this.dataImportSettings = Data_Import_Settings__c.getInstance();
-        this.referenceObjectMappingsByDeveloperName =
-            helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
     }
 
     /*******************************************************************************************************
@@ -241,6 +229,8 @@ public without sharing class BDI_MigrationMappingUtility {
         DataImportObjectMapping[] objectMappings = new List<DataImportObjectMapping>();
         Map<String, String> developerNamesByPredecessor = new Map<String, String>();
 
+        Map<String, Data_Import_Object_Mapping__mdt> referenceObjectMappingsByDeveloperName =
+            helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
         for (String name : referenceObjectMappingsByDeveloperName.keySet()) {
 
             String legacyDataImportObjectName;
@@ -338,7 +328,8 @@ public without sharing class BDI_MigrationMappingUtility {
 
     /*******************************************************************************************************
     * @description Go through all fields in Data Import object and populate relevant lists from help text
-    * mappings
+    * mappings, lists for potentially bad help text mappings and list of data import field mappings generated
+    * from help text mappings.
     */
     @TestVisible
     private void populateListsFromHelpTextMappings() {
@@ -863,6 +854,9 @@ public without sharing class BDI_MigrationMappingUtility {
         public String dataImportFieldAPIName { get;set; }
         public String helpText { get;set; }
         private final UTIL_Describe describeService = UTIL_Describe.getInstance();
+        private final Set<String> LEGACY_DATA_IMPORT_OBJECT_NAMES = new Set<String> {
+            'account1', 'account2', 'address', 'contact1', 'contact2',
+                'household','opportunity','donation','payment','gau','role'};
 
         public HelpTextFieldMapping() {}
 
@@ -874,50 +868,40 @@ public without sharing class BDI_MigrationMappingUtility {
 
             if (this.helpText != null) {
 
-                List<String> parts = splitHelpText(this.helpText);
-                if (parts != null) {
-                    this.dataImportObjectName = String.isNotBlank(parts[0]) ? parts[0] : null;
-                    this.targetFieldAPIName = String.isNotBlank(parts[1]) ? parts[1] : null;
-
-                    if (UTIL_Namespace.shouldAlignNamespace) {
-                        this.targetFieldAPIName =
-                            UTIL_Namespace.alignSchemaNSWithEnvironment(this.targetFieldAPIName);
-                    }
+                List<String> mappingValuesFromHelpText = retrieveObjectAndFieldApiNames(this.helpText);
+                if (mappingValuesFromHelpText != null) {
+                    this.dataImportObjectName = mappingValuesFromHelpText[0];
+                    this.targetFieldAPIName =
+                        UTIL_Namespace.shouldAlignNamespace ?
+                            UTIL_Namespace.alignSchemaNSWithEnvironment(mappingValuesFromHelpText[1]) :
+                            mappingValuesFromHelpText[1];
 
                     checkRequiredFields();
                 }
             }
         }
 
-        private List<String> splitHelpText(String helpText) {
-            String symbol;
-            Boolean hasSpecialChar = helpText.containsAny('$&+,:;=?@#|\'<>.-^*()%!_');
-            Boolean hasDataImportNames =
-                helpText.containsAny('Account1Account2AddressContact1Contact2HouseholdOpportunityDonationPaymentGAURole');
+        /*******************************************************************************************************
+        * @description Retrieves an object and field api name from a DataImport__c field help text mapping.
+        *
+        * @param helpText Help text value of a DataImport__c field
+        * @return A list of strings containing an object api name and a field api name OR null if help text
+        * value doesn't contain a valid help text mapping.
+        */
+        private List<String> retrieveObjectAndFieldApiNames(String helpText) {
+            if (helpText.contains('.')) {
+                List<String> parts = helpText.trim().split('\\.', 2);
 
-            if (hasSpecialChar == true) {
-                String[] specialCharacters =
-                    new List<String>{'$', '&', '\\+', ',', ':', ';', '=', '\\?', '@',
-                                     '#', '\\|', '\'', '<', '>', '\\.', '-', '^', '\\*',
-                                     '\\(', '\\)', '%', '!', '_'};
+                if (parts.size() == 2) {
+                    String possibleObjectApiName = parts[0];
+                    String possibleFieldApiName = parts[1];
+                    Boolean isLegacyObjectApiName =
+                        LEGACY_DATA_IMPORT_OBJECT_NAMES.contains(possibleObjectApiName.toLowerCase());
+                    Boolean isPossibleFieldApiName = !possibleFieldApiName.contains(' ');
 
-                for (String sc : specialCharacters) {
-                    List<String> parts = helpText.split(sc, 2);
-                    Integer countWhitespaces = helpText.countMatches(' ');
-
-                    if (parts.size() >= 2 && countWhitespaces <= 4) {
-                        if (String.isNotBlank(parts[0]) && String.isNotBlank(parts[1])) {
-                            return parts;
-                        }
+                    if (isLegacyObjectApiName && isPossibleFieldApiName) {
+                        return parts;
                     }
-                }
-            }
-
-            if (hasDataImportNames == true) {
-                Integer countWhitespaces = helpText.countMatches(' ');
-
-                if (countWhitespaces <= 4) {
-                    return helpText.split('', 2);
                 }
             }
 
