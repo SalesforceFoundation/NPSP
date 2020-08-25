@@ -18,7 +18,7 @@ Capture Screenshot and Delete Records and Close Browser
     Run Keyword If Any Tests Failed      Capture Page Screenshot
     Close Browser
     Delete Session Records
-    
+
 API Create Contact
     [Documentation]  If no arguments are passed, this keyword will create a contact with Firstname and Lastname
     ...              as random strings with no additional info. This keyword returns the contact dictonary when called
@@ -69,7 +69,7 @@ API Modify Recurring Donation
     [return]         &{rd}
 
 API Create Campaign
-    [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name 
+    [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name
     ...              as random strings and no additional info. This keyword returns the campaign dictonary when called
     ...              Syntax for passing parameters:
     ...
@@ -81,7 +81,7 @@ API Create Campaign
     ...                  &{fields}
     &{campaign} =     Salesforce Get  Campaign  ${campaign_id}
     [return]         &{campaign}
-    
+
 API Create Opportunity
     [Documentation]  Creates opportunity of specified type for specified account. Opportunity details can be passed as key, value pairs
     ...              Sets defaults of StageName=Closed Won,CloseDate=current date,Amount=100, do not create payments as true if no values are passed.
@@ -103,9 +103,9 @@ API Create Opportunity
     ...               Name=Test Donation
     ...               npe01__Do_Not_Automatically_Create_Payment__c=true
     ...               &{fields}
-    &{opportunity} =     Salesforce Get  Opportunity  ${opp_id} 
-    [return]         &{opportunity}  
- 
+    &{opportunity} =     Salesforce Get  Opportunity  ${opp_id}
+    [return]         &{opportunity}
+
 API Create Organization Account
     [Documentation]  If no arguments are passed, this keyword will create an account of type organization with just Name
     ...              as random string and no additional info. This keyword returns the account dictonary when called
@@ -181,6 +181,15 @@ API Create Recurring Donation
     &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
     [return]           &{recurringdonation}
 
+API Create Payment
+    [Documentation]   Creates a payment record for the specified opportunity record with given parameters passed
+    [Arguments]       ${opportunity}     &{fields}
+    ${pay_id} =       Salesforce Insert  npe01__OppPayment__c
+    ...               npe01__Opportunity__c=${opportunity}
+    ...               &{fields}
+    &{payment} =      Salesforce Get  npe01__OppPayment__c  ${pay_id}
+    [return]          &{payment}
+
 API Query Installment
     [Documentation]         Queries for record on opportunity object using recurring donation id, installment and other specified fields
     ...                     This keyword returns the record found when called
@@ -210,7 +219,7 @@ API Create GAU
     ...               Name=${name}
     ...               &{fields}
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
-    [return]         &{gau}  
+    [return]         &{gau}
 
 API Create GAU Allocation
     [Documentation]  Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation
@@ -224,9 +233,9 @@ API Create GAU Allocation
     ${all_id} =      Salesforce Insert  ${ns}Allocation__c
     ...              ${ns}General_Accounting_Unit__c=${gau_id}
     ...              ${ns}Opportunity__c=${opp_id}
-    ...              &{fields} 
+    ...              &{fields}
     &{gau_alloc} =   Salesforce Get  ${ns}Allocation__c  ${all_id}
-    [return]         &{gau_alloc} 
+    [return]         &{gau_alloc}
 
 API Modify Allocations Setting
     [Documentation]     Can be used to modify either Default Allocations or Payment Allocations.
@@ -239,7 +248,7 @@ API Modify Allocations Setting
     ...                 select=Id
     &{setting} =        Get From List  ${records}  0
     Salesforce Update  ${ns}Allocations_Settings__c     ${setting}[Id]
-    ...                 &{fields} 
+    ...                 &{fields}
     &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  ${setting}[Id]
     [return]            &{alloc_setting}
 
@@ -256,7 +265,7 @@ API Create DataImportBatch
     ...                  &{fields}
     &{batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}
     [return]         &{batch}
-    
+
 API Create DataImport
     [Documentation]     Creates a data import with specified key,value pairs and return the data import record when keyword is called.
     ...                 Required parameters are:
@@ -308,7 +317,7 @@ Run Donations Batch Process
     Run Keyword if      ${crlp_enabled} != True
         ...             Validate Batch Process When CRLP Unchecked
         ...     ELSE    Validate Batch Process When CRLP Checked
-     
+
 Scroll Page To Location
     [Documentation]     Scrolls window by pixels using javascript
     ...                 Required parameters are:
@@ -329,7 +338,7 @@ Open NPSP Settings
     Open Main Menu            ${topmenu}
     Open Sub Link             ${submenu}
     Sleep  1
-    
+
 Click Data Import Button
     [Documentation]   Switches to the frame and clicks the button identified by path
     ...               Ex: Click Data Import Button  NPSP Data Import  button  Begin Data Import Process
@@ -340,8 +349,8 @@ Click Data Import Button
     ...               |   others    |   parameters to identify button   |
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
-       
-     
+
+
 Process Data Import Batch
     [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch
     ...                    | status | expected status of batch processing Ex:'Completed' 'Errors' |
@@ -350,7 +359,7 @@ Process Data Import Batch
     Change View To                                     To Be Imported
     Click                                              Start Data Import
     Begin Data Import Process And Verify Status        BDI_DataImport_BATCH    ${status}
-    Click Close Button    
+    Click Close Button
 
 Enable Customizable Rollups
     [Documentation]        Go to NPSP Settings and check if Customizable Rollups are enabled
@@ -466,7 +475,7 @@ Enable Gift Entry
     Go To Page                              Custom          NPSP_Settings
     Open Main Menu                          System Tools
     Click Link With Text                    Advanced Mapping for Data Import & Gift Entry
-    Enable Gift Entry If Not Enabled    
+    Enable Gift Entry If Not Enabled
 
 API Query Record
     [Documentation]    Queries the given object table by using key,value pair passed and returns the entire record
@@ -483,10 +492,10 @@ API Check And Enable Gift Entry
     ...                If either of them are not enabled then calls the Enable Gift Entry keyword to enable them
     ${ns} =             Get NPSP Namespace Prefix
     @{records} =       Salesforce Query           ${ns}Data_Import_Settings__c
-    ...                select=${ns}Field_Mapping_Method__c    
+    ...                select=${ns}Field_Mapping_Method__c
     &{am} =            Get From List  ${records}  0
     @{records} =       Salesforce Query           ${ns}Gift_Entry_Settings__c
-    ...                select=${ns}Enable_Gift_Entry__c   
+    ...                select=${ns}Enable_Gift_Entry__c
     &{ge} =            Get From List  ${records}  0
     Run Keyword if     '${am}[${ns}Field_Mapping_Method__c]'!='Data Import Field Mapping' or '${ge}[${ns}Enable_Gift_Entry__c]'!='True'
     ...                Enable Gift Entry

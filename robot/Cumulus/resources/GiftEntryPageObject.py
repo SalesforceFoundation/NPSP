@@ -341,3 +341,20 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             locator=npsp_lex_locators["gift_entry"]["table"].format(table,field,value)
             self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {table} table')
 
+    def verify_link_status(self, **kwargs):
+        """ Verify the link is disabled/enabled, pass the name of the link
+        and the expected status of the link as either enabled or disabled
+        Eg: |Verify Link Status  |  Update this Payment=enabled
+             ...                    Update this Opportunity=disabled  |"""
+        for key,value in kwargs.items():
+            locator = npsp_lex_locators["button-with-text"].format(key)
+            self.selenium.wait_until_element_is_visible(locator,error= f"'{key}' is not displayed on the page")
+            if value=="disabled":
+                actual_value = self.selenium.get_webelement(locator).get_attribute(value)
+                if actual_value == None or actual_value == False:
+                    raise Exception (f"Expected {key} status to be {value} but found {actual_value}")
+            elif value=="enabled":
+                actual_value = self.selenium.get_webelement(locator).get_attribute("disabled")
+                if not (actual_value == None or actual_value == False):
+                    raise Exception (f"Expected {key} status to be {value} but found {actual_value}")
+
