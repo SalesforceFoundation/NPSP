@@ -11687,7 +11687,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <fullName>stgLabelErrorSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgLabelErrorSettings</shortDescription>
         <value>Error Settings</value>
     </labels>

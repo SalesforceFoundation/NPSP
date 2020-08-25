@@ -64,31 +64,31 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
     * @description Override saveSettings from STG_Panel to update Custom Setting Error Setting
+    *   DisableRecordDataHealthChecks__c field, which allows user to only run config related health checks
     * @return PageReference 
     */
     public override PageReference saveSettings() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
         try {
-            List<SObject> toUpdate = new List<SObject>();
-
-            if (STG_Panel.stgService.stgErr != null && !Test.isRunningTest()) {
-                toUpdate.add(STG_Panel.stgService.stgErr);
-            }
-
             Boolean hasUpdatePermission = UTIL_Describe.getObjectDescribe(
                 String.valueOf(Error_Settings__c.SObjectType)
-            ).IsUpdateable();
+            ).isUpdateable();
 
             if (!hasUpdatePermission) {
-                throw new DmlException(
+                throw new NoPermissionException(
                     String.format(
                         System.Label.flsError,
                         new List<String>{System.Label.stgLabelErrorSettings})
                 );
             }
 
-            update toUpdate;
+            if (STG_Panel.stgService.stgErr != null && !Test.isRunningTest()) {
+                update STG_Panel.stgService.stgErr;
+            }
+
+            // Health Checks reulst will be clear out when Error Setting DisableRecordDataHealthChecks__c field
+            // is successfully updated because the result will not be relevant anymore.
             listDR = new List<DetectResult>();
 
         } catch (Exception e) {
@@ -100,6 +100,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         return null;
     }
 
+    public class NoPermissionException extends Exception {}
     /*********************************************************************************************************
     * @description Whether all tests passed Health Check
     */
@@ -217,10 +218,11 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyTriggerHandlers();
         verifyLevels();
 
-        if (STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c == false) {
-            executeDataRecordsHealthChecks();
+        if (STG_Panel.stgService.stgErr.DisableRecordDataHealthChecks__c == true) {
+            addDisableRecordHealthCheckWarnings();
+
         } else {
-            generateDisableRecordHealthCheckMessages();
+            executeDataRecordsHealthChecks();
         }
 
         DateTime dtEnd = system.now();
@@ -244,7 +246,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Generate warning messages for disabled record health checks
     */
-    private void generateDisableRecordHealthCheckMessages() {
+    private void addDisableRecordHealthCheckWarnings() {
         List<String> healthChecksNotRun = new List<String> {
             System.Label.healthLabelAccountModelData,
             System.Label.healthLabelContactData,

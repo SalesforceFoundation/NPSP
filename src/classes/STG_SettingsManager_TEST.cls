@@ -1190,7 +1190,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verifies that the user cannot update Error Settings without update permission 
     */
     @isTest
-    private static void shouldPreventUpateErrorSettingsWhenUserDoesNotHaveUpdatePermission() {
+    private static void shouldPreventUpdateErrorSettingsWhenUserDoesNotHaveUpdatePermission() {
         Test.startTest();
 
         System.runAs(createReadOnlyUser()) {
@@ -1850,11 +1850,6 @@ private with sharing class STG_SettingsManager_TEST {
         
         System.assertEquals('idPanelHealthCheck', panel.idPanel());
         System.assertEquals(null, panel.runDetector());
-
-        STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c = true;
-        System.assertEquals(null, panel.saveSettings(), 'Page reference should not be returned');
-        System.assertEquals(true, STG_Panel.stgService.stgErr.Disable_Record_Data_Health_Checks__c,
-            'Error Settings Disable Record Data Health Check should be set to true');
     }
 
     /*********************************************************************************************************

@@ -24,7 +24,7 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Disable_Record_Data_Health_Checks__c</fullName>
+        <fullName>DisableRecordDataHealthChecks__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates whether record data related health checks are disabled</description>
         <externalId>false</externalId>
