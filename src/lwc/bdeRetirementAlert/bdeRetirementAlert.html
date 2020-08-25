@@ -1,0 +1,19 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size=8>
+        </lightning-layout-item>
+        <lightning-layout-item size=4>
+            <template if:true={_showPrompt}>
+                <c-util-prompt confirm-button-variant={confirmButtonVariant}
+                               confirm-button-title={confirmButtonTitle}
+                               has-back-drop={hasBackDrop}
+                               header-title={headerTitle}
+                               onconfirm= {handleOnConfirm}
+                               prompt-message={promptMessage}
+                               position={position}
+                               variant={variant}>
+                </c-util-prompt>
+            </template>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
