@@ -1118,12 +1118,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
          field.send_keys(value)
          time.sleep(3)
          field.send_keys(Keys.ENTER)
-         time.sleep(3)
-        
-    def save_current_record_id_for_deletion(self,object_name): 
-        """Gets the current page record id and stores it for specified object 
-           in order to delete record during suite teardown """  
-#         self.pageobjects.current_page_should_be("Details",object_name)    
 
     def save_current_record_id_for_deletion(self,object_name):
         """Gets the current page record id and stores it for specified object
