@@ -19,6 +19,7 @@ npsp_lex_locators={
     },
     "record": {
         'button':"//lightning-button/button[@title='{}']",
+        'headerbutton':"//lightning-button/button[contains(text(),'{}')]",
         'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
