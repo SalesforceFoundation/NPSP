@@ -1478,6 +1478,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_show_more_actions_button(self,title):
         """Clicks on more actions dropdown and click the given title"""
         locator=npsp_lex_locators['link-contains'].format("more actions")
+        self.selenium.wait_until_element_is_visible(locator)
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains(title)
         link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
