@@ -1119,6 +1119,20 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
          time.sleep(3)
          field.send_keys(Keys.ENTER)
 
+
+    def search_field_and_wait_for_modal(self, fieldname, value):
+        """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
+        and wait for the modal to appear.
+		"""
+        xpath = npsp_lex_locators["placeholder"].format(fieldname)
+        field = self.selenium.get_webelement(xpath)
+        self.selenium.clear_element_text(field)
+        field.send_keys(value)
+        time.sleep(3)
+        field.send_keys(Keys.ENTER)
+        self.salesforce.wait_until_modal_is_open()
+
+
     def save_current_record_id_for_deletion(self,object_name):
         """Gets the current page record id and stores it for specified object
            in order to delete record during suite teardown """
