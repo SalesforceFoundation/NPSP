@@ -81,6 +81,7 @@
     },
 
     handleKeypressOnList : function (component, event, helper) {
+        
         const id = event.getParam("id");
         const key = event.getParam("keyPressed");
         
@@ -95,6 +96,24 @@
                 helper.handleArrowDownKey(component, helper);
                 break;
 
+        }
+    },
+
+    handleKeypressOnInput: function(component, event, helper) {
+        const key = event.getParams().keyCode; 
+        switch (key) {
+            case 40:
+                component.set("v.disabledSearch", true);
+                event.stopPropagation();
+                event.preventDefault();
+                helper.handleArrowDownKey(component, helper);
+                break;
+            case 38: 
+                component.set("v.disabledSearch", true);
+                event.stopPropagation();
+                event.preventDefault();
+                helper.handleArrowUpKey(component, helper);
+                break;
         }
     },
 

@@ -12,22 +12,19 @@
         //stopping propagation to avoid lastpass bug
         event.preventDefault()
         event.stopPropagation()
-        const thisElement = document.querySelector('[role="listitem"]');
-        if (!thisElement) return; 
-        const id = thisElement.getAttribute("id");
-        const key = event.key;
+        var key = event.key;
         if (key == 'Enter') {
             helper.fireOptionSelectedEvent(component);;
             return;
         }
         //
-        var event = component.getEvent("keypressEvent");
+        var event = $A.get("e.c:HH_keypressEvent");
         event.setParams({
-            "id" : id,
             "keyPressed" : key
         });
         event.fire();
      },
+    
      // Event that handles the new focus on the right element after the autocomple component has calculated the next element
      handleNewFocussedElement : function(component, event, helper) {
         var id = event.getParam('id');

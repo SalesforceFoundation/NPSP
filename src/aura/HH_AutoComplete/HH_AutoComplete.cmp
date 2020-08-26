@@ -11,7 +11,7 @@
     <!-- events we fire -->
     <aura:registerEvent name="ContactNewEvent" type="c:HH_ContactNewEvent" />
     <aura:handler name="reachFooter" event="c:HH_reachFooter" action="{!c.handleReachFooter}" />
-
+    <aura:registerEvent name="keypressEvent" type="c:HH_keypressEvent"/>
     <!-- markup follows... -->
 
     <c:autocomplete aura:id="autocomplete"
@@ -21,7 +21,7 @@
                     searchContext="{!$Label.c.lblFindInContacts}">
 
         <aura:set attribute="itemTemplate">
-            <c:HH_AutoCompleteOption value="{!item.value}" index="{!index}"/>
+            <c:HH_AutoCompleteOption value="{!item.value}"/>
         </aura:set>
 
         <aura:set attribute="dataProvider">
@@ -29,9 +29,30 @@
         </aura:set>
 
         <aura:set attribute="listFooter">
-            <div class="slds-lookup__item ">
-                <lightning:button variant="bare" class="listFooter" label="{!$Label.npo02.NewContact}" aura:id="listFooter"
-                    iconName="utility:add" iconPosition="left" onclick="{!c.handleNewContact}" />
+            <div class="slds-lookup__item">
+                <ul class="slds-lookup__list">
+                    <li id="newContact" class="slds-lookup__item" tabindex="0" onclick="{!c.handleNewContact}" onkeydown="{!c.handleKeyPress}" role="listitem">
+                        <span role="option">
+                            <div class="slds-media slds-tile slds-hint-parent">
+                                <div class="slds-media__figure">
+                                    <lightning:icon iconName="utility:add"
+                                        class="slds-icon_x-small" size="small"/>
+                                </div>
+                                <div class="slds-media__body">
+                                    <div class="slds-tile__detail slds-text-body_small">
+                                        <ul>
+                                            <li><ui:outputText value="{!$Label.npo02.NewContact}" /></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
+                
+
+                <!-- <lightning:button variant="bare" class="listFooter" label="{!$Label.npo02.NewContact}" aura:id="listFooter"
+                    iconName="utility:add" iconPosition="left" onclick="{!c.handleNewContact}" /> -->
             </div>
         </aura:set>
         

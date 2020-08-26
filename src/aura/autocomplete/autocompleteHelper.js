@@ -1,5 +1,10 @@
 ({
     handleInputChange: function(component) {
+        
+        if (component.get("v.disabledSearch")) {
+            component.set("v.disabledSearch", false);
+            return;
+        }
         this.setListVisibility(component, false);
 
         var keyword = component.find('input').get('v.value');
@@ -78,16 +83,27 @@
     handleArrowDownKey: function (component, helper) {
         const listbox = document.querySelector('[role="listbox"]');
         const elements = component.get("v.items");
-        let currentFocussedElement = listbox.getAttribute('aria-activedescendant');
+        var currentFocussedElement = listbox.getAttribute('aria-activedescendant');
         
         if (currentFocussedElement == null || currentFocussedElement == '') {
-            currentFocussedElement = elements[0].value.Id
-            listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+            if (elements[0]) {
+                currentFocussedElement = elements[0].value.Id
+                listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+                helper.fireNewItemFocus(currentFocussedElement);
+                return;
+            } else {
+                var showFooter = component.get('v.showListFooter');
+                if (showFooter) {
+                    helper.fireFocusOnFooter(component, listbox);
+                    return;
+                }
+            }
+            
         }
 
-        let newFocussedElement = null; 
+        var newFocussedElement = null; 
         
-        for (let i = 0; i < elements.length; i++) {
+        for (var i = 0; i < elements.length; i++) {
             if (elements[i].value.Id == currentFocussedElement) {
                 // I am in the middle of the list, setting the next descendant to the next element
                 if (i < elements.length - 1) {
@@ -96,7 +112,7 @@
                     break;
                 } else {
                     // reach the last element of the list, next one is footer(if present) or the first element if not present.
-                    let showFooter = component.get('v.showListFooter');
+                    var showFooter = component.get('v.showListFooter');
                     if (showFooter) {
                         helper.fireFocusOnFooter(component, listbox);
                         return;
@@ -118,8 +134,19 @@
         const elements = component.get("v.items");
         var currentFocussedElement = listbox.getAttribute('aria-activedescendant');
         if (currentFocussedElement == null || currentFocussedElement == '') {
-            currentFocussedElement = elements[0].value.Id
-            listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+            var showFooter = component.get('v.showListFooter');
+            if (showFooter) {
+                helper.fireFocusOnFooter(component, listbox);
+                return;
+            } else {
+                if (elements[elements.length - 1]) {
+                    currentFocussedElement = elements[elements.length - 1].value.Id
+                    listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+                    helper.fireNewItemFocus(currentFocussedElement);
+                    return;
+                }
+            }
+            
         }
         var newFocussedElement = null; 
         if (currentFocussedElement == null || currentFocussedElement == '') {
@@ -130,7 +157,7 @@
         for (var i = 0; i < elements.length; i++) { 
             if (elements[i].value.Id == currentFocussedElement) {
                 if (i == 0) {
-                    let showFooter = component.get('v.showListFooter');
+                    var showFooter = component.get('v.showListFooter');
                     if (showFooter) {
                         helper.fireFocusOnFooter(component, listbox);
                         return;
@@ -153,7 +180,7 @@
     },
 
     fireFocusOnFooter: function(component, listbox) {
-        let event = component.getEvent('reachFooter');
+        var event = component.getEvent('reachFooter');
         listbox.setAttribute('aria-activedescendant', "");
         event.fire();
     }
