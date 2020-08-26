@@ -6,8 +6,9 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/BDE_jqtablesorter/BDE_jqtablesorter.min.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/BDE_jqtablesorter/style.css')}"/>
 
+    <apex:includeLightning />
+
     <script type="text/javascript" >
-    
         var j$ = jQuery.noConflict();
      
         window.onunload = unloadpage;
@@ -186,8 +187,24 @@
                 theCheckbox.checked = false;
             });
             getSetUp();    
-        }   
- 
+        }
+
+        $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+           $Lightning.createComponent("{!namespace}" + ":bdeRetirementAlert",
+               {
+                  headerTitle : "{!$Label.bdeRetirementWarningHeader}",
+                  hasBackDrop : false,
+                  variant: "{!$Label.commonAssistiveError}",
+                  position: "right",
+                  confirmButtonTitle: "{!$Label.commonOkay}",
+                  confirmButtonVariant: "neutral",
+                  promptMessage: "{!$Label.bdeRetirementWarningBody}"
+               },
+               "retirementPrompt",
+               function () { }
+           );
+        });
+
     </script>
     <style>
         .ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
@@ -278,5 +295,6 @@
         </apex:pageBlock>
         </apex:outputPanel>
     </apex:form>
-     
+
+    <div id="retirementPrompt" style="position: fixed; right: 0; bottom: 0; padding-right: 1rem;"/>
 </apex:page>

@@ -280,4 +280,13 @@ public class UTIL_Namespace {
         } catch (Exception ex) {}
         return false;
     }
+
+    /*******************************************************************************************************
+     * @description Returns the namespace for a component (LWC, Aura or VisualForce)
+     * @return {String} component namespace
+     */
+    public static String getComponentNamespace () {
+        String namespace = getNamespace();
+        return String.isEmpty(namespace) ? 'c' : namespace;
+    }
 }
