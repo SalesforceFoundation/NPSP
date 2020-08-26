@@ -794,6 +794,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         sec=0
         expected = npsp_lex_locators['batch_status'].format(batch,status)
         error = npsp_lex_locators['batch_status'].format(batch,"Errors")
+        self.selenium.capture_page_screenshot()
         while True:
             i += 1
             if i > 18:
@@ -810,6 +811,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 except Exception:
                     sec= sec+30
                     print("Batch processing is not finished with {} status in {} seconds".format(status,sec))
+                    self.selenium.capture_page_screenshot()
 
 
     def get_npsp_settings_value(self,field_name):
