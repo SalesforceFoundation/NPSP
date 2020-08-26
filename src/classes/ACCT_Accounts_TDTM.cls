@@ -60,9 +60,16 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
         //set system Account fields
         configAccountForContact(listNew, listOld, triggerAction, listHHNew, listHHOld);
 
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
+            TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert)
+        ) {
+            return null;
+        }
+
         // deal with any name changes for Household Accounts
-        if (listHHNew.size() > 0)
+        if (listHHNew.size() > 0) {
             HH_HouseholdNaming.handleHHNameUpdates(listHHNew, listHHOld, triggerAction, objResult);
+        }
 
         return null;
     }
