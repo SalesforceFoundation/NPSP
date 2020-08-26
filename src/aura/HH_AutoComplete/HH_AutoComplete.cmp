@@ -49,10 +49,6 @@
                         </span>
                     </li>
                 </ul>
-                
-
-                <!-- <lightning:button variant="bare" class="listFooter" label="{!$Label.npo02.NewContact}" aura:id="listFooter"
-                    iconName="utility:add" iconPosition="left" onclick="{!c.handleNewContact}" /> -->
             </div>
         </aura:set>
         
