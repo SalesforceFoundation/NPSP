@@ -29,11 +29,11 @@ from cumulusci.core.config import TaskConfig
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 from BaseObjects import BaseNPSPPage
 
-from locators_48 import npsp_lex_locators as locators_48
+from locators_50 import npsp_lex_locators as locators_50
 from locators_49 import npsp_lex_locators as locators_49
 locators_by_api_version = {
-    48.0: locators_48,   # spring '20
     49.0: locators_49,   # summer '20
+    50.0: locators_50,   # winter '21
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
