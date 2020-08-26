@@ -27,15 +27,15 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                                                error=f"{title} link was not found on the page")  
         self.npsp.click_link_with_text(title)
         locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
-        self.selenium.wait_until_page_contains_element(locator,
+        self.selenium.wait_until_page_contains_element(locator, 
                                                error=f"click on {title} link was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()                                        
         
     def open_sub_link(self,title):  
-        """Waits for the link to load and clicks to make a part of page active"""
-        self.selenium.wait_until_page_contains(title,
+        """Waits for the link to load and clicks to make a part of page active"""  
+        self.selenium.wait_until_page_contains(title, 
                                                error=f"{title} link was not found on the page")  
-        self.npsp.click_link_with_text(title)
+        self.npsp.click_link_with_text(title)    
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"click on {title} sublink was not successful even after 30 seconds")
@@ -44,12 +44,13 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
     
     @capture_screenshot_on_error
     def click_settings_button (self,panel_id,btn_value):  
-        """clicks on the buttons on npsp settings object using panel id and button value"""
+        """clicks on the buttons on npsp settings object using panel id and button value"""      
         locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"{btn_value} did not appear on page")
         self.selenium.wait_until_element_is_visible(locator, timeout=60)
         self.salesforce._jsclick(locator)
+        self.selenium.capture_page_screenshot()   
     
     def select_value_from_list(self,list_name,value): 
         '''Selects value from list identified by list_name.
@@ -83,7 +84,9 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator = npsp_lex_locators["npsp_settings"]["checkbox"].format(page_name)
         self.selenium.wait_until_element_is_enabled(locator,error="Checkbox could not be found on the page")
         self.selenium.scroll_element_into_view(locator)
+        self.selenium.capture_page_screenshot()
         self.selenium.get_webelement(locator).click()
+        self.selenium.capture_page_screenshot()
     
     @capture_screenshot_on_error
     def wait_for_message(self,message):
