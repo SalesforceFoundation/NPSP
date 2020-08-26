@@ -49,7 +49,8 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"{btn_value} did not appear on page")
         self.selenium.wait_until_element_is_visible(locator, timeout=60)
-        self.salesforce._jsclick(locator)   
+        self.salesforce._jsclick(locator)
+        self.selenium.capture_page_screenshot()   
     
     def select_value_from_list(self,list_name,value): 
         '''Selects value from list identified by list_name.
@@ -83,7 +84,9 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator = npsp_lex_locators["npsp_settings"]["checkbox"].format(page_name)
         self.selenium.wait_until_element_is_enabled(locator,error="Checkbox could not be found on the page")
         self.selenium.scroll_element_into_view(locator)
+        self.selenium.capture_page_screenshot()
         self.selenium.get_webelement(locator).click()
+        self.selenium.capture_page_screenshot()
     
     @capture_screenshot_on_error
     def wait_for_message(self,message):
