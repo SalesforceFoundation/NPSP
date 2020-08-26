@@ -954,6 +954,7 @@
         <members>AutoNumber__c.Starting_Number__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
+        <members>Batch_Data_Entry_Settings__c.Viewed_Retirement_Alert__c</members>
         <members>Batch__c.Batch_Status__c</members>
         <members>Batch__c.Description__c</members>
         <members>Batch__c.Number_of_Items__c</members>
@@ -1903,6 +1904,8 @@
         <members>batchNumberSettingsHeaderDisplayFormat</members>
         <members>batchNumberSettingsHeaderFormats</members>
         <members>batchNumberSettingsSave</members>
+        <members>bdeRetirementWarningBody</members>
+        <members>bdeRetirementWarningHeader</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiAdditionalObjChildNotUpdated</members>
         <members>bdiAdditionalObjPredNotFound</members>
@@ -2155,6 +2158,7 @@
         <members>commonNext</members>
         <members>commonNo</members>
         <members>commonNoItems</members>
+        <members>commonOkay</members>
         <members>commonOpen</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
@@ -3768,6 +3772,7 @@
     <types>
         <members>batchProgress</members>
         <members>bdiBatchNumberSettings</members>
+        <members>bdeRetirementAlert</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
@@ -3836,6 +3841,7 @@
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilProgressBar</members>
+        <members>utilPrompt</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
         <members>utilTemplateBuilder</members>
