@@ -50,6 +50,7 @@ Enter a donation for an account with exact payment match
     ...                       Donation Amount=100
     Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
+    Sleep    2
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
     Wait For Locator    bge.edit_button    Donation Amount
