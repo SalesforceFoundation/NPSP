@@ -19,7 +19,6 @@ npsp_lex_locators={
     },
     "record": {
         'button':"//lightning-button/button[@title='{}']",
-        'headerbutton':"//lightning-button/button[contains(text(),'{}')]",
         'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
@@ -181,7 +180,6 @@ npsp_lex_locators={
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
         },
     'npsp_settings':{
-        'header':'//h3[text()="Nonprofit Success Pack Application Settings"]',
         'main_menu':'//div[@class="slds-tree__branch slds-tree__item"][.//a[text()="{}"]]',
         'panel_sub_link':'//ul/li[contains(@class,"slds-is-selected")]/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
