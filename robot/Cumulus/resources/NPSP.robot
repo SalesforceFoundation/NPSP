@@ -287,36 +287,60 @@ API Query Opportunity For Recurring Donation
     ...                &{fields}
     [return]           @{object}
 
-Validate Batch Process When CRLP Unchecked
-    [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled
-    Open NPSP Settings           Bulk Data Processes                Rollup Donations Batch
-    Click Settings Button        idPanelOppBatch                    Run Batch
-    Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
-    Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
-    Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
-    Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
+# Validate Batch Process When CRLP Unchecked
+#     [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled
+#     Open NPSP Settings           Bulk Data Processes                Rollup Donations Batch
+#     Click Settings Button        idPanelOppBatch                    Run Batch
+#     Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
+#     Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
+#     Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
+#     Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
 
-Validate Batch Process When CRLP Checked
-    [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is enabled
-    Open NPSP Settings           Bulk Data Processes                      Rollup Donations Batch
-    Click Settings Button        idPanelOppBatch                          Run Batch
-    Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
-    Wait For Batch To Process    CRLP_RD_BATCH                            Completed
-    Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
-    Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
-    Wait For Batch To Process    CRLP_Account_BATCH                       Completed
-    Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
+# Validate Batch Process When CRLP Checked
+#     [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is enabled
+#     Open NPSP Settings           Bulk Data Processes                      Rollup Donations Batch
+#     Click Settings Button        idPanelOppBatch                          Run Batch
+#     Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
+#     Wait For Batch To Process    CRLP_RD_BATCH                            Completed
+#     Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
+#     Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
+#     Wait For Batch To Process    CRLP_Account_BATCH                       Completed
+#     Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
+
+# Run Donations Batch Process
+#     [Documentation]              Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked
+#     ...                          else runs Validate Batch Process When CRLP UnChecked
+#     Open NPSP Settings           Donations                     Customizable Rollups
+#     ${crlp_enabled} =            Check Crlp Not Enabled By Default
+
+#     #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
+#     Run Keyword if      ${crlp_enabled} != True
+#         ...             Validate Batch Process When CRLP Unchecked
+#         ...     ELSE    Validate Batch Process When CRLP Checked
 
 Run Donations Batch Process
-    [Documentation]              Checks if customizable rollups is enabled and if enabled runs Validate Batch Process When CRLP Checked
-    ...                          else runs Validate Batch Process When CRLP UnChecked
-    Open NPSP Settings           Donations                     Customizable Rollups
-    ${crlp_enabled} =            Check Crlp Not Enabled By Default
-
+    [Documentation]    Checks if customizable rollups is enabled via API and if enabled runs CRLP batch processes
+    ...                else runs RLLP Batch Processes
+    ${ns} =            Get NPSP Namespace Prefix
+    @{records} =       Salesforce Query           ${ns}Customizable_Rollup_Settings__c
+    ...                select=${ns}Customizable_Rollups_Enabled__c
+    &{crlp} =          Get From List              ${records}  0
     #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
-    Run Keyword if      ${crlp_enabled} != True
-        ...             Validate Batch Process When CRLP Unchecked
-        ...     ELSE    Validate Batch Process When CRLP Checked
+    Open NPSP Settings           Bulk Data Processes                      Rollup Donations Batch
+    Click Settings Button        idPanelOppBatch                          Run Batch
+    Run Keyword if     '${crlp}[${ns}Customizable_Rollups_Enabled__c]'!='True'
+    ...                Run Keywords
+    ...                Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
+    ...         AND    Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
+    ...         AND    Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
+    ...         AND    Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
+    ...         ELSE   Run Keywords
+    ...                Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
+    ...         AND    Wait For Batch To Process    CRLP_RD_BATCH                            Completed
+    ...         AND    Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
+    ...         AND    Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
+    ...         AND    Wait For Batch To Process    CRLP_Account_BATCH                       Completed
+    ...         AND    Wait For Batch To Process    CRLP_Contact_BATCH                       Completed
 
 Scroll Page To Location
     [Documentation]     Scrolls window by pixels using javascript
