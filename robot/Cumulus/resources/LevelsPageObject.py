@@ -99,4 +99,6 @@ class LevelDetailPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail view did not open in 1 min")
         self.selenium.location_should_contain("/lightning/r/",message="Current page is not Level record detail view")
+        spinner = npsp_lex_locators['dropdown_spinner']
+        self.selenium.wait_until_element_is_not_visible(spinner)
 
