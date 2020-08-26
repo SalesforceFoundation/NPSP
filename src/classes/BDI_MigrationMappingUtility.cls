@@ -379,6 +379,44 @@ public without sharing class BDI_MigrationMappingUtility {
         Map<String, String> dataImportObjectDeveloperNameByLabel =
                 helper.getDataImportObjectDeveloperNamesByLabel();
 
+        //
+        // CREATE OBJECT MAPPING INFO        
+        //
+        // if no RD migrated record found        
+        if (!dataImportObjectDeveloperNameByLabel.containsKey('Recurring Donation')) {
+
+            // get all default object mappings 
+            Map<String, Data_Import_Object_Mapping__mdt> defaultObjectMappings =
+                        helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
+
+            // get rd object mapping
+            Data_Import_Object_Mapping__mdt rdObjectMapping = defaultObjectMappings.get('Recurring_Donation');
+
+            if (rdObjectMapping!=null) { 
+        
+                // create instance of object mapping using RD object
+                BDI_MigrationMappingUtility.DataImportObjectMapping diom = 
+                    new BDI_MigrationMappingUtility.DataImportObjectMapping(rdObjectMapping, true);                
+
+                // get metadata object to be enqueued
+                Metadata.CustomMetadata objectMetadata = diom.getMetadataRecord();
+                String uniqueName = objectMetadata.fullName;
+                uniqueName =  uniqueName.split('\\.')[uniqueName.split('\\.').size()-1] ;              
+                                                
+                // add new custom object mapping so we can process fields for the same object
+                dataImportObjectDeveloperNameByLabel.put('Recurring Donation',uniqueName);
+
+                // enqueue object to deploy
+                queuedMetadataTypesForDeploy.add(objectMetadata);
+            
+            }
+
+        }
+
+        //
+        // CREATE FIELD MAPPING INFO        
+        //
+
         // Collect current Default Field Mapping and Migrated Custom Field Mapping records
         Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByFieldMappingKey =
                 helper.getFieldMappingStringsBySetDeveloperName(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
