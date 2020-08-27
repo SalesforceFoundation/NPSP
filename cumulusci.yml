@@ -1165,7 +1165,7 @@ flows:
                     generator_yaml: datasets/rd2/data_factory_with_rd2.yml
                     num_records: 100
                     num_records_tablename: Contact
-                    batch_size: 1000
+                    batch_size: 2500
                     bulk_mode: parallel
             9:
                 task: restore_triggers
