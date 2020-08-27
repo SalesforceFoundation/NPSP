@@ -67,13 +67,19 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """ Verify we are on the Recurring Donations Detail page
             by verifying that the url contains '/view'
         """
-        self.selenium.location_should_contain(
-            "/lightning/r/npe03__Recurring_Donation__c/",
-            message="Current page is not a Recurring Donations record view",
-        )
-        locator = npsp_lex_locators["bge"]["button"].format("Edit")
-        edit_button = self.selenium.get_webelement(locator)
-        self.selenium.wait_until_page_contains_element(edit_button, error="Recurring donations Details page did not load fully")
+        for i in range(3):
+            self.selenium.location_should_contain(
+                "/lightning/r/npe03__Recurring_Donation__c/",
+                message="Current page is not a Recurring Donations record view",
+            )
+            locator = npsp_lex_locators["bge"]["button"].format("Edit")
+            edit_button = self.selenium.get_webelement(locator)
+            self.selenium.wait_until_page_contains_element(edit_button, error="Recurring donations Details page did not load fully")
+            if self.npsp.check_if_element_displayed(edit_button):
+                return
+            else:
+                self.selenium.reload_page()
+                i += 1
 
     def refresh_opportunities(self):
         """Clicks on more actions dropdown and click the given title"""

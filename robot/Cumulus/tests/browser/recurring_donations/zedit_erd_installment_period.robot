@@ -4,9 +4,9 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 Suite Setup     Run keywords
+...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable RD2
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
@@ -57,6 +57,7 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
+    Current Page Should be                  Details    npe03__Recurring_Donation__c
     Edit Recurring Donation Status
     ...                                     Recurring Period=Advanced
     ...                                     Every=3
