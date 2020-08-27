@@ -213,7 +213,7 @@ npsp_lex_locators={
         'button':'//div[contains(@class,"active")]/descendant::button[text()="{}"]',
         'month':"//div[@class='slds-align-middle']//button[@title='{}']",
         'date':"//div[contains(@class,'slds-datepicker')]//table[@class='slds-datepicker__month']//span[text()='{}']",
-        'card-header':'//article[./div[@class="slds-card__body"]//lightning-formatted-text[text()="{}"]]/header',
+        'card-header':'//article[./div[@class="slds-card__body"]//lightning-formatted-text[text()="{}"]]//header',
         'edit_button':'//td[@data-label="{}"]//button',
         'edit_field':'//lightning-primitive-datatable-iedit-panel//input',
         'count':'//div[contains(@class,"BGE_DataImportBatchEntry")]//tbody/tr',

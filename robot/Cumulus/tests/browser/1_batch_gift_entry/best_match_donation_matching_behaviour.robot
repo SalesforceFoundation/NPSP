@@ -16,11 +16,9 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 Best Match Donation Matching Behaviour
 
     [tags]  stable
-    Go To Page                        Listing                      Batch_Gift_Entry
-    # Click Link  &{batch}[Name]
-    Click Link With Text    ${batch}[Name]
-    Switch Window       NEW
-    Wait For Locator    bge.title    Batch Gift Entry
+    Go To Page             Details           DataImportBatch__c         object_id=${batch}[Id]
+    # Wait For Locator    bge.title    Batch Gift Entry
+    Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
     Search Field By Value    Search Accounts    ${account}[Name]
     Wait Until Modal Is Open
@@ -74,7 +72,7 @@ Best Match Donation Matching Behaviour
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     # Verify that the gift matched to existing opportunity and updated it to closed won status and payment is paid
-    Go To Record Home    ${opp_match}[Id]
+    Go To Page      Details     Opportunity     object_id=${opp_match}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
@@ -89,7 +87,7 @@ Best Match Donation Matching Behaviour
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
     # Verify that the opportunity that does not match is still in prospecting stage
-    Go To Record Home    ${opp_dont_match}[Id]
+    Go To Page      Details     Opportunity     object_id=${opp_dont_match}[Id]
     Navigate To And Validate Field Value    Amount    contains    $50.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
