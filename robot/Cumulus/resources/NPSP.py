@@ -3,6 +3,7 @@ import warnings
 import time
 import random
 import string
+import re
 from datetime import datetime
 from datetime import timedelta
 
@@ -37,6 +38,7 @@ locators_by_api_version = {
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
+OID_REGEX = r"^(%2F)?([a-zA-Z0-9]{15,18})$"
 
 @selenium_retry
 class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
@@ -1537,3 +1539,17 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         actual_count=len(records)
         if actual_count != int(count):
             raise Exception(f'Expected total count of records to be {count} but found {actual_count}')
+
+    def get_record_id_from_field_link(self,locator,field):
+        """Using the locator for field, gets the link and using the href url of the link,
+        gets the record id and returns it.
+        Ex: Get Record Id From Field link   bge.value   Donation"""
+        value=self.return_locator_value(locator,field)
+        locator=npsp_lex_locators['link-text'].format(value)
+        url=self.selenium.get_webelement(locator).get_attribute('href')
+        for part in url.split("/"):
+            oid_match = re.match(OID_REGEX, part)
+            if oid_match is not None:
+                return oid_match.group(2)
+        raise AssertionError(f"Could not parse record id from url: {url}")
+
