@@ -35,8 +35,10 @@ Enter a donation for an account with exact payment match
     Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Search Field By Value    Search Accounts    ${account}[Name]
-    Wait Until Modal Is Open
+    Wait Until Keyword Succeeds          1 minute
+        ...                              5 seconds
+        ...                              Search Field And Wait For Modal    Search Accounts    ${account}[Name]
+
     Click Link    ${account}[Name]
     Click Link With Text    Review Donations
     ${pay_no}    Get BGE Card Header    ${opportunity}[Name]
@@ -48,6 +50,7 @@ Enter a donation for an account with exact payment match
     ...                       Donation Amount=100
     Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
+    Sleep    2
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
     Wait For Locator    bge.edit_button    Donation Amount

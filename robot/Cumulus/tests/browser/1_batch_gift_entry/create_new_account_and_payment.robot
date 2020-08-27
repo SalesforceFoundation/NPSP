@@ -28,8 +28,10 @@ Create a new account and enter payment information
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
     ${acc_name} =  Generate Random String
-    Search Field By Value    Search Accounts    ${acc_name}
-    Wait Until Modal Is Open
+    Wait Until Keyword Succeeds          1 minute
+        ...                              5 seconds
+        ...                              Search Field And Wait For Modal    Search Accounts    ${acc_name}
+
     Click Element    title:Search Accounts...
     Wait For Locator    record.edit_button    New Account
     Click Element    title=New Account
