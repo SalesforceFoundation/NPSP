@@ -34,8 +34,11 @@ Select a payment for a contact make grid changes and process it
     # Click Link  &{batch}[Name]
     Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
-    Search Field By Value    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
-    Wait Until Modal Is Open
+    Wait Until Keyword Succeeds          1 minute
+           ...                           5 seconds
+           ...                           Search Field And Wait For Modal    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
+
+
     Click Link    ${contact}[FirstName] ${contact}[LastName]
     Click Link With Text    Review Donations
     ${pay_no}    Get BGE Card Header    ${opportunity}[Name]
