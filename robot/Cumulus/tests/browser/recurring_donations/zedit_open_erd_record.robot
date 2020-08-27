@@ -7,9 +7,9 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run keywords
+...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable RD2
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
@@ -54,6 +54,7 @@ Edit An Enhanced Recurring donation record of type open
     ...                                    npe03__Recurring_Donation__c
     ...                                    object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
+    Current Page Should be                 Details    npe03__Recurring_Donation__c
     Edit Recurring Donation Status
     ...                                    Status=Closed
     ...                                    Status Reason=Commitment Completed

@@ -22,8 +22,10 @@ Best Match Donation Matching Behaviour
     Switch Window       NEW
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Search Field By Value    Search Accounts    ${account}[Name]
-    Wait Until Modal Is Open
+    Wait Until Keyword Succeeds          1 minute
+        ...                              5 seconds
+        ...                              Search Field And Wait For Modal    Search Accounts    ${account}[Name]
+
     Click Link    ${account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    ${opp_match}[Name]
