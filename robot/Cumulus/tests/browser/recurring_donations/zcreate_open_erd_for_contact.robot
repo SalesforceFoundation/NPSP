@@ -3,9 +3,10 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 Suite Setup     Run keywords
+...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable RD2
+
 Suite Teardown  Delete Records and Close Browser
 
 
