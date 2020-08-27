@@ -115,8 +115,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     buildVisualforceOriginUrls() {
         let url = `https://${this.domainInfo.orgDomain}--c.visualforce.com`;
-        let alternateUrl = `https://${this.domainInfo.orgDomain}--c.
-        ${this.domainInfo.podName}.visual.force.com`;
+        let alternateUrl = `https://${this.domainInfo.orgDomain}--c.${this.domainInfo.podName}.visual.force.com`;
         const currentNamespace = getNamespace(
             DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
         if (currentNamespace) {
