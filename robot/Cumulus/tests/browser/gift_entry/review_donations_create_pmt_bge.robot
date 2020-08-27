@@ -101,6 +101,7 @@ Review Donation And Create Payment For Batch Gift
     ...                                  Donation Date=Today
     Click Button                         Save & Enter New Gift
     Verify Gift Count                    2
+    Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
     Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
     Wait For Batch To Process            BDI_DataImport_BATCH            Completed
