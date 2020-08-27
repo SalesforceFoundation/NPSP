@@ -1,6 +1,6 @@
 import {api, LightningElement, track} from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
+import getOrgDomainInfo from '@salesforce/apex/GE_GiftEntryController.getOrgDomainInfo';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import {format, getNamespace, isFunction} from 'c/utilCommon';
@@ -52,8 +52,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     async connectedCallback() {
         this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(await getPaymentTransactionStatusValues()));
-        this.domain = await getOrgDomain();
-        this._visualforceOrigins = this.buildVisualforceOriginUrls(this.domain);
+        this.domainInfo = await getOrgDomainInfo();
+        this._visualforceOriginUrls = this.buildVisualforceOriginUrls();
     }
 
     renderedCallback() {
@@ -113,9 +113,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * make sure we're only listening for messages from the correct source in the
     * registerPostMessageListener method.
     */
-    buildVisualforceOriginUrls(domain) {
-        let url = `https://${domain}--c.visualforce.com`;
-        let alternateUrl = `https://${domain}--c.visual.force.com`;
+    buildVisualforceOriginUrls() {
+        let url = `https://${this.domainInfo.orgDomain}--c.visualforce.com`;
+        let alternateUrl = `https://${this.domainInfo.orgDomain}--c.
+        ${this.domainInfo.podName}.visual.force.com`;
         const currentNamespace = getNamespace(
             DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
         if (currentNamespace) {
