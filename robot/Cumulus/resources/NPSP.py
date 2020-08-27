@@ -3,6 +3,7 @@ import warnings
 import time
 import random
 import string
+import re
 from datetime import datetime
 from datetime import timedelta
 
@@ -37,6 +38,7 @@ locators_by_api_version = {
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
+OID_REGEX = r"^(%2F)?([a-zA-Z0-9]{15,18})$"
 
 @selenium_retry
 class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
@@ -1118,8 +1120,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
          field = self.selenium.get_webelement(xpath)
          self.selenium.clear_element_text(field)
          field.send_keys(value)
-         time.sleep(2)
+         time.sleep(3)
          field.send_keys(Keys.ENTER)
+
+
+    def search_field_and_wait_for_modal(self, fieldname, value):
+        """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
+        and wait for the modal to appear.
+		"""
+        xpath = npsp_lex_locators["placeholder"].format(fieldname)
+        field = self.selenium.get_webelement(xpath)
+        self.selenium.clear_element_text(field)
+        field.send_keys(value)
+        time.sleep(3)
+        field.send_keys(Keys.ENTER)
+        self.salesforce.wait_until_modal_is_open()
+
 
     def save_current_record_id_for_deletion(self,object_name):
         """Gets the current page record id and stores it for specified object
@@ -1480,6 +1496,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_show_more_actions_button(self,title):
         """Clicks on more actions dropdown and click the given title"""
         locator=npsp_lex_locators['link-contains'].format("more actions")
+        self.selenium.wait_until_element_is_visible(locator)
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains(title)
         link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
@@ -1522,3 +1539,17 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         actual_count=len(records)
         if actual_count != int(count):
             raise Exception(f'Expected total count of records to be {count} but found {actual_count}')
+
+    def get_record_id_from_field_link(self,locator,field):
+        """Using the locator for field, gets the link and using the href url of the link,
+        gets the record id and returns it.
+        Ex: Get Record Id From Field link   bge.value   Donation"""
+        value=self.return_locator_value(locator,field)
+        locator=npsp_lex_locators['link-text'].format(value)
+        url=self.selenium.get_webelement(locator).get_attribute('href')
+        for part in url.split("/"):
+            oid_match = re.match(OID_REGEX, part)
+            if oid_match is not None:
+                return oid_match.group(2)
+        raise AssertionError(f"Could not parse record id from url: {url}")
+

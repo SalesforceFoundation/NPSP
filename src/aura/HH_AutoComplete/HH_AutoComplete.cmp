@@ -31,7 +31,7 @@
         <aura:set attribute="listFooter">
             <div class="slds-lookup__item">
                 <ul class="slds-lookup__list">
-                    <li id="newContact" class="slds-lookup__item" tabindex="0" onclick="{!c.handleNewContact}" onkeydown="{!c.handleKeyPress}" role="listitem">
+                    <li id="newContact" class="slds-lookup__item" tabindex="0" onclick="{!c.handleNewContact}" onkeydown="{!c.handleKeyPress}" role="listitem"  data-qa-locator="newContact">
                         <span role="option">
                             <div class="slds-media slds-tile slds-hint-parent">
                                 <div class="slds-media__figure">

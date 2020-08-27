@@ -133,20 +133,14 @@
         const listbox = document.querySelector('[role="listbox"]');
         const elements = component.get("v.items");
         var currentFocussedElement = listbox.getAttribute('aria-activedescendant');
+        
         if (currentFocussedElement == null || currentFocussedElement == '') {
-            var showFooter = component.get('v.showListFooter');
-            if (showFooter) {
-                helper.fireFocusOnFooter(component, listbox);
+            if (elements[elements.length - 1]) {
+                currentFocussedElement = elements[elements.length - 1].value.Id
+                listbox.setAttribute('aria-activedescendant', currentFocussedElement);
+                helper.fireNewItemFocus(currentFocussedElement);
                 return;
-            } else {
-                if (elements[elements.length - 1]) {
-                    currentFocussedElement = elements[elements.length - 1].value.Id
-                    listbox.setAttribute('aria-activedescendant', currentFocussedElement);
-                    helper.fireNewItemFocus(currentFocussedElement);
-                    return;
-                }
             }
-            
         }
         var newFocussedElement = null; 
         if (currentFocussedElement == null || currentFocussedElement == '') {
