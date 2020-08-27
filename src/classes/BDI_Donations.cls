@@ -260,7 +260,15 @@ public class BDI_Donations {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                continue;
             }
-            
+
+            //If there are no Donation Fields populated and no donation amount populated then
+            //do not continue with donation processing.
+            if (dataImport.Donation_Amount__c == null &&
+                !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,
+                                                                        dataImportFieldToOpportunityField)) {
+                continue;
+            }
+
             // skip di's that have an OppId or PaymentId, but we were told to do no matching.  in this case
             // they must have already been created for this di on a previous run, and we don't want to create another.
             if ((dataImport.DonationImported__c != null || dataImport.PaymentImported__c != null) && matchBehavior == BDI_DataImport_API.DoNotMatch) {

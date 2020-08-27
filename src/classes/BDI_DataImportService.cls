@@ -2005,6 +2005,26 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description loops through fields provided in Map and determines if any of them have a value.  If at least
+    * one field does, then it returns true.
+    * @param di the data import record to check
+    * @param diFieldToTargetFieldMap the mapping of DI field to target field that will be evaluated.
+    * @return Boolean whether any fields were populated
+    */
+    public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di, 
+                                                            Map<String,String> diFieldToTargetFieldMap) {
+        Boolean isPopulated = false;
+        for (String diField : diFieldToTargetFieldMap.keySet()){
+            if (di.get(diField) != null) {
+                isPopulated = true;
+                break;
+            }
+        }
+        
+        return isPopulated;
+    }
+
+    /*******************************************************************************************************
     * @description our exception object for Field Level Security errors.
     */
     public class FLSException extends Exception {}

@@ -265,7 +265,18 @@
             </valueSetDefinition>
         </valueSet>
     </fields>
-        <fields>
+    <fields>
+        <fullName>DisableFirstInstallment__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Prevents creation of the first installment Opportunity for a new Recurring Donation, regardless of the Installment Opportunity Auto-Creation setting in NPSP Settings.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Prevents creation of the first installment Opportunity for a new Recurring Donation, regardless of the Installment Opportunity Auto-Creation setting in NPSP Settings.</inlineHelpText>
+        <label>Disable First Installment</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>EndDate__c</fullName>
         <description>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</description>
         <externalId>false</externalId>

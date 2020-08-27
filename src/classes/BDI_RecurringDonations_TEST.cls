@@ -1,7 +1,7 @@
 @isTest
 private class BDI_RecurringDonations_TEST {
     static final String RD_STATUS_CLOSED = 'Closed';
-
+    private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
     @TestSetup
     static void setupTestData(){
         Campaign testCampaign = new Campaign(Name = 'TestGroupA Campaign',
@@ -10,6 +10,7 @@ private class BDI_RecurringDonations_TEST {
                                         EndDate = Date.today().addDays(10));
         insert testCampaign;
 
+        //RD with contact1 as donor and with donation being created at same time.
         DataImport__c testDataImportA = 
                 new DataImport__c(
                     Contact1_Firstname__c = 'Susie',
@@ -21,16 +22,19 @@ private class BDI_RecurringDonations_TEST {
                     Contact1_Preferred_Phone__c = '555-567-0001',
                     Recurring_Donation_Amount__c = 100,
                     Recurring_Donation_Date_Established__c = System.Date.Today(),
-                    Recurring_Donation_Day_of_Month__c = '10',
+                    Recurring_Donation_Day_of_Month__c = String.valueOf(System.Date.Today().addDays(3).day()),
                     Recurring_Donation_Installment_Frequency__c = 1,
                     Recurring_Donation_Installment_Period__c = 'Monthly',	
-                    Recurring_Donation_Effective_Date__c = System.Date.Today().addDays(5),
+                    Recurring_Donation_Effective_Date__c = System.Date.Today(),
                     Recurring_Donation_End_Date__c = null,
                     Recurring_Donation_Planned_Installments__c = null,
                     Recurring_Donation_Recurring_Type__c = null,
                     Recurring_Donation_Status__c = null,
                     Recurring_Donation_Status_Reason__c = null,	
                     Donation_Donor__c = 'Contact1',
+                    Donation_Amount__c = 100,
+                    Donation_Date__c = System.Date.Today(),
+                    DonationCampaignImported__c = testCampaign.Id,
                     Home_City__c = 'Fakeville',
                     Home_Country__c = 'United States',
                     Home_State_Province__c = 'California',
@@ -40,6 +44,7 @@ private class BDI_RecurringDonations_TEST {
                     Payment_Check_Reference_Number__c = '453',
                     Payment_Method__c = 'Check');
 
+        //RD with Contact1 as donor, yearly schedule, and creation of new campaign
         DataImport__c testDataImportB = 
                 new DataImport__c(
                     Contact1_Firstname__c = 'Joe',
@@ -60,7 +65,8 @@ private class BDI_RecurringDonations_TEST {
                     Recurring_Donation_Recurring_Type__c = null,
                     Recurring_Donation_Status__c = null,
                     Recurring_Donation_Status_Reason__c = null,	
-                    Donation_Donor__c = 'Contact1',
+                    Donation_Campaign_Name__c = 'Test Campaign 2',
+                    Donation_Donor__c = null, //leaving this null to test defaulting of contact1
                     Home_City__c = 'Fakeville',
                     Home_Country__c = 'United States',
                     Home_State_Province__c = 'California',
@@ -70,6 +76,7 @@ private class BDI_RecurringDonations_TEST {
                     Payment_Check_Reference_Number__c = '453',
                     Payment_Method__c = 'Check');
 
+        //RD with Account 1 as donor 
         DataImport__c testDataImportC = 
                 new DataImport__c(Account1_City__c = 'Faketown',
                     Account1_Country__c = 'United States',
@@ -93,31 +100,61 @@ private class BDI_RecurringDonations_TEST {
                     Donation_Donor__c = 'Account1',
                     Payment_Check_Reference_Number__c = '453',
                     Payment_Method__c = 'Check');
-        insert new DataImport__c[]{testDataImportA,testDataImportB,testDataImportC};
+
+        //RD with Account1 as donor, but no donor info
+        DataImport__c testDataImportD = 
+                    new DataImport__c(Account1_City__c = null,
+                        Account1_Country__c = null,
+                        Account1_Name__c = null,
+                        Account1_Phone__c = null,
+                        Account1_State_Province__c = null,
+                        Account1_Street__c = null,    
+                        Account1_Website__c = null,
+                        Account1_Zip_Postal_Code__c = null,
+                        Recurring_Donation_Amount__c = 400,
+                        Recurring_Donation_Date_Established__c = System.Date.Today(),
+                        Recurring_Donation_Day_of_Month__c = '12',
+                        Recurring_Donation_Installment_Frequency__c = 1,
+                        Recurring_Donation_Installment_Period__c = 'Monthly',	
+                        Recurring_Donation_Effective_Date__c = System.Date.Today().addDays(5),
+                        Recurring_Donation_End_Date__c = null,
+                        Recurring_Donation_Planned_Installments__c = null,
+                        Recurring_Donation_Recurring_Type__c = null,
+                        Recurring_Donation_Status__c = null,
+                        Recurring_Donation_Status_Reason__c = null,	
+                        Donation_Donor__c = 'Account1',
+                        Payment_Check_Reference_Number__c = '453',
+                        Payment_Method__c = 'Check');
+        insert new DataImport__c[]{testDataImportA,testDataImportB,testDataImportC,testDataImportD};
         
     }
 
 
     @isTest
-    static void shouldCreateRecurringDonation() {
+    static void shouldCreateAndUpdateRecurringDonation() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        //Disabling first installment creation for this test.  Will reenable when the disable
+        //first installment field on the RD is working.
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
+        });
+
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
             BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
-        //DataImport__c[] disForProcessing = [SELECT Id FROM DataImport__c LIMIT 10];
-
         Test.StartTest();
-
-        //npsp.BDI_DataImport_API.processDataImportRecords(dis, disForProcessing, false);
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
-        DataImport__c testDataImportAResult;
-        DataImport__c testDataImportBResult;
-        DataImport__c testDataImportCResult;
+        DataImport__c testDIResultA;
+        DataImport__c testDIResultB;
+        DataImport__c testDIResultC;
+        DataImport__c testDIResultD;
 
         for (DataImport__c di : [SELECT Id,
                                         Status__c,
@@ -137,7 +174,10 @@ private class BDI_RecurringDonations_TEST {
                                         DonationCampaignImported__c,
                                         DonationImportStatus__c,
                                         DonationImported__c,
+                                        Donation_Donor__c,
+                                        Recurring_Donation_Amount__c,
                                         RecurringDonationImported__c,
+                                        RecurringDonationImportStatus__c,
                                         HomeAddressImportStatus__c,
                                         HomeAddressImported__c,
                                         HouseholdAccountImported__c,
@@ -145,25 +185,70 @@ private class BDI_RecurringDonations_TEST {
                                         PaymentImported__c
                                     FROM DataImport__c]) {
             if (di.Contact1_Lastname__c == 'TestGroupA01') {
-                testDataImportAResult = di;
+                testDIResultA = di;
             } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
-                testDataImportBResult = di;
+                testDIResultB = di;
             } else if (di.Account1_Name__c == 'TestGroupC Org 1') {
-                testDataImportCResult = di;
+                testDIResultC = di;
+            } else if (di.Recurring_Donation_Amount__c == 400) {
+                testDIResultD = di;
             }
         }
 
-        System.assertEquals(null,testDataImportAResult.FailureInformation__c);
-        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportAResult.Status__c);
-        System.assertNotEquals(null,testDataImportAResult.Contact1Imported__c);
-        System.assertEquals(System.label.bdiCreated,testDataImportAResult.Contact1ImportStatus__c);
-        //System.assertNotEquals(null,testDataImportAResult.DonationCampaignImported__c);
-        //System.assertEquals(System.label.bdiMatched,testDataImportAResult.DonationCampaignImportStatus__c);
-        //System.assertNotEquals(null,testDataImportAResult.DonationImported__c);
-        System.assertEquals(System.label.bdiCreated,testDataImportAResult.DonationImportStatus__c);
-        System.assertNotEquals(null,testDataImportAResult.HouseholdAccountImported__c);
-        System.assertNotEquals(null,testDataImportAResult.HomeAddressImported__c);
+        //RD with contact1 as donor and with donation being created at same time.
+        System.assertEquals(null,testDIResultA.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultA.Status__c);
+        System.assertNotEquals(null,testDIResultA.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultA.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDIResultA.RecurringDonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultA.RecurringDonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultA.DonationCampaignImported__c);
+        System.assertNotEquals(null,testDIResultA.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultA.DonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultA.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDIResultA.HomeAddressImported__c);
 
+        //RD with Contact1 as donor, yearly schedule, and creation of new campaign
+        System.assertEquals(null,testDIResultB.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultB.Status__c);
+        System.assertNotEquals(null,testDIResultB.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultB.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDIResultB.RecurringDonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultB.RecurringDonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultB.DonationCampaignImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultB.DonationCampaignImportStatus__c);
+        System.assertEquals('Contact1',testDIResultB.Donation_Donor__c); //should have been defaulted
+        System.assertEquals(null,testDIResultB.DonationImported__c);
+        System.assertEquals(null,testDIResultB.DonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultB.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDIResultB.HomeAddressImported__c);
+
+        //RD with Account 1 as donor 
+        System.assertEquals(null,testDIResultC.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultC.Status__c);
+        System.assertNotEquals(null,testDIResultC.Account1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultC.Account1ImportStatus__c);
+        System.assertEquals(null,testDIResultC.DonationCampaignImported__c);
+        System.assertEquals(null,testDIResultC.DonationCampaignImportStatus__c);
+        System.assertNotEquals(null,testDIResultC.RecurringDonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultC.RecurringDonationImportStatus__c);
+        System.assertEquals(null,testDIResultC.DonationImported__c);
+        System.assertEquals(null,testDIResultC.DonationImportStatus__c);
+        System.assertEquals(null,testDIResultC.HouseholdAccountImported__c);
+        System.assertEquals(null,testDIResultC.HomeAddressImported__c);
+
+        //RD with Account1 as donor, but no donor info
+        System.assertNotEquals(null,testDIResultD.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiFailed,testDIResultD.Status__c);
+        System.assertEquals(null,testDIResultD.Account1Imported__c);
+        System.assertEquals(null,testDIResultD.Account1ImportStatus__c);
+        System.assertEquals(null,testDIResultD.RecurringDonationImported__c);
+        System.assert(
+            testDIResultD.RecurringDonationImportStatus__c.contains(System.label.bdiErrorInvalidDonor));
+        System.assertEquals(null,testDIResultD.DonationImported__c);
+        System.assertEquals(null,testDIResultD.DonationImportStatus__c);
+        System.assertEquals(null,testDIResultD.HouseholdAccountImported__c);
+        System.assertEquals(null,testDIResultD.HomeAddressImported__c);
 
         npe03__Recurring_Donation__c rdA;
         npe03__Recurring_Donation__c rdB;
@@ -175,6 +260,7 @@ private class BDI_RecurringDonations_TEST {
                                                         npe03__Organization__c,
                                                         InstallmentFrequency__c,
                                                         npe03__Installment_Period__c,
+                                                        npe03__Recurring_Donation_Campaign__c,
                                                         RecurringType__c,
                                                         CommitmentId__c,
                                                         StartDate__c,
@@ -188,77 +274,89 @@ private class BDI_RecurringDonations_TEST {
 
         for (npe03__Recurring_Donation__c rd : rdResults){
             System.debug('recurring donation: ' + rd);
-            if (rd.Id == testDataImportAResult.RecurringDonationImported__c) {
+            if (rd.Id == testDIResultA.RecurringDonationImported__c) {
                 rdA = rd;
-            } else if (rd.Id == testDataImportBResult.RecurringDonationImported__c) {
+            } else if (rd.Id == testDIResultB.RecurringDonationImported__c) {
                 rdB = rd;
-            } else if (rd.Id == testDataImportCResult.RecurringDonationImported__c) {
+            } else if (rd.Id == testDIResultC.RecurringDonationImported__c) {
                 rdC = rd;
             }
         }
 
         System.assertNotEquals(null,rdA);
-        System.assertEquals(testDataImportAResult.Contact1Imported__c, rdA.npe03__Contact__c);
+        System.assertEquals(testDIResultA.Contact1Imported__c, rdA.npe03__Contact__c);
         System.assertEquals(100, rdA.npe03__Amount__c);
         System.assertEquals(null,rdA.CommitmentId__c);
-        System.assertEquals(null,rdA.npe03__Organization__c);
+        System.assertEquals(testDIResultA.HouseholdAccountImported__c,rdA.npe03__Organization__c);
         System.assertEquals('Active',rdA.Status__c);
         System.assertEquals('Monthly',rdA.npe03__Installment_Period__c);
-        System.assertEquals(testDataImportAResult.Recurring_Donation_Day_Of_Month__c,rdA.Day_Of_Month__c);
+        System.assertEquals(testDIResultA.DonationCampaignImported__c,rdA.npe03__Recurring_Donation_Campaign__c);
+        System.assertEquals(testDIResultA.Recurring_Donation_Day_Of_Month__c,rdA.Day_Of_Month__c);
         System.assertEquals(1,rdA.InstallmentFrequency__c);
 
         System.assertNotEquals(null,rdB);
-        System.assertEquals(testDataImportBResult.Contact1Imported__c, rdB.npe03__Contact__c);
+        System.assertEquals(testDIResultB.Contact1Imported__c, rdB.npe03__Contact__c);
         System.assertEquals(200, rdB.npe03__Amount__c);
         System.assertEquals(null,rdB.CommitmentId__c);
-        System.assertEquals(null,rdB.npe03__Organization__c);
+        System.assertEquals(testDIResultB.HouseholdAccountImported__c,rdB.npe03__Organization__c);
+        System.assertEquals(testDIResultB.DonationCampaignImported__c,rdB.npe03__Recurring_Donation_Campaign__c);
         System.assertEquals('Active',rdB.Status__c);
         System.assertEquals('Yearly',rdB.npe03__Installment_Period__c);
-        System.assertEquals(testDataImportBResult.Recurring_Donation_Day_Of_Month__c,rdB.Day_Of_Month__c);
         System.assertEquals(1,rdB.InstallmentFrequency__c);
 
         System.assertNotEquals(null,rdC);
         System.assertEquals(null, rdC.npe03__Contact__c);
         System.assertEquals(300, rdC.npe03__Amount__c);
         System.assertEquals(null,rdC.CommitmentId__c);
-        System.assertEquals(testDataImportCResult.Account1Imported__c,rdC.npe03__Organization__c);
+        System.assertEquals(testDIResultC.Account1Imported__c,rdC.npe03__Organization__c);
         System.assertEquals('Active',rdC.Status__c);
         System.assertEquals('Monthly',rdC.npe03__Installment_Period__c);
-        System.assertEquals(testDataImportCResult.Recurring_Donation_Day_Of_Month__c,rdC.Day_Of_Month__c);
+        System.assertEquals(testDIResultC.Recurring_Donation_Day_Of_Month__c,rdC.Day_Of_Month__c);
         System.assertEquals(1,rdC.InstallmentFrequency__c);
 
         Opportunity[] opptResults = [SELECT Id, 
                                             Name,
                                             Amount,
                                             CloseDate,
+                                            CreatedDate,
                                             StageName,
                                             Account.Name,
                                             npe03__Recurring_Donation__c,
                                             RecordtypeId
                                         FROM Opportunity];
         
-        for (Opportunity oppt : opptResults) {
-            System.debug('Opportunity is: ' + oppt);
-        }
-
         //Updating this DI to close RD
         DataImport__c diAUpdate = 
             new DataImport__c(
-                            Contact1Imported__c = testDataImportAResult.Contact1Imported__c,
-                            RecurringDonationImported__c = testDataImportAResult.RecurringDonationImported__c,
+                            Contact1Imported__c = testDIResultA.Contact1Imported__c,
+                            RecurringDonationImported__c = testDIResultA.RecurringDonationImported__c,
                             Recurring_Donation_Status__c = RD_STATUS_CLOSED,
+                            Recurring_Donation_End_Date__c = System.Date.Today(),
                             Recurring_Donation_Status_Reason__c = 'No Longer Interested');
 
-        DataImport__c[] disForUpdate = new DataImport__c[]{diAUpdate};
+        DataImport__c diBUpdate = 
+            new DataImport__c(
+                            Contact1Imported__c = testDIResultB.Contact1Imported__c,
+                            RecurringDonationImported__c = testDIResultB.RecurringDonationImported__c,
+                            Recurring_Donation_Amount__c = 250);
+
+        DataImport__c diCUpdate = 
+            new DataImport__c(
+                            RecurringDonationImported__c = testDIResultC.RecurringDonationImported__c,
+                            Recurring_Donation_Status__c = RD_STATUS_CLOSED,
+                            Recurring_Donation_End_Date__c = System.Date.Today().addDays(-1),
+                            Recurring_Donation_Status_Reason__c = 'No Longer Interested');
+
+        DataImport__c[] disForUpdate = new DataImport__c[]{diAUpdate,diBUpdate,diCUpdate};
         insert disForUpdate;
 
         //Process updated DIs
         BDI_DataImport_API.processDataImportRecords(dis, disForUpdate, false);
 
-        DataImport__c testDataImportAResult2;
-        DataImport__c testDataImportBResult2;
-        DataImport__c testDataImportCResult2;
-
+        DataImport__c testDIResultA2;
+        DataImport__c testDIResultB2;
+        DataImport__c testDIResultC2;
+        
         for (DataImport__c di : [SELECT Id,
                                         Status__c,
                                         FailureInformation__c,
@@ -278,21 +376,29 @@ private class BDI_RecurringDonations_TEST {
                                         DonationImportStatus__c,
                                         DonationImported__c,
                                         RecurringDonationImported__c,
+                                        RecurringDonationImportStatus__c,
+                                        Recurring_Donation_Status__c,
+                                        Recurring_Donation_Amount__c,
                                         HomeAddressImportStatus__c,
                                         HomeAddressImported__c,
                                         HouseholdAccountImported__c,
                                         PaymentImportStatus__c,
                                         PaymentImported__c
                                     FROM DataImport__c]) {
-            System.debug('2nd pass Data Import records: ' + di);
-            if (di.RecurringDonationImported__c == testDataImportAResult.RecurringDonationImported__c) {
-                testDataImportAResult2 = di;
-            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
-                testDataImportBResult2 = di;
-            } else if (di.Account1_Name__c == 'TestGroupC Org 1') {
-                testDataImportCResult2 = di;
+            if (di.Id == diAUpdate.Id) {
+                testDIResultA2 = di;
+            } else if (di.Id == diBUpdate.Id) {
+                testDIResultB2 = di;
+            } else if (di.Id == diCUpdate.Id) {
+                testDIResultC2 = di;
             }
         }
+        
+        System.assertEquals(System.Label.bdiImported,testDIResultA2.Status__c);
+        System.assertEquals(System.Label.bdiUpdated,testDIResultA2.RecurringDonationImportStatus__c);
+
+        System.assertEquals(System.Label.bdiImported,testDIResultB2.Status__c);
+        System.assertEquals(System.Label.bdiUpdated,testDIResultB2.RecurringDonationImportStatus__c);
 
         npe03__Recurring_Donation__c rdA2;
         npe03__Recurring_Donation__c rdB2;
@@ -308,6 +414,7 @@ private class BDI_RecurringDonations_TEST {
                                                         CommitmentId__c,
                                                         ClosedReason__c,
                                                         StartDate__c,
+                                                        EndDate__c,
                                                         npe03__Date_Established__c,
                                                         Day_of_Month__c,
                                                         Status__c,
@@ -317,26 +424,26 @@ private class BDI_RecurringDonations_TEST {
         System.assertEquals(3,rdResults2.size());
 
         for (npe03__Recurring_Donation__c rd : rdResults2){
-            System.debug('2nd pass Recurring Donations records: ' + rd);
-            if (rd.Id == testDataImportAResult.RecurringDonationImported__c) {
+            if (rd.Id == testDIResultA.RecurringDonationImported__c) {
                 rdA2 = rd;
-            } else if (rd.Id == testDataImportBResult.RecurringDonationImported__c) {
+            } else if (rd.Id == testDIResultB.RecurringDonationImported__c) {
                 rdB2 = rd;
-            } else if (rd.Id == testDataImportCResult.RecurringDonationImported__c) {
+            } else if (rd.Id == testDIResultC.RecurringDonationImported__c) {
                 rdC2 = rd;
             }
         }
-        
         System.assertNotEquals(null,rdA2);
-        System.assertEquals(RD_STATUS_CLOSED, rdA2.Status__c);
-        System.assertEquals('No Longer Interested',rdA2.ClosedReason__c);
-        System.assertEquals(testDataImportAResult.Contact1Imported__c, rdA2.npe03__Contact__c);
         System.assertEquals(100, rdA2.npe03__Amount__c);
-        
-    }
+        System.assertEquals('No Longer Interested',rdA2.ClosedReason__c);
+        System.assertEquals(RD_STATUS_CLOSED, rdA2.Status__c);
+        System.assertEquals(testDIResultA.Contact1Imported__c, rdA2.npe03__Contact__c);
 
-    @isTest
-    static void shouldUpdateRecurringDonation() {
-        
+        System.assertNotEquals(null,rdB2);
+        System.assertEquals(250, rdB2.npe03__Amount__c);
+
+        System.assertNotEquals(null,rdC2);
+        System.assertEquals(300, rdC2.npe03__Amount__c);
+        System.assertEquals('No Longer Interested',rdC2.ClosedReason__c);
+        System.assertEquals(RD_STATUS_CLOSED, rdC2.Status__c);
     }
 }
