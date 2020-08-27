@@ -17,7 +17,6 @@ Best Match Donation Matching Behaviour
 
     [tags]  stable
     Go To Page             Details           DataImportBatch__c         object_id=${batch}[Id]
-    # Wait For Locator    bge.title    Batch Gift Entry
     Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute

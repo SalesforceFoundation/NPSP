@@ -4,9 +4,10 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/ContactPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -14,24 +15,23 @@ Create a new opportunity for a contact with open donations
     #Enter an account with open donations, then clear it and enter a contact with open donations, then choose to create a new opp and process it
     [tags]  stable
     ${ns} =  Get NPSP Namespace Prefix
-    &{batch} =       API Create DataImportBatch    
-    ...    ${ns}Batch_Process_Size__c=50    
-    ...    ${ns}Batch_Description__c=Created via API    
-    ...    ${ns}Donation_Matching_Behavior__c=Single Match or Create    
-    ...    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c    
-    ...    ${ns}RequireTotalMatch__c=false    
-    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   
-    ...    ${ns}GiftBatch__c=true    
-    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
+    &{batch} =       API Create DataImportBatch
+    ...    ${ns}Batch_Process_Size__c=50
+    ...    ${ns}Batch_Description__c=Created via API
+    ...    ${ns}Donation_Matching_Behavior__c=Single Match or Create
+    ...    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c
+    ...    ${ns}RequireTotalMatch__c=false
+    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true
+    ...    ${ns}GiftBatch__c=true
+    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]
     &{account} =     API Create Organization Account
     &{contact} =     API Create Contact
     Store Session Record      Account    ${contact}[AccountId]
     ${date} =     Get Current Date    result_format=%Y-%m-%d
-    &{opportunity1} =     API Create Opportunity   ${account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}  
-    &{opportunity2} =     API Create Opportunity   ${contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
-    Go To Page                        Listing                      Batch_Gift_Entry
-    Click Link With Text    ${batch}[Name]
-    Wait For Locator    bge.title    Batch Gift Entry
+    &{opportunity1} =     API Create Opportunity   ${account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}
+    &{opportunity2} =     API Create Opportunity   ${contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}
+    Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
@@ -53,8 +53,8 @@ Create a new opportunity for a contact with open donations
     Verify Row Count    1
     Page Should Not Contain Link    ${opportunity2}[Name]
     Wait For Locator    bge.edit_button    Donation Amount
-    Click BGE Edit Button    Donation Amount  
-    Wait For Locator    bge.edit_field   
+    Click BGE Edit Button    Donation Amount
+    Wait For Locator    bge.edit_field
     Populate BGE Edit Field    Donation Amount    100
     Click Element With Locator    span    Donation Date
     Page Should Not Contain Link    ${opportunity2}[Name]
@@ -67,7 +67,7 @@ Create a new opportunity for a contact with open donations
     Verify Expected Values    nonns    Opportunity    ${opportunity2}[Id]
     ...    Amount=100.0
     ...    CloseDate=${date}
-    ...    StageName=Prospecting 
+    ...    StageName=Prospecting
     Sleep    2
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
@@ -75,10 +75,10 @@ Create a new opportunity for a contact with open donations
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     Current Page Should Be    Details    Opportunity
-    ${newopp_id}    Save Current Record ID For Deletion    Opportunity    
+    ${newopp_id}    Save Current Record ID For Deletion    Opportunity
     Navigate To And Validate Field Value   Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value  Close Date    contains  ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
-    Go To Record Home    ${contact}[Id]
+    Go To Page      Details        Contact        object_id=${contact}[Id]
     Validate Related Record Count        Opportunities      2
