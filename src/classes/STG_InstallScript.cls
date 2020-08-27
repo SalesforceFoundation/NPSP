@@ -478,7 +478,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Recurring_Donation_Planned_Installments',
                     'Recurring_Donation_Recurring_Type',
                     'Recurring_Donation_Status',
-                    'Recurring_Donation_Status_Reason'
+                    'Recurring_Donation_Status_Reason',
+                    'Recurring_Donation_Campaign'
             };
 
             util.migrateNewDefaultToCustomMetadata(newDefaultMappingStrings);
