@@ -27,6 +27,8 @@ Setup Test Data
     Set suite variable   &{OPPORTUNITY}
     ${UI_DATE} =         Get Current Date                   result_format=%b %-d, %Y
     Set suite variable   ${UI_DATE}
+    &{PAYMENT1} =         API Query Record         npe01__OppPayment__c      npe01__Opportunity__c=${OPPORTUNITY}[Id]
+    Set suite variable   &{PAYMENT1}
     ${NS} =              Get NPSP Namespace Prefix
     Set suite variable   ${NS}
 
@@ -35,7 +37,7 @@ Review Donation And Create Payment For Batch Gift
     [Documentation]       Create a contact with open opportunity (with payment record) via API. Go to GE create a batch with default template.
     ...                   With donor as contact created, open review donations modal and select add payment. Change date to today and payment amt < opp amt.
     ...                   Verify that opp shows in table and on processing creates a paymment but opp is still prospecting and amt is not updated.
-    ...                   Create another payment with total > opp amt and verify opp is closed and opp date is payment date
+    ...                   Create another payment with total > opp amt and verify opp is closed and opp date is payment date. Verify original payment is not updated.
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and create a payment
     Go To Page                           Landing                       GE_Gift_Entry
@@ -73,7 +75,7 @@ Review Donation And Create Payment For Batch Gift
     Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
     Wait For Batch To Process            BDI_DataImport_BATCH            Completed
     Click Button With Value              Close
-    #verify same payment record is updated and paid but opportunity values did not change
+    #verify a payment record is created and paid but opportunity values did not change
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=500.0
     ...                                  CloseDate=${FUT_DATE}
@@ -86,6 +88,7 @@ Review Donation And Create Payment For Batch Gift
     ...                                  npe01__Payment_Amount__c=300.0
     ...                                  npe01__Payment_Date__c=${CUR_DATE}
     ...                                  npe01__Paid__c=True
+    #create another payment for opportunity higher than opportunity amount
     Fill Gift Entry Form
     ...                                  Donor Type=Contact1
     ...                                  Existing Donor Contact=${CONTACT}[Name]
@@ -102,8 +105,13 @@ Review Donation And Create Payment For Batch Gift
     Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
     Wait For Batch To Process            BDI_DataImport_BATCH            Completed
     Click Button With Value              Close
+    #verify opportunity is closed with correct date and amount and intial payment record is still open
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=500.0
     ...                                  CloseDate=${CUR_DATE}
     ...                                  StageName=Closed Won
     ...                                  npe01__Amount_Outstanding__c=-50.0
+    Verify Expected Values               nonns                          npe01__OppPayment__c    ${PAYMENT1}[Id]
+    ...                                  npe01__Payment_Amount__c=500.0
+    ...                                  npe01__Scheduled_Date__c=${FUT_DATE}
+    ...                                  npe01__Paid__c=False
