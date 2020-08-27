@@ -1,5 +1,7 @@
 ## ------------------------------------------------------------------------------------
-## @description Snowfakery Configuration File
+## @description Snowfakery Configuration File to create potentially huge volumes of Contact
+## and related Recurring Donation, Opportunity, Relationship, etc. records. All data created
+## by this is in Enhanced Recurring Donations format.
 ## @author Michael Smith
 ## @date 2020-08-15
 ## ------------------------------------------------------------------------------------
