@@ -1448,6 +1448,7 @@
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
         <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.DisableFirstInstallment__c</members>
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
@@ -3156,6 +3157,7 @@
         <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
         <members>Data_Import_Field_Mapping.Payment_Type</members>
         <members>Data_Import_Field_Mapping.Recurring_Donation_Amount</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Campaign</members>
         <members>Data_Import_Field_Mapping.Recurring_Donation_Date_Established</members>
         <members>Data_Import_Field_Mapping.Recurring_Donation_Day_of_Month</members>
         <members>Data_Import_Field_Mapping.Recurring_Donation_Effective_Date</members>
