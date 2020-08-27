@@ -158,8 +158,16 @@ public class BDI_RecurringDonations {
                 continue;
             }
 
-            // If there are no RD fields on the DI populated then skip the record,
-            if (!BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToRDField)) {
+            // If the imported id field is populated but there are no other RD fields populated OR if 
+            // imported id field is null and Recurring Donation Amount and Recurring Donation Status 
+            // are null then skip this DI.
+            // Once we have custom external Id then we can check to see if that field is populated before
+            // skipping as well.
+            if ((dataImport.RecurringDonationImported__c != null &&
+                 !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToRDField))
+                 || (dataImport.RecurringDonationImported__c == null 
+                    && dataImport.Recurring_Donation_Amount__c == null 
+                    && dataImport.Recurring_Donation_Status__c == null)) {
                 continue;
             }
 
