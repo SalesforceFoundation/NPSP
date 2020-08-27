@@ -370,21 +370,19 @@ public without sharing class BDI_MigrationMappingUtility {
     * @param defaultFieldMappingDeveloperNames - list of Default Field Mapping records to reference
     */
     public void migrateNewDefaultToCustomMetadata(List<String> defaultFieldMappingDeveloperNames) {
-        queuedMetadataTypesForDeploy.clear();
 
-        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
-                new Map<String, Data_Import_Field_Mapping__mdt>();
+        // clean deployment queueue 
+        queuedMetadataTypesForDeploy.clear();
 
         // Collect Migrated Custom Object Mapping developer names
         Map<String, String> dataImportObjectDeveloperNameByLabel =
                 helper.getDataImportObjectDeveloperNamesByLabel();
 
-        //
-        // CREATE OBJECT MAPPING INFO        
-        //
+        // Create Migrated Object (if needed)
+        
         // if no RD migrated record found        
-        if (!dataImportObjectDeveloperNameByLabel.containsKey('Recurring Donation')) {
-
+        if (!dataImportObjectDeveloperNameByLabel.containsKey('Recurring Donation')) { 
+        
             // get all default object mappings 
             Map<String, Data_Import_Object_Mapping__mdt> defaultObjectMappings =
                         helper.getObjectMappingsBySetDeveloperName(DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
@@ -401,8 +399,8 @@ public without sharing class BDI_MigrationMappingUtility {
                 // get metadata object to be enqueued
                 Metadata.CustomMetadata objectMetadata = diom.getMetadataRecord();
                 String uniqueName = objectMetadata.fullName;
-                uniqueName =  uniqueName.split('\\.')[uniqueName.split('\\.').size()-1] ;              
-                                                
+                uniqueName =  uniqueName.split('\\.')[uniqueName.split('\\.').size()-1] ;
+
                 // add new custom object mapping so we can process fields for the same object
                 dataImportObjectDeveloperNameByLabel.put('Recurring Donation',uniqueName);
 
@@ -412,10 +410,12 @@ public without sharing class BDI_MigrationMappingUtility {
             }
 
         }
+        
+        // Create Migrated Fields (if needed)
 
-        //
-        // CREATE FIELD MAPPING INFO        
-        //
+        // aux var to store field mappings that needs migration 
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings =
+                                            new Map<String, Data_Import_Field_Mapping__mdt>();
 
         // Collect current Default Field Mapping and Migrated Custom Field Mapping records
         Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByFieldMappingKey =
@@ -464,6 +464,7 @@ public without sharing class BDI_MigrationMappingUtility {
  	       CMT_MetadataAPI.deployMetadata(
                    queuedMetadataTypesForDeploy, new BDI_MigrationMappingUtility.DeploymentCallback());
         }
+
     }
 
     /*******************************************************************************************************
