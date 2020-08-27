@@ -24,8 +24,9 @@ public static void before_data_load() {
     }
 
     // Block the first installment from being created to avoid lock errors during the bulk insert
+    // Configure the
     rdSettings.DisableRollupsWhenCreatingInstallments__c = true;
-    rdSettings.InstallmentOppFirstCreateMode__c = 'Asynchronous_When_Bulk';
+    rdSettings.InstallmentOppFirstCreateMode__c = 'Synchronous';
     rdSettings.InstallmentOppAutoCreateOption__c = 'Disable_First_Installment';
 
     // Enable and configure automatic naming

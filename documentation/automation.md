@@ -148,6 +148,15 @@ Cumulus's unpackaged configuration is used as follows:
 
 ## Data Sets
 
+### Data Cleanup Tasks
+
+| Name                          | Type | Description                                                                         |
+| ----------------------------- | ---- | ----------------------------------------------------------------------------------- |
+| `test_data_delete` | Task | Delete all records in all NPSP related objects including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors |
+| `test_data_delete_managed` | Task | Version for Managed Orgs  |
+| `purge_npsp_errors` | Task | Deletes all records in the Error__c object  |
+| `purge_npsp_errors_managed` | Task | Deletes all records in the npsp__Error__c object  |
+
 ### Dev Org Data Set
 
 This data set includes most NPSP objects and is scaled based on 100 Contacts.
