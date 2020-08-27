@@ -9,14 +9,17 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             API Check And Enable Gift Entry
-# ...             Setup Test Data
+...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
-${template}  Generated Template
+
 
 *** Keywords ***
 
+Setup Test Data
+    ${NS} =              Get NPSP Namespace Prefix
+    Set suite variable   ${NS}
 
 *** Test Cases ***
 
@@ -25,6 +28,7 @@ Reorder and Modify GE Template Fields
   ...                                   from the default GE template.
 
   [tags]                                unstable                    feature:GE          W-039563
+  ${template} =                         Generate Random String
   Go to Page                            Landing                     npsp__GE_Gift_Entry
   Click Link                            Templates
   Click Gift Entry Button               Create Template
@@ -46,16 +50,21 @@ Reorder and Modify GE Template Fields
   Click Gift Entry Button               button Delete Payment: Check/Reference Number
   Verify Template Builder               conains  AccountSoftCredits: Role
   Verify Template Builder               does not contain  Payment: Check/Reference Number
-  Sleep                                 3s
-  #Click Gift Entry Button               Save & Close
-  #Current Page Should Be                Landing                     npsp__GE_Gift_Entry
-  #Click Gift Entry Button               New Batch
-  #Select Template                       ${template}
-  #Click Button                          Next
-  #Enter Value in Field
-  #...                                   Batch Name=${template}
-  #Click Button                          Next
-  #Click Button                          Save
+  Click Gift Entry Button               Save & Close
+  Current Page Should Be                Landing                     npsp__GE_Gift_Entry
+  Click Gift Entry Button               New Batch
+  Select Template                       ${template}
+  Load Page Object                      Form                        Gift Entry
+  Click Button                          Next
+  Fill Gift Entry Form
+  ...                                   Batch Name=${template}
+  ...                                   Batch Description=This is a test batch created via automation script
+  Click Gift Entry Button               Next
+  Click Gift Entry Button               Save
+  Sleep                                 5s
+  Current Page Should Be                Form                        Gift Entry          title=Gift Entry Form
+  ${batch_id} =                         Save Current Record ID For Deletion     ${NS}DataImportBatch__c
+
 
 
  
