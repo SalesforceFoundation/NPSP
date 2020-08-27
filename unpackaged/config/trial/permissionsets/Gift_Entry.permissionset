@@ -976,11 +976,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>npe01__OppPayment__c.%%%NAMESPACE%%%Payment_Status__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>npe5__Affiliation__c.%%%NAMESPACE%%%Contact_Link__c</field>
         <readable>false</readable>
     </fieldPermissions>
