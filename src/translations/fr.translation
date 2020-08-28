@@ -3925,8 +3925,8 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>Si cette option est sélectionnée, le Contrôle d&apos;intégrité vérifie uniquement vos paramètres de configuration NPSP pour détecter les problèmes.</label>
-        <name>healthLabelDisableRecordBatchDescription</name>
+        <label>Si cette option est sélectionnée, le Contrôle d&apos;intégrité vérifie uniquement vos paramètres de configuration NPSP pour détecter les problèmes.</label>	
+        <name>healthLabelDisableRecordBatchDescription</name>	
     </customLabels>
     <customLabels>
         <label>Le destinataire de notification d’erreur est valide.</label>
