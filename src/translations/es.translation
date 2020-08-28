@@ -3922,8 +3922,8 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>Si se selecciona, Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas.</label>
-        <name>healthLabelDisableRecordBatchDescription</name>
+        <label>Si se selecciona, Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas.</label>	
+        <name>healthLabelDisableRecordBatchDescription</name>	
     </customLabels>
     <customLabels>
         <label>Destinatario de notificaciones de errores válido.</label>
