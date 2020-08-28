@@ -488,6 +488,14 @@ tasks:
                 crlpSettings.%%%NAMESPACE%%%ContactHardCreditNonSkew_Incremental__c = true;
                 upsert crlpSettings;
 
+    add_second_currency:
+        description: Add CAD as a 2nd currency for a multicurrency org
+        class_path: cumulusci.tasks.salesforce.insert_record.InsertRecord
+        group: Org Config
+        options:
+            object: CurrencyType
+            values: "IsoCode:CAD,IsCorporate:false,IsActive:true,DecimalPlaces:2,ConversionRate:1.3"
+
     uninstall_packaged_incremental:
         description: Deletes any metadata from the package in the target org not in the local workspace
         class_path: cumulusci.tasks.salesforce.UninstallPackagedIncremental
@@ -970,10 +978,7 @@ flows:
         group: Org Config
         steps:
             1:
-                task: insert_record
-                options:
-                    object: CurrencyType
-                    values: "IsoCode:CAD,IsCorporate:false,IsActive:true,DecimalPlaces:2,ConversionRate:1.3"
+                task: add_second_currency
 
     config_platformencryption:
         description: 'Configure Platform Encryption org to encrypt standard fields'
