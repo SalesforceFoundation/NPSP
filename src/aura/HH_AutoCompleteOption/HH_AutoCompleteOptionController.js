@@ -10,14 +10,14 @@
           */
 
         //stopping propagation to avoid lastpass bug
-        event.preventDefault()
-        event.stopPropagation()
+        event.preventDefault();
+        event.stopPropagation();
         var key = event.key;
         if (key == 'Enter') {
             helper.fireOptionSelectedEvent(component);;
             return;
         }
-        //
+        
         var event = $A.get("e.c:HH_KeypressEvent");
         event.setParams({
             "keyPressed" : key
@@ -25,12 +25,14 @@
         event.fire();
      },
     
-     // Event that handles the new focus on the right element after the autocomple component has calculated the next element
+     /* 
+      * Event that handles the new focus on the right element after the autocomplete component has calculated the next element
+      */
      handleNewFocussedElement : function(component, event, helper) {
         var id = event.getParam('id');
-        if (id == null) return; 
+        if (id == null) { return; } 
         const thisElement = document.getElementById(id);
-        if (!thisElement) return; 
+        if (!thisElement) { return; }
         const myId = thisElement.getAttribute("id");
         if (myId == id) {
             var element = document.getElementById(id);
