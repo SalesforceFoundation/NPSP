@@ -42,11 +42,11 @@ public with sharing class GE_GiftEntryController {
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
 
     @AuraEnabled(cacheable=true)
-    public static String getOrgDomain() {
+    public static OrgDomainInfo getOrgDomainInfo() {
         String url = System.Url.getOrgDomainUrl().getHost();
         String[] urlParts = url.split('\\.');
-
-        return urlParts[0];
+        String podName = [SELECT InstanceName FROM Organization].InstanceName.toLowerCase();
+        return new OrgDomainInfo (urlParts[0], podName);
     }
 
     /*******************************************************************************************************
@@ -263,6 +263,16 @@ public with sharing class GE_GiftEntryController {
             return GE_PaymentServices.isElevateCustomer;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    public class OrgDomainInfo {
+        @AuraEnabled public String orgDomain;
+        @AuraEnabled public String podName;
+
+        public OrgDomainInfo (String orgDomain, String podName) {
+            this.orgDomain = orgDomain;
+            this.podName = podName;
         }
     }
 
