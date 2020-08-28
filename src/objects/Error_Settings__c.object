@@ -24,6 +24,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>DisableRecordDataHealthChecks__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates whether record data related health checks are disabled</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organization has a large volume of records and Health Check is having problems completing.</inlineHelpText>
+        <label>Disable Record Data Health Checks</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</fullName>
         <defaultValue>false</defaultValue>
         <description>When checked, NPSP won&apos;t automatically schedule default recurring jobs.
