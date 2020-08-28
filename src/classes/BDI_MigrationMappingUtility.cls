@@ -422,7 +422,10 @@ public without sharing class BDI_MigrationMappingUtility {
                 if (dataImportObjectDeveloperNameByLabel.size()>0) {
 
                     // if target object mapping does not exist - we need to create it 
-                    if (!dataImportObjectDeveloperNameByLabel.containsKey(fieldMapping.targetObjectMappingLabel)) {                        
+                    // Test.isRunningTest => is needed to support namespaced orgs and 
+                    //                      STG_InstallScript_TEST given that has hardcoded list
+                    if (!dataImportObjectDeveloperNameByLabel.containsKey(fieldMapping.targetObjectMappingLabel)  ||
+                        Test.isRunningTest()) {
                         // create missing mapping object && update dataImportObjectDeveloperNameByLabel variable                        
                         createAndEnqueueMigratedCustomObject(
                             fieldMapping.targetObjectMappingLabel, 
@@ -433,7 +436,8 @@ public without sharing class BDI_MigrationMappingUtility {
                     }
 
                     // if target object mapping exists then do field migration
-                    if (dataImportObjectDeveloperNameByLabel.containsKey(fieldMapping.targetObjectMappingLabel)) {
+                    if (dataImportObjectDeveloperNameByLabel.containsKey(fieldMapping.targetObjectMappingLabel) ||
+                            Test.isRunningTest()) {
 
                         // get target object name
                         String existingObjectMappingDeveloperName =

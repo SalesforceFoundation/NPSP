@@ -505,8 +505,9 @@ public with sharing class STG_InstallScript_TEST {
         BDI_MigrationMappingUtility util= new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
 
         Test.testInstall(new STG_InstallScript(util), new Version(1,0), true);
-        System.assertEquals(2, util.queuedMetadataTypesForDeploy.size(),
-                'We have 2 metadata records queued for deployment.');
+        // we should have 2 field mappings + 1 object mapping queued for deployment
+        System.assertEquals(3, util.queuedMetadataTypesForDeploy.size(), 
+            'We should have 3 mapping metadata records queued for deployment.');
     }
 
 
