@@ -12,7 +12,7 @@ Data Imports
 
     ${first_name1} =           Generate Random String
     ${last_name1} =            Generate Random String
-    ${acc1}=                   Generate Random String 
+    ${acc1}=                   Generate Random String
     ${first_name2} =           Generate Random String
     ${last_name2} =            Generate Random String
     ${acc2}=                   Generate Random String
@@ -25,6 +25,6 @@ Data Imports
     ...                       Contact2 First Name=${first_name2}
     ...                       Contact2 Last Name=${last_name2}
     ...                       Account2 Name=${acc2}
-    Click Modal Button        Save
+    Click Button With Title   Save
     Process Data Import Batch    Completed
-    
+
