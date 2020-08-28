@@ -850,6 +850,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         errorSettings.OverrideFeature_PilotEnabled__c = mySettings.OverrideFeature_PilotEnabled__c;
         errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
         errorSettings.Respect_Duplicate_Rule_Settings__c = mySettings.Respect_Duplicate_Rule_Settings__c;
+        errorSettings.DisableRecordDataHealthChecks__c = mySettings.DisableRecordDataHealthChecks__c == true;
+
         orgErrorSettings = errorSettings;
         return errorSettings;
     }
