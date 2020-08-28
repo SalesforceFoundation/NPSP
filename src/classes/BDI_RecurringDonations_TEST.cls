@@ -22,7 +22,7 @@ private class BDI_RecurringDonations_TEST {
                     Contact1_Preferred_Phone__c = '555-567-0001',
                     Recurring_Donation_Amount__c = 100,
                     Recurring_Donation_Date_Established__c = System.Date.Today(),
-                    Recurring_Donation_Day_of_Month__c = String.valueOf(System.Date.Today().addDays(3).day()),
+                    Recurring_Donation_Day_of_Month__c = '12',
                     Recurring_Donation_Installment_Frequency__c = 1,
                     Recurring_Donation_Installment_Period__c = 'Monthly',	
                     Recurring_Donation_Effective_Date__c = System.Date.Today(),
