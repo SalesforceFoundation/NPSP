@@ -1,19 +1,13 @@
 html body.sfdcBody {
     padding: 0 !important;
 }
-input.lookupInput {
-    background-color: white;
-    background-image: none;
-    color: #16325c;
-    border: 1px solid #d8dde6;
-    border-radius: 4px;
+
+/* .lookupInput and .lookupInputSLDS changed to not override lightning style color handling */
+body .lookupInput, .slds-vf-scope .lookupInput {
     width: 100%;
-    -webkit-transition: border 0.1s linear, background-color 0.1s linear;
-    transition: border 0.1s linear, background-color 0.1s linear;
-    display: inline-block;
-    padding: 0 16px 0 12px;
-    line-height: 34px;
-    min-height: calc(34px + 2px);
+}
+input.lookupInput {
+    width: 100%;
     margin-right: -30px;
 }
 /* added to get the lookup icon button back within the input field, which didn't seem to work when using <apex:slds/> */
@@ -21,20 +15,24 @@ input.lookupInput {
     margin-right: -30px;
 }
 input.lookupInputSLDS {
-    background-color: white;
-    background-image: none;
-    color: #16325c;
-    border: 1px solid #d8dde6;
-    border-radius: .25rem;
     width: 100%;
-    -webkit-transition: border 0.1s linear, background-color 0.1s linear;
-    transition: border 0.1s linear, background-color 0.1s linear;
-    display: inline-block;
-    padding: 0 1rem 0 .75rem;
-    line-height: 1.875rem;
-    min-height: calc(1.875rem + 2px);
     margin-right: -30px !important;
 }
+body .dateInput input[type="text"], .slds-vf-scope .dateInput input[type="text"] {
+    margin-left: 0;
+    width: 100%;
+    margin-right: -30px;
+}
+.slds-vf-scope div + .lookupInput {
+    margin-left: 0; !important;
+}
+
+/* Needed to eliminate excessive gap between label and info icon after conversion to lightning stylesheets */
+.slds-scope label {
+    margin-right: 0 !important;
+    border-right: 0 !important;
+}
+
 /* slds sets any multiselect to a smaller line height, but in visualforce, a single select looks like a multi with size=1, so this fixes the height */
 .slds-scope .slds-select[size="1"] {
     min-height: calc(1.875rem + (1px * 2));
@@ -54,25 +52,15 @@ span.dateFormat {
 .dependentMultiPicklistFixup select {
     display: inline-block !important;
 }
-.dependentPicklistFixup select, 
-.dependentMultiPicklistFixup select {
-    background-color: white;
-    color: #16325c;
-    border: 1px solid #d8dde6;
-    border-radius: 4px;
-    width: 100%;
-    transition: border 0.1s linear, background-color 0.1s linear;
-    min-height: calc(1.875rem + (1px * 2));
-    height: calc(1.875rem + (1px * 2));
-}
+
 .dependentMultiPicklistFixup select {
     height: inherit;
 }
 .dependentMultiPicklistFixup option {
     padding: 8px;
 }
-.datePicker {
-   z-index: 10000;
+body .datePicker, .slds-vf-scope .datePicker {
+    z-index: 10000;
 }
 
 /* the following are for our UTIL_Tooltip visualforce component to use */
