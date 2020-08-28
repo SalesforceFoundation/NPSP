@@ -1,4 +1,9 @@
-<apex:page controller="HH_ManageHH_CTRL" standardStylesheets="true" showHeader="true" docType="html-5.0" >
+<apex:page controller="HH_ManageHH_CTRL"
+    standardStylesheets="false"
+    lightningStylesheets="true"
+    showHeader="true"
+    docType="html-5.0">
+
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <apex:includeLightning />
         <apex:slds />
@@ -23,20 +28,17 @@
                     <div class="slds-spinner__dot-a"></div>
                     <div class="slds-spinner__dot-b"></div>
                 </div>
-            </div>  
+            </div>
         </div>
 
         <!-- used to display any save errors from the Visualforce page's fieldset -->
         <apex:outputPanel id="panelErrors">
             <c:UTIL_PageMessages />
         </apex:outputPanel>
-        
         <!-- the location that will hold our lightning component -->
-        <div id="lightning" />       
-
+        <div id="lightning" />
         <!-- household fields section (using fieldset that Lightning does not yet support) -->
         <apex:form id="vfForm" >
-            <div class="slds-scope">
                 <div class="slds-grid slds-grid_align-spread slds-m-around_medium" id="fieldset">
                     <div class="slds-form_stacked" style="width:80%" >
                         <apex:variable value="{!IF(isHHAccount, 'Account', 'npo02__Household__c')}" var="objType"/>
@@ -48,12 +50,10 @@
                                     onchange="{!IF(f.FieldPath = 'npe01__One2OneContact__c', 'fireContactChangedEvent();', '')}"/>
                         </apex:repeat>
                     </div>
-                </div>                
             </div>
             <!-- we expose a javascript function our lightning component can call to save the vf fieldset & close the page -->
             <apex:actionFunction action="{!save}" name="saveVisualforce" rerender="panelErrors, vfForm" />
         </apex:form>
-        
     </html>
 
     <script>

@@ -1,8 +1,13 @@
-<apex:page standardController="Opportunity" extensions="PSC_ManageSoftCredits_CTRL" showHeader="true" standardStylesheets="true" docType="html-5.0">
+<apex:page standardController="Opportunity"
+    extensions="PSC_ManageSoftCredits_CTRL"
+    showHeader="true"
+    standardStylesheets="false"
+    lightningStylesheets="true"
+    docType="html-5.0">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
-    
+
     <apex:form >
     <div class="slds-scope">
 
@@ -16,7 +21,7 @@
 
         <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
         <c:UTIL_PageMessages />
-        
+
         <!-- outer div of body below header -->
         <apex:outputPanel styleClass="myBodyContent" layout="block" rendered="{!hasAccess}">
 
@@ -25,7 +30,7 @@
                 <div class="slds-col slds-align-middle" id="account">
                     <label class="slds-form-element__label" for="lnkAccount">{!$Label.pscManageSoftCreditsPrimaryDonor}</label><br/>
                     <a id="lnkAccount" href="/{!PrimaryContactId}"><apex:outputText value="{!PrimaryContactName}" /></a>
-                </div>                                            
+                </div>
                 <div class="slds-col slds-align-middle" id="total">
                     <label class="slds-form-element__label" for="txtOppAmount">{!$Label.pscManageSoftCreditsOppAmount}</label><br/>
                     <span class="slds-form-element__addon">{!currencySymbol}</span>
@@ -45,7 +50,7 @@
                         <label class="slds-form-element__label" for="txtPSCAmount">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
                         <apex:outputText id="txtPSCAmount" value="{0, number,0.00%}"><apex:param value="{!IF(AND(NOT(ISBLANK(opp.Amount)), opp.Amount > 0), oppTotalSoftCredit.Amount/opp.Amount, 0)}" /></apex:outputText>
                     </apex:outputPanel>
-                </apex:outputPanel>   
+                </apex:outputPanel>
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalUn">
                     <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtUnaccounted">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
@@ -71,7 +76,7 @@
                 </div>
             </div> <!-- slds-grid -->
             <!-- /SUMMARY INFO PANEL -->
-            
+
             <!-- PSC TABLE -->
             <apex:outputPanel id="tablePanel">
                 <table class="slds-table slds-table_bordered">
@@ -86,9 +91,10 @@
                     <apex:repeat value="{!softCredits}" var="credit">
                     <tr>
                         <td>
+                            <!-- overrideRequired set true to eliminate redundant asterisk after switch to lightningStylesheets -->
                             <c:UTIL_FormField sObj="{!credit.contactRole}" sObjType="OpportunityContactRole" field="ContactId"
-                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn" 
-                                  overrideRequired="true"/>
+                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn"
+                                  overrideRequired="true" />
 
                         </td>
                         <td>
@@ -115,8 +121,8 @@
                             </apex:outputPanel>
                         </td>
                         <td>
-                            <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" 
-                                title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="tablePanel, totalSelected, totalUn" 
+                            <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN"
+                                title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="tablePanel, totalSelected, totalUn"
                                 immediate="false">
                                 <span class="slds-form-element__label slds-assistive-text">
                                     {!$Label.pscDeleteRow} {!cnt}
@@ -131,11 +137,12 @@
                 </table>
             </apex:outputPanel>
             <!-- /PSC TABLE -->
-            
+
             <div class="slds-p-around_medium">
                 <apex:commandLink action="{!addAnotherSoftCredit}" value="{!$Label.pscManageSoftCreditsAdd}" reRender="tablePanel" />
             </div>
         </apex:outputPanel> <!-- myBodyContent -->
     </div> <!-- slds -->
     </apex:form>
+
 </apex:page>
