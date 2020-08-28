@@ -10,7 +10,7 @@
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactNewEvent" type="c:HH_ContactNewEvent" />
-    <aura:handler name="reachFooter" event="c:HH_reachFooter" action="{!c.handleReachFooter}" />
+    <aura:handler name="reachFooter" event="c:HH_ReachFooter" action="{!c.handleReachFooter}" />
     <aura:registerEvent name="keypressEvent" type="c:HH_KeypressEvent"/>
     <!-- markup follows... -->
 

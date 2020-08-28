@@ -31,7 +31,7 @@
     <aura:attribute name="disabledSearch" type="Boolean" default="false" description="attribute to notify the search handler that is an arrow key and the search has not to be performed"/>
     <aura:handler event="c:HH_KeypressEvent" action="{!c.handleKeypressOnList}"/>
     <aura:registerEvent name="newFocussedElement" type="c:HH_NewFocussedElement"/>
-    <aura:registerEvent name="reachFooter" type="c:HH_reachFooter"/>
+    <aura:registerEvent name="reachFooter" type="c:HH_ReachFooter"/>
     
     <div class="slds" aura:id="autocomplete">
         <div
