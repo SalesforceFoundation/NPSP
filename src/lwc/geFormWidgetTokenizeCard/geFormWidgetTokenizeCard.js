@@ -1,14 +1,24 @@
-import { LightningElement, track, api } from 'lwc';
+import {api, LightningElement, track} from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
-import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import { format, getNamespace } from 'c/utilCommon';
-import { isFunction } from 'c/utilCommon';
-import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import getOrgDomainInfo from '@salesforce/apex/GE_GiftEntryController.getOrgDomainInfo';
+import getPaymentTransactionStatusValues
+    from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
+import {format, getNamespace, isFunction} from 'c/utilCommon';
+import {
+    fireEvent,
+    registerListener,
+    unregisterListener,
+} from 'c/pubsubNoPageRef';
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
-import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
-import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE, LABEL_NEW_LINE, DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
+import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
+    from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DATA_IMPORT_PAYMENT_STATUS_FIELD
+    from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import {
+    DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
+    LABEL_NEW_LINE,
+    WIDGET_TYPE_DI_FIELD_VALUE,
+} from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
@@ -24,12 +34,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track isDisabled = false;
     @track hasUserDisabledWidget = false;
     @track hasEventDisabledWidget = false;
+    _visualforceOriginUrls;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     PAYMENT_TRANSACTION_STATUS_ENUM;
 
     get displayDoNotChargeCardButton() {
-        return this.hasEventDisabledWidget || this.hasUserDisabledWidget ? false : true;
+        return !(this.hasEventDisabledWidget || this.hasUserDisabledWidget);
     }
 
     get tokenizeCardPageUrl() {
@@ -41,8 +52,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     async connectedCallback() {
         this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(await getPaymentTransactionStatusValues()));
-        this.domain = await getOrgDomain();
-        this.visualforceOrigin = this.buildVisualforceOriginUrl(this.domain);
+        this.domainInfo = await getOrgDomainInfo();
+        this._visualforceOriginUrls = this.buildVisualforceOriginUrls();
     }
 
     renderedCallback() {
@@ -102,15 +113,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * make sure we're only listening for messages from the correct source in the
     * registerPostMessageListener method.
     */
-    buildVisualforceOriginUrl(domain) {
-        let url = `https://${domain}--c.visualforce.com`;
-
-        const currentNamespace = getNamespace(DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
+    buildVisualforceOriginUrls() {
+        let url = `https://${this.domainInfo.orgDomain}--c.visualforce.com`;
+        let alternateUrl = `https://${this.domainInfo.orgDomain}--c.${this.domainInfo.podName}.visual.force.com`;
+        const currentNamespace = getNamespace(
+            DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
         if (currentNamespace) {
             url = url.replace('--c', `--${currentNamespace}`);
+            alternateUrl = alternateUrl.replace('--c', `--${currentNamespace}`);
         }
-
-        return url;
+        return [{value: url}, {value: alternateUrl}];
     }
 
     /*******************************************************************************
@@ -119,12 +131,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     registerPostMessageListener() {
         let component = this;
-
         window.onmessage = async function (event) {
-            if (event && event.origin !== component.visualforceOrigin) {
-                // Reject any messages from an unexpected origin
-                return;
-            } else {
+            component.visualforceOrigin = component._visualforceOriginUrls.find(
+                origin => event.origin === origin.value).value;
+            if (component.visualforceOrigin) {
                 const message = JSON.parse(event.data);
                 component.handleMessage(message);
             }
