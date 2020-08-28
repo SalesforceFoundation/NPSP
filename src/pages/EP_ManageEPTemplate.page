@@ -1,4 +1,10 @@
-<apex:page standardController="Engagement_Plan_Template__c" extensions="EP_ManageEPTemplate_CTRL" standardStylesheets="true" showHeader="true" title="{!$Label.EPManageTemplate}">
+<apex:page standardController="Engagement_Plan_Template__c"
+    extensions="EP_ManageEPTemplate_CTRL"
+    standardStylesheets="false"
+    lightningStylesheets="true"
+    showHeader="true"
+    title="{!$Label.EPManageTemplate}">
+
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 

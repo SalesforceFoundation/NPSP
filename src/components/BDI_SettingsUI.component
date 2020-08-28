@@ -3,6 +3,11 @@
     <apex:attribute name="editMode" type="Boolean" assignTo="{!isEditMode}" description="display in Edit mode (or Read Only mode)" />
     <apex:attribute name="showBatchOnlyFields" type="Boolean" assignTo="{!isShowBatchOnlyFields}" description="whether to include fields that exist on DataImportBatch, but not DataImportSettings" />
 
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/remove-duplicate-required-mark.js')}"/>
+    <script>
+        window.onload = stripDuplicateAsterisk;
+    </script>
+
     <style>
         .slds-scope .slds-select[disabled].my-select-disabled  {
             background-color: transparent;
