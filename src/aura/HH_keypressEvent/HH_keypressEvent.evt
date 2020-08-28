@@ -1,3 +1,0 @@
-<aura:event type="APPLICATION" description="Event when a key is pressed when the list has the focus">
-    <aura:attribute name="keyPressed" type="String"/>
-</aura:event>
