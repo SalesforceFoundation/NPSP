@@ -3918,8 +3918,8 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen.</label>
-        <name>healthLabelDisableRecordBatchDescription</name>
+        <label>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen.</label>	
+        <name>healthLabelDisableRecordBatchDescription</name>	
     </customLabels>
     <customLabels>
         <label>De ontvanger van Foutmeldingen is geldig.</label>
