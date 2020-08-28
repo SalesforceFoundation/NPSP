@@ -1187,6 +1187,26 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
+    * @description Verifies that the user cannot update Error Settings without update permission 
+    */
+    @isTest
+    private static void shouldPreventUpdateErrorSettingsWhenUserDoesNotHaveUpdatePermission() {
+        Test.startTest();
+
+        System.runAs(createReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelHealthCheck);
+            STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
+
+            STG_Panel.stgService.stgErr.DisableRecordDataHealthChecks__c = true;
+            panel.saveSettings();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(Schema.SObjectType.Error_Settings__c.getLabel());
+        }
+
+        Test.stopTest();
+    }
+
+    /**
     * @description Verify if admin users can delete relationship auto create settings
     */
     @isTest
@@ -1827,8 +1847,9 @@ private with sharing class STG_SettingsManager_TEST {
     @isTest
     private static void testPanelHealthCheck() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
-        system.assertEquals('idPanelHealthCheck', panel.idPanel());
-        system.assertEquals(null, panel.runDetector());
+        
+        System.assertEquals('idPanelHealthCheck', panel.idPanel());
+        System.assertEquals(null, panel.runDetector());
     }
 
     /*********************************************************************************************************
@@ -1913,6 +1934,35 @@ private with sharing class STG_SettingsManager_TEST {
             'User with Read Only Profile should not be abled to update RD Setting: ' + error.Full_Message__c);
 
 
+    }
+
+    /**
+    * @description Verifies that when DisableRecordDataHealthChecks__c is enabled,
+    *    all data record health checks should be disabled and have warning records created
+    */
+    @isTest
+    private static void shouldCreateWarningRecordsWhenDisabledRecordHealthCheckIsEnabled() {
+        STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
+
+        STG_Panel.stgService.stgErr.DisableRecordDataHealthChecks__c = true;
+        
+        Test.startTest();
+        panel.runDetector();
+        Test.stopTest();
+
+        List<STG_PAnelHealthCheck_CTRL.DetectResult> results = panel.listDR;
+        Boolean hasDisabledHealthCheckWarningMessage = false;
+
+        for (STG_PAnelHealthCheck_CTRL.DetectResult result : results) {
+            if (result.strStatus == STG_PanelHealthCheck_CTRL.statusWarning && result.strName == System.Label.healthLabelDataBatchNotRun) {
+                hasDisabledHealthCheckWarningMessage = true;
+                break;
+            }
+        }
+
+        System.assert(hasDisabledHealthCheckWarningMessage,
+            'A Warning message indicates Record Data Health Checks are not run should exist'
+        );
     }
 
     //Helper Methods
