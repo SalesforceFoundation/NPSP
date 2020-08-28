@@ -3876,8 +3876,8 @@
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- Description for Disable Health Check Record Batch Setting --></label>
-        <name>healthLabelDisableRecordBatchDescription</name>
+        <label><!-- Description for Disable Health Check Record Batch Setting --></label>	
+        <name>healthLabelDisableRecordBatchDescription</name>	
     </customLabels>
     <customLabels>
         <label>נמען הודעות השגיאה חוקי.</label>

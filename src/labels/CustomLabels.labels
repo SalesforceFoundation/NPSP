@@ -7802,7 +7802,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description for Disable Health Check Record Batch Setting</shortDescription>
-        <value>If selected, Health Check only checks your NPSP configuration settings for problems.</value>
+        <value>If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organization has a large volume of records and Health Check is having problems completing.</value>
     </labels>
     <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
