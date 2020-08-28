@@ -1,5 +1,11 @@
-<apex:page showHeader="true" sidebar="false" title="{!$Label.stgNPSPSettingsTitle}" controller="STG_SettingsManager_CTRL"
-           action="{!onNpspSettingsLoad}" docType="html-5.0" standardStylesheets="false">
+<apex:page  controller="STG_SettingsManager_CTRL"
+    showHeader="true"
+    sidebar="false"
+    title="{!$Label.stgNPSPSettingsTitle}"
+    action="{!onNpspSettingsLoad}"
+    docType="html-5.0"
+    standardStylesheets="false"
+    lightningStylesheets="true">
 
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/CollapsibleList/CollapsibleList.js')}"/>
