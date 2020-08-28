@@ -50,6 +50,7 @@ Reorder and Modify GE Template Fields
   Verify Template Builder               does not contain           Payment: Check/Reference Number
   Click Gift Entry Button               Save & Close
   Current Page Should Be                Landing                    npsp__GE_Gift_Entry
+  #Creates new batch with the new template
   Click Gift Entry Button               New Batch
   Select Template                       ${template}
   Load Page Object                      Form                       Gift Entry
@@ -64,7 +65,3 @@ Reorder and Modify GE Template Fields
   Page Should Contain                   AccountSoftCredits: Role        
   Page Should Not Contain               Check/Reference Number
   ${batch_id} =                         Save Current Record ID For Deletion      ${NS}DataImportBatch__c
-
-
-
- 
