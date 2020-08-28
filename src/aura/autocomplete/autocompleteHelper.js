@@ -127,8 +127,10 @@
         
         helper.fireNewItemFocus(newFocussedElement);
     },
+
     // Handles the pressing of the arrow up key.
     // It updates the aria-activedescendant and notify the child elements
+    
     handleArrowUpKey: function (component, helper) {
         const listbox = document.querySelector('[role="listbox"]');
         const elements = component.get("v.items");
@@ -142,12 +144,13 @@
                 return;
             }
         }
-        var newFocussedElement = null; 
+        
         if (currentFocussedElement == null || currentFocussedElement == '') {
             currentFocussedElement = elements[elements.length - 1].value.Id
             listbox.setAttribute('aria-activedescendant', currentFocussedElement);
         }
 
+        var newFocussedElement = null; 
         for (var i = 0; i < elements.length; i++) { 
             if (elements[i].value.Id == currentFocussedElement) {
                 if (i == 0) {
@@ -168,7 +171,7 @@
 
     //Fires an event to notify the new focussed element
     fireNewItemFocus: function(id) {
-        var event = $A.get("e.c:HH_newFocussedElement");
+        var event = $A.get("e.c:HH_NewFocussedElement");
         event.setParam("id", id);
         event.fire();
     },

@@ -19,7 +19,6 @@
           */
 
         //stopping propagation to avoid lastpass bug
-
         event.preventDefault()
         event.stopPropagation()
         const key = event.key;
@@ -27,8 +26,8 @@
             helper.fireNewContactEvent(component);
             return;
         }
-        //
-        var event = $A.get("e.c:HH_keypressEvent");
+        
+        var event = $A.get("e.c:HH_KeypressEvent");
         event.setParams({
             "keyPressed" : key
         });

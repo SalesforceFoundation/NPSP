@@ -18,7 +18,7 @@
             return;
         }
         //
-        var event = $A.get("e.c:HH_keypressEvent");
+        var event = $A.get("e.c:HH_KeypressEvent");
         event.setParams({
             "keyPressed" : key
         });

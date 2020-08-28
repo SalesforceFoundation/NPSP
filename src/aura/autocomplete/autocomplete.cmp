@@ -29,8 +29,8 @@
     <aura:attribute name="showLoadingIndicator" type="Boolean" default="false" access="public"/>
     <aura:attribute name="emptyListContent" type="Aura.Component[]" description="Content to be shown if the list is empty" access="public"/>
     <aura:attribute name="disabledSearch" type="Boolean" default="false" description="attribute to notify the search handler that is an arrow key and the search has not to be performed"/>
-    <aura:handler event="c:HH_keypressEvent" action="{!c.handleKeypressOnList}"/>
-    <aura:registerEvent name="newFocussedElement" type="c:HH_newFocussedElement"/>
+    <aura:handler event="c:HH_KeypressEvent" action="{!c.handleKeypressOnList}"/>
+    <aura:registerEvent name="newFocussedElement" type="c:HH_NewFocussedElement"/>
     <aura:registerEvent name="reachFooter" type="c:HH_reachFooter"/>
     
     <div class="slds" aura:id="autocomplete">
