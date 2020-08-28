@@ -1,4 +1,10 @@
-<apex:page standardController="Level__c" extensions="LVL_LevelEdit_CTRL" showHeader="true" standardStylesheets="true" title="{!$ObjectType.Level__c.labelPlural}">
+<apex:page standardController="Level__c"
+    extensions="LVL_LevelEdit_CTRL"
+    showHeader="true"
+    standardStylesheets="false"
+    lightningStylesheets="true"
+    title="{!$ObjectType.Level__c.labelPlural}">
+
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
@@ -20,7 +26,6 @@
                            $ObjectType.Level__c.fields.Previous_Level_Field__c.updateable,
                            $ObjectType.Level__c.fields.Source_Field__c.updateable,
                            $ObjectType.Level__c.Fields.Target__c.updateable)}" />
-
     <apex:form >
         <div class="slds-scope">
 
@@ -41,7 +46,8 @@
                                     <apex:outputLabel for="fldName" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                         <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Name.Label}
                                     </apex:outputLabel>
-                                    <apex:inputField id="fldName" required="true" value="{!Level__c.Name}" label="" styleClass="slds-input" />
+                                    <!-- required="true" changed to "false" to eliminate redundant asterisk after switch to lightningStylesheets -->
+                                    <apex:inputField id="fldName" required="false" value="{!Level__c.Name}" label="" styleClass="slds-input" />
                                 </div>
                                 <div class="slds-form-element slds-size_1-of-2">
                                     <apex:outputLabel for="fldMinAmount" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
@@ -147,4 +153,5 @@
             </div> <!-- myBodyContent -->
         </div> <!-- slds -->
     </apex:form>
+
 </apex:page>
