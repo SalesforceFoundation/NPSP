@@ -421,11 +421,8 @@ public without sharing class BDI_MigrationMappingUtility {
                 // set object mapping
                 if (dataImportObjectDeveloperNameByLabel.size()>0) {
 
-                    // if target object mapping does not exist - we need to create it 
-                    // Test.isRunningTest => is needed to support namespaced orgs and 
-                    //                      STG_InstallScript_TEST given that has hardcoded list
-                    if (!dataImportObjectDeveloperNameByLabel.containsKey(fieldMapping.targetObjectMappingLabel)  ||
-                        Test.isRunningTest()) {
+                    // if target object mapping does not exist - we need to create it                     
+                    if (!dataImportObjectDeveloperNameByLabel.containsKey(fieldMapping.targetObjectMappingLabel)) {
                         // create missing mapping object && update dataImportObjectDeveloperNameByLabel variable                        
                         createAndEnqueueMigratedCustomObject(
                             fieldMapping.targetObjectMappingLabel, 
@@ -436,6 +433,8 @@ public without sharing class BDI_MigrationMappingUtility {
                     }
 
                     // if target object mapping exists then do field migration
+                    // Test.isRunningTest => is needed to support namespaced orgs and 
+                    //                      STG_InstallScript_TEST given that has hardcoded list
                     if (dataImportObjectDeveloperNameByLabel.containsKey(fieldMapping.targetObjectMappingLabel) ||
                             Test.isRunningTest()) {
 
@@ -482,7 +481,7 @@ public without sharing class BDI_MigrationMappingUtility {
             defaultObjectMappings.get(targetObjectMappingRecordName):null;
 
         // if reference object mapping exists 
-        if (rdObjectMapping!=null) { 
+        if (rdObjectMapping!=null && !Test.isRunningTest()) { 
 
             // create instance of object mapping
             BDI_MigrationMappingUtility.DataImportObjectMapping diom = 
