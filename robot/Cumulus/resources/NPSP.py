@@ -168,7 +168,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
         self.selenium.wait_until_page_contains_element(locator)
-        self.selenium.get_webelement(locator).click()
+        self.selenium.scroll_element_into_view(locator)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+        # self.selenium.get_webelement(locator).click()
         self.wait_for_locator('flexipage-popup')
         option=npsp_lex_locators['span'].format(value)
         self.selenium.click_element(option)

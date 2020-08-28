@@ -104,7 +104,7 @@ npsp_lex_locators={
     'check_field_spl':'//div[contains(@class, "field-label-container")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//a',
     'account_list':'//tbody/tr/th[.//span[contains(@class, "slds-grid")]]/descendant::a[text()="{}"]',
     'dd_options':'//*[@id="p3"]/option[text()="{}"]',
-    'related_list_items':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-grid")]/following-sibling::div[.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]',
+    'related_list_items':'//div[@class = "container forceRelatedListSingleContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-grid")]/following-sibling::div[.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]',
     'span_button':'//span[text()="{}"]',
     'related_drop_down':'//div/a[contains(@class,"slds-button")]/ancestor::li/div/a',
     'span':"//span[@title='{}']",
