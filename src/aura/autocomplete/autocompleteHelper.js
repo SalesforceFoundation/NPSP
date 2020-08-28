@@ -102,7 +102,6 @@
         }
 
         var newFocussedElement = null; 
-        
         for (var i = 0; i < elements.length; i++) {
             if (elements[i].value.Id == currentFocussedElement) {
                 // I am in the middle of the list, setting the next descendant to the next element
@@ -130,7 +129,6 @@
 
     // Handles the pressing of the arrow up key.
     // It updates the aria-activedescendant and notify the child elements
-    
     handleArrowUpKey: function (component, helper) {
         const listbox = document.querySelector('[role="listbox"]');
         const elements = component.get("v.items");
