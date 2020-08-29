@@ -490,8 +490,11 @@ tasks:
 
     add_second_currency:
         description: Add CAD as a 2nd currency for a multicurrency org
-        class_path: tasks.multicurrency.ConfigureCAD
+        class_path: cumulusci.tasks.salesforce.insert_record.InsertRecord
         group: Org Config
+        options:
+            object: CurrencyType
+            values: "IsoCode:CAD,IsCorporate:false,IsActive:true,DecimalPlaces:2,ConversionRate:1.3"
 
     uninstall_packaged_incremental:
         description: Deletes any metadata from the package in the target org not in the local workspace
