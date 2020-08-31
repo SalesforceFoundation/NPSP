@@ -56,7 +56,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
         self._init_locators()
         locator_manager.register_locators("npsp",npsp_lex_locators)
-
+    
     def _init_locators(self):
         try:
             client = self.cumulusci.tooling
@@ -1158,11 +1158,23 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        locator = npsp_lex_locators['record']['list'].format(dropdown)
-        self.selenium.scroll_element_into_view(locator)
-        self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('popup')
-        self.npsp.click_link_with_text(value)
+        
+        if dropdown in ("Open Ended Status") and self.latest_api_version == 50.0:
+            locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
+            selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+            if self.npsp.check_if_element_exists(locator):
+                self.selenium.set_focus_to_element(locator)
+                self.selenium.wait_until_element_is_visible(locator)
+                self.selenium.scroll_element_into_view(locator)
+                self.salesforce._jsclick(locator)
+                self.selenium.wait_until_element_is_visible(selection_value)
+                self.selenium.click_element(selection_value)
+        else:
+            locator = npsp_lex_locators['record']['list'].format(dropdown)
+            self.selenium.scroll_element_into_view(locator)
+            self.selenium.get_webelement(locator).click()
+            self.wait_for_locator('popup')
+            self.npsp.click_link_with_text(value)
 
     def edit_record(self):
         """Clicks on the edit button on record page for standard objects
@@ -1463,9 +1475,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_more_actions_button(self):
         """clicks on the more actions dropdown button in the actions container on record page"""
-        locator=npsp_lex_locators['link'].format("more actions","more actions")
+        if self.latest_api_version == 50.0:
+            locator=npsp_lex_locators['more_actions_link']
+            self.builtin.log(locator)
+        else:
+            locator=npsp_lex_locators['link'].format("more actions","more actions")
         self.salesforce._jsclick(locator)
-
+        
 
     @capture_screenshot_on_error
     def click_related_table_item_link(self, heading, title):
@@ -1482,7 +1498,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_actions_link(self,title):
         """Clicks on the link in the actions container on top right corner of the page using Javascript"""
-        locator=npsp_lex_locators["link-title"].format(title)
+        locator=npsp_lex_locators["lightning-button"].format(title)
         self.salesforce._jsclick(locator)
 
     def click_more_activity_button(self):
@@ -1501,9 +1517,15 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['link-contains'].format("more actions")
         self.selenium.wait_until_element_is_visible(locator)
         self.selenium.click_element(locator)
+        time.sleep(1)
         self.selenium.wait_until_page_contains(title)
-        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
-        self.selenium.click_link(link_locator)
+        if self.latest_api_version == 50.0:
+            link_locator=npsp_lex_locators['custom_objects']['option'].format(title)
+        else:
+            link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
+        time.sleep(1)
+        self.salesforce._jsclick(link_locator)
+        self.salesforce._jsclick(link_locator)
 
     def get_url_formatted_object_name(self,name):
         """Returns a map with BaseURl and the namespace formatted object name"""

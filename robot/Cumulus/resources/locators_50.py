@@ -28,6 +28,7 @@ npsp_lex_locators={
         'edit_form': 'css: div.forcePageBlockItemEdit',
         'flexipage_edit_form': 'css: force-record-layout-item.slds-is-editing',
         'list':"//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-hint-parent')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]",
+        'rdlist':"//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger') and @role='combobox']",
         'flexipage-list':'//lightning-combobox[./label[text()="{}"]]/div//input[contains(@class,"combobox__input")]',
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
@@ -59,8 +60,10 @@ npsp_lex_locators={
     'id':'//*[contains(@id,"{}")]',
     'button':'//input[contains(@value,"{}")]',
     'link':'//a[.//span[text()="{}" or contains(text(),"{}")]]',
+    'more_actions_link':"//button[contains(@class,'slds-button_icon-border-filled') and @aria-haspopup='true']",
     'link-text':'//a[contains(text(),"{}")]',
     'link-title':'//a[@title="{}"]',
+    'lightning-button':'//lightning-button/button[contains(text(),"{}")]',
     'link-contains':'//button[.//span[contains(text(),"{}")]]',
     'label':'//label[text()="{}"]',
     'checkbox':{
@@ -163,6 +166,7 @@ npsp_lex_locators={
     },
     'custom_objects':{
         'actions-link':'//a[@title="{}" or @name="{}"]',
+        'option':'//a/span[text()="{}"]'
         },
     'payments':{
         'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",
