@@ -55,8 +55,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # Turn off info logging of all http requests
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
         self._init_locators()
+        # patch salesforce locators for winter 21
+        if int(self.latest_api_version) == 50:
+            from cumulusci.robotframework import Salesforce
+            Salesforce.lex_locators["record"]["related"]["card"] = (
+                "//*[@data-component-id='force_relatedListContainer']//article[.//span[@title='{}']]"
+            )
         locator_manager.register_locators("npsp",npsp_lex_locators)
-    
+
     def _init_locators(self):
         try:
             client = self.cumulusci.tooling
@@ -1158,7 +1164,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        
+
         if dropdown in ("Open Ended Status") and self.latest_api_version == 50.0:
             locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
             selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
@@ -1481,7 +1487,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         else:
             locator=npsp_lex_locators['link'].format("more actions","more actions")
         self.salesforce._jsclick(locator)
-        
+
 
     @capture_screenshot_on_error
     def click_related_table_item_link(self, heading, title):
