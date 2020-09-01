@@ -44,9 +44,11 @@ Find Matching Gifts
     Populate Lookup Field                  Matching Gift Account             ${data}[org][Name]
     Select Value From Dropdown             Matching Gift Status              Potential
     Click Modal Button                     Save
+    Wait Until Modal Is Closed
     Go To Page                             Details
     ...                                    Opportunity
     ...                                    object_id=${data}[org_opportunity][Id]
+    Current Page Should Be                 Details                           Opportunity
     Navigate to Matching Gifts Page
 
     Page Should Contain Link               Contact1 $50 donation               limit=1

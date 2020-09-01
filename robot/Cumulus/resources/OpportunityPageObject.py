@@ -24,8 +24,8 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.navigate_to_and_validate_field_value("Opportunity Name", "contains", value)
 
     def navigate_to_matching_gifts_page(self):
-        self.npsp.click_more_actions_button()
-        self.selenium.click_link('Find Matched Gifts')
+        time.sleep(2)
+        self.npsp.click_show_more_actions_button('Find Matched Gifts')
         self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
@@ -33,7 +33,7 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.wait_for_locator('frame','Write Off Remaining Balance')
         self.npsp.choose_frame("Write Off Remaining Balance")
         self.selenium.wait_until_page_contains("You are preparing to write off")
-        
+
     def change_related_contact_role_settings(self,name,role=None,**kwargs):
         """Loads the related contact from opportunity, waits for the modal and updates the role and primary settings"""
         dropdown = npsp_lex_locators['related_drop_down'].format(name)
@@ -46,8 +46,8 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.select_value_from_dropdown ("Role",role)
         self.npsp.populate_modal_form(**kwargs)
         self.salesforce.click_modal_button("Save")
-        
-    
+
+
 
 
 @pageobject("Listing", "Opportunity")
@@ -85,6 +85,5 @@ class OpportunityListingPage(BaseNPSPPage, ListingPage):
                 break
 
 
-    
-    
-        
+
+

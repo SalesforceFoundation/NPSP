@@ -916,6 +916,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def verify_row_count(self,value):
         """verifies if actual row count matches with expected value"""
         locator=npsp_lex_locators['bge']['count']
+        self.selenium.wait_until_element_is_visible(locator)
         actual_value=self.selenium.get_webelements(locator)
         count=len(actual_value)
         assert int(value) == count, "Expected rows to be {} but found {}".format(
