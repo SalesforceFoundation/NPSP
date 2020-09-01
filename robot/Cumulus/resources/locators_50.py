@@ -178,7 +178,7 @@ npsp_lex_locators={
         'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
         'field-value':"//div[contains(@class,'slds-form-element')][./span[text()='{}']]/following-sibling::div",
-        'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th",
+        'allocations':"//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//tbody/tr[./td//a[text()='{}']]/th",
         'loc1':"//tbody/tr/td[2]/span/span",
         'loc2':"//tbody/tr/td[3]/span/span",
         },

@@ -9,4 +9,4 @@ npsp_lex_locators["record"]["related"]["title"]='//div[contains(@class, "slds-gr
 npsp_lex_locators["record"]["related"]["link"]="//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//table[contains(@class,'forceRecordLayout')]/tbody/tr[.//th/div/a[contains(@class,'textUnderline')]][.//td//*[text()='{}']]/th//a"
 npsp_lex_locators["record"]["related"]["allocations"]="//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td//a[text()='{}']]/td/span[text()='{}']"
 npsp_lex_locators["record"]["rdlist"]="//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-hint-parent')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]"
-
+npsp_lex_locators["payments"]["allocations"]="//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th"

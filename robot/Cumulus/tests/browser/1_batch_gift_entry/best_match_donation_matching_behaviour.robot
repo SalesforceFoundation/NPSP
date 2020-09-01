@@ -80,7 +80,7 @@ Best Match Donation Matching Behaviour
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     Select Tab    Related
     Load Related List    GAU Allocations
-    Click Link With Text    ${pay_no}
+    Click Span Button    ${pay_no}
     Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
