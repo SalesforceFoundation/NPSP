@@ -1864,8 +1864,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-    * @description Verifies that when Disable First Installment is true,
-    *   No installment will be created on RD insert regardless of NPSP Installment Auto Creation Setting
+    * @description Verifies no Opportunity is created when "Disable First Installment" on RD is true,
+    * and the org setting NPSP Installment Auto Creation is "Always Create Next Installment".
     */
     @IsTest
     private static void shouldNotCreateFirstInstallmentWhenDisableFirstInstallmentIsTrue() {
@@ -1887,8 +1887,8 @@ private class RD2_OpportunityEvaluationService_TEST {
         List<Opportunity> opportunities = oppGateway.getRecords(rd);
 
         System.assert(rd.DisableFirstInstallment__c, 'Disable First Installment should be true');
-        System.assertEquals(0, opportunities.size(),
-            'No opportunity should be create when DisableFirstInstallment__c is true');
+        System.assert(opportunities.isEmpty(),
+            'No Opportunity should be created when the Disable First Installment is true');
     }
 
     // Helpers
