@@ -1671,6 +1671,50 @@ public with sharing class ADDR_Addresses_TEST2 {
     }
 
     /*********************************************************************************************************
+    * @description Test Household naming executes properly when a custom TDTM trigger updates Account properly
+    * on Address change.
+    **********************************************************************************************************/
+    @isTest
+    private static void shouldCreateNamedHHWhenCustomTDTMTriggerUpdatesAccountOnAddressChange() {
+
+        List<Trigger_Handler__c> triggerHandlers = TDTM_Config_API.getDefaultRecords();
+        triggerHandlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+            Class__c = 'ADDR_Addresses_TEST2.TEST_Account_TDTM', Load_Order__c = 2, Object__c = 'Address__c',
+            Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+        insert triggerHandlers;
+
+        Contact testContact = new Contact(
+            LastName = 'Test_Last_Name',
+            FirstName = 'Test_First_Name',
+            Salutation = 'Mr.',
+            Email = 'test@email.com',
+            MailingStreet = '123 Easy Street',
+            MailingCity = 'Esperanza',
+            MailingState = 'CA',
+            MailingPostalCode = '99999',
+            MailingCountry = 'USA'
+        );
+
+        Test.starttest();
+        insert testContact;
+        Test.stopTest();
+
+        Contact con = [
+            SELECT
+                Account.Name,
+                Account.npo02__Informal_Greeting__c,
+                Account.npo02__Formal_Greeting__c,
+                Account.Dunsnumber
+            FROM Contact
+            WHERE Id = :testContact.Id];
+
+        System.assertEquals('Test_Last_Name ' +  system.label.npo02.DefaultHouseholdName, con.Account.Name);
+        System.assertEquals('Test_First_Name',con.Account.npo02__Informal_Greeting__c);
+        System.assert(con.Account.npo02__Formal_Greeting__c.endsWith('Test_First_Name Test_Last_Name'));
+        System.assert(String.isNotBlank(con.Account.DunsNumber));
+    }
+
+    /*********************************************************************************************************
     * @description sets Seasonal_Addresses_Batch_Size__c on npo02__Households_Settings__c
     * @param batchSize: value for Seasonal_Addresses_Batch_Size__c
     **********************************************************************************************************/
@@ -1679,5 +1723,31 @@ public with sharing class ADDR_Addresses_TEST2 {
             new npo02__Households_Settings__c (
                 Seasonal_Addresses_Batch_Size__c = batchSize
             ));
+    }
+
+    /*********************************************************************************************************
+    * @description TDTM Class that updates Account on update of Address. The point of this class is to
+    * simulate customer processing that fires on update of Address
+    **********************************************************************************************************/
+    public class TEST_Account_TDTM extends TDTM_Runnable {
+
+        public override DmlWrapper run(
+            List<SObject> newlist,
+            List<SObject> oldlist,
+            Action triggerAction,
+            Schema.DescribeSObjectResult objResult
+        ) {
+            List<Account> accList = new List<Account>();
+            for (SObject sObj : newlist) {
+                Account a = new Account(
+                    Id = (Id) sObj.get('Household_Account__c'),
+                    DunsNumber = (String.valueOf(System.Crypto.getRandomLong()).right(9)
+                    ));
+                accList.add(a);
+            }
+            update accList;
+
+            return null;
+        }
     }
 }

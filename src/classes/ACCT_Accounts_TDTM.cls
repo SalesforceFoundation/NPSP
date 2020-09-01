@@ -60,6 +60,8 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
         //set system Account fields
         configAccountForContact(listNew, listOld, triggerAction, listHHNew, listHHOld);
 
+        // prevent unnecessary executions during Contact insert. names will be updated in after context
+        // when we have a contact id associated for the new contact(s) responsible for this execution
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
             TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert)
         ) {
