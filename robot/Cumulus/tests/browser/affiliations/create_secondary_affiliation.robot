@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AffiliationPageObject.py
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
@@ -27,8 +28,8 @@ Create Secondary Affiliation for Contact
     Select Tab                           Related
     Click Related List Button            Organization Affiliations        New
     Wait For Modal                       New                              Affiliation
-    Populate Modal Form                  Organization=${account}[Name]
-    Click Modal Button                   Save
+    Populate Lookup Field                Organization                     ${account}[Name]
+    Click Button                         Save
     Wait Until Modal Is Closed
     Validate Related Record Count        Organization Affiliations          1
     Verify Allocations                   Organization Affiliations        ${account}[Name]=Current

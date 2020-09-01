@@ -61,6 +61,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             Salesforce.lex_locators["record"]["related"]["card"] = (
                 "//*[@data-component-id='force_relatedListContainer']//article[.//span[@title='{}']]"
             )
+            Salesforce.lex_locators["record"]["related"]["button"]=("//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//a[@title='{}']")
+            Salesforce.lex_locators["record"]["related"]["popup_trigger"]=("//article[.//span[@title='{}'][//a[text()='{}']]]//div[contains(@class,'slds-truncate')]//button[./span[text()='Show Actions']]")
         locator_manager.register_locators("npsp",npsp_lex_locators)
 
     def _init_locators(self):
