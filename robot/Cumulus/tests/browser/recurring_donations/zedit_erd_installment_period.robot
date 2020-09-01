@@ -4,9 +4,9 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 Suite Setup     Run keywords
+...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-...             Enable RD2
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
@@ -21,12 +21,18 @@ Setup Test Data
         ...                                                         npe03__Amount__c=100
         ...                                                         npe03__Open_Ended_Status__c=Open
         ...                                                         ${NS}Status__c=Active
-        ...                                                         ${NS}Day_of_Month__c=2
+        ...                                                         ${NS}Day_of_Month__c=${day_of_month}
         ...                                                         ${NS}InstallmentFrequency__c=1
         ...                                                         ${NS}PaymentMethod__c=Credit Card
 
         Setupdata   contact         ${contact1_fields}             recurringdonation_data=${recurringdonation_fields}
+        ${date} =                  Get Current Date      result_format=%-m/%-d/%Y
+        Set Suite Variable  ${date}
 
+
+*** Variables ***
+
+${day_of_month}  2
 
 *** Test Cases ***
 
@@ -51,6 +57,7 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
+    Current Page Should be                  Details    npe03__Recurring_Donation__c
     Edit Recurring Donation Status
     ...                                     Recurring Period=Advanced
     ...                                     Every=3
@@ -62,9 +69,8 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
     # validate recurring donation statistics current and next year values
-    Validate Field Values Under Section     Statistics
-    ...                                     Current Year Value=$200.00
-    ...                                     Next Year Value=$400.00
+    Validate Current And Next Year values    100
+
     # Update the payment installment period to every eight weeks
     Edit Recurring Donation Status
     ...                                     Recurring Period=Advanced
@@ -77,6 +83,4 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
     ...                                     object_id=${data}[contact_rd][Id]
 
     # validate recurring donation statistics current and next year values
-    Validate Field Values Under Section     Statistics
-    ...                                     Current Year Value=$300.00
-    ...                                     Next Year Value=$700.00
+    Validate Current And Next Year values    100

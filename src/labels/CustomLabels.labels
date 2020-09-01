@@ -3247,6 +3247,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>unallocated</value>
     </labels>
     <labels>
+        <fullName>bdeRetirementWarningBody</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Batch Data Entry retirement &amp; recommendations</shortDescription>
+        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+    </labels>
+    <labels>
+        <fullName>bdeRetirementWarningHeader</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for warning about Batch Data Entry retiring</shortDescription>
+        <value>Retiring Batch Data Entry</value>
+    </labels>
+    <labels>
         <fullName>bdiAccountCustomIdError</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -5193,6 +5209,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>No items to display.</value>
     </labels>
     <labels>
+        <fullName>commonOkay</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Okay</shortDescription>
+        <value>Okay</value>
+    </labels>
+    <labels>
         <fullName>commonOpen</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5692,6 +5716,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Move the {0} field down.</value>
     </labels>
     <labels>
+        <fullName>geAssistiveRequireField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: explains the function of the required checkbox</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>Require {0}.</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveFieldUp</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5767,13 +5800,31 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Move the {0} section up.</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>geAssistiveShowMenu</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button/Picklist for selecting a list view</shortDescription>
         <value>Show menu.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveDescriptionFieldRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field has been set as required</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as required.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveDescriptionFieldOptional</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: indicates a form field is optional</shortDescription>
+        <!-- {0} is the customer defined name of the field -->
+        <value>{0} is marked as optional.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
@@ -7751,7 +7802,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description for Disable Health Check Record Batch Setting</shortDescription>
-        <value>If selected, Health Check only checks your NPSP configuration settings for problems.</value>
+        <value>If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organization has a large volume of records and Health Check is having problems completing.</value>
     </labels>
     <labels>
         <fullName>healthLabelErrorRecipientValid</fullName>
@@ -10245,7 +10296,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
             &lt;b&gt;This message won't be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We couldn't convert some of your existing Help Text mappings because they're invalid. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
+            We couldn't convert some of your existing Help Text mappings because they're invalid. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
         </value>
     </labels>
     <labels>

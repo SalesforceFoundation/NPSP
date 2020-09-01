@@ -524,7 +524,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Tell the build process to call the getNextDonationDate() method in the ScheduleService
+    * @description Tell the build process to call the ScheduleService method
+    * to calculate the Next Donation Date on the Recurring Donation
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withCalculateNextDonationDate() {
