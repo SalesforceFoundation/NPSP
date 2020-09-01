@@ -52,7 +52,7 @@ Create a Contact and Add Engagement Plan
     Select Tab                                       Related
     Click Related List Button                        Engagement Plans               New
     Populate Lookup Field                            Engagement Plan Template       Automation_Plan
-    Click Modal Button                               Save
+    Click Button                                     Save
     Wait Until Modal Is Closed
     Current Page Should Be                           Detail                         Contact
     Validate Related Record Count                    Engagement Plans               1

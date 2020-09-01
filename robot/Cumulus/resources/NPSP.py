@@ -918,6 +918,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def verify_row_count(self,value):
         """verifies if actual row count matches with expected value"""
         locator=npsp_lex_locators['bge']['count']
+        self.selenium.wait_until_element_is_visible(locator)
         actual_value=self.selenium.get_webelements(locator)
         count=len(actual_value)
         assert int(value) == count, "Expected rows to be {} but found {}".format(
@@ -948,10 +949,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 time.sleep(1)
 
     def click_link_with_text(self, text):
-        if int(self.latest_api_version) == 50 and text.lower() == "manage household":
-            locator = npsp_lex_locators['link-text2'].format(text)
-        else:
-            locator = npsp_lex_locators['link-text'].format(text)
+        locator = npsp_lex_locators['link-text'].format(text)
         self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
@@ -1169,7 +1167,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        
+
         if dropdown in ("Open Ended Status") and self.latest_api_version == 50.0:
             locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
             selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
@@ -1492,7 +1490,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         else:
             locator=npsp_lex_locators['link'].format("more actions","more actions")
         self.salesforce._jsclick(locator)
-        
+
 
     @capture_screenshot_on_error
     def click_related_table_item_link(self, heading, title):

@@ -64,7 +64,6 @@ npsp_lex_locators={
     'link':'//a[.//span[text()="{}" or contains(text(),"{}")]]',
     'more_actions_link':"//button[contains(@class,'slds-button_icon-border-filled') and @aria-haspopup='true']",
     'link-text':'//a[contains(text(),"{}")]',
-    'link-text2':'//lightning-button/button[contains(text(),"{}")]',
     'link-title':'//a[@title="{}"]',
     'lightning-button':'//lightning-button/button[contains(text(),"{}")]',
     'link-contains':'//button[.//span[contains(text(),"{}")]]',
