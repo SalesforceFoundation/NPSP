@@ -1676,6 +1676,8 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/
     @isTest
     private static void shouldCreateNamedHHWhenCustomTDTMTriggerUpdatesAccountOnAddressChange() {
+        final String firstName = 'Test_First_Name';
+        final String lastName = 'Test_Last_Name';
 
         List<Trigger_Handler__c> triggerHandlers = TDTM_Config_API.getDefaultRecords();
         triggerHandlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
@@ -1684,8 +1686,8 @@ public with sharing class ADDR_Addresses_TEST2 {
         insert triggerHandlers;
 
         Contact testContact = new Contact(
-            LastName = 'Test_Last_Name',
-            FirstName = 'Test_First_Name',
+            FirstName = firstName,
+            LastName = lastName,
             Salutation = 'Mr.',
             Email = 'test@email.com',
             MailingStreet = '123 Easy Street',
@@ -1699,19 +1701,23 @@ public with sharing class ADDR_Addresses_TEST2 {
         insert testContact;
         Test.stopTest();
 
-        Contact con = [
+        testContact = [
             SELECT
                 Account.Name,
                 Account.npo02__Informal_Greeting__c,
                 Account.npo02__Formal_Greeting__c,
-                Account.Dunsnumber
+                Account.DunsNumber
             FROM Contact
             WHERE Id = :testContact.Id];
 
-        System.assertEquals('Test_Last_Name ' +  system.label.npo02.DefaultHouseholdName, con.Account.Name);
-        System.assertEquals('Test_First_Name',con.Account.npo02__Informal_Greeting__c);
-        System.assert(con.Account.npo02__Formal_Greeting__c.endsWith('Test_First_Name Test_Last_Name'));
-        System.assert(String.isNotBlank(con.Account.DunsNumber));
+        System.assertEquals(lastName + ' ' +  System.Label.npo02.DefaultHouseholdName, testContact.Account.Name,
+            'Account Name should equal Last Name + Default Household Name');
+        System.assertEquals(firstName, testContact.Account.npo02__Informal_Greeting__c,
+            'Informal Greeting should equal First Name');
+        System.assert(testContact.Account.npo02__Formal_Greeting__c.endsWith(firstName + ' ' + lastName),
+            'Formal Greeting should end with First Name + Last Name');
+        System.assert(String.isNotBlank(testContact.Account.DunsNumber),
+            'Account Duns Number should be populated');
     }
 
     /*********************************************************************************************************
@@ -1737,15 +1743,15 @@ public with sharing class ADDR_Addresses_TEST2 {
             Action triggerAction,
             Schema.DescribeSObjectResult objResult
         ) {
-            List<Account> accList = new List<Account>();
+            List<Account> accounts = new List<Account>();
             for (SObject sObj : newlist) {
-                Account a = new Account(
+                Account acc = new Account(
                     Id = (Id) sObj.get('Household_Account__c'),
                     DunsNumber = (String.valueOf(System.Crypto.getRandomLong()).right(9)
                     ));
-                accList.add(a);
+                accounts.add(acc);
             }
-            update accList;
+            update accounts;
 
             return null;
         }
