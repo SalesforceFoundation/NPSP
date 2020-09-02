@@ -121,7 +121,7 @@ npsp_lex_locators={
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
     'field-value':"//div[contains(@class,'slds-form-element')][./label[text()='{}']]/div/span",
     'header':'//h1//child::div/span[text()="{}"]',
-    'check_related_list_item':'//article[.//span[text() = "{}"]]/descendant::tbody//th//a[text()="{}"]',
+    'check_related_list_item':'//article[.//span[text() = "{}"]]/descendant::tbody//th/*/*/*/*/*/*/*/*/a/span[text()="{}"]',
     'detail_page': {
         'section_header':'//h3//span[text()="{}"]',
         'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a//div[contains(@class, "slds")]',
