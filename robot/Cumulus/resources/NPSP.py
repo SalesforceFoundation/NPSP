@@ -462,7 +462,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     @capture_screenshot_on_error
     def validate_related_record_count(self,title,value):
-       "Navigates to the Related tab and validates the record count for the specified title section"
+        """Navigates to the Related tab and validates the record count for the specified title section"""
         self.select_tab("Related")
         self.salesforce.load_related_list(title)
         exp_value="("+value+")"
