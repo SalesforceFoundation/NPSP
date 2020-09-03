@@ -185,9 +185,30 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_element(option)
 
     def open_date_picker(self, title):
-        locator = npsp_lex_locators['record']['list'].format(title)
+        if self.latest_api_version == 50.0 and title in ("Payment Date"):
+            locator=npsp_lex_locators['record']['lt_date_picker'].format(title)
+        else:
+            locator = npsp_lex_locators['record']['list'].format(title)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click()
+
+    def choose_date(self, value):
+        """To pick a date from the lightning date picker"""
+        if self.latest_api_version == 50.0:
+            locator=npsp_lex_locators['record']['ltdatepicker'].format(value)
+        else:
+            locator = npsp_lex_locators['record']['datepicker'].format(value)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+        
+    def click_modal_footer_button(self,value):
+        """Click the specified lightning button on modal footer"""
+        if self.latest_api_version == 50.0:
+            btnlocator = npsp_lex_locators["button-with-text"].format(value)
+            self.selenium.scroll_element_into_view(btnlocator)
+            self.salesforce._jsclick(btnlocator)
+        else:
+            self.salesforce.click_modal_button(value)
 
     def pick_date(self, value):
         """To pick a date from the date picker"""
@@ -441,12 +462,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     @capture_screenshot_on_error
     def validate_related_record_count(self,title,value):
-
+       "Navigates to the Related tab and validates the record count for the specified title section"
         self.select_tab("Related")
         self.salesforce.load_related_list(title)
-        locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
-        actual_value=self.selenium.get_webelement(locator).text
         exp_value="("+value+")"
+        locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,exp_value)
+        actual_value = self.selenium.get_element_attribute(locator, "title")
         assert exp_value == actual_value, "Expected value to be {} but found {}".format(
             exp_value, actual_value
         )
@@ -536,7 +557,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['object']['button'].format(title)
         self.selenium.wait_until_element_is_visible(locator,error="Button "+ title +" not found on the page")
         self.selenium.get_webelement(locator).click()
-
 
 
     def check_related_list_values(self,list_name,*args):
@@ -1168,7 +1188,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
 
-        if dropdown in ("Open Ended Status") and self.latest_api_version == 50.0:
+        if dropdown in ("Open Ended Status","Payment Method") and self.latest_api_version == 50.0:
             locator =  npsp_lex_locators['record']['rdlist'].format(dropdown)
             selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
             if self.npsp.check_if_element_exists(locator):
@@ -1348,50 +1368,73 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.wait_until_location_contains("/list")
         self.selenium.wait_until_page_does_not_contain(value)
 
+    def _check_and_populate_lightning_fields(self,**kwargs):
+        """During winter 2020 part of the modal fields appear as lightning elements.
+        This keyword validates , identifies the element and populates value"""
+        for key, value in kwargs.items():
+            if key in ("Payment Amount") :
+                locator = npsp_lex_locators["erd"]["modal_input_field"].format(key)
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.salesforce._populate_field(locator, value)
+                else:
+                    self.builtin.log(f"Element {key} not found")
+            if key in ("Payment Method"):
+                """Selects given value from the dropdown field on the rd2 modal"""
+                self.npsp.select_value_from_dropdown(key, value)
+
+            else:
+                return
+            
+            
     @capture_screenshot_on_error
     def populate_modal_form(self,**kwargs):
         """Populates modal form with the field-value pairs
         supported keys are any input, textarea, lookup, checkbox, date and dropdown fields"""
-
+       # As part of winter release 2020 some modal elements are changed to lightning. To support that
+       # An extra check is added to check for lightning fields and populate accordingly
         for key, value in kwargs.items():
-            locator = npsp_lex_locators["modal-form"]["label"].format(key)
-            if self.check_if_element_exists(locator):
-                ele=self.selenium.get_webelements(locator)
-                for e in ele:
-                    classname=e.get_attribute("class")
-#                     print("key is {} and class is {}".format(key,classname))
-                    if "Lookup" in classname and "readonly" not in classname:
-                        self.salesforce.populate_lookup_field(key,value)
-                        print("Executed populate lookup field for {}".format(key))
-                        break
-                    elif "Select" in classname and "readonly" not in classname:
-                        self.select_value_from_dropdown(key,value)
-                        print("Executed select value from dropdown for {}".format(key))
-                        break
-                    elif "Checkbox" in classname and "readonly" not in classname:
-                        if value == "checked":
-                            locator = npsp_lex_locators["checkbox"]["model-checkbox"].format(key)
-                            self.selenium.get_webelement(locator).click()
-                            break
-                    elif "Date" in classname and "readonly" not in classname:
-                        self.open_date_picker(key)
-                        self.pick_date(value)
-                        print("Executed open date picker and pick date for {}".format(key))
-                        break
-                    else:
-                        try :
-                            self.search_field_by_value(key,value)
-                            print("Executed search field by value for {}".format(key))
-                        except Exception :
-                            try :
-                                self.salesforce.populate_field(key,value)
-                                print("Executed populate field for {}".format(key))
-
-                            except Exception:
-                                print ("class name for key {} did not match with field type supported by this keyword".format(key))
-
+            if key in ("Payment Amount", "Payment Method"):
+                self._check_and_populate_lightning_fields(**kwargs)
             else:
-                raise Exception("Locator for {} is not found on the page".format(key))
+                locator = npsp_lex_locators["modal-form"]["label"].format(key)
+                if self.check_if_element_exists(locator):
+                    ele=self.selenium.get_webelements(locator)
+                    for e in ele:
+                        classname=e.get_attribute("class")
+#                       print("key is {} and class is {}".format(key,classname))
+                        if "Lookup" in classname and "readonly" not in classname:
+                            self.salesforce.populate_lookup_field(key,value)
+                            print("Executed populate lookup field for {}".format(key))
+                            break
+                        elif "Select" in classname and "readonly" not in classname:
+                            self.select_value_from_dropdown(key,value)
+                            print("Executed select value from dropdown for {}".format(key))
+                            break
+                        elif "Checkbox" in classname and "readonly" not in classname:
+                            if value == "checked":
+                                locator = npsp_lex_locators["checkbox"]["model-checkbox"].format(key)
+                                self.selenium.get_webelement(locator).click()
+                                break
+                        elif "Date" in classname and "readonly" not in classname:
+                            self.open_date_picker(key)
+                            self.pick_date(value)
+                            print("Executed open date picker and pick date for {}".format(key))
+                            break
+                        else:
+                            try :
+                                self.search_field_by_value(key,value)
+                                print("Executed search field by value for {}".format(key))
+                            except Exception :
+                                try :
+                                    self.salesforce.populate_field(key,value)
+                                    print("Executed populate field for {}".format(key))
+
+                                except Exception:
+                                    print ("class name for key {} did not match with field type supported by this keyword".format(key))
+
+                else:
+                    raise Exception("Locator for {} is not found on the page".format(key))
 
 
     def verify_toast_message(self,value):
