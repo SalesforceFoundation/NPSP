@@ -244,6 +244,6 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     get qaLocatorDifferentSelection() {
-        return `button ${this.CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}`
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}`;
     }
 }
