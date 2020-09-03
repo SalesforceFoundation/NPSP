@@ -121,25 +121,25 @@ const FIELD_MAPPING_HELP_TEXT = {
 
 export default class geTemplateBuilderFormFields extends LightningElement {
 
-    // Expose labels to template
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    isInitialized;
     @api previousSaveAttempted;
     @api selectedFieldMappingSet;
-    @track isLoading = true;
-
     @api formSections;
     @api activeFormSectionId;
     @api sectionIdsByFieldMappingDeveloperNames;
-    @track objectMappings;
-    @track isAllSectionsExpanded = false;
-    objectMappingNames = [];
 
-    @track isReadMoreActive = false;
-    @track hasErrors = false;
+    @track objectMappings;
     @track errors;
 
+    isInitialized;
+    isLoading = true;
+    isAllSectionsExpanded = false;
+    isReadMoreActive = false;
+    hasErrors = false;
+
+    // Expose labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    objectMappingNames = [];
     // identifiers for use with querySelectors
     LOCATORS = {
         FIELD_BUNDLES_SECTION_ID,
