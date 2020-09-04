@@ -944,6 +944,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Elevate_Custom_Metadata__c</fullName>
+        <description>Custom metadata from Elevate Giving Pages, stored as JSON.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Custom metadata from Elevate Giving Pages, stored as JSON.</inlineHelpText>
+        <label>Elevate Custom Metadata</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>6</visibleLines>
+    </fields>
+    <fields>
         <fullName>FailureInformation__c</fullName>
         <description>Description of what caused the Data Import record to fail to be imported.</description>
         <externalId>false</externalId>
