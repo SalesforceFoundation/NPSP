@@ -36,9 +36,9 @@ Create ASC for Related Contact
     Click Related List Button               Relationships                        New
     Wait For Modal                          New                                  Relationship
     Populate Lookup Field                   Related Contact                      ${data}[contact2][FirstName] ${data}[contact2][LastName]
-    Select Value From Dropdown              Type                                 Employer
-    Select Value From Dropdown              Related Opportunity Contact Role     Soft Credit
-    Click Modal Button                      Save
+    Click Flexipage Dropdown                Type                                 Employer
+    Click Flexipage Dropdown                Related Opportunity Contact Role     Soft Credit
+    Click Button                            Save
     Wait Until Modal Is Closed
     ${ns} =                                 Get NPSP Namespace Prefix
     API Create Relationship                 ${data}[contact1][Id]    ${data}[contact3][Id]    Coworker    ${ns}Related_Opportunity_Contact_Role__c=Solicitor

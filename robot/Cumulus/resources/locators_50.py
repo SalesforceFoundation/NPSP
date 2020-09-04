@@ -29,7 +29,7 @@ npsp_lex_locators={
         'flexipage_edit_form': 'css: force-record-layout-item.slds-is-editing',
         'list':"//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-hint-parent')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]",
         'rdlist':"//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger') and @role='combobox']",
-        'flexipage-list':'//lightning-combobox[./label[text()="{}"]]/div//input[contains(@class,"combobox__input")]',
+        'flexipage-list':'//lightning-combobox[./label[text()="{}"]]//input[contains(@class,"combobox__input")]',
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
@@ -44,7 +44,7 @@ npsp_lex_locators={
             'dd-link':'//div[contains(@class,"actionMenu")]//a[@title="{}"]',
             # 'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td//a[text()='{}']]/td/span[text()='{}']",
             'allocations':"//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//tbody/tr[./td//a[text()='{}']]/td//*[text()='{}']",
-            "popup_trigger": "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tr[.//a[text()='{}']]//div[contains(@class, 'forceVirtualAction')]//a",
+            "popup_trigger": "//article[.//span[@title='{}']]//tr[.//*[text()='{}']]//div[contains(@class,'slds-truncate')]//button[./span[text()='Show Actions']]",
          },
     },
     "popup-link":"//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]//a[@title='{}']",

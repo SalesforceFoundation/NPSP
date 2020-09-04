@@ -182,6 +182,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # self.selenium.get_webelement(locator).click()
         self.wait_for_locator('flexipage-popup')
         option=npsp_lex_locators['span'].format(value)
+        self.selenium.scroll_element_into_view(option)
         self.selenium.click_element(option)
 
     def open_date_picker(self, title):

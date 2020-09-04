@@ -11,3 +11,4 @@ npsp_lex_locators["record"]["related"]["link"]="//article[contains(@class, 'forc
 npsp_lex_locators["record"]["related"]["allocations"]="//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td//a[text()='{}']]/td/span[text()='{}']"
 npsp_lex_locators["record"]["rdlist"]="//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-hint-parent')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]"
 npsp_lex_locators["payments"]["allocations"]="//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th"
+npsp_lex_locators["record"]["related"]["popup_trigger"]= "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tr[.//a[text()='{}']]//div[contains(@class, 'forceVirtualAction')]//a"

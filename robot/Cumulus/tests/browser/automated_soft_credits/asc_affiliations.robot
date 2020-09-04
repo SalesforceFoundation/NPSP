@@ -36,8 +36,8 @@ Create ASC for Affiliated Contact
     Click Related List Button               Organization Affiliations            New
     Wait For Modal                          New                                  Affiliation
     Populate Lookup Field                   Organization                         ${data}[account][Name]
-    Select Value From Dropdown              Related Opportunity Contact Role     Soft Credit
-    Click Modal Button                      Save
+    Click Flexipage Dropdown                Related Opportunity Contact Role     Soft Credit
+    Click Button                            Save
     Wait Until Modal Is Closed
 
     #Create opportunity and verify contact role

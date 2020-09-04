@@ -18,6 +18,7 @@ Data Imports
     ${acc2}=                   Generate Random String
     Go To Page                Listing                 DataImport__c
     Click Object Button       New
+    Wait Until Modal Is Open
     Populate Form
     ...                       Contact1 First Name=${first_name1}
     ...                       Contact1 Last Name=${last_name1}
@@ -26,5 +27,6 @@ Data Imports
     ...                       Contact2 Last Name=${last_name2}
     ...                       Account2 Name=${acc2}
     Click Button With Title   Save
+    Wait Until Modal Is Closed
     Process Data Import Batch    Completed
 
