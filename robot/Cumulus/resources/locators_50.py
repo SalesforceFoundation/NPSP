@@ -21,6 +21,8 @@ npsp_lex_locators={
         'button':"//lightning-button/button[@title='{}']",
         'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
+        'ltdatepicker':"//table/tbody/tr/td[@class='slds-day_adjacent-month']/span",
+        'lt_date_picker':"//label[text()='{}']/following-sibling::div",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
         'activity-button':'//button[contains(@class,"{}")]',
         'dd_edit_option': '//div[contains(@class,"branding-actions")]/ul/li/a[@title="{}"]',
@@ -33,7 +35,8 @@ npsp_lex_locators={
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
-            'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
+            #'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
+            'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span[@title="{}"]',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
             'title':'//div/h2//a[./span[text()="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
