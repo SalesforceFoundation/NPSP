@@ -87,14 +87,27 @@
                         </lightning-input>
                     </lightning-layout-item>
                     <lightning-layout-item size="12"
-                                           padding="horizontal-small">
-                        <lightning-button variant="brand"
-                                          label={labels.buttonSave}
-                                          title={labels.buttonSave}
-                                          onclick={handleCreateBatchNumber}
-                                          data-qa-locator={qaLocatorCreateBatchNumberFormatButton}
-                                          disabled={isLoading}>
-                        </lightning-button>
+                                           class="slds-p-horizontal_x-small">
+                        <lightning-layout>
+                            <lightning-layout-item class="slds-p-around_xx-small">
+                                <lightning-button variant="brand"
+                                                  label={labels.buttonSave}
+                                                  title={labels.buttonSave}
+                                                  onclick={handleSave}
+                                                  data-qa-locator={qaLocatorSaveButton}
+                                                  disabled={isLoading}
+                                                  class="slds-slds-m-right_small">
+                                </lightning-button>
+                            </lightning-layout-item>
+                            <lightning-layout-item class="slds-p-around_xx-small">
+                                <lightning-button label={labels.buttonSaveActivate}
+                                                  title={labels.buttonSaveActivate}
+                                                  onclick={handleSaveAndActivate}
+                                                  data-qa-locator={qaLocatorSaveAndActivateButton}
+                                                  disabled={isLoading}>
+                                </lightning-button>
+                            </lightning-layout-item>
+                        </lightning-layout>
                     </lightning-layout-item>
 
                 </lightning-layout>

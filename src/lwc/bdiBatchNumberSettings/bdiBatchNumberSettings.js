@@ -17,8 +17,9 @@ import Max_Used_Number from '@salesforce/schema/AutoNumber__c.Max_Used_Number__c
 import Object_API_Name from '@salesforce/schema/AutoNumber__c.Object_API_Name__c';
 import Starting_Number from '@salesforce/schema/AutoNumber__c.Starting_Number__c';
 
-import commonActivate from '@salesforce/label/c.commonActivate';
-import commonDeactivate from '@salesforce/label/c.commonDeactivate';
+import autoNumberErrorInvalidDisplayFormat
+    from '@salesforce/label/c.autoNumberErrorInvalidDisplayFormat';
+import batchNumberSettingsActivate from '@salesforce/label/c.batchNumberSettingsActivate';
 import batchNumberSettingsConfigureHeader
     from '@salesforce/label/c.batchNumberSettingsConfigureHeader';
 import batchNumberSettingsDescActivation
@@ -27,17 +28,17 @@ import batchNumberSettingsDescDisplayFormat
     from '@salesforce/label/c.batchNumberSettingsDescDisplayFormat';
 import batchNumberSettingsDescription
     from '@salesforce/label/c.batchNumberSettingsDescription';
-import batchNumberSettingsHeaderFormats
-    from '@salesforce/label/c.batchNumberSettingsHeaderFormats';
-import batchNumberSettingsSave from '@salesforce/label/c.batchNumberSettingsSave';
-import batchNumberSettingsHeader from '@salesforce/label/c.batchNumberSettingsHeader';
 import batchNumberSettingsDescriptionCreate
     from '@salesforce/label/c.batchNumberSettingsDescriptionCreate';
+import batchNumberSettingsError from '@salesforce/label/c.batchNumberSettingsError';
+import batchNumberSettingsHeader from '@salesforce/label/c.batchNumberSettingsHeader';
 import batchNumberSettingsHeaderDisplayFormat
     from '@salesforce/label/c.batchNumberSettingsHeaderDisplayFormat';
-import batchNumberSettingsError from '@salesforce/label/c.batchNumberSettingsError';
-import autoNumberErrorInvalidDisplayFormat
-    from '@salesforce/label/c.autoNumberErrorInvalidDisplayFormat';
+import batchNumberSettingsHeaderFormats
+    from '@salesforce/label/c.batchNumberSettingsHeaderFormats';
+import commonActivate from '@salesforce/label/c.commonActivate';
+import commonDeactivate from '@salesforce/label/c.commonDeactivate';
+import commonSave from '@salesforce/label/c.commonSave';
 
 const COLUMNS = [
     {fieldName: Display_Format.fieldApiName},
@@ -74,17 +75,18 @@ export default class bdiBatchNumberSettings extends LightningElement {
     }
 
     labels = {
-        header: batchNumberSettingsHeader,
+        buttonSave: commonSave,
+        buttonSaveActivate: batchNumberSettingsActivate,
         description: batchNumberSettingsDescription,
-        headerConfigure: batchNumberSettingsConfigureHeader,
-        descriptionConfigure: batchNumberSettingsDescriptionCreate,
-        headerDisplayFormat: batchNumberSettingsHeaderDisplayFormat,
-        descriptionDisplayFormat: batchNumberSettingsDescDisplayFormat,
-        headerFormats: batchNumberSettingsHeaderFormats,
         descriptionActivation: batchNumberSettingsDescActivation,
-        buttonSave: batchNumberSettingsSave,
+        descriptionConfigure: batchNumberSettingsDescriptionCreate,
+        descriptionDisplayFormat: batchNumberSettingsDescDisplayFormat,
         error: batchNumberSettingsError,
-        errorInvalidDisplayFormat: autoNumberErrorInvalidDisplayFormat
+        errorInvalidDisplayFormat: autoNumberErrorInvalidDisplayFormat,
+        header: batchNumberSettingsHeader,
+        headerConfigure: batchNumberSettingsConfigureHeader,
+        headerDisplayFormat: batchNumberSettingsHeaderDisplayFormat,
+        headerFormats: batchNumberSettingsHeaderFormats
     }
 
     fieldDescribes;
@@ -171,29 +173,50 @@ export default class bdiBatchNumberSettings extends LightningElement {
         }
     }
 
-    handleCreateBatchNumber() {
-        const fields = {};
-        fields[Object_API_Name.fieldApiName] = DataImportBatch.objectApiName;
-        fields[Field_API_Name.fieldApiName] = Batch_Number.fieldApiName;
-        fields[Starting_Number.fieldApiName] = this.startingNumber;
-        fields[Display_Format.fieldApiName] = this.displayFormat;
-        fields[Description.fieldApiName] = this.description;
+    async handleSave() {
+        await this.save();
+        this.reset();
+        this.fetchAutoNumbers();
+    }
 
-        const record = {
-            fields: fields
-        }
-
+    async save() {
         this.isLoading = true;
-        save({autoNumber: JSON.stringify(record)})
-            .then(() => {
-                this.reset();
-                this.fetchAutoNumbers();
-            })
-            .catch(error => {
-                this.error = error;
-                this.displayErrorOnInputs(this.errorDetails);
-            })
-            .finally(() => this.isLoading = false);
+        try {
+            const autoNumber = await save({autoNumber: JSON.stringify({fields: this.fields})});
+            return autoNumber;
+        } catch (err) {
+            this.error = err;
+            this.displayErrorOnInputs(this.errorDetails);
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    async handleSaveAndActivate() {
+        const autoNumber = await this.save();
+        await this.activate(autoNumber.Id);
+        this.fetchAutoNumbers();
+    }
+
+    async activate(autoNumberId) {
+        this.isLoading = true;
+        try {
+            await activate({autoNumberId: autoNumberId});
+        } catch (err) {
+            this.error = err;
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    get fields() {
+        return {
+            [Object_API_Name.fieldApiName]: DataImportBatch.objectApiName,
+            [Field_API_Name.fieldApiName]: Batch_Number.fieldApiName,
+            [Starting_Number.fieldApiName]: this.startingNumber,
+            [Display_Format.fieldApiName]: this.displayFormat,
+            [Description.fieldApiName]: this.description
+        }
     }
 
     get errorMessage() {
@@ -253,8 +276,12 @@ export default class bdiBatchNumberSettings extends LightningElement {
         return `input ${this.labelDescription}`;
     }
 
-    get qaLocatorCreateBatchNumberFormatButton() {
+    get qaLocatorSaveButton() {
         return `button ${this.labels.buttonSave}`;
+    }
+
+    get qaLocatorSaveAndActivateButton() {
+        return `button ${this.labels.buttonSaveActivate}`;
     }
 
     get qaLocatorBatchNumberDatatable() {
