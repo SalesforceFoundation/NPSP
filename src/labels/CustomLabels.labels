@@ -3774,6 +3774,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Maps To</value>
     </labels>
     <labels>
+        <fullName>bdiFMUIDeleteFieldMappingPrompt</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Prompt body when attempting to delete a field mapping</shortDescription>
+        <value>Deleting a field mapping breaks existing templates and batches that use it. Are you sure you wish to delete this mapping?</value>
+    </labels>
+    <labels>
         <fullName>bdiFMUIDescription1</fullName>
         <categories>Advanced Mapping</categories>
         <language>en_US</language>
@@ -4124,6 +4132,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Title for the Edit Object Group modal.</shortDescription>
         <value>Edit Object Group</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIFieldMappingProblemHeader</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast warning header about Field Mapping issues</shortDescription>
+        <value>Check Field Mappings</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIFieldMappingProblemMessage</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body about Field Mapping issues</shortDescription>
+        <value>There is a problem with the Field Mappings listed below. Make sure the NPSP Data Import and target fields still exist and review the Field Mapping.</value>
     </labels>
     <labels>
         <fullName>bdiOMUILongDeployment</fullName>
@@ -4969,6 +4993,136 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>batchNumberSettingsDescActivation</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of how to use the existing batch number format table</shortDescription>
+        <value>Activate or deactivate batch number formats. One batch number format can be active at time.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderFormats</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for table of existing batch number formats</shortDescription>
+        <value>Batch Number Formats</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsActivate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to save and activate the new batch number format</shortDescription>
+        <value>Save &amp; Activate</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Display Format options</shortDescription>
+        <value>Display Format allows you to control the appearance of your auto-numbered
+            field. It must be unique and include the number of digits as well as a prefix, if
+            desired. Your format can be up to 30 characters.&lt;/br&gt;&lt;/br&gt;
+            Examples&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            A sequence formatted as {0} with a starting number of 9 displays as 9, 10, 11,
+            etc.
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as {00000} with a starting number of 9 displays as 00009,
+            00010, 00011, etc.&#10;
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as ABC-{0000} with a starting number of 9 displays as
+            ABC-0009, ABC-0010, ABC-0011, etc.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsError</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for auto-number format setting</shortDescription>
+        <value>Cannot save auto-number format. Please review the errors and try again.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for explanation of Display Format options</shortDescription>
+        <value>Learn more about display formats.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescriptionCreate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for creating a batch number format</shortDescription>
+        <value>Create a custom batch number format and choose a starting number. You must activate the new batch number format in the Batch Number Formats section.</value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorInvalidDisplayFormat</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when auto-number Display Format is invalid</shortDescription>
+        <value>Invalid Display Format.</value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorDuplicate</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for duplicate auto-number format</shortDescription>
+        <value>This Display Format is already in use.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsConfigureHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number configuration</shortDescription>
+        <value>Configure Batch Number</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescription</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of the batch number settings</shortDescription>
+        <value>Batch numbers are unique identifiers used in Gift Entry, NPSP Data Importer, and the legacy Batch Gift Entry feature. The auto-numbered value appears in the Batch Number fields on Opportunities and Payments.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number settings in NPSP Settings</shortDescription>
+        <value>Batch Number Settings</value>
+    </labels>
+    <labels>    
+        <fullName>commonActivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Activate</shortDescription>
+        <value>Activate</value>
+    </labels>
+    <labels>
+        <fullName>commonDeactivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Deactivate</shortDescription>
+        <value>Deactivate</value>
+    </labels>         
+    <labels>
         <fullName>commonAmount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5065,6 +5219,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
     </labels>
     <labels>
+        <fullName>commonConfirm</fullName>
+        <categories>Common</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirm</shortDescription>
+        <value>Confirm</value>
+    </labels>       
+    <labels>
         <fullName>commonCreditNumber</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5127,6 +5289,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Field Label</shortDescription>
         <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldsNotFound</fullName>
+        <categories>Common</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fields Not Found</shortDescription>
+        <value>Fields Not Found</value>
+    </labels>    
+    <labels>
+        <fullName>commonFieldNotFound</fullName>
+        <categories>Common</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field not found</shortDescription>
+        <value>Field not found</value>
     </labels>
     <labels>
         <fullName>commonGeneralAccountUnit</fullName>
@@ -6548,6 +6726,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>For more information, please see {0} troubleshooting documentation on the Power of Us Hub.</value>
     </labels>
     <labels>
+        <fullName>geFieldsNotFoundMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message body when a field or Field Mapping isn't found</shortDescription>
+        <value>The following fields are included in this form, but can't be found: {0}</value>
+    </labels>
+    <labels>
         <fullName>commonGauAllocations</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7253,7 +7439,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning about some fields when donation already has a GAU Allocation assigned</shortDescription>
-        <value>Since this donation has at least one GAU Allocation assigned, you can&apos;t update certain fields.</value>
+        <value>Since this donation has at least one GAU Allocation assigned, you can't update certain fields because this donation has at least one GAU Allocation assigned.</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>

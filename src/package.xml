@@ -1095,6 +1095,7 @@
         <members>DataImport__c.Donation_Record_Type_Name__c</members>
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
+        <members>DataImport__c.Elevate_Custom_Metadata__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
         <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
@@ -1193,8 +1194,8 @@
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Async_Error_Check_Last_Run__c</members>
-        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.DisableRecordDataHealthChecks__c</members>
+        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Don_t_Auto_Schedule_Default_NPSP_Jobs__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -1878,6 +1879,18 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>autoNumberErrorDuplicate</members>
+        <members>autoNumberErrorInvalidDisplayFormat</members>
+        <members>batchNumberSettingsActivate</members>
+        <members>batchNumberSettingsConfigureHeader</members>
+        <members>batchNumberSettingsDescActivation</members>
+        <members>batchNumberSettingsDescDisplayFormat</members>
+        <members>batchNumberSettingsDescription</members>
+        <members>batchNumberSettingsDescriptionCreate</members>
+        <members>batchNumberSettingsError</members>
+        <members>batchNumberSettingsHeader</members>
+        <members>batchNumberSettingsHeaderDisplayFormat</members>
+        <members>batchNumberSettingsHeaderFormats</members>
         <members>bdeRetirementWarningBody</members>
         <members>bdeRetirementWarningHeader</members>
         <members>bdiAccountCustomIdError</members>
@@ -1944,6 +1957,7 @@
         <members>bdiFMUIBackToMapGroup</members>
         <members>bdiFMUIDataType</members>
         <members>bdiFMUIDatatableMapsTo</members>
+        <members>bdiFMUIDeleteFieldMappingPrompt</members>
         <members>bdiFMUIDescription1</members>
         <members>bdiFMUIDescription2</members>
         <members>bdiFMUIFieldAPIName</members>
@@ -1994,6 +2008,8 @@
         <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
         <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIFieldMappingProblemHeader</members>
+        <members>bdiOMUIFieldMappingProblemMessage</members>
         <members>bdiOMUIGroupNameHelp</members>
         <members>bdiOMUIGroupNameLabel</members>
         <members>bdiOMUIImportDetailsTitle</members>
@@ -2097,6 +2113,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonActivate</members>
         <members>commonAdminPermissionErrorMessage</members>
         <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
@@ -2111,14 +2128,18 @@
         <members>commonCardType</members>
         <members>commonClone</members>
         <members>commonConcurrentBatchError</members>
+        <members>commonConfirm</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
+        <members>commonDeactivate</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonFieldNotFound</members>
+        <members>commonFieldsNotFound</members>
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
         <members>commonInsufficientPermissions</members>
@@ -2290,6 +2311,7 @@
         <members>geErrorUncertainCardChargePart2</members>
         <members>geErrorUncertainCardChargePart3</members>
         <members>geErrorUncertainCardChargePart4</members>
+        <members>geFieldsNotFoundMessage</members>
         <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>
