@@ -4985,12 +4985,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Number Formats</value>
     </labels>
     <labels>
-        <fullName>batchNumberSettingsSave</fullName>
+        <fullName>batchNumberSettingsActivate</fullName>
         <categories>Batch Number Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link to save a batch number format</shortDescription>
-        <value>Save Batch Number Format</value>
+        <shortDescription>Link to save and activate the new batch number format</shortDescription>
+        <value>Save &amp; Activate</value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsDescDisplayFormat</fullName>

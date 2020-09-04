@@ -1904,7 +1904,7 @@
         <members>batchNumberSettingsHeader</members>
         <members>batchNumberSettingsHeaderDisplayFormat</members>
         <members>batchNumberSettingsHeaderFormats</members>
-        <members>batchNumberSettingsSave</members>
+        <members>batchNumberSettingsActivate</members>
         <members>bdeRetirementWarningBody</members>
         <members>bdeRetirementWarningHeader</members>
         <members>bdiAccountCustomIdError</members>
