@@ -3785,8 +3785,8 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>psElevateCommon</members>
-        <members>psElevateCreditCardForm</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2ElevateCreditCardForm</members>
         <members>rd2EntryForm</members>
         <members>rd2EntryFormCustomFieldsSection</members>
         <members>rd2EntryFormDonorSection</members>

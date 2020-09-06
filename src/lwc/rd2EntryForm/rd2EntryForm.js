@@ -364,30 +364,12 @@ export default class rd2EntryForm extends LightningElement {
     * Handle component display when an error on the tokenize credit card event
     */
     handleTokenizeCardError(event) {
-        try {
-            if (event.error.isObject) {
-                let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
+        //Do not display an error from the tokenize card since
+        //it will be displayed in the credit card widget,
+        //but stop loading and enable the Save button
 
-                // Represents the error response returned from payment services
-                let errorObject = JSON.parse(errorResponse);
-                errorObject.forEach((message, index) => {
-                    errorObjects.push(message);
-                });
-
-                this.error.detail = event.error.message[0] + JSON.stringify(errorObjects);
-            } else {
-                this.error.detail = event.error.message;
-            }            
-
-        } catch (error) {
-            this.error.detail = JSON.stringify(event);
-
-        } finally {
-            this.error.header = 'Salesforce.org Elevate';
-
-            const disableSaveButton = false;
-            this.handlePageOnError(disableSaveButton);
-        }
+        const disableSaveButton = false;
+        this.handlePageOnError(disableSaveButton);
     }
 
     /***

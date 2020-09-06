@@ -1,7 +1,14 @@
 
 
+/***
+* @description Visualforce page for the credit card tokenization
+*/
 const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 
+/***
+* @description Max number of ms to wait for the response
+*/
+const TOKENIZE_TIMEOUT_MS = 10000;
 
 /***
 * @description Returns tokenize card Visualforce page URL
@@ -31,6 +38,7 @@ const getVisualforceOriginURLs = (domainInfo, namespace) => {
 
 
 export {
+    TOKENIZE_TIMEOUT_MS,
     getVisualforceOriginURLs,
-    getTokenizeCardPageURL
+    getTokenizeCardPageURL,
 };

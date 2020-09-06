@@ -12,9 +12,9 @@
                                     <h1 class='slds-text-body_regular'>{labels.commonPaymentServices}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <template if:true={displayHideCardButton}>
-                                        <lightning-button variant="base" label={disableCardEntryLabel}
-                                            alternative-text={disableCardEntryLabel} icon-name='utility:close'
+                                    <template if:false={isDisabled}>
+                                        <lightning-button variant="base" label={labels.rd2ElevateDisableLabel}
+                                            alternative-text={labels.rd2ElevateDisableLabel} icon-name='utility:close'
                                             icon-position="right" onclick={handleUserDisabledWidget}
                                             class='slds-button slds-button_base slds-float_right hide-card-button'>
                                         </lightning-button>
@@ -26,25 +26,23 @@
 
                     <lightning-layout-item size='12' padding='around-small'>
                         <template if:true={isDisabled}>
-                            <template if:true={hasUserDisabledWidget}>
-                                <p class='fade-in'>
-                                    <span class='slds-content-message'>
-                                        {disabledCardEntryMessage}
-                                    </span>
-                                    <lightning-button variant='base' label={enableCardEntryLabel}
-                                        title={enableCardEntryLabel} onclick={handleUserEnabledWidget}
-                                        class='slds-m-left_xx-small'>
-                                    </lightning-button>
-                                </p>
-                            </template>
-                            <template if:false={hasUserDisabledWidget}>
-                                <p class='slds-text-body_regular slds-p-vertical_medium'>{disabledMessage}</p>
-                            </template>
+                            <p class='fade-in'>
+                                <span class='slds-content-message'>
+                                    {labels.rd2ElevateDisabledMessage}
+                                </span>
+                                <lightning-button variant='base' label={labels.rd2ElevateEnableLabel}
+                                    title={labels.rd2ElevateEnableLabel} onclick={handleUserEnabledWidget}
+                                    class='slds-m-left_xx-small'>
+                                </lightning-button>
+                            </p>
                         </template>
                         <template if:false={isDisabled}>
-                            <c-util-alert-banner if:true={alert.show} theme={alert.theme} variant={alert.variant}
-                                icon={alert.icon} message={alert.message}>
-                            </c-util-alert-banner>
+                            <div if:true={alert.show} class='slds-p-bottom_large'>
+                                <c-util-alert-banner if:true={alert.show} theme={alert.theme} variant={alert.variant}
+                                    icon={alert.icon} message={alert.message}>
+                                </c-util-alert-banner>
+                            </div>
+
                             <div class='iframe-container'>
                                 <template if:true={isLoading}>
                                     <lightning-spinner alternative-text={labels.assistiveSpinner}>

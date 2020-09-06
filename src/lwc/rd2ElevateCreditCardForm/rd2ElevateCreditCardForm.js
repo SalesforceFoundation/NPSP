@@ -1,8 +1,10 @@
 import { api, track, LightningElement } from 'lwc';
-import { format, getNamespace, isFunction } from 'c/utilCommon';
-import { isBlank } from 'c/util';
-import { getTokenizeCardPageURL, getVisualforceOriginURLs } from 'c/psElevateCommon';
-import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { fireEvent } from 'c/pubsubNoPageRef';
+import { getNamespace, isFunction } from 'c/utilCommon';
+import {
+    TOKENIZE_TIMEOUT_MS,
+    getTokenizeCardPageURL, getVisualforceOriginURLs
+} from 'c/psElevateCommon';
 
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 
@@ -12,24 +14,11 @@ import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import assistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 
-import geButtonPaymentDoNotCharge from '@salesforce/label/c.geButtonPaymentDoNotCharge';
-import geBodyPaymentNotProcessingTransaction from '@salesforce/label/c.geBodyPaymentNotProcessingTransaction';
-import geButtonPaymentAlternate from '@salesforce/label/c.geButtonPaymentAlternate';
-import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
-import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
-
 import rd2ElevateDisableLabel from '@salesforce/label/c.RD2_ElevateDisableLabel';
 import rd2ElevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
 import rd2ElevateEnableLabel from '@salesforce/label/c.RD2_ElevateEnableLabel';
 
-import {
-    DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
-    LABEL_NEW_LINE,
-    WIDGET_TYPE_DI_FIELD_VALUE,
-} from 'c/geConstants';
-
-const TOKENIZE_TIMEOUT_MS = 10000; 
-const WIDGET_DISABLED_EVENT_NAME = 'doNotChargeState';
+const WIDGET_DISABLED_EVENT_NAME = 'rd2TokenizeCardWidgetDisabled';
 
 export default class psElevateCreditCardForm extends LightningElement {
 
@@ -37,11 +26,6 @@ export default class psElevateCreditCardForm extends LightningElement {
         commonPaymentServices,
         assistiveSpinner,
         tokenRequestTimedOut,
-        gePaymentProcessingErrorBanner,
-        gePaymentProcessError,
-        geButtonPaymentDoNotCharge,
-        geBodyPaymentNotProcessingTransaction,
-        geButtonPaymentAlternate,
         rd2ElevateDisableLabel,
         rd2ElevateDisabledMessage,
         rd2ElevateEnableLabel
@@ -49,63 +33,48 @@ export default class psElevateCreditCardForm extends LightningElement {
 
 
     @api cardHolderName;
-    @api scope;
 
     @track domain;
     @track visualforceOrigin;
     @track isLoading = true;
     @track alert = {};
-    @track disabledMessage;
     @track isDisabled = false;
-    @track hasUserDisabledWidget = false;
-    @track hasEventDisabledWidget = false;
     _visualforceOriginUrls;
 
-    isGEWidget() {
-        return isBlank(this.scope) || this.scope !== 'rd2'
-            ? true //default is GE
-            : false;
-    }
-
-    get disableCardEntryLabel() {
-        return this.isGEWidget()
-            ? this.labels.geButtonPaymentDoNotCharge
-            : this.labels.rd2ElevateDisableLabel
-    }
-
-    get disabledCardEntryMessage() {
-        return this.isGEWidget()
-            ? this.labels.geBodyPaymentNotProcessingTransaction
-            : this.labels.rd2ElevateDisabledMessage
-    }
-
-    get enableCardEntryLabel() {
-        return this.isGEWidget()
-            ? this.labels.geButtonPaymentAlternate
-            : this.labels.rd2ElevateEnableLabel
-    }
-
-    get displayHideCardButton() {
-        return !(this.hasEventDisabledWidget || this.hasUserDisabledWidget);
-    }
-
-    get tokenizeCardPageUrl() {
-        return getTokenizeCardPageURL(this.getCurrentNamespace());
-    }
-
+    /***
+    * @description
+    */
     async connectedCallback() {
         this.domainInfo = await getOrgDomainInfo();
 
         this._visualforceOriginUrls = getVisualforceOriginURLs(this.domainInfo, this.getCurrentNamespace());
     }
 
+    /***
+    * @description
+    */
     renderedCallback() {
         this.registerPostMessageListener();
-        registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleEventDisabledWidget, this);
     }
 
+    /***
+    * @description
+    */
     disconnectedCallback() {
-        unregisterListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME);
+    }
+
+    /***
+    * @description
+    */
+    getCurrentNamespace() {
+        return getNamespace(PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
+    }
+
+    /***
+    * @description 
+    */
+    get tokenizeCardPageUrl() {
+        return getTokenizeCardPageURL(this.getCurrentNamespace());
     }
 
     /***
@@ -113,9 +82,8 @@ export default class psElevateCreditCardForm extends LightningElement {
     */
     handleUserDisabledWidget() {
         this.hideWidget();
-        this.hasUserDisabledWidget = true;
         this.dispatchApplicationEvent(WIDGET_DISABLED_EVENT_NAME, {
-            isWidgetDisabled: this.hasUserDisabledWidget
+            isWidgetDisabled: true
         });
     }
 
@@ -125,42 +93,32 @@ export default class psElevateCreditCardForm extends LightningElement {
     handleUserEnabledWidget() {
         this.isLoading = true;
         this.displayWidget();
-        this.hasUserDisabledWidget = false;
         this.dispatchApplicationEvent(WIDGET_DISABLED_EVENT_NAME, {
-            isWidgetDisabled: this.hasUserDisabledWidget
+            isWidgetDisabled: false
         });
     }
 
     /***
-    * @description Handles receipt of an event to disable this widget. Currently
-    * used when we've charged a card, but BDI processing failed.
-    */
-    handleEventDisabledWidget(event) {
-        this.hideWidget(event.detail.message);
-        this.hasEventDisabledWidget = true;
-    }
-
-    /***
     * @description Function enables or disables the widget based on provided args.
-    * @param {string} message: Text to be disabled in the widgets body when disabled.
     */
-    displayWidget(message) {
+    displayWidget() {
         this.isDisabled = false;
-        this.disabledMessage = message || null;
+        this.clearError();
     }
 
     /***
     * @description Function enables or disables the widget based on provided args.
-    * @param {string} message: Text to be disabled in the widgets body when disabled.
     */
-    hideWidget(message) {
+    hideWidget() {
         this.isDisabled = true;
-        this.disabledMessage = message || null;
+        this.clearError();
     }
 
-    getCurrentNamespace() {
-        return getNamespace(
-            PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
+    /***
+    * @description
+    */
+    dispatchApplicationEvent(eventName, payload) {
+        fireEvent(null, eventName, payload);
     }
 
     /***
@@ -213,7 +171,7 @@ export default class psElevateCreditCardForm extends LightningElement {
 
                 this.tokenCallback = message => {
                     clearTimeout(timer);
-                    this.alert = {};
+                    this.clearError();
 
                     if (message.error) {
                         reject(this.handleTokenizationError(message));
@@ -255,34 +213,27 @@ export default class psElevateCreditCardForm extends LightningElement {
             errorValue = message.error;
         }
 
-        const isGEWidget = this.isGEWidget();
-
-        /** This event can be used to extend handling payment errors at the form level by adding additional detail
-         * objects.
-         * We use the hex value for line feed (new line) 0x0A
-         */
-        let labelReplacements = [this.labels.commonPaymentServices, errorValue];
-        let formattedErrorResponse = format(this.labels.gePaymentProcessError, labelReplacements);
-        let splitErrorResponse = formattedErrorResponse.split(LABEL_NEW_LINE);
-
-        let alertMessage = isGEWidget
-            ? this.labels.gePaymentProcessingErrorBanner
-            : errorValue;
-
         this.alert = {
             theme: 'error',
             show: true,
-            message: alertMessage,
+            message: errorValue,
             variant: 'inverse',
             icon: 'utility:error'
         };
 
         return {
             error: {
-                message: (isGEWidget || isObject) ? splitErrorResponse : errorValue,
+                message: errorValue,
                 isObject: isObject
             }
-        };              
+        };
+    }
+
+    /**
+     * 
+     */
+    clearError() {
+        this.alert = {};
     }
 
     /**
@@ -292,20 +243,8 @@ export default class psElevateCreditCardForm extends LightningElement {
     @api
     returnValues() {
         return {
-            type: WIDGET_TYPE_DI_FIELD_VALUE,
             payload: this.requestToken()
         };
-    }
-
-    @api
-    load() { }
-
-    @api
-    reset() { }
-
-    @api
-    get allFieldsByAPIName() {
-        return [PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName];
     }
 
     @api
@@ -313,7 +252,4 @@ export default class psElevateCreditCardForm extends LightningElement {
         this.cardHolderName = cardHolderName;
     }
 
-    dispatchApplicationEvent(eventName, payload) {
-        fireEvent(null, eventName, payload);
-    }
 }
