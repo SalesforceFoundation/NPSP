@@ -54,12 +54,35 @@ export default class psElevateCreditCardForm extends LightningElement {
     disconnectedCallback() {
     }
 
-
     /***
     * @description 
     */
     get tokenizeCardPageUrl() {
         return psElevateCommon.getTokenizeCardPageURL();
+    }
+
+    /***
+    * @description Method handles messages received from iframed visualforce page.
+    *
+    * @param {object} message: Message received from iframe
+    */
+    async handleMessage(message) {
+        psElevateCommon.handleMessage(message);
+        
+        if (message.isLoaded) {
+            this.isLoading = false;
+        }
+    }
+
+    /***
+    * @description Method sends a message to the visualforce page iframe requesting
+    * a token. Response for this request is found and handled in
+    * registerPostMessageListener.
+    */
+    requestToken() {
+        const iframe = this.template.querySelector(`[data-id='${this.labels.commonPaymentServices}']`);
+
+        return psElevateCommon.requestToken(this.visualforceOrigin, iframe, this.handleError);
     }
 
     /***
@@ -99,28 +122,11 @@ export default class psElevateCreditCardForm extends LightningElement {
         this.clearError();
     }
 
-    /***
-    * @description Method handles messages received from iframed visualforce page.
-    *
-    * @param {object} message: Message received from iframe
-    */
-    async handleMessage(message) {
-        psElevateCommon.handleMessage(message);
-        
-        if (message.isLoaded) {
-            this.isLoading = false;
-        }
-    }
-
-    /***
-    * @description Method sends a message to the visualforce page iframe requesting
-    * a token. Response for this request is found and handled in
-    * registerPostMessageListener.
-    */
-    requestToken() {
-        const iframe = this.template.querySelector(`[data-id='${this.labels.commonPaymentServices}']`);
-
-        return psElevateCommon.requestToken(this.visualforceOrigin, iframe, this.handleError);
+    /**
+     * 
+     */
+    clearError() {
+        this.alert = {};
     }
 
     /**
@@ -152,13 +158,6 @@ export default class psElevateCreditCardForm extends LightningElement {
                 isObject: isObject
             }
         };
-    }
-
-    /**
-     * 
-     */
-    clearError() {
-        this.alert = {};
     }
 
     /**
