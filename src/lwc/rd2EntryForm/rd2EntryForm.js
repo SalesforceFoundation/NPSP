@@ -1,9 +1,9 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { showToast, constructErrorMessage, isNull, isNotEmpty } from 'c/utilCommon';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { getRecord } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 
@@ -31,6 +31,7 @@ import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
+const LABEL_NEW_LINE = '/0x0A/';
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -69,8 +70,10 @@ export default class rd2EntryForm extends LightningElement {
     isRecordReady = false;
     isSettingReady = false;
 
-    @track hasError = false;
-    @track errorMessage = {};
+    isElevateCustomer = false;
+    @track isElevateTokenizeCard = false;
+
+    @track error = {};
 
     /***
     * @description Dynamically render the new/edit form via CSS to show/hide based on the status of
@@ -94,9 +97,10 @@ export default class rd2EntryForm extends LightningElement {
                 this.rdSettings = response;
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
+                this.isElevateCustomer = response.isElevateCustomer;
             })
             .catch((error) => {
-                this.handleError(error, true);
+                this.handleError(error);
             })
             .finally(() => {
                 this.isLoading = false;
@@ -108,8 +112,7 @@ export default class rd2EntryForm extends LightningElement {
         checkRequiredFieldPermissions()
             .then(response => {
                 if (response === false) {
-                    this.hasError = true;
-                    this.errorMessage = {
+                    this.error = {
                         header: this.customLabels.flsErrorHeader,
                         detail: this.customLabels.flsErrorDetail
                     };
@@ -134,7 +137,7 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         if (response.error) {
-            this.handleError(response.error, true);
+            this.handleError(response.error);
         }
     }
 
@@ -192,11 +195,31 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
 
+            this.evaluateTokenizeCard(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
+
         } else if (response.error) {
-            this.handleError(response.error, true);
+            this.handleError(response.error);
         }
     }
 
+    /***
+    * @description Checks if form re-rendering is required due to payment method change
+    * @param event Contains new payment method value
+    */
+    handlePaymentChange(event) {
+        this.clearError();
+        this.evaluateTokenizeCard(event.detail.value);
+    }
+
+    /***
+    * @description Checks if credit card widget should be displayed
+    * @param paymentMethod Payment method
+    */
+    evaluateTokenizeCard(paymentMethod) {
+        this.isElevateTokenizeCard = this.isElevateCustomer === true
+            && !this.isEdit
+            && paymentMethod === 'Credit Card';//TODO is this label?
+    }
 
     /***
     * @description Overrides the standard submit.
@@ -204,18 +227,42 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     handleSubmit(event) {
+        this.clearError();
         this.isLoading = true;
-        this.hasError = false;
-        this.template.querySelector("[data-id='submitButton']").disabled = true;
+        this.saveButton.disabled = true;
 
         const allFields = this.getAllSectionsInputValues();
 
         if (this.isSectionInputsValid()) {
-            this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
+            this.processSubmit(allFields);
+
         } else {
             this.isLoading = false;
-            this.hasError = false;
-            this.template.querySelector("[data-id='submitButton']").disabled = false;
+            this.saveButton.disabled = false;
+        }
+    }
+
+    /***
+    * @description Overrides the standard submit.
+    * Collects and validates fields displayed on the form and any integrated LWC
+    * and submits them for the record insert or update.
+    */
+    processSubmit = async (allFields) => {
+        if (this.isElevateTokenizeCard) {
+            try {
+                const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
+                const widgetValues = await elevateWidget.returnValues().payload;
+                console.log('Widget values: ' + JSON.stringify(widgetValues));
+            } catch (error) {
+                this.handleTokenizeCardError(error);
+                return;
+            }
+        }
+
+        try {
+            this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
+        } catch (error) {
+            this.handleSaveError(error);
         }
     }
 
@@ -226,7 +273,7 @@ export default class rd2EntryForm extends LightningElement {
         const donorFields = (isNull(this.donorComponent))
             ? {}
             : this.donorComponent.returnValues();
-    
+
         const scheduleFields = (isNull(this.scheduleComponent))
             ? {}
             : this.scheduleComponent.returnValues();
@@ -235,7 +282,7 @@ export default class rd2EntryForm extends LightningElement {
             ? {}
             : this.customFieldsComponent.returnValues();
 
-        return {...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues()};
+        return { ...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues() };
     }
 
     /***
@@ -245,7 +292,7 @@ export default class rd2EntryForm extends LightningElement {
         const isDonorSectionValid = (isNull(this.donorComponent))
             ? true
             : this.donorComponent.isValid();
-    
+
         const isScheduleSectionValid = (isNull(this.scheduleComponent))
             ? true
             : this.scheduleComponent.isValid();
@@ -259,27 +306,49 @@ export default class rd2EntryForm extends LightningElement {
         return isDonorSectionValid && isScheduleSectionValid && isCustomFieldSectionValid && isEntryFormValid;
     }
 
-    /***
-    * @description Handle component display when an error occurs
-    * @param error: Error Event
-    * @param disableSaveButton: true to disable the Save button on the page; defaults to false
+    /**
+    * @description Clears the error notification
     */
-    handleError(error, disableSaveButton) {
-        this.errorMessage = (!error || !(error.detail && error.header)) ? constructErrorMessage(error) : error;
-        this.hasError = true;
-
-        const disableBtn = !!(disableSaveButton && disableSaveButton === true);
-        this.isLoading = disableBtn;
-
-        this.template.querySelector("[data-id='submitButton']").disabled = disableBtn;
-        this.template.querySelector(".slds-modal__header").scrollIntoView();
+    clearError() {
+        this.error = {};
     }
 
     /***
-     * @description Handle component display when a save error occurs
+     * @description Handle component display when an error on the save action occurs.
+     * Keep Save button enabled so user can correct a value and save again.
      */
     handleSaveError(error) {
         this.handleError(error, false);
+    }
+
+    /***
+     * @description Handle error and disable the Save button
+     */
+    handleError(error) {
+        this.handleError(error, true);
+    }
+
+    /***
+    * @description Handle component display when an error occurs
+    * @param error: Error Event
+    * @param disableSaveButton: Indicates if the Save button should be disabled
+    */
+    handleError(error, disableSaveButton) {
+        this.error = constructErrorMessage(error);
+
+        this.handlePageOnError(disableSaveButton);
+    }
+
+    /***
+    * @description Handle component display when an error occurs
+    * @param disableSaveButton: Indicates if the Save button should be disabled
+    */
+    handlePageOnError(disableSaveButton) {
+        const disableBtn = !!(disableSaveButton && disableSaveButton === true);
+        this.isLoading = disableBtn;
+
+        this.saveButton.disabled = disableBtn;
+        this.template.querySelector(".slds-modal__header").scrollIntoView();
     }
 
     /**
@@ -288,7 +357,37 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleChildComponentError(event) {
         let error = event.detail && event.detail.value ? event.detail.value : event.detail;
-        this.handleError(error, true);
+        this.handleError(error);
+    }
+
+    /**
+    * Handle component display when an error on the tokenize credit card event
+    */
+    handleTokenizeCardError(event) {
+        try {
+            if (event.error.isObject) {
+                let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
+
+                // Represents the error response returned from payment services
+                let errorObject = JSON.parse(errorResponse);
+                errorObject.forEach((message, index) => {
+                    errorObjects.push(message);
+                });
+
+                this.error.detail = event.error.message[0] + JSON.stringify(errorObjects);
+            } else {
+                this.error.detail = event.error.message;
+            }            
+
+        } catch (error) {
+            this.error.detail = JSON.stringify(event);
+
+        } finally {
+            this.error.header = 'Salesforce.org Elevate';
+
+            const disableSaveButton = false;
+            this.handlePageOnError(disableSaveButton);
+        }
     }
 
     /***
@@ -334,6 +433,13 @@ export default class rd2EntryForm extends LightningElement {
      */
     get customFieldsComponent() {
         return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];
+    }
+
+    /**
+     * @description Returns the save button element
+     */
+    get saveButton() {
+        return this.template.querySelector("[data-id='submitButton']");
     }
 
     /**

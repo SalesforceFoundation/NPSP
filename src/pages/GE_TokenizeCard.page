@@ -61,7 +61,7 @@
         }
 
         /*******************************************************************************
-        * @description Method listens for messages from geFormWidgetTokenizeCard
+        * @description Method listens for messages from a credit card widget LWC
         */
         window.onmessage = function (event) {
             if (event && event.origin !== lightningOrigin) {
@@ -73,7 +73,7 @@
         }
 
         /*******************************************************************************
-        * @description Creates a token and posts the response to geFormWidgetTokenizeCard
+        * @description Creates a token and posts the response to a credit card widget LWC
         */
         function handleTokenCreation() {
             sfdo
@@ -81,10 +81,15 @@
                     nameOnCard: 'test name'
                 })
                 .then(function response(resp) {
-                    // Send token to lwc
-                    const token = resp.token;
-                    const successString = JSON.stringify({ token: token });
-                    postMessage(successString);
+                    if (resp.token) {
+                        // Send token to lwc
+                        const successString = JSON.stringify({ token: resp.token });
+                        postMessage(successString);
+
+                    } else if (resp.error) {
+                        // Response contains the error, send it to lwc
+                        postMessage(JSON.stringify(resp));
+                    }
                 })
                 .catch(function handleError(err) {
                     // Send error to lwc
@@ -94,9 +99,9 @@
         }
 
         /*******************************************************************************
-        * @description Posts messages to geFormWidgetTokenizeCard
+        * @description Posts messages to a credit card widget LWC
         *
-        * @param {string} message: String to pass to geFormWidgetTokenizeCard
+        * @param {string} message: String to pass to the LWC
         */
         function postMessage(message) {
             window.top.postMessage(message, lightningOrigin);

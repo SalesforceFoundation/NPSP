@@ -385,6 +385,8 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>PS_ElevateController</members>
+        <members>PS_ElevateService</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -1193,8 +1195,8 @@
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Async_Error_Check_Last_Run__c</members>
-        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.DisableRecordDataHealthChecks__c</members>
+        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Don_t_Auto_Schedule_Default_NPSP_Jobs__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -1672,6 +1674,9 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevateDisableLabel</members>
+        <members>RD2_ElevateDisabledMessage</members>
+        <members>RD2_ElevateEnableLabel</members>
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_EnablementDisabledHeader</members>
@@ -3779,6 +3784,8 @@
         <members>geWidgetService</members>
         <members>libsMoment</members>
         <members>progressRing</members>
+        <members>psElevateCommon</members>
+        <members>psElevateCreditCardForm</members>
         <members>pubsubNoPageRef</members>
         <members>rd2EntryForm</members>
         <members>rd2EntryFormCustomFieldsSection</members>

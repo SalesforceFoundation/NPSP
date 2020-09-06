@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group Recurring Donations
+* @group Elevate Payment Services
 * @description Determines the Elevate Payment Integration Services status and permissions
 */
 public with sharing class PS_IntegrationServiceConfig {

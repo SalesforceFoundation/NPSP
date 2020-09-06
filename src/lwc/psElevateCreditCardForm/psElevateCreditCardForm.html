@@ -1,0 +1,65 @@
+<template>
+    <lightning-layout vertical-align='center' multiple-rows='true'>
+
+        <lightning-layout-item size='12' padding='horizontal-small'>
+            <article class='credit-card-container slds-m-top_small'>
+                <lightning-layout vertical-align='center' multiple-rows='true'>
+
+                    <lightning-layout-item size='12'>
+                        <div class='credit-card-header slds-p-vertical_small slds-p-horizontal_x-small'>
+                            <lightning-layout vertical-align='center'>
+                                <lightning-layout-item size='6'>
+                                    <h1 class='slds-text-body_regular'>{labels.commonPaymentServices}</h1>
+                                </lightning-layout-item>
+                                <lightning-layout-item size='6'>
+                                    <template if:true={displayHideCardButton}>
+                                        <lightning-button variant="base" label={disableCardEntryLabel}
+                                            alternative-text={disableCardEntryLabel} icon-name='utility:close'
+                                            icon-position="right" onclick={handleUserDisabledWidget}
+                                            class='slds-button slds-button_base slds-float_right hide-card-button'>
+                                        </lightning-button>
+                                    </template>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </div>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size='12' padding='around-small'>
+                        <template if:true={isDisabled}>
+                            <template if:true={hasUserDisabledWidget}>
+                                <p class='fade-in'>
+                                    <span class='slds-content-message'>
+                                        {disabledCardEntryMessage}
+                                    </span>
+                                    <lightning-button variant='base' label={enableCardEntryLabel}
+                                        title={enableCardEntryLabel} onclick={handleUserEnabledWidget}
+                                        class='slds-m-left_xx-small'>
+                                    </lightning-button>
+                                </p>
+                            </template>
+                            <template if:false={hasUserDisabledWidget}>
+                                <p class='slds-text-body_regular slds-p-vertical_medium'>{disabledMessage}</p>
+                            </template>
+                        </template>
+                        <template if:false={isDisabled}>
+                            <c-util-alert-banner if:true={alert.show} theme={alert.theme} variant={alert.variant}
+                                icon={alert.icon} message={alert.message}>
+                            </c-util-alert-banner>
+                            <div class='iframe-container'>
+                                <template if:true={isLoading}>
+                                    <lightning-spinner alternative-text={labels.assistiveSpinner}>
+                                    </lightning-spinner>
+                                </template>
+                                <iframe class='payment-services-iframe' title={labels.commonPaymentServices}
+                                    src={tokenizeCardPageUrl} data-id={labels.commonPaymentServices}>
+                                </iframe>
+                            </div>
+                        </template>
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </article>
+        </lightning-layout-item>
+
+    </lightning-layout>
+</template>

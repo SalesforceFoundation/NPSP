@@ -56,12 +56,13 @@ public with sharing class RD2_EntryFormController {
         'SystemModStamp'
     };
 
+
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static Map<String, Object> getRecurringSettings(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
@@ -73,7 +74,8 @@ public with sharing class RD2_EntryFormController {
             'parentSObjectType' => parentSObjectType,
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-            'customFieldSets' => getCustomFieldSectionFields()
+            'customFieldSets' => getCustomFieldSectionFields(),
+            'isElevateCustomer' => PS_ElevateService.isElevateCustomer
         };
     }
 
@@ -117,7 +119,7 @@ public with sharing class RD2_EntryFormController {
      * false, the custom UI will display a warning message at the top of the page.
      * @return True if the User has Read access to all required fields in the UI
      */
-    @AuraEnabled(Cacheable=True)
+    @AuraEnabled(cacheable=true)
     public static Boolean checkRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
             'npe03__Amount__c',
