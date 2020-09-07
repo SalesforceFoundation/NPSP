@@ -51,6 +51,7 @@ public virtual with sharing class BDI_ObjectMapping {
     @AuraEnabled public String Relationship_To_Predecessor;
     @AuraEnabled public String dynamicSourceField;
     @AuraEnabled public BDI_FieldMapping[] Field_Mappings;
+    @AuraEnabled public Boolean Is_Broken;
 
 
     /*******************************************************************************************************
@@ -84,11 +85,20 @@ public virtual with sharing class BDI_ObjectMapping {
         this.Custom_Mapping_Logic_Class = objectMapping.Custom_Mapping_Logic_Class__c;
         this.Data_Import_Object_Mapping_Set = objectMapping.Data_Import_Object_Mapping_Set__c;
         this.Data_Import_Object_Mapping_Set_Dev_Name = objectMapping.Data_Import_Object_Mapping_Set__r.DeveloperName;
-        this.Imported_Record_Field_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name, 
-                                                                    objectMapping.Imported_Record_Field_Name__c);
-        this.Imported_Record_Status_Field_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name, 
-                                                                    objectMapping.Imported_Record_Status_Field_Name__c);
-        this.Object_API_Name = UTIL_Describe.getObjectName(objectMapping.Object_API_Name__c);
+        try {
+            this.Imported_Record_Field_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name,
+                objectMapping.Imported_Record_Field_Name__c);
+            this.Imported_Record_Status_Field_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name,
+                objectMapping.Imported_Record_Status_Field_Name__c);
+            this.Object_API_Name = UTIL_Describe.getObjectName(objectMapping.Object_API_Name__c);
+        } catch (UTIL_Describe.SchemaDescribeException sde) {
+            if (sde.getMessage().contains('Invalid')) {
+                this.Is_Broken = true;
+            }
+        } finally {
+
+        }
+
         this.Relationship_Field = objectMapping.Relationship_Field__c;
 
         this.Is_Deleted = objectMapping.Is_Deleted__c;

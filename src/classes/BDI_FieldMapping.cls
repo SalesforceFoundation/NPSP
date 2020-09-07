@@ -57,7 +57,7 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String Element_Type = 'field';
     // Used for Form Template Builder and Widgets
     @AuraEnabled public String Widget_Object_Mapping_Developer_Name;
-    @AuraEnabled public String[] Widget_Field_Mapping_Developer_Names;
+    @AuraEnabled public Boolean Is_Broken;
 
     public BDI_FieldMapping() {
 
@@ -132,5 +132,6 @@ public virtual with sharing class BDI_FieldMapping {
         }
 
         this.Is_Required = !sourceFieldDescribe.isNillable() ? true : false;
+        this.Is_Broken = false;
     }
 }

@@ -215,7 +215,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 this.modalMode = 'new';
                 this.fieldMapping = {};
             }
-
+            console.log(JSON.stringify(this.fieldMapping));
             this.getSourceFieldOptions(this.diFieldDescribes);
             this.getTargetFieldOptions(this.targetObjectFieldDescribes);
         } catch(error) {

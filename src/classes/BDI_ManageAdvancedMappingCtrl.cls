@@ -119,21 +119,24 @@ public class BDI_ManageAdvancedMappingCtrl {
     * component
     * @return List: List of Data Import Object Mapping
     */
-    @AuraEnabled(cacheable=false)
-    public static BDI_ObjectMapping[] getObjectMappings(){
+    @TestVisible
+    private static BDI_ObjectMapping[] getObjectMappings(){
 
         BDI_ObjectMapping[] objMappings = bdiMsAdv.objectMappingByDevName.values();
 
         //Assign the label name field for the predecessor using the constructed map by dev name.
         for (BDI_ObjectMapping objMapping : objMappings) {
-
             BDI_ObjectMapping predecessorObjMapping = bdiMsAdv.objectMappingByDevName.get(objMapping.Predecessor);
             if(predecessorObjMapping != null) {
                 objMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
             }
         }
-
         return objMappings;
+    }
+
+    @AuraEnabled
+    public static AdvancedMappingObjectData getAdvancedMappingObjectData () {
+        return new AdvancedMappingObjectData(getObjectMappings(), getObjectOptions());
     }
 
     /*******************************************************************************************************
@@ -202,25 +205,40 @@ public class BDI_ManageAdvancedMappingCtrl {
     @AuraEnabled
     public static DataImportFieldMappingWrapper[] getFieldMappingsByObjectAndFieldSetNames(
         String objectName, String fieldMappingSetname) {
-
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
-
-        BDI_FieldMapping[] fieldMappings =
-            bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectName);
-
+        BDI_FieldMapping[] fieldMappings = injectBrokenFieldMappings(bdiMsAdv, objectName);
         if (fieldMappings != null) {
             for (BDI_FieldMapping fieldMapping : fieldMappings) {
-
-                if (bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
-                    fieldMapping.Is_Deleted == false) {
-
-                    fieldMappingWrappers.add(new DataImportFieldMappingWrapper(fieldMapping));
+                if ((bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
+                    fieldMapping.Is_Deleted == false)) {
+                    DataImportFieldMappingWrapper wrapper = new DataImportFieldMappingWrapper(fieldMapping);
+                    fieldMappingWrappers.add(wrapper);
                 }
             }
         }
-
         return fieldMappingWrappers;
+    }
+
+    /**
+     * @description
+     * @param bdiMsAdv
+     * @param objectName
+     *
+     * @return {BDI_FieldMapping[]} fieldMappings
+     */
+    private static BDI_FieldMapping[] injectBrokenFieldMappings (
+        BDI_MappingServiceAdvanced bdiMsAdv, String objectName) {
+        BDI_FieldMapping [] brokenFieldMappings = bdiMsAdv.objectMappingByDevName.get(objectName).Field_Mappings;
+        BDI_FieldMapping[] fieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectName);
+        if (brokenFieldMappings!= null && !brokenFieldMappings.isEmpty()) {
+            //Add possible broken field mappings
+            if (fieldMappings == null) {
+                fieldMappings = new BDI_FieldMapping[]{};
+            }
+            fieldMappings.addAll(bdiMsAdv.objectMappingByDevName.get(objectName).Field_Mappings);
+        }
+        return fieldMappings;
     }
 
     /*******************************************************************************************************
@@ -526,6 +544,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping_Dev_Name;
             this.Required = fieldMapping.Required;
             this.Is_Deleted = fieldMapping.Is_Deleted;
+            this.Is_Broken = fieldMapping.Is_Broken;
         }
     }
 
@@ -667,8 +686,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * @description Returns a list of combobox options for the valid objects to chooose from.
     * @return objectOptions List of combobox options for the valid objects to chooose from.
     */
-    @AuraEnabled(cacheable=true)
-    public static List<ComboboxOption> getObjectOptions(){
+    private static List<ComboboxOption> getObjectOptions(){
         List<ComboboxOption> objectOptions = new List<ComboboxOption>();
         Map<String, Schema.SObjectType> allObjectMap = Schema.getGlobalDescribe(); 
         List<String> filteredObjectNames = new List<String>();
@@ -800,6 +818,18 @@ public class BDI_ManageAdvancedMappingCtrl {
         public NamespaceWrapper(){
             this.currentNamespace = UTIL_Namespace.getNamespace();
             this.npspNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
+        }
+    }
+
+    public class AdvancedMappingObjectData {
+        @AuraEnabled
+        public BDI_ObjectMapping[] objectMappings;
+        @AuraEnabled
+        public List<ComboboxOption> objectOptions;
+
+        public AdvancedMappingObjectData (BDI_ObjectMapping [] objectMappings, List<ComboboxOption> objectOptions) {
+            this.objectMappings = objectMappings;
+            this.objectOptions = objectOptions;
         }
     }
 }

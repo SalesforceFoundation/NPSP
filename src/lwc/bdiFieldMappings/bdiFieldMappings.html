@@ -34,6 +34,26 @@
                     {customLabels.bdiFieldMappingsLabel}
                 </h2>
 
+                <template if:true={hasBrokenFieldReferences}>
+                    <div class="slds-size_1-of-1">
+                        <c-util-page-level-message title='Check Field Mappings'
+                                                   subtitle='There is a problem with the Field Mappings listed below. Make sure the NPSP Data Import and target fields still exist and review the Field Mapping.'
+                                                   variant='warning'>
+                            <ul slot="body"
+                                class="slds-list_dotted">
+                                <template for:each={brokenFieldMappings}
+                                          for:item="fieldMapping">
+                                    <li key={fieldMapping}
+                                        aria-label={fieldMapping}
+                                        class="slds-text-color_default">
+                                        {fieldMapping}
+                                    </li>
+                                </template>
+                            </ul>
+                        </c-util-page-level-message>
+                    </div>
+                </template>
+
                 <p class="slds-text_extension slds-m-bottom_medium">
                     {customLabels.bdiFMUIDescription1}
                 </p>
@@ -61,18 +81,20 @@
                         </p>
                     </div>
                     <div class="slds-size_1-of-1">
-                        <tempate if:true={isLoading}>
+                        <template if:true={isLoading}>
                             <lightning-spinner></lightning-spinner>
                             <c-util-stencil row-count="10" column-count="7"></c-util-stencil>
-                        </tempate>
+                        </template>
                         <template if:false={isLoading}>
                             <lightning-datatable
-                                key-field="id"
+                                key-field="DeveloperName"
                                 data={fieldMappings}
                                 columns={columns}
                                 hide-checkbox-column
                                 onrowaction={handleRowAction}
                                 sorted-by={sortedBy}
+                                show-row-number-column
+                                errors={errors}
                                 sorted-direction={sortedDirection}
                                 onsort={handleColumnSorting}>
                             </lightning-datatable>

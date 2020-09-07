@@ -41,6 +41,7 @@ import bdiFMUIFieldAPIName from '@salesforce/label/c.bdiFMUIFieldAPIName';
 import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
+import {isNull} from 'c/utilCommon';
 
 const actions = [
     { label: stgBtnEdit, name: 'edit' },
@@ -76,31 +77,32 @@ export default class bdiFieldMappings extends LightningElement {
         stgLabelObject,
     }
 
-    @api objectMapping;
-    @api diFieldDescribes;
-    @api mappedDiFieldDescribes;
-    @api targetObjectFieldDescribes;
     @api shouldRender;
+    @track brokenFieldMappings = [];
 
-    @track displayFieldMappings = false;
-    @track isLoading = true;
-    @track columns = columns;
-    @track sortedBy;
-    @track sortDirection;
-    @track fieldMappingSetName;
-    @track fieldMappings;
+    objectMapping;
+    diFieldDescribes;
+    mappedDiFieldDescribes;
+    targetObjectFieldDescribes;
+
+
+    displayFieldMappings = false;
+    isLoading = true;
+    columns = columns;
+    sortedBy;
+    sortDirection;
+    fieldMappingSetName;
+    fieldMappings;
 
     deploymentTimer;
     deploymentTimeout = 10000;
-
     _dataImportApiName;
+    @track errors;
 
-    @api
     get noFieldMappings() {
         return !this.fieldMappings || this.fieldMappings.length === 0;
     }
 
-    @api
     refresh() {
         if (this.displayFieldMappings) {
             this.init();
@@ -108,11 +110,11 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     handleNavButton() {
+        this.displayFieldMappings = false;
         fireEvent(this.pageRef, 'showobjectmappings');
     }
 
     connectedCallback() {
-        registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
         registerListener('deploymentResponse', this.handleDeploymentResponse, this);
         registerListener('startDeploymentTimeout', this.handleDeploymentTimeout, this);
@@ -127,6 +129,7 @@ export default class bdiFieldMappings extends LightningElement {
     * @description Group up various get data calls to apex
     */
     init = async() => {
+        this.brokenFieldMappings = [];
         try {
             this.isLoading = true;
 
@@ -149,6 +152,8 @@ export default class bdiFieldMappings extends LightningElement {
             this.targetObjectFieldDescribes =
                 await getObjectFieldDescribes({objectName: objectAPIName});
 
+            console.log(JSON.stringify(this.targetObjectFieldDescribes));
+
             // Get the field mapping set name from the data import custom settings
             this.fieldMappingSetName =
                 await getFieldMappingSetName();
@@ -159,12 +164,12 @@ export default class bdiFieldMappings extends LightningElement {
                     objectName: this.objectMapping.DeveloperName,
                     fieldMappingSetname: this.fieldMappingSetName
                 });
-
             if (this.fieldMappings && this.fieldMappings.length > 0) {
                 this.fieldMappings = this.sortData(
                     this.fieldMappings,
                     'Source_Field_Label',
                     'asc');
+                this.processBrokenFieldMappingReferences();
             }
 
             this.isLoading = false;
@@ -172,6 +177,29 @@ export default class bdiFieldMappings extends LightningElement {
         } catch(error) {
             this.handleError(error);
         }
+    }
+
+    processBrokenFieldMappingReferences () {
+        this.fieldMappings.forEach(fieldMapping => {
+            if (fieldMapping.Is_Broken && !fieldMapping.Is_Deleted) {
+                this.errors = { rows: {}, table: {} };
+                this.errors.rows[fieldMapping.DeveloperName] = {
+                    title: 'Error',
+                    messages: ['Please check this row'],
+                    fieldNames: []
+                };
+                this.brokenFieldMappings.push(
+                    `${fieldMapping.MasterLabel} : ${fieldMapping.Target_Field_API_Name} (${fieldMapping.Source_Field_API_Name})`);
+            }
+        });
+    }
+
+    get hasBrokenFieldReferences () {
+        return this.brokenFieldMappings.length > 0;
+    }
+
+    get showRowNumberColumns () {
+        return !isNull(this.errors);
     }
 
     /*******************************************************************************
@@ -274,6 +302,7 @@ export default class bdiFieldMappings extends LightningElement {
     handleRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
+        console.log(JSON.stringify(row));
 
         switch (actionName) {
 
