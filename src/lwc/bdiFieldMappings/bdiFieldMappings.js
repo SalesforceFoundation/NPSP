@@ -1,18 +1,13 @@
 import { LightningElement, track, api } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
-import getFieldMappingSetName
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingSetName';
+import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
+import getAdvancedMappingFieldsData
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getAdvancedMappingFieldsData';
 import getFieldMappingsByObjectAndFieldSetNames
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
-import getObjectFieldDescribes
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
-import getDataImportObjectName
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getDataImportObjectName';
-import getMappedDISourceFields
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
+import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+
 
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
@@ -41,7 +36,8 @@ import bdiFMUIFieldAPIName from '@salesforce/label/c.bdiFMUIFieldAPIName';
 import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
-import {isNull} from 'c/utilCommon';
+import { isNull, showToast } from 'c/utilCommon';
+
 
 const actions = [
     { label: stgBtnEdit, name: 'edit' },
@@ -96,7 +92,6 @@ export default class bdiFieldMappings extends LightningElement {
 
     deploymentTimer;
     deploymentTimeout = 10000;
-    _dataImportApiName;
     @track errors;
 
     get noFieldMappings() {
@@ -132,31 +127,17 @@ export default class bdiFieldMappings extends LightningElement {
         this.brokenFieldMappings = [];
         try {
             this.isLoading = true;
+            let fieldMappingData = await getAdvancedMappingFieldsData({
+                targetObjectApiName : this.objectMapping.Object_API_Name,
+                sourceObjectApiName : DATA_IMPORT.objectApiName
+            })
 
-            this._dataImportApiName = await getDataImportObjectName();
-
-            // Get all the data import field describes
-            if (!this.diFieldDescribes) {
-                this.diFieldDescribes =
-                    await getObjectFieldDescribes({objectName: this._dataImportApiName});
+            if (!isNull(fieldMappingData)) {
+                this.diFieldDescribes = fieldMappingData.sourceObjectFieldDescribes;
+                this.targetObjectFieldDescribes = fieldMappingData.targetObjectFieldDescribes;
+                this.mappedDiFieldDescribes = fieldMappingData.mappedDISourceFields;
+                this.fieldMappingSetName = fieldMappingData.fieldMappingSetName;
             }
-
-            // Get mapped data import field describes
-            this.mappedDiFieldDescribes =
-                await getMappedDISourceFields();
-
-            // Get all the target object field describes based on the currently
-            // selected object mapping
-            let objectAPIName = this.objectMapping.Object_API_Name;
-
-            this.targetObjectFieldDescribes =
-                await getObjectFieldDescribes({objectName: objectAPIName});
-
-            console.log(JSON.stringify(this.targetObjectFieldDescribes));
-
-            // Get the field mapping set name from the data import custom settings
-            this.fieldMappingSetName =
-                await getFieldMappingSetName();
 
             // Get all the field mappings for the currently selected object mapping
             this.fieldMappings =
@@ -184,8 +165,8 @@ export default class bdiFieldMappings extends LightningElement {
             if (fieldMapping.Is_Broken && !fieldMapping.Is_Deleted) {
                 this.errors = { rows: {}, table: {} };
                 this.errors.rows[fieldMapping.DeveloperName] = {
-                    title: 'Error',
-                    messages: ['Please check this row'],
+                    title: 'Please Check Row',
+                    messages: '',
                     fieldNames: []
                 };
                 this.brokenFieldMappings.push(
@@ -199,7 +180,7 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     get showRowNumberColumns () {
-        return !isNull(this.errors);
+        return !isNull(this.errors) && this.errors.length > 0;
     }
 
     /*******************************************************************************
@@ -220,7 +201,7 @@ export default class bdiFieldMappings extends LightningElement {
                     event.deploymentId +
                     '%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp';
 
-                that.showToast(
+                showToast(
                     bdiFMUILongDeployment,
                     bdiFMUILongDeploymentMessage + ' {0}',
                     'warning',
@@ -252,10 +233,10 @@ export default class bdiFieldMappings extends LightningElement {
             const failMessage = `${unsuccessful} ${bdiFieldMappingsLabel} ${bdiFMUIUpdate}. ${bdiFMUITryAgain}.`;
             const succeeded = status === 'Succeeded';
             
-            this.showToast(
+            showToast(
                 `${succeeded ? successMessage : failMessage}`,
                 '',
-                succeeded ? 'success' : 'error');
+                succeeded ? 'success' : 'error', []);
         }
     }
 
@@ -302,7 +283,6 @@ export default class bdiFieldMappings extends LightningElement {
     handleRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
-        console.log(JSON.stringify(row));
 
         switch (actionName) {
 
@@ -387,39 +367,17 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates and dispatches a ShowToastEvent
-    *
-    * @param {string} title: Title of the toast, dispalyed as a heading.
-    * @param {string} message: Message of the toast. It can contain placeholders in
-    * the form of {0} ... {N}. The placeholders are replaced with the links from
-    * messageData param
-    * @param {string} mode: Mode of the toast
-    * @param {array} messageData: List of values that replace the {index} placeholders
-    * in the message param
-    */
-    showToast(title, message, variant, mode, messageData) {
-        const event = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-            mode: mode,
-            messageData: messageData
-        });
-        this.dispatchEvent(event);
-    }
-
-    /*******************************************************************************
     * @description Creates and dispatches an error toast
     *
     * @param {object} error: Event holding error details
     */
     handleError(error) {
         if (error && error.status && error.body) {
-            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+            showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
-            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+            showToast(`${error.name}`, error.message, 'error', 'sticky');
         } else {
-            this.showToast(stgUnknownError, '', 'error', 'sticky');
+            showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
 }

@@ -139,6 +139,17 @@ public class BDI_ManageAdvancedMappingCtrl {
         return new AdvancedMappingObjectData(getObjectMappings(), getObjectOptions());
     }
 
+    @AuraEnabled(Cacheable = true)
+    public static AdvancedMappingFieldData getAdvancedMappingFieldsData (String targetObjectApiName,
+        String sourceObjectApiName) {
+        String fieldMappingSetName = getFieldMappingSetName();
+        FieldInfo[] sourceObjectFieldDescribes = getObjectFieldDescribes(sourceObjectApiName, false);
+        FieldInfo[] targetObjectFieldDescribes = getObjectFieldDescribes(targetObjectApiName, false);
+        List<String> mappedDISourceFields = getMappedDISourceFields();
+        return new AdvancedMappingFieldData(
+            fieldMappingSetName, sourceObjectFieldDescribes, targetObjectFieldDescribes, mappedDISourceFields);
+    }
+
     /*******************************************************************************************************
     * @description Get the namespaced/un-namespaced api name of DataImport__c
     *
@@ -831,5 +842,21 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.objectMappings = objectMappings;
             this.objectOptions = objectOptions;
         }
+    }
+
+    public class AdvancedMappingFieldData {
+        @AuraEnabled public String fieldMappingSetName;
+        @AuraEnabled public FieldInfo[] sourceObjectFieldDescribes;
+        @AuraEnabled public FieldInfo[] targetObjectFieldDescribes;
+        @AuraEnabled public List<String> mappedDISourceFields;
+
+        public AdvancedMappingFieldData (String fieldMappingSetName, FieldInfo[] sourceObjectFieldDescribes,
+            FieldInfo[] targetObjectFieldDescribes, List<String> mappedDISourceFields) {
+            this.fieldMappingSetName = fieldMappingSetName;
+            this.sourceObjectFieldDescribes = sourceObjectFieldDescribes;
+            this.targetObjectFieldDescribes = targetObjectFieldDescribes;
+            this.mappedDISourceFields = mappedDISourceFields;
+        }
+
     }
 }
