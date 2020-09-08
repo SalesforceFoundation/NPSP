@@ -78,7 +78,7 @@ private with sharing class ACCT_AccountMerge_TEST {
 
         // this creates some test opps
         list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactList(UTIL_UnitTestData_TEST.listConT, null, 
-            UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 100, null, null);
+            UTIL_UnitTestData_TEST.getclosedWonStage(), System.Today(), 100, null, null);
         insert listOpp;        
 
         // decide who wins (and remember who was primary contact)
@@ -101,41 +101,41 @@ private with sharing class ACCT_AccountMerge_TEST {
             from Contact order by Id];
             
         // verify the accounts and contacts
-        system.assertEquals(1, listAcc.size());
-        system.assertEquals(accWinner.Id, listAcc[0].Id);
-        system.assertEquals(4, listCon.size());
+        System.assertEquals(1, listAcc.size());
+        System.assertEquals(accWinner.Id, listAcc[0].Id);
+        System.assertEquals(4, listCon.size());
                     
         // verify the contacts belong to correct account.
-        system.assertEquals(listCon[0].AccountId, listAcc[0].Id);
-        system.assertEquals(listCon[1].AccountId, listAcc[0].Id);
-        system.assertEquals(listCon[2].AccountId, listAcc[0].Id);
-        system.assertEquals(listCon[3].AccountId, listAcc[0].Id);
+        System.assertEquals(listCon[0].AccountId, listAcc[0].Id);
+        System.assertEquals(listCon[1].AccountId, listAcc[0].Id);
+        System.assertEquals(listCon[2].AccountId, listAcc[0].Id);
+        System.assertEquals(listCon[3].AccountId, listAcc[0].Id);
         
         // verify that primary contact did not change
-        system.assertEquals(accWinner.npe01__One2OneContact__c, listAcc[0].npe01__One2OneContact__c);        
+        System.assertEquals(accWinner.npe01__One2OneContact__c, listAcc[0].npe01__One2OneContact__c);        
             
         // verify the account's greetings are updated (lastnames are the same so the account name won't change!)
-        system.assertEquals(4, listAcc[0].Number_Of_Household_Members__c);
-        system.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[0].Firstname));        
-        system.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[1].Firstname));        
-        system.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[2].Firstname));        
-        system.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[3].Firstname));        
+        System.assertEquals(4, listAcc[0].Number_Of_Household_Members__c);
+        System.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[0].Firstname));        
+        System.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[1].Firstname));        
+        System.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[2].Firstname));        
+        System.assertEquals(true, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[3].Firstname));        
         
         // verify opps are moved over
-        system.assertEquals(4, [select count() from Opportunity where AccountId = :listAcc[0].Id]);  
+        System.assertEquals(4, [select count() from Opportunity where AccountId = :listAcc[0].Id]);  
             
         // verify Account rollups are updated
-        system.assertEquals(4, listAcc[0].npo02__NumberOfClosedOpps__c);            
+        System.assertEquals(4, listAcc[0].npo02__NumberOfClosedOpps__c);            
 
         // verify Soft Credits recalculated
-        system.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[0].Id]);        
-        system.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[1].Id]);        
-        system.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[2].Id]);        
-        system.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[3].Id]);    
+        System.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[0].Id]);        
+        System.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[1].Id]);        
+        System.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[2].Id]);        
+        System.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[3].Id]);    
         
         // verify Addresses are merged
-        system.assertEquals(4, [select count() from Address__c]);
-        system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);    
+        System.assertEquals(4, [select count() from Address__c]);
+        System.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);    
     }
 
     /*******************************************************************************************************
@@ -242,13 +242,13 @@ private with sharing class ACCT_AccountMerge_TEST {
         insert listCon;
         
         List<Opportunity> listOppCon = UTIL_UnitTestData_TEST.OppsForContactList (listCon, null, 
-            UTIL_UnitTestData_TEST.getClosedWonStage(), system.Today(), 100, null, null);
+            UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), 100, null, null);
         insert listOppCon;
 
         list<Account> listAcc = [select Id, Name, npe01__One2OneContact__c from Account];
-        system.assertEquals(2, listAcc.size());
+        System.assertEquals(2, listAcc.size());
         List<Opportunity> listOppAcc = UTIL_UnitTestData_TEST.OppsForAccountList (listAcc, null, 
-            UTIL_UnitTestData_TEST.getClosedWonStage(), system.Today(), 100, null, null);
+            UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), 100, null, null);
         insert listOppAcc;
 
         // decide who wins (and remember who was primary contact)
@@ -268,22 +268,22 @@ private with sharing class ACCT_AccountMerge_TEST {
         listCon = [select Id, Firstname, AccountId from Contact order by Id];
             
         // verify the accounts and contacts
-        system.assertEquals(1, listAcc.size());
-        system.assertEquals(accWinner.Id, listAcc[0].Id);
-        system.assertEquals(2, listCon.size());
+        System.assertEquals(1, listAcc.size());
+        System.assertEquals(accWinner.Id, listAcc[0].Id);
+        System.assertEquals(2, listCon.size());
                     
         // verify the contacts belong to correct account.
-        system.assertEquals(listCon[0].AccountId, listAcc[0].Id);
-        system.assertEquals(listCon[1].AccountId, listAcc[0].Id);
+        System.assertEquals(listCon[0].AccountId, listAcc[0].Id);
+        System.assertEquals(listCon[1].AccountId, listAcc[0].Id);
         
         // verify that primary contact did not change
-        system.assertEquals(accWinner.npe01__One2OneContact__c, listAcc[0].npe01__One2OneContact__c);        
+        System.assertEquals(accWinner.npe01__One2OneContact__c, listAcc[0].npe01__One2OneContact__c);        
                     
         // verify opps are moved over
-        system.assertEquals(4, [select count() from Opportunity where AccountId = :listAcc[0].Id]);  
+        System.assertEquals(4, [select count() from Opportunity where AccountId = :listAcc[0].Id]);  
             
         // verify Account rollups are updated
-        system.assertEquals(4, listAcc[0].npo02__NumberOfClosedOpps__c);            
+        System.assertEquals(4, listAcc[0].npo02__NumberOfClosedOpps__c);            
     }
 
     /*******************************************************************************************************
@@ -320,8 +320,8 @@ private with sharing class ACCT_AccountMerge_TEST {
         acc.BillingStreet = '987 xyz';
         acc.BillingCity = 'Bellevue';
         update acc;
-        system.assertEquals(4, [select count() from Address__c]);
-        system.assertEquals(3, [select count() from Address__c where Default_Address__c = true]);  
+        System.assertEquals(4, [select count() from Address__c]);
+        System.assertEquals(3, [select count() from Address__c where Default_Address__c = true]);  
 
         // decide who wins (and remember who was primary contact)
         Account accWinner = listAcc[1];
@@ -343,14 +343,14 @@ private with sharing class ACCT_AccountMerge_TEST {
             from Account order by Id]);
             
         // verify the accounts 
-        system.assertEquals(1, listAcc.size());
-        system.assertEquals(accWinner.Id, listAcc[0].Id);
+        System.assertEquals(1, listAcc.size());
+        System.assertEquals(accWinner.Id, listAcc[0].Id);
                     
         // verify Addresses are merged
-        system.assertEquals(2, [select count() from Address__c]);
-        system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);  
+        System.assertEquals(2, [select count() from Address__c]);
+        System.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);  
         Address__c addrDefault = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c from Address__c where Default_Address__c = true];
-        system.assertEquals(addrDefault.MailingStreet__c, listAcc[0].BillingStreet); 
+        System.assertEquals(addrDefault.MailingStreet__c, listAcc[0].BillingStreet); 
         
     }
 
@@ -423,7 +423,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         
         // create an opp for each contact
         list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactList(listConAll, null, 
-            UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 100, null, null);
+            UTIL_UnitTestData_TEST.getclosedWonStage(), System.Today(), 100, null, null);
         insert listOpp;
         
         // merge the accounts
@@ -436,26 +436,26 @@ private with sharing class ACCT_AccountMerge_TEST {
             npo02__NumberOfClosedOpps__c, 
             BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
             from Account order by Id]);
-        system.assertEquals(1, listAcc.size());
+        System.assertEquals(1, listAcc.size());
         accWinner = listAcc[0];
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
             from Contact order by Id];
             
         // verify the contacts belong to correct account.
-        system.assertEquals(listCon[0].AccountId, accWinner.Id);
-        system.assertEquals(listCon[1].AccountId, accWinner.Id);
-        system.assertEquals(listCon[2].AccountId, accWinner.Id);
-        system.assertEquals(listCon[3].AccountId, accWinner.Id);
+        System.assertEquals(listCon[0].AccountId, accWinner.Id);
+        System.assertEquals(listCon[1].AccountId, accWinner.Id);
+        System.assertEquals(listCon[2].AccountId, accWinner.Id);
+        System.assertEquals(listCon[3].AccountId, accWinner.Id);
             
         // verify the account's names and greetings are updated
         if (accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
-            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[0].Firstname));    
-            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[1].Firstname));    
-            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[2].Firstname));    
-            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[3].Firstname));    
+            System.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[0].Firstname));    
+            System.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[1].Firstname));    
+            System.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[2].Firstname));    
+            System.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[3].Firstname));    
         } else if (accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-            system.assertEquals(false, accWinner.Name.contains('Anonymous'));    
+            System.assertEquals(false, accWinner.Name.contains('Anonymous'));    
         }
                 
         integer cAccOpps = [select count() from Opportunity];
@@ -466,52 +466,52 @@ private with sharing class ACCT_AccountMerge_TEST {
         
         // verify Opps, OCR's, and Rollups are what we expect!
         if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
-            system.assertEquals(4, cAccOpps);
-            system.assertEquals(4, cOCRCon0);
-            system.assertEquals(4, cOCRCon1);
-            system.assertEquals(4, cOCRCon2);
-            system.assertEquals(4, cOCRCon3);
-            system.assertEquals(4, accWinner.npo02__NumberOfClosedOpps__c);            
+            System.assertEquals(4, cAccOpps);
+            System.assertEquals(4, cOCRCon0);
+            System.assertEquals(4, cOCRCon1);
+            System.assertEquals(4, cOCRCon2);
+            System.assertEquals(4, cOCRCon3);
+            System.assertEquals(4, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-            system.assertEquals(4, cAccOpps);
-            system.assertEquals(1, cOCRCon0);
-            system.assertEquals(1, cOCRCon1);
-            system.assertEquals(1, cOCRCon2);
-            system.assertEquals(1, cOCRCon3);
-            system.assertEquals(4, accWinner.npo02__NumberOfClosedOpps__c);            
+            System.assertEquals(4, cAccOpps);
+            System.assertEquals(1, cOCRCon0);
+            System.assertEquals(1, cOCRCon1);
+            System.assertEquals(1, cOCRCon2);
+            System.assertEquals(1, cOCRCon3);
+            System.assertEquals(4, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         else if (accTypeLoser == null && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
-            system.assertEquals(4, cAccOpps);
-            system.assertEquals(3, cOCRCon0);
-            system.assertEquals(3, cOCRCon1);
-            system.assertEquals(2, cOCRCon2);
-            system.assertEquals(2, cOCRCon3);
-            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+            System.assertEquals(4, cAccOpps);
+            System.assertEquals(3, cOCRCon0);
+            System.assertEquals(3, cOCRCon1);
+            System.assertEquals(2, cOCRCon2);
+            System.assertEquals(2, cOCRCon3);
+            System.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         else if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == null) {
-            system.assertEquals(4, cAccOpps);
-            system.assertEquals(2, cOCRCon0);
-            system.assertEquals(2, cOCRCon1);
-            system.assertEquals(1, cOCRCon2);
-            system.assertEquals(1, cOCRCon3);
-            system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
+            System.assertEquals(4, cAccOpps);
+            System.assertEquals(2, cOCRCon0);
+            System.assertEquals(2, cOCRCon1);
+            System.assertEquals(1, cOCRCon2);
+            System.assertEquals(1, cOCRCon3);
+            System.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         else if (accTypeLoser == null && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-            system.assertEquals(4, cAccOpps);
-            system.assertEquals(1, cOCRCon0);
-            system.assertEquals(1, cOCRCon1);
-            system.assertEquals(1, cOCRCon2);
-            system.assertEquals(1, cOCRCon3);
-            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+            System.assertEquals(4, cAccOpps);
+            System.assertEquals(1, cOCRCon0);
+            System.assertEquals(1, cOCRCon1);
+            System.assertEquals(1, cOCRCon2);
+            System.assertEquals(1, cOCRCon3);
+            System.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == null) {
-            system.assertEquals(4, cAccOpps);
-            system.assertEquals(1, cOCRCon0);
-            system.assertEquals(1, cOCRCon1);
-            system.assertEquals(1, cOCRCon2);
-            system.assertEquals(1, cOCRCon3);
-            system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
+            System.assertEquals(4, cAccOpps);
+            System.assertEquals(1, cOCRCon0);
+            System.assertEquals(1, cOCRCon1);
+            System.assertEquals(1, cOCRCon2);
+            System.assertEquals(1, cOCRCon3);
+            System.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         
     }

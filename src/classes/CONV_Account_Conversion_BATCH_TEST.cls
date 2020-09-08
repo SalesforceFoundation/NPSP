@@ -61,9 +61,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         }
         insert cons;
         Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons LIMIT 1];
-        system.assertEquals(c.OwnerId, tempUser.Id, 'The Contact owner should be temp user');
+        System.assertEquals(c.OwnerId, tempUser.Id, 'The Contact owner should be temp user');
 
-        system.assertEquals(50, [select count() from Account where npe01__One2OneContact__c IN :cons]);
+        System.assertEquals(50, [select count() from Account where npe01__One2OneContact__c IN :cons]);
 
         c = [SELECT Id, npo02__Household__r.OwnerId FROM Contact WHERE Id = :cons[49].Id LIMIT 1];
         npo02__Household__c h = c.npo02__Household__r;
@@ -76,22 +76,22 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
             update inactiveUser;
         }
 
-        String HHName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' ' + system.label.npo02.DefaultHouseholdName;
+        String HHName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' ' + System.label.npo02.DefaultHouseholdName;
         List<npo02__Household__c> hhlist = [select id from npo02__Household__c where Name = :HHName];
-        system.assertEquals(50, hhlist.size());
+        System.assertEquals(50, hhlist.size());
 
         //add a second contact to a random household
         c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
         insert c;
 
         List<Account> accounts = [SELECT Id FROM Account WHERE npe01__One2OneContact__c IN :cons OR npe01__One2OneContact__c = :c.Id];
-        system.assertEquals(51, accounts.size());
+        System.assertEquals(51, accounts.size());
 
         //add opptys to the Contacts as well
-        List<Opportunity> opps = UTIL_UnitTestData_TEST.OppsForContactList(cons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), system.today(), 100, null, '');
-        //Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), Primary_Contact__c = c.Id);
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.OppsForContactList(cons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 100, null, '');
+        //Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = System.today(), Primary_Contact__c = c.Id);
         insert opps;
-        system.assertEquals(50, [select count() from OpportunityContactRole where isPrimary = true and ContactId IN :cons]);
+        System.assertEquals(50, [select count() from OpportunityContactRole where isPrimary = true and ContactId IN :cons]);
 
         Task t = new Task(WhatId = c.npo02__Household__c, Subject = 'TestTask', Status = 'Open');
         insert t;
@@ -112,33 +112,33 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         // is now owned by the same owner as the Contact.
         Contact inactiveOwnedContact = [SELECT Id, OwnerId, Account.OwnerId, Owner.IsActive, npo02__Household__r.Owner.IsActive
             FROM Contact WHERE Id = :cons[49].Id LIMIT 1];
-        system.assertEquals(false, inactiveOwnedContact.npo02__Household__r.Owner.IsActive, 'Household owner should be inactive');
-        system.assertEquals(true, inactiveOwnedContact.Owner.IsActive, 'Contact owner should be active');
-        system.assertEquals(inactiveOwnedContact.OwnerId, inactiveOwnedContact.Account.OwnerId, 'Household Account Owner should match the Contact owner');
+        System.assertEquals(false, inactiveOwnedContact.npo02__Household__r.Owner.IsActive, 'Household owner should be inactive');
+        System.assertEquals(true, inactiveOwnedContact.Owner.IsActive, 'Contact owner should be active');
+        System.assertEquals(inactiveOwnedContact.OwnerId, inactiveOwnedContact.Account.OwnerId, 'Household Account Owner should match the Contact owner');
 
         //get the newly created Households
         List<Account> newHHAccounts = [SELECT Name, npo02__TotalOppAmount__c, Id FROM Account WHERE Id NOT IN :accounts];
         //should be total HH count from above
-        system.assertEquals(50, newHHAccounts.size());
+        System.assertEquals(50, newHHAccounts.size());
         //total gifts should be the same for any of the 50
-        system.assertEquals(newHHAccounts[24].npo02__TotalOppAmount__c, 100.00);
+        System.assertEquals(newHHAccounts[24].npo02__TotalOppAmount__c, 100.00);
         //our two-person household was also successfully converted and set the correct primary contact
         Contact c2 = [SELECT Account.npe01__One2OneContact__c FROM Contact WHERE Id = :c.Id LIMIT 1];
         //the primary was set
-        system.assertNotEquals(null, c2.Account.npe01__One2OneContact__c);
+        System.assertNotEquals(null, c2.Account.npe01__One2OneContact__c);
         //the primary is the contact w/ a total opp amount
-        system.assertNotEquals(c2.Id, c2.Account.npe01__One2OneContact__c);
-        system.assertEquals(2, [select count() from Contact where AccountId = :c2.AccountId]);
+        System.assertNotEquals(c2.Id, c2.Account.npe01__One2OneContact__c);
+        System.assertEquals(2, [select count() from Contact where AccountId = :c2.AccountId]);
         //assert all opptys have been moved over
-        system.assertEquals(50, [select count() from Opportunity where AccountId IN :newHHAccounts]);
+        System.assertEquals(50, [select count() from Opportunity where AccountId IN :newHHAccounts]);
         //assert the task was ported as well
-        system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
-        system.assert(CAO_Constants.isHHAccountModel());
+        System.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
+        System.assert(CAO_Constants.isHHAccountModel());
         //Using the API class just to give it test coverage.
-        system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
-        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+        System.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        System.assertEquals(0, [select count() from npe5__Affiliation__c]);
 
-        system.assertEquals(cons.size(), [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
+        System.assertEquals(cons.size(), [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
             AND npe01__One2OneContact__c IN :cons AND npe01__SYSTEM_AccountType__c = 'Household Account'],
                 'There should be 50 Accounts owned by the TempUser');
     }
@@ -159,17 +159,17 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         insert c;
         Id indID = CAO_Constants.getIndividualAccountId();
 
-        system.assertNotEquals(null, indID);
+        System.assertNotEquals(null, indID);
 
-        String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
-        system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
+        String HHName = 'Contact ' + System.label.npo02.DefaultHouseholdName;
+        System.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
 
         //add an oppty to the Contact as well
         Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                                        AccountId = indID, CloseDate = system.today(), Primary_Contact__c = c.Id);
+                                        AccountId = indID, CloseDate = System.today(), Primary_Contact__c = c.Id);
         insert o;
-        system.assertEquals('Individual', [select Account.Name from Opportunity where Name = 'Test Oppty'].Account.Name);
-        system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
+        System.assertEquals('Individual', [select Account.Name from Opportunity where Name = 'Test Oppty'].Account.Name);
+        System.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
 
 /*
         //insert a larger set of contacts, comment-out pre-merge
@@ -191,16 +191,16 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //get the newly created Household
         Account newHHAccount = [SELECT npo02__TotalOppAmount__c, Id FROM Account WHERE Id != :indID];
-        system.assertNotEquals(null, newHHAccount);
-        system.assertEquals(newHHAccount.id, [select AccountId from Contact where id = :c.id].AccountId);
-        system.assertEquals(newHHAccount.npo02__TotalOppAmount__c, 1000.00);
-        system.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
-        system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        System.assertNotEquals(null, newHHAccount);
+        System.assertEquals(newHHAccount.id, [select AccountId from Contact where id = :c.id].AccountId);
+        System.assertEquals(newHHAccount.npo02__TotalOppAmount__c, 1000.00);
+        System.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
+        System.assert(CAO_Constants.isHHAccountModel());
+        System.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         for (Contact con : [select id, Account.Name from Contact]){
-            system.assertNotEquals('Individual', con.Account.Name);
+            System.assertNotEquals('Individual', con.Account.Name);
         }
-        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+        System.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
     /*******************************************************************************************************
     * @description Tests the conversion process for Contacts with a single address
@@ -289,8 +289,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         c = [select Account.Name, AccountId, npo02__Household__c, npo02__Household__r.npo02__MailingStreet__c, LastName, Id, MailingStreet, Account.BillingStreet from Contact where Id = :c.Id];
 
-        system.assertEquals(c.Account.Name, 'Test Contact');
-        system.assertEquals('123 Main St.', c.MailingStreet);
+        System.assertEquals(c.Account.Name, 'Test Contact');
+        System.assertEquals('123 Main St.', c.MailingStreet);
 
         Contact c2 = new Contact(LastName = 'Contact', FirstName = 'Test2',
                                 MailingStreet = '1 1st Avenue', MailingCity = 'Baltimore',
@@ -310,9 +310,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         update h;
 
         h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
-        system.assertEquals(null, h.npo02__MailingStreet__c);
-        system.assertEquals(null, h.npo02__MailingCity__c);
-        system.assertEquals(null, h.npo02__MailingState__c);
+        System.assertEquals(null, h.npo02__MailingStreet__c);
+        System.assertEquals(null, h.npo02__MailingCity__c);
+        System.assertEquals(null, h.npo02__MailingState__c);
 
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
@@ -329,24 +329,24 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
         Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account WHERE Id NOT IN :accounts];
-        system.assertNotEquals(null, newHHAccount);
-        system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
-        system.assertEquals(c2.MailingStreet, newHHAccount.BillingStreet);
-        system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
-        system.assertEquals(2, [select count() from Address__c]);
+        System.assertNotEquals(null, newHHAccount);
+        System.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
+        System.assertEquals(c2.MailingStreet, newHHAccount.BillingStreet);
+        System.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
+        System.assertEquals(2, [select count() from Address__c]);
         c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id];
-        system.assertEquals('1 1st Avenue', c2.Account.BillingStreet);
-        system.assertEquals('1 1st Avenue', c2.MailingStreet);
-        system.assertEquals(false, c2.is_Address_Override__c);
-        system.assertNotEquals(null, c2.Current_Address__c);
+        System.assertEquals('1 1st Avenue', c2.Account.BillingStreet);
+        System.assertEquals('1 1st Avenue', c2.MailingStreet);
+        System.assertEquals(false, c2.is_Address_Override__c);
+        System.assertNotEquals(null, c2.Current_Address__c);
         c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id];
-        system.assertEquals('1 1st Avenue', c.Account.BillingStreet);
-        system.assertEquals('123 Main St.', c.MailingStreet);
-        system.assertEquals(true, c.is_Address_Override__c);
-        system.assertNotEquals(null, c.Current_Address__c);
-        system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
-        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+        System.assertEquals('1 1st Avenue', c.Account.BillingStreet);
+        System.assertEquals('123 Main St.', c.MailingStreet);
+        System.assertEquals(true, c.is_Address_Override__c);
+        System.assertNotEquals(null, c.Current_Address__c);
+        System.assert(CAO_Constants.isHHAccountModel());
+        System.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        System.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
     /*******************************************************************************************************
     * @description Tests the conversion process for Contacts with two addresses, but address verification disabled
@@ -366,8 +366,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         c = [select Account.Name, AccountId, npo02__Household__c, npo02__Household__r.npo02__MailingStreet__c, LastName, Id, MailingStreet, Account.BillingStreet from Contact where Id = :c.Id];
 
-        system.assertEquals(c.Account.Name, 'Test Contact');
-        system.assertEquals('123 Main St.', c.MailingStreet);
+        System.assertEquals(c.Account.Name, 'Test Contact');
+        System.assertEquals('123 Main St.', c.MailingStreet);
 
         Contact c2 = new Contact(LastName = 'Contact', FirstName = 'Test2',
                                 MailingStreet = '1 1st Avenue', MailingCity = 'Baltimore',
@@ -387,9 +387,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         update h;
 
         h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
-        system.assertEquals(null, h.npo02__MailingStreet__c);
-        system.assertEquals(null, h.npo02__MailingCity__c);
-        system.assertEquals(null, h.npo02__MailingState__c);
+        System.assertEquals(null, h.npo02__MailingStreet__c);
+        System.assertEquals(null, h.npo02__MailingCity__c);
+        System.assertEquals(null, h.npo02__MailingState__c);
 
         //set the HH Account model before entering the batch
         //CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
@@ -406,25 +406,25 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
         Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account WHERE Id NOT IN :accounts];
-        system.assertNotEquals(null, newHHAccount);
-        system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
-        //system.assertEquals(null, newHHAccount.BillingStreet, 'The contact addresses shouldn\'t be copied over during the conversion.');
-        system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
-        system.assertEquals(0, [select count() from Address__c], 'No address objects should be created.');
+        System.assertNotEquals(null, newHHAccount);
+        System.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
+        //System.assertEquals(null, newHHAccount.BillingStreet, 'The contact addresses shouldn\'t be copied over during the conversion.');
+        System.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
+        System.assertEquals(0, [select count() from Address__c], 'No address objects should be created.');
         c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id];
-        system.assertEquals(null, c2.Account.BillingStreet);
-        system.assertEquals('1 1st Avenue', c2.MailingStreet);
-        system.assertEquals(false, c2.is_Address_Override__c);
-        system.assertEquals(null, c2.Current_Address__c);
+        System.assertEquals(null, c2.Account.BillingStreet);
+        System.assertEquals('1 1st Avenue', c2.MailingStreet);
+        System.assertEquals(false, c2.is_Address_Override__c);
+        System.assertEquals(null, c2.Current_Address__c);
         c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id];
-        system.assertEquals(null, c.Account.BillingStreet);
-        system.assertEquals('123 Main St.', c.MailingStreet);
-        system.assertEquals(false, c.is_Address_Override__c);
-        system.assertEquals(null, c.Current_Address__c);
-        system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
-        system.assertEquals(UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c, true);
-        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+        System.assertEquals(null, c.Account.BillingStreet);
+        System.assertEquals('123 Main St.', c.MailingStreet);
+        System.assertEquals(false, c.is_Address_Override__c);
+        System.assertEquals(null, c.Current_Address__c);
+        System.assert(CAO_Constants.isHHAccountModel());
+        System.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        System.assertEquals(UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c, true);
+        System.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
     /*******************************************************************************************************
     * @description Tests the conversion process when setting primary affiliation
@@ -447,11 +447,11 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         c.AccountId = a.Id;
         update c;
         //confirm we have one new affiliation
-        system.assertEquals(1, [select count() from npe5__Affiliation__c]);
+        System.assertEquals(1, [select count() from npe5__Affiliation__c]);
         npe5__Affiliation__c aff = [select npe5__Status__c, npe5__Primary__c, npe5__Organization__c, npe5__Contact__c from npe5__Affiliation__c limit 1];
-        system.assertEquals('Current', aff.npe5__Status__c);
+        System.assertEquals('Current', aff.npe5__Status__c);
 
-        system.assertEquals('NonIndividualAccount', [select Account.Name from Contact where Id = :c.Id].Account.Name);
+        System.assertEquals('NonIndividualAccount', [select Account.Name from Contact where Id = :c.Id].Account.Name);
 
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
@@ -466,15 +466,15 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //confirm we still have one affiliation
-        system.assertEquals(1, [select count() from npe5__Affiliation__c]);
+        System.assertEquals(1, [select count() from npe5__Affiliation__c]);
         //select that affiliation and confirm its linking our account and contact
         aff = [select npe5__Status__c, npe5__Primary__c, npe5__Organization__c, npe5__Contact__c from npe5__Affiliation__c limit 1];
-        system.assertEquals('Current', aff.npe5__Status__c);
-        system.assert(aff.npe5__Primary__c == true);
-        system.assert(aff.npe5__Contact__c == c.Id);
-        system.assert(aff.npe5__Organization__c == a.Id);
+        System.assertEquals('Current', aff.npe5__Status__c);
+        System.assert(aff.npe5__Primary__c == true);
+        System.assert(aff.npe5__Contact__c == c.Id);
+        System.assert(aff.npe5__Organization__c == a.Id);
         //confirm that the Primary Affiliation on the Contact is set to our affiliation
-        system.assertEquals([select Primary_Affiliation__c from Contact where Id = :c.Id].Primary_Affiliation__c, aff.npe5__Organization__c);
+        System.assertEquals([select Primary_Affiliation__c from Contact where Id = :c.Id].Primary_Affiliation__c, aff.npe5__Organization__c);
     }
 
     /*******************************************************************************************************
