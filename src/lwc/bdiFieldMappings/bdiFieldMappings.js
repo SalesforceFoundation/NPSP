@@ -122,6 +122,7 @@ export default class bdiFieldMappings extends LightningElement {
     */
     init = async() => {
         this.brokenFieldMappings = [];
+        this.errors = null;
         try {
             this.isLoading = true;
             let fieldMappingData = await getAdvancedMappingFieldsData({
@@ -177,7 +178,7 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     get showRowNumberColumns () {
-        return !isNull(this.errors) && this.errors.length > 0;
+        return !isNull(this.errors);
     }
 
     /*******************************************************************************

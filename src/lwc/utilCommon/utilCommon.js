@@ -528,6 +528,15 @@ const stripNamespace = (apiName , namespacePrefix) => {
     return apiNameParts[1];
 }
 
+/*******************************************************************************
+ * @description Parse proxy objects for debugging, mutating, etc
+ *
+ * @param {object} obj: Object to be parsed
+ */
+const parse = (obj) => {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 export {
     constructErrorMessage,
     debouncify,
@@ -558,5 +567,6 @@ export {
     arraysMatch,
     getValueFromDotNotationString,
     validateJSONString,
-    stripNamespace
+    stripNamespace,
+    parse
 };

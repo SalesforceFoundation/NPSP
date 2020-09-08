@@ -218,7 +218,7 @@ public class BDI_ManageAdvancedMappingCtrl {
         String objectName, String fieldMappingSetname) {
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
-        BDI_FieldMapping[] fieldMappings = injectBrokenFieldMappings(bdiMsAdv, objectName);
+        BDI_FieldMapping[] fieldMappings = injectBrokenFieldMappings(objectName);
         if (fieldMappings != null) {
             for (BDI_FieldMapping fieldMapping : fieldMappings) {
                 if ((bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
@@ -233,13 +233,11 @@ public class BDI_ManageAdvancedMappingCtrl {
 
     /**
      * @description
-     * @param bdiMsAdv
      * @param objectName
      *
      * @return {BDI_FieldMapping[]} fieldMappings
      */
-    private static BDI_FieldMapping[] injectBrokenFieldMappings (
-        BDI_MappingServiceAdvanced bdiMsAdv, String objectName) {
+    private static BDI_FieldMapping[] injectBrokenFieldMappings (String objectName) {
         BDI_FieldMapping [] brokenFieldMappings = bdiMsAdv.objectMappingByDevName.get(objectName).Field_Mappings;
         BDI_FieldMapping[] fieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectName);
         if (brokenFieldMappings!= null && !brokenFieldMappings.isEmpty()) {

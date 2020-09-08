@@ -49,7 +49,6 @@ export default class bdiObjectMappings extends LightningElement {
     deploymentTimer;
     deploymentTimeout = 10000;
     diObjectMappingSetDevName;
-    @track errors;
 
     
     customLabels = {
@@ -161,15 +160,6 @@ export default class bdiObjectMappings extends LightningElement {
     processBrokenMappingReferences (objectMappings) {
         this.brokenMappings = [];
         objectMappings.forEach(mapping => {
-            if (mapping.Is_Broken) {
-                this.errors = { rows: {}, table: {} };
-                this.errors.rows[mapping.DeveloperName] = {
-                    title: 'Error',
-                    messages: ['Please check this row'],
-                    fieldNames: []
-                };
-                this.brokenMappings.push(`${mapping.MasterLabel}`);
-            }
             if (mapping.hasOwnProperty('Field_Mappings')) {
                 mapping.Field_Mappings.forEach(fieldMapping => {
                     if (fieldMapping.Is_Broken && !fieldMapping.Is_Deleted) {
@@ -181,9 +171,6 @@ export default class bdiObjectMappings extends LightningElement {
         });
     }
 
-    get showRowNumberColumns () {
-        return !isNull(this.errors) && this.errors.length > 0;
-    }
     
     /*******************************************************************************
     * @description shows the object mappings component and refreshes the data
@@ -260,10 +247,9 @@ export default class bdiObjectMappings extends LightningElement {
     * it is a core object mapping.
     */
     getRowActions(row, doneCallback) {
-        const actions = [];
-        if (!row.Is_Broken) {
-            actions.push( { label: bdiOMUIViewFieldMappingsLabel, name: 'goToFieldMappings' })
-        }
+        const actions = [
+            { label: bdiOMUIViewFieldMappingsLabel, name: 'goToFieldMappings' }
+        ];
 
         if (row.Relationship_To_Predecessor !== 'No Predecessor'
             && row.MasterLabel !== 'Opportunity Contact Role 1' 

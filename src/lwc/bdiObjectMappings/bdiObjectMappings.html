@@ -76,12 +76,10 @@
                                 <lightning-spinner></lightning-spinner>
                             </tempate>
                             <lightning-datatable
-                                key-field="DeveloperName"
+                                key-field="id"
                                 data={objectMappings}
                                 columns={columns}
                                 hide-checkbox-column
-                                errors={errors}
-                                show-row-number-column={showRowNumberColumns}
                                 onrowaction={handleRowAction}>
                             </lightning-datatable>
                         </div>
