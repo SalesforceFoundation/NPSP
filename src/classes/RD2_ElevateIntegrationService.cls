@@ -76,25 +76,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
-    * @description Returns whether the Elevate credit card can be displayed
-    * on the form to enter a new Recurring Donation in NPSP and the related commitment in Elevate.
-    * This method can be removed when work is GA and the RD2 controller
-    * should be using above defined isIntegrationEnabled() only.
-    * @return Boolean
-    */
-    @TestVisible
-    public static Boolean isCommitmentAPIEnabled {	
-        get {	
-            if (isCommitmentAPIEnabled == null) {	
-                isCommitmentAPIEnabled = isIntegrationEnabled()
-                    && UTIL_FeatureEnablement.isPilotEnabled();	
-            }	
-            return isCommitmentAPIEnabled;	
-        }	
-        private set;	
-    }
-
-    /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation

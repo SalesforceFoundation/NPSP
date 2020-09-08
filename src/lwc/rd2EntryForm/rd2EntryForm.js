@@ -70,7 +70,7 @@ export default class rd2EntryForm extends LightningElement {
     isSettingReady = false;
 
     @track isElevateWidgetDisplayed = false;
-    isCommitmentAPIEnabled = false;
+    isElevateCustomer = false;
 
     @track error = {};
 
@@ -96,7 +96,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.rdSettings = response;
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
-                this.isCommitmentAPIEnabled = response.isCommitmentAPIEnabled;
+                this.isElevateCustomer = response.isElevateCustomer;
             })
             .catch((error) => {
                 this.handleError(error);
@@ -215,7 +215,7 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        this.isElevateWidgetDisplayed = this.isCommitmentAPIEnabled === true
+        this.isElevateWidgetDisplayed = this.isElevateCustomer === true
             && !this.isEdit // The Elevate widget is applicable to new RDs only
             && paymentMethod === 'Credit Card';// Verify the payment method value
     }
