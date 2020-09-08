@@ -283,6 +283,7 @@ npsp_lex_locators={
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]',
         'lookup-option':'//li/lightning-base-combobox-item[.//*[@title="{}"]]',
+        'temp-builder-fields':'//label[@class="slds-form-element__label slds-no-flex"]'
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
