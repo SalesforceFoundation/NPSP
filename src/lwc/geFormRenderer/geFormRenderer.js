@@ -1018,10 +1018,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             });
 
         } else if (errorResponse) {
-            errorObjects.push({
-                message: errorResponse,
-                index: 0
-            });
+            let errorObject = errorResponse.message
+                ? errorResponse
+                : {
+                    message: errorResponse,
+                    index: 0
+                };
+            errorObjects.push(errorObject);
         }
 
         this.pageLevelErrorMessageList = [{
