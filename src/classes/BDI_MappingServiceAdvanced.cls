@@ -239,37 +239,37 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         Data_Import_Field_Mapping_Set__mdt diFieldMappingSet) {
         return [
             SELECT Id,
-            MasterLabel,
-            Custom_Mapping_Logic_Class__c,
-            DeveloperName,
-            Data_Import_Object_Mapping_Set__c,
-            Data_Import_Object_Mapping_Set__r.DeveloperName,
-            Imported_Record_Field_Name__c,
-            Imported_Record_Status_Field_Name__c,
-            Is_Deleted__c,
-            NamespacePrefix,
-            Object_API_Name__c,
-            Predecessor__c,
-            Relationship_Field__c,
-            Relationship_To_Predecessor__c,
-            (SELECT MasterLabel,
-            DeveloperName,
-            Data_Import_Field_Mapping_Set__c,
-            Data_Import_Field_Mapping_Set__r.DeveloperName,
-            Required__c,
-            Source_Field_API_Name__c,
-            Target_Field_API_Name__c,
-            Target_Object_Mapping__c,
-            Target_Object_Mapping__r.DeveloperName,
-            Target_Object_Mapping__r.Object_API_Name__c,
-            Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
-            Is_Deleted__c
+                MasterLabel,
+                Custom_Mapping_Logic_Class__c,
+                DeveloperName,
+                Data_Import_Object_Mapping_Set__c,
+                Data_Import_Object_Mapping_Set__r.DeveloperName,
+                Imported_Record_Field_Name__c,
+                Imported_Record_Status_Field_Name__c,
+                Is_Deleted__c,
+                NamespacePrefix,
+                Object_API_Name__c,
+                Predecessor__c,
+                Relationship_Field__c,
+                Relationship_To_Predecessor__c,
+                (SELECT MasterLabel,
+                DeveloperName,
+                Data_Import_Field_Mapping_Set__c,
+                Data_Import_Field_Mapping_Set__r.DeveloperName,
+                Required__c,
+                Source_Field_API_Name__c,
+                Target_Field_API_Name__c,
+                Target_Object_Mapping__c,
+                Target_Object_Mapping__r.DeveloperName,
+                Target_Object_Mapping__r.Object_API_Name__c,
+                Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                Is_Deleted__c
             FROM Data_Import_Field_Mappings__r
             WHERE Is_Deleted__c = false
-            AND Target_Object_Mapping__r.Is_Deleted__c = false)
+                AND Target_Object_Mapping__r.Is_Deleted__c = false)
             FROM Data_Import_Object_Mapping__mdt
             WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c
-            AND Is_Deleted__c = false
+                AND Is_Deleted__c = false
             ORDER BY MasterLabel ASC
         ];
     }
@@ -277,10 +277,10 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     private List<Data_Import_Field_Mapping_Set__mdt> getDataImportFieldMappingSets () {
         return [
             SELECT Id,
-            MasterLabel,
-            DeveloperName,
-            Data_Import_Object_Mapping_Set__c,
-            Data_Import_Object_Mapping_Set__r.DeveloperName
+                MasterLabel,
+                DeveloperName,
+                Data_Import_Object_Mapping_Set__c,
+                Data_Import_Object_Mapping_Set__r.DeveloperName
             FROM Data_Import_Field_Mapping_Set__mdt
             WHERE DeveloperName =: fieldMappingSetName LIMIT 1
         ];

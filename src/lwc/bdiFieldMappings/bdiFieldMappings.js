@@ -80,8 +80,6 @@ export default class bdiFieldMappings extends LightningElement {
     diFieldDescribes;
     mappedDiFieldDescribes;
     targetObjectFieldDescribes;
-
-
     displayFieldMappings = false;
     isLoading = true;
     columns = columns;
@@ -89,7 +87,6 @@ export default class bdiFieldMappings extends LightningElement {
     sortDirection;
     fieldMappingSetName;
     fieldMappings;
-
     deploymentTimer;
     deploymentTimeout = 10000;
     @track errors;
@@ -130,7 +127,7 @@ export default class bdiFieldMappings extends LightningElement {
             let fieldMappingData = await getAdvancedMappingFieldsData({
                 targetObjectApiName : this.objectMapping.Object_API_Name,
                 sourceObjectApiName : DATA_IMPORT.objectApiName
-            })
+            });
 
             if (!isNull(fieldMappingData)) {
                 this.diFieldDescribes = fieldMappingData.sourceObjectFieldDescribes;
