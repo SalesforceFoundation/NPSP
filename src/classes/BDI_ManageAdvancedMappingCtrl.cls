@@ -838,7 +838,8 @@ public class BDI_ManageAdvancedMappingCtrl {
         @AuraEnabled
         public List<ComboboxOption> objectOptions;
 
-        public AdvancedMappingObjectData (BDI_ObjectMapping [] objectMappings, List<ComboboxOption> objectOptions) {
+        public AdvancedMappingObjectData (BDI_ObjectMapping [] objectMappings,
+            List<ComboboxOption> objectOptions) {
             this.objectMappings = objectMappings;
             this.objectOptions = objectOptions;
         }

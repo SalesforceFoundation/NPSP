@@ -182,7 +182,7 @@ export default class bdiObjectMappings extends LightningElement {
     }
 
     get showRowNumberColumns () {
-        return !isNull(this.errors);
+        return !isNull(this.errors) && this.errors.length > 0;
     }
     
     /*******************************************************************************
