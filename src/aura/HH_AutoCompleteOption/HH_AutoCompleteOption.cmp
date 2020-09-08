@@ -10,7 +10,7 @@
                     <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
                         <p class="slds-tile__title slds-truncate">{!v.value.Name}</p>
                         <lightning:buttonIcon iconName="utility:new" variant="bare" onclick="{!c.handleClick}"
-                            class="slds-shrink-none" size="large" alternativeText="{!$Label.npo02.Add}" />
+                            class="slds-shrink-none" size="large" alternativeText="{!$Label.npo02.Add + ' ' + v.value.Name}" ariaLabel="{!$Label.npo02.Add + ' ' + v.value.Name}" />
                     </div>
                     <div class="slds-tile__detail slds-text-body_small">
                         <ul>
