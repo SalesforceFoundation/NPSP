@@ -1,13 +1,13 @@
 
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { getNamespace, isFunction } from 'c/utilCommon';
+import { getNamespace, isFunction, isNull } from 'c/utilCommon';
 
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 
 
 /***
-* @description Visualforce page for the credit card tokenization
+* @description Visualforce page used to handle the payment services credit card tokenization request
 */
 const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 
@@ -17,14 +17,17 @@ const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 const TOKENIZE_EVENT_ACTION = 'createToken';
 
 /***
-* @description Max number of ms to wait for the response
+* @description Max number of ms to wait for the response containing a token or an error
 */
 const TOKENIZE_TIMEOUT_MS = 10000;
 
 
-class PSElevateCommon {
+/***
+* @description Payment services Elevate credit card tokenization service
+*/
+class psElevateTokenHandler {
     /***
-    * @description Max number of ms to wait for the response
+    * @description Custom labels
     */
     labels = Object.freeze({
         tokenRequestTimedOut
@@ -32,7 +35,7 @@ class PSElevateCommon {
 
 
     /***
-    * @description Returns tokenize card Visualforce page URL
+    * @description Returns credit card tokenization Visualforce page URL
     */
     getTokenizeCardPageURL() {
         const namespace = this.getCurrentNamespace();
@@ -43,9 +46,8 @@ class PSElevateCommon {
     }
 
     /***
-    * @description Builds the visualforce origin url that we need in order to
-    * make sure we're only listening for messages from the correct source in the
-    * registerPostMessageListener method.
+    * @description Builds the Visualforce origin url that we need in order to
+    * make sure we're only listening for messages from the correct source.
     */
     getVisualforceOriginURLs(domainInfo) {
         const namespace = this.getCurrentNamespace();
@@ -62,21 +64,22 @@ class PSElevateCommon {
     }
 
     /***
-    * @description
+    * @description Returns the NPSP namespace (if any)
     */
     getCurrentNamespace() {
         return getNamespace(PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
     }
 
     /***
-    * @description
+    * @description Dispatches the application event when the Elevate credit card iframe 
+    * is displayed or hidden 
     */
     dispatchApplicationEvent(eventName, payload) {
         fireEvent(null, eventName, payload);
     }
 
     /***
-    * @description Method listens for a message from the visualforce iframe.
+    * @description Listens for a message from the Visualforce iframe.
     * Rejects any messages from an unknown origin.
     */
     registerPostMessageListener(component) {
@@ -93,56 +96,61 @@ class PSElevateCommon {
     }
 
     /***
-    * @description Method handles messages received from iframed visualforce page.
-    *
-    * @param {object} message: Message received from iframe
+    * @description Handles messages received from Visualforce page.
+    * @param message Message received from the iframe
     */
     handleMessage(message) {
         if (message.error || message.token) {
             if (isFunction(this.tokenCallback)) {
                 this.tokenCallback(message);
             }
-        } 
-    }
-
-    /***
-    * @description Method sends a message to the visualforce page iframe requesting
-    * a token. Response for this request is found and handled in
-    * registerPostMessageListener.
-    */
-    requestToken(visualforceOrigin, iframe, handleError) {
-        if (iframe) {
-            const tokenPromise = new Promise((resolve, reject) => {
-
-                const timer = setTimeout(() => 
-                    reject(this.handleTimeout(handleError)), 
-                    TOKENIZE_TIMEOUT_MS
-                );
-
-                this.tokenCallback = message => {
-                    clearTimeout(timer);
-
-                    if (message.error) {
-                        reject(handleError(message));
-
-                    } else if (message.token) {
-                        resolve(message.token);
-                    }
-                };
-
-            });
-
-            iframe.contentWindow.postMessage(
-                { action: TOKENIZE_EVENT_ACTION },
-                visualforceOrigin
-            );
-
-            return tokenPromise;
         }
     }
 
+    /***
+    * @description Method sends a message to the visualforce page iframe requesting a token. 
+    * This request response is found and handled in the registerPostMessageListener().
+    * @param visualforceOrigin Visualforce origin
+    * @param iframe The payment services iframe displayed within the credit card widget LWC
+    * @param handleError An error handler function
+    * @return Promise A token promise
+    */
+    requestToken(visualforceOrigin, iframe, handleError) {
+        if (isNull(iframe)) {
+            return;
+        }
+
+        const tokenPromise = new Promise((resolve, reject) => {
+
+            const timer = setTimeout(() =>
+                reject(this.handleTimeout(handleError)),
+                TOKENIZE_TIMEOUT_MS
+            );
+
+            this.tokenCallback = message => {
+                clearTimeout(timer);
+
+                if (message.error) {
+                    reject(handleError(message));
+
+                } else if (message.token) {
+                    resolve(message.token);
+                }
+            };
+
+        });
+
+        iframe.contentWindow.postMessage(
+            { action: TOKENIZE_EVENT_ACTION },
+            visualforceOrigin
+        );
+
+        return tokenPromise;
+    }
+
     /**
-     *
+     * Handles a timeout error display when the tokenization 
+     * request does not result in a response
      */
     handleTimeout(handleError) {
         const message = {
@@ -154,5 +162,7 @@ class PSElevateCommon {
     }
 }
 
-
-export default new PSElevateCommon();
+/**
+ * A new instance of the Elevate tokenization handler
+ */
+export default new psElevateTokenHandler();

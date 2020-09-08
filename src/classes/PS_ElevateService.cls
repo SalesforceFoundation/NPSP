@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2020
 * @group Elevate Payment Services
-* @description 
+* @description Contains Elevate payment services methods 
 */
 public with sharing class PS_ElevateService {
 
@@ -39,10 +39,12 @@ public with sharing class PS_ElevateService {
      * @description Checks whether an org is a customer of Elevate Payment Services
      * @return Boolean
     */
+    @TestVisible
     public static Boolean isElevateCustomer {
         get {
             PS_IntegrationServiceConfig config = new PS_IntegrationServiceConfig();
             return config.isIntegrationEnabled();
         }
+        private set;
     }
 }

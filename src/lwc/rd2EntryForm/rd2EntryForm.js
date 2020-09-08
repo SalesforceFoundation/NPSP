@@ -31,7 +31,6 @@ import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
-const LABEL_NEW_LINE = '/0x0A/';
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -71,7 +70,7 @@ export default class rd2EntryForm extends LightningElement {
     isSettingReady = false;
 
     isElevateCustomer = false;
-    @track isElevateTokenizeCard = false;
+    @track isElevateWidgetDisplayed = false;
 
     @track error = {};
 
@@ -195,7 +194,7 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
 
-            this.evaluateTokenizeCard(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
+            this.evaluateElevateWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
 
         } else if (response.error) {
             this.handleError(response.error);
@@ -208,17 +207,17 @@ export default class rd2EntryForm extends LightningElement {
     */
     handlePaymentChange(event) {
         this.clearError();
-        this.evaluateTokenizeCard(event.detail.value);
+        this.evaluateElevateWidget(event.detail.value);
     }
 
     /***
     * @description Checks if credit card widget should be displayed
     * @param paymentMethod Payment method
     */
-    evaluateTokenizeCard(paymentMethod) {
-        this.isElevateTokenizeCard = this.isElevateCustomer === true
-            && !this.isEdit
-            && paymentMethod === 'Credit Card';//TODO is this label?
+    evaluateElevateWidget(paymentMethod) {
+        this.isElevateWidgetDisplayed = this.isElevateCustomer === true
+            && !this.isEdit // The Elevate widget is applicable to new RDs only
+            && paymentMethod === 'Credit Card';// Verify the payment method value
     }
 
     /***
@@ -248,11 +247,10 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     processSubmit = async (allFields) => {
-        if (this.isElevateTokenizeCard) {
+        if (this.isElevateWidgetDisplayed) {
             try {
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-                const widgetValues = await elevateWidget.returnValues().payload;
-                console.log('Widget values: ' + JSON.stringify(widgetValues));
+                const token = await elevateWidget.returnValues().payload;
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;

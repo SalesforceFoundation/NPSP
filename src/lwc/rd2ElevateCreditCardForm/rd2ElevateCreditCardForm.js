@@ -1,6 +1,6 @@
 import { api, track, LightningElement } from 'lwc';
 
-import psElevateCommon from 'c/psElevateCommon';
+import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/PS_ElevateController.getOrgDomainInfo';
 
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
@@ -12,7 +12,11 @@ import rd2ElevateEnableLabel from '@salesforce/label/c.RD2_ElevateEnableLabel';
 
 const WIDGET_DISABLED_EVENT_NAME = 'rd2TokenizeCardWidgetDisabled';
 
-export default class psElevateCreditCardForm extends LightningElement {
+
+/***
+* @description Payment services Elevate credit card widget on the Recurring Donation entry form
+*/
+export default class rd2ElevateCreditCardForm extends LightningElement {
 
     labels = {
         commonPaymentServices,
@@ -22,8 +26,6 @@ export default class psElevateCreditCardForm extends LightningElement {
         rd2ElevateEnableLabel
     };
 
-    @api cardHolderName;
-
     @track visualforceOrigin;
     @track visualforceOriginUrls;
 
@@ -32,82 +34,74 @@ export default class psElevateCreditCardForm extends LightningElement {
     @track alert = {};
 
     /***
-    * @description
+    * @description Get the organization domain information such as domain and the pod name
+    * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
         const domainInfo = await getOrgDomainInfo();
 
-        this.visualforceOriginUrls = psElevateCommon.getVisualforceOriginURLs(domainInfo);
+        this.visualforceOriginUrls = tokenHandler.getVisualforceOriginURLs(domainInfo);
     }
 
     /***
-    * @description
+    * @description Listens for a message from the Visualforce iframe.
     */
     renderedCallback() {
         let component = this;
-        psElevateCommon.registerPostMessageListener(component);
+        tokenHandler.registerPostMessageListener(component);
     }
 
     /***
-    * @description
-    */
-    disconnectedCallback() {
-    }
-
-    /***
-    * @description 
+    * @description Elevate credit card tokenization Visualforce page URL
     */
     get tokenizeCardPageUrl() {
-        return psElevateCommon.getTokenizeCardPageURL();
+        return tokenHandler.getTokenizeCardPageURL();
     }
 
     /***
-    * @description Method handles messages received from iframed visualforce page.
-    *
-    * @param {object} message: Message received from iframe
+    * @description Method handles messages received from Visualforce iframe wrapper.
+    * @param message Message received from iframe
     */
     async handleMessage(message) {
-        psElevateCommon.handleMessage(message);
-        
+        tokenHandler.handleMessage(message);
+
         if (message.isLoaded) {
             this.isLoading = false;
         }
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting
-    * a token. Response for this request is found and handled in
-    * registerPostMessageListener.
+    * @description Method sends a message to the visualforce page iframe requesting a token. 
     */
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.labels.commonPaymentServices}']`);
 
-        return psElevateCommon.requestToken(this.visualforceOrigin, iframe, this.handleError);
+        return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.handleError);
     }
 
     /***
-    * @description Handles a user's onclick event for disabling the widget.
+    * @description Handles user onclick event for disabling the widget.
     */
     handleUserDisabledWidget() {
         this.hideWidget();
-        psElevateCommon.dispatchApplicationEvent(WIDGET_DISABLED_EVENT_NAME, {
+        tokenHandler.dispatchApplicationEvent(WIDGET_DISABLED_EVENT_NAME, {
             isWidgetDisabled: true
         });
     }
 
     /***
-    * @description Handles a user's onclick event for re-enabling the widget.
+    * @description Handles user onclick event for re-enabling the widget.
     */
     handleUserEnabledWidget() {
         this.isLoading = true;
         this.displayWidget();
-        psElevateCommon.dispatchApplicationEvent(WIDGET_DISABLED_EVENT_NAME, {
+        tokenHandler.dispatchApplicationEvent(WIDGET_DISABLED_EVENT_NAME, {
             isWidgetDisabled: false
         });
     }
 
     /***
-    * @description Function enables or disables the widget based on provided args.
+    * @description Enables or disables the widget based on provided args.
     */
     displayWidget() {
         this.isDisabled = false;
@@ -115,7 +109,7 @@ export default class psElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Function enables or disables the widget based on provided args.
+    * @description Enables or disables the widget based on provided args.
     */
     hideWidget() {
         this.isDisabled = true;
@@ -123,14 +117,16 @@ export default class psElevateCreditCardForm extends LightningElement {
     }
 
     /**
-     * 
+     * Clears the error display
      */
     clearError() {
         this.alert = {};
     }
 
     /**
-     *
+     * Handles the error from the iframe
+     * @param message Error container
+     * @return object Error object returned to the RD entry form
      */
     handleError = (message) => {
         let errorValue;
@@ -169,11 +165,6 @@ export default class psElevateCreditCardForm extends LightningElement {
         return {
             payload: this.requestToken()
         };
-    }
-
-    @api
-    setNameOnCard(cardHolderName) {
-        this.cardHolderName = cardHolderName;
     }
 
 }

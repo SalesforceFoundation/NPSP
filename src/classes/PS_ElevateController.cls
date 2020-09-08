@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2020
 * @group Elevate Payment Services
-* @description 
+* @description Contains Elevate payment services methods accessible by LWCs
 */
 public with sharing class PS_ElevateController {
 

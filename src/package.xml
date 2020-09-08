@@ -3784,7 +3784,7 @@
         <members>geWidgetService</members>
         <members>libsMoment</members>
         <members>progressRing</members>
-        <members>psElevateCommon</members>
+        <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
         <members>rd2ElevateCreditCardForm</members>
         <members>rd2EntryForm</members>
