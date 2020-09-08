@@ -35,16 +35,60 @@
 */
 public with sharing class PS_ElevateService {
 
-    /**
-     * @description Checks whether an org is a customer of Elevate Payment Services
-     * @return Boolean
+    /***
+    * @description Checks whether an org is a customer of Elevate Payment Services
+    * @return Boolean
     */
-    @TestVisible
-    public static Boolean isElevateCustomer {
-        get {
+    @AuraEnabled
+    public static Boolean isElevateCustomer() {
+        Boolean isCustomer = false;
+        try {
             PS_IntegrationServiceConfig config = new PS_IntegrationServiceConfig();
-            return config.isIntegrationEnabled();
+            isCustomer = config.isIntegrationEnabled();
+        } catch (Exception ex) {
+            throwAuraHandledException(ex.getMessage());
         }
-        private set;
+
+        return isCustomer;
+    }
+
+    /***
+    * @description Throws AuraHandledException
+    * The wrapping of the error message again is required
+    * so the specific message is displayed instead of generic "Script thrown exception".
+    * @param errMessage Exception message that needs to be set again
+    * @return void
+    */
+    private static void throwAuraHandledException(String errMessage) {
+        AuraHandledException e = new AuraHandledException(errMessage);
+        e.setMessage(errMessage);
+        throw e;
+    }
+
+    /***
+    * @description Returns org domain details
+    * @return OrgDomainInfo
+    */
+    @AuraEnabled(cacheable=true)
+    public static OrgDomainInfo getOrgDomainInfo() {
+        String url = System.Url.getOrgDomainUrl().getHost();
+        String[] urlParts = url.split('\\.');
+
+        String podName = [SELECT InstanceName FROM Organization].InstanceName.toLowerCase();
+
+        return new OrgDomainInfo(urlParts[0], podName);
+    }
+
+    /***
+    * @description Contains org domain and pod name
+    */
+    public class OrgDomainInfo {
+        @AuraEnabled public String orgDomain;
+        @AuraEnabled public String podName;
+
+        public OrgDomainInfo (String orgDomain, String podName) {
+            this.orgDomain = orgDomain;
+            this.podName = podName;
+        }
     }
 }

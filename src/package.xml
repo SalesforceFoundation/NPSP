@@ -385,7 +385,6 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
-        <members>PS_ElevateController</members>
         <members>PS_ElevateService</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>

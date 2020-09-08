@@ -75,7 +75,7 @@ public with sharing class RD2_EntryFormController {
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
             'customFieldSets' => getCustomFieldSectionFields(),
-            'isElevateCustomer' => PS_ElevateService.isElevateCustomer
+            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
         };
     }
 
@@ -213,7 +213,7 @@ public with sharing class RD2_EntryFormController {
             if (excludedCustomFields.contains(field.getFieldPath())
                 || field.getFieldPath().startsWith('npsp__')
                 || field.getFieldPath().startsWith('npe03__')
-                ||!UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+                || !UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
             ) {
                 continue;
             }
