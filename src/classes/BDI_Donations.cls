@@ -661,9 +661,14 @@ public class BDI_Donations {
         List<Database.UpsertResult> results = UTIL_DMLService.upsertRecords(paymentsToUpdate, false);
         for (Integer i = 0; i < results.size(); i++) {
             Database.UpsertResult result = results[i];
-            if (!result.isSuccess()) {
-                bdi.LogBDIError(dataImportsToUpdate[i], result.getErrors()[0].getMessage(), null);
-            }
+            if (!result.isSuccess()) {                
+                bdi.LogBDIError(
+                    dataImportsToUpdate[i], 
+                    result.getErrors()[0].getMessage(), 
+                    'Payment_Status__c'
+                );
+                dataImportsToUpdate[i].PaymentImportStatus__c = System.Label.bdiFailed;                
+            }           
         }
 
         for (DataImport__c dataImport : dataImportsWithDonations) {
