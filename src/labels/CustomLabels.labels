@@ -1618,8 +1618,8 @@
         <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
     </labels>
     <labels>
-        <fullName>RD2_ElevateDisableLabel</fullName>
-        <categories>Gift Entry</categories>
+        <fullName>RD2_ElevateDisableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label indicating user can hide the credit card and not use Elevate</shortDescription>
@@ -1627,15 +1627,15 @@
     </labels>
     <labels>
         <fullName>RD2_ElevateDisabledMessage</fullName>
-        <categories>Gift Entry</categories>
+        <categories>Recurring Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text indicating the Recurring Donation will not be committed to Elevate</shortDescription>
         <value>You are not using Elevate for this Recurring Donation.</value>
     </labels>
     <labels>
-        <fullName>RD2_ElevateEnableLabel</fullName>
-        <categories>Gift Entry</categories>
+        <fullName>RD2_ElevateEnableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link text to toggle and enable commitment creation in Elevate</shortDescription>

@@ -9,13 +9,14 @@
                         <div class='credit-card-header slds-p-vertical_small slds-p-horizontal_x-small'>
                             <lightning-layout vertical-align='center'>
                                 <lightning-layout-item size='6'>
-                                    <h1 class='slds-text-body_regular'>{labels.commonPaymentServices}</h1>
+                                    <h1 class='slds-text-body_regular'>{labels.elevateWidgetLabel}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
                                     <template if:false={isDisabled}>
-                                        <lightning-button variant="base" label={labels.rd2ElevateDisableLabel}
-                                            alternative-text={labels.rd2ElevateDisableLabel} icon-name='utility:close'
-                                            icon-position="right" onclick={handleUserDisabledWidget}
+                                        <lightning-button variant="base" label={labels.elevateDisableButtonLabel}
+                                            alternative-text={labels.elevateDisableButtonLabel}
+                                            icon-name='utility:close' icon-position="right"
+                                            onclick={handleUserDisabledWidget}
                                             class='slds-button slds-button_base slds-float_right hide-card-button'>
                                         </lightning-button>
                                     </template>
@@ -28,10 +29,10 @@
                         <template if:true={isDisabled}>
                             <p class='fade-in'>
                                 <span class='slds-content-message'>
-                                    {labels.rd2ElevateDisabledMessage}
+                                    {labels.elevateDisabledMessage}
                                 </span>
-                                <lightning-button variant='base' label={labels.rd2ElevateEnableLabel}
-                                    title={labels.rd2ElevateEnableLabel} onclick={handleUserEnabledWidget}
+                                <lightning-button variant='base' label={labels.elevateEnableButtonLabel}
+                                    title={labels.elevateEnableButtonLabel} onclick={handleUserEnabledWidget}
                                     class='slds-m-left_xx-small'>
                                 </lightning-button>
                             </p>
@@ -45,11 +46,11 @@
 
                             <div class='iframe-container'>
                                 <template if:true={isLoading}>
-                                    <lightning-spinner alternative-text={labels.assistiveSpinner}>
+                                    <lightning-spinner alternative-text={labels.spinnerAltText}>
                                     </lightning-spinner>
                                 </template>
-                                <iframe class='payment-services-iframe' title={labels.commonPaymentServices}
-                                    src={tokenizeCardPageUrl} data-id={labels.commonPaymentServices}>
+                                <iframe class='payment-services-iframe' title={labels.elevateWidgetLabel}
+                                    src={tokenizeCardPageUrl} data-id={labels.elevateWidgetLabel}>
                                 </iframe>
                             </div>
                         </template>

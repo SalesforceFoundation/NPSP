@@ -3,12 +3,11 @@ import { api, track, LightningElement } from 'lwc';
 import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/PS_ElevateController.getOrgDomainInfo';
 
-import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
-import assistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
-
-import rd2ElevateDisableLabel from '@salesforce/label/c.RD2_ElevateDisableLabel';
-import rd2ElevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
-import rd2ElevateEnableLabel from '@salesforce/label/c.RD2_ElevateEnableLabel';
+import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
+import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
+import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
+import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
+import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 
 const WIDGET_DISABLED_EVENT_NAME = 'rd2TokenizeCardWidgetDisabled';
 
@@ -19,11 +18,11 @@ const WIDGET_DISABLED_EVENT_NAME = 'rd2TokenizeCardWidgetDisabled';
 export default class rd2ElevateCreditCardForm extends LightningElement {
 
     labels = {
-        commonPaymentServices,
-        assistiveSpinner,
-        rd2ElevateDisableLabel,
-        rd2ElevateDisabledMessage,
-        rd2ElevateEnableLabel
+        elevateWidgetLabel,
+        spinnerAltText,
+        elevateDisableButtonLabel,
+        elevateDisabledMessage,
+        elevateEnableButtonLabel
     };
 
     @track visualforceOrigin;
@@ -74,7 +73,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * @description Method sends a message to the visualforce page iframe requesting a token. 
     */
     requestToken() {
-        const iframe = this.template.querySelector(`[data-id='${this.labels.commonPaymentServices}']`);
+        const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
 
         return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.handleError);
     }
