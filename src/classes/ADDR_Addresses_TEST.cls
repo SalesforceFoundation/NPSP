@@ -480,9 +480,17 @@ public with sharing class ADDR_Addresses_TEST {
         Test.stopTest();
 
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
-        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, Current_Address__r.Default_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
+        listCon = [SELECT Id, Name, AccountId, is_Address_Override__c, Current_Address__c, Current_Address__r.Default_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude FROM Contact];
 
-        system.assertEquals(cHH, [SELECT Count() FROM Address__c WHERE MailingCity__c LIKE 'not%' AND Default_Address__c = False],
+        Integer nonOverrideAddressCounter = 0;
+
+        for (Address__c address : [SELECT MailingCity__c FROM Address__c WHERE Default_Address__c = false]) {
+            if (address.MailingCity__c.startsWith('not')) {
+                nonOverrideAddressCounter++;
+            }
+        }
+        
+        system.assertEquals(cHH, nonOverrideAddressCounter,
             'There should be one "not override" address per Household not set as default address');
 
         Integer cNotOverride = 0;

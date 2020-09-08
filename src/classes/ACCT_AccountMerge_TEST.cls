@@ -170,7 +170,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         update ADDR_Addresses_TEST.listConT;
 
         // decide who wins (and remember who was primary contact)
-        Account accWinner = [select Id, Name, npe01__One2OneContact__c from Account where Id = :ADDR_Addresses_TEST.listAccT[1].Id];
+        Account accWinner = [SELECT Id, Name, npe01__One2OneContact__c FROM Account WHERE Id = :ADDR_Addresses_TEST.listAccT[1].Id];
         list<Account> listAccLoser = new list<Account>();
         listAccLoser.add(ADDR_Addresses_TEST.listAccT[0]);
         listAccLoser.add(ADDR_Addresses_TEST.listAccT[2]);
@@ -183,35 +183,46 @@ private with sharing class ACCT_AccountMerge_TEST {
         Test.stopTest();
 
         // reload our contacts and accounts
-        list<Account> listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
+        list<Account> listAcc = new list<Account>([SELECT Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
             npo02__NumberOfClosedOpps__c, npe01__One2OneContact__c, Number_Of_Household_Members__c,
             BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
-            from Account order by Id]);
-        list<Contact> listCon = [select Id, Firstname, AccountId, 
+            FROM Account ORDER BY Id]);
+        list<Contact> listCon = [SELECT Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Id];
+            FROM Contact ORDER BY Id];
             
         // verify the accounts and contacts
-        system.assertEquals(1, listAcc.size());
-        system.assertEquals(accWinner.Id, listAcc[0].Id);
-        system.assertEquals(cHH * cCon, listCon.size());
+        System.assertEquals(1, listAcc.size());
+        System.assertEquals(accWinner.Id, listAcc[0].Id);
+        System.assertEquals(cHH * cCon, listCon.size());
                     
         // verify Addresses are merged
-        system.assertEquals(cHH + 1, [select count() from Address__c]);
-        system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);  
-        Address__c addrDefault = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c from Address__c where Default_Address__c = true]; 
+        System.assertEquals(cHH + 1, [SELECT count() FROM Address__c]);
+        System.assertEquals(1, [SELECT count() FROM Address__c WHERE Default_Address__c = true]);  
+        Address__c addrDefault = [SELECT Id, Default_Address__c, MailingStreet__c, MailingCity__c FROM Address__c WHERE Default_Address__c = true]; 
         
         // verify overrides
-        Address__c addr = [select Id, Default_Address__c, MailingStreet__c from Address__c where  MailingStreet__c = '123 abc'];
-        system.assertEquals(false, addr.Default_Address__c);
+        Address__c targetAddr = null;
+        for (Address__c addr : [SELECT Id, MailingStreet__c FROM Address__c WHERE Default_Address__c = false]) {
+            if (addr.MailingStreet__c == '123 abc') {
+                targetAddr = addr;
+                break;
+            }
+        }
+        System.assertNotEquals(null, targetAddr, 'There should a non default address returned');
+
         for (integer i = 0; i < listCon.size(); i++) {
         	Contact con = listCon[i];
         	if (con.is_Address_Override__c) {
-                system.assertEquals(addr.MailingStreet__c, con.MailingStreet);
-                system.assertEquals(addr.Id, con.Current_Address__c);
+                System.assertEquals(targetAddr.MailingStreet__c, con.MailingStreet,
+                    'The mailing street should match contact mailing street when contact has override address');
+                System.assertEquals(targetAddr.Id, con.Current_Address__c,
+                'The address should be the current address on the contact when contact has override address');
         	} else {
-                system.assertEquals(addrDefault.MailingStreet__c, con.MailingStreet);
-                system.assertEquals(addrDefault.Id, con.Current_Address__c);        	   
+                System.assertEquals(addrDefault.MailingStreet__c, con.MailingStreet,
+                    'The default address should be populated on contact when address is not overrided');
+                System.assertEquals(addrDefault.Id, con.Current_Address__c,
+                    'The default address should be populated on contact when address is not overrided');        	   
         	}
         } 
     }

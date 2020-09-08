@@ -539,7 +539,14 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(updatedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, updatedContacts[0].Account.Name);
             system.assertEquals(2, [SELECT Count() FROM Address__c WHERE Household_Account__c = :originalAccountId],
                 'There should two addresses attached to the Household');
-            system.assertEquals(1, [SELECT Count() FROM Address__c WHERE MailingStreet__c = :updateContactMailingStreet],
+
+            Integer attachedAddressCount = 0;
+            for (Address__c address : [SELECT Id, MailingStreet__c FROM Address__c]) {
+                if (address.MailingStreet__c == updateContactMailingStreet) {
+                    attachedAddressCount++;
+                }
+            }
+            system.assertEquals(1, attachedAddressCount,
                 'There should one address with the new street attached to the Household');
         }
 
