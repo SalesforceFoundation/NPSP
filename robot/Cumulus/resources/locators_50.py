@@ -34,7 +34,7 @@ npsp_lex_locators={
         'flexipage-list':'//lightning-combobox[./label[text()="{}"]]//input[contains(@class,"combobox__input")]',
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
-            'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
+            'button':"//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//a[@title='{}']",
             #'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
             'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span[@title="{}"]',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
@@ -98,9 +98,9 @@ npsp_lex_locators={
     'delete_icon':'//span[contains(text() ,"{}")]/following::span[. = "{}"]/following-sibling::a/child::span[@class = "deleteIcon"]',
     'delete_icon_record':'//label[contains(text() ,"{}")]/following::input[@placeholder = "{}"]/following-sibling::div/child::button[@title="Clear Selection"]',
     'aff_list':'//div[@role="tablist"]/following::div[@class = "container forceRelatedListSingleContainer"][7]/article/div[@class="slds-card__body"]/div/div/div/div/div/div/div/table/tbody/tr/td[1]',
-    'aff_status':'//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/td[3]',
+    'aff_status':'//table[contains(@class,"slds-table")]/tbody/tr[./td//a[text()="{}"]]/td[@data-label="Relationship Explanation"]',
     'relationship_status':'//lightning-formatted-text[contains(text(),"is")]',
-    'aff_id':'//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/th//a',
+    'aff_id':'//table[contains(@class,"slds-table")]/tbody/tr[./td//a[text()="{}"]]/th//a',
     'click_aff_id':'//table[contains(@class,"forceRecordLayout")]/tbody/tr/th/div/a[text()="{}"]',
     'confirm': {
         'check_value':'//div[contains(@class, "forcePageBlockItem") or contains(@class, "slds-form-element_stacked")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//*[text()="{}"]',

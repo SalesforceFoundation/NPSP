@@ -93,8 +93,8 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             self.selenium.click_link(button_name)
         else:
             self.selenium.click_button(button_name)
-            
-            
+
+
     def go_to_recurring_donation_related_opportunities_page(self,rd_id):
 
         """ Navigates to the related opportunities page of the given recurring donation ID """
@@ -106,7 +106,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         locator = npsp_lex_locators["link-title"].format("New")
         new_button = self.selenium.get_webelement(locator)
         self.selenium.wait_until_page_contains_element(new_button, error="Recurring Donations related opportunities page did not load fully")
-    
+
     @capture_screenshot_on_error
     def edit_recurring_donation_status(self, **kwargs):
         """From the actions dropdown select edit action and edit the fields specified in the kwargs
@@ -147,7 +147,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     self.selenium.wait_until_element_is_visible(locator)
                     self.selenium.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
-   
+
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
                 else:
@@ -211,7 +211,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """
         datefield = npsp_lex_locators["erd"]["installment_date"].format(int(paynum))
         installment_date = self.selenium.get_webelement(datefield).text
-        
+
         # This is to format the date by removing the trailing 0 which is being the common format across
         # 01/06/2020 -> 1/6/2020
         tokens = installment_date.split('/')

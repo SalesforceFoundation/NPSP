@@ -48,8 +48,10 @@ Create Relationships for contacts
     ...                                 Parent
 
     Click More Actions Button
-    Click Link                          link=Relationships Viewer
+    Click Link                          Relationships_Viewer
     Wait Until Loading Is Complete
+    #sleep for 5 seconds to allow image to load before trying to capture screenshot
+    Sleep                               5
     Capture Page Screenshot
     Go To Page                          Details                                                     Contact                                     object_id=${contact1}[Id]
     Current Page Should Be              Details                                                     Contact

@@ -12,3 +12,6 @@ npsp_lex_locators["record"]["related"]["allocations"]="//article[contains(@class
 npsp_lex_locators["record"]["rdlist"]="//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-hint-parent')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]"
 npsp_lex_locators["payments"]["allocations"]="//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/th"
 npsp_lex_locators["record"]["related"]["popup_trigger"]= "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tr[.//a[text()='{}']]//div[contains(@class, 'forceVirtualAction')]//a"
+npsp_lex_locators["record"]["related"]["button"]= "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']"
+npsp_lex_locators["aff_status"]='//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/td[3]'
+npsp_lex_locators["aff_id"]='//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/th//a'
