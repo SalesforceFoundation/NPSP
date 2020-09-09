@@ -195,6 +195,7 @@ export default class bdiBatchNumberSettings extends LightningElement {
     async handleSaveAndActivate() {
         const autoNumber = await this.save();
         await this.activate(autoNumber.Id);
+        this.reset();
         this.fetchAutoNumbers();
     }
 
