@@ -35,8 +35,8 @@
 
                 <template if:true={hasBrokenFieldReferences}>
                     <div class="slds-size_1-of-1">
-                        <c-util-page-level-message title='Check Field Mappings'
-                                                   subtitle='There is a problem with the Field Mappings listed below. Make sure the NPSP Data Import and target fields still exist and review the Field Mapping.'
+                        <c-util-page-level-message title={customLabels.bdiOMUIFieldMappingProblemHeader}
+                                                   subtitle={brokenFieldReferencesWarningMessage}
                                                    variant='warning'>
                             <ul slot="body"
                                 class="slds-list_dotted">

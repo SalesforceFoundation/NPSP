@@ -103,7 +103,6 @@ public class BDI_ManageAdvancedMappingCtrl {
     *
     * @return String: Default Field Mapping Set name
     */
-    @AuraEnabled(cacheable=true)
     public static String getFieldMappingSetName() {
         return bdiMsAdv.fieldMappingSet.DeveloperName;
     }
@@ -124,11 +123,21 @@ public class BDI_ManageAdvancedMappingCtrl {
 
         BDI_ObjectMapping[] objMappings = bdiMsAdv.objectMappingByDevName.values();
 
-        //Assign the label name field for the predecessor using the constructed map by dev name.
-        for (BDI_ObjectMapping objMapping : objMappings) {
-            BDI_ObjectMapping predecessorObjMapping = bdiMsAdv.objectMappingByDevName.get(objMapping.Predecessor);
+        for (BDI_ObjectMapping objectMapping : objMappings) {
+            BDI_FieldMapping [] fieldMappings =
+                bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+            BDI_ObjectMapping predecessorObjMapping =
+                bdiMsAdv.objectMappingByDevName.get(objectMapping.Predecessor);
+            if (!fieldMappings.isEmpty()) {
+               for (BDI_FieldMapping fieldMapping : fieldMappings) {
+                   if(!fieldMapping.isValid && !fieldMapping.Is_Deleted) {
+                       objectMapping.Field_Mappings.add(fieldMapping);
+                   }
+               }
+            }
+            //Assign the label name field for the predecessor using the constructed map by dev name.
             if(predecessorObjMapping != null) {
-                objMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
+                objectMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
             }
         }
         return objMappings;
@@ -219,20 +228,19 @@ public class BDI_ManageAdvancedMappingCtrl {
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
         BDI_FieldMapping[] fieldMappings = injectBrokenFieldMappings(objectName);
-        if (fieldMappings != null) {
-            for (BDI_FieldMapping fieldMapping : fieldMappings) {
-                if ((bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
-                    fieldMapping.Is_Deleted == false)) {
-                    DataImportFieldMappingWrapper wrapper = new DataImportFieldMappingWrapper(fieldMapping);
-                    fieldMappingWrappers.add(wrapper);
-                }
+        for (BDI_FieldMapping fieldMapping : fieldMappings) {
+            if ((bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
+                fieldMapping.Is_Deleted == false)) {
+                DataImportFieldMappingWrapper wrapper = new DataImportFieldMappingWrapper(fieldMapping);
+                fieldMappingWrappers.add(wrapper);
             }
         }
         return fieldMappingWrappers;
     }
 
     /**
-     * @description
+     * @description Adds broken field mappings to list of valid field mappings to be returned
+     * to Advanced Mapping Fields Mapping component
      * @param objectName
      *
      * @return {BDI_FieldMapping[]} fieldMappings
@@ -242,9 +250,6 @@ public class BDI_ManageAdvancedMappingCtrl {
         BDI_FieldMapping[] fieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectName);
         if (brokenFieldMappings!= null && !brokenFieldMappings.isEmpty()) {
             //Add possible broken field mappings
-            if (fieldMappings == null) {
-                fieldMappings = new BDI_FieldMapping[]{};
-            }
             fieldMappings.addAll(bdiMsAdv.objectMappingByDevName.get(objectName).Field_Mappings);
         }
         return fieldMappings;
@@ -553,7 +558,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping_Dev_Name;
             this.Required = fieldMapping.Required;
             this.Is_Deleted = fieldMapping.Is_Deleted;
-            this.Is_Broken = fieldMapping.Is_Broken;
+            this.isValid = fieldMapping.isValid;
         }
     }
 
@@ -830,6 +835,10 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
+    /******************************************************************************************************
+     * @description Inner class representation of the data needed to render Advanced Mapping Object Mapping
+     * component
+     */
     public class AdvancedMappingObjectData {
         @AuraEnabled
         public BDI_ObjectMapping[] objectMappings;
@@ -843,6 +852,10 @@ public class BDI_ManageAdvancedMappingCtrl {
         }
     }
 
+    /******************************************************************************************************
+    * @description Inner class representation of the data needed to render Advanced Mapping Fields Mapping
+    * component
+    */
     public class AdvancedMappingFieldData {
         @AuraEnabled public String fieldMappingSetName;
         @AuraEnabled public FieldInfo[] sourceObjectFieldDescribes;

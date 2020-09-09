@@ -36,6 +36,9 @@ import bdiFMUIFieldAPIName from '@salesforce/label/c.bdiFMUIFieldAPIName';
 import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
+import bdiOMUIFieldMappingProblemHeader from '@salesforce/label/c.bdiOMUIFieldMappingProblemHeader';
+import bdiOMUIFieldMappingProblemMessagePart1 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart1';
+import bdiOMUIFieldMappingProblemMessagePart2 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart2';
 import { isNull, showToast } from 'c/utilCommon';
 
 
@@ -71,6 +74,9 @@ export default class bdiFieldMappings extends LightningElement {
         bdiFMUITarget,
         stgHelpAdvancedMapping3,
         stgLabelObject,
+        bdiOMUIFieldMappingProblemHeader,
+        bdiOMUIFieldMappingProblemMessagePart1,
+        bdiOMUIFieldMappingProblemMessagePart2
     }
 
     @api shouldRender;
@@ -160,15 +166,15 @@ export default class bdiFieldMappings extends LightningElement {
 
     processBrokenFieldMappingReferences () {
         this.fieldMappings.forEach(fieldMapping => {
-            if (fieldMapping.Is_Broken && !fieldMapping.Is_Deleted) {
+            if (!fieldMapping.isValid && !fieldMapping.Is_Deleted) {
                 this.errors = { rows: {}, table: {} };
                 this.errors.rows[fieldMapping.DeveloperName] = {
-                    title: 'Please Check Row',
-                    messages: '',
+                    title: bdiOMUIFieldMappingProblemHeader,
+                    messages: bdiOMUIFieldMappingProblemMessagePart2,
                     fieldNames: []
                 };
                 this.brokenFieldMappings.push(
-                    `${fieldMapping.MasterLabel} : ${fieldMapping.Target_Field_API_Name} (${fieldMapping.Source_Field_API_Name})`);
+                    `${this.objectMapping.MasterLabel} : ${fieldMapping.MasterLabel} (${fieldMapping.Target_Field_API_Name})`);
             }
         });
     }
@@ -179,6 +185,10 @@ export default class bdiFieldMappings extends LightningElement {
 
     get showRowNumberColumns () {
         return !isNull(this.errors);
+    }
+
+    get brokenFieldReferencesWarningMessage () {
+        return `${this.customLabels.bdiOMUIFieldMappingProblemMessagePart1} ${this.customLabels.bdiOMUIFieldMappingProblemMessagePart2}`
     }
 
     /*******************************************************************************

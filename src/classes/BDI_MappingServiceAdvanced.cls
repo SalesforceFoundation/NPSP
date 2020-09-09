@@ -290,15 +290,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         for (Data_Import_Object_Mapping__mdt diom : dataImportObjectMappings) {
             if (hasFieldMappings(diom)) {
                 for (Data_Import_Field_Mapping__mdt difm : diom.Data_Import_Field_Mappings__r) {
-                    BDI_FieldMapping fieldMapping;
-                    try {
-                        fieldMapping = new BDI_FieldMapping(difm);
-                    } catch (UTIL_Describe.SchemaDescribeException sde) {
-                        if (sde.getMessage().contains('Invalid')) {
-                            constructBrokenFieldMappings(difm);
-                            continue;
-                        }
-                    }
+                    BDI_FieldMapping fieldMapping =  new BDI_FieldMapping(difm);
                     BDI_FieldMapping[] tempFieldMappings = new BDI_FieldMapping[]{};
                     if (fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name) != null) {
                         tempFieldMappings = fieldMappingsByObjMappingDevName.get(
@@ -436,32 +428,5 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         fieldMapping.Target_Object_Mapping_Dev_Name = parentObjectMapping.DeveloperName;
 
         return fieldMapping;
-    }
-
-    private void constructBrokenFieldMappings (Data_Import_Field_Mapping__mdt difm) {
-        BDI_FieldMapping fieldMapping =  new BDI_FieldMapping();
-        fieldMapping.Target_Object_API_Name = difm.Target_Object_Mapping__r.Object_API_Name__c;
-        fieldMapping.Source_Field_API_Name = difm.Source_Field_API_Name__c;
-        fieldMapping.Target_Field_API_Name = difm.Target_Field_API_Name__c;
-        fieldMapping.Is_Broken = true;
-        fieldMapping.Target_Object_Mapping_Dev_Name = difm.Target_Object_Mapping__r.DeveloperName;
-        fieldMapping.MasterLabel = difm.MasterLabel;
-        fieldMapping.Is_Deleted = difm.Is_Deleted__c;
-        fieldMapping.DeveloperName = difm.DeveloperName;
-        fieldMapping.Data_Import_Field_Mapping_Set = difm.Data_Import_Field_Mapping_Set__r.DeveloperName;
-
-        if (objectMappingByDevName.containsKey(difm.Target_Object_Mapping__r.DeveloperName)) {
-            BDI_ObjectMapping bdiObjectMapping =
-                objectMappingByDevName.get(difm.Target_Object_Mapping__r.DeveloperName);
-            if (bdiObjectMapping.Field_Mappings == null) {
-                BDI_FieldMapping [] fieldMappings = new BDI_FieldMapping []{};
-                fieldMappings.add(fieldMapping);
-                objectMappingByDevName.get(
-                    difm.Target_Object_Mapping__r.DeveloperName).Field_Mappings = fieldMappings;
-            } else {
-                objectMappingByDevName.get(
-                    difm.Target_Object_Mapping__r.DeveloperName).Field_Mappings.add(fieldMapping);
-            }
-        }
     }
 }

@@ -57,7 +57,7 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String Element_Type = 'field';
     // Used for Form Template Builder and Widgets
     @AuraEnabled public String Widget_Object_Mapping_Developer_Name;
-    @AuraEnabled public Boolean Is_Broken;
+    @AuraEnabled public Boolean isValid = true;
 
     public BDI_FieldMapping() {
 
@@ -67,12 +67,12 @@ public virtual with sharing class BDI_FieldMapping {
     // Schema.PicklistEntry does not work with AuraEnabled.
     @AuraEnabled public Map<String, String>  Target_Field_Picklist_Values = new Map<String, String>();
 
-    public BDI_FieldMapping(Data_Import_Field_Mapping__mdt fieldMapping) {
+    public BDI_FieldMapping(Data_Import_Field_Mapping__mdt fieldMappingMetadata) {
         String dataImport = SobjectType.DataImport__c.Name;
 
-        this.Target_Object_API_Name = fieldMapping.Target_Object_Mapping__r.Object_API_Name__c;
-        this.Source_Field_API_Name = fieldMapping.Source_Field_API_Name__c;
-        this.Target_Field_API_Name = fieldMapping.Target_Field_API_Name__c;
+        this.Target_Object_API_Name = fieldMappingMetadata.Target_Object_Mapping__r.Object_API_Name__c;
+        this.Source_Field_API_Name = fieldMappingMetadata.Source_Field_API_Name__c;
+        this.Target_Field_API_Name = fieldMappingMetadata.Target_Field_API_Name__c;
 
         // Removing the npsp namespace since the code is not currently packaged.
         if (UTIL_Namespace.shouldAlignNamespace) {
@@ -84,20 +84,45 @@ public virtual with sharing class BDI_FieldMapping {
                  UTIL_Namespace.alignSchemaNSWithEnvironment(this.Target_Field_API_Name);
         }
 
-        Schema.DescribeFieldResult sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
-            dataImport,
-            this.Source_Field_API_Name);
+        Schema.DescribeFieldResult sourceFieldDescribe;
+        Schema.DescribeFieldResult targetFieldDescribe;
 
-        Schema.DescribeFieldResult targetFieldDescribe = UTIL_Describe.getFieldDescribe(
-            this.Target_Object_API_Name,
-            this.Target_Field_API_Name);
+        try {
+            sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
+                dataImport,
+                this.Source_Field_API_Name);
+            targetFieldDescribe = UTIL_Describe.getFieldDescribe(
+                this.Target_Object_API_Name,
+                this.Target_Field_API_Name);
+        } catch (UTIL_Describe.SchemaDescribeException sde) {
+            if (sde.getMessage().contains('Invalid')) {
+                this.isValid = false;
+            }
+        }
 
+        if (this.isValid) {
+            constructValidFieldMapping(sourceFieldDescribe, targetFieldDescribe, fieldMappingMetadata);
+        } else {
+            constructInvalidFieldMapping(fieldMappingMetadata, this);
+        }
+
+    }
+
+
+    /*****************************************************************************************************************
+     * @description Constructs a valid field mapping
+     * @param sourceFieldDescribe Source Field Describe data
+     * @param targetFieldDescribe Target Field Describe data
+     * @param fieldMapping Data Import Field Mapping Metadata
+     */
+    private void constructValidFieldMapping (Schema.DescribeFieldResult sourceFieldDescribe,
+        Schema.DescribeFieldResult targetFieldDescribe, Data_Import_Field_Mapping__mdt fieldMapping) {
         //Updating field and object names to make sure they are using the actual correctly cased
         //API names so it doesn't cause problems with some LWC functions
         this.Target_Object_API_Name = UTIL_Describe.getObjectName(this.Target_Object_API_Name);
         this.Target_Field_API_Name = UTIL_Describe.getFieldName(this.Target_Object_API_Name, this.Target_Field_API_Name);
-        this.Source_Field_API_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name, 
-                                                                    this.Source_Field_API_Name);
+        this.Source_Field_API_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name,
+            this.Source_Field_API_Name);
 
         this.DeveloperName = fieldMapping.DeveloperName;
         this.MasterLabel = fieldMapping.MasterLabel;
@@ -105,15 +130,15 @@ public virtual with sharing class BDI_FieldMapping {
         this.Source_Field_Label = sourceFieldDescribe.label;
         this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
         this.Source_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Source_Field_Data_Type);
-        
-        // If a field is nillable, it can have a null value. A non-nillable field means it is required. 
+
+        // If a field is nillable, it can have a null value. A non-nillable field means it is required.
         this.Source_Field_Required = !sourceFieldDescribe.isNillable();
 
         this.Target_Field_Label = targetFieldDescribe.label;
         this.Target_Field_Data_Type = String.valueOf(targetFieldDescribe.type);
         this.Target_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Target_Field_Data_Type);
-        
-        // If a field is nillable, it can have a null value. A non-nillable field means it is required. 
+
+        // If a field is nillable, it can have a null value. A non-nillable field means it is required.
         this.Target_Field_Required = !targetFieldDescribe.isNillable();
 
         this.Data_Import_Field_Mapping_Set = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
@@ -122,16 +147,30 @@ public virtual with sharing class BDI_FieldMapping {
         this.Is_Deleted = fieldMapping.Is_Deleted__c;
 
         List<Schema.PicklistEntry> picklistEntriesList = targetFieldDescribe.getPicklistValues();
-        
+
         for (Schema.PicklistEntry picklistEntry : picklistEntriesList) {
 
-            // Create a mapping of active picklist entry value to label 
+            // Create a mapping of active picklist entry value to label
             if (picklistEntry.isActive()) {
                 Target_Field_Picklist_Values.put(picklistEntry.getValue(), picklistEntry.getLabel());
             }
         }
 
         this.Is_Required = !sourceFieldDescribe.isNillable() ? true : false;
-        this.Is_Broken = false;
+        this.isValid = true;
+    }
+
+    /*****************************************************************************************************************
+     * @description Constructs an invalid field mapping
+     * @param difm Data Import Field Mapping Metadata
+     * @param fieldMapping Field Mapping object being built
+     */
+    private void constructInvalidFieldMapping (Data_Import_Field_Mapping__mdt difm, BDI_FieldMapping fieldMapping) {
+        fieldMapping.isValid = false;
+        fieldMapping.Target_Object_Mapping_Dev_Name = difm.Target_Object_Mapping__r.DeveloperName;
+        fieldMapping.MasterLabel = difm.MasterLabel;
+        fieldMapping.Is_Deleted = difm.Is_Deleted__c;
+        fieldMapping.DeveloperName = difm.DeveloperName;
+        fieldMapping.Data_Import_Field_Mapping_Set = difm.Data_Import_Field_Mapping_Set__r.DeveloperName;
     }
 }

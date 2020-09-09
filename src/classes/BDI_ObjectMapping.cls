@@ -95,6 +95,7 @@ public virtual with sharing class BDI_ObjectMapping {
         this.Is_Deleted = objectMapping.Is_Deleted__c;
         this.Predecessor = objectMapping.Predecessor__c;
         this.Relationship_To_Predecessor = objectMapping.Relationship_To_Predecessor__c;
+        this.Field_Mappings = new BDI_FieldMapping[]{};
     }
 
     /*******************************************************************************************************

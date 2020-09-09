@@ -33,6 +33,9 @@ import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3
 import bdiOMUILongDeployment from '@salesforce/label/c.bdiOMUILongDeployment';
 import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
 import bdiFMUILongDeploymentMessage from '@salesforce/label/c.bdiFMUILongDeploymentMessage';
+import bdiOMUIFieldMappingProblemHeader from '@salesforce/label/c.bdiOMUIFieldMappingProblemHeader';
+import bdiOMUIFieldMappingProblemMessagePart1 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart1';
+import bdiOMUIFieldMappingProblemMessagePart2 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart2';
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 const NPSP_SETTINGS_URL = '/lightning/n/npsp__NPSP_Settings';
 
@@ -74,7 +77,10 @@ export default class bdiObjectMappings extends LightningElement {
         stgHelpAdvancedMapping3,
         bdiOMUILongDeployment,
         bdiFMUILongDeploymentLink,
-        bdiFMUILongDeploymentMessage
+        bdiFMUILongDeploymentMessage,
+        bdiOMUIFieldMappingProblemHeader,
+        bdiOMUIFieldMappingProblemMessagePart1,
+        bdiOMUIFieldMappingProblemMessagePart2
     };
 
     constructor() {
@@ -162,10 +168,9 @@ export default class bdiObjectMappings extends LightningElement {
         objectMappings.forEach(mapping => {
             if (mapping.hasOwnProperty('Field_Mappings')) {
                 mapping.Field_Mappings.forEach(fieldMapping => {
-                    if (fieldMapping.Is_Broken && !fieldMapping.Is_Deleted) {
-                        this.brokenMappings.push(
-                            `${mapping.MasterLabel} : ${fieldMapping.Target_Field_API_Name} (${fieldMapping.Source_Field_API_Name})`);
-                    }
+                    this.brokenMappings.push(
+                        `${mapping.MasterLabel} : ${fieldMapping.MasterLabel} (${fieldMapping.Target_Field_API_Name})`);
+
                 });
             }
         });
@@ -183,6 +188,10 @@ export default class bdiObjectMappings extends LightningElement {
 
     get hasBrokenMetadataReferences () {
         return this.brokenMappings.length > 0;
+    }
+
+    get brokenFieldReferencesWarningMessage () {
+        return `${this.customLabels.bdiOMUIFieldMappingProblemMessagePart1} ${this.customLabels.bdiOMUIFieldMappingProblemMessagePart2}`
     }
 
     /*******************************************************************************
@@ -348,11 +357,11 @@ export default class bdiObjectMappings extends LightningElement {
     */
     handleError(error) {
         if (error && error.status && error.body) {
-            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+            showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
-            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+            showToast(`${error.name}`, error.message, 'error', 'sticky');
         } else {
-            this.showToast(stgUnknownError, '', 'error', 'sticky');
+            showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
 }
