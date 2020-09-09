@@ -16,7 +16,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api isLast;
     @api objectApiName;
     @api field;
-    @api sourceObjectFieldInfo;
 
     @track objectDescribeInfo;
 
