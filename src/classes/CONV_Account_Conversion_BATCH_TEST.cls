@@ -259,7 +259,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
             }
         }
     
-        System.assertNotEquals(null, targetAddress, 'A address with matching mailing adress should be created');
+        System.assertNotEquals(null, targetAddress, 'An address with the matching mailing street should be created.');
         System.assertEquals(true, targetAddress.Default_Address__c, 'The address should be the default address');
         System.assertEquals(targetAddress.Id, [SELECT Current_Address__c FROM Contact WHERE Id = :c.Id].Current_Address__c,
             'The default address should be the current address on contact');
@@ -267,7 +267,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         System.assert(CAO_Constants.isHHAccountModel(),
             'The Org Setting should be set to Household Account Model');
         System.assertEquals(HH_Households.NO_HOUSEHOLDS_PROCESSOR, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c,
-            'The Household Rules should be set correctaly');
+            'The Household Rules should be set correctly');
 
         System.assertEquals(0, [SELECT count() FROM npe5__Affiliation__c],
             'There should be no affiliation created');

@@ -209,7 +209,7 @@ private with sharing class ACCT_AccountMerge_TEST {
                 break;
             }
         }
-        System.assertNotEquals(null, targetAddr, 'There should a non default address returned');
+        System.assertNotEquals(null, targetAddr, 'A non-default address should be returned.');
 
         for (integer i = 0; i < listCon.size(); i++) {
         	Contact con = listCon[i];
