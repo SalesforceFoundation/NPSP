@@ -33,7 +33,7 @@
 * @group Address Management
 * @description Batch class for SmartyStreets address verification. It looks for all populated addresses and updates them if the setting is turned on.
 */
-public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH implements Database.Batchable<sObject>, Database.AllowsCallouts {
+public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH implements Database.AllowsCallouts {
     /**
     * @description # of records in each batch
     */
@@ -68,6 +68,10 @@ public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH impleme
         List<Address__c> addressesToVerify = new List<Address__c>();
 
         for (Address__c address : addressesToProcess) {
+            if (skipPreviouslyVerified == true && address.Verified__c == true) {
+                continue;
+            }
+
             if (ADDR_Validator_UTIL.isUSAddress(address)) {
                 addressesToVerify.add(address);
             }
@@ -86,7 +90,7 @@ public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH impleme
     public override String getSOQLFullQueryFieldList() {
         return 'Id, Name,  Formula_MailingStreetAddress__c, Formula_MailingAddress__c, ' 
             + 'MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, '
-            + 'MailingPostalCode__c, MailingCountry__c, API_Response__c';
+            + 'MailingPostalCode__c, MailingCountry__c, API_Response__c, Verified__c';
     }
 
     /**
