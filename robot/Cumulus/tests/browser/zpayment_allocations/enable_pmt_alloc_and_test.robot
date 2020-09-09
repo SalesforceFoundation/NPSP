@@ -28,7 +28,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     ...                                    Add a new Allocation to another GAU and verify that the Allocation is split between default and new GAUs.
     ...                                    Go to Opportunity and verify that same allocation is reflected under GAU allocations related list.
     [tags]                                 W-039821            feature:Payment Allocations
-    Go To Page                             Detail
+    Go To Page                             Details
     ...                                    Opportunity
     ...                                    object_id=${data}[contact1_opportunity][Id]
     Select Tab                             Related
@@ -48,8 +48,9 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Verify Payment Allocations
     ...    ${def_gau}[Name]=$60.00
     ...    ${gau}[Name]=$40.00
-    Select Tab                             Details
-    Click Link                             ${data}[contact1_opportunity][Name]
+    Go To Page                             Details
+    ...                                    Opportunity
+    ...                                    object_id=${data}[contact1_opportunity][Id]
     Current Page Should Be                 Details                    Opportunity
     Select Tab                             Related
     Verify Allocations                     GAU Allocations
