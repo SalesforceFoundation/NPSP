@@ -33,7 +33,7 @@
 * @group Elevate Payment Services
 * @description Contains Elevate payment services methods 
 */
-public with sharing class PS_ElevateService {
+public without sharing class PS_ElevateService {
 
     /***
     * @description Checks whether an org is a customer of Elevate Payment Services

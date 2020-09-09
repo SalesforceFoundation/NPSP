@@ -107,12 +107,13 @@
                                     onchange={handlePaymentChange}>
                                 </lightning-input-field>
                             </lightning-layout-item>
-                        </lightning-layout>
 
-                        <template if:true={isElevateWidgetDisplayed}>
-                            <c-rd2-elevate-credit-card-form data-id='elevateWidget' data-qa-locator='widget Elevate'>
-                            </c-rd2-elevate-credit-card-form>
-                        </template>
+                            <lightning-layout-item size="12" class="slds-p-bottom_small"
+                                if:true={isElevateWidgetDisplayed}>
+                                <c-rd2-elevate-credit-card-form data-id='elevateWidget' data-qa-locator='widget Elevate'>
+                                </c-rd2-elevate-credit-card-form>
+                            </lightning-layout-item>
+                        </lightning-layout>
 
                     </div>
                 </div>

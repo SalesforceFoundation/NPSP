@@ -9,14 +9,14 @@
 }
 
 .credit-card-container {
-    border: 1px solid #E2E1E0;
+    border: 1px solid var(--lwc-colorBorder, rgb(216, 221, 230));
     border-radius: 0.25rem;
     min-height: 5rem;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
 .credit-card-header {
-    background-color: #E2E1E0;
+    background-color: var(--lwc-colorBackgroundShade, rgb(224, 229, 238));
     font-weight: bold;
 }
 
