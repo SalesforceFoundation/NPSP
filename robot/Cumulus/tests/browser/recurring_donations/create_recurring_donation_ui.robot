@@ -27,6 +27,7 @@ Create Open Recurring Donation With Monthly Installment
     Go To Page                           Details
     ...                                  Contact
     ...                                  object_id=${data}[contact][Id]
+    Current Page Should Be               Details                      Contact
     Wait Until Keyword Succeeds          1 minute
     ...                                  5 seconds
     ...                                  Click Show More Actions Button       New Open Recurring Donation
@@ -40,6 +41,7 @@ Create Open Recurring Donation With Monthly Installment
     Wait Until Modal Is Closed		
     Reload Page		
     Select Tab                           Related
+    Current Page Should Be               Details                Contact
     Check Related List Values            Recurring Donations    Robot Recurring Donation
     Load Related List                    Opportunities
     Click ViewAll Related List           Opportunities
