@@ -5,7 +5,6 @@ from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from datetime import datetime
-import re
 from dateutil.relativedelta import relativedelta
 
 
