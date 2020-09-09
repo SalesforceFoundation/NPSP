@@ -235,6 +235,11 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         return fieldMappingInstance.fieldMappingSet;
     }
 
+    /******************************************************************************************************************
+     * @description Returns a data required to build object mapping and field mapping information
+     * @param diFieldMappingSet Data Import Field Mapping Set
+     * @return A list of Data Import Object Metadata
+     */
     private List<Data_Import_Object_Mapping__mdt> getDataImportObjectMappingMetadata (
         Data_Import_Field_Mapping_Set__mdt diFieldMappingSet) {
         return [
@@ -252,21 +257,21 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
                 Predecessor__c,
                 Relationship_Field__c,
                 Relationship_To_Predecessor__c,
-                (SELECT MasterLabel,
-                DeveloperName,
-                Data_Import_Field_Mapping_Set__c,
-                Data_Import_Field_Mapping_Set__r.DeveloperName,
-                Required__c,
-                Source_Field_API_Name__c,
-                Target_Field_API_Name__c,
-                Target_Object_Mapping__c,
-                Target_Object_Mapping__r.DeveloperName,
-                Target_Object_Mapping__r.Object_API_Name__c,
-                Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
-                Is_Deleted__c
-            FROM Data_Import_Field_Mappings__r
-            WHERE Is_Deleted__c = false
-                AND Target_Object_Mapping__r.Is_Deleted__c = false)
+                    (SELECT MasterLabel,
+                    DeveloperName,
+                    Data_Import_Field_Mapping_Set__c,
+                    Data_Import_Field_Mapping_Set__r.DeveloperName,
+                    Required__c,
+                    Source_Field_API_Name__c,
+                    Target_Field_API_Name__c,
+                    Target_Object_Mapping__c,
+                    Target_Object_Mapping__r.DeveloperName,
+                    Target_Object_Mapping__r.Object_API_Name__c,
+                    Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                    Is_Deleted__c
+                FROM Data_Import_Field_Mappings__r
+                WHERE Is_Deleted__c = false
+                    AND Target_Object_Mapping__r.Is_Deleted__c = false)
             FROM Data_Import_Object_Mapping__mdt
             WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c
                 AND Is_Deleted__c = false
@@ -286,6 +291,10 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         ];
     }
 
+    /******************************************************************************************************************
+    * @description Builds various maps of for field mappings based on retrieved data import object mappings
+    * @param dataImportObjectMappings List of Data Import Object Mapping Metadata
+    */
     private void populateFieldMappings (List<Data_Import_Object_Mapping__mdt> dataImportObjectMappings) {
         for (Data_Import_Object_Mapping__mdt diom : dataImportObjectMappings) {
             if (hasFieldMappings(diom)) {
@@ -314,6 +323,10 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
             diom.Data_Import_Field_Mappings__r.size() > 0;
     }
 
+    /******************************************************************************************************************
+     * @description Builds a map of object mapping developer name to BDI Object mapping object
+     * @param dataImportObjectMappings List of Data Import Object Mapping Metadata
+     */
     private void populateObjectMappings (
         List<Data_Import_Object_Mapping__mdt> dataImportObjectMappings) {
         for (Data_Import_Object_Mapping__mdt diom : dataImportObjectMappings) {
