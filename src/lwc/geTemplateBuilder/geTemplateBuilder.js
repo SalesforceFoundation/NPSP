@@ -249,7 +249,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.currentNamespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
             const queryParameters = getQueryParameters();
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-            await this.checkForFormTemplateRecordId(queryParameters);
+            await this.loadFormTemplateRecord(queryParameters);
 
             this.buildBatchHeaderFields();
             this.buildDefaultFormFields();
@@ -296,7 +296,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     *
     * @param {object} queryParameters: Object containing query parameters
     */
-    checkForFormTemplateRecordId = async (queryParameters) => {
+    loadFormTemplateRecord = async (queryParameters) => {
         if (!this.formTemplateRecordId) {
             this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
         }
