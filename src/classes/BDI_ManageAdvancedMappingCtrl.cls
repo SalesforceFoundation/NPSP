@@ -239,7 +239,8 @@ public class BDI_ManageAdvancedMappingCtrl {
         String objectName, String fieldMappingSetname) {
         DataImportFieldMappingWrapper[] fieldMappingWrappers =
             new List<DataImportFieldMappingWrapper>();
-        BDI_FieldMapping[] fieldMappings = injectBrokenFieldMappings(objectName);
+        BDI_FieldMapping[] fieldMappings = extractInvalidFieldMappings(
+            bdiMsAdv.objectMappingByDevName.get(objectName));
         for (BDI_FieldMapping fieldMapping : fieldMappings) {
             if ((bdiMsAdv.fieldMappingSet.DeveloperName == fieldMappingSetname &&
                 fieldMapping.Is_Deleted == false)) {
@@ -251,18 +252,17 @@ public class BDI_ManageAdvancedMappingCtrl {
     }
 
     /**
-     * @description Adds broken field mappings to list of valid field mappings to be returned
+     * @description Adds invalid field mappings to list of valid field mappings to be returned
      * to Advanced Mapping Fields Mapping component
-     * @param objectName
+     * @param objectMapping Object Mapping that contains invalid field mappings
      *
      * @return {BDI_FieldMapping[]} fieldMappings
      */
-    private static BDI_FieldMapping[] injectBrokenFieldMappings (String objectName) {
-        BDI_FieldMapping [] brokenFieldMappings = bdiMsAdv.objectMappingByDevName.get(objectName).Field_Mappings;
-        BDI_FieldMapping[] fieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectName);
-        if (brokenFieldMappings!= null && !brokenFieldMappings.isEmpty()) {
-            //Add possible broken field mappings
-            fieldMappings.addAll(bdiMsAdv.objectMappingByDevName.get(objectName).Field_Mappings);
+    private static BDI_FieldMapping[] extractInvalidFieldMappings (BDI_ObjectMapping objectMapping) {
+        BDI_FieldMapping[] fieldMappings = bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+        if (!objectMapping.Field_Mappings.isEmpty()) {
+            //Add possible invalid field mappings
+            fieldMappings.addAll(objectMapping.Field_Mappings);
         }
         return fieldMappings;
     }
