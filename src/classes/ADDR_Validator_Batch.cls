@@ -49,7 +49,7 @@ public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH impleme
     */
     private static Boolean skipPreviouslyVerified = false;
 
-    /*******************************************************************************************************
+    /**
     * @description Constructor that initializes the class.
     * @param skipPreviouslyVerified If true, the batch skips over objects that already have any verification records.
     */
