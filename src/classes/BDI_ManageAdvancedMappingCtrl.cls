@@ -695,7 +695,7 @@ public class BDI_ManageAdvancedMappingCtrl {
     * @description Returns a list of combobox options for the valid objects to chooose from.
     * @return objectOptions List of combobox options for the valid objects to chooose from.
     */
-    private static List<ComboboxOption> getObjectOptions(){
+    private static List<ComboboxOption> getObjectOptions() {
         List<ComboboxOption> objectOptions = new List<ComboboxOption>();
         Map<String, Schema.SObjectType> allObjectMap = Schema.getGlobalDescribe(); 
         List<String> filteredObjectNames = new List<String>();
