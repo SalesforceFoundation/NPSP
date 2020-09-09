@@ -143,11 +143,23 @@ public class BDI_ManageAdvancedMappingCtrl {
         return objMappings;
     }
 
+    /*******************************************************************************************************
+     * @description This method gathers and returns data required to use the Advanced Mapping Object Mapping
+     * Component
+     * @return AdvancedMappingObjectData
+     */
     @AuraEnabled
     public static AdvancedMappingObjectData getAdvancedMappingObjectData () {
         return new AdvancedMappingObjectData(getObjectMappings(), getObjectOptions());
     }
 
+    /*******************************************************************************************************
+    * @description This method gathers and returns data required to use the Advanced Mapping Fields Mapping
+    * Component
+    * @param targetObjectApiName Target Object ApiName
+    * @param sourceObjectApiName Source Object ApiName
+    * @return AdvancedMappingFieldData
+    */
     @AuraEnabled(Cacheable = true)
     public static AdvancedMappingFieldData getAdvancedMappingFieldsData (String targetObjectApiName,
         String sourceObjectApiName) {
