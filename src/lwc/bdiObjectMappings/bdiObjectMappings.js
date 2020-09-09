@@ -36,8 +36,8 @@ import bdiFMUILongDeploymentMessage from '@salesforce/label/c.bdiFMUILongDeploym
 import bdiOMUIFieldMappingProblemHeader from '@salesforce/label/c.bdiOMUIFieldMappingProblemHeader';
 import bdiOMUIFieldMappingProblemMessagePart1 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart1';
 import bdiOMUIFieldMappingProblemMessagePart2 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart2';
-import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
-const NPSP_SETTINGS_URL = '/lightning/n/npsp__NPSP_Settings';
+import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+const NPSP_SETTINGS_URL = '/lightning/n/NPSP_Settings';
 
 export default class bdiObjectMappings extends LightningElement {
     @api shouldRender;
@@ -115,16 +115,19 @@ export default class bdiObjectMappings extends LightningElement {
         unregisterAllListeners(this);
     }
 
+    get namespace() {
+        return getNamespace(DATA_IMPORT.objectApiName);
+    }
+
     get npspSettingsURL () {
-        let currentNamespace = getNamespace(DATA_IMPORT_OBJECT.objectApiName);
-        return isNull(currentNamespace) ? NPSP_SETTINGS_URL.replace(
-            'npsp__','') : NPSP_SETTINGS_URL;
+        return !isNull(this.namespace) ? NPSP_SETTINGS_URL.replace(
+            'n/', `n/${this.namespace}__`) : NPSP_SETTINGS_URL;
     }
 
     get namespaceWrapper () {
         return {
-            currentNamespace : getNamespace(DATA_IMPORT_OBJECT.objectApiName),
-            npspNamespace: 'npsp'
+            currentNamespace : this.namespace,
+            npspNamespace: this.namespace
         };
     }
 
@@ -143,6 +146,7 @@ export default class bdiObjectMappings extends LightningElement {
     * a list of all non-deleted object mappings
     */
     retrieveAdvancedMappingObjectData() {
+        console.log(this.npspSettingsURL);
         getAdvancedMappingObjectData()
             .then((data) => {
                 this.processBrokenMappingReferences(data.objectMappings);
