@@ -1193,8 +1193,8 @@
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Async_Error_Check_Last_Run__c</members>
-        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.DisableRecordDataHealthChecks__c</members>
+        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Don_t_Auto_Schedule_Default_NPSP_Jobs__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
