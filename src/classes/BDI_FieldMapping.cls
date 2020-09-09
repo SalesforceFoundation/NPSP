@@ -59,34 +59,48 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String Widget_Object_Mapping_Developer_Name;
     @AuraEnabled public Boolean isValid = true;
 
-    public BDI_FieldMapping() {
-
-    }
+    public BDI_FieldMapping() {}
 
     // A mapping of picklist value to label.
     // Schema.PicklistEntry does not work with AuraEnabled.
     @AuraEnabled public Map<String, String>  Target_Field_Picklist_Values = new Map<String, String>();
 
-    public BDI_FieldMapping(Data_Import_Field_Mapping__mdt fieldMappingMetadata) {
-        String dataImport = SobjectType.DataImport__c.Name;
-
+    /****************************************************************************************************************
+     * @description Builds a least viable version of the BDI_FieldMapping wrapper object
+     * @param fieldMappingMetadata Data Import Field Mapping custom metadata object
+     *
+     * @return BDI_FieldMapping
+     */
+    public BDI_FieldMapping withBaseFieldMappingFields (Data_Import_Field_Mapping__mdt fieldMappingMetadata) {
         this.Target_Object_API_Name = fieldMappingMetadata.Target_Object_Mapping__r.Object_API_Name__c;
         this.Source_Field_API_Name = fieldMappingMetadata.Source_Field_API_Name__c;
         this.Target_Field_API_Name = fieldMappingMetadata.Target_Field_API_Name__c;
-
-        // Removing the npsp namespace since the code is not currently packaged.
         if (UTIL_Namespace.shouldAlignNamespace) {
-            this.Target_Object_API_Name = 
+            this.Target_Object_API_Name =
                 UTIL_Namespace.alignSchemaNSWithEnvironment(this.Target_Object_API_Name);
-            this.Source_Field_API_Name = 
+            this.Source_Field_API_Name =
                 UTIL_Namespace.alignSchemaNSWithEnvironment(this.Source_Field_API_Name);
             this.Target_Field_API_Name =
-                 UTIL_Namespace.alignSchemaNSWithEnvironment(this.Target_Field_API_Name);
+                UTIL_Namespace.alignSchemaNSWithEnvironment(this.Target_Field_API_Name);
         }
+        this.Data_Import_Field_Mapping_Set = fieldMappingMetadata.Data_Import_Field_Mapping_Set__r.DeveloperName;
+        this.Target_Object_Mapping_Dev_Name = fieldMappingMetadata.Target_Object_Mapping__r.DeveloperName;
+        this.Required = fieldMappingMetadata.Required__c;
+        this.Is_Deleted = fieldMappingMetadata.Is_Deleted__c;
+        this.DeveloperName = fieldMappingMetadata.DeveloperName;
+        this.MasterLabel = fieldMappingMetadata.MasterLabel;
+        return this;
+    }
 
+    /****************************************************************************************************************
+     * @description Builds a complete version of the BDI_FieldMapping wrapper object if the source and target field
+     * describe information is valid
+     * @return BDI_FieldMapping
+     */
+    public BDI_FieldMapping withFieldDescribeInfo () {
+        String dataImport = SObjectType.DataImport__c.name;
         Schema.DescribeFieldResult sourceFieldDescribe;
         Schema.DescribeFieldResult targetFieldDescribe;
-
         try {
             sourceFieldDescribe = UTIL_Describe.getFieldDescribe(
                 dataImport,
@@ -97,36 +111,30 @@ public virtual with sharing class BDI_FieldMapping {
         } catch (UTIL_Describe.SchemaDescribeException sde) {
             if (sde.getMessage().contains('Invalid')) {
                 this.isValid = false;
+                return this;
             }
         }
-
-        if (this.isValid) {
-            constructValidFieldMapping(sourceFieldDescribe, targetFieldDescribe, fieldMappingMetadata);
-        } else {
-            constructInvalidFieldMapping(fieldMappingMetadata, this);
-        }
-
+        return buildFieldMappingWithDescribeInfo(sourceFieldDescribe, targetFieldDescribe);
     }
 
 
-    /*****************************************************************************************************************
-     * @description Constructs a valid field mapping
-     * @param sourceFieldDescribe Source Field Describe data
-     * @param targetFieldDescribe Target Field Describe data
-     * @param fieldMapping Data Import Field Mapping Metadata
+    /**
+     * @description Builds a complete version of the BDI_FieldMapping object with available Schema Describe
+     * Information
+     * @param sourceFieldDescribe Source Field Describe Information
+     * @param targetFieldDescribe Target Field Describe Information
+     *
+     * @return BDI_FieldMapping
      */
-    private void constructValidFieldMapping (Schema.DescribeFieldResult sourceFieldDescribe,
-        Schema.DescribeFieldResult targetFieldDescribe, Data_Import_Field_Mapping__mdt fieldMapping) {
+    private BDI_FieldMapping buildFieldMappingWithDescribeInfo (Schema.DescribeFieldResult sourceFieldDescribe,
+        Schema.DescribeFieldResult targetFieldDescribe) {
         //Updating field and object names to make sure they are using the actual correctly cased
         //API names so it doesn't cause problems with some LWC functions
         this.Target_Object_API_Name = UTIL_Describe.getObjectName(this.Target_Object_API_Name);
-        this.Target_Field_API_Name = UTIL_Describe.getFieldName(this.Target_Object_API_Name, this.Target_Field_API_Name);
-        this.Source_Field_API_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name,
+        this.Target_Field_API_Name = UTIL_Describe.getFieldName(this.Target_Object_API_Name,
+            this.Target_Field_API_Name);
+        this.Source_Field_API_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.name,
             this.Source_Field_API_Name);
-
-        this.DeveloperName = fieldMapping.DeveloperName;
-        this.MasterLabel = fieldMapping.MasterLabel;
-
         this.Source_Field_Label = sourceFieldDescribe.label;
         this.Source_Field_Data_Type = String.valueOf(sourceFieldDescribe.type);
         this.Source_Field_Display_Type_Label = UTIL_Describe.getLabelForDisplayType(this.Source_Field_Data_Type);
@@ -141,36 +149,17 @@ public virtual with sharing class BDI_FieldMapping {
         // If a field is nillable, it can have a null value. A non-nillable field means it is required.
         this.Target_Field_Required = !targetFieldDescribe.isNillable();
 
-        this.Data_Import_Field_Mapping_Set = fieldMapping.Data_Import_Field_Mapping_Set__r.DeveloperName;
-        this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping__r.DeveloperName;
-        this.Required = fieldMapping.Required__c;
-        this.Is_Deleted = fieldMapping.Is_Deleted__c;
-
         List<Schema.PicklistEntry> picklistEntriesList = targetFieldDescribe.getPicklistValues();
 
         for (Schema.PicklistEntry picklistEntry : picklistEntriesList) {
-
             // Create a mapping of active picklist entry value to label
             if (picklistEntry.isActive()) {
                 Target_Field_Picklist_Values.put(picklistEntry.getValue(), picklistEntry.getLabel());
             }
         }
-
         this.Is_Required = !sourceFieldDescribe.isNillable() ? true : false;
-        this.isValid = true;
+        return this;
     }
 
-    /*****************************************************************************************************************
-     * @description Constructs an invalid field mapping
-     * @param difm Data Import Field Mapping Metadata
-     * @param fieldMapping Field Mapping object being built
-     */
-    private void constructInvalidFieldMapping (Data_Import_Field_Mapping__mdt difm, BDI_FieldMapping fieldMapping) {
-        fieldMapping.isValid = false;
-        fieldMapping.Target_Object_Mapping_Dev_Name = difm.Target_Object_Mapping__r.DeveloperName;
-        fieldMapping.MasterLabel = difm.MasterLabel;
-        fieldMapping.Is_Deleted = difm.Is_Deleted__c;
-        fieldMapping.DeveloperName = difm.DeveloperName;
-        fieldMapping.Data_Import_Field_Mapping_Set = difm.Data_Import_Field_Mapping_Set__r.DeveloperName;
-    }
+
 }

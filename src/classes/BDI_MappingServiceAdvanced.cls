@@ -292,30 +292,35 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     }
 
     /******************************************************************************************************************
-    * @description Builds various maps of for field mappings based on retrieved data import object mappings
+    * @description Builds various maps for field mappings based on retrieved data import object mappings
     * @param dataImportObjectMappings List of Data Import Object Mapping Metadata
     */
     private void populateFieldMappings (List<Data_Import_Object_Mapping__mdt> dataImportObjectMappings) {
         for (Data_Import_Object_Mapping__mdt diom : dataImportObjectMappings) {
             if (hasFieldMappings(diom)) {
                 for (Data_Import_Field_Mapping__mdt difm : diom.Data_Import_Field_Mappings__r) {
-                    BDI_FieldMapping fieldMapping =  new BDI_FieldMapping(difm);
-                    BDI_FieldMapping[] tempFieldMappings = new BDI_FieldMapping[]{};
-                    if (fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name) != null) {
-                        tempFieldMappings = fieldMappingsByObjMappingDevName.get(
-                            fieldMapping.Target_Object_Mapping_Dev_Name);
-                    }
-                    tempFieldMappings.add(fieldMapping);
-                    fieldMappingByDevName.put(fieldMapping.DeveloperName,fieldMapping);
-                    String objectAndField =
-                        fieldMapping.Target_Object_API_Name + '.' + fieldMapping.Target_Field_API_Name;
-                    fieldMappingByTargetFieldName.put(objectAndField,fieldMapping);
-                    fieldMappingsByObjMappingDevName.put(fieldMapping.Target_Object_Mapping_Dev_Name,tempFieldMappings);
-                    fieldMappingsByObjMappingLegacyName.put(
-                        difm.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c, tempFieldMappings);
+                    BDI_FieldMapping fieldMapping =  new BDI_FieldMapping();
+                    fieldMapping.withBaseFieldMappingFields(difm).withFieldDescribeInfo();
+                    buildFieldMappingDataStructures(fieldMapping, difm);
                 }
             }
         }
+    }
+
+    private void buildFieldMappingDataStructures (BDI_FieldMapping fieldMapping, Data_Import_Field_Mapping__mdt difm) {
+        BDI_FieldMapping[] tempFieldMappings = new BDI_FieldMapping[]{};
+        if (fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name) != null) {
+            tempFieldMappings = fieldMappingsByObjMappingDevName.get(
+                fieldMapping.Target_Object_Mapping_Dev_Name);
+        }
+        tempFieldMappings.add(fieldMapping);
+        fieldMappingByDevName.put(fieldMapping.DeveloperName,fieldMapping);
+        String objectAndField =
+            fieldMapping.Target_Object_API_Name + '.' + fieldMapping.Target_Field_API_Name;
+        fieldMappingByTargetFieldName.put(objectAndField,fieldMapping);
+        fieldMappingsByObjMappingDevName.put(fieldMapping.Target_Object_Mapping_Dev_Name,tempFieldMappings);
+        fieldMappingsByObjMappingLegacyName.put(
+            difm.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c, tempFieldMappings);
     }
 
     private Boolean hasFieldMappings (Data_Import_Object_Mapping__mdt diom) {

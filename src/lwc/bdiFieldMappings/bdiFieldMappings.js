@@ -165,9 +165,9 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     processBrokenFieldMappingReferences () {
+        this.errors = { rows: {}, table: {} };
         this.fieldMappings.forEach(fieldMapping => {
             if (!fieldMapping.isValid && !fieldMapping.Is_Deleted) {
-                this.errors = { rows: {}, table: {} };
                 this.errors.rows[fieldMapping.DeveloperName] = {
                     title: bdiOMUIFieldMappingProblemHeader,
                     messages: bdiOMUIFieldMappingProblemMessagePart2,
@@ -184,7 +184,7 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     get showRowNumberColumns () {
-        return !isNull(this.errors);
+        return !isNull(this.errors.rows);
     }
 
     get brokenFieldReferencesWarningMessage () {
