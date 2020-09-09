@@ -5,6 +5,7 @@ from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from datetime import datetime
+import re
 from dateutil.relativedelta import relativedelta
 
 
@@ -215,8 +216,8 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         # This is to format the date by removing the trailing 0 which is being the common format across
         # 01/06/2020 -> 1/6/2020
         tokens = installment_date.split('/')
-        dd = tokens[0].replace("0","")
-        mm = tokens[1].replace("0","")
+        dd = tokens[0].lstrip('0')
+        mm = tokens[1].lstrip('0')
         newString = f"{dd}/{mm}/{tokens[2]}"
         return newString
 
