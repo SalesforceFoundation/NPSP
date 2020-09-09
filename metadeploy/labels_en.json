@@ -79,6 +79,54 @@
         "Enhanced Recurring Donations Metadata Updates": {
             "message": "Enhanced Recurring Donations Metadata Updates",
             "description": "title of installation step"
+        },
+        "Add Relationships for Trailhead": {
+            "message": "Add Relationships for Trailhead",
+            "description": "title of installation step"
+        },
+        "Ensure Opportunity Record Types": {
+            "message": "Ensure Opportunity Record Types",
+            "description": "title of installation step"
+        },
+        "Trailhead Playground Configuration": {
+            "message": "Trailhead Playground Configuration",
+            "description": "title of installation step"
+        },
+        "Remove Default Metadata": {
+            "message": "Remove Default Metadata",
+            "description": "title of installation step"
+        },
+        "Update Administrator Profile": {
+            "message": "Update Administrator Profile",
+            "description": "title of installation step"
+        },
+        "Prepare for Data Load": {
+            "message": "Prepare for Data Load",
+            "description": "title of installation step"
+        },
+        "Load Trailhead Data Set": {
+            "message": "Load Trailhead Data Set",
+            "description": "title of installation step"
+        },
+        "Finalize Data Load": {
+            "message": "Finalize Data Load",
+            "description": "title of installation step"
+        },
+        "Create User": {
+            "message": "Create User",
+            "description": "title of installation step"
+        },
+        "Assign Task Ownership": {
+            "message": "Assign Task Ownership",
+            "description": "title of installation step"
+        },
+        "Configure Users": {
+            "message": "Configure Users",
+            "description": "title of installation step"
+        },
+        "Assign Event Ownership": {
+            "message": "Assign Event Ownership",
+            "description": "title of installation step"
         }
     },
     "plan:new_org": {
@@ -116,6 +164,10 @@
     "checks": {
         "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.": {
             "message": "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.",
+            "description": "shown if validation fails"
+        },
+        "Please enable My Domain in your org prior to installing.": {
+            "message": "Please enable My Domain in your org prior to installing.",
             "description": "shown if validation fails"
         }
     },
