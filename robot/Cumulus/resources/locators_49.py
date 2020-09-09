@@ -15,3 +15,4 @@ npsp_lex_locators["record"]["related"]["popup_trigger"]= "//article[contains(@cl
 npsp_lex_locators["record"]["related"]["button"]= "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']"
 npsp_lex_locators["aff_status"]='//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/td[3]'
 npsp_lex_locators["aff_id"]='//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/th//a'
+npsp_lex_locators["record"]["related"]["viewall"]='//a[.//span[text()="View All"]/span[text()="{}"]]'

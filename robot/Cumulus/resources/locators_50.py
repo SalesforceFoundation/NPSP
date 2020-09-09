@@ -39,7 +39,7 @@ npsp_lex_locators={
             'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span[@title="{}"]',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
             'title':'//div/h2//a[./span[text()="{}"]]',
-            'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
+            'viewall':'//article[contains(@class, "slds-card slds-card_boundary")][.//span[@title="{}"]]//a[.//span[@class="view-all-label"]]',
             'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
             'link':"//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//table/tbody/tr[.//td//*[text()='{}']]/th//a",
