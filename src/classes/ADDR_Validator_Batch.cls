@@ -47,14 +47,14 @@ public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH impleme
     /**
     * @description Control whether or not to skip the already verified address 
     */
-    private static Boolean skipPreviouslyVerified = false;
+    private Boolean skipPreviouslyVerified = false;
 
     /**
     * @description Constructor that initializes the class.
     * @param skipPreviouslyVerified If true, the batch skips over objects that already have any verification records.
     */
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
-        skipPreviouslyVerified = skipPreviouslyVerified;
+        this.skipPreviouslyVerified = skipPreviouslyVerified;
         this.setBatchSize(BATCH_SIZE);
     }
 
@@ -68,7 +68,7 @@ public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH impleme
         List<Address__c> addressesToVerify = new List<Address__c>();
 
         for (Address__c address : addressesToProcess) {
-            if (skipPreviouslyVerified == true && address.Verified__c == true) {
+            if (this.skipPreviouslyVerified == true && address.Verified__c == true) {
                 continue;
             }
 
