@@ -406,7 +406,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             const fieldMapping =
                 TemplateBuilderService.fieldMappingByDevName[formField.dataImportFieldMappingDevNames[0]];
-            if (SKIPPED_BATCH_TABLE_HEADER_FIELDS.includes(fieldMapping.Source_Field_API_Name)) return;
+
+            if (isEmpty(fieldMapping) ||
+                SKIPPED_BATCH_TABLE_HEADER_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
+
+                return;
+            }
 
             this.availableBatchTableColumnOptions = [
                 ...this.availableBatchTableColumnOptions,
