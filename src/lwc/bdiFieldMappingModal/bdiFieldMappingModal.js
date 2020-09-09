@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
-import { showToast, parse } from 'c/utilCommon';
+import { showToast, mutable } from 'c/utilCommon';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 
@@ -209,7 +209,7 @@ export default class bdiFieldMappingModal extends LightningElement {
             if (event.row) {
                 // Edit field mapping
                 this.modalMode = 'edit';
-                this.fieldMapping = parse(event.row);
+                this.fieldMapping = mutable(event.row);
             } else {
                 // New field mapping
                 this.modalMode = 'new';
@@ -258,7 +258,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 }
 
                 this.searchableSourceFieldLabelOptions.push(labelOption);
-                diFieldsByAPIName[labelOption.value] = parse(fieldInfos[i]);
+                diFieldsByAPIName[labelOption.value] = mutable(fieldInfos[i]);
 
                 // Include the data import field if it hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
@@ -300,7 +300,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                     }
 
                     this.targetFieldLabelOptions.push(labelOption);
-                    targetFieldsByAPIName[labelOption.value] = parse(fieldInfos[i]);
+                    targetFieldsByAPIName[labelOption.value] = mutable(fieldInfos[i]);
 
                     let displayType = this.toTitleCase(fieldInfos[i].displayType);
                     // Collect target fields by display type
