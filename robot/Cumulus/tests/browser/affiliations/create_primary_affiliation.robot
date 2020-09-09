@@ -25,6 +25,7 @@ Create Primary Affiliation for Contact
     ...                                  Verifies that affiliation to account shows under organization affiliation related list as current
     [tags]                               W-037651    feature:Affiliations
     Go To Page                           Details                      Contact                     object_id=${contact}[Id]
+    Current Page Should Be               Details                      Contact
     Select Tab                           Details
     Edit Record Field Value              Primary Affiliation          ${account}[Name]
     Save Record
