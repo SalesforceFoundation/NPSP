@@ -259,4 +259,12 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             this.batchFields = _batchFields;
         }
     }
+
+    // ================================================================================
+    // AUTOMATION LOCATOR GETTERS
+    // ================================================================================
+
+    get qaLocatorBatchTableColumns() {
+        return `dual-listbox ${this.CUSTOM_LABELS.geTabBatchTableColumns}`;
+    }
 }
