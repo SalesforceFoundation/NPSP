@@ -230,4 +230,20 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         this._donationType = null;
         this.opportunities = [];
     }
+
+    // ================================================================================
+    // AUTOMATION LOCATOR GETTERS
+    // ================================================================================
+
+    get qaLocatorSelectedDonation() {
+        return `button ${this._selectedDonation.Name}`;
+    }
+
+    get qaLocatorReviewDonations() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingReviewDonations}`;
+    }
+
+    get qaLocatorDifferentSelection() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}`;
+    }
 }

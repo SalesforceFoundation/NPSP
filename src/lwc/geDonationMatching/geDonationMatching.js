@@ -68,4 +68,12 @@ export default class geDonationMatching extends LightningElement {
         const detail = { receiverComponent: this.receiverComponent, opportunity: { new: true } };
         fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
     }
+
+    // ================================================================================
+    // AUTOMATION LOCATOR GETTERS
+    // ================================================================================
+
+    get qaLocatorNewOpportunity() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingNewOpportunity}`;
+    }
 }

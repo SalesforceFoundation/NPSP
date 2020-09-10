@@ -1751,6 +1751,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    get namespace() {
+        return getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
+    }
+
+    // ================================================================================
+    // AUTOMATION LOCATOR GETTERS
+    // ================================================================================
+
     get qaLocatorCancelButton() {
         return `button ${this.cancelButtonText}`;
     }
@@ -1758,9 +1766,4 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get qaLocatorSaveButton() {
         return `button ${this.saveActionLabel}`;
     }
-
-    get namespace() {
-        return getNamespace(FORM_TEMPLATE_FIELD.fieldApiName);
-    }
-
 }
