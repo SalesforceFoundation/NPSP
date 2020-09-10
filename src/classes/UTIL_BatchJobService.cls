@@ -33,7 +33,7 @@
 * @group Batch Job
 * @description Batch job service
 */
-public with sharing class UTIL_BatchJobService {
+public without sharing class UTIL_BatchJobService {
     /***
     * @description A batch job custom exception
     */
@@ -113,7 +113,8 @@ public with sharing class UTIL_BatchJobService {
                 AND ApexClass.Name = :className
                 AND ApexClass.NamespacePrefix = :namespacePrefix
                 AND Status IN :IN_PROGRESS_STATUSES
-            ORDER BY CreatedDate DESC];
+            ORDER BY CreatedDate DESC
+        ];
        
         return apexJobs;
     }
