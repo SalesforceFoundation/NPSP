@@ -50,6 +50,10 @@ class psElevateTokenHandler {
     * make sure we're only listening for messages from the correct source.
     */
     getVisualforceOriginURLs(domainInfo) {
+        if (isNull(domainInfo)) {
+            return;
+        }
+
         const namespace = this.getCurrentNamespace();
 
         let url = `https://${domainInfo.orgDomain}--c.visualforce.com`;
@@ -84,9 +88,11 @@ class psElevateTokenHandler {
     */
     registerPostMessageListener(component) {
         window.onmessage = async function (event) {
-            component.visualforceOrigin = component.visualforceOriginUrls.find(
-                origin => event.origin === origin.value
-            ).value;
+            if (component.visualforceOriginUrls) {
+                component.visualforceOrigin = component.visualforceOriginUrls.find(
+                    origin => event.origin === origin.value
+                ).value;
+            }
 
             if (component.visualforceOrigin) {
                 const message = JSON.parse(event.data);

@@ -45,6 +45,7 @@ public without sharing class PS_ElevateService {
         try {
             PS_IntegrationServiceConfig config = new PS_IntegrationServiceConfig();
             isCustomer = config.isIntegrationEnabled();
+            
         } catch (Exception ex) {
             throwAuraHandledException(ex.getMessage());
         }

@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { showToast, constructErrorMessage, isNull, isNotEmpty } from 'c/utilCommon';
+import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';

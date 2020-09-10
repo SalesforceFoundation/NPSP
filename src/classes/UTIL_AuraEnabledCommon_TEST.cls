@@ -31,57 +31,19 @@
 * @author Salesforce.org
 * @date 2020
 * @group Utilities
-* @description Common AuraEnabled methods applicable to multiple domains
+* @description Tests for common AuraEnabled methods applicable to multiple domains
 */
-public without sharing class UTIL_AuraEnabledCommon {
+@isTest(IsParallel=true)
+private with sharing class UTIL_AuraEnabledCommon_TEST {
     
     /***
-    * @description Returns org domain details
-    * @return OrgDomainInfo
+    * @description Verifies org domain and pod names are returned
     */
-    @AuraEnabled(cacheable=true)
-    public static OrgDomainInfo getOrgDomainInfo() {
-        OrgDomainInfo domainInfo;
+    @isTest
+    private static void shouldReturnOrgDomainInfo() {
+        UTIL_AuraEnabledCommon.OrgDomainInfo domainInfo = UTIL_AuraEnabledCommon.getOrgDomainInfo();
 
-        try {
-            String url = System.Url.getOrgDomainUrl().getHost();
-            String[] urlParts = url.split('\\.');
-
-            String podName = [SELECT InstanceName FROM Organization].InstanceName.toLowerCase();
-
-            domainInfo = new OrgDomainInfo(urlParts[0], podName);
-            
-        } catch (Exception ex) {
-            throwAuraHandledException(ex.getMessage());
-        }
-
-        return domainInfo;
-    }
-
-    /***
-    * @description Throws AuraHandledException
-    * The wrapping of the error message again is required
-    * so the specific message is displayed instead of generic "Script thrown exception".
-    * @param errMessage Exception message that needs to be set again
-    * @return void
-    */
-    private static void throwAuraHandledException(String errMessage) {
-        AuraHandledException e = new AuraHandledException(errMessage);
-        e.setMessage(errMessage);
-        throw e;
-    }
-
-
-    /***
-    * @description Contains org domain and pod name
-    */
-    public class OrgDomainInfo {
-        @AuraEnabled public String orgDomain;
-        @AuraEnabled public String podName;
-
-        public OrgDomainInfo (String orgDomain, String podName) {
-            this.orgDomain = orgDomain;
-            this.podName = podName;
-        }
+        System.assertNotEquals(null, domainInfo.orgDomain, 'Org domain should be returned');
+        System.assertNotEquals(null, domainInfo.podName, 'Org pod name should be returned');
     }
 }

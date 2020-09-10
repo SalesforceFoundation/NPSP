@@ -1,4 +1,5 @@
 import { api, track, LightningElement } from 'lwc';
+import { constructErrorMessage } from 'c/utilCommon';
 
 import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
@@ -37,7 +38,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
-        const domainInfo = await getOrgDomainInfo();
+        const domainInfo = await getOrgDomainInfo()
+            .catch(error => {
+                this.handleError(error);
+            });
 
         this.visualforceOriginUrls = tokenHandler.getVisualforceOriginURLs(domainInfo);
     }
@@ -137,6 +141,12 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
         } else if (typeof message.error === 'string') {
             errorValue = message.error;
+
+        } else {//an unexpected error has been generated
+            const error = constructErrorMessage(message);
+            errorValue = error
+                ? error.detail
+                : JSON.stringify(message);
         }
 
         this.alert = {
