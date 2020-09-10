@@ -571,6 +571,7 @@
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_Address</members>
         <members>UTIL_Address_TEST</members>
+        <members>UTIL_AuraEnabledCommon</members>
         <members>UTIL_BatchJobProgress_CTRL</members>
         <members>UTIL_BatchJobProgress_TEST</members>
         <members>UTIL_BatchJobService</members>

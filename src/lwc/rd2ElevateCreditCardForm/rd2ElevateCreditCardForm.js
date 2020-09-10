@@ -1,7 +1,7 @@
 import { api, track, LightningElement } from 'lwc';
 
 import tokenHandler from 'c/psElevateTokenHandler';
-import getOrgDomainInfo from '@salesforce/apex/PS_ElevateService.getOrgDomainInfo';
+import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 
 import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';

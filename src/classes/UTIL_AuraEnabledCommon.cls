@@ -30,39 +30,35 @@
 /**
 * @author Salesforce.org
 * @date 2020
-* @group Elevate Payment Services
-* @description Contains common Elevate payment services methods 
+* @group Utilities
+* @description Common AuraEnabled methods applicable to multiple domains
 */
-public without sharing class PS_ElevateService {
+public without sharing class UTIL_AuraEnabledCommon {
+    
+    /***
+    * @description Returns org domain details
+    * @return OrgDomainInfo
+    */
+    @AuraEnabled(cacheable=true)
+    public static OrgDomainInfo getOrgDomainInfo() {
+        String url = System.Url.getOrgDomainUrl().getHost();
+        String[] urlParts = url.split('\\.');
+
+        String podName = [SELECT InstanceName FROM Organization].InstanceName.toLowerCase();
+
+        return new OrgDomainInfo(urlParts[0], podName);
+    }
 
     /***
-    * @description Checks whether an org is a customer of Elevate Payment Services
-    * @return Boolean
+    * @description Contains org domain and pod name
     */
-    @AuraEnabled
-    public static Boolean isElevateCustomer() {
-        Boolean isCustomer = false;
-        try {
-            PS_IntegrationServiceConfig config = new PS_IntegrationServiceConfig();
-            isCustomer = config.isIntegrationEnabled();
-        } catch (Exception ex) {
-            throwAuraHandledException(ex.getMessage());
+    public class OrgDomainInfo {
+        @AuraEnabled public String orgDomain;
+        @AuraEnabled public String podName;
+
+        public OrgDomainInfo (String orgDomain, String podName) {
+            this.orgDomain = orgDomain;
+            this.podName = podName;
         }
-
-        return isCustomer;
     }
-
-    /***
-    * @description Throws AuraHandledException
-    * The wrapping of the error message again is required
-    * so the specific message is displayed instead of generic "Script thrown exception".
-    * @param errMessage Exception message that needs to be set again
-    * @return void
-    */
-    private static void throwAuraHandledException(String errMessage) {
-        AuraHandledException e = new AuraHandledException(errMessage);
-        e.setMessage(errMessage);
-        throw e;
-    }
-
 }
