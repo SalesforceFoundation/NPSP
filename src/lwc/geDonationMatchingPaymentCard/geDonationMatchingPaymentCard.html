@@ -49,7 +49,8 @@
             <button slot="footer"
                     class="slds-button slds-button_neutral slds-button_extension"
                     onclick={handleUpdatePayment}
-                    data-id={payment.Name}>
+                    data-id={payment.Name}
+                    data-qa-locator={qaLocatorUpdatePayment}>
                 {CUSTOM_LABELS.geButtonMatchingUpdatePayment}
             </button>
         </template>
