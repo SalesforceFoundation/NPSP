@@ -176,4 +176,16 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
         detail.fields.applyPayment = true;
         this.dispatchEvent(new CustomEvent('updateselecteddonation', { detail }));
     }
+
+    // ================================================================================
+    // AUTOMATION LOCATOR GETTERS
+    // ================================================================================
+
+    get qaLocatorAddNewPayment() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingNewPayment} ${this.opportunityNameDetails.value}`;
+    }
+
+    get qaLocatorUpdateOpportunity() {
+        return `button ${this.CUSTOM_LABELS.geButtonMatchingUpdateOpportunity} ${this.opportunityNameDetails.value}`;
+    }
 }
