@@ -97,6 +97,7 @@ public class TEST_SObjectGateway {
                     npe03__Paid_Amount__c,
                     npe03__Date_Established__c,
                     Day_of_Month__c,
+                    DisableFirstInstallment__c,
                     StartDate__c,
                     EndDate__c,
                     npe03__Next_Payment_Date__c,
