@@ -236,7 +236,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     }
 
     /******************************************************************************************************************
-     * @description Returns a data required to build object mapping and field mapping information
+     * @description Returns data required to build object mapping and field mapping wrapper objects
      * @param diFieldMappingSet Data Import Field Mapping Set
      * @return A list of Data Import Object Metadata
      */

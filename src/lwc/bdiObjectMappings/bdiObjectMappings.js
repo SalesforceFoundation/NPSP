@@ -146,7 +146,6 @@ export default class bdiObjectMappings extends LightningElement {
     * a list of all non-deleted object mappings
     */
     retrieveAdvancedMappingObjectData() {
-        console.log(this.npspSettingsURL);
         getAdvancedMappingObjectData()
             .then((data) => {
                 this.processBrokenMappingReferences(data.objectMappings);
