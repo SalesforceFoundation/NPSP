@@ -241,6 +241,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
         String.valueOf(npe03__Recurring_Donation__c.CurrentYearValue__c),
         String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
+        String.valueOf(npe03__Recurring_Donation__c.DisableFirstInstallment__c),
         String.valueOf(npe03__Recurring_Donation__c.EndDate__c),
         String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
         String.valueOf(npe03__Recurring_Donation__c.NextYearValue__c),
@@ -492,7 +493,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return !rdSettings.isDisableAllInstallments;
 
         } else if (rd.isNew()) {
-            return rdSettings.isFirstInstallmentEnabled;
+            return !rd.isFirstInstallmentDisabled() && rdSettings.isFirstInstallmentEnabled;
 
         } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
             return rdSettings.isNextInstallmentEnabled;
