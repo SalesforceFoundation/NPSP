@@ -56,13 +56,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
         self._init_locators()
         # patch salesforce locators for winter 21
-        if int(self.latest_api_version) == 50:
-            from cumulusci.robotframework import Salesforce
-            Salesforce.lex_locators["record"]["related"]["card"] = (
-                "//*[@data-component-id='force_relatedListContainer']//article[.//span[@title='{}']]"
-            )
-            Salesforce.lex_locators["record"]["related"]["button"]=("//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//a[@title='{}']")
-            Salesforce.lex_locators["record"]["related"]["popup_trigger"]=("//article[.//span[@title='{}'][//a[text()='{}']]]//div[contains(@class,'slds-truncate')]//button[./span[text()='Show Actions']]")
+        # if int(self.latest_api_version) == 50:
+        #     from cumulusci.robotframework import Salesforce
+        #     Salesforce.lex_locators["record"]["related"]["card"] = (
+        #         "//*[@data-component-id='force_relatedListContainer']//article[.//span[@title='{}']]"
+        #     )
+        #     Salesforce.lex_locators["record"]["related"]["button"]=("//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//a[@title='{}']")
+        #     Salesforce.lex_locators["record"]["related"]["popup_trigger"]=("//article[.//span[@title='{}'][//a[text()='{}']]]//div[contains(@class,'slds-truncate')]//button[./span[text()='Show Actions']]")
         locator_manager.register_locators("npsp",npsp_lex_locators)
 
     def _init_locators(self):
@@ -201,7 +201,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             locator = npsp_lex_locators['record']['datepicker'].format(value)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click()
-        
+
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
         if self.latest_api_version == 50.0:
@@ -1386,8 +1386,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
             else:
                 return
-            
-            
+
+
     @capture_screenshot_on_error
     def populate_modal_form(self,**kwargs):
         """Populates modal form with the field-value pairs
