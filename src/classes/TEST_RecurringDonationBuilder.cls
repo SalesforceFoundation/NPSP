@@ -534,6 +534,16 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    /***
+    * @description Set DisableFirstInstallment field to true. This field is by default false.
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withFirstInstallmentDisabled() {
+        validateMode(Mode.Enhanced);
+        valuesByFieldName.put('DisableFirstInstallment__c', true);
+        return this;
+    }
+
     /**
     * @description Configure the RD with the appropriate default values based on the mode
     */
@@ -549,7 +559,6 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         return this;
     }
-
 
     /***
     * @description Builds Recurring Donation sObject based on the provided values
