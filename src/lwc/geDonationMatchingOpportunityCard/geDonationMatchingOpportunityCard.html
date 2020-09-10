@@ -118,13 +118,15 @@
             <button slot="footer"
                     class="slds-button slds-button_neutral slds-button_extension slds-border_extension-bottom"
                     onclick={handleNewPayment}
-                    data-id={opportunity.Name}>
+                    data-id={opportunity.Name}
+                    data-qa-locator={qaLocatorAddNewPayment}>
                 {CUSTOM_LABELS.geButtonMatchingNewPayment}
             </button>
             <button slot="footer"
                     class="slds-button slds-button_neutral slds-button_extension"
                     onclick={handleUpdateOpportunity}
                     data-id={opportunity.Name}
+                    data-qa-locator={qaLocatorUpdateOpportunity}
                     disabled={isUpdateOpportunityDisabled}>
                 {CUSTOM_LABELS.geButtonMatchingUpdateOpportunity}
             </button>
