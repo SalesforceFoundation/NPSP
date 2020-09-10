@@ -413,6 +413,14 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Indicates if the Recurring Donation has first installment creation disabled.
+    * @return Boolean 
+    */
+    public Boolean isFirstInstallmentDisabled() {
+        return rd.DisableFirstInstallment__c == true;
+    }
+
+    /**
     * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
     * @param currentDate The current date
     * @return Boolean
