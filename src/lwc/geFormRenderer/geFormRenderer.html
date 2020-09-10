@@ -125,14 +125,16 @@
                                 <lightning-button label={cancelButtonText}
                                                   title={cancelButtonText}
                                                   onclick={handleCancel}
-                                                  class='slds-m-left_x-small'>
+                                                  class='slds-m-left_x-small'
+                                                  data-qa-locator={qaLocatorCancelButton}>
                                 </lightning-button>
                                 <lightning-button variant='brand'
                                                   label={saveActionLabel}
                                                   title={saveActionLabel}
                                                   onclick={handleSave}
                                                   class='slds-m-left_x-small'
-                                                  disabled={isUpdateActionDisabled}>
+                                                  disabled={isUpdateActionDisabled}
+                                                  data-qa-locator={qaLocatorSaveButton}>
                                 </lightning-button>
                             </div>
                         </lightning-layout-item>

@@ -13,7 +13,8 @@
                         {reviewDonationsMessage}
                         <template if:true={showDonorLink}>
                             <button class="slds-button slds-m-left_xx-small"
-                                    onclick={navigateToRecord}>
+                                    onclick={navigateToRecord}
+                                    data-qa-locator={qaLocatorSelectedDonation}>
                                 {_selectedDonation.Name}
                             </button>
                         </template>
@@ -21,7 +22,8 @@
                     <template if:false={hasSelectedDonation}>
                         <span>
                             <button class="slds-button slds-m-left_xx-small"
-                                    onclick={openReviewDonationsModal}>
+                                    onclick={openReviewDonationsModal}
+                                    data-qa-locator={qaLocatorReviewDonations}>
                                 {CUSTOM_LABELS.geButtonMatchingReviewDonations}
                             </button>
                         </span>
@@ -30,7 +32,8 @@
                 <template if:true={hasSelectedDonation}>
                     <lightning-layout-item size="12">
                         <button class="slds-button slds-button_margin-extension"
-                                onclick={openReviewDonationsModal}>
+                                onclick={openReviewDonationsModal}
+                                data-qa-locator={qaLocatorDifferentSelection}>
                             {CUSTOM_LABELS.geButtonMatchingUpdateDonationSelection}
                         </button>
                     </lightning-layout-item>
