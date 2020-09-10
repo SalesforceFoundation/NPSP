@@ -1863,6 +1863,34 @@ private class RD2_OpportunityEvaluationService_TEST {
         
     }
 
+    /**
+    * @description Verifies no Opportunity is created when "Disable First Installment" on RD is true,
+    * and the org setting NPSP Installment Auto Creation is "Always Create Next Installment".
+    */
+    @IsTest
+    private static void shouldNotCreateFirstInstallmentWhenDisableFirstInstallmentIsTrue() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_ALWAYS_CREATE_NEXT
+        });
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withFirstInstallmentDisabled()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opportunities = oppGateway.getRecords(rd);
+
+        System.assert(rd.DisableFirstInstallment__c, 'Disable First Installment should be true');
+        System.assert(opportunities.isEmpty(),
+            'No Opportunity should be created when the Disable First Installment is true');
+    }
+
     // Helpers
     ///////////////////
 
