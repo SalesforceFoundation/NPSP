@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>npsp__Error_Type__c</columns>
+        <columns>npsp__Context_Type__c</columns>
+        <columns>npsp__Full_Message__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Errors</label>
+    </listViews>
+</CustomObject>

@@ -60,9 +60,8 @@
     MailingPostalCode:
       fake: zipcode
 
-
 # For each contact:
-#   - 95% of all Contacts will have an Recurringn Donation created (in RD2 format)
+#   - 95% of all Contacts will have an Recurring Donation created (in RD2 format)
 #       - 95% of them are for this Household Contact, the rest have this Contact and an Organization Account
 #       - DateEstablished/EffectiveDate is within the last 2 years
 #       - 5% of them have an Allocation and/or a linked Campaign
