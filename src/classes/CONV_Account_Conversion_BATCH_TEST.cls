@@ -56,7 +56,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
-        // Insert numberOfContacts test Contacts with a different owner than the Current User
+        // Insert number of test Contacts with a different owner than the Current User
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(numberOfContacts);
         for (Contact c : cons) {
             c.OwnerId = tempUser.Id;
