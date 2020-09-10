@@ -89,7 +89,7 @@ global with sharing class BDI_DataImportService {
     */
     public static String strSoqlForDataImportProcess(List<Id> dataImportIds) {
         List<String> whereClauses = new List<String>{
-            'Status__c <> \' + BDI_DataImport_API.bdiImported + \'',
+            'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
             'Id =: dataImportIds'
         };
 
@@ -121,7 +121,7 @@ global with sharing class BDI_DataImportService {
             batchIdClause = 'NPSP_Data_Import_Batch__c = NULL';
         }
         List<String> whereClauses = new List<String>{
-            'Status__c <> \' + BDI_DataImport_API.bdiImported + \'',
+            'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
             batchIdClause
         };
 
