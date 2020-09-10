@@ -3,6 +3,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import {deepClone, isEmpty} from 'c/utilCommon';
 
 const WIDGET = 'widget';
 const YES = 'Yes';
@@ -11,16 +12,27 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    isBatchHeaderField = false;
+    _field;
+
+    @track targetObjectDescribeInfo;
 
     @api isFirst;
     @api isLast;
     @api objectApiName;
-    @api field;
+    @api
+    get field() {
+        return this._field;
+    }
+    set field(value) {
+        this._field = deepClone(value);
+
+        if (isEmpty(this.fieldMapping)) {
+            this._field.isValid = false;
+        }
+    }
     @api sourceObjectFieldInfo;
 
-    @track objectDescribeInfo;
-
-    isBatchHeaderField = false;
 
 
     /*******************************************************************************
@@ -32,7 +44,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @wire(getObjectInfo, { objectApiName: '$targetObjectApiName' })
     wiredObjectInfo(response) {
         if (response.data) {
-            this.objectDescribeInfo = response.data;
+            this.targetObjectDescribeInfo = response.data;
         }
     }
 
