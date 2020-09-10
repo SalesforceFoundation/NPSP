@@ -44,6 +44,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%DisableFirstInstallment__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%EndDate__c</field>
         <readable>true</readable>
     </fieldPermissions>

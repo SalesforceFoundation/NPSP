@@ -1431,6 +1431,7 @@
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
         <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.DisableFirstInstallment__c</members>
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
