@@ -1,18 +1,13 @@
 import { LightningElement, track, api } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
-import getFieldMappingSetName
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingSetName';
+import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
+import getAdvancedMappingFieldsData
+    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getAdvancedMappingFieldsData';
 import getFieldMappingsByObjectAndFieldSetNames
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getFieldMappingsByObjectAndFieldSetNames';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
-import getObjectFieldDescribes
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectFieldDescribes';
-import getDataImportObjectName
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getDataImportObjectName';
-import getMappedDISourceFields
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getMappedDISourceFields';
+import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+
 
 // Import custom labels
 import bdiFieldMappingsLabel from '@salesforce/label/c.bdiFieldMappings';
@@ -41,6 +36,11 @@ import bdiFMUIFieldAPIName from '@salesforce/label/c.bdiFMUIFieldAPIName';
 import bdiFMUIFieldLabel from '@salesforce/label/c.bdiFMUIFieldLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
+import bdiOMUIFieldMappingProblemHeader from '@salesforce/label/c.bdiOMUIFieldMappingProblemHeader';
+import bdiOMUIFieldMappingProblemMessagePart1 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart1';
+import bdiOMUIFieldMappingProblemMessagePart2 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart2';
+import { isNull, showToast } from 'c/utilCommon';
+
 
 const actions = [
     { label: stgBtnEdit, name: 'edit' },
@@ -74,33 +74,33 @@ export default class bdiFieldMappings extends LightningElement {
         bdiFMUITarget,
         stgHelpAdvancedMapping3,
         stgLabelObject,
+        bdiOMUIFieldMappingProblemHeader,
+        bdiOMUIFieldMappingProblemMessagePart1,
+        bdiOMUIFieldMappingProblemMessagePart2
     }
 
-    @api objectMapping;
-    @api diFieldDescribes;
-    @api mappedDiFieldDescribes;
-    @api targetObjectFieldDescribes;
     @api shouldRender;
+    @track brokenFieldMappings = [];
 
-    @track displayFieldMappings = false;
-    @track isLoading = true;
-    @track columns = columns;
-    @track sortedBy;
-    @track sortDirection;
-    @track fieldMappingSetName;
-    @track fieldMappings;
-
+    objectMapping;
+    diFieldDescribes;
+    mappedDiFieldDescribes;
+    targetObjectFieldDescribes;
+    displayFieldMappings = false;
+    isLoading = true;
+    columns = columns;
+    sortedBy;
+    sortDirection;
+    fieldMappingSetName;
+    fieldMappings;
     deploymentTimer;
     deploymentTimeout = 10000;
+    @track errors;
 
-    _dataImportApiName;
-
-    @api
     get noFieldMappings() {
         return !this.fieldMappings || this.fieldMappings.length === 0;
     }
 
-    @api
     refresh() {
         if (this.displayFieldMappings) {
             this.init();
@@ -108,11 +108,11 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     handleNavButton() {
+        this.displayFieldMappings = false;
         fireEvent(this.pageRef, 'showobjectmappings');
     }
 
     connectedCallback() {
-        registerListener('showobjectmappings', this.handleShowObjectMappings, this);
         registerListener('showfieldmappings', this.handleShowFieldMappings, this);
         registerListener('deploymentResponse', this.handleDeploymentResponse, this);
         registerListener('startDeploymentTimeout', this.handleDeploymentTimeout, this);
@@ -127,31 +127,21 @@ export default class bdiFieldMappings extends LightningElement {
     * @description Group up various get data calls to apex
     */
     init = async() => {
+        this.brokenFieldMappings = [];
+        this.errors = null;
         try {
             this.isLoading = true;
+            let fieldMappingData = await getAdvancedMappingFieldsData({
+                targetObjectApiName : this.objectMapping.Object_API_Name,
+                sourceObjectApiName : DATA_IMPORT.objectApiName
+            });
 
-            this._dataImportApiName = await getDataImportObjectName();
-
-            // Get all the data import field describes
-            if (!this.diFieldDescribes) {
-                this.diFieldDescribes =
-                    await getObjectFieldDescribes({objectName: this._dataImportApiName});
+            if (!isNull(fieldMappingData)) {
+                this.diFieldDescribes = fieldMappingData.sourceObjectFieldDescribes;
+                this.targetObjectFieldDescribes = fieldMappingData.targetObjectFieldDescribes;
+                this.mappedDiFieldDescribes = fieldMappingData.mappedDISourceFields;
+                this.fieldMappingSetName = fieldMappingData.fieldMappingSetName;
             }
-
-            // Get mapped data import field describes
-            this.mappedDiFieldDescribes =
-                await getMappedDISourceFields();
-
-            // Get all the target object field describes based on the currently
-            // selected object mapping
-            let objectAPIName = this.objectMapping.Object_API_Name;
-
-            this.targetObjectFieldDescribes =
-                await getObjectFieldDescribes({objectName: objectAPIName});
-
-            // Get the field mapping set name from the data import custom settings
-            this.fieldMappingSetName =
-                await getFieldMappingSetName();
 
             // Get all the field mappings for the currently selected object mapping
             this.fieldMappings =
@@ -159,12 +149,12 @@ export default class bdiFieldMappings extends LightningElement {
                     objectName: this.objectMapping.DeveloperName,
                     fieldMappingSetname: this.fieldMappingSetName
                 });
-
             if (this.fieldMappings && this.fieldMappings.length > 0) {
                 this.fieldMappings = this.sortData(
                     this.fieldMappings,
                     'Source_Field_Label',
                     'asc');
+                this.processBrokenFieldMappingReferences();
             }
 
             this.isLoading = false;
@@ -172,6 +162,33 @@ export default class bdiFieldMappings extends LightningElement {
         } catch(error) {
             this.handleError(error);
         }
+    }
+
+    processBrokenFieldMappingReferences () {
+        this.errors = { rows: {}, table: {} };
+        this.fieldMappings.forEach(fieldMapping => {
+            if (!fieldMapping.isValid && !fieldMapping.Is_Deleted) {
+                this.errors.rows[fieldMapping.DeveloperName] = {
+                    title: bdiOMUIFieldMappingProblemHeader,
+                    messages: bdiOMUIFieldMappingProblemMessagePart2,
+                    fieldNames: []
+                };
+                this.brokenFieldMappings.push(
+                    `${this.objectMapping.MasterLabel} : ${fieldMapping.MasterLabel} (${fieldMapping.Target_Field_API_Name})`);
+            }
+        });
+    }
+
+    get hasBrokenFieldReferences () {
+        return this.brokenFieldMappings.length > 0;
+    }
+
+    get showRowNumberColumns () {
+        return !isNull(this.errors.rows);
+    }
+
+    get brokenFieldReferencesWarningMessage () {
+        return `${this.customLabels.bdiOMUIFieldMappingProblemMessagePart1} ${this.customLabels.bdiOMUIFieldMappingProblemMessagePart2}`
     }
 
     /*******************************************************************************
@@ -192,7 +209,7 @@ export default class bdiFieldMappings extends LightningElement {
                     event.deploymentId +
                     '%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp';
 
-                that.showToast(
+                showToast(
                     bdiFMUILongDeployment,
                     bdiFMUILongDeploymentMessage + ' {0}',
                     'warning',
@@ -224,10 +241,10 @@ export default class bdiFieldMappings extends LightningElement {
             const failMessage = `${unsuccessful} ${bdiFieldMappingsLabel} ${bdiFMUIUpdate}. ${bdiFMUITryAgain}.`;
             const succeeded = status === 'Succeeded';
             
-            this.showToast(
+            showToast(
                 `${succeeded ? successMessage : failMessage}`,
                 '',
-                succeeded ? 'success' : 'error');
+                succeeded ? 'success' : 'error', []);
         }
     }
 
@@ -358,39 +375,17 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates and dispatches a ShowToastEvent
-    *
-    * @param {string} title: Title of the toast, dispalyed as a heading.
-    * @param {string} message: Message of the toast. It can contain placeholders in
-    * the form of {0} ... {N}. The placeholders are replaced with the links from
-    * messageData param
-    * @param {string} mode: Mode of the toast
-    * @param {array} messageData: List of values that replace the {index} placeholders
-    * in the message param
-    */
-    showToast(title, message, variant, mode, messageData) {
-        const event = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-            mode: mode,
-            messageData: messageData
-        });
-        this.dispatchEvent(event);
-    }
-
-    /*******************************************************************************
     * @description Creates and dispatches an error toast
     *
     * @param {object} error: Event holding error details
     */
     handleError(error) {
         if (error && error.status && error.body) {
-            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+            showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
-            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+            showToast(`${error.name}`, error.message, 'error', 'sticky');
         } else {
-            this.showToast(stgUnknownError, '', 'error', 'sticky');
+            showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
 }

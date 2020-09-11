@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsubNoPageRef';
+import { showToast, mutable } from 'c/utilCommon';
 import createDataImportFieldMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportFieldMapping';
 
@@ -54,14 +54,14 @@ export default class bdiFieldMappingModal extends LightningElement {
 
     @api objectMapping;
     @api fieldMappingSetName;
-    @api isModalOpen = false;
-    @api modalMode = 'new';
-    @api diFieldDescribes;
-    @api mappedDiFieldDescribes;
-    @api targetObjectFieldDescribes;
+    isModalOpen = false;
+    modalMode = 'new';
+    diFieldDescribes;
+    mappedDiFieldDescribes;
+    targetObjectFieldDescribes;
 
-    @track isLoading;
-    @track row;
+    isLoading;
+    row;
 
     @track fieldMapping = {
         Source_Field_API_Name: undefined,
@@ -72,16 +72,16 @@ export default class bdiFieldMappingModal extends LightningElement {
         Target_Field_Display_Type_Label: undefined
     };
 
-    @track sourceFieldLabelOptions;
-    @track searchableSourceFieldLabelOptions;
-    @track targetFieldLabelOptions;
-    @track hasSourceFieldErrors;
-    @track hasTargetFieldErrors;
+    sourceFieldLabelOptions;
+    searchableSourceFieldLabelOptions;
+    targetFieldLabelOptions;
+    hasSourceFieldErrors;
+    hasTargetFieldErrors;
 
-    @api diFieldsByAPIName;
-    @api targetFieldsByAPIName;
+    diFieldsByAPIName;
+    targetFieldsByAPIName;
 
-    @api targetFieldsByLabelByDisplayType;
+    targetFieldsByLabelByDisplayType;
 
     @track mappedTargetFieldApiNames = [];
 
@@ -209,13 +209,12 @@ export default class bdiFieldMappingModal extends LightningElement {
             if (event.row) {
                 // Edit field mapping
                 this.modalMode = 'edit';
-                this.fieldMapping = this.parse(event.row);
+                this.fieldMapping = mutable(event.row);
             } else {
                 // New field mapping
                 this.modalMode = 'new';
                 this.fieldMapping = {};
             }
-
             this.getSourceFieldOptions(this.diFieldDescribes);
             this.getTargetFieldOptions(this.targetObjectFieldDescribes);
         } catch(error) {
@@ -232,7 +231,11 @@ export default class bdiFieldMappingModal extends LightningElement {
     */
     collectMappedTargetMappings(fieldMappings) {
         this.mappedTargetFieldApiNames =
-            fieldMappings.map(fieldMapping => fieldMapping.Target_Field_API_Name);
+            fieldMappings.map(fieldMapping => {
+               if (fieldMapping.isValid) {
+                   fieldMapping.Target_Field_API_Name
+               }
+            });
     }
 
     /*******************************************************************************
@@ -255,7 +258,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                 }
 
                 this.searchableSourceFieldLabelOptions.push(labelOption);
-                diFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
+                diFieldsByAPIName[labelOption.value] = mutable(fieldInfos[i]);
 
                 // Include the data import field if it hasn't already been mapped
                 // or if it's the currently selected field (i.e. editing)
@@ -297,7 +300,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                     }
 
                     this.targetFieldLabelOptions.push(labelOption);
-                    targetFieldsByAPIName[labelOption.value] = this.parse(fieldInfos[i]);
+                    targetFieldsByAPIName[labelOption.value] = mutable(fieldInfos[i]);
 
                     let displayType = this.toTitleCase(fieldInfos[i].displayType);
                     // Collect target fields by display type
@@ -331,7 +334,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     * @description Handles escape key press and closes the modal
     */
     escapeFunction = (event) => {
-        if (event.keyCode === 27) {
+        if (event.key === 'Escape') {
             this.handleCloseModal();
         }
     }
@@ -375,7 +378,7 @@ export default class bdiFieldMappingModal extends LightningElement {
                         this.handleError(error);
                     });
             } else {
-                this.showToast(
+                showToast(
                     'Error',
                     `Missing the following field ${missingField}`,
                     'error',
@@ -454,14 +457,12 @@ export default class bdiFieldMappingModal extends LightningElement {
             let fieldInfo = this.diFieldsByAPIName[fieldAPIName];
             let displayType = this.toTitleCase(fieldInfo.displayType);
 
-            this.fieldMapping = {
-                Source_Field_Label: fieldInfo.label,
-                Source_Field_API_Name: fieldAPIName,
-                Source_Field_Data_Type: displayType,
-                Source_Field_Display_Type_Label: this.labelsByDisplayType[displayType],
-                Target_Field_API_Name: undefined,
-                isBooleanMappable: fieldInfo.isBooleanMappable,
-            }
+            this.fieldMapping.Source_Field_Label = fieldInfo.label;
+            this.fieldMapping.Source_Field_API_Name = fieldAPIName;
+            this.fieldMapping.Source_Field_Data_Type = displayType;
+            this.fieldMapping.Source_Field_Display_Type_Label = this.labelsByDisplayType[displayType];
+            this.fieldMapping.Target_Field_API_Name = undefined;
+            this.fieldMapping.isBooleanMappable = fieldInfo.isBooleanMappable;
 
             this.hasSourceFieldErrors = false;
             this.handleAvailableTargetFieldsBySourceFieldDisplayType(this.fieldMapping);
@@ -471,7 +472,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     /*******************************************************************************
     * @description Filters the available target fields based on display type
     *
-    * @param {string} displayType: Display Type of the currently selected source field
+    * @param {object} fieldMapping: Display Type of the currently selected source field
     */
     handleAvailableTargetFieldsBySourceFieldDisplayType(fieldMapping) {
         if (fieldMapping.isBooleanMappable === undefined) {
@@ -518,39 +519,17 @@ export default class bdiFieldMappingModal extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates and dispatches a ShowToastEvent
-    *
-    * @param {string} title: Title of the toast, dispalyed as a heading.
-    * @param {string} message: Message of the toast. It can contain placeholders in
-    * the form of {0} ... {N}. The placeholders are replaced with the links from
-    * messageData param
-    * @param {string} mode: Mode of the toast
-    * @param {array} messageData: List of values that replace the {index} placeholders
-    * in the message param
-    */
-    showToast(title, message, variant, mode, messageData) {
-        const event = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-            mode: mode,
-            messageData: messageData
-        });
-        this.dispatchEvent(event);
-    }
-
-    /*******************************************************************************
     * @description Creates and dispatches an error toast
     *
     * @param {object} error: Event holding error details
     */
     handleError(error) {
         if (error && error.status && error.body) {
-            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+            showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
-            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+            showToast(`${error.name}`, error.message, 'error', 'sticky');
         } else {
-            this.showToast(stgUnknownError, '', 'error', 'sticky');
+            showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
 
@@ -562,15 +541,6 @@ export default class bdiFieldMappingModal extends LightningElement {
     */
     sortBy(list, sortedBy) {
         return list.sort((a, b) => { return (a[sortedBy] > b[sortedBy]) ? 1 : -1} );
-    }
-
-    /*******************************************************************************
-    * @description Parse proxy objects for debugging, mutating, etc
-    *
-    * @param {object} obj: Object to be parsed
-    */
-    parse(obj) {
-       return JSON.parse(JSON.stringify(obj));
     }
 
     /*******************************************************************************
