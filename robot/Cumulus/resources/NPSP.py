@@ -1553,3 +1553,19 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 return oid_match.group(2)
         raise AssertionError(f"Could not parse record id from url: {url}")
 
+    def query_object_and_return_id(self,object_name,**kwargs):
+        """Queries the given object table by using key,value pair passed and returns ids of matched records"""
+        list=self.salesforce.salesforce_query(object_name,**kwargs)
+        ids=[sub['Id'] for sub in list]
+        print(f"ID's saved are: {ids}")
+        return ids
+
+    def query_and_store_records_to_delete(self,object_name,**kwargs):
+        """Queries the given object table by using key,value pair passed and
+        stores the ids of matched records in order to delete as part of suite teardown"""
+        records=self.query_object_and_return_id(object_name,**kwargs)
+        if records:
+            for i in records:
+                self.salesforce.store_session_record(object_name,i)
+
+
