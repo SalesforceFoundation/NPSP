@@ -52,9 +52,10 @@ public class TDTM_ProcessControl {
     * - ALLOC
     * Household Triggers:
     * - HH
+    * - HH_isRunningBeforeInsert: Prevent execution of BeforeInsert trigger in ACCT_Accounts_TDTM
     * OPP Triggers:
     * - OPP_CampaignMember: Control recursion specifically for the OPP_CampaignMember_TDTM class
-    * Recuring Donations Triggers:
+    * Recurring Donations Triggers:
     * - RD
     * Relationships Triggers:
     * - REL
@@ -68,6 +69,7 @@ public class TDTM_ProcessControl {
         AFFL_hasRunForAccounts,
         ALLOC,
         HH,
+        HH_isRunningBeforeInsert,
         OPP_CampaignMember,
         RD,
         REL,
@@ -82,6 +84,7 @@ public class TDTM_ProcessControl {
     /*******************************************************************************************************
     * @description Increment/Decrement the static flag counter that tracks whether the processing
     *    trigger has been called already
+    * @param f A flag whose static flag counter is to be incremented or decremented.
     * @param b A boolean where true increments the counter and false decrements it.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
@@ -95,7 +98,8 @@ public class TDTM_ProcessControl {
     }
 
     /********************************************************************************************************
-    * @description Returns true if the recursionFlag value is greater than 1
+    * @description Returns true if the recursionFlag value is greater than 0
+    * @return Boolean
     */
     public static Boolean isRecursive(flag f) {
         return (recursionMap.containsKey(f) ? recursionMap.get(f) : 0) > 0;
