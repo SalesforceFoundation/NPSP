@@ -4339,6 +4339,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>. Create new fields on the NPSP Data Import object if needed.</value>
     </labels>
     <labels>
+        <fullName>bdiOMUIFieldMappingProblemHeader</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast warning header about Field Mapping issues</shortDescription>
+        <value>Check Field Mappings</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIFieldMappingProblemMessagePart1</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body, first part, about Field Mapping issues</shortDescription>
+        <value>There is a problem with the Field Mappings listed below.</value>
+    </labels>
+    <labels>
+        <fullName>bdiOMUIFieldMappingProblemMessagePart2</fullName>
+        <categories>Advanced Mapping</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body, second part, about Field Mapping issues</shortDescription>
+        <value>Make sure the NPSP Data Import and target fields still exist and edit or delete the Field Mapping.</value>
+    </labels>
+    <labels>
         <fullName>bdiPositiveNumber</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
