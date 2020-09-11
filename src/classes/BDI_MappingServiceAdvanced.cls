@@ -199,94 +199,11 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
     private void retrieveCustMetadata(Boolean includeUtilityFields) {
         //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
-        Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName =
-            new Map<String,Data_Import_Object_Mapping__mdt>();
-
-        diFieldMappingSet = [SELECT id, 
-                                MasterLabel, 
-                                DeveloperName, 
-                                Data_Import_Object_Mapping_Set__c,
-                                Data_Import_Object_Mapping_Set__r.DeveloperName    
-                    FROM Data_Import_Field_Mapping_Set__mdt
-                    WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
-
-        Data_Import_Field_Mapping__mdt[] fieldMappings = new List<Data_Import_Field_Mapping__mdt>();
-
-        for (Data_Import_Object_Mapping__mdt diom:[SELECT Id,
-                                            MasterLabel,
-                                            Custom_Mapping_Logic_Class__c,
-                                            DeveloperName, 
-                                            Data_Import_Object_Mapping_Set__c,
-                                            Data_Import_Object_Mapping_Set__r.DeveloperName, 
-                                            Imported_Record_Field_Name__c,
-                                            Imported_Record_Status_Field_Name__c,
-                                            Is_Deleted__c,
-                                            NamespacePrefix,
-                                            Object_API_Name__c,
-                                            Predecessor__c,
-                                            Relationship_Field__c,
-                                            Relationship_To_Predecessor__c,
-                                            (SELECT MasterLabel,
-                                                DeveloperName,
-                                                Data_Import_Field_Mapping_Set__c,
-                                                Data_Import_Field_Mapping_Set__r.DeveloperName,
-                                                Required__c,
-                                                Source_Field_API_Name__c,
-                                                Target_Field_API_Name__c,
-                                                Target_Object_Mapping__c,
-                                                Target_Object_Mapping__r.DeveloperName,
-                                                Target_Object_Mapping__r.Object_API_Name__c,
-                                                Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
-                                                Is_Deleted__c
-                                            FROM Data_Import_Field_Mappings__r
-                                            WHERE Is_Deleted__c = false
-                                                AND Target_Object_Mapping__r.Is_Deleted__c = false)
-                                    FROM Data_Import_Object_Mapping__mdt
-                                    WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c
-                                        AND Is_Deleted__c = false
-                                    ORDER BY MasterLabel ASC]) {
-
-            if (diom.Data_Import_Field_Mappings__r != null &&
-                diom.Data_Import_Field_Mappings__r.size() > 0) {
-
-                fieldMappings.addAll(diom.Data_Import_Field_Mappings__r);
-            }
-
-            if (diom.Imported_Record_Field_Name__c != null) {
-                if (UTIL_Namespace.shouldAlignNamespace) {
-                    diom.Imported_Record_Field_Name__c = 
-                        UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Imported_Record_Field_Name__c);
-                }
-                
-                importedRecordFieldNames.add(diom.Imported_Record_Field_Name__c.toLowerCase());
-            }
-            
-            BDI_ObjectMapping objectMapping = new BDI_ObjectMapping(diom);
-            this.objectMappingByDevName.put(objectMapping.DeveloperName,objectMapping);
-        }
-
-
-        if (fieldMappings != null) {
-            for (Data_Import_Field_Mapping__mdt difm : fieldMappings) {
-
-                BDI_FieldMapping fieldMapping = new BDI_FieldMapping(difm);
-
-                BDI_FieldMapping[] tempFieldMappings = new BDI_FieldMapping[]{};
-
-                if (fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name) != null) {
-                    tempFieldMappings = fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name);
-                }
-
-                tempFieldMappings.add(fieldMapping);
-                fieldMappingByDevName.put(fieldMapping.DeveloperName,fieldMapping);
-                String objectAndField = fieldMapping.Target_Object_API_Name + '.' + fieldMapping.Target_Field_API_Name;
-                fieldMappingByTargetFieldName.put(objectAndField,fieldMapping);
-                fieldMappingsByObjMappingDevName.put(fieldMapping.Target_Object_Mapping_Dev_Name,tempFieldMappings);
-                fieldMappingsByObjMappingLegacyName.put(
-                    difm.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
-                    tempFieldMappings);
-            }
-        }
+        diFieldMappingSet = getDataImportFieldMappingSets()[0];
+        List<Data_Import_Object_Mapping__mdt> dataImportObjectMappings =
+            getDataImportObjectMappingMetadata(diFieldMappingSet);
+        populateObjectMappings(dataImportObjectMappings);
+        populateFieldMappings(dataImportObjectMappings);
 
         if (includeUtilityFields) {
             addUtilityFields(fieldMappingInstance.objectMappingByDevName,
@@ -306,6 +223,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     * set name and returns an instance of BDI_FieldMappingSet.
     *
     * @param fieldMappingSetName: Developer name of a Data_Import_Field_Mapping_Set__mdt record.
+    * @param includeUtilityFields
     *
     * @return fieldMappingSet: Instance of BDI_FieldMappingSet.
     */
@@ -315,6 +233,118 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
         getInstance(fieldMappingSetName, includeUtilityFields);
         return fieldMappingInstance.fieldMappingSet;
+    }
+
+    /******************************************************************************************************************
+     * @description Returns data required to build object mapping and field mapping wrapper objects
+     * @param diFieldMappingSet Data Import Field Mapping Set
+     * @return A list of Data Import Object Metadata
+     */
+    private List<Data_Import_Object_Mapping__mdt> getDataImportObjectMappingMetadata (
+        Data_Import_Field_Mapping_Set__mdt diFieldMappingSet) {
+        return [
+            SELECT Id,
+                MasterLabel,
+                Custom_Mapping_Logic_Class__c,
+                DeveloperName,
+                Data_Import_Object_Mapping_Set__c,
+                Data_Import_Object_Mapping_Set__r.DeveloperName,
+                Imported_Record_Field_Name__c,
+                Imported_Record_Status_Field_Name__c,
+                Is_Deleted__c,
+                NamespacePrefix,
+                Object_API_Name__c,
+                Predecessor__c,
+                Relationship_Field__c,
+                Relationship_To_Predecessor__c,
+                    (SELECT MasterLabel,
+                    DeveloperName,
+                    Data_Import_Field_Mapping_Set__c,
+                    Data_Import_Field_Mapping_Set__r.DeveloperName,
+                    Required__c,
+                    Source_Field_API_Name__c,
+                    Target_Field_API_Name__c,
+                    Target_Object_Mapping__c,
+                    Target_Object_Mapping__r.DeveloperName,
+                    Target_Object_Mapping__r.Object_API_Name__c,
+                    Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                    Is_Deleted__c
+                FROM Data_Import_Field_Mappings__r
+                WHERE Is_Deleted__c = false
+                    AND Target_Object_Mapping__r.Is_Deleted__c = false)
+            FROM Data_Import_Object_Mapping__mdt
+            WHERE Data_Import_Object_Mapping_Set__c =: diFieldMappingSet.Data_Import_Object_Mapping_Set__c
+                AND Is_Deleted__c = false
+            ORDER BY MasterLabel ASC
+        ];
+    }
+
+    private List<Data_Import_Field_Mapping_Set__mdt> getDataImportFieldMappingSets () {
+        return [
+            SELECT Id,
+                MasterLabel,
+                DeveloperName,
+                Data_Import_Object_Mapping_Set__c,
+                Data_Import_Object_Mapping_Set__r.DeveloperName
+            FROM Data_Import_Field_Mapping_Set__mdt
+            WHERE DeveloperName =: fieldMappingSetName LIMIT 1
+        ];
+    }
+
+    /******************************************************************************************************************
+    * @description Builds various maps for field mappings based on retrieved data import object mappings
+    * @param dataImportObjectMappings List of Data Import Object Mapping Metadata
+    */
+    private void populateFieldMappings (List<Data_Import_Object_Mapping__mdt> dataImportObjectMappings) {
+        for (Data_Import_Object_Mapping__mdt diom : dataImportObjectMappings) {
+            if (hasFieldMappings(diom)) {
+                for (Data_Import_Field_Mapping__mdt difm : diom.Data_Import_Field_Mappings__r) {
+                    BDI_FieldMapping fieldMapping =  new BDI_FieldMapping();
+                    fieldMapping.withBaseFieldMappingFields(difm).withFieldDescribeInfo();
+                    buildFieldMappingDataStructures(fieldMapping, difm);
+                }
+            }
+        }
+    }
+
+    private void buildFieldMappingDataStructures (BDI_FieldMapping fieldMapping, Data_Import_Field_Mapping__mdt difm) {
+        BDI_FieldMapping[] tempFieldMappings = new BDI_FieldMapping[]{};
+        if (fieldMappingsByObjMappingDevName.get(fieldMapping.Target_Object_Mapping_Dev_Name) != null) {
+            tempFieldMappings = fieldMappingsByObjMappingDevName.get(
+                fieldMapping.Target_Object_Mapping_Dev_Name);
+        }
+        tempFieldMappings.add(fieldMapping);
+        fieldMappingByDevName.put(fieldMapping.DeveloperName,fieldMapping);
+        String objectAndField =
+            fieldMapping.Target_Object_API_Name + '.' + fieldMapping.Target_Field_API_Name;
+        fieldMappingByTargetFieldName.put(objectAndField,fieldMapping);
+        fieldMappingsByObjMappingDevName.put(fieldMapping.Target_Object_Mapping_Dev_Name,tempFieldMappings);
+        fieldMappingsByObjMappingLegacyName.put(
+            difm.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c, tempFieldMappings);
+    }
+
+    private Boolean hasFieldMappings (Data_Import_Object_Mapping__mdt diom) {
+        return diom.Data_Import_Field_Mappings__r != null &&
+            diom.Data_Import_Field_Mappings__r.size() > 0;
+    }
+
+    /******************************************************************************************************************
+     * @description Builds a map of object mapping developer name to BDI Object mapping object
+     * @param dataImportObjectMappings List of Data Import Object Mapping Metadata
+     */
+    private void populateObjectMappings (
+        List<Data_Import_Object_Mapping__mdt> dataImportObjectMappings) {
+        for (Data_Import_Object_Mapping__mdt diom : dataImportObjectMappings) {
+            if (diom.Imported_Record_Field_Name__c != null) {
+                if (UTIL_Namespace.shouldAlignNamespace) {
+                    diom.Imported_Record_Field_Name__c =
+                        UTIL_Namespace.alignSchemaNSWithEnvironment(diom.Imported_Record_Field_Name__c);
+                }
+                importedRecordFieldNames.add(diom.Imported_Record_Field_Name__c.toLowerCase());
+            }
+            BDI_ObjectMapping objectMapping = new BDI_ObjectMapping(diom);
+            this.objectMappingByDevName.put(objectMapping.DeveloperName, objectMapping);
+        }
     }
 
     /*******************************************************************************************************
@@ -375,6 +405,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     * @param developerName: Object Mapping developer name.
     * @param masterLabel: Object Mapping master label, this will display in the UI.
     * @param objectApiName: The target sObject API name.
+     * @return BDI_ObjectMapping
     */
     private static BDI_ObjectMapping constructSimulatedObjectMapping(String developerName,
         String masterLabel,
@@ -395,6 +426,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     *
     * @param fieldDescribe: Describe info of the field we need a Field Mapping for.
     * @param parentObjectMapping: The parent object mapping this Field Mapping needs to reference.
+    * @return BDI_FieldMapping
     */
     private static BDI_FieldMapping constructSimulatedFieldMapping(Schema.DescribeFieldResult fieldDescribe,
         BDI_ObjectMapping parentObjectMapping) {

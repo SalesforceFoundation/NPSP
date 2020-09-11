@@ -1999,6 +1999,9 @@
         <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
         <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIFieldMappingProblemHeader</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart1</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart2</members>
         <members>bdiOMUIGroupNameHelp</members>
         <members>bdiOMUIGroupNameLabel</members>
         <members>bdiOMUIImportDetailsTitle</members>
