@@ -40,8 +40,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Trigger Handler on Contacts that handles managing Households (Objects) and naming exclusions
     * on contact.
-    * @param listNew List of Contacts from trigger new.
-    * @param listOld List of Contacts from trigger old.
+    * @param newlist List of Contacts from trigger new.
+    * @param oldlist List of Contacts from trigger old.
     * @param triggerAction Which trigger event (BeforeInsert, AfterInsert, etc.).
     * @param objResult DescribeSObjectResult for Contacts
     * @return dmlWrapper The objects to insert/update/delete
@@ -53,7 +53,15 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         list<Contact> oldContacts = oldlist;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
-        //if this is before insert or update, sync the household name exclustions
+        //prevent execution of BeforeUpdate in ACCT_Accounts_TDTM
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, true);
+        }
+        else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
+        }
+
+        //if this is before insert or update, sync the household name exclusions
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             for (integer i=0; i<contacts.size();i++) {
                 Contact con = contacts[i];
