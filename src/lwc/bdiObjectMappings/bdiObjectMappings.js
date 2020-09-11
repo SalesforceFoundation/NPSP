@@ -1,12 +1,10 @@
 import { LightningElement, track, api } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getObjectMappings from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectMappings';
-import getObjectOptions from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getObjectOptions';
+import getAdvancedMappingObjectData from
+        '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getAdvancedMappingObjectData';
 import createDataImportObjectMapping
     from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.createDataImportObjectMapping';
 import { registerListener, unregisterAllListeners, fireEvent} from 'c/pubsubNoPageRef';
-import getNamespaceWrapper
-    from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
+import { getNamespace, showToast, isNull } from 'c/utilCommon';
 
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 import bdiOMUIChildParentLabel from '@salesforce/label/c.bdiOMUIChildParentLabel';
@@ -35,28 +33,26 @@ import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3
 import bdiOMUILongDeployment from '@salesforce/label/c.bdiOMUILongDeployment';
 import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
 import bdiFMUILongDeploymentMessage from '@salesforce/label/c.bdiFMUILongDeploymentMessage';
+import bdiOMUIFieldMappingProblemHeader from '@salesforce/label/c.bdiOMUIFieldMappingProblemHeader';
+import bdiOMUIFieldMappingProblemMessagePart1 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart1';
+import bdiOMUIFieldMappingProblemMessagePart2 from '@salesforce/label/c.bdiOMUIFieldMappingProblemMessagePart2';
+import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+const NPSP_SETTINGS_URL = '/lightning/n/NPSP_Settings';
 
 export default class bdiObjectMappings extends LightningElement {
-    @track displayObjectMappings = true;
-    @track isLoading = true;
-    @track isModalOpen = false;
-    @track columns = [];
-    @track objectMappings;
-
-    @api objectMapping;
-    @api objectOptions;
     @api shouldRender;
-
-
-    @track npspSettingsURL = '/lightning/n/npsp__NPSP_Settings';  
-
+    @track brokenMappings = [];
+    displayObjectMappings = true;
+    isLoading = true;
+    isModalOpen = false;
+    columns = [];
+    objectMappings;
+    objectMapping;
+    objectOptions;
     deploymentTimer;
     deploymentTimeout = 10000;
-
     diObjectMappingSetDevName;
-    npspNS;
-    namespace;
-    namespaceWrapper;
+
     
     customLabels = {
         bdiOMUIChildParentLabel,
@@ -81,7 +77,10 @@ export default class bdiObjectMappings extends LightningElement {
         stgHelpAdvancedMapping3,
         bdiOMUILongDeployment,
         bdiFMUILongDeploymentLink,
-        bdiFMUILongDeploymentMessage
+        bdiFMUILongDeploymentMessage,
+        bdiOMUIFieldMappingProblemHeader,
+        bdiOMUIFieldMappingProblemMessagePart1,
+        bdiOMUIFieldMappingProblemMessagePart2
     };
 
     constructor() {
@@ -103,14 +102,10 @@ export default class bdiObjectMappings extends LightningElement {
     */
     connectedCallback() {
         registerListener('showobjectmappings', this.handleShowObjectMappings, this);
-        registerListener('showfieldmappings', this.handleShowFieldMappings, this);
         registerListener('deploymentResponse', this.handleDeploymentResponse, this);
         registerListener('startDeploymentTimeout', this.handleDeploymentTimeout, this);
         registerListener('refresh', this.refresh, this);
-
-        this.retrieveObjectMappings();
-        this.retrieveObjectOptions();
-        this.getPackageNamespace();
+        this.retrieveAdvancedMappingObjectData();
     }
 
     /*******************************************************************************
@@ -120,42 +115,29 @@ export default class bdiObjectMappings extends LightningElement {
         unregisterAllListeners(this);
     }
 
-    /*******************************************************************************
-    * @description retrieves the namespace prefix
-    */
-    getPackageNamespace() {
-        getNamespaceWrapper()
-            .then((data) => {
-                this.namespaceWrapper = data;
-                this.namespace = data.currentNamespace;
-                this.npspNS = data.npspNamespace;
-                //if we are not in a namespaced npsp org then remove the prefix from
-                //the page url.
-                if (this.namespace !== this.npspNS) {
-                    let newPrefix;
+    get namespace() {
+        return getNamespace(DATA_IMPORT.objectApiName);
+    }
 
-                    if (this.namespace) {
-                        newPrefix = this.namespace + '__';
-                    } else {
-                        newPrefix = '';
-                    }
+    get npspSettingsURL () {
+        return !isNull(this.namespace) ? NPSP_SETTINGS_URL.replace(
+            'n/', `n/${this.namespace}__`) : NPSP_SETTINGS_URL;
+    }
 
-                    this.npspSettingsURL = this.npspSettingsURL.replace(this.npspNS +'__',newPrefix);
-                }
-            })
-            .catch((error) => {
-                this.handleError(error);
-            });        
+    get namespaceWrapper () {
+        return {
+            currentNamespace : this.namespace,
+            npspNamespace: this.namespace
+        };
     }
 
     /*******************************************************************************
     * @description Refreshes object mappings data.  Usually called after save/delete.
     */
-    @api
     refresh() {
         if (this.displayObjectMappings) {
             this.isLoading = true;
-            this.retrieveObjectMappings();
+            this.retrieveAdvancedMappingObjectData();
         }
     }
 
@@ -163,11 +145,14 @@ export default class bdiObjectMappings extends LightningElement {
     * @description Call apex method 'getObjectMappings' to get
     * a list of all non-deleted object mappings
     */
-    retrieveObjectMappings() {
-        getObjectMappings()
+    retrieveAdvancedMappingObjectData() {
+        getAdvancedMappingObjectData()
             .then((data) => {
-                this.objectMappings = data;
-                this.diObjectMappingSetDevName = this.objectMappings[0].Data_Import_Object_Mapping_Set_Dev_Name;
+                this.processBrokenMappingReferences(data.objectMappings);
+                this.objectOptions = data.objectOptions;
+                this.objectMappings = data.objectMappings;
+                this.diObjectMappingSetDevName = data.objectMappings[0].
+                        Data_Import_Object_Mapping_Set_Dev_Name;
                 this.isLoading = false;
             })
             .catch((error) => {
@@ -176,20 +161,24 @@ export default class bdiObjectMappings extends LightningElement {
             });
     }
 
-    /*******************************************************************************
-    * @description Call apex method 'getObjectOptions' to get
-    * a list of all objects that will be valid for creating object mappings on.
-    */
-    retrieveObjectOptions() {
-        getObjectOptions()
-            .then(result => {
-                this.objectOptions = result;
-            })
-            .catch(error => {
-                this.error = error;
-                this.handleError(error);
-            });
+    /**
+     * @description Extracts broken field mapping references from retrieved
+     * object mappings
+     * @param objectMappings
+     */
+    processBrokenMappingReferences (objectMappings) {
+        this.brokenMappings = [];
+        objectMappings.forEach(mapping => {
+            if (mapping.hasOwnProperty('Field_Mappings')) {
+                mapping.Field_Mappings.forEach(fieldMapping => {
+                    this.brokenMappings.push(
+                        `${mapping.MasterLabel} : ${fieldMapping.MasterLabel} (${fieldMapping.Target_Field_API_Name})`);
+
+                });
+            }
+        });
     }
+
     
     /*******************************************************************************
     * @description shows the object mappings component and refreshes the data
@@ -199,13 +188,13 @@ export default class bdiObjectMappings extends LightningElement {
         this.refresh();
     }
 
-    /*******************************************************************************
-    * @description Shows the field mappings component and passes in the selected
-    * object mapping.
-    */
-    handleShowFieldMappings(event) {
-        this.objectMapping = event.objectMapping;
-        this.displayObjectMappings = false;
+
+    get hasBrokenMetadataReferences () {
+        return this.brokenMappings.length > 0;
+    }
+
+    get brokenFieldReferencesWarningMessage () {
+        return `${this.customLabels.bdiOMUIFieldMappingProblemMessagePart1} ${this.customLabels.bdiOMUIFieldMappingProblemMessagePart2}`
     }
 
     /*******************************************************************************
@@ -229,6 +218,7 @@ export default class bdiObjectMappings extends LightningElement {
         let rowString;
         switch (actionName) {
             case 'goToFieldMappings':
+                this.displayObjectMappings = false;
                 fireEvent(this.pageRef,'showfieldmappings', {objectMapping:row});
                 break;
 
@@ -246,7 +236,7 @@ export default class bdiObjectMappings extends LightningElement {
                     })
                     .catch((error) => {
                         this.isLoading = false;
-                        this.showToast(
+                        showToast(
                             'Error',
                             '{0}. {1}. {2}.',
                             'error',
@@ -269,7 +259,6 @@ export default class bdiObjectMappings extends LightningElement {
     * it is a core object mapping.
     */
     getRowActions(row, doneCallback) {
-
         const actions = [
             { label: bdiOMUIViewFieldMappingsLabel, name: 'goToFieldMappings' }
         ];
@@ -306,7 +295,7 @@ export default class bdiObjectMappings extends LightningElement {
                     event.deploymentId +
                     '%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp';
 
-                that.showToast(
+                showToast(
                     bdiOMUILongDeployment,
                     bdiFMUILongDeploymentMessage + ' {0}',
                     'warning',
@@ -338,10 +327,10 @@ export default class bdiObjectMappings extends LightningElement {
             const failMessage = `${unsuccessful} ${bdiOMUIObjectGroupsTitle} ${bdiFMUIUpdate}. ${bdiFMUITryAgain}.`;
             const succeeded = status === 'Succeeded';
             
-            this.showToast(
+            showToast(
                 `${succeeded ? successMessage : failMessage}`,
                 '',
-                succeeded ? 'success' : 'error');
+                succeeded ? 'success' : 'error','',[]);
         }
     }
     /*******************************************************************************
@@ -365,39 +354,17 @@ export default class bdiObjectMappings extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates and dispatches a ShowToastEvent
-    *
-    * @param {string} title: Title of the toast, dispalyed as a heading.
-    * @param {string} message: Message of the toast. It can contain placeholders in
-    * the form of {0} ... {N}. The placeholders are replaced with the links from
-    * messageData param
-    * @param {string} mode: Mode of the toast
-    * @param {array} messageData: List of values that replace the {index} placeholders
-    * in the message param
-    */
-    showToast(title, message, variant, mode, messageData) {
-        const event = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-            mode: mode,
-            messageData: messageData
-        });
-        this.dispatchEvent(event);
-    }
-
-    /*******************************************************************************
     * @description Creates and dispatches an error toast
     *
     * @param {object} error: Event holding error details
     */
     handleError(error) {
         if (error && error.status && error.body) {
-            this.showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
+            showToast(`${error.status} ${error.statusText}`, error.body.message, 'error', 'sticky');
         } else if (error && error.name && error.message) {
-            this.showToast(`${error.name}`, error.message, 'error', 'sticky');
+            showToast(`${error.name}`, error.message, 'error', 'sticky');
         } else {
-            this.showToast(stgUnknownError, '', 'error', 'sticky');
+            showToast(stgUnknownError, '', 'error', 'sticky');
         }
     }
 }
