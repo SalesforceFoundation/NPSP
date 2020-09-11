@@ -1,6 +1,8 @@
-<aura:component extends="c:autocompleteOption">
-    <li class="slds-lookup__item">
-        <span>
+<aura:component extends="c:autocompleteOption" >
+    <aura:registerEvent name="keypressEvent" type="c:HH_KeypressEvent"/>
+    <aura:handler event="c:HH_NewFocussedElement" action="{!c.handleNewFocussedElement}"/>
+    <li class="slds-lookup__item" role="listitem" tabindex="0" onkeydown="{!c.handleKeyPress}" id="{!v.value.Id}" onclick="{!c.handleClick}">
+        <span role="option">
             <div class="slds-media slds-tile slds-hint-parent">
                 <div class="slds-media__figure">
                     <lightning:icon iconName="{!'standard:' + (!empty(v.value.HHId__c) ? 'household' : 'contact')}"
@@ -9,7 +11,7 @@
                 <div class="slds-media__body">
                     <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
                         <p class="slds-tile__title slds-truncate">{!v.value.Name}</p>
-                        <lightning:buttonIcon iconName="utility:new" variant="bare" onclick="{!c.handleClick}"
+                        <lightning:buttonIcon iconName="utility:new" variant="bare"  tabindex="-1"
                             class="slds-shrink-none" size="large" alternativeText="{!$Label.npo02.Add}" />
                     </div>
                     <div class="slds-tile__detail slds-text-body_small">
