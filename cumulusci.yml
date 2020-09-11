@@ -1152,7 +1152,7 @@ flows:
                     apex: createTestingUser();
 
     test_data_rd2:
-        description: Creates 100 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records.
+        description: Creates 1000 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records.
         group: NPSP
         steps:
             1:
@@ -1178,9 +1178,12 @@ flows:
                         - CRLP_Rollup_TDTM
                         - RLLP_OppRollup_TDTM
                         - RD2_RecurringDonationsOpp_TDTM
+                        - ALLO_Allocations_TDTM:Allocation__c
+                        - ALLO_Allocations_TDTM:npe01__OppPayment__c
+                        - ALLO_PaymentSync_TDTM
+                        - REL_Relationships_TDTM
                         - CON_ContactMerge_TDTM
                         - ACCT_AccountMerge_TDTM
-                        - REL_Relationships_TDTM
                         - CON_CascadeDeleteLookups_TDTM
                         - ACCT_CascadeDeleteLookups_TDTM
                     active: false
@@ -1222,12 +1225,15 @@ flows:
                 ## The actual data-loading task.
                 ## Use command line parameters to override the num_records and batch_size parameters
                 options:
-                    generator_yaml: datasets/rd2/data_factory_with_rd2.yml
-                    num_records: 100
+                    generator_yaml: datasets/rd2/data_recipe_with_rd2.yml
+                    num_records: 1000
                     num_records_tablename: Contact
-                    batch_size: 200
+                    batch_size: 200000
                     bulk_mode: parallel
                     managed: true
+                    mapping: datasets/rd2/data_recipe_with_rd2_mapping.yml
+                    working_directory: ./tmp
+
             9:
                 task: restore_triggers
                 ## Reactivate the Rollup and Merge triggers after data loading completes
@@ -1236,6 +1242,9 @@ flows:
                         - RD2_RecurringDonationsOpp_TDTM
                         - CRLP_Rollup_TDTM
                         - RLLP_OppRollup_TDTM
+                        - ALLO_Allocations_TDTM:Allocation__c
+                        - ALLO_Allocations_TDTM:npe01__OppPayment__c
+                        - ALLO_PaymentSync_TDTM
                     active: true
                     restore: false
                     managed: true

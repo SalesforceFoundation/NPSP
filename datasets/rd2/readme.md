@@ -4,12 +4,12 @@ Snowfakery Documentation: https://snowfakery.readthedocs.io/en/docs/
 
 ## YML Files:
 
-### rd1_factory:
+### rd1_recipe:
 - This yml will create RD1 format records
 - It is feasible to disable *all* NPSP Triggers before executing this to avoid row lock errors
 - Running the standard RD1 batch job after the import completes will create all historical and future installment opportunities
 
-### rd2_factory:
+### rd2_recipe:
 - This yml creates RD2 format records primarily
 - A Household Contact or Organization Account is created for each RD
 - Installment Periods, OpenEndedStatus types, and other values distributed across all possible options
@@ -24,10 +24,10 @@ Snowfakery Documentation: https://snowfakery.readthedocs.io/en/docs/
   - "Installment Opportunity Auto-Creation": "Disable_First_Installment" 
 - Run the standard RD2 batch job after the import completes to allow the first installment opportunity to be created.
   
-`cci task run generate_and_load_from_yaml -o generator_yaml datasets/rd2/rd2_factory.yml -o num_records 100 -o num_records_tablename npe03__Recurring_Donation__c --org {org_alias}`
+`cci task run generate_and_load_from_yaml -o generator_yaml datasets/rd2/rd2_recipe.yml -o num_records 100 -o num_records_tablename npe03__Recurring_Donation__c --org {org_alias}`
  
 
-### data_factory_with_rd2:
+### data_recipe_with_rd2:
 - This yml will create Contacts records with the following:
    - 95% of all created Contacts will have 1 Enhanced Recurring Donation
        - 95% of the RD's are for this Household Contact
@@ -50,7 +50,7 @@ Snowfakery Documentation: https://snowfakery.readthedocs.io/en/docs/
   - "Installment Opportunity Auto-Creation": "Disable_First_Installment" 
 - Run the standard RD2 batch job after the import completes to allow the first installment opportunity to be created.
   
-`cci task run generate_and_load_from_yaml -o generator_yaml datasets/rd2/data_factory_with_rd2.yml -o num_records 100 -o num_records_tablename Contact --org {org_alias}`
+`cci task run generate_and_load_from_yaml -o generator_yaml datasets/rd2/data_recipe_with_rd2.yml -o num_records 100 -o num_records_tablename Contact --org {org_alias}`
 
 ##### To generate 100 Contacts (the default) with sample RD2 and Opp data:
 `cci flow run test_data_rd2 --org {orgname}`
