@@ -812,6 +812,9 @@
         <members>HH_Container</members>
         <members>HH_ContainerLoadedEvent</members>
         <members>HH_HouseholdSavedEvent</members>
+        <members>HH_KeypressEvent</members>
+        <members>HH_NewFocussedElement</members>
+        <members>HH_ReachFooter</members>
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
