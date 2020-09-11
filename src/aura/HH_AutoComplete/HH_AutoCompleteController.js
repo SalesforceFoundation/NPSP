@@ -1,28 +1,38 @@
 ({
     handleNewContact: function(component, event, helper) {
-        var con = {'sobjectType': 'Contact'};
-        var autocomplete = component.find('autocomplete');
-        var name = autocomplete.get('v.displayValue');
-        var list = name.split(' ');
-        if (list.length === 0) {
-            con.LastName = name;
-        } else if (list.length === 1) {
-            con.LastName = list[0];
-        } else {
-            con.FirstName = list[0];
-            con.LastName = list[1];
-            for (var i = 2; i < list.length; i++) {
-                con.LastName += ' ' + list[i];
-            }
-        }
-        var evt = component.get('e.ContactNewEvent');
-        evt.setParams({ "contact" : con });
-        evt.fire();
+       helper.fireNewContactEvent(component);
     },
-    
+
+    handleReachFooter : function(component, event, helper) {
+        document.getElementById("newContact").focus();
+    },
+
     clearList: function(component) {
         var autocomplete = component.find('autocomplete');
         autocomplete.clearList();
-    }
+    },
+    // Handle keypress event on the elements of the list
+    handleKeyPress : function(component, event, helper) {
+        /*
+          Need to check if the key pressed is enter. If so, the element has to trigger the selected element event
+          if no, an event has to be raised to the autocomplete component to manage the new focus
+          */
+
+        //stopping propagation to avoid lastpass bug
+        event.preventDefault()
+        event.stopPropagation()
+        const key = event.key;
+        if (key == 'Enter') {
+            helper.fireNewContactEvent(component);
+            return;
+        }
+        
+        var event = $A.get("e.c:HH_KeypressEvent");
+        event.setParams({
+            "keyPressed" : key
+        });
+        event.fire();
+     },
+
 
 })
