@@ -1,0 +1,1 @@
+<aura:event type="COMPONENT" description="Event that fires when you reach the footer of the autocomplete list"/>
