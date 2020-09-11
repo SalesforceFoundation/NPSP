@@ -1,6 +1,5 @@
 <template>
     <template if:true={displayObjectMappings}>
-        
         <c-bdi-object-mapping-modal
             is-modal-open={isModalOpen}
             object-options={objectOptions}
@@ -21,10 +20,10 @@
             <template if:true={shouldRender}>
                 <div class="slds-size_1-of-2 slds-m-bottom_small">
                     <lightning-button
-                        label={customLabels.bdiOMUICreateNewObjectGroup}
-                        title={customLabels.bdiOMUICreateNewObjectGroup}
-                        onclick={handleOpenModal}
-                        class="slds-m-left_x-small slds-float_right">
+                            class="slds-m-left_x-small slds-float_right"
+                            label={customLabels.bdiOMUICreateNewObjectGroup}
+                            onclick={handleOpenModal}
+                            title={customLabels.bdiOMUICreateNewObjectGroup}>
                     </lightning-button>
                 </div>
             </template>
@@ -32,6 +31,26 @@
                 <h1 class="slds-text-heading_medium slds-text-heading_medium_extension slds-m-bottom_x-small">{customLabels.bdiAdvancedMapping}</h1>
                 <template if:true={shouldRender}>
                     <h2 class="slds-text-heading_small slds-text-heading_small_extension slds-m-bottom_medium">{customLabels.bdiOMUIObjectGroupsTitle}</h2>
+
+                    <template if:true={hasBrokenMetadataReferences}>
+                        <div class="slds-size_1-of-1">
+                            <c-util-page-level-message title={customLabels.bdiOMUIFieldMappingProblemHeader}
+                                                       subtitle={brokenFieldReferencesWarningMessage}
+                                                       variant='warning'>
+                                <ul slot="body"
+                                    class="slds-list_dotted">
+                                    <template for:each={brokenMappings}
+                                              for:item="mapping">
+                                        <li key={mapping}
+                                            aria-label={mapping}
+                                            class="slds-text-color_default">
+                                            {mapping}
+                                        </li>
+                                    </template>
+                                </ul>
+                            </c-util-page-level-message>
+                        </div>
+                    </template>
 
                         <p class="slds-text_extension slds-m-bottom_small">
                             {customLabels.bdiOMUIPageDescriptionPt1}
@@ -68,10 +87,10 @@
                 </div>
                 <div class="slds-size_1-of-2">
                     <lightning-button
-                        label={customLabels.bdiOMUICreateNewObjectGroup}
-                        title={customLabels.bdiOMUICreateNewObjectGroup}
-                        onclick={handleOpenModal}
-                        class="slds-m-left_x-small slds-float_right">
+                            class="slds-m-left_x-small slds-float_right"
+                            label={customLabels.bdiOMUICreateNewObjectGroup}
+                            onclick={handleOpenModal}
+                            title={customLabels.bdiOMUICreateNewObjectGroup}>
                     </lightning-button>
                 </div>
             </template>
