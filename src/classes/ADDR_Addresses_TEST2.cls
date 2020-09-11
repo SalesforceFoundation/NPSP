@@ -1671,6 +1671,56 @@ public with sharing class ADDR_Addresses_TEST2 {
     }
 
     /*********************************************************************************************************
+    * @description Test Household naming executes properly when a custom TDTM trigger updates Account properly
+    * on Address change.
+    **********************************************************************************************************/
+    @isTest
+    private static void shouldCreateNamedHHWhenCustomTDTMTriggerUpdatesAccountOnAddressChange() {
+        final String firstName = 'Test_First_Name';
+        final String lastName = 'Test_Last_Name';
+
+        List<Trigger_Handler__c> triggerHandlers = TDTM_Config_API.getDefaultRecords();
+        triggerHandlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+            Class__c = 'ADDR_Addresses_TEST2.TEST_Account_TDTM', Load_Order__c = 2, Object__c = 'Address__c',
+            Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+        insert triggerHandlers;
+
+        Contact testContact = new Contact(
+            FirstName = firstName,
+            LastName = lastName,
+            Salutation = 'Mr.',
+            Email = 'test@email.com',
+            MailingStreet = '123 Easy Street',
+            MailingCity = 'Esperanza',
+            MailingState = 'CA',
+            MailingPostalCode = '99999',
+            MailingCountry = 'USA'
+        );
+
+        Test.starttest();
+        insert testContact;
+        Test.stopTest();
+
+        testContact = [
+            SELECT
+                Account.Name,
+                Account.npo02__Informal_Greeting__c,
+                Account.npo02__Formal_Greeting__c,
+                Account.AccountNumber
+            FROM Contact
+            WHERE Id = :testContact.Id];
+
+        System.assertEquals(lastName + ' ' +  System.Label.npo02.DefaultHouseholdName, testContact.Account.Name,
+            'Account Name should equal Last Name + Default Household Name');
+        System.assertEquals(firstName, testContact.Account.npo02__Informal_Greeting__c,
+            'Informal Greeting should equal First Name');
+        System.assert(testContact.Account.npo02__Formal_Greeting__c.endsWith(firstName + ' ' + lastName),
+            'Formal Greeting should end with First Name + Last Name');
+        System.assert(String.isNotBlank(testContact.Account.AccountNumber),
+            'Account Number should be populated');
+    }
+
+    /*********************************************************************************************************
     * @description sets Seasonal_Addresses_Batch_Size__c on npo02__Households_Settings__c
     * @param batchSize: value for Seasonal_Addresses_Batch_Size__c
     **********************************************************************************************************/
@@ -1679,5 +1729,31 @@ public with sharing class ADDR_Addresses_TEST2 {
             new npo02__Households_Settings__c (
                 Seasonal_Addresses_Batch_Size__c = batchSize
             ));
+    }
+
+    /*********************************************************************************************************
+    * @description TDTM Class that updates Account on update of Address. The point of this class is to
+    * simulate customer processing that fires on update of Address
+    **********************************************************************************************************/
+    public class TEST_Account_TDTM extends TDTM_Runnable {
+
+        public override DmlWrapper run(
+            List<SObject> newlist,
+            List<SObject> oldlist,
+            Action triggerAction,
+            Schema.DescribeSObjectResult objResult
+        ) {
+            List<Account> accounts = new List<Account>();
+            for (SObject sObj : newlist) {
+                Account acc = new Account(
+                    Id = (Id) sObj.get('Household_Account__c'),
+                    AccountNumber = (String.valueOf(System.Crypto.getRandomLong()).right(9))
+                );
+                accounts.add(acc);
+            }
+            update accounts;
+
+            return null;
+        }
     }
 }
