@@ -10,7 +10,8 @@
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactNewEvent" type="c:HH_ContactNewEvent" />
-
+    <aura:handler name="reachFooter" event="c:HH_ReachFooter" action="{!c.handleReachFooter}" />
+    <aura:registerEvent name="keypressEvent" type="c:HH_KeypressEvent"/>
     <!-- markup follows... -->
 
     <c:autocomplete aura:id="autocomplete"
@@ -29,8 +30,25 @@
 
         <aura:set attribute="listFooter">
             <div class="slds-lookup__item">
-                <lightning:button variant="bare" label="{!$Label.npo02.NewContact}"
-                    iconName="utility:add" iconPosition="left" onclick="{!c.handleNewContact}" />
+                <ul class="slds-lookup__list">
+                    <li id="newContact" class="slds-lookup__item" tabindex="0" onclick="{!c.handleNewContact}" onkeydown="{!c.handleKeyPress}" role="listitem"  data-qa-locator="newContact">
+                        <span role="option">
+                            <div class="slds-media slds-tile slds-hint-parent">
+                                <div class="slds-media__figure">
+                                    <lightning:icon iconName="utility:add"
+                                        class="slds-icon_x-small" size="small"/>
+                                </div>
+                                <div class="slds-media__body">
+                                    <div class="slds-tile__detail slds-text-body_small">
+                                        <ul>
+                                            <li><ui:outputText value="{!$Label.npo02.NewContact}" /></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
             </div>
         </aura:set>
         

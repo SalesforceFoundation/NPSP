@@ -814,6 +814,9 @@
         <members>HH_Container</members>
         <members>HH_ContainerLoadedEvent</members>
         <members>HH_HouseholdSavedEvent</members>
+        <members>HH_KeypressEvent</members>
+        <members>HH_NewFocussedElement</members>
+        <members>HH_ReachFooter</members>
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
@@ -1097,6 +1100,7 @@
         <members>DataImport__c.Donation_Record_Type_Name__c</members>
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
+        <members>DataImport__c.Elevate_Custom_Metadata__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
         <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
@@ -2013,6 +2017,9 @@
         <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
         <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIFieldMappingProblemHeader</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart1</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart2</members>
         <members>bdiOMUIGroupNameHelp</members>
         <members>bdiOMUIGroupNameLabel</members>
         <members>bdiOMUIImportDetailsTitle</members>
