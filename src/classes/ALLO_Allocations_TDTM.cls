@@ -56,6 +56,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         set;
     }
 
+    /* @description The set of ids that were created in the current context by BDI.  Used to make sure that GAU Allocations applied
+    *  at the recurring donation level are cascaded down to opportunities even if they are closed won. */
+    public static Set<Id> bdiCreatedOpptIds = new Set<Id>();
+
     /*******************************************************************************************************
     * @description wrapper class to hold all allocation and opportunity information for a single parent:
     * Opportunity, Campaign, or Recurring Donation.
@@ -408,7 +412,16 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (UserInfo.isMultiCurrencyOrganization()) {
                 oppQuery += ', CurrencyIsoCode';
             }
-            oppQuery+=' FROM Opportunity WHERE (Opportunity.isClosed = FALSE AND npe03__Recurring_Donation__c IN :setRecDonId) OR Id IN :setOppIds';
+        
+            Set<Id> combinedOpptIds = new Set<Id>();
+            combinedOpptIds.addall(setOppIds);
+
+            //Combine the Oppt Ids collected from Allocations and combined them with Oppt Ids created by BDI in this transaction context
+            if (!setRecDonId.isEmpty() && !bdiCreatedOpptIds.isEmpty()) {
+                combinedOpptIds.addAll(bdiCreatedOpptIds);
+            }
+
+            oppQuery+=' FROM Opportunity WHERE (Opportunity.isClosed = FALSE AND npe03__Recurring_Donation__c IN :setRecDonId) OR Id IN :combinedOpptIds';
             listOpps = database.query(oppQuery);
         }
 

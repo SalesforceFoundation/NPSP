@@ -215,6 +215,7 @@ public class BDI_Donations {
             if (!result.isSuccess()) {
                 bdi.LogBDIError(dataImportsToInsert[i], result.getErrors()[0].getMessage(), 'DonationImportStatus__c');
             } else {
+                ALLO_Allocations_TDTM.bdiCreatedOpptIds.add(opportunitiesToInsert[i].Id);
                 dataImportsToInsert[i].DonationImported__c = opportunitiesToInsert[i].Id;
                 if (dataImportsToInsert[i].DonationImportStatus__c != System.Label.bdiMatchedByUserNewOpp) {
                     dataImportsToInsert[i].DonationImportStatus__c = System.Label.bdiCreated;
