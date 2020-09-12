@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>MailingStreet__c</fullName>
+        <label>Mailing Street</label>
+        <encryptionScheme>ProbabilisticEncryption</encryptionScheme>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <length>255</length>
+    </fields>
+    <fields>
+        <fullName>MailingStreet2__c</fullName>
+        <label>Mailing Street2</label>
+        <encryptionScheme>ProbabilisticEncryption</encryptionScheme>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <length>255</length>
+    </fields>
+    <fields>
+        <fullName>MailingCity__c</fullName>
+        <label>Mailing City</label>
+        <encryptionScheme>ProbabilisticEncryption</encryptionScheme>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <length>255</length>
+    </fields>
+    <fields>
+        <fullName>MailingState__c</fullName>
+        <label>Mailing State/Province</label>
+        <encryptionScheme>ProbabilisticEncryption</encryptionScheme>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <length>255</length>
+    </fields>
+    <fields>
+        <fullName>MailingPostalCode__c</fullName>
+        <label>Mailing Zip/Postal Code</label>
+        <encryptionScheme>ProbabilisticEncryption</encryptionScheme>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <length>255</length>
+    </fields>
+    <fields>
+        <fullName>MailingCountry__c</fullName>
+        <label>Mailing Country</label>
+        <encryptionScheme>ProbabilisticEncryption</encryptionScheme>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <length>255</length>
+    </fields>
+</CustomObject>
