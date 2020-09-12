@@ -657,6 +657,29 @@ tasks:
 
 
 flows:
+    install_regression:
+        steps:
+            1:
+                flow: dependencies
+            3:
+                task: None
+
+    regression_org:
+        steps:
+            3:
+                task: None
+            4:
+                task: update_dependencies
+                options:
+                    include_beta: True
+                    security_type: PUSH
+            5:
+                task: install_managed_beta
+                options:
+                    security_type: PUSH
+            6:
+                task: snapshot_changes
+
     config_dev:
         steps:
             3:
