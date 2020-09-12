@@ -4,16 +4,16 @@
         <members>Account.BillingAddress</members>
         <members>Account.Name</members>
         <members>Account.Website</members>
-        <members>Address__c.MailingStreet__c</members>
-        <members>Address__c.MailingStreet2__c</members>
-        <members>Address__c.MailingCity__c</members>
-        <members>Address__c.MailingState__c</members>
-        <members>Address__c.MailingPostalCode__c</members>
-        <members>Address__c.MailingCountry__c</members>
         <members>Contact.MailingAddress</members>
         <members>Contact.Name</members>
         <members>Contact.OtherAddress</members>
         <members>Contact.Title</members>
+        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingStreet__c</members>
+        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingStreet2__c</members>
+        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingCity__c</members>
+        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingState__c</members>
+        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingPostalCode__c</members>
+        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingCountry__c</members>
         <name>CustomField</name>
     </types>
     <version>48.0</version>
