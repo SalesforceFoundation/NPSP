@@ -1005,8 +1005,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     handleAsyncWidgetError(event) {
         let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
+
         let errorObjects = [];
-        if(event.error.isObject) {
+        if (event.error.isObject) {
             // Represents the error response returned from payment services
             let errorObject = JSON.parse(errorResponse);
             errorObject.forEach((message, index) => {
@@ -1015,12 +1016,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     index: index
                 });
             });
+
+        } else if (errorResponse) {
+            let errorObject = errorResponse.message
+                ? errorResponse
+                : {
+                    message: errorResponse,
+                    index: 0
+                };
+            errorObjects.push(errorObject);
         }
 
         this.pageLevelErrorMessageList = [{
             index: 0,
             errorMessage: event.error.message[0],
-            multilineMessages: isNotEmpty(errorObjects) ? errorObjects : errorResponse
+            multilineMessages: errorObjects
         }];
         this.showSpinner = false;
         this.hasPageLevelError = true;

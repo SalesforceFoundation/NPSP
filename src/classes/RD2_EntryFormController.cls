@@ -56,16 +56,23 @@ public with sharing class RD2_EntryFormController {
         'SystemModStamp'
     };
 
+
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static Map<String, Object> getRecurringSettings(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
             : parentId.getSobjectType().getDescribe().getName();
+
+        // Checks whether the Elevate credit card can be displayed
+        // on the form to enter a new Recurring Donation in NPSP and the related commitment in Elevate.
+        // The RD2 controller should be using isIntegrationEnabled() only when GA.
+        Boolean isElevateCustomer = RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && UTIL_FeatureEnablement.isPilotEnabled();	
 
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
@@ -73,7 +80,8 @@ public with sharing class RD2_EntryFormController {
             'parentSObjectType' => parentSObjectType,
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-            'customFieldSets' => getCustomFieldSectionFields()
+            'customFieldSets' => getCustomFieldSectionFields(),
+            'isElevateCustomer' => isElevateCustomer
         };
     }
 
@@ -117,7 +125,7 @@ public with sharing class RD2_EntryFormController {
      * false, the custom UI will display a warning message at the top of the page.
      * @return True if the User has Read access to all required fields in the UI
      */
-    @AuraEnabled(Cacheable=True)
+    @AuraEnabled(cacheable=true)
     public static Boolean checkRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
             'npe03__Amount__c',
@@ -211,7 +219,7 @@ public with sharing class RD2_EntryFormController {
             if (excludedCustomFields.contains(field.getFieldPath())
                 || field.getFieldPath().startsWith('npsp__')
                 || field.getFieldPath().startsWith('npe03__')
-                ||!UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+                || !UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
             ) {
                 continue;
             }
