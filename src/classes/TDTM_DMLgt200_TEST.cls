@@ -337,7 +337,14 @@ private class TDTM_DMLgt200_TEST {
             'There should be exactly ' + insertCnt.format() + ' Contact records');
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
             'There should be exactly ' + insertCnt.format() + ' Household Account records');
-        System.assertEquals(insertCnt, [SELECT Count() FROM Address__c WHERE MailingPostalCode__c = :testZipCode],
+
+        Integer counter = 0;
+        for (Address__c address : [SELECT MailingPostalCode__c FROM Address__c]) {
+            if (address.MailingPostalCode__c == testZipCode) {
+                counter++;
+            }
+        }
+        System.assertEquals(insertCnt, counter,
             'There should be exactly ' + insertCnt.format() + ' Address Records');
     }
 
