@@ -8,10 +8,12 @@ Insert HH_Account:
   sf_object: Account
   table: Account
   fields:
+    description: description
     Name: Name
+    Phone: Phone
   record_type: HH_Account
   filters:
-  - RecordType = 'HH_Account'
+  - record_type = 'HH_Account'
 Insert Account:
   sf_object: Account
   table: Account
@@ -20,7 +22,7 @@ Insert Account:
     Name: Name
     Phone: Phone
   filters:
-  - RecordType is NULL
+  - record_type is NULL
 Insert Campaign:
   sf_object: Campaign
   table: Campaign
@@ -104,7 +106,7 @@ Insert Opportunity:
     StageName: StageName
   record_type: Donation
   filters:
-  - RecordType = 'Donation'
+  - record_type = 'Donation'
   lookups:
     Primary_Contact__c:
       table: Contact
