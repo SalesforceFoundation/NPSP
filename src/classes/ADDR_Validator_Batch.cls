@@ -33,59 +33,90 @@
 * @group Address Management
 * @description Batch class for SmartyStreets address verification. It looks for all populated addresses and updates them if the setting is turned on.
 */
-public class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
+public class ADDR_Validator_Batch extends UTIL_AbstractChunkingLDV_BATCH implements Database.AllowsCallouts {
+    /**
+    * @description # of records in each batch
+    */
+    private static final Integer BATCH_SIZE = 200;
 
-    private String query;
+    /**
+    * @description Chunk size to use when running in LDV Mode
+    */
+    private static final Integer CHUNK_SIZE = 10000000;
 
-    /*******************************************************************************************************
+    /**
+    * @description Control whether or not to skip the already verified address 
+    */
+    private Boolean skipPreviouslyVerified = false;
+
+    /**
     * @description Constructor that initializes the class.
     * @param skipPreviouslyVerified If true, the batch skips over objects that already have any verification records.
     */
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
-    	//turn smartystreets verification on, so the batch verification works even if the checkbox wasn't checked by the user
-    	Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-
-        //query for all US addresses
-        query = 'select id, name, MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, Formula_MailingAddress__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, API_Response__c ' +
-            ' from Address__c where ' +
-            '(MailingCountry__c = null or MailingCountry__c in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
-            'and (MailingStreet__c != null or MailingPostalCode__c != null or (MailingCity__c != null and MailingState__c != null))';
-
-        if (skipPreviouslyVerified) {
-            query += ' and Verified__c != true';
-        }
+        this.skipPreviouslyVerified = skipPreviouslyVerified;
+        this.setBatchSize(BATCH_SIZE);
     }
 
-    /*******************************************************************************************************
-    * @description Collects the records to be passed to the execute method in batches.
-    * @param bc The context for the batch. Provided by the platform.
-    * @return Database.QueryLocator The record set processed in chunks for each iteration of the batch.
-    */
-    public Database.QueryLocator start(Database.BatchableContext bc) {
-        return Database.getQueryLocator(query);
-    }
-
-    /*******************************************************************************************************
+    /**
     * @description Processes the batch of records in the scope.
     * @param bc The context for the batch. Provided by the platform.
     * @param scope The batch records to be process.
     */
-    public void execute(Database.BatchableContext bc, List<Address__c> scope) {
+    public override void doExecute(Database.BatchableContext BC, List<SObject> records) {
+        List<Address__c> addressesToProcess = (List<Address__c>) records;
         List<Address__c> addressesToVerify = new List<Address__c>();
-        for (Address__c a : scope) {
-            if (ADDR_Validator_UTIL.isUSAddress(a)) {
-                addressesToVerify.add(a);
+
+        for (Address__c address : addressesToProcess) {
+            if (this.skipPreviouslyVerified == true && address.Verified__c == true) {
+                continue;
+            }
+
+            if (ADDR_Validator_UTIL.isUSAddress(address)) {
+                addressesToVerify.add(address);
             }
         }
+
         //verify and update this batch of addresses
         if (!addressesToVerify.isEmpty()) {
             ADDR_Validator.verifyAddressRecords(addressesToVerify);
         }
     }
 
-    /*******************************************************************************************************
-    * @description Method to be called after all batches are processed. Required by the interface.
+    /**
+     * @description Define the fields to be queried
+     * @return String
+     */
+    public override String getSOQLFullQueryFieldList() {
+        return 'Id, Name,  Formula_MailingStreetAddress__c, Formula_MailingAddress__c, ' 
+            + 'MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, '
+            + 'MailingPostalCode__c, MailingCountry__c, API_Response__c, Verified__c';
+    }
+
+    /**
+    * @description Define Address__c for the main object that is being processed in the batch
+    * @return String value of SOQLObjectName
     */
-    public void finish(Database.BatchableContext bc) { }
+    public override SObjectType getSObjectType() {
+        return Address__c.getSObjectType();
+    }
+
+    /**
+    * @description Define the WHERE clause in the batch query
+    * @return String
+    */
+    public override String getWhereClause() {
+        return (skipPreviouslyVerified) 
+            ? 'Verified__c != true'
+            : '';
+    }
+
+    /**
+    * @description LDV Chunk Size to use
+    * @return Integer chunk size to use when running in LDV Chunking mode
+    */
+    public override Integer getLDVChunkSize() {
+        return CHUNK_SIZE;
+    }
 
 }
