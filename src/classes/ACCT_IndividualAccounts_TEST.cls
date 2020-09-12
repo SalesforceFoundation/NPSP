@@ -86,7 +86,7 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
 
         //contact should have no AccountId
-        system.assertEquals(null,insertedContacts[0].AccountId);
+        System.assertEquals(null,insertedContacts[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -211,13 +211,13 @@ private class ACCT_IndividualAccounts_TEST {
         Test.stopTest();
 
         Contact[] insertedContacts = [Select Account.npo02__Formal_Greeting__c, FirstName, LastName, AccountId  from Contact where id=:con.id];
-        system.assertEquals('Doctor Jack Ruby', insertedContacts[0].Account.npo02__Formal_Greeting__c);
+        System.assertEquals('Doctor Jack Ruby', insertedContacts[0].Account.npo02__Formal_Greeting__c);
 
         con.Title = 'Hard Worker';
         update con;
 
         Contact[] updatedContacts = [Select Account.npo02__Formal_Greeting__c, FirstName, LastName, AccountId  from Contact where id=:con.id];
-        system.assertEquals('Hard Worker Jack Ruby', updatedContacts[0].Account.npo02__Formal_Greeting__c);
+        System.assertEquals('Hard Worker Jack Ruby', updatedContacts[0].Account.npo02__Formal_Greeting__c);
     }
 
 
@@ -267,12 +267,12 @@ private class ACCT_IndividualAccounts_TEST {
         update insertedContacts;
         insertedContacts = [Select FirstName, LastName, AccountId,npe01__Private__c  from Contact where id=:con.id];
         //contact should have no AccountId
-        system.assertEquals(null,insertedContacts[0].AccountId);
-        system.assert(insertedContacts[0].npe01__Private__c);
+        System.assertEquals(null,insertedContacts[0].AccountId);
+        System.assert(insertedContacts[0].npe01__Private__c);
 
         // account should NOT get deleted
         Account[] acts = [Select Id from Account where Id = :accountId];
-        system.assertEquals(1, acts.size());
+        System.assertEquals(1, acts.size());
     }
 
     /*********************************************************************************************************
@@ -330,7 +330,7 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
 
         //contact should have no AccountId
-        system.assertEquals(null,insertedContacts[0].AccountId);
+        System.assertEquals(null,insertedContacts[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -375,24 +375,24 @@ private class ACCT_IndividualAccounts_TEST {
         UTIL_Debug.debug('****' +insertedcontacts[0].id);
         UTIL_Debug.debug('****' +insertedContacts);
         //one contact should have been created
-        system.assertEquals(1,insertedContacts.size());
+        System.assertEquals(1,insertedContacts.size());
         //the account should have the right type
         if (strProcessor == CAO_Constants_API.ONE_TO_ONE_PROCESSOR)
-            system.assertEquals(CAO_Constants_API.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants_API.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
         else if (strProcessor == CAO_Constants_API.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(CAO_Constants_API.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants_API.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
         //the account should be flagged as an individual
-        system.assertEquals(true,insertedcontacts[0].Account.npe01__SYSTEMIsIndividual__c );
+        System.assertEquals(true,insertedcontacts[0].Account.npe01__SYSTEMIsIndividual__c );
         //the account should have been named correctly
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
-            system.assertEquals(CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + ' ' + CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,insertedcontacts[0].Account.Name);
+            System.assertEquals(CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + ' ' + CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,insertedcontacts[0].Account.Name);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,insertedcontacts[0].Account.Name);
+            System.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX,insertedcontacts[0].Account.Name);
         //relationship should be bi-directional
-        system.assertEquals(insertedcontacts[0].id,insertedcontacts[0].Account.npe01__One2OneContact__c);
+        System.assertEquals(insertedcontacts[0].id,insertedcontacts[0].Account.npe01__One2OneContact__c);
         //addresses should be sync'd
-        system.assertEquals(newContactMailingStreet,insertedcontacts[0].Account.BillingStreet);
-        system.assertEquals(insertedcontacts[0].MailingStreet,insertedcontacts[0].Account.BillingStreet);
+        System.assertEquals(newContactMailingStreet,insertedcontacts[0].Account.BillingStreet);
+        System.assertEquals(insertedcontacts[0].MailingStreet,insertedcontacts[0].Account.BillingStreet);
 
         String updatedContactLastName = 'Contact_forTestsChange';
         String updatedOtherCity = 'Seattle';
@@ -407,17 +407,17 @@ private class ACCT_IndividualAccounts_TEST {
 
         //the account should have been named correctly
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
-            system.assertEquals(updatedContacts[0].firstName + ' ' + updatedContacts[0].LastName,updatedContacts[0].Account.Name);
+            System.assertEquals(updatedContacts[0].firstName + ' ' + updatedContacts[0].LastName,updatedContacts[0].Account.Name);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(updatedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX,updatedContacts[0].Account.Name);
+            System.assertEquals(updatedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX,updatedContacts[0].Account.Name);
         //relationship should be bi-directional
-        system.assertEquals(updatedContacts[0].id,updatedContacts[0].Account.npe01__One2OneContact__c);
+        System.assertEquals(updatedContacts[0].id,updatedContacts[0].Account.npe01__One2OneContact__c);
         //addresses should be sync'd
-        system.assertEquals(newContactMailingStreet,updatedContacts[0].MailingStreet);
+        System.assertEquals(newContactMailingStreet,updatedContacts[0].MailingStreet);
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-	        system.assertEquals(updatedOtherCity,updatedContacts[0].Account.ShippingCity);
-	        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
-	        system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
+	        System.assertEquals(updatedOtherCity,updatedContacts[0].Account.ShippingCity);
+	        System.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
+	        System.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
         }
     }
 
@@ -467,10 +467,10 @@ private class ACCT_IndividualAccounts_TEST {
         //Original Account should still be there
         Account[] originalAccount = [Select id from Account where Id=:originalAccountId];
 
-        system.assertEquals(1,originalAccount.size());
+        System.assertEquals(1,originalAccount.size());
 
         //AccountId of updated contact should match the orignial Account
-        system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
+        System.assertEquals(originalAccountId,updatedContacts[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -523,30 +523,37 @@ private class ACCT_IndividualAccounts_TEST {
                 MailingStreet,npe01__Organization_Type__c,Account.BillingStreet from Contact where id=:con.id];
 
         //AccountId of updated contact should match the orignial Account
-        system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
+        System.assertEquals(originalAccountId,updatedContacts[0].AccountId);
 
         //org type should be set correctly
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-            system.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, updatedContacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, updatedContacts[0].npe01__Organization_Type__c);
         } else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, updatedContacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, updatedContacts[0].npe01__Organization_Type__c);
         }
 
         //the account should have been named correctly
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-            system.assertEquals(updatedContacts[0].FirstName + ' ' + updatedContacts[0].LastName, updatedContacts[0].Account.Name);
+            System.assertEquals(updatedContacts[0].FirstName + ' ' + updatedContacts[0].LastName, updatedContacts[0].Account.Name);
         } else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-            system.assertEquals(updatedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, updatedContacts[0].Account.Name);
-            system.assertEquals(2, [SELECT Count() FROM Address__c WHERE Household_Account__c = :originalAccountId],
+            System.assertEquals(updatedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, updatedContacts[0].Account.Name);
+            System.assertEquals(2, [SELECT Count() FROM Address__c WHERE Household_Account__c = :originalAccountId],
                 'There should two addresses attached to the Household');
-            system.assertEquals(1, [SELECT Count() FROM Address__c WHERE MailingStreet__c = :updateContactMailingStreet],
+
+            Integer attachedAddressCount = 0;
+            for (Address__c address : [SELECT Id, MailingStreet__c FROM Address__c]) {
+                if (address.MailingStreet__c == updateContactMailingStreet) {
+                    attachedAddressCount++;
+                }
+            }
+            System.assertEquals(1, attachedAddressCount,
                 'There should one address with the new street attached to the Household');
         }
 
         //addresses should be sync'd
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-            system.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
-            system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
+            System.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
+            System.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
         }
     }
 
@@ -586,14 +593,14 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContacts = [Select Account.Name,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
         //the contact should have the right type
         if (strProcessor == CAO_Constants_API.BUCKET_PROCESSOR)
-            system.assertEquals(CAO_Constants_API.BUCKET_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants_API.BUCKET_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
         else if (strProcessor == CAO_Constants_API.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(CAO_Constants_API.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants_API.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
         //the account should have been named correctly
         if (strProcessor == CAO_Constants_API.BUCKET_PROCESSOR)
-            system.assertEquals(CAO_Constants_API.BUCKET_ACCOUNT_NAME,insertedcontacts[0].Account.Name);
+            System.assertEquals(CAO_Constants_API.BUCKET_ACCOUNT_NAME,insertedcontacts[0].Account.Name);
         else if (strProcessor == CAO_Constants_API.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(con.LastName + CAO_Constants.HH_NAME_SUFFIX,insertedcontacts[0].Account.Name);
+            System.assertEquals(con.LastName + CAO_Constants.HH_NAME_SUFFIX,insertedcontacts[0].Account.Name);
     }
 
     /*********************************************************************************************************
@@ -642,16 +649,16 @@ private class ACCT_IndividualAccounts_TEST {
 
         //the contact should have the right type
         if (strProcessor == CAO_Constants.BUCKET_PROCESSOR)
-            system.assertEquals(CAO_Constants.BUCKET_ORGANIZATION_TYPE,updatedContacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants.BUCKET_ORGANIZATION_TYPE,updatedContacts[0].npe01__Organization_Type__c);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE,updatedContacts[0].npe01__Organization_Type__c);
+            System.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE,updatedContacts[0].npe01__Organization_Type__c);
         //the account should have been named correctly
         if (strProcessor == CAO_Constants.BUCKET_PROCESSOR)
-            system.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME,updatedContacts[0].Account.Name);
+            System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME,updatedContacts[0].Account.Name);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(updatedContacts[0].Lastname + CAO_Constants.HH_NAME_SUFFIX,updatedContacts[0].Account.Name);
+            System.assertEquals(updatedContacts[0].Lastname + CAO_Constants.HH_NAME_SUFFIX,updatedContacts[0].Account.Name);
         //the account should have the correct AccountId
-        system.assertEquals(AccountId,updatedContacts[0].AccountId);
+        System.assertEquals(AccountId,updatedContacts[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -686,7 +693,7 @@ private class ACCT_IndividualAccounts_TEST {
         Account[] insertedAccount = [select npe01__SystemIsIndividual__c from Account where id = :acct.id];
 
         //the account should not be an individual one
-        system.assert(!insertedAccount[0].npe01__SystemIsIndividual__c);
+        System.assert(!insertedAccount[0].npe01__SystemIsIndividual__c);
 
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -702,9 +709,9 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContacts = [Select Account.Name,Account.npe01__SystemIsIndividual__c,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
 
         //the contact should be connected to the account
-        system.assertEquals(acct.id,insertedContacts[0].AccountId);
+        System.assertEquals(acct.id,insertedContacts[0].AccountId);
         //the account should not be an individual account
-        system.assert(!insertedContacts[0].Account.npe01__SystemIsIndividual__c);
+        System.assert(!insertedContacts[0].Account.npe01__SystemIsIndividual__c);
 
         con.AccountId = null;
         Test.startTest();
@@ -714,9 +721,9 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con.id];
 
         //the account should be an individual account
-        system.assert(updatedContacts[0].Account.npe01__SystemIsIndividual__c);
+        System.assert(updatedContacts[0].Account.npe01__SystemIsIndividual__c);
         //the account should not be the one we started with
-        system.assertNotEquals(acct.id,updatedContacts[0].AccountId);
+        System.assertNotEquals(acct.id,updatedContacts[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -760,9 +767,9 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContact = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con2.id];
 
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
-            system.assertNotEquals(accountId,insertedContact[0].AccountId);
+            System.assertNotEquals(accountId,insertedContact[0].AccountId);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(accountId,insertedContact[0].AccountId);
+            System.assertEquals(accountId,insertedContact[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -811,9 +818,9 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContact = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con2.id];
 
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
-            system.assertNotEquals(accountId,insertedContact[0].AccountId);
+            System.assertNotEquals(accountId,insertedContact[0].AccountId);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(accountId,insertedContact[0].AccountId);
+            System.assertEquals(accountId,insertedContact[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -855,9 +862,9 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContacts = [Select Account.Name,Account.npe01__SystemIsIndividual__c,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
 
         //the contact should be connected to the account
-        system.assertEquals(acct.id,insertedContacts[0].AccountId);
+        System.assertEquals(acct.id,insertedContacts[0].AccountId);
 
-        system.assertEquals(acctName,insertedContacts[0].Account.Name);
+        System.assertEquals(acctName,insertedContacts[0].Account.Name);
 
 
         Contact con2 = new Contact(id=con.id, LastName='Smith');
@@ -867,7 +874,7 @@ private class ACCT_IndividualAccounts_TEST {
 
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con.id];
 
-        system.assertEquals(acctName,updatedContacts[0].Account.Name);
+        System.assertEquals(acctName,updatedContacts[0].Account.Name);
     }
 
     /*********************************************************************************************************
@@ -902,7 +909,7 @@ private class ACCT_IndividualAccounts_TEST {
         Account[] insertedAccount = [select npe01__SystemIsIndividual__c from Account where id = :acct.id];
 
         //the account should not be an individual one
-        system.assert(!insertedAccount[0].npe01__SystemIsIndividual__c);
+        System.assert(!insertedAccount[0].npe01__SystemIsIndividual__c);
 
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -918,9 +925,9 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] insertedContacts = [Select Account.Name,Account.npe01__SystemIsIndividual__c,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
 
         //the contact should be connected to the account
-        system.assertEquals(acct.id,insertedContacts[0].AccountId);
+        System.assertEquals(acct.id,insertedContacts[0].AccountId);
         //the account should not be an individual account
-        system.assert(!insertedContacts[0].Account.npe01__SystemIsIndividual__c);
+        System.assert(!insertedContacts[0].Account.npe01__SystemIsIndividual__c);
 
         con.AccountId = null;
         Test.startTest();
@@ -930,9 +937,9 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] updatedContacts = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con.id];
 
         //the account should be an individual account
-        system.assert(updatedContacts[0].Account.npe01__SystemIsIndividual__c);
+        System.assert(updatedContacts[0].Account.npe01__SystemIsIndividual__c);
         //the account should not be the one we started with
-        system.assertNotEquals(acct.id,updatedContacts[0].AccountId);
+        System.assertNotEquals(acct.id,updatedContacts[0].AccountId);
     }
 
     /*********************************************************************************************************
@@ -974,10 +981,10 @@ private class ACCT_IndividualAccounts_TEST {
         Test.stopTest();
 
         insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:contactId];
-        system.assertEquals(0,insertedContacts.size());
+        System.assertEquals(0,insertedContacts.size());
 
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
-        system.assertEquals(1,missingAccount.size());
+        System.assertEquals(1,missingAccount.size());
     }
 
     /*********************************************************************************************************
@@ -1029,7 +1036,7 @@ private class ACCT_IndividualAccounts_TEST {
         Test.stopTest();
 
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
-        system.assertEquals(1,missingAccount.size());
+        System.assertEquals(1,missingAccount.size());
     }
 
     /*********************************************************************************************************
@@ -1081,7 +1088,7 @@ private class ACCT_IndividualAccounts_TEST {
         Test.stopTest();
 
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
-        system.assertEquals(1,missingAccount.size());
+        System.assertEquals(1,missingAccount.size());
     }
 
     /*********************************************************************************************************
@@ -1123,9 +1130,9 @@ private class ACCT_IndividualAccounts_TEST {
         con = [select AccountId from Contact where id = :con.Id];
         Account newAcc = [select id,Name from Account where id = :con.AccountId limit 1];
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
-            system.assertEquals(newAcc.Name, CAO_Constants.Contact_FIRSTNAME_FOR_TESTS + ' ' + CAO_Constants.Contact_LASTNAME_FOR_TESTS);
+            System.assertEquals(newAcc.Name, CAO_Constants.Contact_FIRSTNAME_FOR_TESTS + ' ' + CAO_Constants.Contact_LASTNAME_FOR_TESTS);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX);
+            System.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX);
 
         //set name to null
         con.FirstName = null;
@@ -1136,9 +1143,9 @@ private class ACCT_IndividualAccounts_TEST {
 
         newAcc = [select id,Name from Account where id = :con.AccountId limit 1];
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
-            system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS);
+            System.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS);
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX);
+            System.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX);
     }
 
     /*********************************************************************************************************
@@ -1488,8 +1495,8 @@ private class ACCT_IndividualAccounts_TEST {
         System.runAs(tempUser) {
             insert c;
             c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id = :c.Id LIMIT 1];
-            system.assertEquals(c.OwnerId, currUserId, 'The Contact owner should be current system admin user');
-            system.assertEquals(c.Account.OwnerId, currUserId, 'The Account owner should be the same as the Contact Owner');
+            System.assertEquals(c.OwnerId, currUserId, 'The Contact owner should be current system admin user');
+            System.assertEquals(c.Account.OwnerId, currUserId, 'The Account owner should be the same as the Contact Owner');
         }
     }
 
