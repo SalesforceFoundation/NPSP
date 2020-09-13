@@ -1690,11 +1690,11 @@ public with sharing class ADDR_Addresses_TEST2 {
             LastName = lastName,
             Salutation = 'Mr.',
             Email = 'test@email.com',
-            MailingStreet = '123 Easy Street',
-            MailingCity = 'Esperanza',
-            MailingState = 'CA',
-            MailingPostalCode = '99999',
-            MailingCountry = 'USA'
+            MailingStreet = '123 Main Street',
+            MailingCity = 'San Francisco',
+            MailingState = 'California',
+            MailingPostalCode = '94105',
+            MailingCountry = 'United States'
         );
 
         Test.starttest();
