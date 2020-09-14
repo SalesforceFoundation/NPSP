@@ -47,6 +47,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         set;
     }
+
+    public List<Schema.FieldSetMember> fsmlColumns {get; set;}
+    
     /** @description The set of allowed object types this page should be used with */
     private Set<sObjectType> sObjTypesAllowed = new Set<sObjectType> {
         Opportunity.sObjectType,
@@ -113,6 +116,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
 
+        
+        fsmlColumns = FieldSetService.createService().getFieldSetMembers('ManageAllocationsTableFields', 'Allocation__c');
         parentId = ApexPages.currentPage().getParameters().get('id');
         sObjType = parentId.getSObjectType();
         parentAmount = 0;
@@ -185,13 +190,14 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
 
         defaultAllo = new Allocation__c();
-        listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c 
-            FROM Allocation__c 
-            WHERE Opportunity__c = :parentId 
-            OR Campaign__c = :parentId 
-            OR Recurring_Donation__c = :parentId
-            OR Payment__c = :parentId];
+        String queryString = 'SELECT ' + getQueryFields(getBaseAllocationFields(), fsmlColumns, false) +
+                             'FROM npsp__Allocation__c ' +
+                             'WHERE npsp__Opportunity__c = :parentId ' +
+                             'OR npsp__Campaign__c = :parentId ' +
+                             'OR npsp__Recurring_Donation__c = :parentId ' +
+                             'OR npsp__Payment__c = :parentId ';
 
+        listAllo = (List<npsp__Allocation__c>)Database.query(queryString);
         //find default allocation if enabled, remove from list
         if (settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null)) {
             for (integer i=0; i<listAllo.size(); i++) {
@@ -357,6 +363,44 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                     String.format(
                         System.Label.exceptionDeletePermission,
                         new String[]{UTIL_Describe.getObjectLabel(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'))})));
+    
     }
 
+    private static Set<String> getBaseAllocationFields() {
+
+        Set<String> fields = new Set<String> {
+            'Id',
+            'Name',
+            'npsp__Amount__c',
+            'npsp__Percent__c',
+            'npsp__General_Accounting_Unit__c'
+        };
+
+        return fields;
+    }
+
+    private static String getQueryFields(Set<String> baseFields, List<Schema.FieldSetMember> fieldSetMembers, Boolean addTrailingComma) {
+        String queryString = '';
+        Set<String> allFields = new Set<String>();
+        allFields.addAll(baseFields);
+
+        if(fieldSetMembers != null) {
+            for(Schema.FieldSetMember fsm : fieldSetMembers) {
+                allFields.add(fsm.getFieldPath());
+
+                // add lookup object Name field
+                if(!Test.isRunningTest()) {
+                    if(fsm.getSObjectField().getDescribe().getReferenceTo().size() > 0) {
+                        allFields.add(fsm.getFieldPath().replace('__c', '__r').replace('Id', '') + '.Name');
+                    }
+                }
+            }
+        }
+
+        if(!allFields.isEmpty()) {
+            queryString = String.join(new List<String>(allFields), ', ');
+            queryString += addTrailingComma ? ', ' : ' ';
+        }
+        return queryString;
+    }
 }

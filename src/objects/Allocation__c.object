@@ -167,6 +167,11 @@
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
+    <fieldSets>
+        <fullName>ManageAllocationsTableFields</fullName>
+        <description>Fields added to this field set will be displayed as editable columns in the Manage Allocations table</description>
+        <label>Manage Allocations Table Fields</label>
+    </fieldSets>
     <label>GAU Allocation</label>
     <nameField>
         <displayFormat>ALL-{0}</displayFormat>
