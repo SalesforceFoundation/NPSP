@@ -812,6 +812,9 @@
         <members>HH_Container</members>
         <members>HH_ContainerLoadedEvent</members>
         <members>HH_HouseholdSavedEvent</members>
+        <members>HH_KeypressEvent</members>
+        <members>HH_NewFocussedElement</members>
+        <members>HH_ReachFooter</members>
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
@@ -1194,8 +1197,8 @@
         <members>Engagement_Plan__c.Total_EP_Tasks__c</members>
         <members>Engagement_Plan__c.Total_Tasks__c</members>
         <members>Error_Settings__c.Async_Error_Check_Last_Run__c</members>
-        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.DisableRecordDataHealthChecks__c</members>
+        <members>Error_Settings__c.Disable_Error_Handling__c</members>
         <members>Error_Settings__c.Don_t_Auto_Schedule_Default_NPSP_Jobs__c</members>
         <members>Error_Settings__c.Enable_Debug__c</members>
         <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -1432,6 +1435,7 @@
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
         <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.DisableFirstInstallment__c</members>
         <members>npe03__Recurring_Donation__c.EndDate__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
         <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
@@ -1995,6 +1999,9 @@
         <members>bdiOMUIErrorNoUnmappedFieldsPt1</members>
         <members>bdiOMUIErrorNoUnmappedFieldsPt2</members>
         <members>bdiOMUIErrorNoValidThroughThisField</members>
+        <members>bdiOMUIFieldMappingProblemHeader</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart1</members>
+        <members>bdiOMUIFieldMappingProblemMessagePart2</members>
         <members>bdiOMUIGroupNameHelp</members>
         <members>bdiOMUIGroupNameLabel</members>
         <members>bdiOMUIImportDetailsTitle</members>

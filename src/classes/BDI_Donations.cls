@@ -665,9 +665,8 @@ public class BDI_Donations {
                 bdi.LogBDIError(
                     dataImportsToUpdate[i], 
                     result.getErrors()[0].getMessage(), 
-                    'Payment_Status__c'
-                );
-                dataImportsToUpdate[i].PaymentImportStatus__c = System.Label.bdiFailed;                
+                    'PaymentImportStatus__c'
+                );               
             }           
         }
 

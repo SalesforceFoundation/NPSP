@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="notify the children Element that the focus has to be set on it">
+    <aura:attribute name="id" type="String"/>
+</aura:event>
