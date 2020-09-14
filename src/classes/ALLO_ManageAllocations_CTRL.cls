@@ -371,9 +371,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         Set<String> fields = new Set<String> {
             'Id',
             'Name',
-            'npsp__Amount__c',
-            'npsp__Percent__c',
-            'npsp__General_Accounting_Unit__c'
+            'Amount__c',
+            'Percent__c',
+            'General_Accounting_Unit__c'
         };
 
         return fields;
