@@ -92,21 +92,26 @@ private class GE_LookupController_TEST {
 
     @IsTest
     static void testSearchSOQL() {
-        List<Account> accounts = new List<Account>{
-                new Account(Name = 'Test Account'),
-                new Account(Name = 'Non-Matching Account')
+        TEST_OpportunityBuilder builder = new TEST_OpportunityBuilder()
+            .withClosedWonStage()
+            .withCloseDate(Date.today());
+
+        List<Opportunity> opps = new List<Opportunity> {
+            builder.withName('Test Opportunity').build(),
+            builder.withName('Non-Matching Opportunity').build()
         };
-        insert accounts;
+        
+        insert opps;
 
         // doSearch utilizes SOSL, which means results must be hardcoded in tests
-        Test.setFixedSearchResults(new List<Id>{accounts[0].Id});
+        Test.setFixedSearchResults(new List<Id>{opps[0].Id});
 
         Test.startTest();
-        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearchSOQL('test', 'Account');
+        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearchSOQL('test', 'Opportunity');
         Test.stopTest();
 
         System.assertNotEquals(null, results, 'Expected results to not be null.');
         System.assertEquals(1, results.size(), 'Expected one result.');
-        System.assertEquals('Test Account', results[0].displayValue, 'Expected display value to be Test Account');
+        System.assertEquals('Test Opportunity', results[0].displayValue, 'Expected display value to be Test Opportunity');
     }
 }
