@@ -1130,7 +1130,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 		"""
         xpath = npsp_lex_locators["placeholder"].format(fieldname)
         field = self.selenium.get_webelement(xpath)
-        self.selenium.clear_element_text(field)
+        self.salesforce._clear(field)
         field.send_keys(value)
         time.sleep(3)
         field.send_keys(Keys.ENTER)
