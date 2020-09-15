@@ -60,7 +60,7 @@ Process And Validate Batch
 
 *** Test Cases ***
 
-Edit GE Template And Verify Changes
+Test Batch Status Adding Removig Gifts
     [Documentation]                  This test case makes edits to Default gift entry template
     ...                              Adds the status field. Initiates Batch and adds different
     ...                              Gift entries. Validates the different Status messages.
