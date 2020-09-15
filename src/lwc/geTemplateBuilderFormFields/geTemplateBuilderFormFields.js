@@ -778,17 +778,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     }
 
     /*******************************************************************************
-     * Start getters and setters
-     */
-
-    get errorTitle() {
-
-    }
-    get errorMessage() {
-
-    }
-
-    /*******************************************************************************
      * End getters for data-qa-locator attributes
      */
 
