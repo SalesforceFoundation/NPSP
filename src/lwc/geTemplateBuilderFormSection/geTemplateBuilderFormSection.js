@@ -66,6 +66,16 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     */
 
     /*******************************************************************************
+     * @description Handles the custom event fired from the geTemplateBuilderFormField child when
+     * there is a metadata error on the field such as a deleted field mapping or deleted source or
+     * target field.
+     * @param {object} event: object for the custom event
+     */
+    handleFieldMetadataError(event) {
+        this.dispatchEvent(new CustomEvent('fieldmetadataerror'));
+    }
+
+    /*******************************************************************************
     * @description Dispatches an event notifying the parent component GE_TemplateBuilder
     * to open a modal for editing the section.
     *

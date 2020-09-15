@@ -205,6 +205,29 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         return isValid;
     }
 
+    connectedCallback() {
+        this.init();
+    }
+
+    init = async () => {
+        this.objectMappings = await this.buildObjectMappingsList();
+        this.handleSortFieldMappings();
+        this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
+        this.isLoading = false;
+    };
+
+    renderedCallback() {
+        if (!this.isInitialized && this.isLoading === false && this.previousSaveAttempted) {
+            this.isInitialized = true;
+            this.validate();
+        }
+
+        // Set top section as active if there are multiple sections and none are selected on load
+        if (!this.activeFormSectionId && this.formSections && this.formSections.length >= 2) {
+            this.handleChangeActiveSection({ detail: this.formSections[0].id });
+        }
+    }
+
     toggleModal(event) {
         dispatch(this, 'togglemodal', event.detail);
     }
@@ -233,29 +256,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     getSectionById(sectionId) {
         return this.template.querySelector(`[data-section-id=${sectionId}]`);
     }
-
-    renderedCallback() {
-        if (!this.isInitialized && this.isLoading === false && this.previousSaveAttempted) {
-            this.isInitialized = true;
-            this.validate();
-        }
-
-        // Set top section as active if there are multiple sections and none are selected on load
-        if (!this.activeFormSectionId && this.formSections && this.formSections.length >= 2) {
-            this.handleChangeActiveSection({ detail: this.formSections[0].id });
-        }
-    }
-
-    connectedCallback() {
-        this.init();
-    }
-
-    init = async () => {
-        this.objectMappings = await this.buildObjectMappingsList();
-        this.handleSortFieldMappings();
-        this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
-        this.isLoading = false;
-    };
 
     /*******************************************************************************
     * @description Intermediary async method for pulling the object and field mappings
@@ -466,6 +466,16 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             fieldMapping: fieldMapping,
             objectMapping: objectMapping
         });   
+    }
+
+    /*******************************************************************************
+     * @description Handles the custom event fired from the geTemplateBuilderFormSection child when
+     * there is a metadata error on the field such as a deleted field mapping or deleted source or
+     * target field.
+     * @param {object} event: object for the custom event
+     */
+    handleFieldMetadataError(event) {
+        this.hasErrors = true;
     }
 
     /*******************************************************************************
