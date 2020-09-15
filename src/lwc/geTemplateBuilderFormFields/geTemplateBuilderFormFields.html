@@ -224,10 +224,10 @@
 
         <div class="slds-size_9-of-12 slds-p-around_large slds-border_left">
             <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
-                <template if:true={hasErrors}>
+                <template if:true={pageLevelError.hasErrors}>
                     <div class="slds-size_1-of-1">
-                        <c-util-page-level-message title={CUSTOM_LABELS.commonError}
-                                                   subtitle={CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields}
+                        <c-util-page-level-message title={pageLevelError.title}
+                                                   subtitle={pageLevelError.message}
                                                    variant='error'>
                             <ul slot="body"
                                 class="slds-list_dotted">
