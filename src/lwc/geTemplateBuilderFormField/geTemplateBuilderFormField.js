@@ -47,7 +47,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
                 inputField.setCustomValidity('Field not found');
                 inputField.reportValidity();
 
-                this.dispatchEvent(new CustomEvent('fieldMetadataError'));
+                this.dispatchEvent(new CustomEvent('fieldmetadataerror'));
             }
         }
     }
