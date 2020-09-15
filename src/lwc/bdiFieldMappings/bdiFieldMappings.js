@@ -184,7 +184,7 @@ export default class bdiFieldMappings extends LightningElement {
     }
 
     get showRowNumberColumns () {
-        return !isNull(this.errors.rows);
+        return isNull(this.errors) ? false : !isNull(this.errors.rows);
     }
 
     get brokenFieldReferencesWarningMessage () {
