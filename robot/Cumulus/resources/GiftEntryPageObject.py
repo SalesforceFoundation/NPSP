@@ -46,6 +46,25 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_element(locator)
 
+    def add_batch_table_columns(self,*args):
+        """Adds specified batch columns to the visible section if they are not already added"""
+        first_element=True
+        position=0
+        for i in args:
+            locator=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",i)
+            if self.npsp.check_if_element_exists(locator):
+                if first_element:
+                    self.selenium.click_element(locator)
+                    first_element=False
+                    position=args.index(i)
+                else:
+                    self.selenium.click_element(locator,'COMMAND')
+        self.selenium.click_button("Move selection to Visible Fields")
+        verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
+        print (f'verify locator is {verify_field}')
+        self.selenium.wait_until_page_does_not_contain_element(verify_field)
+
+
     def select_template_action(self,name,action):
         """From the template table, select template with name and select an action from the dropdown"""
         locator=npsp_lex_locators["gift_entry"]["actions_dropdown"].format(name)
@@ -306,6 +325,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.click_element(option)
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+                self.selenium.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
             elif 'datetime' in type :
                 locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
@@ -314,6 +334,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.click_button(value)
                 self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
             else:
+                self.selenium.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
 
     def verify_error_for_field(self,**kwargs):
@@ -340,6 +361,15 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         for field,value in kwargs.items():
             locator=npsp_lex_locators["gift_entry"]["table"].format(table,field,value)
             self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {table} table')
+    
+    def perform_action_on_datatable_row(self,name,action):
+        locator=npsp_lex_locators["gift_entry"]["datatable_options_icon"].format(name)
+        self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.scroll_element_into_view(locator)
+        self.selenium.click_element(locator)
+        menuitem=npsp_lex_locators["gift_entry"]["datatable-menu-item"].format(action)
+        self.selenium.wait_until_element_is_visible(menuitem,error= f"'{action}' is not displayed on the page")
+        self.selenium.click_element(menuitem)
 
     def verify_link_status(self, **kwargs):
         """ Verify the link is disabled/enabled, pass the name of the link
