@@ -129,13 +129,16 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     @api sectionIdsByFieldMappingDeveloperNames;
 
     @track objectMappings;
-    @track errors;
+    @track pageLevelError = {
+        hasErrors : false,
+        title : '',
+        message : ''
+    };
 
     isInitialized;
     isLoading = true;
     isAllSectionsExpanded = false;
     isReadMoreActive = false;
-    hasErrors = false;
 
     // Expose labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -191,17 +194,26 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             const lightningAccordion = this.template.querySelector('lightning-accordion');
             lightningAccordion.activeSectionName = [...objectMappingsWithMissingRequiredFields];
 
-            this.hasErrors = true;
+            this.pageLevelError = {
+                hasErrors : true,
+                title : this.CUSTOM_LABELS.commonError,
+                message: this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields
+            }
             this.errors = [...missingRequiredFieldMappings];
 
             isValid = false;
         } else {
             isValid = true;
-            this.hasErrors = false;
+
+            this.pageLevelError = {
+                hasErrors : true,
+                title : this.CUSTOM_LABELS.commonError,
+                message: this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields
+            }
             this.errors = [];
         }
 
-        dispatch(this, 'updatevalidity', { property: 'hasSelectFieldsTabError', hasError: this.hasErrors });
+        dispatch(this, 'updatevalidity', { property: 'hasSelectFieldsTabError', hasError: this.pageLevelError.hasErrors });
         return isValid;
     }
 
@@ -475,7 +487,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      * @param {object} event: object for the custom event
      */
     handleFieldMetadataError(event) {
-        this.hasErrors = true;
+        // this.hasErrors = true;
     }
 
     /*******************************************************************************
@@ -764,6 +776,21 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         }
         return [];
     }
+
+    /*******************************************************************************
+     * Start getters and setters
+     */
+
+    get errorTitle() {
+
+    }
+    get errorMessage() {
+
+    }
+
+    /*******************************************************************************
+     * End getters for data-qa-locator attributes
+     */
 
     /*******************************************************************************
     * Start getters for data-qa-locator attributes
