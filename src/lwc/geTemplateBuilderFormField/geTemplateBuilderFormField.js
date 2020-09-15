@@ -9,30 +9,18 @@ const WIDGET = 'widget';
 const YES = 'Yes';
 
 export default class geTemplateBuilderFormField extends LightningElement {
-
-    // Expose custom labels to template
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    isBatchHeaderField = false;
-    _field;
-
     @track targetObjectDescribeInfo;
 
     @api isFirst;
     @api isLast;
     @api objectApiName;
-    @api
-    get field() {
-        return this._field;
-    }
-    set field(value) {
-        this._field = deepClone(value);
-
-        if (isEmpty(this.fieldMapping)) {
-            this._field.isValid = false;
-        }
-    }
+    @api field;
     @api sourceObjectFieldInfo;
 
+    // Expose custom labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    isBatchHeaderField = false;
+    hasRendered = false;
 
 
     /*******************************************************************************
@@ -45,6 +33,36 @@ export default class geTemplateBuilderFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.targetObjectDescribeInfo = response.data;
+            this.validate();
+        }
+    }
+
+    renderedCallback() {
+        if (!this.hasRendered) {
+            this.hasRendered = true;
+
+            if (isEmpty(this.fieldMapping)) {
+                const inputField = this.template.querySelector('[data-id="formField"]');
+
+                inputField.setCustomValidity('Field not found');
+                inputField.reportValidity();
+
+                this.dispatchEvent(new CustomEvent('fieldMetadataError'));
+            }
+        }
+    }
+
+    /*******************************************************************************
+     * @description Performs form field-level validations that require data not present in the parent component
+     * such as target object describe metadata.
+     */
+    validate() {
+        this.field;
+
+        if (isEmpty(this.targetObjectDescribeInfo.fields[this.fieldMapping.Target_Field_API_Name]) ||
+            isEmpty(this.sourceObjectFieldInfo[this.fieldMapping.Source_Field_API_Name])) {
+
+            console.log('error', 'invalid field' + this.fieldMapping.Target_Field_API_Name);
         }
     }
 
@@ -127,6 +145,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get targetObjectApiName() {
+        this.field;
         if (this.fieldMapping && this.fieldMapping.Target_Object_API_Name) {
             return this.fieldMapping.Target_Object_API_Name;
         }
