@@ -1690,11 +1690,11 @@ public with sharing class ADDR_Addresses_TEST2 {
             LastName = lastName,
             Salutation = 'Mr.',
             Email = 'test@email.com',
-            MailingStreet = '123 Easy Street',
-            MailingCity = 'Esperanza',
-            MailingState = 'CA',
-            MailingPostalCode = '99999',
-            MailingCountry = 'USA'
+            MailingStreet = '123 Main Street',
+            MailingCity = 'San Francisco',
+            MailingState = 'California',
+            MailingPostalCode = '94105',
+            MailingCountry = 'United States'
         );
 
         Test.starttest();
@@ -1706,7 +1706,7 @@ public with sharing class ADDR_Addresses_TEST2 {
                 Account.Name,
                 Account.npo02__Informal_Greeting__c,
                 Account.npo02__Formal_Greeting__c,
-                Account.DunsNumber
+                Account.AccountNumber
             FROM Contact
             WHERE Id = :testContact.Id];
 
@@ -1716,8 +1716,8 @@ public with sharing class ADDR_Addresses_TEST2 {
             'Informal Greeting should equal First Name');
         System.assert(testContact.Account.npo02__Formal_Greeting__c.endsWith(firstName + ' ' + lastName),
             'Formal Greeting should end with First Name + Last Name');
-        System.assert(String.isNotBlank(testContact.Account.DunsNumber),
-            'Account Duns Number should be populated');
+        System.assert(String.isNotBlank(testContact.Account.AccountNumber),
+            'Account Number should be populated');
     }
 
     /*********************************************************************************************************
@@ -1747,8 +1747,8 @@ public with sharing class ADDR_Addresses_TEST2 {
             for (SObject sObj : newlist) {
                 Account acc = new Account(
                     Id = (Id) sObj.get('Household_Account__c'),
-                    DunsNumber = (String.valueOf(System.Crypto.getRandomLong()).right(9)
-                    ));
+                    AccountNumber = (String.valueOf(System.Crypto.getRandomLong()).right(9))
+                );
                 accounts.add(acc);
             }
             update accounts;
