@@ -6039,7 +6039,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields main section text block</shortDescription>
-        <value>Select a section, then select a field in the Form Fields &amp; Field Bundles sidebar to add it to this section in the main Configure Form Fields screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering sections or fields.</value>
+        <value>Select a section, then select a field in the Form Fields &amp; Field Bundles sidebar to add it to this section in the main Configure Form Fields screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the Gift Entry form by creating sections and reordering sections or fields.</value>
     </labels>
     <labels>
         <fullName>geBodyGiftEntryHelp</fullName>
