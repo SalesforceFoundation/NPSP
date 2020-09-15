@@ -1,156 +1,156 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Totalización</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Totalizaciones</value>
-    </caseValues>
-    <fields>
-        <label>Activo</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <label>Campo de importe</label>
-        <name>Amount_Field__c</name>
-        <relationshipLabel>Importe de totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objeto de importe</label>
-        <name>Amount_Object__c</name>
-        <relationshipLabel>Importe de totalización</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Campo de fecha</label>
-        <name>Date_Field__c</name>
-        <relationshipLabel>Fecha de totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objeto de fecha</label>
-        <name>Date_Object__c</name>
-        <relationshipLabel>Fecha de totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Descripción</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Campo a totalizar</label>
-        <name>Detail_Field__c</name>
-        <relationshipLabel>Detalle de totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objeto de detalle</label>
-        <name>Detail_Object__c</name>
-        <relationshipLabel>Detalle de totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Grupo de filtros</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>Totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Entero</label>
-        <name>Integer__c</name>
-    </fields>
-    <fields>
-        <label>Es Eliminado</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>Operación</label>
-        <name>Operation__c</name>
-        <picklistValues>
-            <masterLabel>Average</masterLabel>
-            <translation>Media</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Year</masterLabel>
-            <translation>Mejor año</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Year Total</masterLabel>
-            <translation>Total en año mejor</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Count</masterLabel>
-            <translation>Recuento</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Donor Streak</masterLabel>
-            <translation>Racha de donante</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>First</masterLabel>
-            <translation>Primero</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Largest</masterLabel>
-            <translation>Mayor</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Last</masterLabel>
-            <translation>Último</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Smallest</masterLabel>
-            <translation>Menor</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Sum</masterLabel>
-            <translation>Suma</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Years Donated</masterLabel>
-            <translation>Años donados</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Campo de destino</label>
-        <name>Summary_Field__c</name>
-        <relationshipLabel>Resumen de totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Objeto objetivo</label>
-        <name>Summary_Object__c</name>
-        <relationshipLabel>Resumen de totalizaciones</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Intervalo de tiempo</label>
-        <name>Time_Bound_Operation_Type__c</name>
-        <picklistValues>
-            <masterLabel>All Time</masterLabel>
-            <translation>Todo el tiempo</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Days Back</masterLabel>
-            <translation>Días atrás</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Years Ago</masterLabel>
-            <translation>Años transcurridos</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Utilizar año fiscal</label>
-        <name>Use_Fiscal_Year__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Rollup Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Nueva sección</label>
-            <section>New Section</section>
-        </sections>
-        <sections>
-            <label>Detalles de totalización</label>
-            <section>Rollup Details</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Active__c</name>
+    <label>Activo</label>
+  </fields>
+  <fields>
+    <name>Amount_Field__c</name>
+    <relationshipLabel>Importe de totalizaciones</relationshipLabel>
+    <label>Campo de importe</label>
+  </fields>
+  <fields>
+    <name>Amount_Object__c</name>
+    <relationshipLabel>Importe de totalización</relationshipLabel>
+    <label>Objeto de importe</label>
+  </fields>
+  <fields>
+    <name>Date_Field__c</name>
+    <relationshipLabel>Fecha de totalizaciones</relationshipLabel>
+    <label>Campo de fecha</label>
+  </fields>
+  <fields>
+    <name>Date_Object__c</name>
+    <relationshipLabel>Fecha de totalizaciones</relationshipLabel>
+    <label>Objeto de fecha</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>Descripción</label>
+  </fields>
+  <fields>
+    <name>Detail_Field__c</name>
+    <relationshipLabel>Detalle de totalizaciones</relationshipLabel>
+    <label>Campo a totalizar</label>
+  </fields>
+  <fields>
+    <name>Detail_Object__c</name>
+    <relationshipLabel>Detalle de totalizaciones</relationshipLabel>
+    <label>Objeto de detalle</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>Totalizaciones</relationshipLabel>
+    <label>Grupo de filtros</label>
+  </fields>
+  <fields>
+    <name>Integer__c</name>
+    <label>Entero</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>Es Eliminado</label>
+  </fields>
+  <fields>
+    <name>Operation__c</name>
+    <label>Operación</label>
+    <picklistValues>
+      <masterLabel>Count</masterLabel>
+      <translation>Recuento</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Sum</masterLabel>
+      <translation>Suma</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Average</masterLabel>
+      <translation>Media</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Largest</masterLabel>
+      <translation>Mayor</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Smallest</masterLabel>
+      <translation>Menor</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>First</masterLabel>
+      <translation>Primero</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last</masterLabel>
+      <translation>Último</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Years Donated</masterLabel>
+      <translation>Años donados</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Donor Streak</masterLabel>
+      <translation>Racha de donante</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Year</masterLabel>
+      <translation>Mejor año</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Year Total</masterLabel>
+      <translation>Total en año mejor</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Summary_Field__c</name>
+    <relationshipLabel>Resumen de totalizaciones</relationshipLabel>
+    <label>Campo de destino</label>
+  </fields>
+  <fields>
+    <name>Summary_Object__c</name>
+    <relationshipLabel>Resumen de totalizaciones</relationshipLabel>
+    <label>Objeto objetivo</label>
+  </fields>
+  <fields>
+    <name>Time_Bound_Operation_Type__c</name>
+    <label>Intervalo de tiempo</label>
+    <picklistValues>
+      <masterLabel>All Time</masterLabel>
+      <translation>Todo el tiempo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Years Ago</masterLabel>
+      <translation>Años transcurridos</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Days Back</masterLabel>
+      <translation>Días atrás</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Use_Fiscal_Year__c</name>
+    <label>Utilizar año fiscal</label>
+  </fields>
+  <layouts>
+    <layout>Rollup Layout</layout>
+    <sections>
+      <label>Nueva sección</label>
+      <section>New Section</section>
+    </sections>
+    <sections>
+      <label>Detalles de totalización</label>
+      <section>Rollup Details</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Totalización</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Totalizaciones</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,201 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
-    <fields>
-        <help>この住所を検証する必要がある場合は、住所ページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。</help>
-        <label>住所検証状況</label>
-        <name>Address_Verification_Status__c</name>
-    </fields>
-    <fields>
-        <help>この取引先責任者が作成されたバッチを参照します。</help>
-        <label>一括処理</label>
-        <name>Batch__c</name>
-        <relationshipLabel>取引先責任者</relationshipLabel>
-    </fields>
-    <fields>
-        <help>取引先責任者の郵送先項目が入力された現在の住所。</help>
-        <label>現在の住所</label>
-        <name>Current_Address__c</name>
-        <relationshipLabel>取引先責任者 (現在の住所)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>このオプションを選択すると、取引先責任者が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。</help>
-        <label>死亡</label>
-        <name>Deceased__c</name>
-    </fields>
-    <fields>
-        <help>このオプションを選択すると、取引先責任者がメールの送信および電話の発信から除外されます。</help>
-        <label>連絡不可</label>
-        <name>Do_Not_Contact__c</name>
-    </fields>
-    <fields>
-        <help>このボックスをオンにすると、この取引先責任者が世帯の公式の挨拶から除外されます。</help>
-        <label>世帯の公式の挨拶から除外</label>
-        <name>Exclude_from_Household_Formal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>このボックスをオンにすると、この取引先責任者が世帯の非公式の挨拶から除外されます。</help>
-        <label>世帯の非公式の挨拶から除外</label>
-        <name>Exclude_from_Household_Informal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>このボックスをオンにすると、この取引先責任者が世帯名から除外されます。</help>
-        <label>世帯名から除外</label>
-        <name>Exclude_from_Household_Name__c</name>
-    </fields>
-    <fields>
-        <help>最初のソフトクレジットの金額。</help>
-        <label>最初のソフトクレジット額</label>
-        <name>First_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>最初のソフトクレジットの日付。</help>
-        <label>最初のソフトクレジット日</label>
-        <name>First_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>世帯取引先または世帯オブジェクトの現在の世帯の ID を保持します。</help>
-        <label>HHId</label>
-        <name>HHId__c</name>
-    </fields>
-    <fields>
-        <help>最大ソフトクレジットの金額。</help>
-        <label>最大ソフトクレジット額</label>
-        <name>Largest_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>最大ソフトクレジットの日付。</help>
-        <label>最大ソフトクレジット日</label>
-        <name>Largest_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>最新のソフトクレジットの金額。</help>
-        <label>前回のソフトクレジット額</label>
-        <name>Last_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>最新のソフトクレジットの日付。</help>
-        <label>前回のソフトクレジット日</label>
-        <name>Last_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>[NPSP 設定] で定義された過去の日数の間に完了したソフトクレジットの数。</help>
-        <label>過去 N 日間のソフトクレジット数</label>
-        <name>Number_of_Soft_Credits_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>昨年のソフトクレジットの数。</help>
-        <label>昨年のソフトクレジット数</label>
-        <name>Number_of_Soft_Credits_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>今年のソフトクレジットの数。</help>
-        <label>今年のソフトクレジット数</label>
-        <name>Number_of_Soft_Credits_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>2 年前のソフトクレジットの数。</help>
-        <label>2 年前のソフトクレジット数</label>
-        <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>ソフトクレジットの数。</help>
-        <label>ソフトクレジット数</label>
-        <name>Number_of_Soft_Credits__c</name>
-    </fields>
-    <fields>
-        <help>団体アフィリエーションの取引先責任者のリストで「主」とマークされた取引先を追跡するために使用します。</help>
-        <label>主アフィリエーション</label>
-        <name>Primary_Affiliation__c</name>
-        <relationshipLabel>使用しないでください。[団体アフィリエーション] を使用します。</relationshipLabel>
-    </fields>
-    <fields>
-        <help>ユーザがユーザの取引先の主取引先責任者である場合にオンにします。[取引先] で [主取引先責任者] を編集できます。</help>
-        <label>主取引先責任者</label>
-        <name>Primary_Contact__c</name>
-    </fields>
-    <fields>
-        <help>[世帯設定] で定義された過去の日数の間に完了したソフトクレジットの総額。</help>
-        <label>過去 N 日間のソフトクレジット</label>
-        <name>Soft_Credit_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>オンの場合、取引先責任者の現在の住所の検索で世帯のデフォルトが上書きされます。</help>
-        <label>住所の上書き</label>
-        <name>is_Address_Override__c</name>
-    </fields>
-    <layouts>
-        <layout>Contact Layout</layout>
-        <sections>
-            <label>取引先責任者の詳細</label>
-            <section>Contact Details</section>
-        </sections>
-        <sections>
-            <label>支援情報</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>支援総額</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>世帯の住所</label>
-            <section>Household Address</section>
-        </sections>
-        <sections>
-            <label>世帯の支援情報</label>
-            <section>Household Donation Info</section>
-        </sections>
-        <sections>
-            <label>会員情報</label>
-            <section>Membership Information</section>
-        </sections>
-        <sections>
-            <label>その他</label>
-            <section>Misc</section>
-        </sections>
-        <sections>
-            <label>ソフトクレジット合計</label>
-            <section>Soft Credit Totals</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>新規アフィリエーション</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>新規継続支援</label>
-        <name>New_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>新規リレーション</label>
-        <name>New_Relationship</name>
-    </quickActions>
-    <quickActions>
-        <label>クイック更新</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>取引先責任者のマージ</label>
-        <name>Merge_Contacts</name>
-    </webLinks>
-    <webLinks>
-        <label>新規支援</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>積み上げ集計の再計算</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Address_Verification_Status__c</name>
+    <help>この住所を検証する必要がある場合は、住所ページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。</help>
+    <label>住所検証状況</label>
+  </fields>
+  <fields>
+    <name>Batch__c</name>
+    <help>この取引先責任者が作成されたバッチを参照します。</help>
+    <relationshipLabel>取引先責任者</relationshipLabel>
+    <label>一括処理</label>
+  </fields>
+  <fields>
+    <name>Current_Address__c</name>
+    <help>取引先責任者の郵送先項目が入力された現在の住所。</help>
+    <relationshipLabel>取引先責任者 (現在の住所)</relationshipLabel>
+    <label>現在の住所</label>
+  </fields>
+  <fields>
+    <name>Deceased__c</name>
+    <help>このオプションを選択すると、取引先責任者が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。</help>
+    <label>死亡</label>
+  </fields>
+  <fields>
+    <name>Do_Not_Contact__c</name>
+    <help>このオプションを選択すると、取引先責任者がメールの送信および電話の発信から除外されます。</help>
+    <label>連絡不可</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Formal_Greeting__c</name>
+    <help>このボックスをオンにすると、この取引先責任者が世帯の公式の挨拶から除外されます。</help>
+    <label>世帯の公式の挨拶から除外</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Informal_Greeting__c</name>
+    <help>このボックスをオンにすると、この取引先責任者が世帯の非公式の挨拶から除外されます。</help>
+    <label>世帯の非公式の挨拶から除外</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Name__c</name>
+    <help>このボックスをオンにすると、この取引先責任者が世帯名から除外されます。</help>
+    <label>世帯名から除外</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Amount__c</name>
+    <help>最初のソフトクレジットの金額。</help>
+    <label>最初のソフトクレジット額</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Date__c</name>
+    <help>最初のソフトクレジットの日付。</help>
+    <label>最初のソフトクレジット日</label>
+  </fields>
+  <fields>
+    <name>HHId__c</name>
+    <help>世帯取引先または世帯オブジェクトの現在の世帯の ID を保持します。</help>
+    <label>HHId</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Amount__c</name>
+    <help>最大ソフトクレジットの金額。</help>
+    <label>最大ソフトクレジット額</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Date__c</name>
+    <help>最大ソフトクレジットの日付。</help>
+    <label>最大ソフトクレジット日</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Amount__c</name>
+    <help>最新のソフトクレジットの金額。</help>
+    <label>前回のソフトクレジット額</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Date__c</name>
+    <help>最新のソフトクレジットの日付。</help>
+    <label>前回のソフトクレジット日</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+    <help>[NPSP 設定] で定義された過去の日数の間に完了したソフトクレジットの数。</help>
+    <label>過去 N 日間のソフトクレジット数</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_Year__c</name>
+    <help>昨年のソフトクレジットの数。</help>
+    <label>昨年のソフトクレジット数</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_This_Year__c</name>
+    <help>今年のソフトクレジットの数。</help>
+    <label>今年のソフトクレジット数</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    <help>2 年前のソフトクレジットの数。</help>
+    <label>2 年前のソフトクレジット数</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits__c</name>
+    <help>ソフトクレジットの数。</help>
+    <label>ソフトクレジット数</label>
+  </fields>
+  <fields>
+    <name>Primary_Affiliation__c</name>
+    <help>団体アフィリエーションの取引先責任者のリストで「主」とマークされた取引先を追跡するために使用します。</help>
+    <relationshipLabel>使用しないでください。[団体アフィリエーション] を使用します。</relationshipLabel>
+    <label>主アフィリエーション</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact__c</name>
+    <help>ユーザがユーザの取引先の主取引先責任者である場合にオンにします。[取引先] で [主取引先責任者] を編集できます。</help>
+    <label>主取引先責任者</label>
+  </fields>
+  <fields>
+    <name>Soft_Credit_Last_N_Days__c</name>
+    <help>[世帯設定] で定義された過去の日数の間に完了したソフトクレジットの総額。</help>
+    <label>過去 N 日間のソフトクレジット</label>
+  </fields>
+  <fields>
+    <name>is_Address_Override__c</name>
+    <help>オンの場合、取引先責任者の現在の住所の検索で世帯のデフォルトが上書きされます。</help>
+    <label>住所の上書き</label>
+  </fields>
+  <webLinks>
+    <name>Merge_Contacts</name>
+    <label>取引先責任者のマージ</label>
+  </webLinks>
+  <webLinks>
+    <name>New_Gift</name>
+    <label>新規支援</label>
+  </webLinks>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>積み上げ集計の再計算</label>
+  </webLinks>
+  <layouts>
+    <layout>Contact Layout</layout>
+    <sections>
+      <label>取引先責任者の詳細</label>
+      <section>Contact Details</section>
+    </sections>
+    <sections>
+      <label>世帯の住所</label>
+      <section>Household Address</section>
+    </sections>
+    <sections>
+      <label>支援情報</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>支援総額</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>ソフトクレジット合計</label>
+      <section>Soft Credit Totals</section>
+    </sections>
+    <sections>
+      <label>世帯の支援情報</label>
+      <section>Household Donation Info</section>
+    </sections>
+    <sections>
+      <label>会員情報</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>その他</label>
+      <section>Misc</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

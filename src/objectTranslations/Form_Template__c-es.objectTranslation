@@ -1,35 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Plantilla de formulario</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Plantillas de formularios</value>
-    </caseValues>
-    <fields>
-        <help>La breve descripción que los usuarios pueden introducir para una plantilla.</help>
-        <label>Descripción</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>La versión de Entrada de regalos utilizada para crear esta plantilla.</help>
-        <label>Versión de formato</label>
-        <name>Format_Version__c</name>
-    </fields>
-    <fields>
-        <help>Las secciones y los campos de esta plantilla, junto con su orden, requisitos y valores predeterminados. Se almacena como JSON. No modificar directamente.</help>
-        <label>JSON de plantilla</label>
-        <name>Template_JSON__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Form Template Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nombre de plantilla de formulario</nameFieldLabel>
+  <fields>
+    <name>Description__c</name>
+    <help>La breve descripción que los usuarios pueden introducir para una plantilla.</help>
+    <label>Descripción</label>
+  </fields>
+  <fields>
+    <name>Format_Version__c</name>
+    <help>La versión de Entrada de regalos utilizada para crear esta plantilla.</help>
+    <label>Versión de formato</label>
+  </fields>
+  <fields>
+    <name>Template_JSON__c</name>
+    <help>Las secciones y los campos de esta plantilla, junto con su orden, requisitos y valores predeterminados. Se almacena como JSON. No modificar directamente.</help>
+    <label>JSON de plantilla</label>
+  </fields>
+  <layouts>
+    <layout>Form Template Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre de plantilla de formulario</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de plantilla de formulario</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Plantilla de formulario</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Plantillas de formularios</value>
+  </caseValues>
 </CustomObjectTranslation>

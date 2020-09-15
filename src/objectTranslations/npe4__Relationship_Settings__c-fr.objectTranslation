@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Si la valeur est VRAIE, la synchronisation des champs de relations personnalisées est activée.</help>
-        <label>Activer synchr. champ personnalisé</label>
-        <name>Enable_Custom_Field_Sync__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Enable_Custom_Field_Sync__c</name>
+    <help>Si la valeur est VRAIE, la synchronisation des champs de relations personnalisées est activée.</help>
+    <label>Activer synchr. champ personnalisé</label>
+  </fields>
+</CustomObjectTranslation>

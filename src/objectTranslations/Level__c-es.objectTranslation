@@ -1,86 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Nivel</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Niveles</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- LevelEdit --></label>
-        <name>LevelEdit</name>
-    </fieldSets>
-    <fields>
-        <help>Si este nivel esta en uso actualmente.</help>
-        <label>Activo</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Describe para que es este nivel, o que significa alcanzar este nivel.</help>
-        <label>Descripción</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>La plantilla del plan de acción a aplicar al objeto destino cuando este nivel es alcanzado.</help>
-        <label>Plantilla del plan de acción</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Niveles</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indica qué campo utilizar en el objeto de destino para almacenar el nivel actual.</help>
-        <label>Campo de nivel</label>
-        <name>Level_Field__c</name>
-    </fields>
-    <fields>
-        <help>El valor debe ser menor a este importe para que NPSP lo asigne este nivel. Si esta vacío, NPSP asignará este nivel a cualquier importe mayor o igual al importe mínimo de este nivel.</help>
-        <label>Importe máximo (&lt;)</label>
-        <name>Maximum_Amount__c</name>
-    </fields>
-    <fields>
-        <help>El importe mínimo necesario para que NPSP asigne este nivel. Si esta vacío, NPSP asignará este nivel a cualquier importe inferior al importe máximo de este nivel.</help>
-        <label>Importe mínimo (&gt;=)</label>
-        <name>Minimum_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Indica qué campo utilizar en el objeto de destino para almacenar el nivel anterior.</help>
-        <label>Campo de nivel anterior</label>
-        <name>Previous_Level_Field__c</name>
-    </fields>
-    <fields>
-        <help>El campo del objeto destino (nombre del desarrollador) que define el importe y el período de tiempo en los que se basa este nivel.</help>
-        <label>Campo de origen</label>
-        <name>Source_Field__c</name>
-    </fields>
-    <fields>
-        <help>El objeto al que se le aplica este nivel.</help>
-        <label>Destino</label>
-        <name>Target__c</name>
-        <picklistValues>
-            <masterLabel>Account</masterLabel>
-            <translation>Cuenta</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Contact</masterLabel>
-            <translation>Contacto</translation>
-        </picklistValues>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Level Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Área de texto largo</label>
-            <section>long text section</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nombre de nivel</nameFieldLabel>
-    <validationRules>
-        <errorMessage>Destino es un campo requerido en Nivel. Especifique el objeto destino para este nivel.</errorMessage>
-        <name>Target_Required</name>
-    </validationRules>
+  <fields>
+    <name>Active__c</name>
+    <help>Si este nivel esta en uso actualmente.</help>
+    <label>Activo</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <help>Describe para que es este nivel, o que significa alcanzar este nivel.</help>
+    <label>Descripción</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <help>La plantilla del plan de acción a aplicar al objeto destino cuando este nivel es alcanzado.</help>
+    <relationshipLabel>Niveles</relationshipLabel>
+    <label>Plantilla del plan de acción</label>
+  </fields>
+  <fields>
+    <name>Level_Field__c</name>
+    <help>Indica qué campo utilizar en el objeto de destino para almacenar el nivel actual.</help>
+    <label>Campo de nivel</label>
+  </fields>
+  <fields>
+    <name>Maximum_Amount__c</name>
+    <help>El valor debe ser menor a este importe para que NPSP lo asigne este nivel. Si esta vacío, NPSP asignará este nivel a cualquier importe mayor o igual al importe mínimo de este nivel.</help>
+    <label>Importe máximo (&lt;)</label>
+  </fields>
+  <fields>
+    <name>Minimum_Amount__c</name>
+    <help>El importe mínimo necesario para que NPSP asigne este nivel. Si esta vacío, NPSP asignará este nivel a cualquier importe inferior al importe máximo de este nivel.</help>
+    <label>Importe mínimo (&gt;=)</label>
+  </fields>
+  <fields>
+    <name>Previous_Level_Field__c</name>
+    <help>Indica qué campo utilizar en el objeto de destino para almacenar el nivel anterior.</help>
+    <label>Campo de nivel anterior</label>
+  </fields>
+  <fields>
+    <name>Source_Field__c</name>
+    <help>El campo del objeto destino (nombre del desarrollador) que define el importe y el período de tiempo en los que se basa este nivel.</help>
+    <label>Campo de origen</label>
+  </fields>
+  <fields>
+    <name>Target__c</name>
+    <help>El objeto al que se le aplica este nivel.</help>
+    <label>Destino</label>
+    <picklistValues>
+      <masterLabel>Account</masterLabel>
+      <translation>Cuenta</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contact</masterLabel>
+      <translation>Contacto</translation>
+    </picklistValues>
+  </fields>
+  <validationRules>
+    <errorMessage>Destino es un campo requerido en Nivel. Especifique el objeto destino para este nivel.</errorMessage>
+    <name>Target_Required</name>
+  </validationRules>
+  <layouts>
+    <layout>Level Layout</layout>
+    <sections>
+      <label>Área de texto largo</label>
+      <section>long text section</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre de nivel</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de nivel</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Nivel</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Niveles</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,85 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Asignación de objeto de importación de datos</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Asignaciones de objetos de importaciones de datos</value>
-    </caseValues>
-    <fields>
-        <help>Si debe emplearse lógica de Apex personalizada para asignar campos a este objeto, este campo se rellena con el nombre de una clase (incluyendo el espacio de nombres) que amplía la clase BDI_ObjectMappingLogic y sustituye el método populateObject.</help>
-        <label>Clase de lógica asignación personalizada</label>
-        <name>Custom_Mapping_Logic_Class__c</name>
-    </fields>
-    <fields>
-        <help>El Grupo de objetos de importación de datos que contiene este registro.</help>
-        <label>Conjunto asign objetos importación datos</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>Asignaciones objetos importación datos</relationshipLabel>
-    </fields>
-    <fields>
-        <help>El nombre de API de campo del objeto Importación de datos de NPSP donde el Id. del registro importado se colocará cuando la importación se realice correctamente. También es donde el código verificará si este registro fue importado o por coincidencia.</help>
-        <label>Nombre de campo de registro importado</label>
-        <name>Imported_Record_Field_Name__c</name>
-    </fields>
-    <fields>
-        <help>El Nombre de API de campo donde se registrará la operación correcta o fallida de un registro de Importación de datos de NPSP.</help>
-        <label>Nombre campo estado registro importado</label>
-        <name>Imported_Record_Status_Field_Name__c</name>
-    </fields>
-    <fields>
-        <label>Está eliminado</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de objeto de importación datos heredados del objeto en el que se basa este Grupo de objetos de importación de datos.</help>
-        <label>Nomb. objeto importación datos heredados</label>
-        <name>Legacy_Data_Import_Object_Name__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API del objeto de destino para este Grupo de objetos.</help>
-        <label>Nombre API del objeto</label>
-        <name>Object_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>El registro de Grupo de objetos de importación de datos que debe existir antes de que se pueda crear este registro (ya sea principal o secundario).</help>
-        <label>Predecesor</label>
-        <name>Predecessor__c</name>
-    </fields>
-    <fields>
-        <help>Si este Grupo de objetos es un secundario del predecesor, este campo debe consultar el principal. Si es el principal del predecesor, debe ser el campo de búsqueda en el registro secundario.</help>
-        <label>Campo de relación</label>
-        <name>Relationship_Field__c</name>
-    </fields>
-    <fields>
-        <help>Indica si este objeto es un principal o secundario del predecesor.</help>
-        <label>Relación con predecesor</label>
-        <name>Relationship_To_Predecessor__c</name>
-        <picklistValues>
-            <masterLabel>Child</masterLabel>
-            <translation>Menor</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Predecessor</masterLabel>
-            <translation>Sin predecesor</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Parent</masterLabel>
-            <translation>Progenitor</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Data Import Object Mapping Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Detalles de relación de objeto personalizado</label>
-            <section>Custom Object Relationship Details</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Custom_Mapping_Logic_Class__c</name>
+    <help>Si debe emplearse lógica de Apex personalizada para asignar campos a este objeto, este campo se rellena con el nombre de una clase (incluyendo el espacio de nombres) que amplía la clase BDI_ObjectMappingLogic y sustituye el método populateObject.</help>
+    <label>Clase de lógica asignación personalizada</label>
+  </fields>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>El Grupo de objetos de importación de datos que contiene este registro.</help>
+    <relationshipLabel>Asignaciones objetos importación datos</relationshipLabel>
+    <label>Conjunto asign objetos importación datos</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Field_Name__c</name>
+    <help>El nombre de API de campo del objeto Importación de datos de NPSP donde el Id. del registro importado se colocará cuando la importación se realice correctamente. También es donde el código verificará si este registro fue importado o por coincidencia.</help>
+    <label>Nombre de campo de registro importado</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Status_Field_Name__c</name>
+    <help>El Nombre de API de campo donde se registrará la operación correcta o fallida de un registro de Importación de datos de NPSP.</help>
+    <label>Nombre campo estado registro importado</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>Está eliminado</label>
+  </fields>
+  <fields>
+    <name>Object_API_Name__c</name>
+    <help>El nombre de API del objeto de destino para este Grupo de objetos.</help>
+    <label>Nombre API del objeto</label>
+  </fields>
+  <fields>
+    <name>Legacy_Data_Import_Object_Name__c</name>
+    <help>El nombre de objeto de importación datos heredados del objeto en el que se basa este Grupo de objetos de importación de datos.</help>
+    <label>Nomb. objeto importación datos heredados</label>
+  </fields>
+  <fields>
+    <name>Predecessor__c</name>
+    <help>El registro de Grupo de objetos de importación de datos que debe existir antes de que se pueda crear este registro (ya sea principal o secundario).</help>
+    <label>Predecesor</label>
+  </fields>
+  <fields>
+    <name>Relationship_Field__c</name>
+    <help>Si este Grupo de objetos es un secundario del predecesor, este campo debe consultar el principal. Si es el principal del predecesor, debe ser el campo de búsqueda en el registro secundario.</help>
+    <label>Campo de relación</label>
+  </fields>
+  <fields>
+    <name>Relationship_To_Predecessor__c</name>
+    <help>Indica si este objeto es un principal o secundario del predecesor.</help>
+    <label>Relación con predecesor</label>
+    <picklistValues>
+      <masterLabel>Parent</masterLabel>
+      <translation>Progenitor</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Child</masterLabel>
+      <translation>Menor</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Predecessor</masterLabel>
+      <translation>Sin predecesor</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Data Import Object Mapping Layout</layout>
+    <sections>
+      <label>Detalles de relación de objeto personalizado</label>
+      <section>Custom Object Relationship Details</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Asignación de objeto de importación de datos</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Asignaciones de objetos de importaciones de datos</value>
+  </caseValues>
 </CustomObjectTranslation>

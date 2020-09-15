@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>データインポート項目の対応付けセット</value>
-    </caseValues>
-    <fields>
-        <help>この項目の対応付けセットが含まれるデータインポートオブジェクトグループ。</help>
-        <label>データインポートオブジェクトの対応付けセット</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>データインポート項目の対応付けセット</relationshipLabel>
-    </fields>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>この項目の対応付けセットが含まれるデータインポートオブジェクトグループ。</help>
+    <relationshipLabel>データインポート項目の対応付けセット</relationshipLabel>
+    <label>データインポートオブジェクトの対応付けセット</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>データインポート項目の対応付けセット</value>
+  </caseValues>
 </CustomObjectTranslation>

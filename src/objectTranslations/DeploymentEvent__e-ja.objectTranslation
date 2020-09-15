@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>リリースイベント</value>
-    </caseValues>
-    <fields>
-        <label>完了日</label>
-        <name>CompletedDate__c</name>
-    </fields>
-    <fields>
-        <label>リリース ID</label>
-        <name>DeploymentId__c</name>
-    </fields>
-    <fields>
-        <label>状況</label>
-        <name>Status__c</name>
-    </fields>
+  <fields>
+    <name>CompletedDate__c</name>
+    <label>完了日</label>
+  </fields>
+  <fields>
+    <name>DeploymentId__c</name>
+    <label>リリース ID</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <label>状況</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>リリースイベント</value>
+  </caseValues>
 </CustomObjectTranslation>

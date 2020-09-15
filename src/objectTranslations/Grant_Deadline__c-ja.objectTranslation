@@ -1,59 +1,63 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>提出書類</value>
-    </caseValues>
-    <fields>
-        <help>提出書類の期限日。</help>
-        <label>提出期限</label>
-        <name>Grant_Deadline_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>提出書類が実際に提出された日付。</help>
-        <label>提出完了日</label>
-        <name>Grant_Deliverable_Close_Date__c</name>
-    </fields>
-    <fields>
-        <help>提出書類の要件の説明。</help>
-        <label>助成金の提出書類要件</label>
-        <name>Grant_Deliverable_Requirements__c</name>
-    </fields>
-    <fields>
-        <label>商談</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>提出書類</relationshipLabel>
-    </fields>
-    <fields>
-        <label>種別</label>
-        <name>Type__c</name>
-        <picklistValues>
-            <masterLabel>Application</masterLabel>
-            <translation>アプリケーション</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Final Report</masterLabel>
-            <translation>最終レポート</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Interim Report</masterLabel>
-            <translation>中間レポート</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>LOI</masterLabel>
-            <translation>LOI</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Grant Deadline Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>助成金の提出書類要件</label>
-            <section>Grant Deliverable Requirements</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>提出書類名</nameFieldLabel>
+  <fields>
+    <name>Grant_Deadline_Due_Date__c</name>
+    <help>提出書類の期限日。</help>
+    <label>提出期限</label>
+  </fields>
+  <fields>
+    <name>Grant_Deliverable_Close_Date__c</name>
+    <help>提出書類が実際に提出された日付。</help>
+    <label>提出完了日</label>
+  </fields>
+  <fields>
+    <name>Grant_Deliverable_Requirements__c</name>
+    <help>提出書類の要件の説明。</help>
+    <label>助成金の提出書類要件</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>提出書類</relationshipLabel>
+    <label>商談</label>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <label>種別</label>
+    <picklistValues>
+      <masterLabel>LOI</masterLabel>
+      <translation>LOI</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Application</masterLabel>
+      <translation>アプリケーション</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Interim Report</masterLabel>
+      <translation>中間レポート</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Final Report</masterLabel>
+      <translation>最終レポート</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Grant Deadline Layout</layout>
+    <sections>
+      <label>助成金の提出書類要件</label>
+      <section>Grant Deliverable Requirements</section>
+    </sections>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>提出書類名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>提出書類名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>提出書類</value>
+  </caseValues>
 </CustomObjectTranslation>

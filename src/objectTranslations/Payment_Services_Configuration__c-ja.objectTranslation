@@ -1,35 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>支払サービス設定</value>
-    </caseValues>
-    <fields>
-        <label>秘密</label>
-        <name>Is_Secret__c</name>
-    </fields>
-    <fields>
-        <label>キー</label>
-        <name>Key__c</name>
-    </fields>
-    <fields>
-        <label>サービスキー</label>
-        <name>Service_Key__c</name>
-    </fields>
-    <fields>
-        <label>サービス</label>
-        <name>Service__c</name>
-    </fields>
-    <fields>
-        <label>値</label>
-        <name>Value__c</name>
-    </fields>
-    <layouts>
-        <layout>Payment Configuration Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>支払サービス設定名</nameFieldLabel>
+  <fields>
+    <name>Is_Secret__c</name>
+    <label>秘密</label>
+  </fields>
+  <fields>
+    <name>Key__c</name>
+    <label>キー</label>
+  </fields>
+  <fields>
+    <name>Service_Key__c</name>
+    <label>サービスキー</label>
+  </fields>
+  <fields>
+    <name>Service__c</name>
+    <label>サービス</label>
+  </fields>
+  <fields>
+    <name>Value__c</name>
+    <label>値</label>
+  </fields>
+  <layouts>
+    <layout>Payment Configuration Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>支払サービス設定名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>支払サービス設定名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>支払サービス設定</value>
+  </caseValues>
 </CustomObjectTranslation>

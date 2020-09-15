@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Ensemble de mappage de champs d&apos;importation de données</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Ensembles de mappage de champs d&apos;importation de données</value>
-    </caseValues>
-    <fields>
-        <help>Le groupe d&apos;objets Importation de données qui contient cet ensemble de mappages de champ.</help>
-        <label>Ensemble mappages objets import. données</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>Ensembles de mappages de champs d&apos;importation de données</relationshipLabel>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Vowel</startsWith>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>Le groupe d'objets Importation de données qui contient cet ensemble de mappages de champ.</help>
+    <relationshipLabel>Ensembles de mappages de champs d'importation de données</relationshipLabel>
+    <label>Ensemble mappages objets import. données</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Ensemble de mappage de champs d'importation de données</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Ensembles de mappage de champs d'importation de données</value>
+  </caseValues>
 </CustomObjectTranslation>

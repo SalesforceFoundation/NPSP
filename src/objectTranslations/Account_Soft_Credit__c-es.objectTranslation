@@ -1,47 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Crédito blando de cuenta</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Créditos blandos de cuentas</value>
-    </caseValues>
-    <fields>
-        <help>La cuenta que recibe este crédito blando.</help>
-        <label>Cuenta</label>
-        <name>Account__c</name>
-        <relationshipLabel>Créditos blandos de cuenta</relationshipLabel>
-    </fields>
-    <fields>
-        <help>El importe que será asignado como crédito blando.</help>
-        <label>Importe</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>La oportunidad a la que se aplica este crédito blando.</help>
-        <label>Oportunidad</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Créditos blandos de cuenta</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La función asociada con este crédito blando. La función describe cómo se relacionó la cuenta con la oportunidad.</help>
-        <label>Función</label>
-        <name>Role__c</name>
-        <picklistValues>
-            <masterLabel>Donation Source</masterLabel>
-            <translation>Origen de la donación</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Influencer</masterLabel>
-            <translation>Influyente</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Match</masterLabel>
-            <translation>Coincidencia</translation>
-        </picklistValues>
-    </fields>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Nombre de crédito blando de cuenta</nameFieldLabel>
+  <fields>
+    <name>Account__c</name>
+    <help>La cuenta que recibe este crédito blando.</help>
+    <relationshipLabel>Créditos blandos de cuenta</relationshipLabel>
+    <label>Cuenta</label>
+  </fields>
+  <fields>
+    <name>Amount__c</name>
+    <help>El importe que será asignado como crédito blando.</help>
+    <label>Importe</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>La oportunidad a la que se aplica este crédito blando.</help>
+    <relationshipLabel>Créditos blandos de cuenta</relationshipLabel>
+    <label>Oportunidad</label>
+  </fields>
+  <fields>
+    <name>Role__c</name>
+    <help>La función asociada con este crédito blando. La función describe cómo se relacionó la cuenta con la oportunidad.</help>
+    <label>Función</label>
+    <picklistValues>
+      <masterLabel>Donation Source</masterLabel>
+      <translation>Origen de la donación</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Influencer</masterLabel>
+      <translation>Influyente</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Match</masterLabel>
+      <translation>Coincidencia</translation>
+    </picklistValues>
+  </fields>
+  <nameFieldLabel>Nombre de crédito blando de cuenta</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de crédito blando de cuenta</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Crédito blando de cuenta</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Créditos blandos de cuentas</value>
+  </caseValues>
 </CustomObjectTranslation>

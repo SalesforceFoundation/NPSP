@@ -1,41 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>DÉPRÉCIÉ-Planifiable</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>DÉPRÉCIÉ-Planifiables</value>
-    </caseValues>
-    <fields>
-        <help>Détermine si la tâche sera active ou non.</help>
-        <label>Actif</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Classe planifiée pour être exécutée à une certaine fréquence.</help>
-        <label>Nom de classe</label>
-        <name>Class_Name__c</name>
-    </fields>
-    <fields>
-        <help>Quand exécuter la tâche.</help>
-        <label>Fréquence</label>
-        <name>Frequency__c</name>
-        </fields>
-    <fields>
-        <help>La dernière fois que la tâche a été exécutée.</help>
-        <label>Date de dernière exécution</label>
-        <name>Last_Time_Run__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Schedulable Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom de la tâche</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Active__c</name>
+    <help>Détermine si la tâche sera active ou non.</help>
+    <label>Actif</label>
+  </fields>
+  <fields>
+    <name>Class_Name__c</name>
+    <help>Classe planifiée pour être exécutée à une certaine fréquence.</help>
+    <label>Nom de classe</label>
+  </fields>
+  <fields>
+    <name>Frequency__c</name>
+    <help>Quand exécuter la tâche.</help>
+    <label>Fréquence</label>
+    <picklistValues>
+      <masterLabel>Hourly</masterLabel>
+      <translation>Toutes les heures</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>Quotidien</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Hebdomadaire</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Mensuel</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Trimestriel</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Last_Time_Run__c</name>
+    <help>La dernière fois que la tâche a été exécutée.</help>
+    <label>Date de dernière exécution</label>
+  </fields>
+  <layouts>
+    <layout>Schedulable Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom de la tâche</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom de la tâche</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>DÉPRÉCIÉ-Planifiable</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>DÉPRÉCIÉ-Planifiables</value>
+  </caseValues>
 </CustomObjectTranslation>

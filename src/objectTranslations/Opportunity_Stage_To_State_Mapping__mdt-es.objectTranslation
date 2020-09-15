@@ -1,30 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Asignación de Etapa de oportunidad a Situación</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Asignaciones de Etapas de oportunidades a Situaciones</value>
-    </caseValues>
-    <fields>
-        <help>El nombre de API de la Etapa de oportunidad que se asignará al estado.</help>
-        <label>Etapa de oportunidad</label>
-        <name>Opportunity_Stage__c</name>
-    </fields>
-    <fields>
-        <help>Las entradas válidas son “No comprometido”, “Comprometido” o “Finalizado”.</help>
-        <label>Estado de oportunidad</label>
-        <name>Opportunity_State__c</name>
-        <picklistValues>
-            <masterLabel>Committed</masterLabel>
-            <translation>Comprometido</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Finalized</masterLabel>
-            <translation>Finalizado</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Opportunity_Stage__c</name>
+    <help>El nombre de API de la Etapa de oportunidad que se asignará al estado.</help>
+    <label>Etapa de oportunidad</label>
+  </fields>
+  <fields>
+    <name>Opportunity_State__c</name>
+    <help>Las entradas válidas son “No comprometido”, “Comprometido” o “Finalizado”.</help>
+    <label>Estado de oportunidad</label>
+    <picklistValues>
+      <masterLabel>Committed</masterLabel>
+      <translation>Comprometido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Finalized</masterLabel>
+      <translation>Finalizado</translation>
+    </picklistValues>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Asignación de Etapa de oportunidad a Situación</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Asignaciones de Etapas de oportunidades a Situaciones</value>
+  </caseValues>
 </CustomObjectTranslation>

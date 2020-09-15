@@ -1,71 +1,71 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>エンゲージメント計画テンプレート</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage EP Template FS --></label>
-        <name>ManageEPTemplateFS</name>
-    </fieldSets>
-    <fields>
-        <help>親 ToDo が実際にいつ完了したかに基づいて、子 ToDo の期日を再計算します。</help>
-        <label>子 ToDo の期日を自動的に更新</label>
-        <name>Automatically_Update_Child_Task_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>エンゲージメント計画 ToDo の [割り当て先] 項目が空白の場合、ToDo を誰に割り当てる必要がありますか?</help>
-        <label>デフォルトの任命先</label>
-        <name>Default_Assignee__c</name>
-        <picklistValues>
-            <masterLabel>Owner of Object for Engagement Plan</masterLabel>
-            <translation>エンゲージメント計画のオブジェクトの所有者</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>User Creating Engagement Plan</masterLabel>
-            <translation>エンゲージメント計画を作成しているユーザ</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>説明</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>週末の期日を持つ ToDo を週末の前の金曜日または週末の後の月曜日にスケジュールする必要がありますか? これは、[週末をスキップ] が選択されている場合にのみ適用されます。</help>
-        <label>再スケジュール先</label>
-        <name>Reschedule_To__c</name>
-        <picklistValues>
-            <masterLabel>Friday</masterLabel>
-            <translation>金曜日</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monday</masterLabel>
-            <translation>月曜日</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>選択した場合、エンゲージメント計画の期日が土曜日または日曜日になることはありません。</help>
-        <label>週末をスキップ</label>
-        <name>Skip_Weekends__c</name>
-    </fields>
-    <fields>
-        <label>エンゲージメント計画総数</label>
-        <name>Total_Engagement_Plans__c</name>
-    </fields>
-    <fields>
-        <label>ToDo 総数</label>
-        <name>Total_Tasks__c</name>
-    </fields>
-    <layouts>
-        <layout>Engagement Plan Template Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>エンゲージメント計画テンプレート名</nameFieldLabel>
-    <webLinks>
-        <label>テンプレートの管理</label>
-        <name>Manage_Template</name>
-    </webLinks>
+  <fields>
+    <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    <help>親 ToDo が実際にいつ完了したかに基づいて、子 ToDo の期日を再計算します。</help>
+    <label>子 ToDo の期日を自動的に更新</label>
+  </fields>
+  <fields>
+    <name>Default_Assignee__c</name>
+    <help>エンゲージメント計画 ToDo の [割り当て先] 項目が空白の場合、ToDo を誰に割り当てる必要がありますか?</help>
+    <label>デフォルトの任命先</label>
+    <picklistValues>
+      <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+      <translation>エンゲージメント計画のオブジェクトの所有者</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>User Creating Engagement Plan</masterLabel>
+      <translation>エンゲージメント計画を作成しているユーザ</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>説明</label>
+  </fields>
+  <fields>
+    <name>Reschedule_To__c</name>
+    <help>週末の期日を持つ ToDo を週末の前の金曜日または週末の後の月曜日にスケジュールする必要がありますか? これは、[週末をスキップ] が選択されている場合にのみ適用されます。</help>
+    <label>再スケジュール先</label>
+    <picklistValues>
+      <masterLabel>Monday</masterLabel>
+      <translation>月曜日</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Friday</masterLabel>
+      <translation>金曜日</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Skip_Weekends__c</name>
+    <help>選択した場合、エンゲージメント計画の期日が土曜日または日曜日になることはありません。</help>
+    <label>週末をスキップ</label>
+  </fields>
+  <fields>
+    <name>Total_Engagement_Plans__c</name>
+    <label>エンゲージメント計画総数</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>ToDo 総数</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Template</name>
+    <label>テンプレートの管理</label>
+  </webLinks>
+  <layouts>
+    <layout>Engagement Plan Template Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>エンゲージメント計画テンプレート名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>エンゲージメント計画テンプレート名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>エンゲージメント計画テンプレート</value>
+  </caseValues>
 </CustomObjectTranslation>
