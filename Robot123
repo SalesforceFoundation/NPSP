@@ -1,0 +1,76 @@
+*** Settings ***
+
+Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulus.robotframework.PageObjects
+...             robot/cumulus/resources/ContactPageObject.py
+...             robot/cumulus/resources/AccountPageObject.py
+...             robot/cumulus/resources/OpportuniesPageObject.py
+...             robot/cumulus/resourses/SchedulePaymentPageObjecect.py
+...             robot/cumulus/resources/NPSP.py
+Suite Setup     Run Keywords
+...             Open Test Browser
+...             Setup Test Data
+Suite Teardown  Delete Records and Close Browser
+
+
+*** Keywords ***
+# Sets test data contact and an opportunity for the contact
+Setup Test Data
+    Setupdata   contact   ${contact1_fields}
+       
+
+
+
+*** Varibles ***
+&{contact1_fields}            Email=test@emaple.com
+&{opp_name}                   Raven Donation Test
+${Amount}                     $250
+${Stage_Type}                 Closed Won
+
+*** Test Cases ***
+
+Create  Donation and Opportunity and Create Payment Manually
+[Documentation]       Navigate to Opportunities page and open Opportunity>In the right section, got to Payments click on drop down Arrow>New
+                      Create a new Payment for the Opportunity
+
+[tags]                    W-038461          feature:Donations
+
+Go To Page                Listing
+...                       Opportunity
+
+Click Object Button       New
+Select Record Type        Donation
+Wait for Modal            New               Opportunity
+# Create a new Opportunity from UI
+
+Populate Modal Form
+...                                         Opportunity Name=${opp_name}
+...                                         Account Name=${data}[contact][LastName] Household
+...                                         Amount=${Amount}
+...                                         Do Not Automatically create Payment=checked
+Select Value From Dropdown                  Stage ${Stage_Type}
+Open Date Picker                            Close Date
+Pick Date                                   Today
+Click Modal Button                          Save
+Current Page Should Be                      Details                                 Opportunity
+Save Current Record ID For Deletion         Opportunity
+Validate Related Record Count               Payments
+
+#Make A New Payment
+
+Click Related List Button                   Payments
+Wait For Modal                              New
+Select Window                               
+Populate Modal Form                         Payment Amount=$250
+...                                         Payment Method=Credit Card
+
+Open Date Picker                            Payment Date
+Pick Date                                   Today
+Click Modal Button                          Save
+Scroll Page To Location                     0   0
+Validate Related Record Count               Payments
+
+Go To Page                                  Details
+...                                         Contact
+...                                         object_id=${data}[contact][Id]
+Wait Util Loading Page Is Complete
