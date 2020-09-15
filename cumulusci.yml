@@ -704,6 +704,11 @@ tasks:
                     );
                 }
 
+    generate_and_load_from_yaml_hack:
+        class_path: cumulusci.tasks.bulkdata.generate_and_load_data_from_yaml.GenerateAndLoadDataFromYaml
+
+    hack_cci_sf_sep_2020:
+        class_path: datasets.rd2.cci_sf_hack.CCIHack
 
 flows:
     install_regression:
