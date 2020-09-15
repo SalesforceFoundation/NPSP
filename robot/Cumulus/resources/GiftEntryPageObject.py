@@ -363,6 +363,10 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {table} table')
     
     def perform_action_on_datatable_row(self,name,action):
+        """Select the specific gift entry data row based on the name parameter and
+        selects the action from the dropdown menu.
+        Eg: |Perform Action On Datatable Row  | ${contact2}[Name]     |     Delete
+        """
         locator=npsp_lex_locators["gift_entry"]["datatable_options_icon"].format(name)
         self.selenium.wait_until_page_contains_element(locator)
         self.selenium.scroll_element_into_view(locator)
