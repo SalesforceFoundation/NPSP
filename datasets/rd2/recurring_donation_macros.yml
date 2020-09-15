@@ -13,7 +13,7 @@
             pick:
               - object: Account
                 fields:
-                  description: Org Account related to Recurring Donation
+                  Description: Org Account related to Recurring Donation
                   Name: ${{ fake.company }} ${{ fake.company_suffix }}
                   Phone:
                     fake: phone_number

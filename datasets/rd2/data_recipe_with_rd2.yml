@@ -14,27 +14,27 @@
   nickname: theRdGau
   just_once: True
   fields:
-    name: The RD GAU
-    description__c: ${{fake.paragraph}}
+    Name: The RD GAU
+    Description__c: ${{fake.paragraph}}
 
 - object: General_Accounting_Unit__c
   nickname: theOppGau
   just_once: True
   fields:
-    name: The Opp GAU
-    description__c: ${{fake.paragraph}}
+    Name: The Opp GAU
+    Description__c: ${{fake.paragraph}}
 
 - object: General_Accounting_Unit__c
   count: 100
   just_once: True
   fields:
-    name: The ${{fake.word}} ${{fake.word}} Program
+    Name: The ${{fake.word}} ${{fake.word}} Program
 
 - object: Campaign
   nickname: theCampaign
   just_once: True
   fields:
-    name: The ${{fake.word}} Campaign
+    Name: The ${{fake.word}} Campaign
     IsActive: True
 
 - macro: ContactName
@@ -116,8 +116,8 @@
                 pick:
                   - object: Account
                     fields:
-                      description: Org Account related to Recurring Donation
                       Name: ${{ fake.company }} ${{ fake.company_suffix }}
+                      Description: Org Account related to Recurring Donation
                       Phone:
                         fake: phone_number
                     friends:
@@ -302,6 +302,9 @@
   nickname: multiHousehold
   fields:
     Name: Multi-Person Household
+    Description: Multi-Household Account
+    Phone:
+      fake: phone_number
     RecordType: HH_Account
   friends:
     - object: Contact

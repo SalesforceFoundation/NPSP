@@ -2,32 +2,32 @@ Insert General_Accounting_Unit__c:
   sf_object: General_Accounting_Unit__c
   table: General_Accounting_Unit__c
   fields:
-    name: name
-    description__c: description__c
+    Name: Name
+    Description__c: Description__c
 Insert HH_Account:
   sf_object: Account
   table: Account
   fields:
-    description: description
+    Description: Description
     Name: Name
     Phone: Phone
   record_type: HH_Account
   filters:
-  - record_type = 'HH_Account'
+  - RecordType = 'HH_Account'
 Insert Account:
   sf_object: Account
   table: Account
   fields:
-    description: description
+    Description: Description
     Name: Name
     Phone: Phone
   filters:
-  - record_type is NULL
+  - RecordType is NULL
 Insert Campaign:
   sf_object: Campaign
   table: Campaign
   fields:
-    name: name
+    Name: Name
     IsActive: IsActive
 Insert Contact:
   sf_object: Contact
@@ -106,7 +106,7 @@ Insert Opportunity:
     StageName: StageName
   record_type: Donation
   filters:
-  - record_type = 'Donation'
+  - RecordType = 'Donation'
   lookups:
     Primary_Contact__c:
       table: Contact
