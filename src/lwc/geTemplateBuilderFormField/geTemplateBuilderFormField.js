@@ -36,6 +36,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.targetObjectDescribeInfo = response.data;
+
             this.validate();
         }
     }
@@ -70,6 +71,11 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
         if (isEmpty(this.targetObjectDescribeInfo.fields[this.fieldMapping.Target_Field_API_Name]) ||
             isEmpty(this.sourceObjectFieldInfo[this.fieldMapping.Source_Field_API_Name])) {
+
+            const inputField = this.template.querySelector('[data-id="formField"]');
+
+            inputField.setCustomValidity('Field not found');
+            inputField.reportValidity();
 
             this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));
         }
