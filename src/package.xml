@@ -296,8 +296,6 @@
         <members>GAU_TDTM_TEST</members>
         <members>GE_DefaultTemplate</members>
         <members>GE_DefaultTemplate_TEST</members>
-        <members>GE_FormRendererService</members>
-        <members>GE_FormRendererService_TEST</members>
         <members>GE_FormServiceController</members>
         <members>GE_GiftEntryController</members>
         <members>GE_GiftEntryController_TEST</members>

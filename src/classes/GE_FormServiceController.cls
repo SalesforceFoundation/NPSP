@@ -50,9 +50,9 @@ public with sharing class GE_FormServiceController {
     public static FORM_RenderWrapper getFormRenderWrapper(Id templateId) {
         try {
             if (templateId != null) {
-                return GE_FormRendererService.getRenderWrapperById(templateId);
+                return GE_GiftEntryController.getRenderWrapperById(templateId);
             } else {
-                return GE_FormRendererService.getDefaultSGERenderWrapper();
+                return GE_GiftEntryController.getDefaultSGERenderWrapper();
             }
         } catch (Exception e) {
             AuraHandledException ex = new AuraHandledException(e.getMessage());

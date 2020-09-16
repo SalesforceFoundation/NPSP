@@ -42,6 +42,6 @@ public with sharing class GE_TemplateBuilderCtrl {
      */
     @AuraEnabled
     public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
-        return GE_FormRendererService.getDefaultSGERenderWrapper();
+        return GE_GiftEntryController.getDefaultSGERenderWrapper();
     }
 }
