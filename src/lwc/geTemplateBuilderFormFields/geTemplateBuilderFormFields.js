@@ -190,23 +190,23 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             const lightningAccordion = this.template.querySelector('lightning-accordion');
             lightningAccordion.activeSectionName = [...objectMappingsWithMissingRequiredFields];
 
+            this.errors = [...missingRequiredFieldMappings];
+
             this.pageLevelError = {
                 hasErrors : true,
                 title : this.CUSTOM_LABELS.commonError,
                 message: this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields
             }
-            this.errors = [...missingRequiredFieldMappings];
 
             isValid = false;
         } else {
             isValid = true;
 
-            this.pageLevelError = {
-                hasErrors : true,
-                title : this.CUSTOM_LABELS.commonError,
-                message: this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields
-            }
             this.errors = [];
+
+            this.pageLevelError = {
+                hasErrors : false
+            }
         }
 
         dispatch(this, 'updatevalidity', { property: 'hasSelectFieldsTabError', hasError: this.pageLevelError.hasErrors });
@@ -484,11 +484,11 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      */
     handleFieldMetadataError(event) {
         // this.hasErrors = true;
-        this.pageLevelError = {
-            hasErrors: true,
-            title: this.CUSTOM_LABELS.commonFieldsNotFound,
-            message: this.CUSTOM_LABELS.geFieldsNotFoundMessage
-        }
+        // this.pageLevelError = {
+        //     hasErrors: true,
+        //     title: this.CUSTOM_LABELS.commonFieldsNotFound,
+        //     message: this.CUSTOM_LABELS.geFieldsNotFoundMessage
+        // }
     }
 
     /*******************************************************************************

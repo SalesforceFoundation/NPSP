@@ -5,6 +5,8 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import {deepClone, isEmpty} from 'c/utilCommon';
 
+import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
+
 const WIDGET = 'widget';
 const YES = 'Yes';
 
@@ -40,6 +42,10 @@ export default class geTemplateBuilderFormField extends LightningElement {
     renderedCallback() {
         if (!this.hasRendered) {
             this.hasRendered = true;
+
+            if (this.objectApiName === DI_BATCH_INFO.objectApiName) {
+                return;
+            }
 
             if (isEmpty(this.fieldMapping)) {
                 const inputField = this.template.querySelector('[data-id="formField"]');
