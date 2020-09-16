@@ -9,7 +9,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             API Check And Enable Gift Entry
 ...             Setup Test Data
-#Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
 ${amount}         100
@@ -106,7 +106,7 @@ Test Batch Status Adding Removig Gifts
     Process And Validate Batch       Completed
     Verify Table Field Values        Batch Gifts
     ...                              Status=Imported
-
+    # Verify the backend dataimport batch job using the API call
     Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
     ...                              Batch_Status__c=Completed
 
@@ -127,10 +127,11 @@ Test Batch Status Adding Removig Gifts
 
     # Verify the backend dataimport batch job
     Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
-    ...                              Batch_Status__c=Failed - Needs Review !
+    ...                              Batch_Status__c=Failed - Needs Review
 
     #Delete the row that has Dry run status and trigger the batch job to see it completed
     Perform Action On Datatable Row  ${contact2}[Name]          Delete
+
     # Verify the backend dataimport batch job
     Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
     ...                              Batch_Status__c=Completed
