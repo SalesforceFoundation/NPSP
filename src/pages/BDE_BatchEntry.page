@@ -211,7 +211,7 @@
     </style>
 
     <apex:outputPanel rendered="true">
-        <apex:sectionHeader title="Batch Data Entry" subtitle="{!pageSubtitle}" />
+        <apex:sectionHeader title="{!$Label.stgNavBDE}" subtitle="{!pageSubtitle}" />
         <div id='retirementPrompt'></div>
     </apex:outputPanel>
 
