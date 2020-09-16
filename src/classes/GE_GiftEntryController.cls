@@ -601,5 +601,30 @@ public with sharing class GE_GiftEntryController {
         return null;
     }
 
+    /**
+     * @description Returns a render wrapper containing the Advanced Mapping field and
+     * object mappings and a Gift Entry form template, which is either the default
+     * or the one whose Id is passed in as templateId.
+     *
+     * @param templateId Id of the target Form_Template__c.
+     *
+     * @return The render wrapper containing the target template or the default
+     * template if templateId is null.
+     */
+    @AuraEnabled(cacheable=true)
+    public static FORM_RenderWrapper getFormRenderWrapper(Id templateId) {
+        try {
+            if (templateId != null) {
+                return getRenderWrapperById(templateId);
+            } else {
+                return getDefaultSGERenderWrapper();
+            }
+        } catch (Exception e) {
+            AuraHandledException ex = new AuraHandledException(e.getMessage());
+            ex.initCause(e);
+            throw ex;
+        }
+    }
+
     private class BDIException extends Exception {}
 }

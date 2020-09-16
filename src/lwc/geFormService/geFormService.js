@@ -1,5 +1,5 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
-import getFormRenderWrapper from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
+import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 
 import { handleError } from 'c/utilTemplateBuilder';
