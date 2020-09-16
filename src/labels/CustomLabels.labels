@@ -4997,7 +4997,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Batch Number Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Description of how to use the existing batch number format table</shortDescription>
+        <shortDescription>Description of how to use the batch number format table</shortDescription>
         <value>Activate or deactivate batch number formats. One batch number format can be active at time.</value>
     </labels>
     <labels>
@@ -5005,7 +5005,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Batch Number Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for table of existing batch number formats</shortDescription>
+        <shortDescription>Header for table of batch number formats</shortDescription>
         <value>Batch Number Formats</value>
     </labels>
     <labels>
@@ -5064,7 +5064,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description for creating a batch number format</shortDescription>
-        <value>Create a custom batch number format and choose a starting number. You must activate the new batch number format in the Batch Number Formats section.</value>
+        <value>Create a custom batch number format and choose a starting number. You must activate the new batch number format. Only one batch number format can be active at a time. </value>
     </labels>
     <labels>
         <fullName>autoNumberErrorInvalidDisplayFormat</fullName>
@@ -5096,7 +5096,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of the batch number settings</shortDescription>
-        <value>Batch numbers are unique identifiers used in Gift Entry, NPSP Data Importer, and the legacy Batch Gift Entry feature. The auto-numbered value appears in the Batch Number fields on Opportunities and Payments.</value>
+        <value>Batch numbers are unique identifiers used in Gift Entry and NPSP Data Importer. The auto-numbered value appears in the Batch Number fields on Opportunities and Payments.</value>
     </labels>
     <labels>
         <fullName>batchNumberSettingsHeader</fullName>
