@@ -126,8 +126,9 @@ public class BDI_ManageAdvancedMappingCtrl {
         for (BDI_ObjectMapping objectMapping : objMappings) {
             BDI_FieldMapping [] fieldMappings =
                 bdiMsAdv.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
-            BDI_ObjectMapping predecessorObjMapping =
-                bdiMsAdv.objectMappingByDevName.get(objectMapping.Predecessor);
+            if (fieldMappings == null) {
+                fieldMappings = new BDI_FieldMapping[]{};
+            }
             if (!fieldMappings.isEmpty()) {
                for (BDI_FieldMapping fieldMapping : fieldMappings) {
                    if(!fieldMapping.isValid && !fieldMapping.Is_Deleted) {
@@ -135,6 +136,8 @@ public class BDI_ManageAdvancedMappingCtrl {
                    }
                }
             }
+            BDI_ObjectMapping predecessorObjMapping =
+                bdiMsAdv.objectMappingByDevName.get(objectMapping.Predecessor);
             //Assign the label name field for the predecessor using the constructed map by dev name.
             if(predecessorObjMapping != null) {
                 objectMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
@@ -264,7 +267,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             //Add possible invalid field mappings
             fieldMappings.addAll(objectMapping.Field_Mappings);
         }
-        return fieldMappings;
+        return fieldMappings == null ? new BDI_FieldMapping[]{} : fieldMappings;
     }
 
     /*******************************************************************************************************
