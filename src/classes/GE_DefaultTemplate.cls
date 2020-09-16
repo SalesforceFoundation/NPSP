@@ -137,7 +137,7 @@ public with sharing class GE_DefaultTemplate {
         populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
         
         FORM_Template defaultTemplate = (FORM_Template)JSON.deserialize(defaultTemplateSRJSON, FORM_Template.class);
-        FORM_Layout defaultLayout = defaultTemplate.layout;
+        FORM_Template.Layout defaultLayout = defaultTemplate.layout;
         List<FORM_Section> sectionList = defaultLayout.sections;
 
         for (FORM_Section section : sectionList) {

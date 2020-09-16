@@ -40,7 +40,7 @@ public with sharing class FORM_Template {
     @AuraEnabled public String name;
     @AuraEnabled public String description;
     @AuraEnabled public String version;
-    @AuraEnabled public FORM_Layout layout;
+    @AuraEnabled public Layout layout;
     @AuraEnabled public String[] defaultBatchTableColumns;
     @AuraEnabled public String permissionErrorType;
     @AuraEnabled public String permissionErrors;
@@ -49,7 +49,7 @@ public with sharing class FORM_Template {
     @AuraEnabled public FORM_BatchHeaderField[] batchHeaderFields;
     /* END */
 
-    public FORM_Template(String name, String description, String version, FORM_Layout layout) {
+    public FORM_Template(String name, String description, String version, Layout layout) {
         this.name = name;
         this.description = description;
         this.version = version;

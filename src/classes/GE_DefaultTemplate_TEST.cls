@@ -37,7 +37,7 @@
 @isTest
 public with sharing class GE_DefaultTemplate_TEST {
     /*******************************************************************************************************
-     * @description Confirm that a default template is able to be deserialized to the current FORM_Layout structure.
+     * @description Confirm that a default template is able to be deserialized to the current FORM_Template.Layout structure.
      * This is the best we can do since there will not be a migrated field set available for testing.  
      */
     @isTest
@@ -46,7 +46,7 @@ public with sharing class GE_DefaultTemplate_TEST {
             GE_DefaultTemplate.buildDefaultTemplate();
         } catch (Exception e) {
             System.Assert(false, 'There was an error deserializing the Base ' + 
-                                  'JSON to the current FORM_Layout structure');
+                                  'JSON to the current FORM_Template.Layout structure');
         }
     }   
 }

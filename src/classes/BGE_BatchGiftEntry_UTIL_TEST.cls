@@ -105,8 +105,8 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
                                 widgetElement
                         });
 
-        FORM_Layout formLayout =
-                new FORM_Layout('', new FORM_Section[]{
+        FORM_Template.Layout formLayout =
+                new FORM_Template.Layout('', new FORM_Section[]{
                         formSection
                 });
 

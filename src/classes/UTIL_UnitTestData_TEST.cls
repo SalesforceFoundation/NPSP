@@ -494,7 +494,7 @@ public class UTIL_UnitTestData_TEST {
                                                 'True',
                                                 elements);
 
-        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
+        FORM_Template.Layout layout = new FORM_Template.Layout('DefaultMappingSet',
                                             new FORM_Section[]{section});
 
         FORM_Template template = new FORM_Template('Sample Template',
