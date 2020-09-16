@@ -1984,6 +1984,14 @@
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
     </labels>
     <labels>
+        <fullName>RD2_EndDateMustBeValidForElevateRecurringDonation</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate connected Recurring Donation End Date must be valid.</shortDescription>
+        <value>End Date can&apos;t be in the future for Elevate connected Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
