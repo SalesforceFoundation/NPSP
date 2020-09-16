@@ -90,7 +90,7 @@ private with sharing class GE_GiftEntryController_TEST {
     }
 
     /*******************************************************************************************************
-     * @description Confirm that a default FORM_RenderWrapper is correctly returned
+     * @description Confirm that a default RenderWrapper is correctly returned
      */
     @isTest
     private static void createAndReturnDefaultFormTemplate() {
@@ -108,7 +108,7 @@ private with sharing class GE_GiftEntryController_TEST {
 
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
-        FORM_RenderWrapper frw = GE_GiftEntryController.getDefaultSGERenderWrapper();
+        GE_GiftEntryController.RenderWrapper frw = GE_GiftEntryController.getDefaultSGERenderWrapper();
         System.assert(frw.formTemplate != null);
         System.assert(frw.formTemplate.name == template.name);
 

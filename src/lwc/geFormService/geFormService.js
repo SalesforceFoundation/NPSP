@@ -43,7 +43,7 @@ class GeFormService {
 
     /**
      * Retrieve the default form render wrapper.
-     * @returns {Promise<FORM_RenderWrapper>}
+     * @returns {Promise<GE_GiftEntryController.RenderWrapper>}
      */
     @api
     getFormTemplate() {

@@ -417,14 +417,14 @@ public with sharing class GE_GiftEntryController {
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
 
     @AuraEnabled
-    public static FORM_RenderWrapper getRenderWrapperById(Id templateId) {
+    public static RenderWrapper getRenderWrapperById(Id templateId) {
         FORM_Service formService = new FORM_Service();
 
         // Get the base template
         FORM_Template queriedTemplate = formService.retrieveFormTemplate(templateId);
 
         // Create the wrapper which will hold the template and field mapping set.
-        FORM_RenderWrapper renderWrapper = wrapTemplate(queriedTemplate);
+        RenderWrapper renderWrapper = wrapTemplate(queriedTemplate);
 
         return renderWrapper;
     }
@@ -433,14 +433,14 @@ public with sharing class GE_GiftEntryController {
      * This method creates a wrapper which contains the  template selected by name and a field mapping set.
      * If the template is not found, it returns a wrapper for the default template
      * @param String templateName
-     * @return  A FORM_RenderWrapper containing the default template JSON.
+     * @return  A RenderWrapper containing the default template JSON.
      */
-    public static FORM_RenderWrapper getRenderWrapper(String templateName) {
+    public static RenderWrapper getRenderWrapper(String templateName) {
         FORM_Service formService = new FORM_Service();
 
         FORM_Template template = formService.retrieveFormTemplate(templateName);
 
-        FORM_RenderWrapper renderWrapper = wrapTemplate(template);
+        RenderWrapper renderWrapper = wrapTemplate(template);
 
         return renderWrapper;
     }
@@ -448,14 +448,14 @@ public with sharing class GE_GiftEntryController {
     /**
      * This method creates a wrapper which contains the default SGE template and a field mapping set.
      *
-     * @return  A FORM_RenderWrapper containing the default template JSON.
+     * @return  A RenderWrapper containing the default template JSON.
      */
-    public static FORM_RenderWrapper getDefaultSGERenderWrapper() {
+    public static RenderWrapper getDefaultSGERenderWrapper() {
         FORM_Service formService = new FORM_Service();
 
         FORM_Template defaultTemplate = formService.retrieveDefaultSGEFormTemplate();
 
-        FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
+        RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 
         return renderWrapper;
     }
@@ -463,9 +463,9 @@ public with sharing class GE_GiftEntryController {
     /**
      * This method builds the wrapper given the template and the field mapping set.
      *
-     * @return  A FORM_RenderWrapper containing the default template JSON.
+     * @return  A RenderWrapper containing the default template JSON.
      */
-    private static FORM_RenderWrapper wrapTemplate(FORM_Template template) {
+    private static RenderWrapper wrapTemplate(FORM_Template template) {
         if (template != null) {
             Boolean includeUnmappedFields = true;
             // Get the mapping service which will retrieve all the mappings
@@ -474,7 +474,7 @@ public with sharing class GE_GiftEntryController {
             updateTemplateWithRequired(template, mappingService.fieldMappingSet);
 
             // Create the wrapper which will hold the template and field mapping set.
-            FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
+            RenderWrapper renderWrapper = new RenderWrapper(template, mappingService.fieldMappingSet);
 
             return renderWrapper;
         } else {
@@ -612,7 +612,7 @@ public with sharing class GE_GiftEntryController {
      * template if templateId is null.
      */
     @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper getFormRenderWrapper(Id templateId) {
+    public static RenderWrapper getFormRenderWrapper(Id templateId) {
         try {
             if (templateId != null) {
                 return getRenderWrapperById(templateId);
@@ -631,8 +631,19 @@ public with sharing class GE_GiftEntryController {
      * @return      A render wrapper containing a template and information about the object/field mappings.
      */
     @AuraEnabled
-    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
+    public static RenderWrapper retrieveDefaultSGERenderWrapper() {
         return GE_GiftEntryController.getDefaultSGERenderWrapper();
+    }
+
+    public class RenderWrapper {
+
+        @AuraEnabled public FORM_Template formTemplate;
+        @AuraEnabled public BDI_FieldMappingSet fieldMappingSetWrapper;
+
+        public RenderWrapper(FORM_Template formTemplate, BDI_FieldMappingSet fieldMappingSetWrapper) {
+            this.formTemplate = formTemplate;
+            this.fieldMappingSetWrapper = fieldMappingSetWrapper;
+        }
     }
 
     private class BDIException extends Exception {}
