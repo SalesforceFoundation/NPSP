@@ -9,7 +9,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             API Check And Enable Gift Entry
 ...             Setup Test Data
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+#Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
 ${amount}         100
@@ -31,6 +31,8 @@ Setup Test Data
         ...              LastName=${faker.last_name()}
         ...              AccountId=${account}[Id]
     Set suite variable   &{contact2}
+    ${ns} =  Get NPSP Namespace Prefix
+    Set Suite Variable   ${ns}
 
 
 Edit Default Template To Add Batch Table Columns
@@ -80,6 +82,8 @@ Test Batch Status Adding Removig Gifts
     Click Gift Entry Button          Save
     Current Page Should Be           Form                          Gift Entry
 
+    ${batch_id} =                    Save Current Record ID For Deletion     ${ns}DataImportBatch__c
+
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
     ...                              Existing Donor Contact=${contact}[Name]
@@ -97,11 +101,14 @@ Test Batch Status Adding Removig Gifts
     Click Special Button              Update
     Verify Table Field Values         Batch Gifts
      ...                              Donation Amount=$${amount_updated}.00
-   # Run and validate the Batch data import status
+    # Run and validate the Batch data import status
 
     Process And Validate Batch       Completed
     Verify Table Field Values        Batch Gifts
     ...                              Status=Imported
+
+    Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
+    ...                              Batch_Status__c=Completed
 
     #Scroll to the top of the page, add gift for contact associated with org account
     Scroll Page To Location          0      0
@@ -118,8 +125,16 @@ Test Batch Status Adding Removig Gifts
     Verify Table Field Values        Batch Gifts
     ...                              Status=Failed
 
+    # Verify the backend dataimport batch job
+    Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
+    ...                              Batch_Status__c=Failed - Needs Review !
+
     #Delete the row that has Dry run status and trigger the batch job to see it completed
     Perform Action On Datatable Row  ${contact2}[Name]          Delete
+    # Verify the backend dataimport batch job
+    Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
+    ...                              Batch_Status__c=Completed
+
     Process And Validate Batch       Completed
     Verify Table Field Values        Batch Gifts
     ...                              Status=Imported
