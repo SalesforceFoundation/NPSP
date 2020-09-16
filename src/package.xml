@@ -385,6 +385,7 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>PS_ElevateService</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -570,6 +571,8 @@
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_Address</members>
         <members>UTIL_Address_TEST</members>
+        <members>UTIL_AuraEnabledCommon</members>
+        <members>UTIL_AuraEnabledCommon_TEST</members>
         <members>UTIL_BatchJobProgress_CTRL</members>
         <members>UTIL_BatchJobProgress_TEST</members>
         <members>UTIL_BatchJobService</members>
@@ -1677,6 +1680,9 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevateDisableButtonLabel</members>
+        <members>RD2_ElevateDisabledMessage</members>
+        <members>RD2_ElevateEnableButtonLabel</members>
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_EnablementDisabledHeader</members>
@@ -3787,7 +3793,9 @@
         <members>geWidgetService</members>
         <members>libsMoment</members>
         <members>progressRing</members>
+        <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2ElevateCreditCardForm</members>
         <members>rd2EntryForm</members>
         <members>rd2EntryFormCustomFieldsSection</members>
         <members>rd2EntryFormDonorSection</members>

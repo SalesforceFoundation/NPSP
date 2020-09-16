@@ -41,7 +41,7 @@ private with sharing class RD2_EntryFormController_TEST {
     * @description Verifies that Entry Form Controller gathers the correct org setting
     */
     @isTest
-    private static void shouldReturnRDSettingForEntryForm() {
+    private static void shouldReturnSettings() {
         Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
@@ -54,10 +54,49 @@ private with sharing class RD2_EntryFormController_TEST {
             'Multi Currency Org should be detected in the configuration.');
         System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
             'Parent Sobject type should be correctly identified when value is not null');
+
         System.assertEquals(true, ((Map<String,Boolean>)orgSettingsByKey.get('InstallmentPeriodPermissions')).get('Createable'),
             'Installment_Period__c.IsCreatable should return true');
         System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
             'A list of Custom Fields should be returned');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer 
+    * in order to display the Elevate credit card widget if so.
+    */
+    @isTest
+    private static void shouldDisplayElevateWidgetWhenElevateEnabledAndPilotEnabledIsTrue() {
+        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
+        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(true);
+
+        Test.startTest();
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        Test.stopTest();
+
+        System.assertEquals(true, ((Boolean) orgSettingsByKey.get('isElevateCustomer')),
+            'The org should be Elevate customer');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer 
+    * in order to display the Elevate credit card widget if so.
+    */
+    @isTest
+    private static void shouldNotDisplayElevateWidgetWhenElevateEnabledAndPilotEnabledIsFalse() {
+        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
+        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(false);
+
+        Test.startTest();
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        Test.stopTest();
+
+        System.assertEquals(false, ((Boolean) orgSettingsByKey.get('isElevateCustomer')),
+            'The org should not be Elevate customer');
     }
 
     /***
