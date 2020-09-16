@@ -31,8 +31,8 @@ Setup Test Data
         ...              LastName=${faker.last_name()}
         ...              AccountId=${account}[Id]
     Set suite variable   &{CONTACT2}
-    ${ns} =  Get NPSP Namespace Prefix
-    Set Suite Variable   ${ns}
+    ${NS} =  Get NPSP Namespace Prefix
+    Set Suite Variable   ${NS}
 
 
 Edit Default Template To Add Batch Table Columns
@@ -82,7 +82,7 @@ Test Batch Status Adding Removig Gifts
     Click Gift Entry Button          Save
     Current Page Should Be           Form                          Gift Entry
 
-    ${BATCH_ID} =                    Save Current Record ID For Deletion     ${ns}DataImportBatch__c
+    ${BATCH_ID} =                    Save Current Record ID For Deletion     ${NS}DataImportBatch__c
 
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
