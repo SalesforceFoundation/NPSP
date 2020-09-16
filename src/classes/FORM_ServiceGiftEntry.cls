@@ -221,7 +221,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Method for retrieving the current default template.
     */
     public static FORM_Template retrieveDefaultSGEFormTemplate() {
-        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
+        Gift_Entry_Settings__c giftEntrySettings = getGiftEntrySettings();
         FORM_Template template;
         List<Form_Template__c> templateObjList = [
                                 SELECT Id, Name, Format_Version__c, Template_JSON__c
@@ -371,7 +371,7 @@ public with sharing class FORM_ServiceGiftEntry {
             Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
             columnHeader.Field_Api_Name__c = field;
             columnHeader.Index__c = index;
-            columnHeader.Name = GE_GiftEntry_UTIL.generateId();
+            columnHeader.Name = generateId();
             columnHeader.List_Name__c = listName;
             columnHeaders.add(columnHeader);
         }
@@ -423,5 +423,36 @@ public with sharing class FORM_ServiceGiftEntry {
         }
     }
 
+    /*******************************************************************************************************
+    * @description @description Creates a 'unique' id made to look like a UUID..
+    *
+    * @return {String} guid: Generated UUID.
+    */
+    public static String generateId() {
+        Blob key = Crypto.generateAesKey(128);
+        String hexString = EncodingUtil.convertToHex(key);
+        String generateUniqueId = hexString.substring(0,8)+ '-' + hexString.substring(8,12) +
+                '-' + hexString.substring(12,16) + '-' + hexString.substring(16,20) + '-' + hexString.substring(20);
+        return generateUniqueId;
+    }
+
+    /**
+     * @description This method will create a default template
+     * if it is necessary and then return the Gift_Entry_Settings__c
+     * custom setting  for use.
+     *
+     * @return Returns whether or not there is an existing default template.
+     */
+    @AuraEnabled
+    public static Gift_Entry_Settings__c getGiftEntrySettings() {
+        try {
+            GE_DefaultTemplate.createDefaultTemplateIfNecessary();
+            Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+
+            return giftEntryCustomSetting;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
 
 }
