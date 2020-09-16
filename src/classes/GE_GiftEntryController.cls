@@ -418,10 +418,8 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static RenderWrapper getRenderWrapperById(Id templateId) {
-        FORM_Service formService = new FORM_Service();
-
         // Get the base template
-        FORM_Template queriedTemplate = formService.retrieveFormTemplate(templateId);
+        FORM_Template queriedTemplate = FORM_ServiceGiftEntry.retrieveFormTemplateById(templateId);
 
         // Create the wrapper which will hold the template and field mapping set.
         RenderWrapper renderWrapper = wrapTemplate(queriedTemplate);
@@ -436,9 +434,7 @@ public with sharing class GE_GiftEntryController {
      * @return  A RenderWrapper containing the default template JSON.
      */
     public static RenderWrapper getRenderWrapper(String templateName) {
-        FORM_Service formService = new FORM_Service();
-
-        FORM_Template template = formService.retrieveFormTemplate(templateName);
+        FORM_Template template = FORM_ServiceGiftEntry.retrieveFormTemplateById(templateName);
 
         RenderWrapper renderWrapper = wrapTemplate(template);
 
@@ -451,9 +447,7 @@ public with sharing class GE_GiftEntryController {
      * @return  A RenderWrapper containing the default template JSON.
      */
     public static RenderWrapper getDefaultSGERenderWrapper() {
-        FORM_Service formService = new FORM_Service();
-
-        FORM_Template defaultTemplate = formService.retrieveDefaultSGEFormTemplate();
+        FORM_Template defaultTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
 
         RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 
