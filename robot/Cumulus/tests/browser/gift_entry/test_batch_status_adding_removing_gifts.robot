@@ -29,7 +29,7 @@ Setup Test Data
     &{CONTACT2} =        API Create Contact
         ...              FirstName=${faker.first_name()}
         ...              LastName=${faker.last_name()}
-        ...              AccountId=${account}[Id]
+        ...              AccountId=${ACCOUNT}[Id]
     Set suite variable   &{CONTACT2}
     ${NS} =  Get NPSP Namespace Prefix
     Set Suite Variable   ${NS}
