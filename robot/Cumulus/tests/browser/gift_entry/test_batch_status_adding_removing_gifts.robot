@@ -12,25 +12,25 @@ Suite Setup     Run keywords
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
-${amount}         100
-${amount_updated}  50
-${msg}            Automation Batch Status Test
+${AMOUNT}         100
+${AMOUNT_UPDATED}  50
+${MSG}            Automation Batch Status Test
 
 *** Keywords ***
 Setup Test Data
     [Documentation]     Data setup needed for the testcase. Creates a regular contact
     ...                 and a contact associated with an account.
-    &{contact} =    API Create Contact    FirstName=${faker.first_name()}    LastName=${faker.last_name()}
-    Set suite variable    &{contact}
+    &{CONTACT} =    API Create Contact    FirstName=${faker.first_name()}    LastName=${faker.last_name()}
+    Set suite variable    &{CONTACT}
     # create an account using create  account api
-    &{account} =    API Create Organization Account    Name=${faker.company()}
-    Set suite variable    &{account}
+    &{ACCOUNT} =    API Create Organization Account    Name=${faker.company()}
+    Set suite variable    &{ACCOUNT}
     #Create a contact associated with the account ID creaed above
-    &{contact2} =        API Create Contact
+    &{CONTACT2} =        API Create Contact
         ...              FirstName=${faker.first_name()}
         ...              LastName=${faker.last_name()}
         ...              AccountId=${account}[Id]
-    Set suite variable   &{contact2}
+    Set suite variable   &{CONTACT2}
     ${ns} =  Get NPSP Namespace Prefix
     Set Suite Variable   ${ns}
 
@@ -76,18 +76,18 @@ Test Batch Status Adding Removig Gifts
     Select Template                  Default Gift Entry Template
     Current Page Should Be           Form                          GE_Gift_Entry
     Fill Gift Entry Form
-    ...                              Batch Name=${msg}
+    ...                              Batch Name=${MSG}
     ...                              Batch Description=This is a test batch created via automation script
     Click Gift Entry Button          Next
     Click Gift Entry Button          Save
     Current Page Should Be           Form                          Gift Entry
 
-    ${batch_id} =                    Save Current Record ID For Deletion     ${ns}DataImportBatch__c
+    ${BATCH_ID} =                    Save Current Record ID For Deletion     ${ns}DataImportBatch__c
 
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
-    ...                              Existing Donor Contact=${contact}[Name]
-    ...                              Donation Amount=${amount}
+    ...                              Existing Donor Contact=${CONTACT}[Name]
+    ...                              Donation Amount=${AMOUNT}
     ...                              Donation Date=Today
 
     Click Special Button             Save & Enter New Gift
@@ -95,27 +95,27 @@ Test Batch Status Adding Removig Gifts
     ...                              Status=Dry Run - Validated
 
     # Update the gift value and check the value gets  reflected in the table
-    Perform Action On Datatable Row   ${contact}[Name]          Open
+    Perform Action On Datatable Row   ${CONTACT}[Name]          Open
     Fill Gift Entry Form
-     ...                              Donation Amount=${amount_updated}
+     ...                              Donation Amount=${AMOUNT_UPDATED}
     Click Special Button              Update
     Verify Table Field Values         Batch Gifts
-     ...                              Donation Amount=$${amount_updated}.00
+     ...                              Donation Amount=$${AMOUNT_UPDATED}.00
     # Run and validate the Batch data import status
 
     Process And Validate Batch       Completed
     Verify Table Field Values        Batch Gifts
     ...                              Status=Imported
     # Verify the backend dataimport batch job using the API call
-    Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
+    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
     ...                              Batch_Status__c=Completed
 
     #Scroll to the top of the page, add gift for contact associated with org account
     Scroll Page To Location          0      0
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
-    ...                              Existing Donor Contact=${contact2}[Name]
-    ...                              Donation Amount=${amount}
+    ...                              Existing Donor Contact=${CONTACT2}[Name]
+    ...                              Donation Amount=${AMOUNT}
     ...                              Donation Date=Today
 
     Click Special Button             Save & Enter New Gift
@@ -126,14 +126,14 @@ Test Batch Status Adding Removig Gifts
     ...                              Status=Failed
 
     # Verify the backend dataimport batch job
-    Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
+    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
     ...                              Batch_Status__c=Failed - Needs Review
 
     #Delete the row that has Dry run status and trigger the batch job to see it completed
-    Perform Action On Datatable Row  ${contact2}[Name]          Delete
+    Perform Action On Datatable Row  ${CONTACT2}[Name]          Delete
 
     # Verify the backend dataimport batch job
-    Verify Expected Values    nonns  DataImportBatch__c    ${batch_id}
+    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
     ...                              Batch_Status__c=Completed
 
     Process And Validate Batch       Completed
