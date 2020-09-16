@@ -108,7 +108,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     FORM_Template.class
             );
 
-            for (FORM_Section formSection : t.layout.sections) {
+            for (FORM_Template.Section formSection : t.layout.sections) {
                 for (FORM_Template.Element formElement : formSection.elements) {
                     if (formElement.dataImportFieldMappingDevNames == null) {
                         continue;

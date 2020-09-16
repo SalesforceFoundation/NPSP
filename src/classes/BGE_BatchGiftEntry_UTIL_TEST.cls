@@ -99,14 +99,14 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
                                 'Account_2_City'
                         });
 
-        FORM_Section formSection =
-                new FORM_Section('', '', '', '',
+        FORM_Template.Section formSection =
+                new FORM_Template.Section('', '', '', '',
                         new FORM_Template.Element[]{
                                 widgetElement
                         });
 
         FORM_Template.Layout formLayout =
-                new FORM_Template.Layout('', new FORM_Section[]{
+                new FORM_Template.Layout('', new FORM_Template.Section[]{
                         formSection
                 });
 

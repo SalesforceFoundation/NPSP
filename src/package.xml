@@ -285,7 +285,6 @@
         <members>FORM_PermissionValidator</members>
         <members>FORM_PermissionsValidator_TEST</members>
         <members>FORM_RenderWrapper</members>
-        <members>FORM_Section</members>
         <members>FORM_Service</members>
         <members>FORM_ServiceGiftEntry</members>
         <members>FORM_ServiceGiftEntry_TEST</members>

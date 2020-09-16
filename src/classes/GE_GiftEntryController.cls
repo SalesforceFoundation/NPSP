@@ -499,9 +499,9 @@ public with sharing class GE_GiftEntryController {
     * @param fieldMappingSet The field mapping set which determines what DI field is mapped to what target field.
     */
     private static void updateTemplateWithRequired(FORM_Template template, BDI_FieldMappingSet fieldMappingSet) {
-        List<FORM_Section> sectionList = template.layout.sections;
+        List<FORM_Template.Section> sectionList = template.layout.sections;
 
-        for (FORM_Section section : sectionList) {
+        for (FORM_Template.Section section : sectionList) {
 
             // Go through all the elements
             for (FORM_Template.Element element : section.elements) {

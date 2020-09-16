@@ -73,7 +73,7 @@ public with sharing class FORM_PermissionValidator {
         Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
 
         BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
-        for (FORM_Section section : template.layout.sections) {
+        for (FORM_Template.Section section : template.layout.sections) {
             for (FORM_Template.Element element : section.elements) {
 
                 if (element.elementType == FIELD_ELEMENT_TYPE) {

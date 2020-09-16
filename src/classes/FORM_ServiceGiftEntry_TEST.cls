@@ -352,14 +352,14 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         
         FORM_Template.Element[] elements = new FORM_Template.Element[]{field,widget};
 
-        FORM_Section section = new FORM_Section('SectionLabel',
+        FORM_Template.Section section = new FORM_Template.Section('SectionLabel',
             'Accordion',
             'Expanded',
             'True',
             elements);
         
         FORM_Template.Layout layout = new FORM_Template.Layout('DefaultMappingSet',
-            new FORM_Section[]{section});
+            new FORM_Template.Section[]{section});
 
         FORM_Template template = new FORM_Template('Sample Template',
             'This is the description.',

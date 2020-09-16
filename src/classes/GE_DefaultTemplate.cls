@@ -138,9 +138,9 @@ public with sharing class GE_DefaultTemplate {
         
         FORM_Template defaultTemplate = (FORM_Template)JSON.deserialize(defaultTemplateSRJSON, FORM_Template.class);
         FORM_Template.Layout defaultLayout = defaultTemplate.layout;
-        List<FORM_Section> sectionList = defaultLayout.sections;
+        List<FORM_Template.Section> sectionList = defaultLayout.sections;
 
-        for (FORM_Section section : sectionList) {
+        for (FORM_Template.Section section : sectionList) {
             List<FORM_Template.Element> elementList = section.elements;
 
             for (FORM_Template.Element element : elementList) {

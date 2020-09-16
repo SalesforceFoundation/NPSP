@@ -61,11 +61,40 @@ public with sharing class FORM_Template {
     */
     public class Layout {
         @AuraEnabled public String fieldMappingSetDevName;
-        @AuraEnabled public FORM_Section[] sections;
+        @AuraEnabled public Section[] sections;
 
-        public Layout(String fieldMappingSetDevName, FORM_Section[] sections) {
+        public Layout(String fieldMappingSetDevName, Section[] sections) {
             this.fieldMappingSetDevName = fieldMappingSetDevName;
             this.sections = sections;
+        }
+    }
+
+    /**
+    * @description Form Section definition for use in entering gifts.
+    */
+    public class Section {
+
+        @AuraEnabled public String label;
+        @AuraEnabled public String displayType;
+        @AuraEnabled public String defaultDisplayMode;
+        @AuraEnabled public String displayRule;
+        @AuraEnabled public Element[] elements;
+
+        /* Additional props PS */
+        @AuraEnabled public String id;
+        /* END */
+
+        public Section(String label,
+                String displayType,
+                String defaultDisplayMode,
+                String displayRule,
+                Element[] elements) {
+
+            this.label = label;
+            this.displayType = displayType;
+            this.defaultDisplayMode = defaultDisplayMode;
+            this.displayRule = displayRule;
+            this.elements = elements;
         }
     }
 
