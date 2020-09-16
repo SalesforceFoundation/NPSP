@@ -1883,6 +1883,8 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>bdeRetirementBlockerHeader</members>
+        <members>bdeRetirementBlockerMessage</members>
         <members>bdeRetirementWarningBody</members>
         <members>bdeRetirementWarningHeader</members>
         <members>bdiAccountCustomIdError</members>
