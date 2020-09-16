@@ -36,9 +36,14 @@
 public inherited sharing class PS_ElevateAPI {
     public class APIException extends Exception {}
 
-    public enum ElevateEndpoint { TOKENIZE, PURCHASE, COMMITMENT }
+    public enum ElevateEndpoint { 
+        TOKENIZE, PURCHASE, 
+        COMMITMENT, COMMITMENT_CANCEL 
+    }
 
-    public enum HttpRequestMethod { GET, POST, PATCH, DEL }
+    public enum HttpRequestMethod { 
+        GET, POST, PATCH 
+    }
 
     public static final String TIMED_OUT = 'timed out';
     public static final Integer TIMEOUT_STATUS_CODE = 408;
@@ -58,12 +63,12 @@ public inherited sharing class PS_ElevateAPI {
     /***
     * @description Sends an HttpRequest to the Elevate Payment Services API
     */
-    public ResponseWrapper sendRequest(HttpRequestMethod method, ElevateEndpoint endpoint, String jsonBody) {
+    public ResponseWrapper sendRequest(HttpRequestMethod method, ElevateEndpoint endpoint, String commitmentId, String jsonBody) {
         HttpRequest request = new HttpRequest();
 
-        request.setEndpoint(getEndpoint(endpoint));
-        setMethod(request, method);
-        setHeader(request);
+        request.setEndpoint(getEndpoint(endpoint, commitmentId));
+        request.setMethod(method.name());
+        setHeader(request, endpoint);
 
         // Set the body as a JSON object...
         if (String.isNotBlank(jsonBody)) {
@@ -74,18 +79,9 @@ public inherited sharing class PS_ElevateAPI {
         return new ResponseWrapper(response);
     }
 
-    private void setMethod(HttpRequest request, HttpRequestMethod method) {
-        String stringMethod = method.name();
-        if (stringMethod == 'DEL') {
-            stringMethod = 'DELETE';
-        }
-
-        request.setMethod(stringMethod);
-    }
-
-    private void setHeader(HttpRequest request) {
+    private void setHeader(HttpRequest request, ElevateEndpoint endpoint) {
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt());
+        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt(endpoint));
         request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
 
         if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
@@ -96,7 +92,7 @@ public inherited sharing class PS_ElevateAPI {
         }
     }
 
-    public String getEndpoint(ElevateEndpoint endpoint) {
+    public String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
         String value;
         if (endpoint == ElevateEndpoint.TOKENIZE) {
             value = '/v1/payments/public/tokens';
@@ -106,6 +102,9 @@ public inherited sharing class PS_ElevateAPI {
 
         } else if (endpoint == ElevateEndpoint.COMMITMENT) {
             value = '/v1/payments/public/commitments';
+
+        } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
+            value = '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
         }
 
         return String.isBlank(value)
@@ -129,13 +128,14 @@ public inherited sharing class PS_ElevateAPI {
         return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
     }
 
-    public String getJwt() {
+    public String getJwt(ElevateEndpoint endpoint) {
         JWTPayload payload = new JWTPayload(
-            config.get(PS_IntegrationServiceConfig.PRODUCTID)
+            config.get(PS_IntegrationServiceConfig.PRODUCTID),
+            endpoint
         );
 
         String jwt = UTIL_Jwt.getSignedJWTFromString(
-            payload.toString(),
+            payload.getAsString(),
             config.get(PS_IntegrationServiceConfig.API_KEY)
         );
 
@@ -143,47 +143,15 @@ public inherited sharing class PS_ElevateAPI {
     }
 
     /***
-    * @description Creates an http request wrapper for a timeout error response
-    */
-    public ResponseWrapper buildTimeoutResponse(Exception ex, String message) {
-
-        Boolean isCalloutException = ex instanceof System.CalloutException;
-        Boolean hasTimedOut = isCalloutException && ex.getMessage().contains(TIMED_OUT);
-
-        if (!hasTimedOut) {
-            return null;
-        }
-
-        ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = TIMEOUT_STATUS_CODE;
-        response.status = ex.getMessage();
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => message });
-
-        return response;
-    }
-
-    /***
-    * @description Creates an http request wrapper for an exception
-    */
-    public ResponseWrapper buildExceptionResponse(Exception ex) {
-        ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = BAD_REQUEST_STATUS_CODE;
-        response.status = ex.getMessage();
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => System.Label.commonUnknownError });
-
-        return response;
-    }
-
-
-
-    /***
     * @description Assists in constructing the Payload portion of a JSON Web Token.
     */
     public with sharing class JWTPayload {
         String sfdoId;
+        ElevateEndpoint endpoint;
 
-        public JWTPayload(String sfdoId) {
+        public JWTPayload(String sfdoId, ElevateEndpoint endpoint) {
             this.sfdoId = sfdoId;
+            this.endpoint = endpoint;
         }
 
         private Long getEpochTimestamp(DateTime dt) {
@@ -195,7 +163,7 @@ public inherited sharing class PS_ElevateAPI {
             return getEpochTimestamp(expirationDate);
         }
 
-        public override String toString() {
+        public String getAsString() {
             JSONGenerator generator = JSON.createGenerator(false);
 
             generator.writeStartObject();
@@ -206,12 +174,68 @@ public inherited sharing class PS_ElevateAPI {
                 generator.writeStringField('sfdo.id', sfdoId);
             }
             generator.writeStringField('sfdo.product', 'CRM'); // Product
-            generator.writeStringField('sfdo.roles', 'Payments.Purchase');//TODO check why specific value?
 
-            return generator.toString();
+            setRoles(generator);
+
+            return generator.getAsString();
+        }
+
+        private void setRoles(JSONGenerator generator) {
+            String value = '';
+
+            if (endpoint == ElevateEndpoint.TOKENIZE) {
+                value = 'Payments.Tokens';
+
+            } else if (endpoint == ElevateEndpoint.PURCHASE) {
+                value = 'Payments.Purchase';
+
+            } else if (endpoint == ElevateEndpoint.COMMITMENT 
+                || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
+            ) {
+                value = 'Payments.Commitments';
+            }
+
+            if (String.isNotBlank(value)) {
+                generator.writeStringField('sfdo.roles', value);
+            }
         }
     }
 
+    /***
+    * @description Creates an http request wrapper for an exception
+    */
+    public ResponseWrapper buildErrorResponse(Exception ex, String message) {
+        Boolean isCalloutException = ex instanceof System.CalloutException;
+        Boolean hasTimedOut = isCalloutException && ex.getMessage().contains(TIMED_OUT);
+
+        return hasTimedOut
+            ? buildTimeoutResponse(ex, message)
+            : buildErrorResponse(ex);
+    }
+
+    /***
+    * @description Creates an http request wrapper for an exception
+    */
+    public ResponseWrapper buildErrorResponse(Exception ex) {
+        ResponseWrapper response = new ResponseWrapper();
+        response.statusCode = BAD_REQUEST_STATUS_CODE;
+        response.status = ex.getMessage();
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => System.Label.commonUnknownError });
+
+        return response;
+    }
+
+    /***
+    * @description Creates an http request wrapper for a timeout error response
+    */
+    public ResponseWrapper buildTimeoutResponse(Exception ex, String message) {
+        ResponseWrapper response = new ResponseWrapper();
+        response.statusCode = TIMEOUT_STATUS_CODE;
+        response.status = ex.getMessage();
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => message });
+
+        return response;
+    }
 
     /***
     * @description Returns contents of the HttpResponse.
