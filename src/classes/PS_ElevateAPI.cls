@@ -49,97 +49,147 @@ public inherited sharing class PS_ElevateAPI {
     public static final Integer TIMEOUT_STATUS_CODE = 408;
     public static final Integer BAD_REQUEST_STATUS_CODE = 400;
 
-    @TestVisible
-    private Map<String, String> config {
-        get {
-            if (config == null) {
-                config = new PS_IntegrationServiceConfig.Configuration().keyValueMap;
-            }
-            return config;
-        }
-        set;
-    }
 
     /***
-    * @description Sends an HttpRequest to the Elevate Payment Services API
+    * @description Contains Elevate integration configuration 
     */
-    public ResponseWrapper sendRequest(HttpRequestMethod method, ElevateEndpoint endpoint, String commitmentId, String jsonBody) {
-        HttpRequest request = new HttpRequest();
-
-        request.setEndpoint(getEndpoint(endpoint, commitmentId));
-        request.setMethod(method.name());
-        setHeader(request, endpoint);
-
-        // Set the body as a JSON object...
-        if (String.isNotBlank(jsonBody)) {
-            request.setBody(jsonBody);
+    public with sharing class ConfigurationService {
+        @TestVisible
+        private Map<String, String> config {
+            get {
+                if (config == null) {
+                    config = new PS_IntegrationServiceConfig.Configuration().keyValueMap;
+                }
+                return config;
+            }
+            set;
         }
 
-        HttpResponse response = new Http().send(request);
-        return new ResponseWrapper(response);
+        public String getEndpointRoot() {
+            return config.get(PS_IntegrationServiceConfig.BASE_URL);
+        }
+
+        public String getElevateSDKURL() {
+            return config.get(PS_IntegrationServiceConfig.ELEVATE_SDK);
+        }
+
+        public String getProductId() {
+            return config.get(PS_IntegrationServiceConfig.PRODUCTID);
+        }
+
+        public String getGatewayIds() {
+            return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
+        }
+
+        public String getMerchantIds() {
+            return config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS);
+        }
+
+        public String getAPIKey() {
+            return config.get(PS_IntegrationServiceConfig.API_KEY);
+        }
     }
 
-    private void setHeader(HttpRequest request, ElevateEndpoint endpoint) {
-        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt(endpoint));
-        request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
 
-        if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
-            request.setHeader(
-                PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
-                config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS)
+    /***
+    * @description Used to build an HttpRequest and send an HttpRequest 
+    * to the Elevate Payment Services API
+    */
+    public with sharing class RequestBuilder {
+        private ConfigurationService config {
+            get {
+                if (config == null) {
+                    config = new ConfigurationService();
+                }
+                return config;
+            }
+            set;
+        }
+
+        private HttpRequestMethod method;
+        private ElevateEndpoint endpoint;
+        private String jsonBody;
+        private String commitmentId;
+
+        public RequestBuilder withMethod(HttpRequestMethod method) {
+            this.method = method;
+            return this;
+        }
+
+        public RequestBuilder withEndpoint(ElevateEndpoint endpoint) {
+            this.endpoint = endpoint;
+            return this;
+        }
+
+        public RequestBuilder withBody(String jsonBody) {
+            this.jsonBody = jsonBody;
+            return this;
+        }
+
+        public RequestBuilder withCommitmentId(String commitmentId) {
+            this.commitmentId = commitmentId;
+            return this;
+        }
+
+        public ResponseWrapper sendRequest() {
+            HttpRequest request = new HttpRequest();
+
+            request.setEndpoint(getEndpoint(endpoint, commitmentId));
+            request.setMethod(method.name());
+            setHeader(request, endpoint);
+
+            // Set the body as a JSON object...
+            if (String.isNotBlank(jsonBody)) {
+                request.setBody(jsonBody);
+            }
+
+            HttpResponse response = new Http().send(request);
+            return new ResponseWrapper(response);
+        }
+
+        private void setHeader(HttpRequest request, ElevateEndpoint endpoint) {
+            request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+            request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt(endpoint));
+            request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
+
+            if (config.getMerchantIds() != null) {
+                request.setHeader(
+                    PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
+                    config.getMerchantIds()
+                );
+            }
+        }
+
+        public String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
+            String value;
+            if (endpoint == ElevateEndpoint.TOKENIZE) {
+                value = '/v1/payments/public/tokens';
+
+            } else if (endpoint == ElevateEndpoint.PURCHASE) {
+                value = '/v1/payments/verified/purchase';
+
+            } else if (endpoint == ElevateEndpoint.COMMITMENT) {
+                value = '/v1/payments/public/commitments';
+
+            } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
+                value = '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
+            }
+
+            return String.isBlank(value)
+                ? null
+                : (config.getEndpointRoot() + value);
+        }
+
+        public String getJwt(ElevateEndpoint endpoint) {
+            JWTPayload payload = new JWTPayload(config.getProductId(), endpoint);
+
+            String jwt = UTIL_Jwt.getSignedJWTFromString(
+                payload.getAsString(),
+                config.getAPIKey()
             );
+
+            return jwt;
         }
-    }
-
-    public String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
-        String value;
-        if (endpoint == ElevateEndpoint.TOKENIZE) {
-            value = '/v1/payments/public/tokens';
-
-        } else if (endpoint == ElevateEndpoint.PURCHASE) {
-            value = '/v1/payments/verified/purchase';
-
-        } else if (endpoint == ElevateEndpoint.COMMITMENT) {
-            value = '/v1/payments/public/commitments';
-
-        } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
-            value = '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
-        }
-
-        return String.isBlank(value)
-            ? null
-            : (getEndpointRoot() + value);
-    }
-
-    public String getEndpointRoot() {
-        return config.get(PS_IntegrationServiceConfig.BASE_URL);
-    }
-
-    public String getElevateSDKURL() {
-        return config.get(PS_IntegrationServiceConfig.ELEVATE_SDK);
-    }
-
-    public String getProductId() {
-        return config.get(PS_IntegrationServiceConfig.PRODUCTID);
-    }
-
-    public String getGatewayIds() {
-        return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
-    }
-
-    public String getJwt(ElevateEndpoint endpoint) {
-        JWTPayload payload = new JWTPayload(
-            config.get(PS_IntegrationServiceConfig.PRODUCTID),
-            endpoint
-        );
-
-        String jwt = UTIL_Jwt.getSignedJWTFromString(
-            payload.getAsString(),
-            config.get(PS_IntegrationServiceConfig.API_KEY)
-        );
-
-        return jwt;
     }
 
     /***
@@ -154,13 +204,14 @@ public inherited sharing class PS_ElevateAPI {
             this.endpoint = endpoint;
         }
 
-        private Long getEpochTimestamp(DateTime dt) {
-            return dt.getTime() / 1000; // convert milliseconds to seconds as needed by iat
-        }
-
         private Long getExpirationDate(Integer daysFromNow) {
             DateTime expirationDate = DateTime.now().addDays(daysFromNow);
+
             return getEpochTimestamp(expirationDate);
+        }
+
+        private Long getEpochTimestamp(DateTime dt) {
+            return dt.getTime() / 1000; // convert milliseconds to seconds as needed by iat
         }
 
         public String getAsString() {
