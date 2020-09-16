@@ -379,7 +379,9 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             if (objectMapping.Field_Mappings) {
                 objectMapping.Field_Mappings.sort(function (a, b) {
                     const requiredCompare = b.Is_Required - a.Is_Required;
-                    const labelCompare = a.Target_Field_Label.localeCompare(b.Target_Field_Label);
+                    const labelCompare = !isEmpty(a.Target_Field_Label) ?
+                        a.Target_Field_Label.localeCompare(b.Target_Field_Label) :
+                        null;
 
                     return requiredCompare || labelCompare;
                 });
@@ -536,6 +538,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
         if (isEmpty(element)) {
             dispatch(this, 'deleteformelement', event.detail);
+
             return;
         }
 
