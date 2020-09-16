@@ -90,10 +90,16 @@ public inherited sharing class PS_ElevateAPI {
         }
     }
 
+    /***
+    * @description Sends an HttpRequest to the Elevate Payment Services API
+    */
+    public ResponseWrapper sendRequest(HttpRequest request) {
+        HttpResponse response = new Http().send(request);
+        return new ResponseWrapper(response);
+    }
 
     /***
-    * @description Used to build an HttpRequest and send an HttpRequest 
-    * to the Elevate Payment Services API
+    * @description Builds an HttpRequest 
     */
     public with sharing class RequestBuilder {
         private ConfigurationService config {
@@ -131,7 +137,7 @@ public inherited sharing class PS_ElevateAPI {
             return this;
         }
 
-        public ResponseWrapper sendRequest() {
+        public HttpRequest build() {
             HttpRequest request = new HttpRequest();
 
             request.setEndpoint(getEndpoint(endpoint, commitmentId));
@@ -143,8 +149,7 @@ public inherited sharing class PS_ElevateAPI {
                 request.setBody(jsonBody);
             }
 
-            HttpResponse response = new Http().send(request);
-            return new ResponseWrapper(response);
+            return request;
         }
 
         private void setHeader(HttpRequest request, ElevateEndpoint endpoint) {
@@ -160,7 +165,7 @@ public inherited sharing class PS_ElevateAPI {
             }
         }
 
-        public String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
+        private String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
             String value;
             if (endpoint == ElevateEndpoint.TOKENIZE) {
                 value = '/v1/payments/public/tokens';
@@ -180,7 +185,7 @@ public inherited sharing class PS_ElevateAPI {
                 : (config.getEndpointRoot() + value);
         }
 
-        public String getJwt(ElevateEndpoint endpoint) {
+        private String getJwt(ElevateEndpoint endpoint) {
             JWTPayload payload = new JWTPayload(config.getProductId(), endpoint);
 
             String jwt = UTIL_Jwt.getSignedJWTFromString(
