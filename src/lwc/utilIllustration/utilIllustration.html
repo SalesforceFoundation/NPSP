@@ -1051,15 +1051,15 @@
             </h3>
             <template if:true={shouldWrapText}>
                 <lightning-layout>
-                    <lightning-layout-item size="4">
-                    </lightning-layout-item>
-                    <lightning-layout-item size="4">
+                    <lightning-layout-item size="12"
+                                           large-device-size="6"
+                                           small-device-size="6"
+                                           medium-device-size="8"
+                                           class=slds-align_absolute-center>
                         <lightning-formatted-rich-text if:true={hasMessage}
                                                        class=slds-align_absolute-center
                                                        value={message}>
                         </lightning-formatted-rich-text>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="4">
                     </lightning-layout-item>
                 </lightning-layout>
             </template>
