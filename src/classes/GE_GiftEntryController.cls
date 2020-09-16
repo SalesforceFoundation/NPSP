@@ -626,5 +626,14 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    /**
+     * @description Retrieves the default SGE render wrapper for gift entry.
+     * @return      A render wrapper containing a template and information about the object/field mappings.
+     */
+    @AuraEnabled
+    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
+        return GE_GiftEntryController.getDefaultSGERenderWrapper();
+    }
+
     private class BDIException extends Exception {}
 }
