@@ -1031,24 +1031,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            rec=self.salesforce.salesforce_get(table,rec_id)
            for key, value in kwargs.items():
                print(f"executing {key}, {value} pair")
-               if value!="Failed - Needs Review !":
-                  self.builtin.should_be_equal_as_strings(rec[key], value)
-               else:
-                  if value in rec[key]:
-                     return
-               
+               self.builtin.should_be_equal_as_strings(rec[key], value)
        except Exception :
            print("Retrying after exception")
            time.sleep(10)
            rec=self.salesforce.salesforce_get(table,rec_id)
            for key, value in kwargs.items():
                print(f"executing {key}, {value} pair")
-               if value!="Failed - Needs Review !":
-                  self.builtin.should_be_equal_as_strings(rec[key], value)
-               else:
-                  if value in rec[key]:
-                     return
-
+               self.builtin.should_be_equal_as_strings(rec[key], value)
 
     def get_org_namespace_prefix(self):
         if self.cumulusci.org.namespaced:
