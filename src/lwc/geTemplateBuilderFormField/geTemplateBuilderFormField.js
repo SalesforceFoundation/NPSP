@@ -52,7 +52,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
             if (isEmpty(this.fieldMapping)) {
                 const inputField = this.template.querySelector('[data-id="formField"]');
 
-                inputField.setCustomValidity('Field not found');
+                inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
                 inputField.reportValidity();
 
                 this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));
@@ -74,7 +74,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
             const inputField = this.template.querySelector('[data-id="formField"]');
 
-            inputField.setCustomValidity('Field not found');
+            inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
             inputField.reportValidity();
 
             this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));

@@ -214,6 +214,7 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
+import commonFieldNotFound from '@salesforce/label/c.commonFieldNotFound';
 
 class GeLabelService {
 
@@ -243,6 +244,7 @@ class GeLabelService {
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonFieldNotFound,
         commonFieldsNotFound,
         commonGauAllocations,
         commonGeneralAccountUnit,
