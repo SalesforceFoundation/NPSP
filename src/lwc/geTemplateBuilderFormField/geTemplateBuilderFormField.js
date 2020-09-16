@@ -9,6 +9,7 @@ import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 
 const WIDGET = 'widget';
 const YES = 'Yes';
+const FIELD_METADATA_ERROR = 'fieldmetadataerror';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @track targetObjectDescribeInfo;
@@ -53,7 +54,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
                 inputField.setCustomValidity('Field not found');
                 inputField.reportValidity();
 
-                this.dispatchEvent(new CustomEvent('fieldmetadataerror'));
+                this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));
             }
         }
     }
@@ -70,7 +71,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         if (isEmpty(this.targetObjectDescribeInfo.fields[this.fieldMapping.Target_Field_API_Name]) ||
             isEmpty(this.sourceObjectFieldInfo[this.fieldMapping.Source_Field_API_Name])) {
 
-            console.log('error', 'invalid field' + this.fieldMapping.Target_Field_API_Name);
+            this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));
         }
     }
 
