@@ -337,6 +337,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
                 if (
                     newRd.isOpenEnded()
+                    && !newRd.isElevateRecord()
                     && newRd.isClosed()
                     && rds[i].EndDate__c != null
                     && rds[i].EndDate__c > currentDate
@@ -537,5 +538,4 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             dmlActions.objectsToUpdate.addAll(revisedSchedules.objectsToUpdate);
         }
     }
-
 }

@@ -1724,6 +1724,7 @@
         <members>RD2_EnablementSimpleIntro</members>
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
+        <members>RD2_EndDateMustBeValidForElevateRecurringDonation</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>
         <members>RD2_EntryFormDonationSectionHeader</members>
         <members>RD2_EntryFormDonorSectionHeader</members>
