@@ -275,6 +275,143 @@ public with sharing class GE_GiftEntryController {
             this.podName = podName;
         }
     }
+    /*******************************************************************************************************
+    * @description Retrieves all open Opportunities, and Opportunities with unpaid Payments, for the
+    * selected Donor (Account or Contact)
+    * @return JSON stringified Map<String, List<SObject>> of all openOpportunities for the given donor
+    */
+    @AuraEnabled(cacheable=true)
+    public static String getOpenDonations(Id donorId, String donorType) {
+        if (donorId == null) {
+            return null;
+        }
+
+        String relationshipField;
+        if (donorType == SObjectType.Account.Name) {
+            relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
+        } else if (donorType == SObjectType.Contact.Name) {
+            relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
+        }
+
+        // Could eventually be used to display unpaid payments on the donation matching modal
+        String paymentSOQL = 'SELECT Id, ' +
+                'Name, ' +
+                'npe01__Scheduled_Date__c, ' +
+                'npe01__Opportunity__r.Name, ' +
+                'npe01__Opportunity__c, ' +
+                'npe01__Payment_Amount__c ' +
+                'FROM npe01__OppPayment__c ' +
+                'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
+                'AND npe01__Written_Off__c = false ' +
+                'AND npe01__Paid__c = false ' +
+                'WITH SECURITY_ENFORCED';
+
+        try {
+            // CRUD / FLS of this operation already verified by checkCRUDFLS()
+            List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
+            Set<Id> oppIdsWithUnpaidPayments = new Set<Id>();
+            for (npe01__OppPayment__c payment : unpaidPayments) {
+                oppIdsWithUnpaidPayments.add(payment.npe01__Opportunity__c);
+            }
+
+            String opportunitySOQL = 'SELECT Id, ' +
+                    'Name, ' +
+                    'StageName, ' +
+                    'CloseDate, ' +
+                    'IsClosed, ' +
+                    'Amount, ' +
+                    'npe01__Number_of_Payments__c, ' +
+                    '(SELECT Id, ' +
+                    'Name, ' +
+                    'npe01__Scheduled_Date__c, ' +
+                    'npe01__Opportunity__r.Name, ' +
+                    'npe01__Opportunity__c, ' +
+                    'npe01__Payment_Amount__c,' +
+                    'npe01__Paid__c, ' +
+                    'npe01__Written_Off__c ' +
+                    'FROM npe01__OppPayment__r ' +
+                    'WHERE npe01__Written_Off__c = false ' +
+                    'AND npe01__Paid__c = false)' +
+                    'FROM Opportunity ' +
+                    'WHERE ' + relationshipField + ' = :donorId ' +
+                    'AND IsClosed = false ' +
+                    'WITH SECURITY_ENFORCED ' +
+                    'ORDER BY CloseDate ASC';
+
+            // CRUD / FLS of this operation already verified by checkCRUDFLS()
+            List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
+
+            List<OpportunityWrapper> opportunityWrappers = new List<OpportunityWrapper>();
+            for (Opportunity opportunity : openOpportunities) {
+                opportunityWrappers.add(new OpportunityWrapper(opportunity));
+            }
+
+            return JSON.serialize(opportunityWrappers);
+        } catch (Exception ex){
+            GE_GiftEntryController.returnAuraException(ex.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
+    * @description Wrapper class used to hold only the information needed in the
+    * component for each Opportunity.  The component does not need to store any of
+    * the paid or written-off Payments for a donor, but it does need to know if the Donation
+    * has related Payments that have not been written-off. In that case the User should not
+    * be able to update the Opportunity in the BGE Donation Selector.
+    */
+    @TestVisible
+    private class OpportunityWrapper {
+        @TestVisible Opportunity opportunity {get; private set;}
+        @TestVisible List<npe01__OppPayment__c> unpaidPayments {get; private set;}
+        @TestVisible Boolean hasNonWrittenOffPayments {get; private set;}
+
+        private OpportunityWrapper(Opportunity opportunity) {
+            this.opportunity = opportunity;
+            initialize();
+        }
+
+        private void initialize() {
+            if (unpaidPayments == null) {
+                unpaidPayments = new List<npe01__OppPayment__c>();
+            }
+
+            if (opportunity.npe01__OppPayment__r.isEmpty()) {
+                hasNonWrittenOffPayments = false;
+                return;
+            }
+
+            for (npe01__OppPayment__c oppPayment : opportunity.npe01__OppPayment__r) {
+                if (hasNonWrittenOffPayments == null
+                        && oppPayment.npe01__Written_Off__c == false) {
+                    hasNonWrittenOffPayments = true;
+                }
+
+                if (isAvailableForUpdate(oppPayment)) {
+                    unpaidPayments.add(oppPayment);
+                } else {
+                    continue;
+                }
+            }
+
+            //If hasNonWrittenOffPayments is null after looping all of the Payments,
+            //then all of the Opp's Payments are written-off, and hasNonWrittenOffPayments can
+            //be set to false, as this Opp should be treated in the BGE Donation Selector UI
+            //as if it has 0 Payments.
+            if (hasNonWrittenOffPayments == null) {
+                hasNonWrittenOffPayments = false;
+            }
+        }
+
+        private Boolean isAvailableForUpdate(npe01__OppPayment__c oppPayment) {
+            if (oppPayment.npe01__Paid__c || oppPayment.npe01__Written_Off__c) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 
     private class BDIException extends Exception {}
 }
