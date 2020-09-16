@@ -129,11 +129,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     @api sectionIdsByFieldMappingDeveloperNames;
 
     @track objectMappings;
-    @track pageLevelError = {
-        hasErrors : false,
-        title : '',
-        message : ''
-    };
+    @track pageLevelError = {};
 
     isInitialized;
     isLoading = true;
@@ -488,6 +484,11 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      */
     handleFieldMetadataError(event) {
         // this.hasErrors = true;
+        this.pageLevelError = {
+            hasErrors: true,
+            title: this.CUSTOM_LABELS.commonFieldsNotFound,
+            message: this.CUSTOM_LABELS.geFieldsNotFoundMessage
+        }
     }
 
     /*******************************************************************************
@@ -776,10 +777,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         }
         return [];
     }
-
-    /*******************************************************************************
-     * End getters for data-qa-locator attributes
-     */
 
     /*******************************************************************************
     * Start getters for data-qa-locator attributes
