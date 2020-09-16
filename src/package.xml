@@ -1138,6 +1138,7 @@
         <members>DataImport__c.Payment_Card_Network__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Declined_Reason__c</members>
+        <members>DataImport__c.Payment_Donor_Cover_Amount__c</members>
         <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
         <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
         <members>DataImport__c.Payment_Elevate_ID__c</members>
