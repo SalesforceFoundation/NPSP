@@ -339,18 +339,18 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
         
-        FORM_Element field = new FORM_Element('FormField',
+        FORM_Template.Element field = new FORM_Template.Element('FormField',
             'True',
             null,
             'CustomLabel',
             new String[]{});
         
-        FORM_Element widget = new FORM_Element('FormWidget',
+        FORM_Template.Element widget = new FORM_Template.Element('FormWidget',
             'DisplayRule',
             'ComponentName',
             new String[]{});
         
-        FORM_Element[] elements = new FORM_Element[]{field,widget};
+        FORM_Template.Element[] elements = new FORM_Template.Element[]{field,widget};
 
         FORM_Section section = new FORM_Section('SectionLabel',
             'Accordion',

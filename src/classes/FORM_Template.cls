@@ -55,4 +55,69 @@ public with sharing class FORM_Template {
         this.version = version;
         this.layout = layout;
     }
+
+    /**
+    * @description Form Layout definition for use in entering gifts.
+    */
+    public class Layout {
+        @AuraEnabled public String fieldMappingSetDevName;
+        @AuraEnabled public FORM_Section[] sections;
+
+        public Layout(String fieldMappingSetDevName, FORM_Section[] sections) {
+            this.fieldMappingSetDevName = fieldMappingSetDevName;
+            this.sections = sections;
+        }
+    }
+
+    /**
+    * @description Form Element definition for use in entering gifts.
+    */
+    public class Element {
+
+        @AuraEnabled public String elementType;
+        @AuraEnabled public String displayRule;
+        @AuraEnabled public String validationRule;
+        @AuraEnabled public String customLabel;
+        @AuraEnabled public String componentName;
+        @AuraEnabled public String[] dataImportFieldMappingDevNames;
+        @AuraEnabled public String dataImportObjectMappingDevName;
+        @AuraEnabled public String fieldApiName;
+        @AuraEnabled public String objectApiName;
+
+        /* PS Additional props for FormFields */
+        @AuraEnabled public String id;
+        @AuraEnabled public String label;
+        @AuraEnabled public Boolean required;
+        @AuraEnabled public String sectionId;
+        @AuraEnabled public String defaultValue;
+        @AuraEnabled public String dataType;
+
+        //Constructor for form field
+        public Element(String elementType,
+                String displayRule,
+                String validationRule,
+                String customLabel,
+                String[] dataImportFieldMappingDevNames) {
+            this.elementType = elementType;
+            this.displayRule = displayRule;
+            this.validationRule = validationRule;
+            this.customLabel = customLabel;
+            this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
+            this.required = false;
+        }
+
+        //Constructor for widget
+        public Element(String elementType,
+                String displayRule,
+                String componentName,
+                String[] dataImportFieldMappingDevNames) {
+            this.elementType = elementType;
+            this.displayRule = displayRule;
+            this.componentName = componentName;
+            this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
+            this.required = false;
+        }
+    }
+
+
 }

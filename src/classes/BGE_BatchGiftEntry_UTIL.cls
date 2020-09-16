@@ -109,7 +109,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             );
 
             for (FORM_Section formSection : t.layout.sections) {
-                for (FORM_Element formElement : formSection.elements) {
+                for (FORM_Template.Element formElement : formSection.elements) {
                     if (formElement.dataImportFieldMappingDevNames == null) {
                         continue;
                     }

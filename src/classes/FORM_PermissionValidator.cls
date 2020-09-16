@@ -74,7 +74,7 @@ public with sharing class FORM_PermissionValidator {
 
         BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
         for (FORM_Section section : template.layout.sections) {
-            for (FORM_Element element : section.elements) {
+            for (FORM_Template.Element element : section.elements) {
 
                 if (element.elementType == FIELD_ELEMENT_TYPE) {
                     for (String fieldDevName : element.dataImportFieldMappingDevNames) {

@@ -475,18 +475,18 @@ public class UTIL_UnitTestData_TEST {
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
 
-        FORM_Element field = new FORM_Element('field',
+        FORM_Template.Element field = new FORM_Template.Element('field',
                                               'True',
                                                null,
                                                'CustomLabel',
                                                new List<String>{'Account_1_Name','Account_1_Country'});
 
-        FORM_Element widget = new FORM_Element('widget',
+        FORM_Template.Element widget = new FORM_Template.Element('widget',
                                                'DisplayRule',
                                                'ComponentName',
                                                 new List<String>{'Contact_1_First_Name','Contact_1_Last_Name'});
 
-        FORM_Element[] elements = new FORM_Element[]{field,widget};
+        FORM_Template.Element[] elements = new FORM_Template.Element[]{field,widget};
 
         FORM_Section section = new FORM_Section('SectionLabel',
                                                 'Accordion',

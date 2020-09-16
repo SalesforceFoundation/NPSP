@@ -91,8 +91,8 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
 
     @isTest
     static void shouldIncludeWidgetFields() {
-        FORM_Element widgetElement =
-                new FORM_Element(
+        FORM_Template.Element widgetElement =
+                new FORM_Template.Element(
                         'widget', '', '', '',
                         new String[]{
                                 'Account_2_Country',
@@ -101,7 +101,7 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
 
         FORM_Section formSection =
                 new FORM_Section('', '', '', '',
-                        new FORM_Element[]{
+                        new FORM_Template.Element[]{
                                 widgetElement
                         });
 

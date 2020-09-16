@@ -40,7 +40,7 @@ public with sharing class FORM_Section {
     @AuraEnabled public String displayType;
     @AuraEnabled public String defaultDisplayMode;
     @AuraEnabled public String displayRule;
-    @AuraEnabled public FORM_Element[] elements;
+    @AuraEnabled public FORM_Template.Element[] elements;
 
     /* Additional props PS */
     @AuraEnabled public String id;
@@ -50,7 +50,7 @@ public with sharing class FORM_Section {
                         String displayType, 
                         String defaultDisplayMode, 
                         String displayRule, 
-                        FORM_Element[] elements) {
+                        FORM_Template.Element[] elements) {
 
         this.label = label;
         this.displayType = displayType;

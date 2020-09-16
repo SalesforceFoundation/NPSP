@@ -141,9 +141,9 @@ public with sharing class GE_DefaultTemplate {
         List<FORM_Section> sectionList = defaultLayout.sections;
 
         for (FORM_Section section : sectionList) {
-            List<FORM_Element> elementList = section.elements;
+            List<FORM_Template.Element> elementList = section.elements;
 
-            for (FORM_Element element : elementList) {
+            for (FORM_Template.Element element : elementList) {
                 if (element.dataImportObjectMappingDevName != null) {
                     String partialObjectDevName = element.dataImportObjectMappingDevName.substringBeforeLast('_');
                     if (updatedObjectDevNameMap.containsKey(partialObjectDevName)) {

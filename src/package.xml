@@ -282,7 +282,6 @@
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
         <members>FORM_BatchHeaderField</members>
-        <members>FORM_Element</members>
         <members>FORM_PermissionValidator</members>
         <members>FORM_PermissionsValidator_TEST</members>
         <members>FORM_RenderWrapper</members>

@@ -504,7 +504,7 @@ public with sharing class GE_GiftEntryController {
         for (FORM_Section section : sectionList) {
 
             // Go through all the elements
-            for (FORM_Element element : section.elements) {
+            for (FORM_Template.Element element : section.elements) {
                 if (element.dataImportFieldMappingDevNames != null
                         && !element.dataImportFieldMappingDevNames.isEmpty()) {
 
