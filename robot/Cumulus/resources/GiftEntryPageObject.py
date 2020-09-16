@@ -46,25 +46,6 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_element(locator)
 
-    def add_batch_table_columns(self,*args):
-        """Adds specified batch columns to the visible section if they are not already added"""
-        first_element=True
-        position=0
-        for i in args:
-            locator=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",i)
-            if self.npsp.check_if_element_exists(locator):
-                if first_element:
-                    self.selenium.click_element(locator)
-                    first_element=False
-                    position=args.index(i)
-                else:
-                    self.selenium.click_element(locator,'COMMAND')
-        self.selenium.click_button("Move selection to Visible Fields")
-        verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
-        print (f'verify locator is {verify_field}')
-        self.selenium.wait_until_page_does_not_contain_element(verify_field)
-
-
     def select_template_action(self,name,action):
         """From the template table, select template with name and select an action from the dropdown"""
         locator=npsp_lex_locators["gift_entry"]["actions_dropdown"].format(name)
