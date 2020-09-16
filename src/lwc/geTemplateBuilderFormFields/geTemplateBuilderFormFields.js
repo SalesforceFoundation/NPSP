@@ -483,12 +483,11 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      * @param {object} event: object for the custom event
      */
     handleFieldMetadataError(event) {
-        // this.hasErrors = true;
-        // this.pageLevelError = {
-        //     hasErrors: true,
-        //     title: this.CUSTOM_LABELS.commonFieldsNotFound,
-        //     message: this.CUSTOM_LABELS.geFieldsNotFoundMessage
-        // }
+        this.pageLevelError = {
+            hasErrors: true,
+            title: this.CUSTOM_LABELS.commonFieldsNotFound,
+            message: this.CUSTOM_LABELS.geFieldsNotFoundMessage
+        }
     }
 
     /*******************************************************************************
