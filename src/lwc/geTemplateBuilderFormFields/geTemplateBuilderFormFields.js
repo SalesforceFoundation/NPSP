@@ -4,6 +4,7 @@ import { mutable, findIndexByProperty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { isEmpty } from 'c/utilCommon';
 
 // Import schema for default form field element objects
 import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
@@ -532,7 +533,14 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     handleDeleteFormElement(event) {
         const fieldMapping = TemplateBuilderService.fieldMappingByDevName[event.detail.fieldName];
         const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
+
+        if (isEmpty(element)) {
+            dispatch(this, 'deleteformelement', event.detail);
+            return;
+        }
+
         element.checked = false;
+
 
         if (fieldMapping.Is_Required) {
             this.validate();
