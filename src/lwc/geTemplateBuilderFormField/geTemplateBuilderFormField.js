@@ -63,7 +63,9 @@ export default class geTemplateBuilderFormField extends LightningElement {
      * such as target object describe metadata.
      */
     validate() {
-        this.field;
+        if (isEmpty(this.fieldMapping)) {
+            return;
+        }
 
         if (isEmpty(this.targetObjectDescribeInfo.fields[this.fieldMapping.Target_Field_API_Name]) ||
             isEmpty(this.sourceObjectFieldInfo[this.fieldMapping.Source_Field_API_Name])) {
@@ -151,7 +153,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get targetObjectApiName() {
-        this.field;
         if (this.fieldMapping && this.fieldMapping.Target_Object_API_Name) {
             return this.fieldMapping.Target_Object_API_Name;
         }
