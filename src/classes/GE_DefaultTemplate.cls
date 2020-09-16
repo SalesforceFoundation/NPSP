@@ -187,9 +187,9 @@ public with sharing class GE_DefaultTemplate {
         }
 
         // Update the batch header fields with the namespace prefix, if necessary
-        List<FORM_BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
+        List<FORM_Template.BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
         
-        for (FORM_BatchHeaderField batchHeaderField : batchHeaderFieldList) {
+        for (FORM_Template.BatchHeaderField batchHeaderField : batchHeaderFieldList) {
 
             if (batchHeaderField.apiName.endsWith('__c')) {
                 batchHeaderField.apiName = UTIL_Namespace.StrTokenNSPrefix(batchHeaderField.apiName);

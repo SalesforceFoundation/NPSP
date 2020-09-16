@@ -46,7 +46,7 @@ public with sharing class FORM_Template {
     @AuraEnabled public String permissionErrors;
 
     /* Additional props PS */
-    @AuraEnabled public FORM_BatchHeaderField[] batchHeaderFields;
+    @AuraEnabled public BatchHeaderField[] batchHeaderFields;
     /* END */
 
     public FORM_Template(String name, String description, String version, Layout layout) {
@@ -148,5 +148,32 @@ public with sharing class FORM_Template {
         }
     }
 
+    /**
+    * @description Form Batch Header Field definition for use in entering gifts.
+    */
+    public class BatchHeaderField {
+
+        @AuraEnabled public String elementType;
+        @AuraEnabled public String displayRule;
+        @AuraEnabled public String validationRule;
+        @AuraEnabled public String customLabel;
+        @AuraEnabled public String label;
+        @AuraEnabled public String apiName;
+        @AuraEnabled public Boolean required;
+        @AuraEnabled public Boolean isRequiredFieldDisabled;
+        @AuraEnabled public Boolean allowDefaultValue;
+        @AuraEnabled public String defaultValue;
+        @AuraEnabled public String dataType;
+
+        public BatchHeaderField(String elementType,
+                String displayRule,
+                String validationRule,
+                String customLabel) {
+            this.elementType = elementType;
+            this.displayRule = displayRule;
+            this.validationRule = validationRule;
+            this.customLabel = customLabel;
+        }
+    }
 
 }
