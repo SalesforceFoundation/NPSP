@@ -55,7 +55,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
             new_contact_btn=npsp_lex_locators['button-title'].format("New Contact")
             self.selenium.wait_until_element_is_visible(new_contact_locator)
             self.selenium.click_element(new_contact_locator)
-            self.selenium.wait_until_element_is_visible(new_contact_locator)
+            self.selenium.wait_until_element_is_visible(new_contact_btn)
             self.selenium.click_button(new_contact_btn)
         else:
             print("Invalid option")
