@@ -54,6 +54,10 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                                     new Map<String, String> {
                                             'key' => PS_IntegrationServiceConfig.API_KEY,
                                             'value' => testApiKey
+                                    },
+                                    new Map<String, String> {
+                                            'key' => PS_IntegrationServiceConfig.BASE_URL,
+                                            'value' => 'http://test.test.com/'
                                     }
                 }
         };
