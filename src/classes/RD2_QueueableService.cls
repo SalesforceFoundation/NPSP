@@ -176,4 +176,33 @@ public class RD2_QueueableService {
                 .matchRecurringDonationsToOpps(rdIdByCommitmentId);
         }
     }
+
+    /**
+     * @description Queueable service to make callouts to elevate and close commitments 
+     */
+    public class CloseElevateCommitments implements Queueable, Database.AllowsCallouts {
+        List<npe03__Recurring_Donation__c> elevateClosedRds;
+
+        /**
+        * @description Constructor
+        * @param eleveCLosedRds Elevate closed RD to process 
+        */
+        public CloseElevateCommitments(List<npe03__Recurring_Donation__c> elevateClosedRds) {
+            this.elevateClosedRds = elevateClosedRds;
+        }
+
+        /**
+         * @description Execute method called when the Queueable runs. Delegates to the
+         * RD2_ElevateIntegrationService service
+         * @param context queuableContext
+         */
+        public void execute(QueueableContext context) {
+            if (elevateClosedRds == null || elevateClosedRds.isEmpty()) {
+                return;
+            }
+
+            new RD2_ElevateIntegrationService()
+                .closeCommitmentsInElevate(elevateClosedRds);
+        }
+    }
 }

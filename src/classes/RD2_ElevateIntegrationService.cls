@@ -75,6 +75,17 @@ public inherited sharing class RD2_ElevateIntegrationService {
         return config.isIntegrationEnabled();
     }
 
+    @TestVisible
+    private PS_ElevateAPI apiService {
+        get {
+            if (apiService == null) {
+                apiService = new PS_ElevateAPI();
+            }
+            return apiService;
+        }
+        set;
+    }
+
     /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
@@ -188,5 +199,34 @@ public inherited sharing class RD2_ElevateIntegrationService {
                 opp.npe03__Recurring_Donation__c = rd.Id;
             }
         }
+    }
+
+    /**
+    * @description Send Http Request to Elevate and close Closed RD's attached Commitments
+    * @param elevateClosedRds Closed RDs that will be sent to Elevate to close the attached Commitments
+    */
+    public void closeCommitmentsInElevate(List<npe03__Recurring_Donation__c> elevateClosedRds) {
+
+        List<PS_ElevateAPI.ResponseWrapper> responses = new List<PS_ElevateAPI.ResponseWrapper>();
+
+        for (npe03__Recurring_Donation__c elevateClosedRd : elevateClosedRds) {
+            HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+                .withCommitmentId(elevateClosedRd.CommitmentId__c)
+                .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT_CANCEL)
+                .withMethod(PS_ElevateAPI.HttpRequestMethod.POST)
+                .build();
+            
+            responses.add(apiService.sendRequest(request));
+        }
+
+        for (Integer i = 0; i < responses.size(); i ++) {
+            if (responses[i].statusCode == 200) {
+                elevateClosedRds[i].ClosedReason__c = elevateClosedRds[i].ClosedReason__c;
+            } else {
+                //Error Handling
+            }
+        }
+
+        update elevateClosedRds;
     }
 }

@@ -124,6 +124,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
+        processClosedElevateRD(rds, oldRds, triggerAction);
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
     }
@@ -538,4 +540,57 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             dmlActions.objectsToUpdate.addAll(revisedSchedules.objectsToUpdate);
         }
     }
+
+    /**
+    * @description Process to closed Commitments in Elevate
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void processClosedElevateRD(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction ) {
+        if (triggerAction != TDTM_Runnable.Action.BeforeUpdate
+            || TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.PS_doNotSendToElevate)
+            || !RD2_ElevateIntegrationService.isIntegrationEnabled()) {
+            return;
+        }
+
+        List<npe03__Recurring_Donation__c> trackedRds = new List<npe03__Recurring_Donation__c>();
+
+        for (Integer i = 0; i < rds.size(); i++) {
+            RD2_RecurringDonation rd = new RD2_RecurringDonation(rds[i]);
+            RD2_RecurringDonation oldRd = new RD2_RecurringDonation(oldRds[i]);
+
+            if (rd.isElevateRecord() && rd.isClosed() && !oldRd.isClosed()) {
+
+                npe03__Recurring_Donation__c trackedRd = updateStatueReasonToPending(rds[i]);
+                trackedRds.add(trackedRd);
+
+                if (trackedRds.size() >= Limits.getLimitCallouts()) {
+                    System.enqueueJob(new RD2_QueueableService.CloseElevateCommitments(trackedRds));
+                    trackedRds.clear();
+                }
+            }
+        }
+
+        if (trackedRds.size() > 0) {
+            System.enqueueJob(new RD2_QueueableService.CloseElevateCommitments(trackedRds));
+        }
+    }
+    /**
+    * @description Update Closed Elevate RD to Pending Process status to indicate the callout is in progress
+    * @param closedRd Closed Elevate RD to update
+    * @return npe03__Recurring_Donation__c Recurring Donation with orgiinal status 
+    */
+    private npe03__Recurring_Donation__c updateStatueReasonToPending(npe03__Recurring_Donation__c closedRd) {
+        npe03__Recurring_Donation__c trackedRd = new npe03__Recurring_Donation__c(
+            Id = closedRd.Id,
+            ClosedReason__c = closedRd.ClosedReason__c,
+            CommitmentId__c = closedRd.CommitmentId__c
+        );
+
+        closedRd.ClosedReason__c = System.Label.RD2_ElevatePendingStatus;
+
+        return trackedRd;
+    }
+
 }
