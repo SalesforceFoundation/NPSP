@@ -71,6 +71,8 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isElevateWidgetDisplayed = false;
     isElevateCustomer = false;
+    elevateAuthToken;
+    elevateCardholderName;
 
     @track error = {};
 
@@ -250,7 +252,8 @@ export default class rd2EntryForm extends LightningElement {
         if (this.isElevateWidgetDisplayed) {
             try {
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-                const token = await elevateWidget.returnValues().payload;
+                this.elevateAuthToken = await elevateWidget.returnToken().payload;
+                this.elevateCardholderName = elevateWidget.returnCardholderName();
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;
@@ -284,7 +287,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Validate all fields on the integrated LWC sections 
+    * @description Validate all fields on the integrated LWC sections
     */
     isSectionInputsValid() {
         const isDonorSectionValid = (isNull(this.donorComponent))
@@ -387,6 +390,8 @@ export default class rd2EntryForm extends LightningElement {
             : insertSuccessMessage.replace("{0}", recordName);
 
         showToast(message, '', 'success', []);
+        console.log('>> Elevate Token: ' + this.elevateAuthToken);
+        console.log('>> Elevate Cardholder: ' + this.elevateCardholderName);
 
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
     }

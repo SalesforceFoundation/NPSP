@@ -1,5 +1,6 @@
-import { api, track, LightningElement } from 'lwc';
+import {api, track, LightningElement, wire} from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
+import { getObjectInfo } from "lightning/uiObjectInfoApi";
 
 import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
@@ -11,6 +12,7 @@ import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessa
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 
 const WIDGET_EVENT_NAME = 'rd2ElevateWidget';
+import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
 
 /***
@@ -46,6 +48,17 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.visualforceOriginUrls = tokenHandler.getVisualforceOriginURLs(domainInfo);
     }
 
+    /**
+     * @description Set the Contact Object label for the Donor Type picklist
+     */
+    @wire(getObjectInfo, { objectApiName: CONTACT_OBJECT })
+    wiredContactObjectInfo(response) {
+        if (response.data) {
+            this.labels.cardholderFirstNameLabel = response.data.fields.FirstName.label;
+            this.labels.cardholderLastNameLabel = response.data.fields.LastName.label;
+        }
+    }
+
     /***
     * @description Listens for a message from the Visualforce iframe.
     */
@@ -74,11 +87,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting a token. 
+    * @description Method sends a message to the visualforce page iframe requesting a token.
     */
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-
         return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.handleError);
     }
 
@@ -166,14 +178,36 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /**
+     * @description Concatenate the cardholder first and last names if there are any
+     * @returns A concatenated Cardholder Name string from the First and Last Name fields
+     */
+    @api
+    returnCardholderName() {
+        let names = [];
+        this.template.querySelectorAll('lightning-input')
+            .forEach(field => {
+                names[field.name] = field.value;
+            });
+
+        let cardHolderName = '';
+        if (names['cardholderFirstName']) {
+            cardHolderName += names['cardholderFirstName'];
+        }
+        if (names['cardholderLastName']) {
+            cardHolderName += ' ' + names['cardholderLastName'];
+        }
+
+        return cardHolderName.trim();
+    }
+
+    /**
      * Requests a payment token when the form is saved
      * @return {paymentToken: Promise<*>} Promise that will resolve to the token
      */
     @api
-    returnValues() {
+    returnToken() {
         return {
             payload: this.requestToken()
         };
     }
-
 }
