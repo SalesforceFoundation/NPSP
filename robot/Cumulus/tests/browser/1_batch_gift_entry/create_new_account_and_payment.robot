@@ -7,13 +7,16 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/AccountPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Run Keywords
+...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
+...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
 Create a new account and enter payment information
     #Create a new account and enter payment information, then process batch
     ${ns} =  Get NPSP Namespace Prefix
+    Set Suite Variable    ${ns}
     &{batch} =       API Create DataImportBatch
     ...    ${ns}Batch_Process_Size__c=50
     ...    ${ns}Batch_Description__c=Created via API
@@ -23,6 +26,7 @@ Create a new account and enter payment information
     ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true
     ...    ${ns}GiftBatch__c=true
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]
+    Set Suite Variable    &{batch}
     Go To Page                        Listing                      Batch_Gift_Entry
     Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
@@ -40,6 +44,8 @@ Create a new account and enter payment information
     ...                        Account Name=${acc_name}
     Click Modal Button         Save
     Wait Until Modal Is Closed
+    &{account} =         API Query Record     Account      Name=${acc_name}
+    Store Session Record        Account       ${account}[Id]
     Fill BGE Form
     ...                       Donation Amount=20
     Select Date From Datepicker    Donation Date    Today
@@ -66,6 +72,3 @@ Create a new account and enter payment information
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
-    Click Link    text=${acc_name}
-    Current Page Should Be    Details    Account
-    ${account_id} =       Save Current Record ID For Deletion      Account
