@@ -1618,6 +1618,14 @@
         <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevatePendingStatus</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Reason to indicates Elevate Service is in progress.</shortDescription>
+        <value>Pending Elevate Process</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

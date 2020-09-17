@@ -386,6 +386,7 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>PS_ElevateAPI</members>
+        <members>PS_ElevateAPI_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -1679,6 +1680,7 @@
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
