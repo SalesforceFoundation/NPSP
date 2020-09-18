@@ -54,6 +54,8 @@ public with sharing class PS_ElevateAPI_TEST {
         String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl + '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
         System.assertEquals(expectedEndpoint, httpRequest.getEndPoint(), 'Cancel API url should be set as the http request end point');
         System.assertEquals(PS_ElevateAPI.HttpRequestMethod.POST.name(), httpRequest.getMethod(), 'The Http request should been set to POST method');
+        System.assertEquals(UserInfo.getUserName(), httpRequest.getHeader(PS_IntegrationServiceConfig.SFDO_USERNAME),
+            'Current User info should be set in the header file');
     }
 
     /**
