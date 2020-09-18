@@ -137,7 +137,3 @@ Test Batch Status Adding Removig Gifts
     # Verify the backend dataimport batch job
     Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
     ...                              Batch_Status__c=Completed
-
-    Process And Validate Batch       Completed
-    Verify Table Field Values        Batch Gifts
-    ...                              Status=Imported
