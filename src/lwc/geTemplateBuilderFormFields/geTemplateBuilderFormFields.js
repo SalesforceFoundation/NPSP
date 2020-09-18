@@ -201,10 +201,9 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         } else {
             isValid = true;
 
-            this.errors = [];
-
             this.pageLevelError = {
-                hasErrors : false
+                hasErrors : false,
+                errors: []
             }
         }
 
