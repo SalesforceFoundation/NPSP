@@ -20,19 +20,19 @@ ${MSG}            Automation Batch Status Test
 Setup Test Data
     [Documentation]     Data setup needed for the testcase. Creates a regular contact
     ...                 and a contact associated with an account.
-    &{CONTACT} =    API Create Contact    FirstName=${faker.first_name()}    LastName=${faker.last_name()}
-    Set suite variable    &{CONTACT}
+    &{CONTACT} =        API Create Contact    FirstName=${faker.first_name()}    LastName=${faker.last_name()}
+    Set suite variable  &{CONTACT}
     # create an account using create  account api
-    &{ACCOUNT} =    API Create Organization Account    Name=${faker.company()}
-    Set suite variable    &{ACCOUNT}
+    &{ACCOUNT} =        API Create Organization Account    Name=${faker.company()}
+    Set suite variable  &{ACCOUNT}
     #Create a contact associated with the account ID creaed above
-    &{CONTACT2} =        API Create Contact
-        ...              FirstName=${faker.first_name()}
-        ...              LastName=${faker.last_name()}
-        ...              AccountId=${ACCOUNT}[Id]
-    Set suite variable   &{CONTACT2}
-    ${NS} =  Get NPSP Namespace Prefix
-    Set Suite Variable   ${NS}
+    &{CONTACT2} =       API Create Contact
+        ...             FirstName=${faker.first_name()}
+        ...             LastName=${faker.last_name()}
+        ...             AccountId=${ACCOUNT}[Id]
+    Set suite variable  &{CONTACT2}
+    ${NS} =             Get NPSP Namespace Prefix
+    Set Suite Variable  ${NS}
 
 
 Edit Default Template To Add Batch Table Columns
