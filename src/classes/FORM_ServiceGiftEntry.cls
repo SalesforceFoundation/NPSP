@@ -428,7 +428,7 @@ public with sharing class FORM_ServiceGiftEntry {
     *
     * @return {String} guid: Generated UUID.
     */
-    public static String generateId() {
+    private static String generateId() {
         Blob key = Crypto.generateAesKey(128);
         String hexString = EncodingUtil.convertToHex(key);
         String generateUniqueId = hexString.substring(0,8)+ '-' + hexString.substring(8,12) +
