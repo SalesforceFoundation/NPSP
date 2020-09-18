@@ -85,8 +85,14 @@ public with sharing class PS_ElevateCommitmentAPI {
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
+        String currencyCode = UserInfo.isMultiCurrencyOrganization()
+            ? (String) rd.get('CurrencyIsoCode')
+            : UserInfo.getDefaultCurrency();
+        
+        reqBody.withCurrency(currencyCode);
+
         setDonorInfo(reqBody, rd);    
-        setSchedules(reqBody, rd);        
+        setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);        
 
         return reqBody;
     }
@@ -110,18 +116,15 @@ public with sharing class PS_ElevateCommitmentAPI {
     /**
     * @description Sets schedules on the commitment request body
     * @param reqBody RequestBody
-    * @param rd Recurring Donation record
+    * @param rdSchedules Recurring Donation Schedules
+    * @param currencyCode Currency ISO Code
     * @return void
     */
-    private void setSchedules(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
-        String currencyCode = UserInfo.isMultiCurrencyOrganization()
-            ? (String) rd.get('CurrencyIsoCode')
-            : UserInfo.getDefaultCurrency();
-
+    private void setSchedules(RequestBody reqBody, List<RecurringDonationSchedule__c> rdSchedules, String currencyCode) {
         Integer currencyMultiplier = currencyMultiplierByCode.get(currencyCode);
 
         List<Schedule> schedules = new List<Schedule>();
-        for (RecurringDonationSchedule__c rdSchedule : rd.RecurringDonationSchedules__r) {
+        for (RecurringDonationSchedule__c rdSchedule : rdSchedules) {
             schedules.add(new Schedule(rdSchedule, currencyMultiplier));
         }
 
@@ -226,6 +229,11 @@ public with sharing class PS_ElevateCommitmentAPI {
 
         public RequestBody withGatewayId(String gatewayId) {
             this.gatewayId = gatewayId;
+            return this;
+        }
+
+        public RequestBody withCurrency(String currencyCode) {
+            this.currencyCode = currencyCode;
             return this;
         }
 

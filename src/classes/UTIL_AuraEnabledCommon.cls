@@ -65,7 +65,7 @@ public without sharing class UTIL_AuraEnabledCommon {
     * @param errMessage Exception message that needs to be set again
     * @return void
     */
-    private static void throwAuraHandledException(String errMessage) {
+    public static void throwAuraHandledException(String errMessage) {
         AuraHandledException e = new AuraHandledException(errMessage);
         e.setMessage(errMessage);
         throw e;

@@ -261,7 +261,7 @@ public with sharing class RD2_EntryFormController {
             return JSON.serialize(requestBody);
 
         } catch (Exception ex) {
-            throwAuraHandledException(ex.getMessage());
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
 
         return null;
@@ -294,19 +294,6 @@ public with sharing class RD2_EntryFormController {
         }
 
         return JSON.serialize(response);
-    }
-
-    /***
-    * @description Throws AuraHandledException
-    * The wrapping of the error message again is required
-    * so the specific message is displayed instead of generic "Script thrown exception".
-    * @param errMessage Exception message that needs to be set again
-    * @return void
-    */
-    private static void throwAuraHandledException(String errMessage) {
-        AuraHandledException e = new AuraHandledException(errMessage);
-        e.setMessage(errMessage);
-        throw e;
     }
 
 }
