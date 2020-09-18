@@ -501,41 +501,65 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /**
-    * @description Verifiers that when closing 
+    * @description Verifies that when Elevate callout is completed and success, RD Close Reason will be switch to the original Closed Reason. 
     */
     @isTest
-    private static void shouldMakeCallOutCloseElevateCommitmentWhenElevateRdIsClosed() {
+    private static void shouldUpdateClosedReasonToOriginalReasonWhenElevateCloseCommitmentCalloutSuccess() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
-
+        enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegratioNServiceConfig_TEST.testConfig);
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
-            .withCommitmentId(COMMITMENT_ID)
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
             .build();
         insert rd;
 
         PS_ElevateAPI_TEST.MockElevateHttpResponse mockHttpRespons = new PS_ElevateAPI_TEST.MockElevateHttpResponse()
             .withStatusCode(200);
     
-        Test.startTest();
-            Test.setMock(HttpCalloutMock.class, mockHttpRespons);
+        String originalReason = 'Original Reason';
 
-            rd.ClosedReason__c = 'Random';
-            rd.Status__c = RD2_Constants.STATUS_CLOSED;
-            update rd;
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, mockHttpRespons);
+
+        rd.ClosedReason__c = originalReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertNotEquals(System.Label.RD2_ElevatePendingStatus, rd.ClosedReason__c,
+        System.assertEquals(originalReason, rd.ClosedReason__c,
             'RD Close Reason should be swapped back to the original reason when the callout success');
+    }
+
+    /**
+    * @description Verifies that when Elevate callout is completed and fail, RD Close Reason will not be updated back to the original Closed Reason
+    */
+    @isTest
+    private static void shouldNotUpdateClosedReasonToOriginalReasonWhenElevateCloseCommitmentCalloutFail() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+        PS_IntegrationService.setConfiguration(PS_IntegratioNServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
+            .build();
+        insert rd;
+
+        PS_ElevateAPI_TEST.MockElevateHttpResponse mockHttpRespons = new PS_ElevateAPI_TEST.MockElevateHttpResponse()
+            .withStatusCode(403)
+            .withStatus('Fail');
+
+        String originalReason = 'Original Reason';
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, mockHttpRespons);
+
+        rd.ClosedReason__c = originalReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertNotEquals(originalReason, rd.ClosedReason__c,
+            'RD Close Reason should not swapped back to the original reason when the callout fail');
     }
     
     // Helpers

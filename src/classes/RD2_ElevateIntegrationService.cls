@@ -203,13 +203,13 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
     /**
     * @description Send Http Request to Elevate and close Closed RD's attached Commitments
-    * @param elevateClosedRds Closed RDs that will be sent to Elevate to close the attached Commitments
+    * @param trackedClosedRds Closed RDs with original Close Reason that will be process
     */
-    public void closeCommitmentsInElevate(List<npe03__Recurring_Donation__c> elevateClosedRds) {
+    public void closeCommitmentsInElevate(List<npe03__Recurring_Donation__c> trackedClosedRds) {
 
         List<PS_ElevateAPI.ResponseWrapper> responses = new List<PS_ElevateAPI.ResponseWrapper>();
 
-        for (npe03__Recurring_Donation__c elevateClosedRd : elevateClosedRds) {
+        for (npe03__Recurring_Donation__c elevateClosedRd : trackedClosedRds) {
             HttpRequest request = new PS_ElevateAPI.RequestBuilder()
                 .withCommitmentId(elevateClosedRd.CommitmentId__c)
                 .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT_CANCEL)
@@ -220,13 +220,12 @@ public inherited sharing class RD2_ElevateIntegrationService {
         }
 
         for (Integer i = 0; i < responses.size(); i ++) {
-            if (responses[i].statusCode == 200) {
-                elevateClosedRds[i].ClosedReason__c = elevateClosedRds[i].ClosedReason__c;
-            } else {
-                //Error Handling
+            if (responses[i].statusCode != 200) {
+                //error handling, currently just populate the failing body onto the close reason
+                trackedClosedRds[i].ClosedReason__c = responses[i].body;
             }
         }
 
-        update elevateClosedRds;
+        update trackedClosedRds;
     }
 }

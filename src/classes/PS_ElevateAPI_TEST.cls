@@ -129,7 +129,6 @@ public with sharing class PS_ElevateAPI_TEST {
         */
         public HttpResponse respond(HttpRequest request) {
             HttpResponse response = new HttpResponse();
-        
             response.setHeader('Content-Type', 'application/json');
             response.setStatusCode( (statusCode != null) ? statusCode : 200 );
             response.setStatus((status != null) ? status : 'OK');
