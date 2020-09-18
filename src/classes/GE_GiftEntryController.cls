@@ -427,20 +427,6 @@ public with sharing class GE_GiftEntryController {
     }
 
     /**
-     * This method creates a wrapper which contains the  template selected by name and a field mapping set.
-     * If the template is not found, it returns a wrapper for the default template
-     * @param String templateName
-     * @return  A RenderWrapper containing the default template JSON.
-     */
-    public static RenderWrapper getRenderWrapper(String templateName) {
-        FORM_Template template = FORM_ServiceGiftEntry.retrieveFormTemplateById(templateName);
-
-        RenderWrapper renderWrapper = wrapTemplate(template);
-
-        return renderWrapper;
-    }
-
-    /**
      * This method creates a wrapper which contains the default SGE template and a field mapping set.
      *
      * @return  A RenderWrapper containing the default template JSON.
