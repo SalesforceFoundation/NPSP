@@ -231,7 +231,7 @@
                                                    variant='error'>
                             <ul slot="body"
                                 class="slds-list_dotted">
-                                <template for:each={errors}
+                                <template for:each={pageLevelError.errors}
                                           for:item="error">
                                     <li key={error}
                                         aria-label={error}
