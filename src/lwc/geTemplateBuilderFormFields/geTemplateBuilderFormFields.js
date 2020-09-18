@@ -190,12 +190,11 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             const lightningAccordion = this.template.querySelector('lightning-accordion');
             lightningAccordion.activeSectionName = [...objectMappingsWithMissingRequiredFields];
 
-            this.errors = [...missingRequiredFieldMappings];
-
             this.pageLevelError = {
                 hasErrors : true,
                 title : this.CUSTOM_LABELS.commonError,
-                message: this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields
+                message: this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields,
+                errors: [...missingRequiredFieldMappings]
             }
 
             isValid = false;
