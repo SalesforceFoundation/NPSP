@@ -335,13 +335,23 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         value=self.npsp.return_locator_value("bge.value",field_name)
         self.npsp.click_link_with_text(value)
 
-    def verify_table_field_values(self,table,**kwargs):
+    def verify_table_field_values(self,name,byname=None,**kwargs):
         """Verifies that table has given field name with value.
-        Arguments are: table=table name, fieldname=fieldvalue
-        Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |"""
-        for field,value in kwargs.items():
-            locator=npsp_lex_locators["gift_entry"]["table"].format(table,field,value)
-            self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {table} table')
+        Arguments are: name which could be table name or a specific contact name, byname to search by contact name,
+        fieldname=fieldvalue
+        if the validation is to ensure the value exists in the table
+        Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |
+        If the validation is to ensure the value specified exists for a specific contact in the table
+        Eg: |Verify Table Field Values  |  John Doe  | True | Opportunity Amount=$150.00  |
+        """
+        if byname == "True":
+            for field,value in kwargs.items():
+                locator=npsp_lex_locators["gift_entry"]["datatable_field_by_name"].format(name,field,value)
+            self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} for row with {name}')
+        else:
+            for field,value in kwargs.items():
+                locator=npsp_lex_locators["gift_entry"]["table"].format(name,field,value)
+            self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {name} table')
     
     def perform_action_on_datatable_row(self,name,action):
         """Select the specific gift entry data row based on the name parameter and

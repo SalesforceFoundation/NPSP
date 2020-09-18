@@ -9,7 +9,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             API Check And Enable Gift Entry
 ...             Setup Test Data
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+#Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
 ${AMOUNT}         100
@@ -91,7 +91,7 @@ Test Batch Status Adding Removig Gifts
     ...                              Donation Date=Today
 
     Click Special Button             Save & Enter New Gift
-    Verify Table Field Values        Batch Gifts
+    Verify Table Field Values        ${CONTACT}[Name]   True
     ...                              Status=Dry Run - Validated
 
     # Update the gift value and check the value gets  reflected in the table
@@ -99,21 +99,21 @@ Test Batch Status Adding Removig Gifts
     Fill Gift Entry Form
      ...                              Donation Amount=${AMOUNT_UPDATED}
     Click Special Button              Update
-    Verify Table Field Values         Batch Gifts
+    Verify Table Field Values         ${CONTACT}[Name]   True
      ...                              Donation Amount=$${AMOUNT_UPDATED}.00
     # Run and validate the Batch data import status
-    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
-    ...                              Batch_Status__c=Open
+    Verify Expected Values    nonns   DataImportBatch__c    ${BATCH_ID}
+    ...                               Batch_Status__c=Open
 
-    Process And Validate Batch       Completed
-    Verify Table Field Values        Batch Gifts
-    ...                              Status=Imported
+    Process And Validate Batch        Completed
+    Verify Table Field Values         ${CONTACT}[Name]   True
+    ...                               Status=Imported
     # Verify the backend dataimport batch job using the API call
-    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
-    ...                              Batch_Status__c=Completed
+    Verify Expected Values    nonns   DataImportBatch__c    ${BATCH_ID}
+    ...                               Batch_Status__c=Completed
 
     #Scroll to the top of the page, add gift for contact associated with org account
-    Scroll Page To Location          0      0
+    Scroll Page To Location           0      0
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
     ...                              Existing Donor Contact=${CONTACT2}[Name]
@@ -121,10 +121,10 @@ Test Batch Status Adding Removig Gifts
     ...                              Donation Date=Today
 
     Click Special Button             Save & Enter New Gift
-    Verify Table Field Values        Batch Gifts
+    Verify Table Field Values        ${CONTACT2}[Name]   True
     ...                              Status=Dry Run - Error
     Process And Validate Batch       Errors
-    Verify Table Field Values        Batch Gifts
+    Verify Table Field Values        ${CONTACT2}[Name]   True
     ...                              Status=Failed
 
     # Verify the backend dataimport batch job
