@@ -250,14 +250,14 @@ public with sharing class RD2_EntryFormController {
     /***
     * @description Builds an Elevate Commitment request body
     * @param recordId Recurring Donation Id
-    * @param token Payment Method Token
+    * @param paymentMethodToken Payment Method Token
     * @return String: JSON containing the Commitment Request Body
     */
     @AuraEnabled
-    public static String getCommitmentRequestBody(Id recordId, String token) {
+    public static String getCommitmentRequestBody(Id recordId, String paymentMethodToken) {
         try {
             PS_ElevateCommitmentAPI api = new PS_ElevateCommitmentAPI();
-            PS_ElevateCommitmentAPI.RequestBody requestBody = api.getRequestBody(recordId, token);
+            PS_ElevateCommitmentAPI.RequestBody requestBody = api.getRequestBody(recordId, paymentMethodToken);
             return JSON.serialize(requestBody);
 
         } catch (Exception ex) {

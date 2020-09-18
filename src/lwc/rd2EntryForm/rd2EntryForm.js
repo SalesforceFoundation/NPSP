@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
-import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
+import { LABEL_NEW_LINE, HTTP_CODES } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -28,6 +29,8 @@ import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccess
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
+import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
+import unknownError from '@salesforce/label/c.commonUnknownError';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
@@ -54,7 +57,9 @@ export default class rd2EntryForm extends LightningElement {
         customFieldsSectionHeader,
         currencyFieldLabel,
         flsErrorHeader,
-        flsErrorDetail
+        flsErrorDetail,
+        elevateWidgetLabel,
+        unknownError
     });
 
     @api parentId;
@@ -62,6 +67,7 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isEdit = false;
     @track record;
+    recordName;
     @track isMultiCurrencyEnabled = false;
     @track fields = {};
     @track rdSettings = {};
@@ -73,13 +79,13 @@ export default class rd2EntryForm extends LightningElement {
     @track isAutoNamingEnabled;
     @track isLoading = true;
     @track hasCustomFields = false;
-
     isRecordReady = false;
     isSettingReady = false;
 
     @track isElevateWidgetEnabled = false;
     isElevateCustomer = false;
     hasUserDisabledElevateWidget = false;
+    paymentMethodToken;
 
     @track error = {};
 
@@ -125,7 +131,7 @@ export default class rd2EntryForm extends LightningElement {
                         detail: this.customLabels.flsErrorDetail
                     };
                 }
-            });     
+            });
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
     }
@@ -273,7 +279,7 @@ export default class rd2EntryForm extends LightningElement {
         if (this.isElevateWidgetEnabled) {
             try {
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-                const token = await elevateWidget.returnValues().payload;
+                this.paymentMethodToken = await elevateWidget.returnValues().payload;
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;
@@ -404,14 +410,92 @@ export default class rd2EntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the success action
     */
     handleSuccess(event) {
-        const recordName = event.detail.fields.Name.value;
-        const message = (this.recordId)
-            ? updateSuccessMessage.replace("{0}", recordName)
-            : insertSuccessMessage.replace("{0}", recordName);
+        this.recordName = event.detail.fields.Name.value;
+        const recordId = event.detail.id;
 
-        showToast(message, '', 'success', []);
+        if (this.isElevateWidgetEnabled && this.paymentMethodToken) {
+            this.createCommitment(recordId);
 
-        fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
+        } else {
+            this.closeModalOnSuccess(recordId);
+        }
+    }
+
+    createCommitment = async (recordId) => {
+        let jsonRequestBody = await getCommitmentRequestBody({
+            recordId: recordId,
+            paymentMethodToken: this.paymentMethodToken
+        });
+        console.log('****jsonRequestBody: ' + jsonRequestBody);
+
+        sendCommitmentRequest({ record: recordId, jsonRequestBody: jsonRequestBody })
+            .then(jsonResponse => {
+                this.processCommitmentResponse(recordId, jsonResponse);
+            })
+            .catch((error) => {
+                this.handleError(error);
+                this.isLoading = false;
+            })
+    }
+
+    processCommitmentResponse(recordId, jsonResponse) {
+        console.log('****response: ' + jsonResponse);
+        let response = JSON.parse(jsonResponse);
+
+        if (response.statusCode === HTTP_CODES.Created) {
+            this.closeModalOnSuccess();
+
+        } else {
+            this.displayCommitmentErrors(response);
+            this.closeModal(recordId);
+        }
+    }
+
+    displayCommitmentErrors(response) {
+        const title = this.customLabels.elevateWidgetLabel;
+
+        response.body = response.body.replace(/\"/g, '').replace(/\'/g, '"');
+        response.body = JSON.parse(response.body);
+        let errors = this.getErrors(response);
+
+        const message = this.getRecurringDonationSuccessMessage()
+            + '\n However, the record in Elevate could not be created due to following error(s):\n {0}';
+        let replacements = [errors];
+        let formattedMessage = format(message, replacements);
+        
+        showToast(title, formattedMessage, 'error', 'sticky', []);
+    }
+
+    /***
+    * @description Get the message or errors from a failed API call.
+    * @param {object} response: Http response object
+    * @return {string}: Message from a failed API call response
+    */
+    getErrors(response) {
+        // For some reason the key in the body object for 'Message'
+        // in the response we receive from Elevate is capitalized.
+        // Also checking for lowercase M in message in case they fix it.        
+        return response.body.Message ||
+            response.body.message ||
+            response.errorMessage ||
+            JSON.stringify(response.body.errors.map(error => error.message)) ||
+            this.customLabels.unknownError;
+    }
+
+    closeModalOnSuccess(recordId) {
+        showToast(this.getRecurringDonationSuccessMessage(), '', 'success', []);
+
+        this.closeModal(recordId);
+    }
+
+    getRecurringDonationSuccessMessage() {
+        return (this.isEdit)
+            ? updateSuccessMessage.replace("{0}", this.recordName)
+            : insertSuccessMessage.replace("{0}", this.recordName);
+    }
+
+    closeModal(recordId) {
+        fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: recordId });
     }
 
     /**
