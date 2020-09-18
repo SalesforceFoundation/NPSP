@@ -6,31 +6,36 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/PaymentPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Run Keywords
+...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
+...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
 Opportunity is Autoclosed when Overpaid
-    [Documentation]    Create Open Opportunity and apply new payment of amount more than opportunity amount and confirm that opportunity is closed when batch is processed
+    [Documentation]    Create Open Opportunity and apply new payment of amount more than opportunity amount
+    ...                and confirm that opportunity is closed when batch is processed
     [tags]  stable
     ${ns} =  Get NPSP Namespace Prefix
-    &{batch} =       API Create DataImportBatch    
-    ...    ${ns}Batch_Process_Size__c=50    
-    ...    ${ns}Batch_Description__c=Created via API    
-    ...    ${ns}Donation_Matching_Behavior__c=Single Match or Create    
-    ...    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c    
-    ...    ${ns}RequireTotalMatch__c=false    
-    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   
-    ...    ${ns}GiftBatch__c=true    
-    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
+    Set Suite Variable    ${ns}
+    &{batch} =       API Create DataImportBatch
+    ...    ${ns}Batch_Process_Size__c=50
+    ...    ${ns}Batch_Description__c=Created via API
+    ...    ${ns}Donation_Matching_Behavior__c=Single Match or Create
+    ...    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c
+    ...    ${ns}RequireTotalMatch__c=false
+    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true
+    ...    ${ns}GiftBatch__c=true
+    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]
+    Set Suite Variable    &{batch}
     &{contact} =     API Create Contact
-    Store Session Record      Account    ${contact}[AccountId] 
+    Store Session Record      Account    ${contact}[AccountId]
     ${date} =     Get Current Date    result_format=%Y-%m-%d
-    &{opportunity} =     API Create Opportunity   ${contact}[AccountId]    Donation  
-    ...    StageName=Prospecting    
-    ...    Amount=100    
+    &{opportunity} =     API Create Opportunity   ${contact}[AccountId]    Donation
+    ...    StageName=Prospecting
+    ...    Amount=100
     ...    CloseDate=${date}
-    ...    Name=${contact}[LastName] Test Donation    
+    ...    Name=${contact}[LastName] Test Donation
     Go To Page                        Listing                      Batch_Gift_Entry
     Click Link With Text    ${batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
@@ -58,7 +63,7 @@ Opportunity is Autoclosed when Overpaid
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
     Current Page Should Be    Details    npe01__OppPayment__c
-    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=101.0
     ...    npe01__Payment_Date__c=${date}
@@ -68,4 +73,4 @@ Opportunity is Autoclosed when Overpaid
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
-    
+
