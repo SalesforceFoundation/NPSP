@@ -60,7 +60,8 @@ Edit An Enhanced Recurring donation record of type open
     ...                                    Status Reason=Commitment Completed
 
     ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
-
+    Reload Page
+    Current Page Should be                 Details    npe03__Recurring_Donation__c
     # Verify that "no active schedules are present" messages appear
     Verify Schedule Warning Messages Present
 
@@ -72,4 +73,5 @@ Edit An Enhanced Recurring donation record of type open
     #validate the stage on opportunity is Closed Lost
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
     Wait Until Loading Is Complete
+    Current Page Should Be                  Details                        Opportunity
     Navigate To And Validate Field Value    Stage                          contains                        Closed Lost
