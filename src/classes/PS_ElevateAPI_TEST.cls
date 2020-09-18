@@ -59,7 +59,7 @@ public with sharing class PS_ElevateAPI_TEST {
     }
 
     /**
-    * @desciprtion Verifies that the http respond is correctly format 
+    * @desciprtion Verifies that the http respond is correctly formatted
     */
     @isTest
     private static void shouldSuccessfullyCalloutAndFormatHttpResponse() {

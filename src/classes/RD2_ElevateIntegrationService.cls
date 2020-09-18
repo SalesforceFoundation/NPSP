@@ -75,6 +75,9 @@ public inherited sharing class RD2_ElevateIntegrationService {
         return config.isIntegrationEnabled();
     }
 
+    /***
+    * @description Payment Service Elevate API
+    */
     @TestVisible
     private PS_ElevateAPI apiService {
         get {

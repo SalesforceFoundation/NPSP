@@ -542,7 +542,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /**
-    * @description Process to closed Commitments in Elevate
+    * @description Process to close Commitments in Elevate. If the Elevate RD is closed and Elevate Service is enabled,
+    *   the RD status will be set to pending process and an async job will be kick off to cancel the mathced commitment
+    *   in Elevate.
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.

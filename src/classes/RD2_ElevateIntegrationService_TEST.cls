@@ -549,6 +549,7 @@ public class RD2_ElevateIntegrationService_TEST {
             .withStatus('Fail');
 
         String originalReason = 'Original Reason';
+
         Test.startTest();
         Test.setMock(HttpCalloutMock.class, mockHttpRespons);
 
