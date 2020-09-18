@@ -4,6 +4,7 @@ import { dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import {deepClone, isEmpty} from 'c/utilCommon';
+import hasViewSetup from '@salesforce/userPermission/ViewSetup';
 
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 
@@ -24,6 +25,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     isBatchHeaderField = false;
     hasRendered = false;
+    hasPermission = hasViewSetup;
 
 
     /*******************************************************************************
@@ -52,6 +54,8 @@ export default class geTemplateBuilderFormField extends LightningElement {
             if (isEmpty(this.fieldMapping)) {
                 const inputField = this.template.querySelector('[data-id="formField"]');
 
+                inputField.setAttribute('label', null);
+                inputField.setAttribute('field-level-help', null)
                 inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
                 inputField.reportValidity();
 
