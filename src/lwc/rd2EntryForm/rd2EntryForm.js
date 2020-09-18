@@ -1,5 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -31,6 +31,14 @@ import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
+import getCommitmentRequestBody from '@salesforce/apex/RD2_entryFormController.getCommitmentRequestBody';
+import sendCommitmentRequest from '@salesforce/apex/RD2_entryFormController.sendCommitmentRequest';
+
+/***
+* @description Event name fired when the Elevate credit card widget is displayed or hidden
+* on the RD2 entry form
+*/
+const ELEVATE_WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -69,8 +77,9 @@ export default class rd2EntryForm extends LightningElement {
     isRecordReady = false;
     isSettingReady = false;
 
-    @track isElevateWidgetDisplayed = false;
+    @track isElevateWidgetEnabled = false;
     isElevateCustomer = false;
+    hasUserDisabledElevateWidget = false;
 
     @track error = {};
 
@@ -116,7 +125,9 @@ export default class rd2EntryForm extends LightningElement {
                         detail: this.customLabels.flsErrorDetail
                     };
                 }
-            })
+            });     
+
+        registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
     }
 
     /***
@@ -206,7 +217,9 @@ export default class rd2EntryForm extends LightningElement {
     * @param event Contains new payment method value
     */
     handlePaymentChange(event) {
+        //reset the widget and the form related to the payment method
         this.clearError();
+        this.hasUserDisabledElevateWidget = false;
         this.evaluateElevateWidget(event.detail.value);
     }
 
@@ -215,9 +228,19 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        this.isElevateWidgetDisplayed = this.isElevateCustomer === true
+        this.isElevateWidgetEnabled = this.isElevateCustomer === true
+            && !this.hasUserDisabledElevateWidget
             && !this.isEdit // The Elevate widget is applicable to new RDs only
             && paymentMethod === 'Credit Card';// Verify the payment method value
+    }
+
+    /**
+     * @description Set variable that informs the RD form when the
+     *  credit card widget is displayed or hidden by a user
+     * @param event
+     */
+    handleElevateWidgetDisplayState(event) {
+        this.hasUserDisabledElevateWidget = event.isDisabled;
     }
 
     /***
@@ -247,7 +270,7 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     processSubmit = async (allFields) => {
-        if (this.isElevateWidgetDisplayed) {
+        if (this.isElevateWidgetEnabled) {
             try {
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
                 const token = await elevateWidget.returnValues().payload;
