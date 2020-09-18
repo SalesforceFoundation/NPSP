@@ -5,19 +5,22 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 ...             robot/Cumulus/resources/DataImportPageObject.py
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Run Keywords
+...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch_id}
+...   AND       Query And Store Records To Delete    Opportunity   AccountId=${contact}[AccountId]
+...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
 BGE Batch With Default Values
     #Create a BGE batch with default values
     [tags]  stable
-    ${batch} =           Generate Random String
-    Go To Page                        Listing                      Batch_Gift_Entry
-    Click BGE Button       New Batch
+    ${batch} =              Generate Random String
+    Go To Page              Listing                      Batch_Gift_Entry
+    Click BGE Button        New Batch
     Fill BGE Form
-    ...                       Name=${batch}
-    ...                       Batch Description=This batch is created by Robot
+    ...                     Name=${batch}
+    ...                     Batch Description=This batch is created by Robot
     Click BGE Button        Next
     Click BGE Button        Next
     Click BGE Button        Next
@@ -25,8 +28,10 @@ BGE Batch With Default Values
     Wait For Locator    bge.title    Batch Gift Entry
     Verify Title    Batch Gift Entry    ${batch}
     ${ns} =  Get NPSP Namespace Prefix
+    Set Suite Variable  ${ns}
     Current Page Should Be    Details    DataImportBatch__c
-    ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c 
+    ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c
+    Set Suite Variable    ${batch_id}
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0
     ...    Donation_Date_Range__c=0.0
@@ -41,10 +46,12 @@ BGE Batch With Default Values
 Create New gift and process batch and validate
     [tags]  stable
     &{contact} =     API Create Contact
+    Set Suite Variable    &{contact}
+    Store Session Record        Account       ${contact}[AccountId]
     Select Value From BGE DD    Donor Type    Contact
     Wait Until Keyword Succeeds          1 minute
-            ...                          5 seconds
-            ...                          Search Field And Wait For Modal    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
+    ...                          5 seconds
+    ...                          Search Field And Wait For Modal    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
 
     Click Link    ${contact}[FirstName] ${contact}[LastName]
     Fill BGE Form    Donation Amount=100
@@ -57,5 +64,4 @@ Create New gift and process batch and validate
     Wait Until Element Is Visible    text:All Gifts
     Verify Row Count    1
     Page Should Contain    PMT-
-    
-             
+
