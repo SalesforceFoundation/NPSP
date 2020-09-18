@@ -52,6 +52,47 @@ public inherited sharing class PS_ElevateAPI {
 
 
     /***
+    * @description Sends an HttpRequest to the Elevate Payment Services API
+    */
+    public ResponseWrapper sendRequest(HttpRequest request) {
+        HttpResponse response = new Http().send(request);
+        return new ResponseWrapper(response);
+    }
+
+    /***
+    * @description Checks if the exception is generated due to the callout timeout
+    */
+    public Boolean isTimeout(Exception ex) { 
+        Boolean isCalloutException = ex instanceof System.CalloutException;
+        return isCalloutException && ex.getMessage().contains(TIMED_OUT);
+    }
+
+    /***
+    * @description Creates an http request wrapper for an exception
+    */
+    public ResponseWrapper buildErrorResponse(Exception ex) {
+        ResponseWrapper response = new ResponseWrapper();
+        response.statusCode = BAD_REQUEST_STATUS_CODE;
+        response.status = ex.getMessage();
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => System.Label.commonUnknownError });
+
+        return response;
+    }
+
+    /***
+    * @description Creates an http request wrapper for a timeout error response
+    */
+    public ResponseWrapper buildTimeoutResponse(Exception ex, String message) {
+        ResponseWrapper response = new ResponseWrapper();
+        response.statusCode = TIMEOUT_STATUS_CODE;
+        response.status = ex.getMessage();
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => message });
+
+        return response;
+    }
+
+
+    /***
     * @description Contains Elevate integration configuration 
     */
     public with sharing class ConfigurationService {
@@ -89,14 +130,6 @@ public inherited sharing class PS_ElevateAPI {
         public String getAPIKey() {
             return config.get(PS_IntegrationServiceConfig.API_KEY);
         }
-    }
-
-    /***
-    * @description Sends an HttpRequest to the Elevate Payment Services API
-    */
-    public ResponseWrapper sendRequest(HttpRequest request) {
-        HttpResponse response = new Http().send(request);
-        return new ResponseWrapper(response);
     }
 
     /***
@@ -256,42 +289,6 @@ public inherited sharing class PS_ElevateAPI {
                 generator.writeStringField('sfdo.roles', value);
             }
         }
-    }
-
-    /***
-    * @description Creates an http request wrapper for an exception
-    */
-    public ResponseWrapper buildErrorResponse(Exception ex, String message) {
-        Boolean isCalloutException = ex instanceof System.CalloutException;
-        Boolean hasTimedOut = isCalloutException && ex.getMessage().contains(TIMED_OUT);
-
-        return hasTimedOut
-            ? buildTimeoutResponse(ex, message)
-            : buildErrorResponse(ex);
-    }
-
-    /***
-    * @description Creates an http request wrapper for an exception
-    */
-    public ResponseWrapper buildErrorResponse(Exception ex) {
-        ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = BAD_REQUEST_STATUS_CODE;
-        response.status = ex.getMessage();
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => System.Label.commonUnknownError });
-
-        return response;
-    }
-
-    /***
-    * @description Creates an http request wrapper for a timeout error response
-    */
-    public ResponseWrapper buildTimeoutResponse(Exception ex, String message) {
-        ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = TIMEOUT_STATUS_CODE;
-        response.status = ex.getMessage();
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => message });
-
-        return response;
     }
 
     /***

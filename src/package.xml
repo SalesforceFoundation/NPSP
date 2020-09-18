@@ -386,6 +386,7 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>PS_ElevateAPI</members>
+        <members>PS_ElevateCommitmentAPI</members>
         <members>PS_ElevateService</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>

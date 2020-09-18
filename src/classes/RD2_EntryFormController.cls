@@ -247,4 +247,35 @@ public with sharing class RD2_EntryFormController {
             this.required = field.getDbRequired() || field.getRequired();
         }
     }
+
+    /***
+    * @description Creates and posts an Elevate Commitment request
+    * @param rdId Recurring Donation Id
+    * @param jsonRequestBody JSON containing parameters for the purchase call request body
+    *
+    * @return String: JSON containing the HttpResponse wrapper
+    */
+    @AuraEnabled
+    public static String sendCommitmentRequest(Id rdId, String jsonRequestBody) {
+        PS_ElevateAPI api = new PS_ElevateAPI();
+        PS_ElevateAPI.ResponseWrapper response;
+
+        try {
+            HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+                .withMethod(PS_ElevateAPI.HttpRequestMethod.POST)
+                .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT)
+                .withBody(jsonRequestBody)
+                .build();
+
+            response = api.sendRequest(request);
+
+        } catch (Exception ex) {
+            response = api.isTimeout(ex)
+                ? api.buildTimeoutResponse(ex, 'Timed out') //TODO create a common generic timeout label
+                : api.buildErrorResponse(ex);
+        }
+
+        return JSON.serialize(response);
+    }
+
 }
