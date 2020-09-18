@@ -57,7 +57,7 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public String Element_Type = 'field';
     // Used for Form Template Builder and Widgets
     @AuraEnabled public String Widget_Object_Mapping_Developer_Name;
-    @AuraEnabled public Boolean isValid = true;
+    @AuraEnabled public Boolean isDescribable = true;
 
     public BDI_FieldMapping() {}
 
@@ -110,7 +110,7 @@ public virtual with sharing class BDI_FieldMapping {
                 this.Target_Field_API_Name);
         } catch (UTIL_Describe.SchemaDescribeException sde) {
             if (sde.getMessage().contains('Invalid')) {
-                this.isValid = false;
+                this.isDescribable = false;
                 return this;
             }
         }

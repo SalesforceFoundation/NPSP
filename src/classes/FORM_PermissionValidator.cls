@@ -80,35 +80,46 @@ public with sharing class FORM_PermissionValidator {
                     for (String fieldDevName : element.dataImportFieldMappingDevNames) {
                         if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
                             BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
-                            
-                            String targetObjDevName = fieldMapping.Target_Object_API_Name;
-                            String targetFieldDevName = fieldMapping.Target_Field_API_Name;
-                            String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
-                            String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
 
-                            if(!isValid(sourceObjDevName, accessLevels)) {
-                                permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
-                            }
+                            if(fieldMapping.isDescribable) {
+                                String targetObjDevName = fieldMapping.Target_Object_API_Name;
+                                String targetFieldDevName = fieldMapping.Target_Field_API_Name;
+                                String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
+                                String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
 
-                            if(!isValid(targetObjDevName, accessLevels)) {
-                                permissionErrorsBySObject.put(targetObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
-                            }
+                                if (!isValid(sourceObjDevName, accessLevels)) {
+                                    permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
+                                            OBJECT_CRUD_ERROR
+                                    });
+                                }
 
-                            if(!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
-                                if(permissionErrorsBySObject.containsKey(sourceObjDevName)) {
-                                    permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
-                                } else {
-                                    permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{sourceFieldDevName});
+                                if (!isValid(targetObjDevName, accessLevels)) {
+                                    permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
+                                            OBJECT_CRUD_ERROR
+                                    });
+                                }
+
+                                if (!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
+                                    if (permissionErrorsBySObject.containsKey(sourceObjDevName)) {
+                                        permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
+                                    } else {
+                                        permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
+                                                sourceFieldDevName
+                                        });
+                                    }
+                                }
+
+                                if (!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
+                                    if (permissionErrorsBySObject.containsKey(targetObjDevName)) {
+                                        permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
+                                    } else {
+                                        permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
+                                                targetFieldDevName
+                                        });
+                                    }
                                 }
                             }
-                            
-                            if(!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
-                                if(permissionErrorsBySObject.containsKey(targetObjDevName)) {
-                                    permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
-                                } else {
-                                    permissionErrorsBySObject.put(targetObjDevName, new Set<String>{targetFieldDevName});
-                                }
-                            }
+
                         }
                     }
                 }
@@ -152,6 +163,7 @@ public with sharing class FORM_PermissionValidator {
 
         SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
         SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
+
         Set<SObjectField> fields = new Set<SObjectField>{objField};
 
         if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)

@@ -1,6 +1,6 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { dispatch, handleError } from 'c/utilTemplateBuilder';
-import { mutable, findIndexByProperty } from 'c/utilCommon';
+import { mutable, findIndexByProperty, isEmpty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -367,7 +367,9 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             if (objectMapping.Field_Mappings) {
                 objectMapping.Field_Mappings.sort(function (a, b) {
                     const requiredCompare = b.Is_Required - a.Is_Required;
-                    const labelCompare = a.Target_Field_Label.localeCompare(b.Target_Field_Label);
+                    const labelCompare = !isEmpty(a.Target_Field_Label) ?
+                        a.Target_Field_Label.localeCompare(b.Target_Field_Label) :
+                        null;
 
                     return requiredCompare || labelCompare;
                 });
