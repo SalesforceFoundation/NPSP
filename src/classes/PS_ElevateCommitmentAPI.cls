@@ -42,6 +42,16 @@ public with sharing class PS_ElevateCommitmentAPI {
         CARD
     }
 
+    /***
+     * @description Translates the currency amt into the lowest denominator; e.g. dollars into cents
+     */ 
+    private static Map<String, Integer> currencyMultiplierByCode = new Map<String, Integer>{
+        'USD' => 100
+    };
+
+    /***
+     * @description Translates the Installment Period into Elevate API frequency value
+     */ 
     private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => 'YEAR',
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => 'MONTH',
@@ -75,32 +85,44 @@ public with sharing class PS_ElevateCommitmentAPI {
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
-        Boolean isContactDonor = rd.npe03__Contact__c != null;
-        if (isContactDonor) {
-            reqBody.withDonor(rd.npe03__Contact__r);
-        } else {
-            reqBody.withDonor(rd.npe03__Organization__r);
-        }
-
-        setSchedules(reqBody, rd.RecurringDonationSchedules__r);        
+        setDonorInfo(reqBody, rd);    
+        setSchedules(reqBody, rd);        
 
         return reqBody;
     }
 
     /**
-    * @description Sets schedules on the commitment request body
+    * @description Sets donor info on the commitment request body
     * @param reqBody RequestBody
-    * @param rdSchedules Recurring Donation Schedules
+    * @param rd Recurring Donation record
     * @return void
     */
-    private void setSchedules(RequestBody reqBody, List<RecurringDonationSchedule__c> rdSchedules) {
-        if (rdSchedules == null || rdSchedules.isEmpty()) {
-            return;
+    private void setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+        Boolean isContactDonor = rd.npe03__Contact__c != null;
+
+        if (isContactDonor) {
+            reqBody.withDonor(rd.npe03__Contact__r);
+        } else {
+            reqBody.withDonor(rd.npe03__Organization__r);
         }
+    }
+
+    /**
+    * @description Sets schedules on the commitment request body
+    * @param reqBody RequestBody
+    * @param rd Recurring Donation record
+    * @return void
+    */
+    private void setSchedules(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+        String currencyCode = UserInfo.isMultiCurrencyOrganization()
+            ? (String) rd.get('CurrencyIsoCode')
+            : UserInfo.getDefaultCurrency();
+
+        Integer currencyMultiplier = currencyMultiplierByCode.get(currencyCode);
 
         List<Schedule> schedules = new List<Schedule>();
-        for (RecurringDonationSchedule__c rdSchedule : rdSchedules) {
-            schedules.add(new Schedule(rdSchedule));
+        for (RecurringDonationSchedule__c rdSchedule : rd.RecurringDonationSchedules__r) {
+            schedules.add(new Schedule(rdSchedule, currencyMultiplier));
         }
 
         reqBody.withSchedules(schedules);
@@ -129,7 +151,11 @@ public with sharing class PS_ElevateCommitmentAPI {
         if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             fields.add('npe03__Contact__r.MailingStateCode');
             fields.add('npe03__Contact__r.MailingCountryCode');
-        }   
+        }  
+        
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            fields.add('CurrencyIsoCode');
+        } 
         
         fields.add(getScheduleSubQuery());
 
@@ -269,8 +295,8 @@ public with sharing class PS_ElevateCommitmentAPI {
         public Integer frequencyInterval;
         public String firstOccurenceOn;
 
-        public Schedule(RecurringDonationSchedule__c rdSchedule) {
-            this.recurringPaymentAmount = Integer.valueOf(rdSchedule.InstallmentAmount__c * 100);//TODO
+        public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier) {
+            this.recurringPaymentAmount = Integer.valueOf(rdSchedule.InstallmentAmount__c * currencyMultiplier);
 
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
             this.frequencyInterval = Integer.valueOf(rdSchedule.InstallmentFrequency__c);
