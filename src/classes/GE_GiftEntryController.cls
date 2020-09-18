@@ -431,7 +431,8 @@ public with sharing class GE_GiftEntryController {
      *
      * @return  A RenderWrapper containing the default template JSON.
      */
-    public static RenderWrapper getDefaultSGERenderWrapper() {
+    @TestVisible
+    private static RenderWrapper getDefaultSGERenderWrapper() {
         FORM_Template defaultTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
 
         RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
