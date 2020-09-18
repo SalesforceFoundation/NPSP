@@ -40,6 +40,7 @@ public with sharing class GE_GiftEntryController {
     public static final Integer TIMEOUT_STATUS_CODE = 408;
     public static final String TIMED_OUT = 'timed out';
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
+    private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
 
     @AuraEnabled(cacheable=true)
     public static OrgDomainInfo getOrgDomainInfo() {
@@ -413,8 +414,6 @@ public with sharing class GE_GiftEntryController {
             }
         }
     }
-
-    private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
 
     @AuraEnabled
     public static RenderWrapper getRenderWrapperById(Id templateId) {
