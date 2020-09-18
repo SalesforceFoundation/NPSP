@@ -415,8 +415,8 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
-    @AuraEnabled
-    public static RenderWrapper getRenderWrapperById(Id templateId) {
+    @TestVisible
+    private static RenderWrapper getRenderWrapperById(Id templateId) {
         // Get the base template
         FORM_Template queriedTemplate = FORM_ServiceGiftEntry.retrieveFormTemplateById(templateId);
 
