@@ -1,6 +1,6 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { dispatch, handleError } from 'c/utilTemplateBuilder';
-import { mutable, findIndexByProperty } from 'c/utilCommon';
+import { mutable, findIndexByProperty, isEmpty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
