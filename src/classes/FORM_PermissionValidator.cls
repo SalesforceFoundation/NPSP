@@ -119,7 +119,6 @@ public with sharing class FORM_PermissionValidator {
                                     }
                                 }
                             }
-
                         }
                     }
                 }
