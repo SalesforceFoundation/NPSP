@@ -6,16 +6,18 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/PaymentPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Library         DateTime
-Suite Setup      Run keywords
+Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Run Keywords
+...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
+...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
 Best Match Donation Matching Behaviour
-    
-    [tags]  stable 
+
+    [tags]  stable
     Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    ${batch}[Name]
@@ -69,7 +71,7 @@ Best Match Donation Matching Behaviour
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     Current Page Should Be    Details    Opportunity
-    ${opp_id} =   Save Current Record ID For Deletion     Opportunity  
+    ${opp_id} =   Save Current Record ID For Deletion     Opportunity
     Navigate To And Validate Field Value    Amount    contains    $200.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
@@ -84,11 +86,11 @@ Best Match Donation Matching Behaviour
     Load Related List    GAU Allocations
     Click Link With Text    ${pay_no}
     Current Page Should Be    Details    npe01__OppPayment__c
-    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
-    ...    npe01__Paid__c=True  
+    ...    npe01__Paid__c=True
     # Verify that the opportunity that does not match is still in prospecting stage
     Go To Record Home    ${opp_dont_match}[Id]
     Navigate To And Validate Field Value    Amount    contains    $50.00
@@ -100,32 +102,32 @@ Best Match Donation Matching Behaviour
 Setup Test Data
     ${ns} =  Get NPSP Namespace Prefix
     Set Suite Variable    ${ns}
-    &{batch} =       API Create DataImportBatch    
-    ...    ${ns}Batch_Process_Size__c=50    
-    ...    ${ns}Batch_Description__c=Created via API    
-    ...    ${ns}Donation_Matching_Behavior__c=Best Match or Create    
-    ...    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c    
-    ...    ${ns}RequireTotalMatch__c=false    
-    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   
-    ...    ${ns}GiftBatch__c=true    
-    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
-    
+    &{batch} =       API Create DataImportBatch
+    ...    ${ns}Batch_Process_Size__c=50
+    ...    ${ns}Batch_Description__c=Created via API
+    ...    ${ns}Donation_Matching_Behavior__c=Best Match or Create
+    ...    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c
+    ...    ${ns}RequireTotalMatch__c=false
+    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true
+    ...    ${ns}GiftBatch__c=true
+    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]
+
     Set Suite Variable    &{batch}
     &{account} =     API Create Organization Account
     Set Suite Variable    &{account}
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     Set Suite Variable    ${date}
-    &{opp_match} =     API Create Opportunity   ${account}[Id]    Donation  
-    ...    StageName=Prospecting    
-    ...    Amount=100    
-    ...    CloseDate=${date}    
-    ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=${account}[Name] Test 100 Donation      
+    &{opp_match} =     API Create Opportunity   ${account}[Id]    Donation
+    ...    StageName=Prospecting
+    ...    Amount=100
+    ...    CloseDate=${date}
+    ...    npe01__Do_Not_Automatically_Create_Payment__c=false
+    ...    Name=${account}[Name] Test 100 Donation
     Set Suite Variable    &{opp_match}
-    &{opp_dont_match} =     API Create Opportunity   ${account}[Id]    Donation  
-    ...    StageName=Prospecting    
-    ...    Amount=50    
-    ...    CloseDate=${date}    
-    ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    ...    Name=${account}[Name] Test 50 Donation      
+    &{opp_dont_match} =     API Create Opportunity   ${account}[Id]    Donation
+    ...    StageName=Prospecting
+    ...    Amount=50
+    ...    CloseDate=${date}
+    ...    npe01__Do_Not_Automatically_Create_Payment__c=false
+    ...    Name=${account}[Name] Test 50 Donation
     Set Suite Variable    &{opp_dont_match}
