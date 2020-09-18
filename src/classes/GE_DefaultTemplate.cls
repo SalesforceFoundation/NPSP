@@ -36,9 +36,8 @@
 */
 
 public with sharing class GE_DefaultTemplate {
-    static final String ELEMENT_TYPE_FIELD = 'field';
     static final String TEMPLATE_VERSION = '1.0';
-    
+
     /**
      * @description This method determines if there is a default template, 
      * if not, it will create a new template and update the custom setting with 
