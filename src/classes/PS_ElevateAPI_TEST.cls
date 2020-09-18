@@ -112,6 +112,11 @@ public with sharing class PS_ElevateAPI_TEST {
             return this;
         }
 
+        /**
+        * @description Set the reponse status code
+        * @param status The status of the returned mock response
+        * @return MockElevateHttpResponse
+        */
         public MockElevateHttpResponse withStatus(String status) {
             this.status = status;
             return this;
