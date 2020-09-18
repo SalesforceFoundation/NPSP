@@ -28,17 +28,11 @@
                     </lightning-layout-item>
 
                     <template if:false={isDisabled}>
-                        <lightning-layout-item padding="horizontal-small" size="4">
-                            <lightning-input name="cardholderFirstName" max-length="40"
-                                             label={labels.cardholderFirstNameLabel}
-                                             data-qa-locator="Elevate Cardholder First Name"
-                            ></lightning-input>
-                        </lightning-layout-item>
-
-                        <lightning-layout-item padding="horizontal-small" size="4">
-                            <lightning-input name="cardholderLastName" max-length="40"
-                                             label={labels.cardholderLastNameLabel}
-                                             data-qa-locator="Elevate Cardholder Last Name"
+                        <lightning-layout-item padding="horizontal-small" size="6">
+                            <lightning-input name="cardholderName"
+                                             label={labels.cardholderNameLabel}
+                                             data-qa-locator="Elevate Cardholder Name"
+                                             data-id="cardholderName"
                             ></lightning-input>
                         </lightning-layout-item>
                     </template>

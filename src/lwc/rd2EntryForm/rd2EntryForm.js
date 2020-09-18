@@ -31,6 +31,7 @@ import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
+// import getCardholderNamesForElevate from '@salesforce/apex/RD2_entryFormController.getCardholderNamesForElevate';
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -220,6 +221,21 @@ export default class rd2EntryForm extends LightningElement {
         this.isElevateWidgetDisplayed = this.isElevateCustomer === true
             && !this.isEdit // The Elevate widget is applicable to new RDs only
             && paymentMethod === 'Credit Card';// Verify the payment method value
+
+        if (this.isElevateWidgetDisplayed === true) {
+            // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
+            // when the component first registers, and ideally if the Contact or Org is changed.
+
+            // const creditCardForm = this.creditCardComponent;
+            // creditCardForm.setCardholderName('Test Name');
+
+            // const contactId = event.detail.fields.npe03__Contact__c.value;
+            // const accountId = event.detail.fields.npe03__Organization__c.value;
+            // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
+            //     .then(response => {
+            //         this.elevateCardholderName = response;
+            //     });
+        }
     }
 
     /***
@@ -251,9 +267,8 @@ export default class rd2EntryForm extends LightningElement {
     processSubmit = async (allFields) => {
         if (this.isElevateWidgetDisplayed) {
             try {
-                const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
+                const elevateWidget = this.creditCardComponent;
                 this.elevateAuthToken = await elevateWidget.returnToken().payload;
-                this.elevateCardholderName = elevateWidget.returnCardholderName();
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;
@@ -391,7 +406,6 @@ export default class rd2EntryForm extends LightningElement {
 
         showToast(message, '', 'success', []);
         console.log('>> Elevate Token: ' + this.elevateAuthToken);
-        console.log('>> Elevate Cardholder: ' + this.elevateCardholderName);
 
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
     }
@@ -418,6 +432,14 @@ export default class rd2EntryForm extends LightningElement {
      */
     get customFieldsComponent() {
         return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];
+    }
+
+    /**
+     * @description Returns the Credit Card Child Component instance
+     * @returns rd2ElevateCreditCardForm component dom
+     */
+    get creditCardComponent() {
+        return this.template.querySelector('[data-id="elevateWidget"]');
     }
 
     /**

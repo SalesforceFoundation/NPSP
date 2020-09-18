@@ -9,10 +9,10 @@ import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
+import cardholderNameLabel from '@salesforce/label/c.gePaymentRequestCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 
 const WIDGET_EVENT_NAME = 'rd2ElevateWidget';
-import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
 
 /***
@@ -25,7 +25,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         spinnerAltText,
         elevateDisableButtonLabel,
         elevateDisabledMessage,
-        elevateEnableButtonLabel
+        elevateEnableButtonLabel,
+        cardholderNameLabel
     };
 
     @track visualforceOrigin;
@@ -46,17 +47,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
             });
 
         this.visualforceOriginUrls = tokenHandler.getVisualforceOriginURLs(domainInfo);
-    }
-
-    /**
-     * @description Set the Contact Object label for the Donor Type picklist
-     */
-    @wire(getObjectInfo, { objectApiName: CONTACT_OBJECT })
-    wiredContactObjectInfo(response) {
-        if (response.data) {
-            this.labels.cardholderFirstNameLabel = response.data.fields.FirstName.label;
-            this.labels.cardholderLastNameLabel = response.data.fields.LastName.label;
-        }
     }
 
     /***
@@ -91,7 +81,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     */
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-        return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.handleError);
+        return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.getCardholderName(), this.handleError);
     }
 
     /***
@@ -181,23 +171,19 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
      * @description Concatenate the cardholder first and last names if there are any
      * @returns A concatenated Cardholder Name string from the First and Last Name fields
      */
+    getCardholderName() {
+        const nameField = this.template.querySelector('[data-id="cardholderName"]');
+        return nameField.value;
+    }
+
+    /**
+     * @description Concatenate the cardholder first and last names if there are any
+     * @returns A concatenated Cardholder Name string from the First and Last Name fields
+     */
     @api
-    returnCardholderName() {
-        let names = [];
-        this.template.querySelectorAll('lightning-input')
-            .forEach(field => {
-                names[field.name] = field.value;
-            });
-
-        let cardHolderName = '';
-        if (names['cardholderFirstName']) {
-            cardHolderName += names['cardholderFirstName'];
-        }
-        if (names['cardholderLastName']) {
-            cardHolderName += ' ' + names['cardholderLastName'];
-        }
-
-        return cardHolderName.trim();
+    setCardholderName(donorName) {
+        const nameField = this.template.querySelector('[data-id="cardholderName"]');
+        nameField.value = donorName;
     }
 
     /**
