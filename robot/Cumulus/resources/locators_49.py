@@ -135,6 +135,7 @@ npsp_lex_locators={
         'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
         'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
         'button':'//*[text()="{}"]',
+        'add_contact_option':'//li/span[text()="{}"]'
 
     },
     'opportunity':{
