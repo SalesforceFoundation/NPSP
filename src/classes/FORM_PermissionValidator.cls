@@ -153,10 +153,6 @@ public with sharing class FORM_PermissionValidator {
         SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
         SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
 
-        if (objField == null) {
-            return false;
-        }
-
         Set<SObjectField> fields = new Set<SObjectField>{objField};
 
         if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
