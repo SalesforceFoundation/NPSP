@@ -26,6 +26,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     isBatchHeaderField = false;
     hasRendered = false;
     hasPermission = hasViewSetup;
+    shouldRender = true;
 
 
     /*******************************************************************************
@@ -54,8 +55,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
             if (isEmpty(this.fieldMapping)) {
                 const inputField = this.template.querySelector('[data-id="formField"]');
 
-                inputField.setAttribute('label', null);
-                inputField.setAttribute('field-level-help', null)
                 inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
                 inputField.reportValidity();
 
@@ -80,6 +79,11 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
             inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
             inputField.reportValidity();
+
+            if (!hasViewSetup) {
+                this.field = {};
+                this.shouldRender = !!hasViewSetup;
+            }
 
             this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));
         }
