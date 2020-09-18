@@ -35,6 +35,54 @@
 */
 @isTest
 public with sharing class PS_ElevateAPI_TEST {
+    /**
+    * @description Verifees that the Endpoint is set correctly for Cancelm Commitment callout 
+    */
+    @isTest
+    private static void shouldCreateCancelHttpRequestWhenActionIsCancelled() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        String commitmentId = 'abcd-efgh-ijkl-mnop-qrst';
+
+        Test.startTest();
+        HttpRequest httpRequest = new PS_ElevateAPI.RequestBuilder()
+            .withMethod(PS_ElevateAPI.HttpRequestMethod.POST)
+            .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT_CANCEL)
+            .withCommitmentId(commitmentId)
+            .build();
+        Test.stopTest();
+
+        String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl + '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
+        System.assertEquals(expectedEndpoint, httpRequest.getEndPoint(), 'Cancel API url should be set as the http request end point');
+    }
+
+    /**
+    * @desciprtion Verifies that the http respond is correctly format 
+    */
+    @isTest
+    private static void shouldSuccessfullyCalloutAndFormatHttpResponse() {
+        String body = '{"Value" : "Success"}';
+        MockElevateHttpResponse mockHttpRespons = new MockElevateHttpResponse()
+            .withStatusCode(200)
+            .withStatus('OK')
+            .withBody(body);
+
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('https://test.com');
+        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+        request.setMethod('POST');
+
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, mockHttpRespons);
+
+        PS_ElevateAPI apiService = new PS_ElevateAPI();
+        PS_ElevateAPI.ResponseWrapper returnWrapper = apiService.sendRequest(request);
+        Test.stopTest();
+
+        System.assertEquals(200, returnWrapper.statusCode, 'The reponse status code should be populated');
+        System.assertEquals('OK', returnWrapper.status, 'The reponse status should be populated');
+        System.assertEquals(body, returnWrapper.body, 'The reponse body should be populated');
+
+    }
 
     /**
     * @description HttpCalloutMock interface to Mock Elevate http response
@@ -42,13 +90,14 @@ public with sharing class PS_ElevateAPI_TEST {
     public class MockElevateHttpResponse implements HttpCalloutMock {
         Integer statusCode;
         String body;
+        String status;
 
         /**
         * @description Set the response body
         * @param body The body JSON of the returned mock response
         * @return MockElevateHttpResponse
         */
-        public MockElevateHttpResponse setMockBody(String body) {
+        public MockElevateHttpResponse withBody(String body) {
             this.body = body;
             return this;
         }
@@ -58,8 +107,13 @@ public with sharing class PS_ElevateAPI_TEST {
         * @param statusCode The status code of the returned mock response
         * @return MockElevateHttpResponse
         */
-        public MockElevateHttpResponse setReturnStatusCode(Integer statusCode) {
+        public MockElevateHttpResponse withStatusCode(Integer statusCode) {
             this.statusCode = statusCode;
+            return this;
+        }
+
+        public MockElevateHttpResponse withStatus(String status) {
+            this.status = status;
             return this;
         }
 
@@ -73,6 +127,7 @@ public with sharing class PS_ElevateAPI_TEST {
         
             response.setHeader('Content-Type', 'application/json');
             response.setStatusCode( (statusCode != null) ? statusCode : 200 );
+            response.setStatus((status != null) ? status : 'OK');
             if (body != null) {
                 response.setBody(body);
             }

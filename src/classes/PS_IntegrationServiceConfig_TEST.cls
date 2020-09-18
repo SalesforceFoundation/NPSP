@@ -36,6 +36,8 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     private static String testMerchantId = 'abc123-xyz456';
     private static String testApiKey = 'def1234-tuv4567';
     private static String testMakanaApiKey = 'ghi12345-qrs45678';
+    @TestVisible
+    private static String testBaseUrl = 'https://elevate.test.com';
 
     // Key-Values by service name
     @TestVisible 
@@ -57,7 +59,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                                     },
                                     new Map<String, String> {
                                             'key' => PS_IntegrationServiceConfig.BASE_URL,
-                                            'value' => 'http://test.test.com/'
+                                            'value' => testBaseUrl
                                     }
                 }
         };

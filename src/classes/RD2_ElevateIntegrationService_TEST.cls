@@ -500,6 +500,44 @@ public class RD2_ElevateIntegrationService_TEST {
             'The Opportunity should not link to any RD through CommitmentId on update');
     }
 
+    /**
+    * @description Verifiers that when closing 
+    */
+    @isTest
+    private static void shouldMakeCallOutCloseElevateCommitmentWhenElevateRdIsClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        PS_IntegrationService.setConfiguration(PS_IntegratioNServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        PS_ElevateAPI_TEST.MockElevateHttpResponse mockHttpRespons = new PS_ElevateAPI_TEST.MockElevateHttpResponse()
+            .withStatusCode(200);
+    
+        Test.startTest();
+            Test.setMock(HttpCalloutMock.class, mockHttpRespons);
+
+            rd.ClosedReason__c = 'Random';
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertNotEquals(System.Label.RD2_ElevatePendingStatus, rd.ClosedReason__c,
+            'RD Close Reason should be swapped back to the original reason when the callout success');
+    }
+    
     // Helpers
     ///////////////////
 
