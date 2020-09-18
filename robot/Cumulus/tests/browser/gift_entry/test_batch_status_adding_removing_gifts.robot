@@ -102,6 +102,8 @@ Test Batch Status Adding Removig Gifts
     Verify Table Field Values         Batch Gifts
      ...                              Donation Amount=$${AMOUNT_UPDATED}.00
     # Run and validate the Batch data import status
+    Verify Expected Values    nonns  DataImportBatch__c    ${BATCH_ID}
+    ...                              Batch_Status__c=Open
 
     Process And Validate Batch       Completed
     Verify Table Field Values        Batch Gifts
