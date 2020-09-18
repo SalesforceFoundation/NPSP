@@ -143,18 +143,8 @@ public with sharing class PS_ElevateCommitmentAPI {
             'npe03__Organization__r.Name',
             'npe03__Contact__c',
             'npe03__Contact__r.FirstName',
-            'npe03__Contact__r.LastName',
-            'npe03__Contact__r.MailingStreet',
-            'npe03__Contact__r.MailingCity',
-            'npe03__Contact__r.MailingState',
-            'npe03__Contact__r.MailingPostalCode',
-            'npe03__Contact__r.MailingCountry'
+            'npe03__Contact__r.LastName'
         };
-
-        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-            fields.add('npe03__Contact__r.MailingStateCode');
-            fields.add('npe03__Contact__r.MailingCountryCode');
-        }  
         
         if (UserInfo.isMultiCurrencyOrganization()) {
             fields.add('CurrencyIsoCode');
@@ -204,16 +194,6 @@ public with sharing class PS_ElevateCommitmentAPI {
         * Optional properties
         */        
         public Metadata metadata; 
-        public String salutation;
-        public String suffix; 
-        public String email;
-        public String phone;
-        public String addressLine1;
-        public String addressLine2;
-        public String city;
-        public String state;
-        public String postalCode;        
-        public String country;
 
         public RequestBody() {
             //set defaults
@@ -249,16 +229,6 @@ public with sharing class PS_ElevateCommitmentAPI {
 
             this.firstName = contact.FirstName;
             this.lastName = contact.LastName;
-
-            this.addressLine1 = contact.MailingStreet;
-            this.city = contact.MailingCity;
-            this.state = contact.MailingState;
-            this.postalCode = contact.MailingPostalCode;
-
-            // The ISO 3166-1 alpha-2 country code. E.g. US
-            if (ADDR_Validator_UTIL.isUSCountry(contact.MailingCountry)) {
-                this.country = 'US';
-            }
             
             return this;
         }

@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
-import { LABEL_NEW_LINE, HTTP_CODES } from 'c/geConstants';
+import { HTTP_CODES } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -462,7 +462,7 @@ export default class rd2EntryForm extends LightningElement {
             + '\n However, the record in Elevate could not be created due to following error(s):\n {0}';
         let replacements = [errors];
         let formattedMessage = format(message, replacements);
-        
+
         showToast(title, formattedMessage, 'error', 'sticky', []);
     }
 
