@@ -5996,7 +5996,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields sidebar text block</shortDescription>
-        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+        <value>Choose fields to include in your form. Before adding fields, click the section in the main Configure Form Fields screen where you want the fields to go. In this Form Fields &amp; Field Bundles sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsDescLeftCol</fullName>
@@ -6039,7 +6039,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields main section text block</shortDescription>
-        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering sections or fields.</value>
+        <value>Select a section, then select a field in the Form Fields &amp; Field Bundles sidebar to add it to this section in the main Configure Form Fields screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the Gift Entry form by creating sections and reordering sections or fields.</value>
     </labels>
     <labels>
         <fullName>geBodyGiftEntryHelp</fullName>
