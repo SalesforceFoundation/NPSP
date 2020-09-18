@@ -310,8 +310,15 @@ class GeFormElement {
         return isNotEmpty(this.objectMapping) && isNotEmpty(this.fieldMapping);
     }
 
+    get isWidget() {
+        return !!this.element.componentName;
+    }
+
     get isRenderable() {
-        if(isNotEmpty(this.fieldMapping)) {
+        if(this.isWidget) {
+            // always render widgets
+            return true;
+        } else if(isNotEmpty(this.fieldMapping)) {
             // the mapping record for this field is valid when it exists and
             // the source and target fields are describable
             return this.hasMappingInformation && this.fieldMapping.isDescribable;

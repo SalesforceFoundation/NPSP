@@ -137,10 +137,6 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    get ready() { // set go
-        return this.hasMappingInformation && this.fieldMapping.isDescribable;
-    }
-
     getValueFromChangeEvent(event) {
         if(this.fieldType === BOOLEAN_TYPE) {
             return event.detail.checked.toString();
@@ -293,7 +289,6 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-
     get objectMapping() {
         return GeFormService.getObjectMappingWrapper(this.targetObjectMappingDevName);
     }
@@ -359,10 +354,6 @@ export default class GeFormField extends LightningElement {
         if(isNotEmpty(this.fieldMapping)) {
             return this.fieldMapping.Source_Field_API_Name;
         }
-    }
-
-    get hasMappingInformation() {
-        return isNotEmpty(this.objectMapping) && isNotEmpty(this.fieldMapping);
     }
 
     // when using lightning-lookup-field, instead of binding to the Data Import fields or donor information
