@@ -245,7 +245,7 @@ export default class GeFormSection extends LightningElement {
 
     get renderableElements() {
         if (!isUndefined(this.section)) {
-            return this.section.elements.filter(element => new GeFormElement(element).isRenderable);
+            return this.section.elements.filter(element => new GeFormElementHelper(element).isRenderable);
         } else {
             return [];
         }
@@ -281,7 +281,8 @@ export default class GeFormSection extends LightningElement {
 
 }
 
-class GeFormElement {
+
+class GeFormElementHelper {
     element;
 
     constructor(element) {
