@@ -520,7 +520,8 @@ public with sharing class GE_GiftEntryController {
     * @description Work in Progress to deliver widget behaviors
     * @return Widget data
     */
-    public static String convertWidgetDataToObjectJSON(String widgetData) {
+    @TestVisible
+    private static String convertWidgetDataToObjectJSON(String widgetData) {
 
         if (String.isBlank(widgetData)) {
             return null;
