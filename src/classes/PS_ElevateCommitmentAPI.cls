@@ -46,9 +46,112 @@ public with sharing class PS_ElevateCommitmentAPI {
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => 'YEAR',
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => 'MONTH',
         RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => 'WEEK',
-        RD2_Constants.INSTALLMENT_PERIOD_DAILY => 'DAY'
+        RD2_Constants.INSTALLMENT_PERIOD_DAILY => 'DAY',
+        RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH => 'MONTH'
     };
 
+    @TestVisible
+    private PS_ElevateAPI.ConfigurationService config {
+        get {
+            if (config == null) {
+                config = new PS_ElevateAPI.ConfigurationService();
+            }
+            return config;
+        }
+        set;
+    }
+
+    /***
+    * @description Constructs the Commitment request body for the specified Recurring Donation
+    * @param recordId Recurring Donation Id
+    * @param token Payment Method Token
+    * @return RequestBody
+    */
+    public RequestBody getRequestBody(Id recordId, String token) {
+        RequestBody reqBody = new RequestBody()
+            .withMerchantId(config.getMerchantIds())
+            .withGatewayId(config.getGatewayIds())
+            .withPaymentMethodToken(token);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+
+        Boolean isContactDonor = rd.npe03__Contact__c != null;
+        if (isContactDonor) {
+            reqBody.withDonor(rd.npe03__Contact__r);
+        } else {
+            reqBody.withDonor(rd.npe03__Organization__r);
+        }
+
+        setSchedules(reqBody, rd.RecurringDonationSchedules__r);        
+
+        return reqBody;
+    }
+
+    /**
+    * @description Sets schedules on the commitment request body
+    * @param reqBody RequestBody
+    * @param rdSchedules Recurring Donation Schedules
+    * @return void
+    */
+    private void setSchedules(RequestBody reqBody, List<RecurringDonationSchedule__c> rdSchedules) {
+        if (rdSchedules == null || rdSchedules.isEmpty()) {
+            return;
+        }
+
+        List<Schedule> schedules = new List<Schedule>();
+        for (RecurringDonationSchedule__c rdSchedule : rdSchedules) {
+            schedules.add(new Schedule(rdSchedule));
+        }
+
+        reqBody.withSchedules(schedules);
+    }
+
+    /**
+    * @param recordId RecurringDonation.RecordId
+    * @return Recurring Donation object
+    */
+    private npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
+        Set<String> fields = new Set<String>{
+            'Id',
+            'RecurringType__c',
+            'npe03__Organization__c',
+            'npe03__Organization__r.Name',
+            'npe03__Contact__c',
+            'npe03__Contact__r.FirstName',
+            'npe03__Contact__r.LastName',
+            'npe03__Contact__r.MailingStreet',
+            'npe03__Contact__r.MailingCity',
+            'npe03__Contact__r.MailingState',
+            'npe03__Contact__r.MailingPostalCode',
+            'npe03__Contact__r.MailingCountry'
+        };
+
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            fields.add('npe03__Contact__r.MailingStateCode');
+            fields.add('npe03__Contact__r.MailingCountryCode');
+        }   
+        
+        fields.add(getScheduleSubQuery());
+
+        String soql = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(fields)
+            .withWhere('Id = :recordId')
+            .withLimit(1)
+            .build();
+
+        return Database.query(soql);
+    }
+
+    /**
+     * @description Returns query on Recurring Donation Schedule
+     * @return String RD Schedule subquery used in the Recurring Donation SOQL
+     */
+    private String getScheduleSubQuery() {
+        Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
+
+        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
+    }
 
     
     /***
@@ -81,7 +184,7 @@ public with sharing class PS_ElevateCommitmentAPI {
         public String city;
         public String state;
         public String postalCode;        
-        public String country;// The ISO 3166-1 alpha-2 country code. E.g. US
+        public String country;
 
         public RequestBody() {
             //set defaults
@@ -100,8 +203,45 @@ public with sharing class PS_ElevateCommitmentAPI {
             return this;
         }
 
+        public RequestBody withPaymentMethodToken(String token) {
+            this.paymentMethodToken = token;
+            return this;
+        }
+
+        public RequestBody withDonor(Contact contact) {
+            if (contact == null) {
+                return this;
+            }
+
+            this.firstName = contact.FirstName;
+            this.lastName = contact.LastName;
+
+            this.addressLine1 = contact.MailingStreet;
+            this.city = contact.MailingCity;
+            this.state = contact.MailingState;
+            this.postalCode = contact.MailingPostalCode;
+
+            // The ISO 3166-1 alpha-2 country code. E.g. US
+            if (ADDR_Validator_UTIL.isUSCountry(contact.MailingCountry)) {
+                this.country = 'US';
+            }
+            
+            return this;
+        }
+
+        public RequestBody withDonor(Account organization) {
+            if (organization == null) {
+                return this;
+            }
+
+            this.firstName = organization.Name;
+            this.lastName = organization.Name;
+
+            return this;
+        }
+
         public RequestBody withSchedules(List<Schedule> schedules) {
-            this.schedules = this.schedules;
+            this.schedules = schedules;
             return this;
         }
 
@@ -124,13 +264,13 @@ public with sharing class PS_ElevateCommitmentAPI {
     * @description Contains Recurring Donation Schedule info to be relayed to the Elevate API
     */
     public with sharing class Schedule {
-        public Double recurringPaymentAmount;
+        public Integer recurringPaymentAmount;
         public String frequency;
         public Integer frequencyInterval;
         public String firstOccurenceOn;
 
         public Schedule(RecurringDonationSchedule__c rdSchedule) {
-            this.recurringPaymentAmount = rdSchedule.InstallmentAmount__c;
+            this.recurringPaymentAmount = Integer.valueOf(rdSchedule.InstallmentAmount__c * 100);//TODO
 
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
             this.frequencyInterval = Integer.valueOf(rdSchedule.InstallmentFrequency__c);

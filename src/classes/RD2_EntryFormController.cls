@@ -37,7 +37,6 @@
 public with sharing class RD2_EntryFormController {
 
     /**
-    * @param parentId The parentId to use when creating the new RD record (if New from Account or Contact)
     * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
     */
     @TestVisible
@@ -249,14 +248,33 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
+    * @description Builds an Elevate Commitment request body
+    * @param recordId Recurring Donation Id
+    * @param token Payment Method Token
+    * @return String: JSON containing the Commitment Request Body
+    */
+    @AuraEnabled
+    public static String getCommitmentRequestBody(Id recordId, String token) {
+        try {
+            PS_ElevateCommitmentAPI api = new PS_ElevateCommitmentAPI();
+            PS_ElevateCommitmentAPI.RequestBody requestBody = api.getRequestBody(recordId, token);
+            return JSON.serialize(requestBody);
+
+        } catch (Exception ex) {
+            throwAuraHandledException(ex.getMessage());
+        }
+
+        return null;
+    }
+
+    /***
     * @description Creates and posts an Elevate Commitment request
-    * @param rdId Recurring Donation Id
+    * @param recordId Recurring Donation Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
-    *
     * @return String: JSON containing the HttpResponse wrapper
     */
     @AuraEnabled
-    public static String sendCommitmentRequest(Id rdId, String jsonRequestBody) {
+    public static String sendCommitmentRequest(Id recordId, String jsonRequestBody) {
         PS_ElevateAPI api = new PS_ElevateAPI();
         PS_ElevateAPI.ResponseWrapper response;
 
@@ -276,6 +294,19 @@ public with sharing class RD2_EntryFormController {
         }
 
         return JSON.serialize(response);
+    }
+
+    /***
+    * @description Throws AuraHandledException
+    * The wrapping of the error message again is required
+    * so the specific message is displayed instead of generic "Script thrown exception".
+    * @param errMessage Exception message that needs to be set again
+    * @return void
+    */
+    private static void throwAuraHandledException(String errMessage) {
+        AuraHandledException e = new AuraHandledException(errMessage);
+        e.setMessage(errMessage);
+        throw e;
     }
 
 }
