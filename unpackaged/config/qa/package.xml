@@ -85,5 +85,9 @@
         <members>npe01__OppPayment__c-npe01__Payment Layout</members>
         <name>Layout</name>
     </types>
+    <types>
+        <members>Gift_Entry</members>
+        <name>PermissionSet</name>
+    </types>    
     <version>48.0</version>
 </Package>
