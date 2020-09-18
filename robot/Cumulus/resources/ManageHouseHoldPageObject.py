@@ -51,9 +51,12 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
             self.selenium.click_button("Add")
 
         elif option.lower() == "new":
-            self.selenium.click_button("New Contact")
-            self.npsp.wait_for_locator("span_button", "New Contact")
-            self.npsp.click_span_button("New Contact")
+            new_contact_locator=npsp_lex_locators['manage_hh_page']['add_contact_option'].format("New Contact")
+            new_contact_btn=npsp_lex_locators['button-title'].format("New Contact")
+            self.selenium.wait_until_element_is_visible(new_contact_locator)
+            self.selenium.click_element(new_contact_locator)
+            self.selenium.wait_until_element_is_visible(new_contact_btn)
+            self.selenium.click_button(new_contact_btn)
         else:
             print("Invalid option")
 
