@@ -105,7 +105,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
             GE_Template.Template t = (GE_Template.Template) JSON.deserialize(
                     batch.Form_Template__r.Template_JSON__c,
-                    GE_Template.class
+                    GE_Template.Template.class
             );
 
             for (GE_Template.Section formSection : t.layout.sections) {

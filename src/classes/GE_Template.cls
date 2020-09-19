@@ -398,12 +398,12 @@ public with sharing class GE_Template {
     public class PermissionValidator {
 
         public final String FIELD_ELEMENT_TYPE = 'field';
-        GE_Template.Template template;
+        Template template;
         Set<AccessLevel> accessLevels;
         UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();
         UTIL_Describe describeService = UTIL_Describe.getInstance();
 
-        public PermissionValidator(GE_Template.Template template, Set<AccessLevel>
+        public PermissionValidator(Template template, Set<AccessLevel>
                 accessLevels) {
             this.template = template;
             this.accessLevels = accessLevels;
@@ -423,14 +423,14 @@ public with sharing class GE_Template {
 
         /*******************************************************************************************************
         * @description Method for validating CRUD/FLS permissions for a template
-        * @return {GE_Template.Template} template
+        * @return {Template} template
         * */
-        public GE_Template.Template validateTemplate() {
+        public Template validateTemplate() {
             Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
 
             BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
-            for (GE_Template.Section section : template.layout.sections) {
-                for (GE_Template.Element element : section.elements) {
+            for (Section section : template.layout.sections) {
+                for (Element element : section.elements) {
 
                     if (element.elementType == FIELD_ELEMENT_TYPE) {
                         for (String fieldDevName : element.dataImportFieldMappingDevNames) {
