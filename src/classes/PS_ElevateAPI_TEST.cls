@@ -87,6 +87,51 @@ public with sharing class PS_ElevateAPI_TEST {
     }
 
     /**
+    * @description Verifies that timed out exception will be correctly handled by the error response builder 
+    */
+    @isTest
+    private static void shouldCorrectlyConstructTimeOutErrorResponseWrapperFromException() {
+        String errorMessage = 'error';
+        String timeOutMessage = 'timed out';
+        PS_ElevateAPI apiService = new PS_ElevateAPI();
+
+        System.CalloutException ex = new System.CalloutException(timeOutMessage);
+
+        Test.startTest();
+        PS_ElevateAPI.ResponseWrapper errorWrapper = apiService.buildErrorResponse(ex, errorMessage);
+        Test.stopTest();
+
+        System.assertEquals(PS_ElevateAPI.TIMEOUT_STATUS_CODE, errorWrapper.statusCode,
+            'The status code should be set to time out status code');
+        System.assertEquals(timeOutMessage, errorWrapper.status,
+            'The time out exception message should be identify as the status');
+        System.assert(errorWrapper.body.contains(errorMessage),
+            'Error message should be included in the return wrapper body:' + errorWrapper.body);
+    }
+
+    /**
+    * @description Verifies that error response will be correctly handled by the error response builder 
+    */
+    @isTest
+    private static void shouldCorrectlyConstructErrorResponseWrapperFromException() {
+        String errorMessage = 'error';
+        PS_ElevateAPI apiService = new PS_ElevateAPI();
+
+        System.DMLException ex = new System.DMLException(errorMEssage);
+
+        Test.startTest();
+        PS_ElevateAPI.ResponseWrapper errorWrapper = apiService.buildErrorResponse(ex, 'null');
+        Test.stopTest();
+
+        System.assertEquals(PS_ElevateAPI.BAD_REQUEST_STATUS_CODE, errorWrapper.statusCode,
+            'The status code should be set to bad request status code');
+        System.assertEquals(errorMessage, errorWrapper.status,
+            'The system exception message should be identify as the status');
+        System.assert(errorWrapper.body.contains(System.Label.commonUnknownError),
+            'Unknown error message should be included in the return wrapper body:' + errorWrapper.body);
+    }
+
+    /**
     * @description HttpCalloutMock interface to Mock Elevate http response
     */
     public class MockElevateHttpResponse implements HttpCalloutMock {
