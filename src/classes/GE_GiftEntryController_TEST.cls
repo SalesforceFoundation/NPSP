@@ -97,7 +97,7 @@ private with sharing class GE_GiftEntryController_TEST {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = returnFormTemplate();
 
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
 
         String templateJSON = JSON.serialize(template);
         defaultTemplate.Template_JSON__c = templateJSON;

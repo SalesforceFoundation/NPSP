@@ -135,14 +135,14 @@ public with sharing class GE_Template {
         
         populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
         
-        FORM_Template defaultTemplate = (FORM_Template)JSON.deserialize(defaultTemplateSRJSON, FORM_Template.class);
-        FORM_Template.Layout defaultLayout = defaultTemplate.layout;
-        List<FORM_Template.Section> sectionList = defaultLayout.sections;
+        Template defaultTemplate = (Template)JSON.deserialize(defaultTemplateSRJSON, Template.class);
+        Layout defaultLayout = defaultTemplate.layout;
+        List<Section> sectionList = defaultLayout.sections;
 
-        for (FORM_Template.Section section : sectionList) {
-            List<FORM_Template.Element> elementList = section.elements;
+        for (Section section : sectionList) {
+            List<Element> elementList = section.elements;
 
-            for (FORM_Template.Element element : elementList) {
+            for (Element element : elementList) {
                 if (element.dataImportObjectMappingDevName != null) {
                     String partialObjectDevName = element.dataImportObjectMappingDevName.substringBeforeLast('_');
                     if (updatedObjectDevNameMap.containsKey(partialObjectDevName)) {
@@ -186,9 +186,9 @@ public with sharing class GE_Template {
         }
 
         // Update the batch header fields with the namespace prefix, if necessary
-        List<FORM_Template.BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
+        List<BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
         
-        for (FORM_Template.BatchHeaderField batchHeaderField : batchHeaderFieldList) {
+        for (BatchHeaderField batchHeaderField : batchHeaderFieldList) {
 
             if (batchHeaderField.apiName.endsWith('__c')) {
                 batchHeaderField.apiName = UTIL_Namespace.StrTokenNSPrefix(batchHeaderField.apiName);
@@ -240,4 +240,150 @@ public with sharing class GE_Template {
             }            
         }
     }
+
+    /**
+    * @description Form template definition for use in entering gifts
+    */
+    public class Template {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String name;
+        @AuraEnabled public String description;
+        @AuraEnabled public String version;
+        @AuraEnabled public Layout layout;
+        @AuraEnabled public String[] defaultBatchTableColumns;
+        @AuraEnabled public String permissionErrorType;
+        @AuraEnabled public String permissionErrors;
+
+        /* Additional props PS */
+        @AuraEnabled public BatchHeaderField[] batchHeaderFields;
+        /* END */
+
+        public Template(String name, String description, String version, Layout layout) {
+            this.name = name;
+            this.description = description;
+            this.version = version;
+            this.layout = layout;
+        }
+    }
+
+    /**
+    * @description Form Layout definition for use in entering gifts.
+    */
+    public class Layout {
+        @AuraEnabled public String fieldMappingSetDevName;
+        @AuraEnabled public Section[] sections;
+
+        public Layout(String fieldMappingSetDevName, Section[] sections) {
+            this.fieldMappingSetDevName = fieldMappingSetDevName;
+            this.sections = sections;
+        }
+    }
+
+    /**
+    * @description Form Section definition for use in entering gifts.
+    */
+    public class Section {
+
+        @AuraEnabled public String label;
+        @AuraEnabled public String displayType;
+        @AuraEnabled public String defaultDisplayMode;
+        @AuraEnabled public String displayRule;
+        @AuraEnabled public Element[] elements;
+
+        /* Additional props PS */
+        @AuraEnabled public String id;
+        /* END */
+
+        public Section(String label,
+                String displayType,
+                String defaultDisplayMode,
+                String displayRule,
+                Element[] elements) {
+
+            this.label = label;
+            this.displayType = displayType;
+            this.defaultDisplayMode = defaultDisplayMode;
+            this.displayRule = displayRule;
+            this.elements = elements;
+        }
+    }
+
+    /**
+    * @description Form Element definition for use in entering gifts.
+    */
+    public class Element {
+
+        @AuraEnabled public String elementType;
+        @AuraEnabled public String displayRule;
+        @AuraEnabled public String validationRule;
+        @AuraEnabled public String customLabel;
+        @AuraEnabled public String componentName;
+        @AuraEnabled public String[] dataImportFieldMappingDevNames;
+        @AuraEnabled public String dataImportObjectMappingDevName;
+        @AuraEnabled public String fieldApiName;
+        @AuraEnabled public String objectApiName;
+
+        /* PS Additional props for FormFields */
+        @AuraEnabled public String id;
+        @AuraEnabled public String label;
+        @AuraEnabled public Boolean required;
+        @AuraEnabled public String sectionId;
+        @AuraEnabled public String defaultValue;
+        @AuraEnabled public String dataType;
+
+        //Constructor for form field
+        public Element(String elementType,
+                String displayRule,
+                String validationRule,
+                String customLabel,
+                String[] dataImportFieldMappingDevNames) {
+            this.elementType = elementType;
+            this.displayRule = displayRule;
+            this.validationRule = validationRule;
+            this.customLabel = customLabel;
+            this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
+            this.required = false;
+        }
+
+        //Constructor for widget
+        public Element(String elementType,
+                String displayRule,
+                String componentName,
+                String[] dataImportFieldMappingDevNames) {
+            this.elementType = elementType;
+            this.displayRule = displayRule;
+            this.componentName = componentName;
+            this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
+            this.required = false;
+        }
+    }
+
+    /**
+    * @description Form Batch Header Field definition for use in entering gifts.
+    */
+    public class BatchHeaderField {
+
+        @AuraEnabled public String elementType;
+        @AuraEnabled public String displayRule;
+        @AuraEnabled public String validationRule;
+        @AuraEnabled public String customLabel;
+        @AuraEnabled public String label;
+        @AuraEnabled public String apiName;
+        @AuraEnabled public Boolean required;
+        @AuraEnabled public Boolean isRequiredFieldDisabled;
+        @AuraEnabled public Boolean allowDefaultValue;
+        @AuraEnabled public String defaultValue;
+        @AuraEnabled public String dataType;
+
+        public BatchHeaderField(String elementType,
+                String displayRule,
+                String validationRule,
+                String customLabel) {
+            this.elementType = elementType;
+            this.displayRule = displayRule;
+            this.validationRule = validationRule;
+            this.customLabel = customLabel;
+        }
+    }
+
 }

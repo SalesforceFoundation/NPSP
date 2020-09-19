@@ -418,7 +418,7 @@ public with sharing class GE_GiftEntryController {
     @TestVisible
     private static RenderWrapper getRenderWrapperById(Id templateId) {
         // Get the base template
-        FORM_Template queriedTemplate = FORM_ServiceGiftEntry.retrieveFormTemplateById(templateId);
+        GE_Template.Template queriedTemplate = FORM_ServiceGiftEntry.retrieveFormTemplateById(templateId);
 
         // Create the wrapper which will hold the template and field mapping set.
         RenderWrapper renderWrapper = wrapTemplate(queriedTemplate);
@@ -433,7 +433,7 @@ public with sharing class GE_GiftEntryController {
      */
     @TestVisible
     private static RenderWrapper getDefaultSGERenderWrapper() {
-        FORM_Template defaultTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
+        GE_Template.Template defaultTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
 
         RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 
@@ -445,7 +445,7 @@ public with sharing class GE_GiftEntryController {
      *
      * @return  A RenderWrapper containing the default template JSON.
      */
-    private static RenderWrapper wrapTemplate(FORM_Template template) {
+    private static RenderWrapper wrapTemplate(GE_Template.Template template) {
         if (template != null) {
             Boolean includeUnmappedFields = true;
             // Get the mapping service which will retrieve all the mappings
@@ -478,13 +478,13 @@ public with sharing class GE_GiftEntryController {
     * @param template - The deserailized template that is stored.
     * @param fieldMappingSet The field mapping set which determines what DI field is mapped to what target field.
     */
-    private static void updateTemplateWithRequired(FORM_Template template, BDI_FieldMappingSet fieldMappingSet) {
-        List<FORM_Template.Section> sectionList = template.layout.sections;
+    private static void updateTemplateWithRequired(GE_Template.Template template, BDI_FieldMappingSet fieldMappingSet) {
+        List<GE_Template.Section> sectionList = template.layout.sections;
 
-        for (FORM_Template.Section section : sectionList) {
+        for (GE_Template.Section section : sectionList) {
 
             // Go through all the elements
-            for (FORM_Template.Element element : section.elements) {
+            for (GE_Template.Element element : section.elements) {
                 if (element.dataImportFieldMappingDevNames != null
                         && !element.dataImportFieldMappingDevNames.isEmpty()) {
 
@@ -618,10 +618,10 @@ public with sharing class GE_GiftEntryController {
 
     public class RenderWrapper {
 
-        @AuraEnabled public FORM_Template formTemplate;
+        @AuraEnabled public GE_Template.Template formTemplate;
         @AuraEnabled public BDI_FieldMappingSet fieldMappingSetWrapper;
 
-        public RenderWrapper(FORM_Template formTemplate, BDI_FieldMappingSet fieldMappingSetWrapper) {
+        public RenderWrapper(GE_Template.Template formTemplate, BDI_FieldMappingSet fieldMappingSetWrapper) {
             this.formTemplate = formTemplate;
             this.fieldMappingSetWrapper = fieldMappingSetWrapper;
         }

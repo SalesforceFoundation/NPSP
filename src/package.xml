@@ -285,7 +285,6 @@
         <members>FORM_PermissionsValidator_TEST</members>
         <members>FORM_ServiceGiftEntry</members>
         <members>FORM_ServiceGiftEntry_TEST</members>
-        <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_Template</members>

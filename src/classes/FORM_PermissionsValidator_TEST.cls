@@ -9,7 +9,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
             utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock); 
         
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = (GE_Template.Template) UTIL_UnitTestData_TEST.createSampleTemplate();
 
         UTIL_UnitTestData_TEST.createSampleFieldMappings();
 
@@ -19,7 +19,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
                 FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
         
-        FORM_Template updatedTemplate = validator.validateTemplate();
+        GE_Template.Template updatedTemplate = validator.validateTemplate();
 
         System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be '
             + 'no permission errors when the user has all required CRUD and FLS permissions.');
@@ -38,7 +38,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
 
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
 
         UTIL_UnitTestData_TEST.createSampleFieldMappings();
 
@@ -48,7 +48,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
                 FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
         
-        FORM_Template updatedTemplate = validator.validateTemplate();
+        GE_Template.Template updatedTemplate = validator.validateTemplate();
 
         System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be '
             + 'no permission errors when the user has all required CRUD and FLS permissions.');
@@ -69,7 +69,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
         
         UTIL_UnitTestData_TEST.createSampleFieldMappings();
         
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
 
         
         FORM_PermissionValidator validator = new FORM_PermissionValidator(template,
@@ -78,7 +78,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
                 FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
         
-        FORM_Template updatedTemplate = validator.validateTemplate();
+        GE_Template.Template updatedTemplate = validator.validateTemplate();
 
         System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should '
             + 'be permission errors when the user has no CRUD access to an object.'); 
@@ -106,7 +106,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
 
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
 
         UTIL_UnitTestData_TEST.createSampleFieldMappings();
         
@@ -116,7 +116,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
                 FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
         
-        FORM_Template updatedTemplate = validator.validateTemplate(); 
+        GE_Template.Template updatedTemplate = validator.validateTemplate();
 
         System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should '
             + 'be permission errors when the user has no FLS access to an object.');

@@ -137,8 +137,8 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Method for retrieving all existing form templates.
     */
     @AuraEnabled
-    public static FORM_Template[] getAllFormTemplates() {
-        FORM_Template[] formTemplates = new FORM_Template[]{};
+    public static GE_Template.Template[] getAllFormTemplates() {
+        GE_Template.Template[] formTemplates = new GE_Template.Template[]{};
         Form_Template__c[] allTemplates = [
             SELECT Id,
                 Name,
@@ -151,7 +151,8 @@ public with sharing class FORM_ServiceGiftEntry {
         ];
 
         for (Form_Template__c formTemplate : allTemplates) {
-            FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
+            GE_Template.Template deserializedFormTemplate = deserializeFormTemplateFromObj
+                    (formTemplate);
             if (formTemplate.id != null) {
                 deserializedFormTemplate.id = formTemplate.id;
             }
@@ -195,8 +196,8 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param templateId - the Id of an existing form template record for retrieval.
     */
     @AuraEnabled
-    public static FORM_Template retrieveFormTemplateById(Id templateId) {
-        FORM_Template template;
+    public static GE_Template.Template retrieveFormTemplateById(Id templateId) {
+        GE_Template.Template template;
 
         Form_Template__c templateObj = [
                                 SELECT Id, Name, Format_Version__c, Template_JSON__c
@@ -220,9 +221,9 @@ public with sharing class FORM_ServiceGiftEntry {
     /*******************************************************************************************************
     * @description Method for retrieving the current default template.
     */
-    public static FORM_Template retrieveDefaultSGEFormTemplate() {
+    public static GE_Template.Template retrieveDefaultSGEFormTemplate() {
         Gift_Entry_Settings__c giftEntrySettings = getGiftEntrySettings();
-        FORM_Template template;
+        GE_Template.Template template;
         List<Form_Template__c> templateObjList = [
                                 SELECT Id, Name, Format_Version__c, Template_JSON__c
                                 FROM Form_Template__c 
@@ -247,11 +248,11 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param template - the template to use for CRUD/FLS validation
     * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/UPDATE/READ)
     */
-    public static FORM_Template checkPermissions(FORM_Template template, Set<FORM_PermissionValidator.AccessLevel> accessLevels){
+    public static GE_Template.Template checkPermissions(GE_Template.Template template, Set<FORM_PermissionValidator.AccessLevel> accessLevels){
         
         FORM_PermissionValidator validator = new FORM_PermissionValidator(template, accessLevels);
 
-        return validator.validateTemplate();
+        return (GE_Template.Template) validator.validateTemplate();
     }
 
     /*******************************************************************************************************
@@ -313,10 +314,10 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Private helper method for deserializing the JSON stored in a form template record.
     * @param templateObj - The Form_Template__c object with the Template JSON.
     */
-    private static FORM_Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
-        FORM_Template template;
+    private static GE_Template.Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
+        GE_Template.Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
-            template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
+            template = (GE_Template.Template)JSON.deserialize(templateObj.Template_JSON__c, GE_Template.Template.class);
         }
         return template;
     }

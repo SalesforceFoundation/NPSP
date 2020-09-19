@@ -42,11 +42,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     */
     @IsTest
     static void shouldReturnCorrectNumberOfRecords() {
-        FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
         FORM_ServiceGiftEntry.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
-        FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
         FORM_ServiceGiftEntry.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
@@ -58,11 +58,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     */
     @IsTest
     static void shouldDeleteFormTemplatesWithGivenIds() {
-        FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
         FORM_ServiceGiftEntry.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
-        FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
         FORM_ServiceGiftEntry.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
@@ -81,7 +81,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     */
     @IsTest
     static void shouldCommitAndRetrieveTemplate() {
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
 
         String templateJSON = JSON.serialize(template);
@@ -94,7 +94,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         giftEntryCustomSetting.Default_Gift_Entry_Template__c = storedFormTemplateId;
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
-        FORM_Template templateResult = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
+        GE_Template.Template templateResult = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
         String templateResultJSON = JSON.serialize(templateResult);
 
         System.assertEquals(templateJSON, templateResultJSON);
@@ -180,7 +180,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     */
     @IsTest
     static void shouldReturnFalseForExistingFormTemplateName() {
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         FORM_ServiceGiftEntry.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
 
@@ -210,7 +210,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
 
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
         String templateJSON = JSON.serialize(template);
         String storedFormTemplateId = FORM_ServiceGiftEntry.storeFormTemplate(null, 
@@ -225,7 +225,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         
         UTIL_UnitTestData_TEST.createSampleFieldMappings();
         
-        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
+        GE_Template.Template updatedTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
 
         System.assert(String.isBlank(updatedTemplate.permissionErrors), 
             'There should be no permission errors when the user has all required CRUD and FLS permissions.');
@@ -238,7 +238,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     */
     @IsTest
     static void shouldPreventDeletionOfTemplateInUse() {
-        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         FORM_ServiceGiftEntry.storeFormTemplate(null,
                 template.name,
@@ -285,7 +285,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         AuraHandledException failure;
 
         // test data
-        FORM_Template template = createSampleTemplate();
+        GE_Template.Template template = createSampleTemplate();
         template.name = templateName;
         String templateJSON = JSON.serialize(template);
         // insert form template using service
@@ -325,31 +325,31 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     }
 
     //Utility method for creating a sample template.
-    public static FORM_Template createSampleTemplate () {
+    public static GE_Template.Template createSampleTemplate () {
         
-        FORM_Template.Element field = new FORM_Template.Element('FormField',
+        GE_Template.Element field = new GE_Template.Element('FormField',
             'True',
             null,
             'CustomLabel',
             new String[]{});
         
-        FORM_Template.Element widget = new FORM_Template.Element('FormWidget',
+        GE_Template.Element widget = new GE_Template.Element('FormWidget',
             'DisplayRule',
             'ComponentName',
             new String[]{});
         
-        FORM_Template.Element[] elements = new FORM_Template.Element[]{field,widget};
+        GE_Template.Element[] elements = new GE_Template.Element[]{field,widget};
 
-        FORM_Template.Section section = new FORM_Template.Section('SectionLabel',
+        GE_Template.Section section = new GE_Template.Section('SectionLabel',
             'Accordion',
             'Expanded',
             'True',
             elements);
         
-        FORM_Template.Layout layout = new FORM_Template.Layout('DefaultMappingSet',
-            new FORM_Template.Section[]{section});
+        GE_Template.Layout layout = new GE_Template.Layout('DefaultMappingSet',
+            new GE_Template.Section[]{section});
 
-        FORM_Template template = new FORM_Template('Sample Template',
+        GE_Template.Template template = new GE_Template.Template('Sample Template',
             'This is the description.',
             '1.0',
             layout);

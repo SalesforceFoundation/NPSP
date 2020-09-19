@@ -43,12 +43,13 @@ public with sharing class FORM_PermissionValidator {
     public static final String OBJECT_CRUD_ERROR = 'CRUD';
     public static final String FLS_ERROR = 'FLS';
     public static final String FIELD_ELEMENT_TYPE = 'field';
-    FORM_Template template;
+    GE_Template.Template template;
     Set<AccessLevel> accessLevels;
     UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();
     UTIL_Describe describeService = UTIL_Describe.getInstance();
     
-    public FORM_PermissionValidator(FORM_Template template, Set<AccessLevel> accessLevels) {
+    public FORM_PermissionValidator(GE_Template.Template template, Set<AccessLevel>
+            accessLevels) {
         this.template = template;
         this.accessLevels = accessLevels;
     }
@@ -67,14 +68,14 @@ public with sharing class FORM_PermissionValidator {
 
     /*******************************************************************************************************
     * @description Method for validating CRUD/FLS permissions for a template
-    * @return {FORM_Template} template
+    * @return {GE_Template.Template} template
     * */
-    public FORM_Template validateTemplate() {
+    public GE_Template.Template validateTemplate() {
         Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
 
         BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
-        for (FORM_Template.Section section : template.layout.sections) {
-            for (FORM_Template.Element element : section.elements) {
+        for (GE_Template.Section section : template.layout.sections) {
+            for (GE_Template.Element element : section.elements) {
 
                 if (element.elementType == FIELD_ELEMENT_TYPE) {
                     for (String fieldDevName : element.dataImportFieldMappingDevNames) {
