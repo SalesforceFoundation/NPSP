@@ -35,7 +35,7 @@
 * @description Class to create a default template when needed
 */
 
-public with sharing class GE_DefaultTemplate {
+public with sharing class GE_Template {
     static final String TEMPLATE_VERSION = '1.0';
 
     /**

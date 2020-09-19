@@ -288,7 +288,7 @@
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
-        <members>GE_DefaultTemplate</members>
+        <members>GE_Template</members>
         <members>GE_DefaultTemplate_TEST</members>
         <members>GE_GiftEntryController</members>
         <members>GE_GiftEntryController_TEST</members>

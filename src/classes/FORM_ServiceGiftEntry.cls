@@ -446,7 +446,7 @@ public with sharing class FORM_ServiceGiftEntry {
     @AuraEnabled
     public static Gift_Entry_Settings__c getGiftEntrySettings() {
         try {
-            GE_DefaultTemplate.createDefaultTemplateIfNecessary();
+            GE_Template.createDefaultTemplateIfNecessary();
             Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
 
             return giftEntryCustomSetting;

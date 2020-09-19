@@ -43,7 +43,7 @@ public with sharing class GE_DefaultTemplate_TEST {
     @isTest
     private static void testDeserializeBaseJSONToCurrentFORMLayout() {
         try {
-            GE_DefaultTemplate.buildDefaultTemplate();
+            GE_Template.buildDefaultTemplate();
         } catch (Exception e) {
             System.Assert(false, 'There was an error deserializing the Base ' + 
                                   'JSON to the current FORM_Template.Layout structure');
