@@ -533,18 +533,14 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         const fieldMapping = TemplateBuilderService.fieldMappingByDevName[event.detail.fieldName];
         const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
 
-        if (isEmpty(element)) {
-            dispatch(this, 'deleteformelement', event.detail);
-
-            return;
-        }
-
-        element.checked = false;
-
+        // if (isEmpty(element)) {
+            element.checked = false;
+        // }
 
         if (fieldMapping.Is_Required) {
             this.validate();
         }
+
         dispatch(this, 'deleteformelement', event.detail);
     }
 
