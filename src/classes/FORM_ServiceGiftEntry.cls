@@ -210,10 +210,10 @@ public with sharing class FORM_ServiceGiftEntry {
         template = deserializeFormTemplateFromObj(templateObj);
         
         template = checkPermissions(template,
-                new Set<FORM_PermissionValidator.AccessLevel>{
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+                new Set<GE_Template.AccessLevel>{
+                    GE_Template.AccessLevel.VALIDATE_READ,
+                    GE_Template.AccessLevel.VALIDATE_CREATE,
+                    GE_Template.AccessLevel.VALIDATE_UPDATE});
 
         return template;
     }
@@ -235,10 +235,10 @@ public with sharing class FORM_ServiceGiftEntry {
             template = deserializeFormTemplateFromObj(templateObjList[0]);
 
             template = checkPermissions(template,
-                new Set<FORM_PermissionValidator.AccessLevel>{
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+                new Set<GE_Template.AccessLevel>{
+                    GE_Template.AccessLevel.VALIDATE_READ,
+                    GE_Template.AccessLevel.VALIDATE_CREATE,
+                    GE_Template.AccessLevel.VALIDATE_UPDATE});
             }
         return template;
     }
@@ -248,9 +248,9 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param template - the template to use for CRUD/FLS validation
     * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/UPDATE/READ)
     */
-    public static GE_Template.Template checkPermissions(GE_Template.Template template, Set<FORM_PermissionValidator.AccessLevel> accessLevels){
+    public static GE_Template.Template checkPermissions(GE_Template.Template template, Set<GE_Template.AccessLevel> accessLevels){
         
-        FORM_PermissionValidator validator = new FORM_PermissionValidator(template, accessLevels);
+        GE_Template.PermissionValidator validator = new GE_Template.PermissionValidator(template, accessLevels);
 
         return (GE_Template.Template) validator.validateTemplate();
     }
@@ -342,8 +342,8 @@ public with sharing class FORM_ServiceGiftEntry {
             columnHeaders = populateDefaultColumnHeaders(listName);
         }
 
-        FORM_PermissionValidator validator = new FORM_PermissionValidator(
-                new Set<FORM_PermissionValidator.AccessLevel>{FORM_PermissionValidator.AccessLevel.VALIDATE_READ});
+        GE_Template.PermissionValidator validator = new GE_Template.PermissionValidator(
+                new Set<GE_Template.AccessLevel>{GE_Template.AccessLevel.VALIDATE_READ});
 
         if (validator.hasObjectPermissions(listNameDevName)) {
             headerData = new ColumnHeaderData(columnHeaders, '');
