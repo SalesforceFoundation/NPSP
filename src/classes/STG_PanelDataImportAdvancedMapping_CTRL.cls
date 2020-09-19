@@ -101,7 +101,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     public Boolean isGiftEntryEnabled {
         get {
-            giftEntrySettings = FORM_ServiceGiftEntry.getGiftEntrySettings();
+            giftEntrySettings = GE_GiftEntryController.getGiftEntrySettings();
             return giftEntrySettings.Enable_Gift_Entry__c;
         }
         set;
@@ -365,7 +365,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     public PageReference enableGiftEntry() {
         Gift_Entry_Settings__c giftEntrySettings =
-                FORM_ServiceGiftEntry.getGiftEntrySettings();
+                GE_GiftEntryController.getGiftEntrySettings();
         if (!giftEntrySettings.Enable_Gift_Entry__c) {
                 giftEntrySettings.Enable_Gift_Entry__c = true;
             try {
@@ -385,7 +385,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     public PageReference disableGiftEntry() {
         Gift_Entry_Settings__c giftEntrySettings =
-                FORM_ServiceGiftEntry.getGiftEntrySettings();
+                GE_GiftEntryController.getGiftEntrySettings();
         if (giftEntrySettings.Enable_Gift_Entry__c) {
                 giftEntrySettings.Enable_Gift_Entry__c = false;
             try {
