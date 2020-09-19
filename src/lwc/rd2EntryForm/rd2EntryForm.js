@@ -421,6 +421,9 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
+    /**
+     * @description Sends Commitment request to the Elevate API
+     */
     createCommitment = async (recordId) => {
         let jsonRequestBody = await getCommitmentRequestBody({
             recordId: recordId,
@@ -438,6 +441,10 @@ export default class rd2EntryForm extends LightningElement {
             })
     }
 
+    /**
+     * @description Verifies if the Commitment was successfully created,
+     * and executes the actions accordingly.
+     */
     processCommitmentResponse(recordId, jsonResponse) {
         console.log('****response: ' + jsonResponse);
         let response = JSON.parse(jsonResponse);
@@ -451,19 +458,35 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
+    /**
+     * @description Displayes errors extracted from the error response
+     * returned from the Elevate API when the Commitment cannot be created
+     */
     displayCommitmentErrors(response) {
         const title = this.customLabels.elevateWidgetLabel;
 
-        response.body = response.body.replace(/\"/g, '').replace(/\'/g, '"');
-        response.body = JSON.parse(response.body);
+        if (response.body) {
+            // Errors returned in the response body can contain a single quote, for example:
+            // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
+            // However, the JSON parser does not work with a single quote, 
+            // so need to replace it with the double quote but after
+            // replacing \" with an empty string, otherwise the message content
+            // will be misformatted.
+            if (JSON.stringify(response.body).includes("'errors'")) {
+                response.body = response.body.replace(/\"/g, '').replace(/\'/g, '"');
+            }
+
+            //parse the error response
+            response.body = JSON.parse(response.body);
+        }
         let errors = this.getErrors(response);
 
         const message = this.getRecurringDonationSuccessMessage()
-            + '\n However, the record in Elevate could not be created due to following error(s):\n {0}';
+            + '\n However, it cannot be created in Elevate due to following error(s):\n {0}';//TODO create a label
         let replacements = [errors];
         let formattedMessage = format(message, replacements);
 
-        showToast(title, formattedMessage, 'error', 'sticky', []);
+        showToast(title, formattedMessage, 'error', 'sticky');
     }
 
     /***
@@ -472,35 +495,47 @@ export default class rd2EntryForm extends LightningElement {
     * @return {string}: Message from a failed API call response
     */
     getErrors(response) {
+        if (response.body && response.body.errors) {
+            return response.body.errors.map(error => error.message).join('\n ');
+        }
+
         // For some reason the key in the body object for 'Message'
         // in the response we receive from Elevate is capitalized.
         // Also checking for lowercase M in message in case they fix it.        
-        return response.body.Message ||
-            response.body.message ||
-            response.errorMessage ||
-            JSON.stringify(response.body.errors.map(error => error.message)) ||
-            this.customLabels.unknownError;
+        return response.body.Message
+            || response.body.message
+            || response.errorMessage
+            || JSON.stringify(response.body);
     }
 
+    /**
+     * @description Displays toast message and closes the entry form modal on successful save
+     */
     closeModalOnSuccess(recordId) {
-        showToast(this.getRecurringDonationSuccessMessage(), '', 'success', []);
+        showToast(this.getRecurringDonationSuccessMessage(), '', 'success');
 
         this.closeModal(recordId);
     }
 
+    /**
+     * @description Message displayed when the Recurring Donation is created or updated successfully
+     */
     getRecurringDonationSuccessMessage() {
         return (this.isEdit)
             ? updateSuccessMessage.replace("{0}", this.recordName)
             : insertSuccessMessage.replace("{0}", this.recordName);
     }
 
+    /**
+     * @description Dispatches an event to close the Recurring Donation entry form modal
+     */
     closeModal(recordId) {
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: recordId });
     }
 
     /**
      * @description Returns the Schedule Child Component instance
-     * @returns rd2EntryFormScheduleSection component dom
+     * @return rd2EntryFormScheduleSection component dom
      */
     get scheduleComponent() {
         return this.template.querySelectorAll('[data-id="scheduleComponent"]')[0];
@@ -508,7 +543,7 @@ export default class rd2EntryForm extends LightningElement {
 
     /**
      * @description Returns the Donor Child Component instance
-     * @returns rd2EntryFormDonorSection component dom
+     * @return rd2EntryFormDonorSection component dom
      */
     get donorComponent() {
         return this.template.querySelectorAll('[data-id="donorComponent"]')[0];
@@ -516,7 +551,7 @@ export default class rd2EntryForm extends LightningElement {
 
     /**
      * @description Returns the Custom Field Child Component instance
-     * @returns rd2EntryFormCustomFieldsSection component dom
+     * @return rd2EntryFormCustomFieldsSection component dom
      */
     get customFieldsComponent() {
         return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];

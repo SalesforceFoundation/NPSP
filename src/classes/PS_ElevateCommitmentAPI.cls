@@ -38,6 +38,7 @@ public with sharing class PS_ElevateCommitmentAPI {
     public enum CommitmentType { 
         SUSTAINER
     }
+
     public enum PaymentMethod { 
         CARD
     }
@@ -61,12 +62,12 @@ public with sharing class PS_ElevateCommitmentAPI {
     };
 
     @TestVisible
-    private PS_ElevateAPI.ConfigurationService config {
+    private PS_IntegrationServiceConfig.Service configService {
         get {
-            if (config == null) {
-                config = new PS_ElevateAPI.ConfigurationService();
+            if (configService == null) {
+                configService = new PS_IntegrationServiceConfig.Service();
             }
-            return config;
+            return configService;
         }
         set;
     }
@@ -79,8 +80,8 @@ public with sharing class PS_ElevateCommitmentAPI {
     */
     public RequestBody getRequestBody(Id recordId, String token) {
         RequestBody reqBody = new RequestBody()
-            .withMerchantId(config.getMerchantIds())
-            .withGatewayId(config.getGatewayIds())
+            .withMerchantId(configService.getMerchantIds())
+            .withGatewayId(configService.getGatewayIds())
             .withPaymentMethodToken(token);
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
@@ -90,6 +91,7 @@ public with sharing class PS_ElevateCommitmentAPI {
             : UserInfo.getDefaultCurrency();
         
         reqBody.withCurrency(currencyCode);
+        reqBody.withMetadata(new Metadata());
 
         setDonorInfo(reqBody, rd);    
         setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);        
@@ -249,6 +251,11 @@ public with sharing class PS_ElevateCommitmentAPI {
             return this;
         }
 
+        public RequestBody withMetadata(Metadata metadata) {
+            this.metadata = metadata;
+            return this;
+        }
+
         public RequestBody applyAll(Map<String, Object> requestBodyParameters) {
             Map<String, Object> selfAsUntyped = (Map<String, Object>) JSON.deserializeUntyped(getAsJson());
 
@@ -271,7 +278,7 @@ public with sharing class PS_ElevateCommitmentAPI {
         public Integer recurringPaymentAmount;
         public String frequency;
         public Integer frequencyInterval;
-        public String firstOccurenceOn;
+        public String firstOccurrenceOn;
 
         public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier) {
             this.recurringPaymentAmount = Integer.valueOf(rdSchedule.InstallmentAmount__c * currencyMultiplier);
@@ -279,7 +286,7 @@ public with sharing class PS_ElevateCommitmentAPI {
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
             this.frequencyInterval = Integer.valueOf(rdSchedule.InstallmentFrequency__c);
 
-            this.firstOccurenceOn = getNextDonationDate(rdSchedule);
+            this.firstOccurrenceOn = getNextDonationDate(rdSchedule);
         }
 
         /***
@@ -290,9 +297,10 @@ public with sharing class PS_ElevateCommitmentAPI {
         private String getNextDonationDate(RecurringDonationSchedule__c rdSchedule) {
             Date donationDate = new RD2_ScheduleService()
                 .getNextDonationDateGreaterThan(rdSchedule, RD2_ScheduleService.currentDate);
+
             
             DateTime donationDatetime = Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
-            return donationDatetime.format('YYYY-MM-DD');
+            return donationDatetime.format('yyyy-MM-dd');
         }
     }
 
@@ -303,5 +311,10 @@ public with sharing class PS_ElevateCommitmentAPI {
         public String originType;
         public String originDisplayName;
         public String campaignCode;
+
+        public Metadata() {
+            //set defaults
+            this.originType = PS_ElevateAPI.OriginType.CRM.name();
+        }
     }
 }

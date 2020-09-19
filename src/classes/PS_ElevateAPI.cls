@@ -38,8 +38,22 @@ public inherited sharing class PS_ElevateAPI {
     public class APIException extends Exception {}
 
     public enum ElevateEndpoint { 
-        TOKENIZE, PURCHASE, 
-        COMMITMENT, COMMITMENT_CANCEL 
+        TOKENIZE, 
+        PURCHASE, 
+        COMMITMENT, 
+        COMMITMENT_CANCEL 
+    }
+
+    public enum ProductType {
+        ENGAGEMENT_HUB,
+        GIVING_PAGE,
+        CRM,
+        THIRD_PARTY_GIVING_PAGE
+    }
+
+    public enum OriginType {
+        CRM,
+        THIRD_PARTY_GIVING_PAGE
     }
 
     public enum HttpRequestMethod { 
@@ -92,56 +106,17 @@ public inherited sharing class PS_ElevateAPI {
     }
 
 
-    /***
-    * @description Contains Elevate integration configuration 
-    */
-    public with sharing class ConfigurationService {
-        @TestVisible
-        private Map<String, String> config {
-            get {
-                if (config == null) {
-                    config = new PS_IntegrationServiceConfig.Configuration().keyValueMap;
-                }
-                return config;
-            }
-            set;
-        }
-
-        public String getEndpointRoot() {
-            return config.get(PS_IntegrationServiceConfig.BASE_URL);
-        }
-
-        public String getElevateSDKURL() {
-            return config.get(PS_IntegrationServiceConfig.ELEVATE_SDK);
-        }
-
-        public String getProductId() {
-            return config.get(PS_IntegrationServiceConfig.PRODUCTID);
-        }
-
-        public String getGatewayIds() {
-            return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
-        }
-
-        public String getMerchantIds() {
-            return config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS);
-        }
-
-        public String getAPIKey() {
-            return config.get(PS_IntegrationServiceConfig.API_KEY);
-        }
-    }
 
     /***
     * @description Builds an HttpRequest 
     */
     public with sharing class RequestBuilder {
-        private ConfigurationService config {
+        private PS_IntegrationServiceConfig.Service configService {
             get {
-                if (config == null) {
-                    config = new ConfigurationService();
+                if (configService == null) {
+                    configService = new PS_IntegrationServiceConfig.Service();
                 }
-                return config;
+                return configService;
             }
             set;
         }
@@ -191,10 +166,17 @@ public inherited sharing class PS_ElevateAPI {
             request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt(endpoint));
             request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
 
-            if (config.getMerchantIds() != null) {
+            if (String.isNotBlank(configService.getMerchantIds())) {
                 request.setHeader(
                     PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
-                    config.getMerchantIds()
+                    configService.getMerchantIds()
+                );
+            }
+
+            if (String.isNotBlank(configService.getClientId())) {
+                request.setHeader(
+                    PS_IntegrationServiceConfig.CLIENTID,
+                    configService.getClientId()
                 );
             }
         }
@@ -216,15 +198,15 @@ public inherited sharing class PS_ElevateAPI {
 
             return String.isBlank(value)
                 ? null
-                : (config.getEndpointRoot() + value);
+                : (configService.getEndpointRoot() + value);
         }
 
         private String getJwt(ElevateEndpoint endpoint) {
-            JWTPayload payload = new JWTPayload(config.getProductId(), endpoint);
+            JWTPayload payload = new JWTPayload(configService.getProductId(), endpoint);
 
             String jwt = UTIL_Jwt.getSignedJWTFromString(
                 payload.getAsString(),
-                config.getAPIKey()
+                configService.getAPIKey()
             );
 
             return jwt;
@@ -260,10 +242,12 @@ public inherited sharing class PS_ElevateAPI {
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
             generator.writeStringField('sub', UserInfo.getUserName()); // Subject
+
             if (sfdoId != null) {
                 generator.writeStringField('sfdo.id', sfdoId);
             }
-            generator.writeStringField('sfdo.product', 'CRM'); // Product
+
+            generator.writeStringField('sfdo.product', ProductType.CRM.name()); 
 
             setRoles(generator);
 
