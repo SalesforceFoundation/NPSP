@@ -54,7 +54,7 @@ public with sharing class PS_IntegrationServiceConfig {
 
     /***
      * @description Client Id is required for a public endpoint.
-     * The param has contain the lower case "id" in order for Elevate to validate the header correctly.
+     * The param has to contain the lower case "id" in order for Elevate to validate the header correctly.
      */
     public static final String CLIENTID = 'clientid';
 

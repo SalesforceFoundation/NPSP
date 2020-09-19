@@ -61,6 +61,7 @@ public inherited sharing class PS_ElevateAPI {
     }
 
     public static final String TIMED_OUT = 'timed out';
+    public static final String TIMED_OUT_STATUS = 'Timed out';
     public static final Integer TIMEOUT_STATUS_CODE = 408;
     public static final Integer BAD_REQUEST_STATUS_CODE = 400;
 
@@ -74,6 +75,15 @@ public inherited sharing class PS_ElevateAPI {
     }
 
     /***
+    * @description Creates an http request wrapper for an exception
+    */
+    public ResponseWrapper buildErrorResponse(Exception ex) {
+        return isTimeout(ex)
+            ? buildTimeoutResponse(ex)
+            : buildBadRequestResponse(ex);
+    }
+
+    /***
     * @description Checks if the exception is generated due to the callout timeout
     */
     public Boolean isTimeout(Exception ex) { 
@@ -84,11 +94,11 @@ public inherited sharing class PS_ElevateAPI {
     /***
     * @description Creates an http request wrapper for an exception
     */
-    public ResponseWrapper buildErrorResponse(Exception ex) {
+    public ResponseWrapper buildBadRequestResponse(Exception ex) {
         ResponseWrapper response = new ResponseWrapper();
         response.statusCode = BAD_REQUEST_STATUS_CODE;
-        response.status = ex.getMessage();
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => System.Label.commonUnknownError });
+        response.status = System.Label.commonUnknownError;
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
 
         return response;
     }
@@ -96,11 +106,11 @@ public inherited sharing class PS_ElevateAPI {
     /***
     * @description Creates an http request wrapper for a timeout error response
     */
-    public ResponseWrapper buildTimeoutResponse(Exception ex, String message) {
+    public ResponseWrapper buildTimeoutResponse(Exception ex) {
         ResponseWrapper response = new ResponseWrapper();
         response.statusCode = TIMEOUT_STATUS_CODE;
-        response.status = ex.getMessage();
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => message });
+        response.status = TIMED_OUT_STATUS;
+        response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
 
         return response;
     }

@@ -288,12 +288,9 @@ public with sharing class RD2_EntryFormController {
             response = api.sendRequest(request);
 
         } catch (Exception ex) {
-            response = api.isTimeout(ex)
-                ? api.buildTimeoutResponse(ex, 'Timed out') //TODO create a common generic timeout label
-                : api.buildErrorResponse(ex);
+            response = api.buildErrorResponse(ex);
         }
 
         return JSON.serialize(response);
     }
-
 }

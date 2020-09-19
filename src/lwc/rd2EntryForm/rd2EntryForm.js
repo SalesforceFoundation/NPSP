@@ -38,8 +38,8 @@ import getCommitmentRequestBody from '@salesforce/apex/RD2_entryFormController.g
 import sendCommitmentRequest from '@salesforce/apex/RD2_entryFormController.sendCommitmentRequest';
 
 /***
-* @description Event name fired when the Elevate credit card widget is displayed or hidden
-* on the RD2 entry form
+* @description Event name fired when the Elevate credit card widget 
+* is displayed or hidden on the RD2 entry form
 */
 const ELEVATE_WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
