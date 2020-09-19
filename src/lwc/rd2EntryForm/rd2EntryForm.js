@@ -32,6 +32,10 @@ import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
 
+const RECURRING_TYPE_OPEN = 'Open';
+const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
+const CURRENCY_CODE_USD = 'USD';
+
 export default class rd2EntryForm extends LightningElement {
 
     listenerEvent = 'rd2EntryFormEvent';
@@ -72,6 +76,8 @@ export default class rd2EntryForm extends LightningElement {
     @track isElevateWidgetDisplayed = false;
     isElevateCustomer = false;
 
+    userDefaultCurrency;
+
     @track error = {};
 
     /***
@@ -92,6 +98,7 @@ export default class rd2EntryForm extends LightningElement {
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
+                this.userDefaultCurrency = response.userDefaultCurrency;
                 this.isSettingReady = true;
                 this.rdSettings = response;
                 this.customFields = response.customFieldSets;
@@ -211,13 +218,23 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
+    * @description Changing recurring type requires reevaluation of Elevate widget
+    * @param event
+    */
+    handleRecurringTypeEvent(event) {
+        this.evaluateElevateWidget(this.getPaymentMethod());
+    }
+
+    /***
     * @description Checks if credit card widget should be displayed
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetDisplayed = this.isElevateCustomer === true
+            && this.userDefaultCurrency === CURRENCY_CODE_USD // Will probably change in future, but for now just USD
+            && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN // Elevate currently doesn't support fixed length
             && !this.isEdit // The Elevate widget is applicable to new RDs only
-            && paymentMethod === 'Credit Card';// Verify the payment method value
+            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD; // Verify the payment method value
     }
 
     /***
@@ -281,6 +298,13 @@ export default class rd2EntryForm extends LightningElement {
             : this.customFieldsComponent.returnValues();
 
         return { ...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues() };
+    }
+
+    /***
+     * @description Returns value of PaymentMethod__c
+     */
+    getPaymentMethod() {
+        return this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`).value;
     }
 
     /***
