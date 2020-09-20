@@ -35,30 +35,30 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
     private static String testMerchantId = 'abc123-xyz456';
     private static String testApiKey = 'def1234-tuv4567';
-	private static String testMakanaApiKey = 'ghi12345-qrs45678';
-	public static String testBaseUrl = 'https://elevate.test.com';
+    private static String testMakanaApiKey = 'ghi12345-qrs45678';
+    public static String testBaseUrl = 'https://elevate.test.com';
 
     // Key-Values by service name
     public static final Map<String, List<Map<String, String>>> testConfig = new Map<String, List<Map<String, String>>>{
-		PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
-			new List<Map<String, String>>{
-				new Map<String, String>{
-					'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
-					'value' => testMerchantId
-				},
-				new Map<String, String>{
-					'key' => PS_IntegrationServiceConfig.API_KEY,
-					'value' => testApiKey
-				},
-				new Map<String, String>{
-					'key' => PS_IntegrationServiceConfig.BASE_URL,
-					'value' => testBaseUrl
-				},
-				new Map<String, String>{
-					'key' => 'sfdo.roles',
-					'value' => 'Payments.Purchase'
-				}
-			}
+        PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
+            new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
+                    'value' => testMerchantId
+                },
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => testApiKey
+                },
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.BASE_URL,
+                    'value' => testBaseUrl
+                },
+                new Map<String, String>{
+                    'key' => 'sfdo.roles',
+                    'value' => 'Payments.Purchase'
+                }
+            }
         };
 
     /***
@@ -106,9 +106,9 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
             requiredConfigs.add(new Payment_Services_Configuration__c(
-				Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-				Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-				Value__c = String.valueOf(i)
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
+                Value__c = String.valueOf(i)
             ));
         }
         insert requiredConfigs;
@@ -122,8 +122,8 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     private static void shouldNotHaveIntegrationPermissions() {
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
         Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
-		System.assert(!hasIntegrationPermissions,
-			'The user should not have integration permissions without configuration keys.');
+        System.assert(!hasIntegrationPermissions,
+            'The user should not have integration permissions without configuration keys.');
     }
 
     @IsTest
@@ -133,9 +133,9 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
             requiredConfigs.add(new Payment_Services_Configuration__c(
-				Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-				Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-				Value__c = String.valueOf(i)
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
+                Value__c = String.valueOf(i)
             ));
         }
         insert requiredConfigs;
@@ -180,18 +180,18 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         // Set payments Api key to null and set an Api key for makana
         PS_IntegrationService.setConfiguration(new Map<String, List<Map<String, String>>>{
-			PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME => new List<Map<String, String>>{
-				new Map<String, String>{
-					'key' => PS_IntegrationServiceConfig.API_KEY,
-					'value' => null
-				}
-			},
-			PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME => new List<Map<String, String>>{
-				new Map<String, String>{
-					'key' => PS_IntegrationServiceConfig.API_KEY,
-					'value' => testMakanaApiKey
-				}
-			}
+            PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME => new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => null
+                }
+            },
+            PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME => new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => testMakanaApiKey
+                }
+            }
         });
 
         Test.startTest();
