@@ -301,9 +301,7 @@ public with sharing class RD2_EntryFormController {
             response = requestService.buildErrorResponse(ex);
 
         } finally {
-            if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
-                //create an error log
-            }
+            //create an error log if the response contains errors            
         }
 
         return JSON.serialize(response);
@@ -325,11 +323,12 @@ public with sharing class RD2_EntryFormController {
                 .withBody(jsonRequestBody)
                 .build();
 
+            // Returned response can be a success or an error response
             response = requestService.sendRequest(request);
 
         } catch (Exception ex) {
             response = requestService.buildErrorResponse(ex);
-        }
+        } 
 
         return response;
     }

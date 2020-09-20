@@ -81,7 +81,9 @@ public with sharing class UTIL_Http {
             Response response = new Response();
             response.statusCode = STATUS_CODE_REQUEST_TIMEOUT;
             response.status = STATUS_TIMED_OUT;
-            response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
+            response.body = new ErrorResponseBody()
+                .withError(ex.getMessage())
+                .getAsJson();
 
             return response;
         }
@@ -93,7 +95,9 @@ public with sharing class UTIL_Http {
             Response response = new Response();
             response.statusCode = STATUS_CODE_BAD_REQUEST;
             response.status = System.Label.commonUnknownError;
-            response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
+            response.body = new ErrorResponseBody()
+                .withError(ex.getMessage())
+                .getAsJson();
 
             return response;
         }
@@ -122,6 +126,38 @@ public with sharing class UTIL_Http {
             this.statusCode = response.getStatusCode();
             this.status = response.getStatus();
             this.body = response.getBody();
+        }
+    }
+
+    /***
+    * @description Contains all error messages to be returned in the response
+    */
+    public with sharing class ErrorResponseBody {
+        public List<Error> errors = new List<Error>();
+
+        public ErrorResponseBody withError(String message) {
+            this.errors.add(new Error(message));
+            return this;
+        }
+
+        public ErrorResponseBody withError(Error err) {
+            this.errors.add(err);
+            return this;
+        }
+
+        public String getAsJson() {
+            return JSON.serialize(this);
+        }
+    }
+
+    /***
+    * @description Contains an error message
+    */
+    public with sharing class Error {
+        public String message;
+
+        public Error(String message) {
+            this.message = message;
         }
     }
 }

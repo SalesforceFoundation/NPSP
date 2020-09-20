@@ -86,9 +86,13 @@ public with sharing class UTIL_Http_TEST {
         System.assertEquals(UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT, response.statusCode,
             'The status code should be set to timed out status code');
         System.assertEquals(UTIL_Http.STATUS_TIMED_OUT, response.status,
-            'The status should be set to timed out status');
-        System.assert(response.body.contains(errorMessage),
-            'The exception message should be returned in the response body: ' + response.body);
+            'The status should be set to timed out status');   
+
+        UTIL_Http.ErrorResponseBody body = (UTIL_Http.ErrorResponseBody) JSON.deserialize(
+            response.body, UTIL_Http.ErrorResponseBody.class
+        );
+        System.assertEquals(1, body.errors.size(), 'There should be one error in the response body');
+        System.assertEquals(errorMessage, body.errors[0].message, 'The error message should match');
     }
 
     /**
@@ -108,8 +112,12 @@ public with sharing class UTIL_Http_TEST {
             'The status code should be set to bad request status code');
         System.assertEquals(System.Label.commonUnknownError, response.status,
             'The status should be set to unknown error');
-        System.assert(response.body.contains(errorMessage),
-            'The exception message should be returned in the response body: ' + response.body);
+
+        UTIL_Http.ErrorResponseBody body = (UTIL_Http.ErrorResponseBody) JSON.deserialize(
+            response.body, UTIL_Http.ErrorResponseBody.class
+        );
+        System.assertEquals(1, body.errors.size(), 'There should be one error in the response body');
+        System.assertEquals(errorMessage, body.errors[0].message, 'The error message should match');
     }
 
 

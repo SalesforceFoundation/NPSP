@@ -30,7 +30,14 @@ import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccess
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
+import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
+import loadingMessage from '@salesforce/label/c.labelMessageLoading';
+import waitMessage from '@salesforce/label/c.commonWaitMessage';
+import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
+import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
+import creatingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
 import unknownError from '@salesforce/label/c.commonUnknownError';
+import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
@@ -59,7 +66,14 @@ export default class rd2EntryForm extends LightningElement {
         flsErrorHeader,
         flsErrorDetail,
         elevateWidgetLabel,
-        unknownError
+        spinnerAltText,
+        loadingMessage,
+        waitMessage,
+        savingRDMessage,
+        validatingCardMessage,
+        creatingCommitmentMessage,
+        unknownError,
+        commitmentFailedMessage
     });
 
     @api parentId;
@@ -78,6 +92,7 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isAutoNamingEnabled;
     @track isLoading = true;
+    @track loadingText = this.customLabels.loadingMessage;
     @track hasCustomFields = false;
     isRecordReady = false;
     isSettingReady = false;
@@ -257,6 +272,7 @@ export default class rd2EntryForm extends LightningElement {
     handleSubmit(event) {
         this.clearError();
         this.isLoading = true;
+        this.loadingText = this.customLabels.waitMessage;
         this.saveButton.disabled = true;
 
         const allFields = this.getAllSectionsInputValues();
@@ -278,6 +294,7 @@ export default class rd2EntryForm extends LightningElement {
     processSubmit = async (allFields) => {
         if (this.isElevateWidgetEnabled) {
             try {
+                this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
                 this.paymentMethodToken = await elevateWidget.returnValues().payload;
             } catch (error) {
@@ -287,6 +304,7 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         try {
+            this.loadingText = this.customLabels.savingRDMessage;
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
         } catch (error) {
             this.handleSaveError(error);
@@ -426,11 +444,11 @@ export default class rd2EntryForm extends LightningElement {
      * updates the Recurring Donation Commitment Id on the successfull creation
      */
     handleElevateCommitment = async (recordId) => {
+        this.loadingText = this.customLabels.creatingCommitmentMessage;
         let jsonRequestBody = await getCommitmentRequestBody({
             recordId: recordId,
             paymentMethodToken: this.paymentMethodToken
         });
-        console.log('****jsonRequestBody: ' + jsonRequestBody);
 
         createCommitment({ record: recordId, jsonRequestBody: jsonRequestBody })
             .then(jsonResponse => {
@@ -447,7 +465,6 @@ export default class rd2EntryForm extends LightningElement {
      * and executes the actions accordingly.
      */
     processCommitmentResponse(recordId, jsonResponse) {
-        console.log('****response: ' + jsonResponse);
         let response = JSON.parse(jsonResponse);
 
         if (response.statusCode === HTTP_CODES.Created) {
@@ -482,8 +499,9 @@ export default class rd2EntryForm extends LightningElement {
         }
         let errors = this.getErrors(response);
 
-        const message = this.getRecurringDonationSuccessMessage()
-            + '\n However, it cannot be created in Elevate due to following error(s):\n {0}';//TODO create a label
+        const message = this.getRecurringDonationSuccessMessage() 
+            + '\n' + this.customLabels.commitmentFailedMessage
+            + '\n {0}';//the space is required, otherwise the errors are duplicated when the message is formatted
         let replacements = [errors];
         let formattedMessage = format(message, replacements);
 
