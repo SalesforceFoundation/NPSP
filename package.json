@@ -2,6 +2,9 @@
   "devDependencies": {
     "@salesforce/sfdx-lwc-jest": "^0.7.1"
   },
+  "resolutions": {
+    "js-yaml": "^3.13.1"
+  },
   "scripts": {
     "test:unit": "lwc-jest",
     "test:unit:watch": "lwc-jest --watch",
