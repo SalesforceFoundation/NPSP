@@ -37,7 +37,8 @@
 
                         <c-rd2-entry-form-donor-section record-id={recordId} parent-id={parentId}
                             parent-s-object-type={rdSettings.parentSObjectType} data-id="donorComponent"
-                            onerrorevent={handleChildComponentError} if:true={isSettingReady}>
+                            onerrorevent={handleChildComponentError} oncontactevent={handleContactEvent}
+                            if:true={isSettingReady}>
                         </c-rd2-entry-form-donor-section>
 
                     </div>
@@ -88,7 +89,7 @@
                                         <label for="currencyField"
                                             class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
                                         <lightning-input-field id="currencyField" field-name={fields.currency.apiName}
-                                            variant="label-hidden" required>
+                                           variant="label-hidden" data-id="currencyField" required onchange={handleCurrencyChange}>
                                         </lightning-input-field>
                                     </div>
                                 </lightning-layout-item>

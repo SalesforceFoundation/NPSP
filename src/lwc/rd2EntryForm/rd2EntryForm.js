@@ -75,7 +75,6 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isElevateWidgetDisplayed = false;
     isElevateCustomer = false;
-
     userDefaultCurrency;
 
     @track error = {};
@@ -226,15 +225,31 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Checks if credit card widget should be displayed
+     * @description Changing recurring type requires reevaluation of Elevate widget
+     * @param event
+     */
+    handleCurrencyChange(event) {
+        this.evaluateElevateWidget(this.getPaymentMethod());
+    }
+
+    /***
+     * @description Changing recurring type requires reevaluation of Elevate widget
+     * @param event
+     */
+    handleContactEvent(event) {
+        this.evaluateElevateWidget(this.getPaymentMethod());
+    }
+
+    /***
+    * @description Checks if credit card widget should be displayed.
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetDisplayed = this.isElevateCustomer === true
-            && this.userDefaultCurrency === CURRENCY_CODE_USD // Will probably change in future, but for now just USD
-            && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN // Elevate currently doesn't support fixed length
             && !this.isEdit // The Elevate widget is applicable to new RDs only
-            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD; // Verify the payment method value
+            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD // Verify the payment method value
+            && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN // Elevate currently doesn't support fixed length
+            && this.isCurrencyUSD();
     }
 
     /***
@@ -305,6 +320,16 @@ export default class rd2EntryForm extends LightningElement {
      */
     getPaymentMethod() {
         return this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`).value;
+    }
+
+    /***
+     * @description Returns boolean true if currency is USD
+     */
+    isCurrencyUSD() {
+        let isoCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
+        return isNull(isoCode)
+            ? this.userDefaultCurrency === CURRENCY_CODE_USD
+            : isoCode === CURRENCY_CODE_USD;
     }
 
     /***
