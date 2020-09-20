@@ -84,7 +84,7 @@ public inherited sharing class PS_ElevateAPI {
     }
 
     /***
-    * @description Checks if the exception is generated due to the callout timeout
+    * @description Checks if the exception is generated due to a callout timeout
     */
     public Boolean isTimeout(Exception ex) { 
         Boolean isCalloutException = ex instanceof System.CalloutException;
@@ -92,24 +92,24 @@ public inherited sharing class PS_ElevateAPI {
     }
 
     /***
-    * @description Creates an http request wrapper for an exception
+    * @description Creates a timeout error response
     */
-    public ResponseWrapper buildBadRequestResponse(Exception ex) {
+    public ResponseWrapper buildTimeoutResponse(Exception ex) {
         ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = BAD_REQUEST_STATUS_CODE;
-        response.status = System.Label.commonUnknownError;
+        response.statusCode = TIMEOUT_STATUS_CODE;
+        response.status = TIMED_OUT_STATUS;
         response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
 
         return response;
     }
 
     /***
-    * @description Creates an http request wrapper for a timeout error response
+    * @description Creates an exception error response
     */
-    public ResponseWrapper buildTimeoutResponse(Exception ex) {
+    public ResponseWrapper buildBadRequestResponse(Exception ex) {
         ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = TIMEOUT_STATUS_CODE;
-        response.status = TIMED_OUT_STATUS;
+        response.statusCode = BAD_REQUEST_STATUS_CODE;
+        response.status = System.Label.commonUnknownError;
         response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
 
         return response;
