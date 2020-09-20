@@ -31,6 +31,7 @@ import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
+import contactHasUSAddress from '@salesforce/apex/RD2_entryFormController.contactHasUSAddress';
 
 const RECURRING_TYPE_OPEN = 'Open';
 const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
@@ -229,14 +230,6 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleCurrencyChange(event) {
-        this.evaluateElevateWidget(this.getPaymentMethod());
-    }
-
-    /***
-     * @description Changing recurring type requires reevaluation of Elevate widget
-     * @param event
-     */
-    handleContactEvent(event) {
         this.evaluateElevateWidget(this.getPaymentMethod());
     }
 

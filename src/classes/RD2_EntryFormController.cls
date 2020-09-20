@@ -152,6 +152,24 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
+     * @description Validate that the current contact has a US address
+     * @return True if Contact address is a US address
+     */
+    @AuraEnabled
+    public static Boolean contactHasUSAddress(Id recordId) {
+        Contact rdContact = [SELECT MailingState, MailingCountry FROM Contact WHERE Id = :recordId];
+        if (String.isNotBlank(rdContact.MailingState)
+            && (rdContact.MailingCountry == 'US'
+                || rdContact.MailingCountry == 'USA'
+                || rdContact.MailingCountry == 'United States'
+                || String.isBlank(rdContact.MailingCountry))
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
     * @param recordId RecurringDonation.RecordId
     * @return Recurring Donation object
     */
