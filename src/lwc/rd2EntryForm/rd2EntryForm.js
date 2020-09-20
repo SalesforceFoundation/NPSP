@@ -35,7 +35,7 @@ import unknownError from '@salesforce/label/c.commonUnknownError';
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_entryFormController.getCommitmentRequestBody';
-import sendCommitmentRequest from '@salesforce/apex/RD2_entryFormController.sendCommitmentRequest';
+import createCommitment from '@salesforce/apex/RD2_entryFormController.createCommitment';
 
 /***
 * @description Event name fired when the Elevate credit card widget 
@@ -414,7 +414,7 @@ export default class rd2EntryForm extends LightningElement {
         const recordId = event.detail.id;
 
         if (this.isElevateWidgetEnabled && this.paymentMethodToken) {
-            this.createCommitment(recordId);
+            this.handleElevateCommitment(recordId);
 
         } else {
             this.closeModalOnSuccess(recordId);
@@ -422,16 +422,17 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Sends Commitment request to the Elevate API
+     * @description Sends Commitment request to the Elevate API and
+     * updates the Recurring Donation Commitment Id on the successfull creation
      */
-    createCommitment = async (recordId) => {
+    handleElevateCommitment = async (recordId) => {
         let jsonRequestBody = await getCommitmentRequestBody({
             recordId: recordId,
             paymentMethodToken: this.paymentMethodToken
         });
         console.log('****jsonRequestBody: ' + jsonRequestBody);
 
-        sendCommitmentRequest({ record: recordId, jsonRequestBody: jsonRequestBody })
+        createCommitment({ record: recordId, jsonRequestBody: jsonRequestBody })
             .then(jsonResponse => {
                 this.processCommitmentResponse(recordId, jsonResponse);
             })

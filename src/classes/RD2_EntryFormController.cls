@@ -55,6 +55,19 @@ public with sharing class RD2_EntryFormController {
         'SystemModStamp'
     };
 
+    /**
+    * @description Sends requests and constructs the response
+    */
+    private static UTIL_Http.RequestService requestService {
+        get {
+            if (requestService == null) {
+                requestService = new UTIL_Http.RequestService();
+            }
+            return requestService;
+        }
+        set;
+    }
+
 
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
@@ -71,7 +84,7 @@ public with sharing class RD2_EntryFormController {
         // on the form to enter a new Recurring Donation in NPSP and the related commitment in Elevate.
         // The RD2 controller should be using isIntegrationEnabled() only when GA.
         Boolean isElevateCustomer = RD2_ElevateIntegrationService.isIntegrationEnabled()
-            && UTIL_FeatureEnablement.isPilotEnabled();	
+            && UTIL_FeatureEnablement.isPilotEnabled();
 
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
@@ -239,7 +252,7 @@ public with sharing class RD2_EntryFormController {
         /***
         * @description Constructor for the CustomField class
         * @param apiName Api name of the field
-        * @param required Indicate if the field is required 
+        * @param required Indicate if the field is required
         */
         public CustomField(Schema.FieldSetMember field) {
             this.apiName = field.getFieldPath();
@@ -268,29 +281,56 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
-    * @description Creates and posts an Elevate Commitment request
+    * @description Creates Elevate Commitment and 
+    * updates the Recurring Donation with returned Commitment data
     * @param recordId Recurring Donation Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
-    * @return String: JSON containing the HttpResponse wrapper
+    * @return String: JSON containing the response with success or error status and message
     */
     @AuraEnabled
-    public static String sendCommitmentRequest(Id recordId, String jsonRequestBody) {
-        PS_ElevateAPI api = new PS_ElevateAPI();
-        PS_ElevateAPI.ResponseWrapper response;
+    public static String createCommitment(Id recordId, String jsonRequestBody) {
+        UTIL_Http.Response response;
+
+        try {
+            response = sendCommitmentRequest(recordId, jsonRequestBody);
+            if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
+                //update RD fields: Commitment Id, credit card expiry date and last 4
+            }
+
+        } catch (Exception ex) {
+            response = requestService.buildErrorResponse(ex);
+
+        } finally {
+            if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
+                //create an error log
+            }
+        }
+
+        return JSON.serialize(response);
+    }
+
+    /***
+    * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
+    * @param recordId Recurring Donation Id
+    * @param jsonRequestBody JSON containing parameters for the purchase call request body
+    * @return String: JSON containing the response with success/error status and message
+    */
+    public static UTIL_Http.Response sendCommitmentRequest(Id recordId, String jsonRequestBody) {
+        UTIL_Http.Response response = new UTIL_Http.Response();
 
         try {
             HttpRequest request = new PS_ElevateAPI.RequestBuilder()
-                .withMethod(PS_ElevateAPI.HttpRequestMethod.POST)
+                .withMethod(UTIL_Http.Method.POST)
                 .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT)
                 .withBody(jsonRequestBody)
                 .build();
 
-            response = api.sendRequest(request);
+            response = requestService.sendRequest(request);
 
         } catch (Exception ex) {
-            response = api.buildErrorResponse(ex);
+            response = requestService.buildErrorResponse(ex);
         }
 
-        return JSON.serialize(response);
+        return response;
     }
 }

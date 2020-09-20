@@ -34,14 +34,14 @@
 * @description Contains common Elevate payment services API methods to send HttpRequest and return response
 */
 public inherited sharing class PS_ElevateAPI {
-    
+
     public class APIException extends Exception {}
 
-    public enum ElevateEndpoint { 
-        TOKENIZE, 
-        PURCHASE, 
-        COMMITMENT, 
-        COMMITMENT_CANCEL 
+    public enum ElevateEndpoint {
+        TOKENIZE,
+        PURCHASE,
+        COMMITMENT,
+        COMMITMENT_CANCEL
     }
 
     public enum ProductType {
@@ -56,69 +56,9 @@ public inherited sharing class PS_ElevateAPI {
         THIRD_PARTY_GIVING_PAGE
     }
 
-    public enum HttpRequestMethod { 
-        GET, POST, PATCH 
-    }
-
-    public static final String TIMED_OUT = 'timed out';
-    public static final String TIMED_OUT_STATUS = 'Timed out';
-    public static final Integer TIMEOUT_STATUS_CODE = 408;
-    public static final Integer BAD_REQUEST_STATUS_CODE = 400;
-
 
     /***
-    * @description Sends an HttpRequest to the Elevate Payment Services API
-    */
-    public ResponseWrapper sendRequest(HttpRequest request) {
-        HttpResponse response = new Http().send(request);
-        return new ResponseWrapper(response);
-    }
-
-    /***
-    * @description Creates an http request wrapper for an exception
-    */
-    public ResponseWrapper buildErrorResponse(Exception ex) {
-        return isTimeout(ex)
-            ? buildTimeoutResponse(ex)
-            : buildBadRequestResponse(ex);
-    }
-
-    /***
-    * @description Checks if the exception is generated due to a callout timeout
-    */
-    public Boolean isTimeout(Exception ex) { 
-        Boolean isCalloutException = ex instanceof System.CalloutException;
-        return isCalloutException && ex.getMessage().contains(TIMED_OUT);
-    }
-
-    /***
-    * @description Creates a timeout error response
-    */
-    public ResponseWrapper buildTimeoutResponse(Exception ex) {
-        ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = TIMEOUT_STATUS_CODE;
-        response.status = TIMED_OUT_STATUS;
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
-
-        return response;
-    }
-
-    /***
-    * @description Creates an exception error response
-    */
-    public ResponseWrapper buildBadRequestResponse(Exception ex) {
-        ResponseWrapper response = new ResponseWrapper();
-        response.statusCode = BAD_REQUEST_STATUS_CODE;
-        response.status = System.Label.commonUnknownError;
-        response.body = JSON.serialize(new Map<String, String>{ 'message' => ex.getMessage() });
-
-        return response;
-    }
-
-
-
-    /***
-    * @description Builds an HttpRequest 
+    * @description Builds an HttpRequest
     */
     public with sharing class RequestBuilder {
         private PS_IntegrationServiceConfig.Service configService {
@@ -131,12 +71,12 @@ public inherited sharing class PS_ElevateAPI {
             set;
         }
 
-        private HttpRequestMethod method;
+        private UTIL_Http.Method method;
         private ElevateEndpoint endpoint;
         private String jsonBody;
         private String commitmentId;
 
-        public RequestBuilder withMethod(HttpRequestMethod method) {
+        public RequestBuilder withMethod(UTIL_Http.Method method) {
             this.method = method;
             return this;
         }
@@ -257,7 +197,7 @@ public inherited sharing class PS_ElevateAPI {
                 generator.writeStringField('sfdo.id', sfdoId);
             }
 
-            generator.writeStringField('sfdo.product', ProductType.CRM.name()); 
+            generator.writeStringField('sfdo.product', ProductType.CRM.name());
 
             setRoles(generator);
 
@@ -273,7 +213,7 @@ public inherited sharing class PS_ElevateAPI {
             } else if (endpoint == ElevateEndpoint.PURCHASE) {
                 value = 'Payments.Purchase';
 
-            } else if (endpoint == ElevateEndpoint.COMMITMENT 
+            } else if (endpoint == ElevateEndpoint.COMMITMENT
                 || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
             ) {
                 value = 'Payments.Commitments';
@@ -284,31 +224,4 @@ public inherited sharing class PS_ElevateAPI {
             }
         }
     }
-
-    /***
-    * @description Returns contents of the HttpResponse.
-    * HttpResponse can't be directly serialized using JSON.serialize().
-    */
-    public with sharing class ResponseWrapper {
-        public Map<String, Object> headers = new Map<String, Object>{};
-        public Integer statusCode;
-        public String status;
-        public String body;
-
-        public ResponseWrapper() {}
-
-        public ResponseWrapper(HttpResponse response) {
-            String[] headerKeys = response.getHeaderKeys();
-            if (headerKeys != null) {
-                for (String key : headerKeys) {
-                    this.headers.put(key, response.getHeader(key));
-                }
-            }
-
-            this.statusCode = response.getStatusCode();
-            this.status = response.getStatus();
-            this.body = response.getBody();
-        }
-    }
-
 }

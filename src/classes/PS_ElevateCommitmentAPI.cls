@@ -35,24 +35,24 @@
 */
 public with sharing class PS_ElevateCommitmentAPI {
 
-    public enum CommitmentType { 
+    public enum CommitmentType {
         SUSTAINER
     }
 
-    public enum PaymentMethod { 
+    public enum PaymentMethod {
         CARD
     }
 
     /***
      * @description Translates the currency amt into the lowest denominator; e.g. dollars into cents
-     */ 
+     */
     private static Map<String, Integer> currencyMultiplierByCode = new Map<String, Integer>{
         'USD' => 100
     };
 
     /***
      * @description Translates the Installment Period into Elevate API frequency value
-     */ 
+     */
     private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => 'YEAR',
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => 'MONTH',
@@ -89,12 +89,12 @@ public with sharing class PS_ElevateCommitmentAPI {
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
-        
+
         reqBody.withCurrency(currencyCode);
         reqBody.withMetadata(new Metadata());
 
-        setDonorInfo(reqBody, rd);    
-        setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);        
+        setDonorInfo(reqBody, rd);
+        setSchedules(reqBody, rd.RecurringDonationSchedules__r, currencyCode);
 
         return reqBody;
     }
@@ -147,11 +147,11 @@ public with sharing class PS_ElevateCommitmentAPI {
             'npe03__Contact__r.FirstName',
             'npe03__Contact__r.LastName'
         };
-        
+
         if (UserInfo.isMultiCurrencyOrganization()) {
             fields.add('CurrencyIsoCode');
-        } 
-        
+        }
+
         fields.add(getScheduleSubQuery());
 
         String soql = new UTIL_Query()
@@ -174,7 +174,7 @@ public with sharing class PS_ElevateCommitmentAPI {
         return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
     }
 
-    
+
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
     */
@@ -194,8 +194,8 @@ public with sharing class PS_ElevateCommitmentAPI {
 
         /***
         * Optional properties
-        */        
-        public Metadata metadata; 
+        */
+        public Metadata metadata;
 
         public RequestBody() {
             //set defaults
@@ -231,7 +231,7 @@ public with sharing class PS_ElevateCommitmentAPI {
 
             this.firstName = contact.FirstName;
             this.lastName = contact.LastName;
-            
+
             return this;
         }
 
@@ -298,7 +298,7 @@ public with sharing class PS_ElevateCommitmentAPI {
             Date donationDate = new RD2_ScheduleService()
                 .getNextDonationDateGreaterThan(rdSchedule, RD2_ScheduleService.currentDate);
 
-            
+
             DateTime donationDatetime = Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
             return donationDatetime.format('yyyy-MM-dd');
         }
