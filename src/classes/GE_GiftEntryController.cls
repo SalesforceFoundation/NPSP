@@ -535,8 +535,6 @@ public with sharing class GE_GiftEntryController {
 
         // Create a map of sobject type to sobject list for processing
         for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
-            Object objList = objMappingDevNameToObjList.get(objMappingDevName);
-
             BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
 
             BDI_FieldMapping[] fieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(objMappingDevName);
