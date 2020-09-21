@@ -228,7 +228,7 @@
                     <div class="slds-size_1-of-1">
                         <c-util-page-level-message title={pageLevelError.title}
                                                    subtitle={pageLevelError.message}
-                                                   variant='error'>
+                                                   variant={pageLevelError.variant}>
                             <ul slot="body"
                                 class="slds-list_dotted">
                                 <template for:each={pageLevelError.errors}
@@ -269,7 +269,7 @@
                                                             ondeleteformelement={handleDeleteFormElement}
                                                             onupdateformelement={handleUpdateFormElement}
                                                             ontogglemodal={toggleModal}
-                                                            onfieldmetadataerror={handleFieldMetadataError}>
+                                                            onfieldmetadatavalidation= {handleFieldMetadataValidation}>
                         </c-ge-template-builder-form-section>
                     </template>
 

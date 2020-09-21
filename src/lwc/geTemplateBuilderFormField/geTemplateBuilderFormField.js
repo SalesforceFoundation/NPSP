@@ -10,7 +10,7 @@ import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 
 const WIDGET = 'widget';
 const YES = 'Yes';
-const FIELD_METADATA_ERROR = 'fieldmetadataerror';
+const FIELD_METADATA_VALIDATION = 'fieldmetadatavalidation';
 
 export default class geTemplateBuilderFormField extends LightningElement {
     @track targetObjectDescribeInfo;
@@ -58,7 +58,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
                 inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
                 inputField.reportValidity();
 
-                this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));
+                this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: true}}));
             }
         }
     }
@@ -85,7 +85,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
                 this.shouldRender = !!hasViewSetup;
             }
 
-            this.dispatchEvent(new CustomEvent(FIELD_METADATA_ERROR));
+            this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: true}}));
         }
     }
 
@@ -316,6 +316,8 @@ export default class geTemplateBuilderFormField extends LightningElement {
         this.stopPropagation(event);
         let detail = { id: this.field.id, fieldName: this.name };
         dispatch(this, 'deleteformelement', detail);
+
+        this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: false}}));
     }
 
     /*******************************************************************************

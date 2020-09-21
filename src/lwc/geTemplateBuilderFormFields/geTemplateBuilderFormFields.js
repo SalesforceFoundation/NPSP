@@ -483,12 +483,16 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      * target field.
      * @param {object} event: object for the custom event
      */
-    handleFieldMetadataError(event) {
-        this.pageLevelError = {
-            hasErrors: true,
-            title: this.CUSTOM_LABELS.commonFieldsNotFound,
-            message: this.CUSTOM_LABELS.geFieldsNotFoundMessage,
-            variant: 'warning'
+    handleFieldMetadataValidation(event) {
+        if (event.detail.showError) {
+            this.pageLevelError = {
+                hasErrors: true,
+                title: this.CUSTOM_LABELS.commonFieldsNotFound,
+                message: this.CUSTOM_LABELS.geFieldsNotFoundMessage,
+                variant: 'warning'
+            }
+        } else {
+            this.pageLevelError = {};
         }
     }
 
@@ -535,9 +539,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         const fieldMapping = TemplateBuilderService.fieldMappingByDevName[event.detail.fieldName];
         const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
 
-        // if (isEmpty(element)) {
-            element.checked = false;
-        // }
+        element.checked = false;
 
         if (fieldMapping.Is_Required) {
             this.validate();
