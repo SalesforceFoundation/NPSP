@@ -32,7 +32,7 @@
 * @date 2020
 * @group BGE
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Class to create a default template when needed
+* @description Class to hold functionality related to Gift Entry Templates.
 */
 
 public with sharing class GE_Template {
