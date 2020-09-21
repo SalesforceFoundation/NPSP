@@ -57,7 +57,7 @@ private with sharing class RD2_EntryFormController_TEST {
             .withInstallmentFrequency(2)
             .build();
         insert rd;
-	}
+    }
 
     /***
     * @description Verifies that Entry Form Controller gathers the correct org setting
@@ -229,13 +229,13 @@ private with sharing class RD2_EntryFormController_TEST {
     */
     @isTest
     private static void shouldReturnCommitmentRequestBody() {        
-		Id recordId = rdGateway.getRecords()[0].Id;
+        Id recordId = rdGateway.getRecords()[0].Id;
         final String paymentMethodToken = 'token-abcd-efgh-ijkl-mnop-qrst';
 
         String jsonRequestBody = RD2_EntryFormController.getCommitmentRequestBody(recordId, paymentMethodToken);
         System.assert(String.isNotBlank(jsonRequestBody), 'The Commitment request body should be returned');
 
-		PS_CommitmentRequest.RequestBody requestBody = (PS_CommitmentRequest.RequestBody) JSON.deserialize(
+        PS_CommitmentRequest.RequestBody requestBody = (PS_CommitmentRequest.RequestBody) JSON.deserialize(
             jsonRequestBody, PS_CommitmentRequest.RequestBody.class
         );
 
@@ -250,7 +250,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static void shouldReturnResponseWhenCommitmentIsCreated() {     
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
-		Id recordId = rdGateway.getRecords()[0].Id;
+        Id recordId = rdGateway.getRecords()[0].Id;
         final String paymentMethodToken = 'token-abcd-efgh-ijkl-mnop-qrst';
         final String jsonResponseBody = '{"id":"test commitment id","status":"ACTIVE"}';
 
