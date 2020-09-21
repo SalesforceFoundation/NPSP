@@ -214,7 +214,7 @@ public with sharing class PS_IntegrationServiceConfig {
     /***
     * @description Returns Elevate integration configuration 
     */
-    public with sharing class Service {
+    public without sharing class Service {
         @TestVisible
         private Map<String, String> config {
             get {

@@ -69,7 +69,7 @@ public inherited sharing class PS_Request {
     /***
     * @description Builds an HttpRequest
     */
-    public with sharing class Builder {
+    public class Builder {
         /***
         * @description Returns Elevate Payments Service configuration
         */
@@ -221,7 +221,7 @@ public inherited sharing class PS_Request {
     /***
     * @description Assists in constructing the Payload portion of a JSON Web Token.
     */
-    public with sharing class JWTPayload {
+    public class JWTPayload {
         String sfdoId;
         ElevateEndpoint endpoint;
 

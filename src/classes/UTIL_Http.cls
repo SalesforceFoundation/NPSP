@@ -51,7 +51,7 @@ public with sharing class UTIL_Http {
     /***
     * @description Contains method to send the HttpRequest and parse its response
     */
-    public with sharing class RequestService {
+    public class RequestService {
 
         /***
         * @description Sends an HttpRequest 
@@ -121,7 +121,7 @@ public with sharing class UTIL_Http {
     * @description Returns contents of the HttpResponse since it
     * cannot be directly serialized using JSON.serialize().
     */
-    public with sharing class Response {
+    public class Response {
         public Map<String, Object> headers = new Map<String, Object>{};
         public Integer statusCode;
         public String status;
@@ -153,7 +153,7 @@ public with sharing class UTIL_Http {
     /***
     * @description Contains all error messages to be returned in the response
     */
-    public with sharing class ErrorResponseBody {
+    public class ErrorResponseBody {
         public List<Error> errors = new List<Error>();
 
         /***
@@ -187,7 +187,7 @@ public with sharing class UTIL_Http {
     /***
     * @description Contains an error message
     */
-    public with sharing class Error {
+    public class Error {
         public String message;
 
         /***

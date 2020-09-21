@@ -33,7 +33,7 @@
 * @group Elevate Payment Services
 * @description Contains Elevate payment services methods specific to building a commitment request
 */
-public with sharing class PS_CommitmentRequest {
+public inherited sharing class PS_CommitmentRequest {
 
     public enum CommitmentType {
         SUSTAINER
@@ -208,7 +208,7 @@ public with sharing class PS_CommitmentRequest {
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
     */
-    public with sharing class RequestBody {
+    public class RequestBody {
         /***
          * Required properties
          */
@@ -341,7 +341,7 @@ public with sharing class PS_CommitmentRequest {
     /***
      * @description Contains Recurring Donation Schedule info to be relayed to the Elevate API
      */
-    public with sharing class Schedule {
+    public class Schedule {
         public Integer recurringPaymentAmount;
         public String frequency;
         public Integer frequencyInterval;
@@ -381,7 +381,7 @@ public with sharing class PS_CommitmentRequest {
     /***
      * @description Assists in constructing the metadata property.
      */
-    public with sharing class Metadata {
+    public class Metadata {
         public String originType;
         public String originDisplayName;
         public String campaignCode;
