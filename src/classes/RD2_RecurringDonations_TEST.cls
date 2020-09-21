@@ -1114,39 +1114,40 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be unchanged');
     }
 
-    /**
-    * @description Verifies that when PS_doNotSendToElevate flag is true, RD will not be sent to Elevate to close.
+     /**
+    * @description Verifies that when PS_doNotSendToElevate flag is true, 
+    * the cancel commitment request will not be sent to Elevate.
     */
     @isTest
-    private static void shouldNotMakeCalloutToElevateIfDoNotSendToElevateFlagIsSet() {
+    private static void shouldNotMakeCalloutToElevateWhenDoNotSendToElevateFlagIsSet() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
 
+        final String commitmentId = 'abcd-efgh-ijkl-mnop-qrst';
+        String closedReason = 'Original Reason';
+
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withCommitmentId('random')
+            .withCommitmentId(commitmentId)
             .build();
         insert rd;
 
-        String originalReason = 'random reason';
-        
-        PS_ElevateAPI_TEST.MockElevateHttpResponse mockHttpRespons = new PS_ElevateAPI_TEST.MockElevateHttpResponse()
-        .withStatusCode(403)
-        .withStatus('Fail');
+        UTIL_Http_TEST.CalloutMock response = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST)
+            .withStatus('Fail');
 
-        rd.ClosedReason__c = originalReason;
-        rd.Status__c = RD2_Constants.STATUS_CLOSED;
         Test.startTest();
-        Test.setMock(HttpCalloutMock.class, mockHttpRespons);
+        Test.setMock(HttpCalloutMock.class, response);
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.PS_doNotSendToElevate, true);
+
+        rd.ClosedReason__c = closedReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
         update rd;
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(originalReason, rd.ClosedReason__c, 'RD will be closed and no callout will be sent');
-        
+        System.assertEquals(closedReason, rd.ClosedReason__c, 'RD will be closed and no callout will be sent');
     }
-
-
 
     // Helpers
     ///////////////////
