@@ -347,14 +347,14 @@ public with sharing class RD2_ValidationService {
             && rdRecord.isClosed()
             && rd.EndDate__c > currentDate
         ) {
-            rd.AddError(System.Label.RD2_EndDateMustBeValidForElevateRecurringDonation);
+            rd.addError(System.Label.RD2_EndDateElevateCannotBeInFuture);
         }
 
         if (rdRecord.isFixedLength()
             && rdRecord.isClosed()
             && rd.EndDate__c > currentDate
         ) {
-            rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
+            rd.addError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
         }
 
         Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);

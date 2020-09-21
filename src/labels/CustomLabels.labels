@@ -1992,7 +1992,7 @@
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
     </labels>
     <labels>
-        <fullName>RD2_EndDateMustBeValidForElevateRecurringDonation</fullName>
+        <fullName>RD2_EndDateElevateCannotBeInFuture</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>

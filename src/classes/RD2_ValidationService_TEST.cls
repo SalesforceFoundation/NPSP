@@ -1044,7 +1044,7 @@ private with sharing class RD2_ValidationService_TEST {
         }
 
         System.assert(
-            errMessage.contains(System.Label.RD2_EndDateMustBeValidForElevateRecurringDonation),
+            errMessage.contains(System.Label.RD2_EndDateElevateCannotBeInFuture),
             'Elevate RD update should fail when Rd End Date is in the future: ' + errMessage
         );
     }
