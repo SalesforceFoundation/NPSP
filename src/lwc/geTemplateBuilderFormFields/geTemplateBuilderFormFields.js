@@ -194,7 +194,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 hasErrors : true,
                 title : this.CUSTOM_LABELS.commonError,
                 message: this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields,
-                errors: [...missingRequiredFieldMappings]
+                errors: [...missingRequiredFieldMappings],
+                variant: 'error'
             }
 
             isValid = false;
@@ -486,7 +487,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         this.pageLevelError = {
             hasErrors: true,
             title: this.CUSTOM_LABELS.commonFieldsNotFound,
-            message: this.CUSTOM_LABELS.geFieldsNotFoundMessage
+            message: this.CUSTOM_LABELS.geFieldsNotFoundMessage,
+            variant: 'warning'
         }
     }
 
