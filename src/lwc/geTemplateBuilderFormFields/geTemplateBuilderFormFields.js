@@ -489,10 +489,13 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 hasErrors: true,
                 title: this.CUSTOM_LABELS.commonFieldsNotFound,
                 message: this.CUSTOM_LABELS.geFieldsNotFoundMessage,
+                type: 'fieldMetadata',
                 variant: 'warning'
             }
         } else {
-            this.pageLevelError = {};
+            if (this.pageLevelError.type === 'fieldMetadata') {
+                this.pageLevelError = {};
+            }
         }
     }
 
