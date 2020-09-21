@@ -63,7 +63,7 @@ public with sharing class GE_Template {
      *
      * @return Returns whether or not there is an existing default template. 
      */
-    private static boolean hasDefaultTemplate() {
+    private static Boolean hasDefaultTemplate() {
             
         // Get the gift entry custom setting to check for the default template.             
         Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
@@ -90,7 +90,7 @@ public with sharing class GE_Template {
      *
      * @return Returns whether or not the feature is enabled.
      */
-    private static boolean giftEntryIsEnabled() {
+    private static Boolean giftEntryIsEnabled() {
             
         // Get the gift entry custom setting to check for the default template.             
         Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
@@ -110,12 +110,12 @@ public with sharing class GE_Template {
      * @return A new Form template that is ready to be saved into the DB and used. 
      */
     public static Form_Template__c buildDefaultTemplate() {
-        FORM_Template__c newDefaultTemplate = new FORM_Template__c();
+        Form_Template__c newDefaultTemplate = new Form_Template__c();
         List<StaticResource> defaultTemplateSRList = [SELECT 
                     Id, 
                     Body 
             FROM StaticResource 
-            WHERE Name = 'DefaultGiftEntryTemplate' limit 1];
+            WHERE Name = 'DefaultGiftEntryTemplate' LIMIT 1];
 
         String defaultTemplateSRJSON = '';
 
