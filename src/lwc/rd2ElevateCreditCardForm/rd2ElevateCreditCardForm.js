@@ -1,6 +1,5 @@
-import {api, track, LightningElement, wire} from 'lwc';
+import {api, track, LightningElement } from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
-import { getObjectInfo } from "lightning/uiObjectInfoApi";
 
 import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
