@@ -103,13 +103,13 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             Map<String, BDI_FieldMapping> fieldMappingByDevName =
                     mappingService.fieldMappingByDevName;
 
-            FORM_Template t = (FORM_Template) JSON.deserialize(
+            GE_Template.Template template = (GE_Template.Template) JSON.deserialize(
                     batch.Form_Template__r.Template_JSON__c,
-                    FORM_Template.class
+                    GE_Template.Template.class
             );
 
-            for (FORM_Template.Section formSection : t.layout.sections) {
-                for (FORM_Template.Element formElement : formSection.elements) {
+            for (GE_Template.Section formSection : template.layout.sections) {
+                for (GE_Template.Element formElement : formSection.elements) {
                     if (formElement.dataImportFieldMappingDevNames == null) {
                         continue;
                     }
