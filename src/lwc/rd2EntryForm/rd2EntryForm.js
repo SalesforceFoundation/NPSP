@@ -36,8 +36,10 @@ import waitMessage from '@salesforce/label/c.commonWaitMessage';
 import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
 import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
 import creatingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
-import unknownError from '@salesforce/label/c.commonUnknownError';
 import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage';
+import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
+import unknownError from '@salesforce/label/c.commonUnknownError';
+
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
@@ -72,8 +74,9 @@ export default class rd2EntryForm extends LightningElement {
         savingRDMessage,
         validatingCardMessage,
         creatingCommitmentMessage,
-        unknownError,
-        commitmentFailedMessage
+        commitmentFailedMessage,
+        contactAdminMessage,
+        unknownError
     });
 
     @api parentId;
@@ -435,54 +438,63 @@ export default class rd2EntryForm extends LightningElement {
             this.handleElevateCommitment(recordId);
 
         } else {
-            this.closeModalOnSuccess(recordId);
+            this.showToastSuccess();
+            this.closeModal(recordId);
         }
     }
 
     /**
      * @description Sends Commitment request to the Elevate API and
      * updates the Recurring Donation Commitment Id on the successfull creation
+     * If an error occurs when the Commitment is created,
+     * it should be displayed, and the modal closed since
+     * the another creation of the same Recurring Donation should be prevented.
      */
-    handleElevateCommitment = async (recordId) => {
+    handleElevateCommitment(recordId) {
         this.loadingText = this.customLabels.creatingCommitmentMessage;
-        let jsonRequestBody = await getCommitmentRequestBody({
+        
+        getCommitmentRequestBody({
             recordId: recordId,
             paymentMethodToken: this.paymentMethodToken
-        });
-
-        createCommitment({ record: recordId, jsonRequestBody: jsonRequestBody })
-            .then(jsonResponse => {
-                this.processCommitmentResponse(recordId, jsonResponse);
+        })
+            .then(jsonRequestBody => {
+                createCommitment({ record: recordId, jsonRequestBody: jsonRequestBody })
+                    .then(jsonResponse => {
+                        this.processCommitmentResponse(jsonResponse);
+                    })
+                    .catch((error) => {
+                        this.displayCommitmentError(error);
+                    })
+                    .finally(() => {
+                        this.closeModal(recordId);
+                    });
             })
-            .catch((error) => {
-                this.handleError(error);
-                this.isLoading = false;
-            })
+            .catch(error => {
+                this.displayCommitmentError(error);
+                this.closeModal(recordId);
+            });        
     }
 
     /**
      * @description Verifies if the Commitment was successfully created,
-     * and executes the actions accordingly.
+     * and displays the error if the error response has been returned.
      */
-    processCommitmentResponse(recordId, jsonResponse) {
+    processCommitmentResponse(jsonResponse) {
         let response = JSON.parse(jsonResponse);
 
         if (response.statusCode === HTTP_CODES.Created) {
-            this.closeModalOnSuccess();
+            this.showToastSuccess();
 
         } else {
-            this.displayCommitmentErrors(response);
-            this.closeModal(recordId);
-        }
+            this.displayCommitmentErrorResponse(response);
+        } 
     }
 
     /**
      * @description Displayes errors extracted from the error response
      * returned from the Elevate API when the Commitment cannot be created
      */
-    displayCommitmentErrors(response) {
-        const title = this.customLabels.elevateWidgetLabel;
-
+    displayCommitmentErrorResponse(response) {
         if (response.body) {
             // Errors returned in the response body can contain a single quote, for example:
             // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
@@ -495,16 +507,13 @@ export default class rd2EntryForm extends LightningElement {
             }
 
             //parse the error response
-            response.body = JSON.parse(response.body);
+            try {
+                response.body = JSON.parse(response.body);
+            } catch (error) { }
         }
+
         let errors = this.getErrors(response);
-
-        const message = this.getRecurringDonationSuccessMessage() 
-            + '\n' + this.customLabels.commitmentFailedMessage;
-        let replacements = [errors];
-        let formattedMessage = format(message, replacements);
-
-        showToast(title, formattedMessage, 'error', 'sticky');
+        this.showToastCommitmentError(errors);
     }
 
     /***
@@ -527,12 +536,54 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Displays toast message and closes the entry form modal on successful save
+     * @description Processes unexpected error from the commitment response
      */
-    closeModalOnSuccess(recordId) {
-        showToast(this.getRecurringDonationSuccessMessage(), '', 'success');
+    displayCommitmentError(errorException) {
+        let error = constructErrorMessage(errorException);
 
-        this.closeModal(recordId);
+        let message;
+        if (error) {
+            if (error.body && error.body.message) {
+                message = error.body.message;
+            } else if (error.message) {
+                message = error.message;
+            } else if (error.detail) {
+                message = error.detail;
+            }
+        }
+        if (isNull(message)) {
+            message = JSON.stringify(error);
+        }
+
+        this.showToastCommitmentError(message);
+    }
+
+    /**
+     * @description Displays errors generated during commitment callout
+     */
+    showToastCommitmentError(errors) {
+        const title = this.customLabels.elevateWidgetLabel;
+
+        // The space is required before the param {0}, 
+        // otherwise the errors are duplicated when the message is formatted.
+        // Moreover, the '\n {0}' cannot be part of the commitment failed message
+        // since the new line is not replaced with a return.
+        const message = this.getRecurringDonationSuccessMessage()
+            + '\n' + this.customLabels.commitmentFailedMessage
+            + '\n {0}'
+            + '\n' + this.customLabels.contactAdminMessage;
+
+        let replacements = [errors];
+        let formattedMessage = format(message, replacements);
+
+        showToast(title, formattedMessage, 'error', 'sticky');
+    }
+
+    /**
+     * @description Displays toast message on successful save
+     */
+    showToastSuccess() {
+        showToast(this.getRecurringDonationSuccessMessage(), '', 'success');
     }
 
     /**

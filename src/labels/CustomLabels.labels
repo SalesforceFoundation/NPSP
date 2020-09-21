@@ -2141,7 +2141,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
-        <value>Creating Elevate commitment...This might take some time, please wait.</value>
+        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>
@@ -2149,7 +2149,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed as prefix to errors returned from Elevate API</shortDescription>
-        <value>However, a Commitment in Elevate could not be created due to following error(s): \n {0}</value>
+        <value>However, an Elevate recurring payment could not be created due to the following errors:</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
@@ -5143,6 +5143,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Error when a batch job is executed while the same batch job is already running.</shortDescription>
         <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
+    </labels>
+    <labels>
+        <fullName>commonContactSystemAdminMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message indicating user should contact the system administrator for help</shortDescription>
+        <value>Contact your system administrator for help.</value>
     </labels>
     <labels>
         <fullName>commonCreditNumber</fullName>
