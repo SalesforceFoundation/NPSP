@@ -76,15 +76,9 @@ private with sharing class PS_Request_TEST {
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + '/v1/payments/public/commitments';
+            + '/v1/payments/verified/commitments';
 
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
-
-        System.assertEquals(
-            PS_IntegrationServiceConfig_TEST.testClientId, 
-            request.getHeader(PS_IntegrationServiceConfig.CLIENTID),
-            'Client Id should be specified in the request header'
-        );
     }
 
     /**

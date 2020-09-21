@@ -52,12 +52,6 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String ELEVATE_SDK = 'elevateSDK';
     public static final String PRODUCTID = 'productId';
 
-    /***
-     * @description Client Id is required for a public endpoint.
-     * The param has to contain the lower case "id" in order for Elevate to validate the header correctly.
-     */
-    public static final String CLIENTID = 'clientid';
-
     @TestVisible 
     private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
         ELEVATE_SDK,
@@ -248,10 +242,6 @@ public with sharing class PS_IntegrationServiceConfig {
 
         public String getAPIKey() {
             return config.get(API_KEY);
-        }
-
-        public String getClientId() {
-            return config.get(CLIENTID);
         }
     }
 

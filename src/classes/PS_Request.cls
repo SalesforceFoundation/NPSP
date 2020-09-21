@@ -164,15 +164,6 @@ public inherited sharing class PS_Request {
                     configService.getMerchantIds()
                 );
             }
-
-            if (String.isNotBlank(configService.getClientId())
-                && endpoint == ElevateEndpoint.COMMITMENT
-            ) {
-                request.setHeader(
-                    PS_IntegrationServiceConfig.CLIENTID,
-                    configService.getClientId()
-                );
-            }
         }
 
         /***
@@ -190,7 +181,7 @@ public inherited sharing class PS_Request {
                 value = '/v1/payments/verified/purchase';
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
-                value = '/v1/payments/public/commitments';
+                value = '/v1/payments/verified/commitments';
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
                 value = '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
