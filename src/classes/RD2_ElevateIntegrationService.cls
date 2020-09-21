@@ -76,20 +76,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
-    * @description Payment Service Elevate API
-    */
-    @TestVisible
-    private PS_ElevateAPI apiService {
-        get {
-            if (apiService == null) {
-                apiService = new PS_ElevateAPI();
-            }
-            return apiService;
-        }
-        set;
-    }
-
-    /***
      * @description Determines if the Recurring Donation can be changed
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation
@@ -205,30 +191,31 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /**
-    * @description Send Http Request to Elevate and close Closed RD's attached Commitments
-    * @param trackedClosedRds Closed RDs with original Close Reason that will be process
+    * @description Sends HttpRequest to Elevate to cancel Commitments for close Recurring Donations
+    * @param closedRDs Closed RDs with the user specified closed reason
+    * @return void
     */
-    public void closeCommitmentsInElevate(List<npe03__Recurring_Donation__c> trackedClosedRds) {
+    public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
+        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
+        List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
 
-        List<PS_ElevateAPI.ResponseWrapper> responses = new List<PS_ElevateAPI.ResponseWrapper>();
-
-        for (npe03__Recurring_Donation__c elevateClosedRd : trackedClosedRds) {
-            HttpRequest request = new PS_ElevateAPI.RequestBuilder()
-                .withCommitmentId(elevateClosedRd.CommitmentId__c)
-                .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT_CANCEL)
-                .withMethod(PS_ElevateAPI.HttpRequestMethod.POST)
+        for (npe03__Recurring_Donation__c rd : closedRDs) {
+            HttpRequest request = new PS_Request.Builder()
+                .withCommitmentId(rd.CommitmentId__c)
+                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_CANCEL)
+                .withMethod(UTIL_Http.Method.POST)
                 .build();
             
-            responses.add(apiService.sendRequest(request));
+            responses.add(requestService.sendRequest(request));
         }
 
-        for (Integer i = 0; i < responses.size(); i ++) {
-            if (responses[i].statusCode != 200) {
-                //error handling, currently just populate the failing body onto the close reason
-                trackedClosedRds[i].ClosedReason__c = responses[i].body;
+        for (Integer i = 0; i < responses.size(); i++) {
+            if (responses[i].statusCode != UTIL_Http.STATUS_CODE_OK) {
+                //error handling, currently just populate the failing body onto the closed reason
+                closedRDs[i].ClosedReason__c = responses[i].body;
             }
         }
 
-        update trackedClosedRds;
+        update closedRDs;
     }
 }
