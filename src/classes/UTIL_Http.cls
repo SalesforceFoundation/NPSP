@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Contains common HttpRequest and HttpResponse constants and methods
 */
-public with sharing class UTIL_Http {
+public without sharing class UTIL_Http {
     public static final Integer STATUS_CODE_OK = 200;
     public static final Integer STATUS_CODE_CREATED = 201;
     public static final Integer STATUS_CODE_BAD_REQUEST = 400;
@@ -55,12 +55,21 @@ public with sharing class UTIL_Http {
 
         /***
         * @description Sends an HttpRequest 
+        * Returned response can be a success or an error response
         * @param request HttpRequest
         * @return Response HttpResponse wrapper
         */
         public Response sendRequest(HttpRequest request) {
-            HttpResponse response = new Http().send(request);
-            return new Response(response);
+            UTIL_Http.Response response = new UTIL_Http.Response();
+
+            try {
+                HttpResponse requestResponse = new Http().send(request);
+                response = new Response(requestResponse);
+
+            } catch (Exception ex) {
+                response = buildErrorResponse(ex);
+            } 
+            return response;
         }
 
         /***

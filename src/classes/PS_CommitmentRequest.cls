@@ -46,7 +46,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the currency amount into the lowest denominator; e.g. dollars into cents
      */
-    private static Map<String, Integer> currencyMultiplierByCode = new Map<String, Integer>{
+    private static Map<String, Integer> currencyMultiplierByIsoCode = new Map<String, Integer>{
         'USD' => 100
     };
 
@@ -153,7 +153,7 @@ public inherited sharing class PS_CommitmentRequest {
     * @return Integer
     */
     private Integer getCurrencyMultiplier(String currencyCode) {
-        Integer currencyMultiplier = currencyMultiplierByCode.get(currencyCode);
+        Integer currencyMultiplier = currencyMultiplierByIsoCode.get(currencyCode);
 
         return currencyMultiplier == null
             ? DEFAULT_CURRENCY_MULTIPLIER

@@ -500,8 +500,7 @@ export default class rd2EntryForm extends LightningElement {
         let errors = this.getErrors(response);
 
         const message = this.getRecurringDonationSuccessMessage() 
-            + '\n' + this.customLabels.commitmentFailedMessage
-            + '\n {0}';//the space is required, otherwise the errors are duplicated when the message is formatted
+            + '\n' + this.customLabels.commitmentFailedMessage;
         let replacements = [errors];
         let formattedMessage = format(message, replacements);
 

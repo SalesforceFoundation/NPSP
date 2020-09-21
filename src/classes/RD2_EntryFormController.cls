@@ -289,16 +289,25 @@ public with sharing class RD2_EntryFormController {
     */
     @AuraEnabled
     public static String createCommitment(Id recordId, String jsonRequestBody) {
-        UTIL_Http.Response response = sendCommitmentRequest(recordId, jsonRequestBody);
-
-        // Future WIs work:
-        // If the commitment is created, then update RD fields: 
-        // Commitment Id, credit card expiry date and last 4.
-
-        // Ensure DML error (if any) on the RD update is returned to the LWC as a response.
+        UTIL_Http.Response response;
         
-        // If the response contains an error, regardless if the commitment is created, or
-        // the RD update failed, create an error log
+        try {
+            response = sendCommitmentRequest(recordId, jsonRequestBody);
+
+            if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
+                // If the commitment is created, then update RD fields: 
+                // Commitment Id, credit card expiry date and last 4.
+
+                // Ensure DML error (if any) on the RD update is returned to the LWC as a response.
+            }        
+        
+        } catch (Exception ex) {
+            response = requestService.buildErrorResponse(ex);
+
+        } finally {
+            // If the response contains an error, regardless if the commitment is created, or
+            // the RD update failed, create an error log
+        }
 
         return JSON.serialize(response);
     }
@@ -310,22 +319,12 @@ public with sharing class RD2_EntryFormController {
     * @return String: JSON containing the response with success/error status and message
     */
     public static UTIL_Http.Response sendCommitmentRequest(Id recordId, String jsonRequestBody) {
-        UTIL_Http.Response response = new UTIL_Http.Response();
+        HttpRequest request = new PS_Request.Builder()
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withBody(jsonRequestBody)
+            .build();
 
-        try {
-            HttpRequest request = new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
-                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
-                .withBody(jsonRequestBody)
-                .build();
-
-            // Returned response can be a success or an error response
-            response = requestService.sendRequest(request);
-
-        } catch (Exception ex) {
-            response = requestService.buildErrorResponse(ex);
-        } 
-
-        return response;
+        return requestService.sendRequest(request);
     }
 }
