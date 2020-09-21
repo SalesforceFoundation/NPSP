@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Contains common HttpRequest and HttpResponse constants and methods
 */
-public with sharing class UTIL_Http {
+public without sharing class UTIL_Http {
     public static final Integer STATUS_CODE_OK = 200;
     public static final Integer STATUS_CODE_CREATED = 201;
     public static final Integer STATUS_CODE_BAD_REQUEST = 400;
