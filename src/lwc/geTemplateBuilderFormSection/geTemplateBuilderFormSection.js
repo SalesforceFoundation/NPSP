@@ -71,8 +71,8 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
      * target field.
      * @param {object} event: object for the custom event
      */
-    handleFieldMetadataError(event) {
-        this.dispatchEvent(new CustomEvent('fieldmetadataerror'));
+    handleFieldMetadataValidation(event) {
+        this.dispatchEvent(new CustomEvent('fieldmetadatavalidation', {detail : event.detail}));
     }
 
     /*******************************************************************************
