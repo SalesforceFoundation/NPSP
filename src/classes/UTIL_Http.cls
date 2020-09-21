@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2020
 * @group Utilities
-* @description Contains common Http constants and methods
+* @description Contains common HttpRequest and HttpResponse constants and methods
 */
 public with sharing class UTIL_Http {
     public static final Integer STATUS_CODE_OK = 200;
@@ -47,10 +47,15 @@ public with sharing class UTIL_Http {
         GET, POST, PATCH
     }
 
+    /***
+    * @description Contains method to send the HttpRequest and parse its response
+    */
     public with sharing class RequestService {
 
         /***
         * @description Sends an HttpRequest 
+        * @param request HttpRequest
+        * @return Response HttpResponse wrapper
         */
         public Response sendRequest(HttpRequest request) {
             HttpResponse response = new Http().send(request);
@@ -58,7 +63,9 @@ public with sharing class UTIL_Http {
         }
 
         /***
-        * @description Creates an http request wrapper for an exception
+        * @description Creates an error response for an exception
+        * @param ex An unexpected exception
+        * @return Response HttpResponse wrapper
         */
         public Response buildErrorResponse(Exception ex) {
             return isTimeout(ex)
@@ -68,6 +75,8 @@ public with sharing class UTIL_Http {
 
         /***
         * @description Checks if the exception is generated due to a callout timeout
+        * @param ex An unexpected exception
+        * @return Boolean Indicates if the exception is generated due to the callout timeout
         */
         public Boolean isTimeout(Exception ex) {
             Boolean isCalloutException = ex instanceof System.CalloutException;
@@ -76,6 +85,8 @@ public with sharing class UTIL_Http {
 
         /***
         * @description Creates a timeout error response
+        * @param ex An unexpected exception
+        * @return Response HttpResponse wrapper
         */
         public Response buildTimeoutResponse(Exception ex) {
             Response response = new Response();
@@ -90,6 +101,8 @@ public with sharing class UTIL_Http {
 
         /***
         * @description Creates an exception error response
+        * @param ex An unexpected exception
+        * @return Response HttpResponse wrapper
         */
         public Response buildBadRequestResponse(Exception ex) {
             Response response = new Response();
@@ -104,8 +117,8 @@ public with sharing class UTIL_Http {
     }
 
     /***
-    * @description Returns contents of the HttpResponse.
-    * HttpResponse can't be directly serialized using JSON.serialize().
+    * @description Returns contents of the HttpResponse since it
+    * cannot be directly serialized using JSON.serialize().
     */
     public with sharing class Response {
         public Map<String, Object> headers = new Map<String, Object>{};
@@ -113,8 +126,15 @@ public with sharing class UTIL_Http {
         public String status;
         public String body;
 
+        /***
+        * @description Default Constructor
+        */
         public Response() {}
 
+        /***
+        * @description Constructor
+        * @param response HttpResponse
+        */
         public Response(HttpResponse response) {
             String[] headerKeys = response.getHeaderKeys();
             if (headerKeys != null) {
@@ -135,16 +155,29 @@ public with sharing class UTIL_Http {
     public with sharing class ErrorResponseBody {
         public List<Error> errors = new List<Error>();
 
+        /***
+        * @description Adds an error with the specified message
+        * @param message An error message
+        * @return ErrorResponseBody This error response body instance
+        */
         public ErrorResponseBody withError(String message) {
-            this.errors.add(new Error(message));
-            return this;
+            return withError(new Error(message));
         }
 
+        /***
+        * @description Adds an error
+        * @param err An error
+        * @return ErrorResponseBody This error response body instance
+        */
         public ErrorResponseBody withError(Error err) {
             this.errors.add(err);
             return this;
         }
 
+        /***
+        * @description Returns the error response body JSON string
+        * @return String
+        */
         public String getAsJson() {
             return JSON.serialize(this);
         }
@@ -156,6 +189,10 @@ public with sharing class UTIL_Http {
     public with sharing class Error {
         public String message;
 
+        /***
+        * @description Constructor
+        * @param message An error message
+        */
         public Error(String message) {
             this.message = message;
         }

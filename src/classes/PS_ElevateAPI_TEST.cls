@@ -38,10 +38,60 @@ public with sharing class PS_ElevateAPI_TEST {
     public static final String COMMITMENT_ID = 'abcd-efgh-ijkl-mnop-qrst';
 
     /**
-    * @description Verifees that the Endpoint is set correctly for Cancel Commitment callout
+    * @description Verifies one-time Payments Purchase HttpRequest 
     */
     @isTest
-    private static void shouldCreateHttpRequestWhenEndpointIsCommitmentCancel() {
+    private static void shouldCreateHttpRequestWhenPaymentsPurchaseEndpoint() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        final String jsonRequestBody = 'purchase request body';
+
+        Test.startTest();
+        HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_ElevateAPI.ElevateEndpoint.PURCHASE)
+            .withBody(jsonRequestBody)
+            .build();
+        Test.stopTest();
+
+        final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
+            + '/v1/payments/verified/purchase';
+
+        assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
+    }
+
+    /**
+    * @description Verifies Commitment creation HttpRequest 
+    */
+    @isTest
+    private static void shouldCreateHttpRequestWhenCreateCommitmentEndpoint() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        final String jsonRequestBody = 'commitment request body';
+
+        Test.startTest();
+        HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT)
+            .withBody(jsonRequestBody)
+            .build();
+        Test.stopTest();
+
+        final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
+            + '/v1/payments/public/commitments';
+
+        assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
+
+        System.assertEquals(
+            PS_IntegrationServiceConfig_TEST.testClientId, 
+            request.getHeader(PS_IntegrationServiceConfig.CLIENTID),
+            'Client Id should be specified in the request header'
+        );
+    }
+
+    /**
+    * @description Verifies Cancel Commitment HttpRequest 
+    */
+    @isTest
+    private static void shouldCreateHttpRequestWhenCancelCommitmentEndpoint() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Test.startTest();
@@ -52,17 +102,107 @@ public with sharing class PS_ElevateAPI_TEST {
             .build();
         Test.stopTest();
 
-        String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
+        final String jsonRequestBody = '';
+        final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
             + '/v1/payments/verified/commitments/'
             + COMMITMENT_ID
-            + '/cancel';
+            + '/cancel';        
+        
+        assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
+    }
 
-        System.assertEquals(expectedEndpoint, request.getEndpoint(),
-            'Endpoint value should match');
-        System.assertEquals(UTIL_Http.Method.POST.name(), request.getMethod(),
-            'The request method should be POST');
-        System.assertEquals(UserInfo.getUserName(), request.getHeader(PS_IntegrationServiceConfig.SFDO_USERNAME),
-            'User name should be specified in the request header');
+    /**
+    * @description Verifies JSON Web Token "sfdo.roles" param is set based on the endpoint
+    */
+    @isTest
+    private static void shouldSetSfdoRolesSpecificToTheEndpoint() {
+        final String sfdoId = 'test id';
+
+        for (PS_ElevateAPI.ElevateEndpoint endpoint : PS_ElevateAPI.ElevateEndpoint.values()) {
+            String roles;
+            if (endpoint == PS_ElevateAPI.ElevateEndpoint.TOKENIZE) {
+                roles = PS_ElevateAPI.ROLE_PAYMENT_TOKENS;
+
+            } else if (endpoint == PS_ElevateAPI.ElevateEndpoint.PURCHASE) {
+                roles = PS_ElevateAPI.ROLE_PAYMENT_PURCHASE;
+
+            } else if (endpoint == PS_ElevateAPI.ElevateEndpoint.COMMITMENT
+                || endpoint == PS_ElevateAPI.ElevateEndpoint.COMMITMENT_CANCEL
+            ) {
+                roles = PS_ElevateAPI.ROLE_PAYMENT_COMMITMENTS;
+            }
+
+            String jwtPayload = new PS_ElevateAPI.JWTPayload(sfdoId, endpoint).getAsString();
+            System.assert(jwtPayload.contains(roles), 
+                'JSON Web Token for ' + endpoint.name() + ' should contain expected roles: ' + jwtPayload);
+        }
+    }
+
+    /**
+    * @description Verifies generate JSON Web Token 
+    */
+    @isTest
+    private static void shouldGenerateJWT() {
+        final String sfdoId = 'test id';
+        PS_ElevateAPI.ElevateEndpoint endpoint = PS_ElevateAPI.ElevateEndpoint.PURCHASE;
+        PS_ElevateAPI.JWTPayload jwtPayload = new PS_ElevateAPI.JWTPayload(sfdoId, endpoint);
+
+        Map<String, String> valueByParam = new Map<String, String>{
+            PS_ElevateAPI.JWT_ISSUER_PARAM => 'ApiKeyManager',
+            PS_ElevateAPI.JWT_EXPIRES_AT_PARAM => String.valueOf(jwtPayload.getExpirationDate(1)),
+            PS_ElevateAPI.JWT_SUBJECT_PARAM => UserInfo.getUserName(),
+            PS_ElevateAPI.JWT_SFDO_ID_PARAM => sfdoId,
+            PS_ElevateAPI.JWT_PRODUCT_PARAM => PS_ElevateAPI.ProductType.CRM.name(),
+            PS_ElevateAPI.JWT_ROLES_PARAM => PS_ElevateAPI.ROLE_PAYMENT_PURCHASE
+        };
+
+        JSONParser parser = JSON.createParser(jwtPayload.getAsString());        
+        while (parser.nextToken() != null) {
+            if (parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                String param = parser.getText();
+
+                parser.nextToken();
+                String value = parser.getText();
+
+                String expectedValue = valueByParam.get(param);
+                System.assertEquals(expectedValue, value, 'JSON Web Token param (' + param + ') value should match');
+            }
+        } 
+    }
+
+
+    // Helpers
+    /////////////
+
+    /**
+    * @description Verifies HttpRequest is as expected
+    * @param request HttpRequest to verify
+    * @param endpoint Expected Elevate API endpoint
+    * @param method Expected HttpRequest method
+    * @param jsonRequestBody Expected HttpRequest body
+    * @return void
+    */
+    private static void assertRequest(HttpRequest request, String endpoint, UTIL_Http.Method method, String jsonRequestBody) {
+        System.assertEquals(endpoint, request.getEndpoint(), 'Endpoint should match');
+        System.assertEquals(method.name(), request.getMethod(), 'The HttpRequest method should match');
+
+        System.assertEquals(
+            UserInfo.getUserName(), 
+            request.getHeader(PS_IntegrationServiceConfig.SFDO_USERNAME),
+            'User name should be specified in the request header'
+        );
+        System.assertEquals(
+            PS_IntegrationServiceConfig_TEST.testMerchantId, 
+            request.getHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS),
+            'Merchant Id should be specified in the request header'
+        );
+        System.assertNotEquals(
+            null, 
+            request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN), 
+            'JSON Web Token should be specified in the request header'
+        );
+        
+        System.assertEquals(jsonRequestBody, request.getBody(), 'Request body should match');
     }
 
 }

@@ -35,8 +35,6 @@
 */
 public inherited sharing class PS_ElevateAPI {
 
-    public class APIException extends Exception {}
-
     public enum ElevateEndpoint {
         TOKENIZE,
         PURCHASE,
@@ -56,11 +54,25 @@ public inherited sharing class PS_ElevateAPI {
         THIRD_PARTY_GIVING_PAGE
     }
 
+    public static String ROLE_PAYMENT_TOKENS = 'Payments.Tokens';
+    public static String ROLE_PAYMENT_PURCHASE = 'Payments.Purchase';
+    public static String ROLE_PAYMENT_COMMITMENTS = 'Payments.Commitments';
+
+    public static String JWT_ISSUER_PARAM = 'iss';
+    public static String JWT_EXPIRES_AT_PARAM = 'exp';
+    public static String JWT_SUBJECT_PARAM = 'sub';
+    public static String JWT_SFDO_ID_PARAM = 'sfdo.id';
+    public static String JWT_PRODUCT_PARAM = 'sfdo.product';
+    public static String JWT_ROLES_PARAM = 'sfdo.roles';
+
 
     /***
     * @description Builds an HttpRequest
     */
     public with sharing class RequestBuilder {
+        /***
+        * @description Returns Elevate Payments Service configuration
+        */
         private PS_IntegrationServiceConfig.Service configService {
             get {
                 if (configService == null) {
@@ -76,26 +88,50 @@ public inherited sharing class PS_ElevateAPI {
         private String jsonBody;
         private String commitmentId;
 
+        /***
+        * @description Sets HttpRequest method
+        * @param method HttpRequest method
+        * @return RequestBuilder This request builder instance
+        */
         public RequestBuilder withMethod(UTIL_Http.Method method) {
             this.method = method;
             return this;
         }
 
+        /***
+        * @description Sets HttpRequest endpoint
+        * @param endpoint API endpoint
+        * @return RequestBuilder This request builder instance
+        */
         public RequestBuilder withEndpoint(ElevateEndpoint endpoint) {
             this.endpoint = endpoint;
             return this;
         }
 
-        public RequestBuilder withBody(String jsonBody) {
-            this.jsonBody = jsonBody;
-            return this;
-        }
-
+        /***
+        * @description Incorporates the Commitment Id into the endpoint where applicable
+        * @param commitmentId Recurring Donation Commitment Id
+        * @return RequestBuilder This request builder instance
+        */
         public RequestBuilder withCommitmentId(String commitmentId) {
             this.commitmentId = commitmentId;
             return this;
         }
 
+        /***
+        * @description Sets HttpRequest body
+        * @param jsonBody HttpRequest JSON body
+        * @return RequestBuilder This request builder instance
+        */
+        public RequestBuilder withBody(String jsonBody) {
+            this.jsonBody = jsonBody;
+            return this;
+        }
+
+        /***
+        * @description Builds a HttpRequest
+        * @return HttpRequest
+        */
         public HttpRequest build() {
             HttpRequest request = new HttpRequest();
 
@@ -111,6 +147,12 @@ public inherited sharing class PS_ElevateAPI {
             return request;
         }
 
+        /***
+        * @description Sets HttpRequest header
+        * @param request HttpRequest
+        * @param endpoint API endpoint
+        * @return void
+        */
         private void setHeader(HttpRequest request, ElevateEndpoint endpoint) {
             request.setHeader('Content-Type', 'application/json;charset=UTF-8');
             request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt(endpoint));
@@ -123,7 +165,9 @@ public inherited sharing class PS_ElevateAPI {
                 );
             }
 
-            if (String.isNotBlank(configService.getClientId())) {
+            if (String.isNotBlank(configService.getClientId())
+                && endpoint == ElevateEndpoint.COMMITMENT
+            ) {
                 request.setHeader(
                     PS_IntegrationServiceConfig.CLIENTID,
                     configService.getClientId()
@@ -131,6 +175,12 @@ public inherited sharing class PS_ElevateAPI {
             }
         }
 
+        /***
+        * @description Constructs HttpRequest endpoint including the endpoint root
+        * @param endpoint API endpoint
+        * @param commitmentId Recurring Donation Commitment Id (required for cancel commitment endpoint only)
+        * @return String Full endpoint
+        */
         private String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
             String value;
             if (endpoint == ElevateEndpoint.TOKENIZE) {
@@ -151,6 +201,11 @@ public inherited sharing class PS_ElevateAPI {
                 : (configService.getEndpointRoot() + value);
         }
 
+        /***
+        * @description Constructs JSON Web Token 
+        * @param endpoint API endpoint
+        * @return String JSON Web Token
+        */
         private String getJwt(ElevateEndpoint endpoint) {
             JWTPayload payload = new JWTPayload(configService.getProductId(), endpoint);
 
@@ -170,57 +225,82 @@ public inherited sharing class PS_ElevateAPI {
         String sfdoId;
         ElevateEndpoint endpoint;
 
+        /***
+        * @description Constructor 
+        * @param sfdoId SFDO Id
+        * @param endpoint API endpoint
+        */
         public JWTPayload(String sfdoId, ElevateEndpoint endpoint) {
             this.sfdoId = sfdoId;
             this.endpoint = endpoint;
         }
 
-        private Long getExpirationDate(Integer daysFromNow) {
-            DateTime expirationDate = DateTime.now().addDays(daysFromNow);
-
-            return getEpochTimestamp(expirationDate);
-        }
-
-        private Long getEpochTimestamp(DateTime dt) {
-            return dt.getTime() / 1000; // convert milliseconds to seconds as needed by iat
-        }
-
+        /***
+        * @description Sets JSON Web Token params and values
+        * @return String JSON Web Token
+        */
         public String getAsString() {
             JSONGenerator generator = JSON.createGenerator(false);
 
             generator.writeStartObject();
-            generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
-            generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
-            generator.writeStringField('sub', UserInfo.getUserName()); // Subject
+            generator.writeStringField(JWT_ISSUER_PARAM, 'ApiKeyManager'); 
+            generator.writeNumberField(JWT_EXPIRES_AT_PARAM, getExpirationDate(1)); 
+            generator.writeStringField(JWT_SUBJECT_PARAM, UserInfo.getUserName()); 
 
             if (sfdoId != null) {
-                generator.writeStringField('sfdo.id', sfdoId);
+                generator.writeStringField(JWT_SFDO_ID_PARAM, sfdoId);
             }
 
-            generator.writeStringField('sfdo.product', ProductType.CRM.name());
+            generator.writeStringField(JWT_PRODUCT_PARAM, ProductType.CRM.name());
 
             setRoles(generator);
 
             return generator.getAsString();
         }
 
+        /***
+        * @description Calculates expiration date from today
+        * @param daysFromNow Number of days from now
+        * @return Long JSON Web Token expiration date
+        */
+        @TestVisible
+        private Long getExpirationDate(Integer daysFromNow) {
+            DateTime expirationDate = DateTime.now().addDays(daysFromNow);
+
+            return getEpochTimestamp(expirationDate);
+        }
+
+        /***
+        * @description Calculates Epoch timestamp
+        * @param dt Datetime value
+        * @return Long 
+        */
+        private Long getEpochTimestamp(DateTime dt) {
+            return dt.getTime() / 1000; // convert milliseconds to seconds as needed by iat
+        }
+
+        /***
+        * @description Sets SFDO roles required for the request authorization 
+        * @param generator JSON Generator containing JWT params and values
+        * @return void 
+        */
         private void setRoles(JSONGenerator generator) {
             String value = '';
 
             if (endpoint == ElevateEndpoint.TOKENIZE) {
-                value = 'Payments.Tokens';
+                value = ROLE_PAYMENT_TOKENS;
 
             } else if (endpoint == ElevateEndpoint.PURCHASE) {
-                value = 'Payments.Purchase';
+                value = ROLE_PAYMENT_PURCHASE;
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT
                 || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
             ) {
-                value = 'Payments.Commitments';
+                value = ROLE_PAYMENT_COMMITMENTS;
             }
 
             if (String.isNotBlank(value)) {
-                generator.writeStringField('sfdo.roles', value);
+                generator.writeStringField(JWT_ROLES_PARAM, value);
             }
         }
     }

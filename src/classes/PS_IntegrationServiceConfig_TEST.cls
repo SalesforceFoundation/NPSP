@@ -33,10 +33,11 @@
 @IsTest
 public with sharing class PS_IntegrationServiceConfig_TEST {
 
-    private static String testMerchantId = 'abc123-xyz456';
-    private static String testApiKey = 'def1234-tuv4567';
-    private static String testMakanaApiKey = 'ghi12345-qrs45678';
+    public static String testMerchantId = 'abc123-xyz456';
+    public static String testApiKey = 'def1234-tuv4567';
+    public static String testMakanaApiKey = 'ghi12345-qrs45678';
     public static String testBaseUrl = 'https://elevate.test.com';
+    public static String testClientId = '500a8000-1000-00bc-000e-d0fg0000h0i0';
 
     // Key-Values by service name
     public static final Map<String, List<Map<String, String>>> testConfig = new Map<String, List<Map<String, String>>>{
@@ -55,8 +56,8 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                     'value' => testBaseUrl
                 },
                 new Map<String, String>{
-                    'key' => 'sfdo.roles',
-                    'value' => 'Payments.Purchase'
+                    'key' => PS_IntegrationServiceConfig.CLIENTID,
+                    'value' => testClientId
                 }
             }
         };
