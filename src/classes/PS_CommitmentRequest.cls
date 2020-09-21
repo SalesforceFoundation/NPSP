@@ -44,14 +44,19 @@ public with sharing class PS_CommitmentRequest {
     }
 
     /***
-     * @description Translates the currency amt into the lowest denominator; e.g. dollars into cents
+     * @description Translates the currency amount into the lowest denominator; e.g. dollars into cents
      */
     private static Map<String, Integer> currencyMultiplierByCode = new Map<String, Integer>{
         'USD' => 100
     };
 
     /***
-     * @description Translates the Installment Period into Elevate API frequency value
+     * @description Default currency multiplier
+     */
+    private static Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
+
+    /***
+     * @description Translates the Installment Period into the Elevate API frequency value
      */
     private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => 'YEAR',
@@ -61,6 +66,9 @@ public with sharing class PS_CommitmentRequest {
         RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH => 'MONTH'
     };
 
+    /***
+     * @description Payment Services configuration
+     */
     @TestVisible
     private PS_IntegrationServiceConfig.Service configService {
         get {
@@ -105,8 +113,13 @@ public with sharing class PS_CommitmentRequest {
     * @param rd Recurring Donation record
     * @return void
     */
+    @TestVisible
     private void setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
-        Boolean isContactDonor = rd.npe03__Contact__c != null;
+        Boolean isContactDonor = rd.npe03__Contact__c != null
+            && (
+                rd.npe03__Organization__c == null 
+                || rd.npe03__Organization__c == rd.npe03__Contact__r.AccountId
+            );
 
         if (isContactDonor) {
             reqBody.withDonor(rd.npe03__Contact__r);
@@ -122,8 +135,9 @@ public with sharing class PS_CommitmentRequest {
     * @param currencyCode Currency ISO Code
     * @return void
     */
+    @TestVisible
     private void setSchedules(RequestBody reqBody, List<RecurringDonationSchedule__c> rdSchedules, String currencyCode) {
-        Integer currencyMultiplier = currencyMultiplierByCode.get(currencyCode);
+        Integer currencyMultiplier = getCurrencyMultiplier(currencyCode);
 
         List<Schedule> schedules = new List<Schedule>();
         for (RecurringDonationSchedule__c rdSchedule : rdSchedules) {
@@ -134,9 +148,24 @@ public with sharing class PS_CommitmentRequest {
     }
 
     /**
+    * @description Determines the currency multiplier
+    * @param currencyCode Currency ISO Code
+    * @return Integer
+    */
+    private Integer getCurrencyMultiplier(String currencyCode) {
+        Integer currencyMultiplier = currencyMultiplierByCode.get(currencyCode);
+
+        return currencyMultiplier == null
+            ? DEFAULT_CURRENCY_MULTIPLIER
+            : currencyMultiplier;
+    }
+
+    /**
+    * @description Queries Recurring Donation fields and related schedules
     * @param recordId RecurringDonation.RecordId
     * @return Recurring Donation object
     */
+    @TestVisible
     private npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
         Set<String> fields = new Set<String>{
             'Id',
@@ -144,6 +173,7 @@ public with sharing class PS_CommitmentRequest {
             'npe03__Organization__c',
             'npe03__Organization__r.Name',
             'npe03__Contact__c',
+            'npe03__Contact__r.AccountId',
             'npe03__Contact__r.FirstName',
             'npe03__Contact__r.LastName'
         };
@@ -180,8 +210,8 @@ public with sharing class PS_CommitmentRequest {
     */
     public with sharing class RequestBody {
         /***
-        * Required properties
-        */
+         * Required properties
+         */
         public String firstName;
         public String lastName;
         public String merchantId;
@@ -193,10 +223,13 @@ public with sharing class PS_CommitmentRequest {
         public List<Schedule> schedules;
 
         /***
-        * Optional properties
-        */
+         * @description Metadata containing origin type and other properties
+         */
         public Metadata metadata;
 
+        /***
+         * @description Constructor
+         */
         public RequestBody() {
             //set defaults
             currencyCode = UserInfo.getDefaultCurrency();
@@ -204,26 +237,51 @@ public with sharing class PS_CommitmentRequest {
             paymentMethodType = PaymentMethod.CARD.name();
         }
 
+        /**
+         * @description Sets merchant Id
+         * @param merchantId Payments merchant Id
+         * @return RequestBody This request body instance
+         */
         public RequestBody withMerchantId(String merchantId) {
             this.merchantId = merchantId;
             return this;
         }
 
+        /**
+         * @description Sets gateway Id
+         * @param gatewayId Payments gateway Id
+         * @return RequestBody This request body instance
+         */
         public RequestBody withGatewayId(String gatewayId) {
             this.gatewayId = gatewayId;
             return this;
         }
 
+        /**
+         * @description Sets currency code value
+         * @param currencyCode Currency ISO Code
+         * @return RequestBody This request body instance
+         */
         public RequestBody withCurrency(String currencyCode) {
             this.currencyCode = currencyCode;
             return this;
         }
 
+        /**
+         * @description Sets payment token, for example credit card token
+         * @param token Token
+         * @return RequestBody This request body instance
+         */
         public RequestBody withPaymentMethodToken(String token) {
             this.paymentMethodToken = token;
             return this;
         }
 
+        /**
+         * @description Sets donor related info such as first and last name required fields
+         * @param contact Donor
+         * @return RequestBody This request body instance
+         */
         public RequestBody withDonor(Contact contact) {
             if (contact == null) {
                 return this;
@@ -235,6 +293,11 @@ public with sharing class PS_CommitmentRequest {
             return this;
         }
 
+        /**
+         * @description Sets donor related info
+         * @param organization Donor
+         * @return RequestBody This request body instance
+         */
         public RequestBody withDonor(Account organization) {
             if (organization == null) {
                 return this;
@@ -246,45 +309,57 @@ public with sharing class PS_CommitmentRequest {
             return this;
         }
 
+        /**
+         * @description Sets schedules data
+         * @param schedules Payments API schedules
+         * @return RequestBody This request body instance
+         */
         public RequestBody withSchedules(List<Schedule> schedules) {
             this.schedules = schedules;
             return this;
         }
 
+        /**
+         * @description Sets metadata
+         * @param metadata Payments API metadata
+         * @return RequestBody This request body instance
+         */
         public RequestBody withMetadata(Metadata metadata) {
             this.metadata = metadata;
             return this;
         }
 
-        public RequestBody applyAll(Map<String, Object> requestBodyParameters) {
-            Map<String, Object> selfAsUntyped = (Map<String, Object>) JSON.deserializeUntyped(getAsJson());
-
-            for (String key : requestBodyParameters.keySet()) {
-                selfAsUntyped.put(key, requestBodyParameters.get(key));
-            }
-
-            return (RequestBody) JSON.deserialize(JSON.serialize(selfAsUntyped), RequestBody.class);
-        }
-
+        /**
+         * @description Returns this request body as a JSON string
+         * @return String
+         */
         public String getAsJson() {
             return JSON.serialize(this);
         }
     }
 
     /***
-    * @description Contains Recurring Donation Schedule info to be relayed to the Elevate API
-    */
+     * @description Contains Recurring Donation Schedule info to be relayed to the Elevate API
+     */
     public with sharing class Schedule {
         public Integer recurringPaymentAmount;
         public String frequency;
         public Integer frequencyInterval;
         public String firstOccurrenceOn;
 
+        /**
+         * @description Schedule constructor
+         * @param rdSchedule Recurring Donation Schedule
+         * @param currencyMultiplier Currency multiplier
+         */
         public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier) {
-            this.recurringPaymentAmount = Integer.valueOf(rdSchedule.InstallmentAmount__c * currencyMultiplier);
+            Double amount = rdSchedule.InstallmentAmount__c * currencyMultiplier;
+            this.recurringPaymentAmount = amount == null ? null : Integer.valueOf(amount);
 
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
-            this.frequencyInterval = Integer.valueOf(rdSchedule.InstallmentFrequency__c);
+            this.frequencyInterval = rdSchedule.InstallmentFrequency__c == null
+                ? null
+                : Integer.valueOf(rdSchedule.InstallmentFrequency__c);
 
             this.firstOccurrenceOn = getNextDonationDate(rdSchedule);
         }
@@ -304,13 +379,16 @@ public with sharing class PS_CommitmentRequest {
     }
 
     /***
-    * @description Assists in constructing the metadata property.
-    */
+     * @description Assists in constructing the metadata property.
+     */
     public with sharing class Metadata {
         public String originType;
         public String originDisplayName;
         public String campaignCode;
 
+        /**
+         * @description Metadata constructor
+         */
         public Metadata() {
             //set defaults
             this.originType = PS_Request.OriginType.CRM.name();

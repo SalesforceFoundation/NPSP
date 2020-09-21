@@ -33,7 +33,7 @@
 * @group Elevate Payment Services
 * @description Contains common Elevate payment services API tests
 */
-@isTest
+@IsTest(IsParallel=true)
 private with sharing class PS_Request_TEST {
     private static final String COMMITMENT_ID = 'abcd-efgh-ijkl-mnop-qrst';
 

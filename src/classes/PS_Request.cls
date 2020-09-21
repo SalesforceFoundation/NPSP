@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2020
 * @group Elevate Payment Services
-* @description Contains common Elevate payment services API methods to build an HttpRequest
+* @description Contains common Elevate payment services methods to build an HttpRequest
 */
 public inherited sharing class PS_Request {
 

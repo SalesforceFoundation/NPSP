@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Contains tests for the common HttpRequest and HttpResponse methods 
 */
-@IsTest
+@IsTest(IsParallel=true)
 public with sharing class UTIL_Http_TEST {
 
     /**

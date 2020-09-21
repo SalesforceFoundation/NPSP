@@ -34,6 +34,7 @@
 public with sharing class PS_IntegrationServiceConfig_TEST {
 
     public static String testMerchantId = 'abc123-xyz456';
+    public static String testGatewayId = 'def123-ghi456';
     public static String testApiKey = 'def1234-tuv4567';
     public static String testMakanaApiKey = 'ghi12345-qrs45678';
     public static String testBaseUrl = 'https://elevate.test.com';
@@ -46,6 +47,10 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                 new Map<String, String>{
                     'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
                     'value' => testMerchantId
+                },
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.SFDO_GATEWAYIDS,
+                    'value' => testGatewayId
                 },
                 new Map<String, String>{
                     'key' => PS_IntegrationServiceConfig.API_KEY,

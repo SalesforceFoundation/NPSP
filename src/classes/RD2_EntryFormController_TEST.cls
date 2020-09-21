@@ -36,6 +36,28 @@
 */
 @isTest
 private with sharing class RD2_EntryFormController_TEST {
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(c.Id)
+            .withAmount(25)
+            .withDefaultValues()
+            .withInstallmentPeriodWeekly()
+            .withDayOfMonth('1')
+            .withInstallmentFrequency(2)
+            .build();
+        insert rd;
+	}
 
     /***
     * @description Verifies that Entry Form Controller gathers the correct org setting
@@ -135,18 +157,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static void shouldReturnContactDonorType() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(c.Id)
-            .withAmount(25)
-            .withDefaultValues()
-            .withInstallmentPeriodWeekly()
-            .withDayOfMonth('1')
-            .withInstallmentFrequency(2)
-            .build();
-        insert rd;
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
         Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
@@ -177,10 +188,12 @@ private with sharing class RD2_EntryFormController_TEST {
     private static void shouldValidateUserMissingPermissions() {
         Id stdProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.PROFILE_STANDARD_USER LIMIT 1].Id;
 
-        FieldPermissions fldPerm = [SELECT Id, PermissionsRead, PermissionsEdit
-                                    FROM FieldPermissions
-                                    WHERE Parent.ProfileId = :stdProfileId
-                                    AND Field = 'npe03__Recurring_Donation__c.npe03__Installment_Period__c'];
+        FieldPermissions fldPerm = [
+            SELECT Id, PermissionsRead, PermissionsEdit
+            FROM FieldPermissions
+            WHERE Parent.ProfileId = :stdProfileId
+            AND Field = 'npe03__Recurring_Donation__c.npe03__Installment_Period__c'
+        ];
         fldPerm.PermissionsRead = false;
         fldPerm.PermissionsEdit = false;
         update fldPerm;
@@ -191,6 +204,7 @@ private with sharing class RD2_EntryFormController_TEST {
             System.assert(!hasPerms, 'Should determine that the Standard User is missing permissions');
         }
     }
+
     /***
     * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields 
     */
@@ -205,9 +219,56 @@ private with sharing class RD2_EntryFormController_TEST {
                 'Excluded fields should not be return:' + field.apiName);
             System.assert(!field.apiName.startsWith('npsp__'),
                 'NPSP package field should not be return:' + field.apiName);
-                System.assert(!field.apiName.startsWith('npe03__'),
+            System.assert(!field.apiName.startsWith('npe03__'),
                 'NPSP package field should not be return:' + field.apiName);
         }
+    }
+
+    /***
+    * @description Verifies Commitment Request Body is built as expected 
+    */
+    @isTest
+    private static void shouldReturnCommitmentRequestBody() {        
+		Id recordId = rdGateway.getRecords()[0].Id;
+        final String paymentMethodToken = 'token-abcd-efgh-ijkl-mnop-qrst';
+
+        String jsonRequestBody = RD2_EntryFormController.getCommitmentRequestBody(recordId, paymentMethodToken);
+        System.assert(String.isNotBlank(jsonRequestBody), 'The Commitment request body should be returned');
+
+		PS_CommitmentRequest.RequestBody requestBody = (PS_CommitmentRequest.RequestBody) JSON.deserialize(
+            jsonRequestBody, PS_CommitmentRequest.RequestBody.class
+        );
+
+        System.assertNotEquals(null, requestBody, 'The Commitment request body should be converted successfully');
+        System.assertEquals(paymentMethodToken, requestBody.paymentMethodToken, 'The payment token should match');        
+    }
+
+    /***
+    * @description Verifies Commitment response is created upon successful creation
+    */
+    @isTest
+    private static void shouldReturnResponseWhenCommitmentIsCreated() {     
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+		Id recordId = rdGateway.getRecords()[0].Id;
+        final String paymentMethodToken = 'token-abcd-efgh-ijkl-mnop-qrst';
+        final String jsonResponseBody = '{"id":"test commitment id","status":"ACTIVE"}';
+
+        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_CREATED)
+            .withStatus(UTIL_Http.STATUS_OK)
+            .withBody(jsonResponseBody);
+
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, callout);
+
+        String jsonRequestBody = RD2_EntryFormController.getCommitmentRequestBody(recordId, paymentMethodToken);
+        UTIL_Http.Response response = RD2_EntryFormController.sendCommitmentRequest(recordId, jsonRequestBody);
+        Test.stopTest();
+
+        System.assertNotEquals(null, response, 'The Commitment response should be returned');
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 
+            'The response status code should match: ' + response);        
     }
 
 }
