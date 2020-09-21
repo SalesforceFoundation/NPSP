@@ -31,9 +31,9 @@
 * @author Salesforce.org
 * @date 2020
 * @group Elevate Payment Services
-* @description Contains Elevate payment services API methods to send a commitment HttpRequest
+* @description Contains Elevate payment services methods specific to building a commitment request
 */
-public with sharing class PS_ElevateCommitmentAPI {
+public with sharing class PS_CommitmentRequest {
 
     public enum CommitmentType {
         SUSTAINER
@@ -298,7 +298,6 @@ public with sharing class PS_ElevateCommitmentAPI {
             Date donationDate = new RD2_ScheduleService()
                 .getNextDonationDateGreaterThan(rdSchedule, RD2_ScheduleService.currentDate);
 
-
             DateTime donationDatetime = Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
             return donationDatetime.format('yyyy-MM-dd');
         }
@@ -314,7 +313,7 @@ public with sharing class PS_ElevateCommitmentAPI {
 
         public Metadata() {
             //set defaults
-            this.originType = PS_ElevateAPI.OriginType.CRM.name();
+            this.originType = PS_Request.OriginType.CRM.name();
         }
     }
 }

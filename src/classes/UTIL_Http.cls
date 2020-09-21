@@ -39,9 +39,10 @@ public with sharing class UTIL_Http {
     public static final Integer STATUS_CODE_BAD_REQUEST = 400;
     public static final Integer STATUS_CODE_REQUEST_TIMEOUT = 408;
 
-    public static final String TIMED_OUT_MESSAGE = 'timed out';
-    public static final String STATUS_TIMED_OUT = 'Timed out';
     public static final String STATUS_OK = 'OK';
+    public static final String STATUS_TIMED_OUT = 'Request Timeout';
+    
+    public static final String TIMED_OUT_MESSAGE = 'timed out';
 
     public enum Method {
         GET, POST, PATCH

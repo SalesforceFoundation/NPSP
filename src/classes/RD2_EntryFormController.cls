@@ -269,8 +269,8 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static String getCommitmentRequestBody(Id recordId, String paymentMethodToken) {
         try {
-            PS_ElevateCommitmentAPI api = new PS_ElevateCommitmentAPI();
-            PS_ElevateCommitmentAPI.RequestBody requestBody = api.getRequestBody(recordId, paymentMethodToken);
+            PS_CommitmentRequest request = new PS_CommitmentRequest();
+            PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(recordId, paymentMethodToken);
             return JSON.serialize(requestBody);
 
         } catch (Exception ex) {
@@ -289,20 +289,16 @@ public with sharing class RD2_EntryFormController {
     */
     @AuraEnabled
     public static String createCommitment(Id recordId, String jsonRequestBody) {
-        UTIL_Http.Response response;
+        UTIL_Http.Response response = sendCommitmentRequest(recordId, jsonRequestBody);
 
-        try {
-            response = sendCommitmentRequest(recordId, jsonRequestBody);
-            if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
-                //update RD fields: Commitment Id, credit card expiry date and last 4
-            }
+        // Future WIs work:
+        // If the commitment is created, then update RD fields: 
+        // Commitment Id, credit card expiry date and last 4.
 
-        } catch (Exception ex) {
-            response = requestService.buildErrorResponse(ex);
-
-        } finally {
-            //create an error log if the response contains errors            
-        }
+        // Ensure DML error (if any) on the RD update is returned to the LWC as a response.
+        
+        // If the response contains an error, regardless if the commitment is created, or
+        // the RD update failed, create an error log
 
         return JSON.serialize(response);
     }
@@ -317,9 +313,9 @@ public with sharing class RD2_EntryFormController {
         UTIL_Http.Response response = new UTIL_Http.Response();
 
         try {
-            HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+            HttpRequest request = new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
-                .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT)
+                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
                 .withBody(jsonRequestBody)
                 .build();
 

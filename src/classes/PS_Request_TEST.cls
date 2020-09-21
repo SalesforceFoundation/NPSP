@@ -34,8 +34,8 @@
 * @description Contains common Elevate payment services API tests
 */
 @isTest
-public with sharing class PS_ElevateAPI_TEST {
-    public static final String COMMITMENT_ID = 'abcd-efgh-ijkl-mnop-qrst';
+private with sharing class PS_Request_TEST {
+    private static final String COMMITMENT_ID = 'abcd-efgh-ijkl-mnop-qrst';
 
     /**
     * @description Verifies one-time Payments Purchase HttpRequest 
@@ -46,9 +46,9 @@ public with sharing class PS_ElevateAPI_TEST {
         final String jsonRequestBody = 'purchase request body';
 
         Test.startTest();
-        HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+        HttpRequest request = new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.POST)
-            .withEndpoint(PS_ElevateAPI.ElevateEndpoint.PURCHASE)
+            .withEndpoint(PS_Request.ElevateEndpoint.PURCHASE)
             .withBody(jsonRequestBody)
             .build();
         Test.stopTest();
@@ -68,9 +68,9 @@ public with sharing class PS_ElevateAPI_TEST {
         final String jsonRequestBody = 'commitment request body';
 
         Test.startTest();
-        HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+        HttpRequest request = new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.POST)
-            .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
             .withBody(jsonRequestBody)
             .build();
         Test.stopTest();
@@ -95,9 +95,9 @@ public with sharing class PS_ElevateAPI_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Test.startTest();
-        HttpRequest request = new PS_ElevateAPI.RequestBuilder()
+        HttpRequest request = new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.POST)
-            .withEndpoint(PS_ElevateAPI.ElevateEndpoint.COMMITMENT_CANCEL)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_CANCEL)
             .withCommitmentId(COMMITMENT_ID)
             .build();
         Test.stopTest();
@@ -118,21 +118,21 @@ public with sharing class PS_ElevateAPI_TEST {
     private static void shouldSetSfdoRolesSpecificToTheEndpoint() {
         final String sfdoId = 'test id';
 
-        for (PS_ElevateAPI.ElevateEndpoint endpoint : PS_ElevateAPI.ElevateEndpoint.values()) {
+        for (PS_Request.ElevateEndpoint endpoint : PS_Request.ElevateEndpoint.values()) {
             String roles;
-            if (endpoint == PS_ElevateAPI.ElevateEndpoint.TOKENIZE) {
-                roles = PS_ElevateAPI.ROLE_PAYMENT_TOKENS;
+            if (endpoint == PS_Request.ElevateEndpoint.TOKENIZE) {
+                roles = PS_Request.ROLE_PAYMENT_TOKENS;
 
-            } else if (endpoint == PS_ElevateAPI.ElevateEndpoint.PURCHASE) {
-                roles = PS_ElevateAPI.ROLE_PAYMENT_PURCHASE;
+            } else if (endpoint == PS_Request.ElevateEndpoint.PURCHASE) {
+                roles = PS_Request.ROLE_PAYMENT_PURCHASE;
 
-            } else if (endpoint == PS_ElevateAPI.ElevateEndpoint.COMMITMENT
-                || endpoint == PS_ElevateAPI.ElevateEndpoint.COMMITMENT_CANCEL
+            } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
             ) {
-                roles = PS_ElevateAPI.ROLE_PAYMENT_COMMITMENTS;
+                roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
             }
 
-            String jwtPayload = new PS_ElevateAPI.JWTPayload(sfdoId, endpoint).getAsString();
+            String jwtPayload = new PS_Request.JWTPayload(sfdoId, endpoint).getAsString();
             System.assert(jwtPayload.contains(roles), 
                 'JSON Web Token for ' + endpoint.name() + ' should contain expected roles: ' + jwtPayload);
         }
@@ -142,18 +142,18 @@ public with sharing class PS_ElevateAPI_TEST {
     * @description Verifies generate JSON Web Token 
     */
     @isTest
-    private static void shouldGenerateJWT() {
+    private static void shouldGenerateJSONWebToken() {
         final String sfdoId = 'test id';
-        PS_ElevateAPI.ElevateEndpoint endpoint = PS_ElevateAPI.ElevateEndpoint.PURCHASE;
-        PS_ElevateAPI.JWTPayload jwtPayload = new PS_ElevateAPI.JWTPayload(sfdoId, endpoint);
+        PS_Request.ElevateEndpoint endpoint = PS_Request.ElevateEndpoint.PURCHASE;
+        PS_Request.JWTPayload jwtPayload = new PS_Request.JWTPayload(sfdoId, endpoint);
 
         Map<String, String> valueByParam = new Map<String, String>{
-            PS_ElevateAPI.JWT_ISSUER_PARAM => 'ApiKeyManager',
-            PS_ElevateAPI.JWT_EXPIRES_AT_PARAM => String.valueOf(jwtPayload.getExpirationDate(1)),
-            PS_ElevateAPI.JWT_SUBJECT_PARAM => UserInfo.getUserName(),
-            PS_ElevateAPI.JWT_SFDO_ID_PARAM => sfdoId,
-            PS_ElevateAPI.JWT_PRODUCT_PARAM => PS_ElevateAPI.ProductType.CRM.name(),
-            PS_ElevateAPI.JWT_ROLES_PARAM => PS_ElevateAPI.ROLE_PAYMENT_PURCHASE
+            PS_Request.JWT_ISSUER_PARAM => 'ApiKeyManager',
+            PS_Request.JWT_EXPIRES_AT_PARAM => String.valueOf(jwtPayload.getExpirationDate(1)),
+            PS_Request.JWT_SUBJECT_PARAM => UserInfo.getUserName(),
+            PS_Request.JWT_SFDO_ID_PARAM => sfdoId,
+            PS_Request.JWT_PRODUCT_PARAM => PS_Request.ProductType.CRM.name(),
+            PS_Request.JWT_ROLES_PARAM => PS_Request.ROLE_PAYMENT_PURCHASE
         };
 
         JSONParser parser = JSON.createParser(jwtPayload.getAsString());        

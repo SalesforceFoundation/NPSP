@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-      
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -31,39 +31,9 @@
 * @author Salesforce.org
 * @date 2020
 * @group Elevate Payment Services
-* @description Contains common Elevate payment services methods 
+* @description Tests verifying Elevate payment services commitment request
 */
-public without sharing class PS_ElevateService {
-
-    /***
-    * @description Checks whether an org is a customer of Elevate Payment Services
-    * @return Boolean
-    */
-    @AuraEnabled
-    public static Boolean isElevateCustomer() {
-        Boolean isCustomer = false;
-        try {
-            PS_IntegrationServiceConfig config = new PS_IntegrationServiceConfig();
-            isCustomer = config.isIntegrationEnabled();
-            
-        } catch (Exception ex) {
-            throwAuraHandledException(ex.getMessage());
-        }
-
-        return isCustomer;
-    }
-
-    /***
-    * @description Throws AuraHandledException
-    * The wrapping of the error message again is required
-    * so the specific message is displayed instead of generic "Script thrown exception".
-    * @param errMessage Exception message that needs to be set again
-    * @return void
-    */
-    private static void throwAuraHandledException(String errMessage) {
-        AuraHandledException e = new AuraHandledException(errMessage);
-        e.setMessage(errMessage);
-        throw e;
-    }
+@isTest
+private with sharing class PS_CommitmentRequest_TEST {
 
 }

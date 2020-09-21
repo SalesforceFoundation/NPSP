@@ -31,9 +31,9 @@
 * @author Salesforce.org
 * @date 2020
 * @group Elevate Payment Services
-* @description Contains common Elevate payment services API methods to send HttpRequest and return response
+* @description Contains common Elevate payment services API methods to build an HttpRequest
 */
-public inherited sharing class PS_ElevateAPI {
+public inherited sharing class PS_Request {
 
     public enum ElevateEndpoint {
         TOKENIZE,
@@ -69,7 +69,7 @@ public inherited sharing class PS_ElevateAPI {
     /***
     * @description Builds an HttpRequest
     */
-    public with sharing class RequestBuilder {
+    public with sharing class Builder {
         /***
         * @description Returns Elevate Payments Service configuration
         */
@@ -91,9 +91,9 @@ public inherited sharing class PS_ElevateAPI {
         /***
         * @description Sets HttpRequest method
         * @param method HttpRequest method
-        * @return RequestBuilder This request builder instance
+        * @return Builder This request builder instance
         */
-        public RequestBuilder withMethod(UTIL_Http.Method method) {
+        public Builder withMethod(UTIL_Http.Method method) {
             this.method = method;
             return this;
         }
@@ -101,9 +101,9 @@ public inherited sharing class PS_ElevateAPI {
         /***
         * @description Sets HttpRequest endpoint
         * @param endpoint API endpoint
-        * @return RequestBuilder This request builder instance
+        * @return Builder This request builder instance
         */
-        public RequestBuilder withEndpoint(ElevateEndpoint endpoint) {
+        public Builder withEndpoint(ElevateEndpoint endpoint) {
             this.endpoint = endpoint;
             return this;
         }
@@ -111,9 +111,9 @@ public inherited sharing class PS_ElevateAPI {
         /***
         * @description Incorporates the Commitment Id into the endpoint where applicable
         * @param commitmentId Recurring Donation Commitment Id
-        * @return RequestBuilder This request builder instance
+        * @return Builder This request builder instance
         */
-        public RequestBuilder withCommitmentId(String commitmentId) {
+        public Builder withCommitmentId(String commitmentId) {
             this.commitmentId = commitmentId;
             return this;
         }
@@ -121,9 +121,9 @@ public inherited sharing class PS_ElevateAPI {
         /***
         * @description Sets HttpRequest body
         * @param jsonBody HttpRequest JSON body
-        * @return RequestBuilder This request builder instance
+        * @return Builder This request builder instance
         */
-        public RequestBuilder withBody(String jsonBody) {
+        public Builder withBody(String jsonBody) {
             this.jsonBody = jsonBody;
             return this;
         }

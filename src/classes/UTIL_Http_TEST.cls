@@ -36,10 +36,8 @@
 @IsTest
 public with sharing class UTIL_Http_TEST {
 
-
-
     /**
-    * @desciprtion Verifies response is correctly formatted based on HttpResponse
+    * @description Verifies response is correctly formatted based on HttpResponse
     */
     @isTest
     private static void shouldPopulateResponseWhenHttpResponseIsReturned() {
