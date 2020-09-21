@@ -814,7 +814,8 @@ public with sharing class GE_GiftEntryController {
     /*******************************************************************************************************
     * @description Method for retrieving the current default template.
     */
-    public static GE_Template.Template retrieveDefaultSGEFormTemplate() {
+    @TestVisible
+    private static GE_Template.Template retrieveDefaultSGEFormTemplate() {
         Gift_Entry_Settings__c giftEntrySettings = getGiftEntrySettings();
         GE_Template.Template template;
         List<Form_Template__c> templateObjList = [
@@ -841,7 +842,8 @@ public with sharing class GE_GiftEntryController {
     * @param template - the template to use for CRUD/FLS validation
     * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/UPDATE/READ)
     */
-    public static GE_Template.Template checkPermissions(GE_Template.Template template, Set<GE_Template.AccessLevel> accessLevels){
+    private static GE_Template.Template checkPermissions(GE_Template.Template template,
+    Set<GE_Template.AccessLevel> accessLevels){
 
         GE_Template.PermissionValidator validator = new GE_Template.PermissionValidator(template, accessLevels);
 

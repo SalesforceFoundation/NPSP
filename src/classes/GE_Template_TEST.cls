@@ -201,7 +201,6 @@ public with sharing class GE_Template_TEST {
     private class UTIL_PermissionsMock implements StubProvider {
 
         Boolean hasPermission;
-        Boolean hasCRUDPermission;
         String permissionType;
         Boolean isFLS;
 

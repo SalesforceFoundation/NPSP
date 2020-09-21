@@ -109,7 +109,8 @@ public with sharing class GE_Template {
      *
      * @return A new Form template that is ready to be saved into the DB and used. 
      */
-    public static Form_Template__c buildDefaultTemplate() {
+    @TestVisible
+    private static Form_Template__c buildDefaultTemplate() {
         Form_Template__c newDefaultTemplate = new Form_Template__c();
         List<StaticResource> defaultTemplateSRList = [SELECT 
                     Id, 
@@ -209,7 +210,7 @@ public with sharing class GE_Template {
      * @return A mapping of partial dev name to full dev name. 
      * e.g. Account1_Name -> Account1_Name_ee63cf9df
      */
-    public static void populateDevNameMapping(Map<String,String> updatedFieldDevNameMap, 
+    private static void populateDevNameMapping(Map<String,String> updatedFieldDevNameMap,
         Map<String,String> updatedObjectDevNameMap) {
 
         // Get the org's migrated field mappings. 
@@ -550,7 +551,6 @@ public with sharing class GE_Template {
         private void handlePermissionsErrors(Map<String, Set<String>> permissionErrorsBySObject) {
 
             Set<String> crudErrors = new Set<String>();
-            Map<String, Set<String>> flsErrors = new Map<String, Set<String>>();
 
             // The map will contain only the object key if there is a CRUD error
             for (String objDevName : permissionErrorsBySObject.keySet()) {
