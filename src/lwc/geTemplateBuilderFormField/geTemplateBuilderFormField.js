@@ -3,7 +3,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
-import {deepClone, isEmpty} from 'c/utilCommon';
+import {isEmpty} from 'c/utilCommon';
 import hasViewSetup from '@salesforce/userPermission/ViewSetup';
 
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
