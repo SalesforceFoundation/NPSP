@@ -6,7 +6,7 @@ import GeLabelService from 'c/geLabelService';
 import {isEmpty} from 'c/utilCommon';
 import hasViewSetup from '@salesforce/userPermission/ViewSetup';
 
-import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
+import DATA_IMPORT_BATCH from '@salesforce/schema/DataImportBatch__c';
 
 const WIDGET = 'widget';
 const YES = 'Yes';
@@ -48,7 +48,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         if (!this.hasRendered) {
             this.hasRendered = true;
 
-            if (this.objectApiName === DI_BATCH_INFO.objectApiName) {
+            if (this.objectApiName === DATA_IMPORT_BATCH.objectApiName) {
                 return;
             }
 
