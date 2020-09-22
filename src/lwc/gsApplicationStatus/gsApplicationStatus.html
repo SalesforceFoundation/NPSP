@@ -1,0 +1,21 @@
+<template>
+    <div class="container">
+        <div class="imagen">Imagen</div>
+        <div if:false={penndig} class="info penndig">
+            <p>No Application Submitted | <a>Lear More</a></p>
+            <p>30 Days Remaining in Free Trail</p>
+            <button onclick={onGetFreeSldc} 
+                class="slds-button slds-button_brand">
+                Get Salesforce for Free
+            </button>
+        </div>
+        <div if:true={penndig} class="info submitted">
+            <p>Application Status: <span>Submitted</span></p>
+            <p>60 Days Remaining in Free Trail | <span>30 Days Added</span></p>
+            <button 
+                class="slds-button slds-button_outline-brand">
+                Check Status
+            </button>
+        </div>
+    </div>
+</template>

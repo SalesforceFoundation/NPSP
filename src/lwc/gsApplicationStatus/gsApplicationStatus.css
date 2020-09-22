@@ -1,0 +1,38 @@
+.imagen {
+    padding: 5rem 0;
+    text-align: center;
+}
+.info {
+    text-align: center;
+}
+.container {
+    padding: 1.5rem;
+    background-color: white;
+    border: solid 1px #b5b5b5;
+    box-shadow: 0px 6px 3px 0px #b5b5b5;
+}
+.info p {
+    padding: 0 0 1rem 0;
+}
+
+.info .slds-button {
+   
+    width: 100%;
+    font-size: larger;
+    padding: 0.5rem;
+}
+
+.slds-button_outline-brand {
+    border-color: purple;
+    color: purple;
+}
+
+.slds-button_brand {
+    background-color: purple;
+}
+
+.info span {
+    color: darkgreen;
+    font-size: larger;
+    font-weight: bold;
+}
