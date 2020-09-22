@@ -544,9 +544,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
         element.checked = false;
 
-        if (fieldMapping.Is_Required) {
-            this.validate();
-        }
+        this.validate();
 
         dispatch(this, 'deleteformelement', event.detail);
     }
