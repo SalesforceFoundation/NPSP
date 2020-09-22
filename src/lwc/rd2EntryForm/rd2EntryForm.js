@@ -72,8 +72,8 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isElevateWidgetDisplayed = false;
     isElevateCustomer = false;
-    elevateAuthToken;
-    elevateCardholderName;
+    paymentMethodToken;
+    cardholderName;
 
     @track error = {};
 
@@ -233,7 +233,7 @@ export default class rd2EntryForm extends LightningElement {
             // const accountId = event.detail.fields.npe03__Organization__c.value;
             // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
             //     .then(response => {
-            //         this.elevateCardholderName = response;
+            //         this.cardholderName = response;
             //     });
         }
     }
@@ -268,7 +268,7 @@ export default class rd2EntryForm extends LightningElement {
         if (this.isElevateWidgetDisplayed) {
             try {
                 const elevateWidget = this.creditCardComponent;
-                this.elevateAuthToken = await elevateWidget.returnToken().payload;
+                this.paymentMethodToken = await elevateWidget.returnToken().payload;
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;
@@ -405,7 +405,6 @@ export default class rd2EntryForm extends LightningElement {
             : insertSuccessMessage.replace("{0}", recordName);
 
         showToast(message, '', 'success', []);
-        console.log('>> Elevate Token: ' + this.elevateAuthToken);
 
         fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
     }
