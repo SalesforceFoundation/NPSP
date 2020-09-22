@@ -387,8 +387,6 @@ public class UTIL_Describe {
         return dfr;
     }
 
-
-
     /*******************************************************************************************************
     * @description Gives field friendly name
     * @param objectName the name of the object to look up
