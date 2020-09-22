@@ -496,9 +496,11 @@ public with sharing class GE_GiftEntryController {
                         // Update the element's required by doing an OR between the element's required, DI source field, target field
                         // Update the element's required to make sure we are respecting the source/target/template builder's required
                         // with the most up to date information.
-                        element.required = element.required ||
-                                (fieldMapping.Source_Field_Required &&
-                                        fieldMapping.Source_Field_Data_Type != BOOLEAN_DATA_TYPE);
+                        if(fieldMapping != null) {
+                            element.required = element.required ||
+                                    (fieldMapping.Source_Field_Required &&
+                                            fieldMapping.Source_Field_Data_Type != BOOLEAN_DATA_TYPE);
+                        }
                     }
                 }
             }
