@@ -18,9 +18,9 @@ import { fireEvent } from 'c/pubsubNoPageRef'
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.upsertCustomColumnHeaders';
-import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
-import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
+import upsertCustomColumnHeaders from '@salesforce/apex/GE_GiftEntryController.upsertCustomColumnHeaders';
+import retrieveCustomColumnHeaders from '@salesforce/apex/GE_GiftEntryController.retrieveCustomColumnHeaders';
+import retrieveRecords from '@salesforce/apex/GE_GiftEntryController.retrieveRecords';
 import userId from '@salesforce/user/Id';
 import USER_TIMEZONE_SID_KEY_FIELD from '@salesforce/schema/User.TimeZoneSidKey';
 import COLUMN_ID_INFO from '@salesforce/schema/Custom_Column_Header__c.Id';

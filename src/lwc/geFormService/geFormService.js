@@ -1,6 +1,6 @@
-import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
-import getFormRenderWrapper from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
-import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
+import getRenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
+import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
+import getAllocationSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 
 
 import { handleError } from 'c/utilTemplateBuilder';
@@ -44,7 +44,7 @@ class GeFormService {
 
     /**
      * Retrieve the default form render wrapper.
-     * @returns {Promise<FORM_RenderWrapper>}
+     * @returns {Promise<GE_GiftEntryController.RenderWrapper>}
      */
     getFormTemplate() {
         return new Promise((resolve, reject) => {
