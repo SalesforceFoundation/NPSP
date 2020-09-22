@@ -1,6 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 import { getSubsetObject, isUndefined, isNotEmpty } from 'c/utilCommon';
-import { GeFormElementHelper } from 'c/geHelpers';
+import GeFormElementHelper from './geFormElementHelper.js';
 
 const COLLAPSED_DISPLAY_MODE = 'collapsed';
 

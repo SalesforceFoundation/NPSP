@@ -1,7 +1,7 @@
 import GeFormService from 'c/geFormService';
 import { isNotEmpty } from 'c/utilCommon';
 
-class GeFormElementHelper {
+export default class GeFormElementHelper {
     element;
 
     constructor(element) {
@@ -46,5 +46,3 @@ class GeFormElementHelper {
         return false;
     }
 }
-
-export { GeFormElementHelper };
