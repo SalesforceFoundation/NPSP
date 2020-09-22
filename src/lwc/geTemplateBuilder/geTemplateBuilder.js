@@ -1203,7 +1203,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (this.hasTemplateInfoTabError) {
-            tabsWithErrors.add(this.tabs.INFO.id);
+            tabsWithErrors.add(this.tabs.INFO.label);
         }
     };
 
@@ -1231,7 +1231,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (this.hasSelectFieldsTabError) {
-            tabsWithErrors.add(this.tabs.FORM_FIELDS.id);
+            tabsWithErrors.add(this.tabs.FORM_FIELDS.label);
         }
     }
 
@@ -1262,7 +1262,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             if (isMissingBatchTableColumns) {
                 this.hasBatchSettingsTabError = true;
-                tabsWithErrors.add(this.tabs.BATCH_SETTINGS.id);
+                tabsWithErrors.add(this.tabs.BATCH_SETTINGS.label);
             } else {
                 this.hasBatchSettingsTabError = false;
             }
