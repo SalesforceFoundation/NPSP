@@ -244,13 +244,10 @@ export default class GeFormSection extends LightningElement {
     }
 
     get renderableElements() {
-        if (!isUndefined(this.section)) {
-            return this.section.elements
-                .map(element => new GeFormElementHelper(element))
-                .filter(helper => helper.isRenderable);
-        } else {
+        if (isUndefined(this.section)) {
             return [];
         }
+        return this.section.elements.filter(element => new GeFormElementHelper(element).isRenderable());
     }
 
     @api

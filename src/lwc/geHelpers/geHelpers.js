@@ -1,5 +1,5 @@
-import GeFormService from "c/geFormService";
-import {isNotEmpty} from "c/utilCommon";
+import GeFormService from 'c/geFormService';
+import { isNotEmpty } from 'c/utilCommon';
 
 class GeFormElementHelper {
     element;
@@ -13,7 +13,7 @@ class GeFormElementHelper {
     }
 
     get targetObjectMappingDevName() {
-        if(isNotEmpty(this.fieldMapping)) {
+        if (isNotEmpty(this.fieldMapping)) {
             return this.fieldMapping.Target_Object_Mapping_Dev_Name;
         }
     }
@@ -34,18 +34,17 @@ class GeFormElementHelper {
         return !!this.element.componentName;
     }
 
-    get isRenderable() {
-        if(this.isWidget) {
+    isRenderable() {
+        if (this.isWidget) {
             // always render widgets
             return true;
-        } else if(isNotEmpty(this.fieldMapping)) {
+        } else if (isNotEmpty(this.fieldMapping)) {
             // the mapping record for this field is valid when it exists and
             // the source and target fields are describable
             return this.hasMappingInformation && this.fieldMapping.isDescribable;
         }
         return false;
     }
-
 }
 
 export { GeFormElementHelper };
