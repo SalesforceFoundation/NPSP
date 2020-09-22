@@ -1138,6 +1138,7 @@
         <members>DataImport__c.Payment_Card_Network__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Declined_Reason__c</members>
+        <members>DataImport__c.Payment_Donor_Cover_Amount__c</members>
         <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
         <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
         <members>DataImport__c.Payment_Elevate_ID__c</members>
@@ -1418,6 +1419,7 @@
         <members>npe01__OppPayment__c.Card_Expiration_Year__c</members>
         <members>npe01__OppPayment__c.Card_Last_4__c</members>
         <members>npe01__OppPayment__c.Card_Network__c</members>
+        <members>npe01__OppPayment__c.Donor_Cover_Amount__c</members>
         <members>npe01__OppPayment__c.Elevate_Original_Payment_ID__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_Date__c</members>
         <members>npe01__OppPayment__c.Elevate_Payment_Created_UTC_Timestamp__c</members>
@@ -3135,6 +3137,7 @@
         <members>Data_Import_Field_Mapping.Payment_Card_Last_4</members>
         <members>Data_Import_Field_Mapping.Payment_Card_Network</members>
         <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
+        <members>Data_Import_Field_Mapping.Payment_Donor_Cover_Amount</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_Date</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_Created_UTC_Timestamp</members>
         <members>Data_Import_Field_Mapping.Payment_Elevate_ID</members>
