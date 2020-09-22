@@ -82,7 +82,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
             if (!hasViewSetup) {
                 this.field = {};
-                this.shouldRender = !!hasViewSetup;
+                this.shouldRender = false;
             }
 
             this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: true}}));
