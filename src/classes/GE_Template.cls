@@ -403,23 +403,26 @@ public with sharing class GE_Template {
         Set<AccessLevel> accessLevels;
         UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();
         UTIL_Describe describeService = UTIL_Describe.getInstance();
+        Map<String, Set<String>> permissionErrorsBySObject;
 
         public PermissionValidator(Template template, Set<AccessLevel>
                 accessLevels) {
             this.template = template;
             this.accessLevels = accessLevels;
+            this.permissionErrorsBySObject = new Map<String, Set<String>>();
         }
 
         public PermissionValidator(Set<AccessLevel> accessLevels) {
             this.accessLevels = accessLevels;
+            this.permissionErrorsBySObject = new Map<String, Set<String>>();
         }
 
         public Boolean hasObjectPermissions (String objectDevName) {
-            return isValid(objectDevName, accessLevels);
+            return isValid(objectDevName);
         }
 
         public Boolean hasFieldPermissions (String objectDevName, String fieldDevName) {
-            return isValid(objectDevName, fieldDevName, accessLevels);
+            return isValid(objectDevName, fieldDevName);
         }
 
         /*******************************************************************************************************
@@ -427,7 +430,6 @@ public with sharing class GE_Template {
         * @return {Template} template
         * */
         public Template validateTemplate() {
-            Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
 
             BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
             for (Section section : template.layout.sections) {
@@ -444,37 +446,11 @@ public with sharing class GE_Template {
                                     String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
                                     String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
 
-                                    if (!isValid(sourceObjDevName, accessLevels)) {
-                                        permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
-                                                OBJECT_CRUD_ERROR
-                                        });
-                                    }
+                                    validate(sourceObjDevName);
+                                    validate(targetObjDevName);
+                                    validate(sourceObjDevName, sourceFieldDevName);
+                                    validate(targetObjDevName, targetFieldDevName);
 
-                                    if (!isValid(targetObjDevName, accessLevels)) {
-                                        permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
-                                                OBJECT_CRUD_ERROR
-                                        });
-                                    }
-
-                                    if (!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
-                                        if (permissionErrorsBySObject.containsKey(sourceObjDevName)) {
-                                            permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
-                                        } else {
-                                            permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
-                                                    sourceFieldDevName
-                                            });
-                                        }
-                                    }
-
-                                    if (!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
-                                        if (permissionErrorsBySObject.containsKey(targetObjDevName)) {
-                                            permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
-                                        } else {
-                                            permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
-                                                    targetFieldDevName
-                                            });
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -485,13 +461,31 @@ public with sharing class GE_Template {
             return template;
         }
 
+        private void validate(String objDevName) {
+            if (!isValid(objDevName)) {
+                permissionErrorsBySObject.put(objDevName, new Set<String>{
+                        OBJECT_CRUD_ERROR
+                });
+            }
+        }
+
+        private void validate(String objDevName, String fieldDevName) {
+            if (permissionErrorsBySObject.containsKey(objDevName)) {
+                permissionErrorsBySObject.get(objDevName).add(fieldDevName);
+            } else {
+                permissionErrorsBySObject.put(objDevName, new Set<String>{
+                        fieldDevName
+                });
+            }
+        }
+
         /*******************************************************************************************************
         * @description Perform CRUD validation on an SObject
         * @param objDevName - the API name of the SObject to validate
         * @param accessLevels - the levels of access to validate on the SObject
         * @return {Boolean}
         */
-        private Boolean isValid(String objDevName, Set<AccessLevel> accessLevels) {
+        private Boolean isValid(String objDevName) {
 
             SObjectType objType = ((SObject) Type.forName(objDevName).newInstance()).getSObjectType();
 
@@ -515,7 +509,7 @@ public with sharing class GE_Template {
         * @param accessLevels - the levels of access to validate on the SObject
         * @return {Boolean}
         */
-        private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
+        private Boolean isValid(String objDevName, String fieldDevName) {
 
             SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
             SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
