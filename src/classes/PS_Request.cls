@@ -49,11 +49,6 @@ public inherited sharing class PS_Request {
         THIRD_PARTY_GIVING_PAGE
     }
 
-    public enum OriginType {
-        CRM,
-        THIRD_PARTY_GIVING_PAGE
-    }
-
     public static String ROLE_PAYMENT_TOKENS = 'Payments.Tokens';
     public static String ROLE_PAYMENT_PURCHASE = 'Payments.Purchase';
     public static String ROLE_PAYMENT_COMMITMENTS = 'Payments.Commitments';
