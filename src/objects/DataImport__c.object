@@ -1410,6 +1410,18 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Donor_Cover_Amount__c</fullName>
+        <description>The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation.</inlineHelpText>
+        <label>Payment Donor Cover Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
     </fields>  
     <fields>      
         <fullName>Payment_Elevate_Created_Date__c</fullName>
