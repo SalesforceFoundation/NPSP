@@ -3756,7 +3756,6 @@
         <members>geFormWidgetRowAllocation</members>
         <members>geFormWidgetTokenizeCard</members>
         <members>geGiftEntryFormApp</members>
-        <members>geHelpers</members>
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
