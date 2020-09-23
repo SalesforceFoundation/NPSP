@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../../PycharmProject"
+		},
+		{
+			"name": "spc-integration",
+			"path": "../../../spc-intergration/spc-integration"
+		}
+	],
+	"settings": {}
+}

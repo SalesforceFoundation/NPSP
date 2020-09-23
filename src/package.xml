@@ -1728,8 +1728,8 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_EnablementSimpleIntro</members>
-        <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateElevateCannotBeInFuture</members>
+        <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>
         <members>RD2_EntryFormDonationSectionHeader</members>
