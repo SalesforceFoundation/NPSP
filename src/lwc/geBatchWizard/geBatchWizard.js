@@ -19,8 +19,8 @@ import {
 } from 'c/utilCommon'
 import GeLabelService from 'c/geLabelService';
 
-import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
-import getDonationMatchingValues from '@salesforce/apex/FORM_ServiceGiftEntry.getDonationMatchingValues';
+import getAllFormTemplates from '@salesforce/apex/GE_GiftEntryController.getAllFormTemplates';
+import getDonationMatchingValues from '@salesforce/apex/GE_GiftEntryController.getDonationMatchingValues';
 
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
