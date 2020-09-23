@@ -482,7 +482,6 @@ public with sharing class GE_Template {
         /*******************************************************************************************************
         * @description Perform CRUD validation on an SObject
         * @param objDevName - the API name of the SObject to validate
-        * @param accessLevels - the levels of access to validate on the SObject
         * @return {Boolean}
         */
         private Boolean isValid(String objDevName) {
@@ -506,7 +505,6 @@ public with sharing class GE_Template {
         * @description Perform FLS validation on an SObject field
         * @param objDevName - the API name of the SObject
         * @param fieldDevName - the API name of the SObject field to validate
-        * @param accessLevels - the levels of access to validate on the SObject
         * @return {Boolean}
         */
         private Boolean isValid(String objDevName, String fieldDevName) {
