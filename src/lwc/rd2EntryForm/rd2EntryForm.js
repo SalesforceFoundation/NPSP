@@ -259,7 +259,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     getPaymentMethod() {
         const paymentMethod = this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`);
-        
+
         return paymentMethod ? paymentMethod.value : null;
     }
 
@@ -276,8 +276,7 @@ export default class rd2EntryForm extends LightningElement {
             currencyCode = CURRENCY;
         }
 
-        console.log('currencyCode: ' + currencyCode);
-        return CURRENCY === CURRENCY_CODE_USD;
+        return currencyCode === CURRENCY_CODE_USD;
     }
 
     /***
