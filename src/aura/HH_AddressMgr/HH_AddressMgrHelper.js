@@ -10,7 +10,7 @@
         var iAddrSelected;
 
         // figure out if changing default address or creating a new one
-        if (component.find("addressSelectionAccordion").get('v.activeSectionName') === $A.get('$Label.npo02.SelectExistingAddress')) {
+        if (component.get('v.isExistingAddrSectionOpen') == true) {
             iAddrSelected = component.get('v.iAddrSelected');
             addr = listAddr[iAddrSelected];
         } else {
@@ -35,5 +35,25 @@
         event.setParams({ "addrDefault" : addr });
         event.fire();
     },
+
+    toggleSections : function(component) {
+        let buttons = component.find('sectionButton');
+
+        for (let cmp in buttons) {
+            let currentIcon = buttons[cmp].get("v.iconName");
+
+            if (currentIcon === 'utility:chevronright') {
+                buttons[cmp].set("v.iconName","utility:chevrondown");
+            } else {
+                buttons[cmp].set("v.iconName","utility:chevronright");
+            }
+        }
+
+        var sections = component.find('accordionSection');
+        for(var cmp in sections) {
+            $A.util.toggleClass(sections[cmp], 'slds-show');  
+            $A.util.toggleClass(sections[cmp], 'slds-hide');  
+        }
+      },
         
 })

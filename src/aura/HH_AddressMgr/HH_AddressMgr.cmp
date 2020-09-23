@@ -52,59 +52,90 @@
                     <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.ChangeAddress}</h2>
                 </div>
                 <div class="slds-modal__content slds-p-around_medium">
-                    <lightning:accordion aura:id="addressSelectionAccordion" activeSectionName="A">
-                        <lightning:accordionSection name="{!$Label.npo02.SelectExistingAddress}" label="{!$Label.npo02.SelectExistingAddress}">
-                            <ul class="slds-list_vertical slds-has-dividers_around-space slds-has-list-interactions" >
-                                <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" > 
-                                <li>
-                                    <lightning:button class="{!iAddr == v.iAddrSelected ? 'selected-address address-button' : 'address-button'}" 
-                                         onclick="{!c.onPressAddrTile}" value="{!iAddr}" ariaDescribedBy="existingAdd">
-                                        <div class="slds-tile slds-tile_board">
-                                            <div class="slds-tile__detail" >
-                                                <!-- address -->
-                                                <p class="slds-text-body_small slds-text-color_default address-text" id="existingAdd">
-                                                    {!addr.MailingStreet__c + (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}
-                                                    <br/>
-                                                    {!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}
-                                                    <br/>
-                                                    {!addr.MailingCountry__c}
-                                                </p>
-                                            </div> 
-                                        </div>
-                                    </lightning:button>
-                                    </li>
-                                </aura:iteration>
-                            </ul>
-                        </lightning:accordionSection>
-                        <lightning:accordionSection name="{!$Label.npo02.EnterNewAddress}" label="{!$Label.npo02.EnterNewAddress}">
-                                <div class="slds-form_stacked">
-                                    <div class="slds-form-element">
-                                        <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" aura:id="txtStreet" class="slds-input slds-form-element__control" 
-                                            label="{!$Label.c.lblStreet}" labelClass="slds-form-element__label" />
-                                    </div>
-                                    <div class="slds-form-element">
-                                        <ui:inputText value="{!v.addrNew.MailingCity__c}" aura:id="txtCity" class="slds-input slds-form-element__control" 
-                                            label="{!$Label.c.lblCity}" labelClass="slds-form-element__label" />
-                                    </div>
-                                    <div class="slds-form-element">
-                                        <ui:inputText value="{!v.addrNew.MailingState__c}" aura:id="txtState" class="slds-input slds-form-element__control" 
-                                            label="{!$Label.c.lblState}" labelClass="slds-form-element__label" />
-                                    </div>
-                                    <div class="slds-form-element">
-                                        <ui:inputText value="{!v.addrNew.MailingPostalCode__c}" aura:id="txtZip" class="slds-input slds-form-element__control" 
-                                            label="{!$Label.c.lblPostalCode}" labelClass="slds-form-element__label" />
-                                    </div>
-                                    <div class="slds-form-element">
-                                        <ui:inputText value="{!v.addrNew.MailingCountry__c}" aura:id="txtCountry" class="slds-input slds-form-element__control" 
-                                            label="{!$Label.c.lblCountry}" labelClass="slds-form-element__label" />
-                                    </div>
+
+                    <ul class="slds-accordion">
+                        <li class="slds-accordion__list-item">
+                        <section class="slds-accordion__section slds-is-open">
+                            <div class="slds-accordion__summary">
+                                <h2 class="slds-accordion__summary-heading">
+                                    <lightning:button aura:id="sectionButton" 
+                                        variant="base"
+                                        class="slds-accordion__summary-action"
+                                        label="{!$Label.npo02.SelectExistingAddress}" 
+                                        title="{!$Label.npo02.SelectExistingAddress}"
+                                        onclick="{!c.toggleSection}"
+                                        iconName="utility:chevrondown"
+                                        ariaExpanded="true"/>
+                                </h2>
+                            </div>
+                            <div aura:id="accordionSection">
+                                <ul class="slds-list_vertical slds-has-dividers_around-space slds-has-list-interactions" >
+                                    <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" > 
+                                    <li>
+                                        <lightning:button class="{!iAddr == v.iAddrSelected ? 'selected-address address-button' : 'address-button'}" 
+                                            onclick="{!c.onPressAddrTile}" value="{!iAddr}" ariaDescribedBy="existingAdd">
+                                            <div class="slds-tile slds-tile_board">
+                                                <div class="slds-tile__detail" >
+                                                    <!-- address -->
+                                                    <p class="slds-text-body_small slds-text-color_default" id="existingAdd">
+                                                        {!addr.MailingStreet__c + (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}
+                                                        <br/>
+                                                        {!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}
+                                                        <br/>
+                                                        {!addr.MailingCountry__c}
+                                                    </p>
+                                                </div> 
+                                            </div>
+                                        </lightning:button>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </section>
+                        </li>
+                        <li class="slds-accordion__list-item">
+                        <section class="slds-accordion__section">
+                            <div class="slds-accordion__summary">
+                            <h2 class="slds-accordion__summary-heading">
+                                <h2 class="slds-accordion__summary-heading">
+                                    <lightning:button aura:id="sectionButton"
+                                        variant="base"
+                                        class="slds-accordion__summary-action"
+                                        label="{!$Label.npo02.EnterNewAddress}"
+                                        title="{!$Label.npo02.EnterNewAddress}"
+                                        onclick="{!c.toggleSection}"
+                                        iconName="utility:chevronright"
+                                        ariaExpanded="false" />
+                                </h2>
+                            </h2>
+                            </div>
+                            <div class="slds-hide slds-form_stacked" aura:id="accordionSection">
+                                <div class="slds-form-element">
+                                    <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" aura:id="txtStreet" class="slds-input slds-form-element__control" 
+                                        label="{!$Label.c.lblStreet}" labelClass="slds-form-element__label" />
                                 </div>
-                        </lightning:accordionSection>
+                                <div class="slds-form-element">
+                                    <ui:inputText value="{!v.addrNew.MailingCity__c}" aura:id="txtCity" class="slds-input slds-form-element__control" 
+                                        label="{!$Label.c.lblCity}" labelClass="slds-form-element__label" />
+                                </div>
+                                <div class="slds-form-element">
+                                    <ui:inputText value="{!v.addrNew.MailingState__c}" aura:id="txtState" class="slds-input slds-form-element__control" 
+                                        label="{!$Label.c.lblState}" labelClass="slds-form-element__label" />
+                                </div>
+                                <div class="slds-form-element">
+                                    <ui:inputText value="{!v.addrNew.MailingPostalCode__c}" aura:id="txtZip" class="slds-input slds-form-element__control" 
+                                        label="{!$Label.c.lblPostalCode}" labelClass="slds-form-element__label" />
+                                </div>
+                                <div class="slds-form-element">
+                                    <ui:inputText value="{!v.addrNew.MailingCountry__c}" aura:id="txtCountry" class="slds-input slds-form-element__control" 
+                                        label="{!$Label.c.lblCountry}" labelClass="slds-form-element__label" />
+                                </div>
+                            </div>
 
-                    </lightning:accordion>
+                        </section>
+                        </li>
+                    </ul>
 
-
-                   
                 </div> <!-- /slds-modal__content -->
                 
                 <div class="slds-modal__footer">

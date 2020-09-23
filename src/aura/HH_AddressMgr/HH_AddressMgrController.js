@@ -54,5 +54,11 @@
     onPressAddrTile : function(component, event /* , helper */) {
         let addressIndex = event.getSource().get('v.value');
         component.set('v.iAddrSelected', addressIndex);
-    }
+    },
+
+     toggleSection : function(component, event, helper) {
+        helper.toggleSections(component);
+        let isExistingAddressSectionOpen = component.get('v.isExistingAddrSectionOpen');
+        component.set('v.isExistingAddrSectionOpen', !isExistingAddressSectionOpen);
+     }
 })
