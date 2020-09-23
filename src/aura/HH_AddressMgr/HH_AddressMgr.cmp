@@ -57,7 +57,7 @@
                             <ul class="slds-list_vertical slds-has-dividers_around-space slds-has-list-interactions" >
                                 <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" > 
                                 <li>
-                                    <lightning:button class="{!iAddr == v.iAddrSelected ? 'selected-address address-button ' : 'address-button '}" 
+                                    <lightning:button class="{!iAddr == v.iAddrSelected ? 'selected-address address-button' : 'address-button'}" 
                                          onclick="{!c.onPressAddrTile}" value="{!iAddr}" ariaDescribedBy="existingAdd">
                                         <div class="slds-tile slds-tile_board">
                                             <div class="slds-tile__detail" >
