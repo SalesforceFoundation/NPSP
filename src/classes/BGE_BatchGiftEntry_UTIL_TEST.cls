@@ -91,27 +91,27 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
 
     @isTest
     static void shouldIncludeWidgetFields() {
-        FORM_Element widgetElement =
-                new FORM_Element(
+        GE_Template.Element widgetElement =
+                new GE_Template.Element(
                         'widget', '', '', '',
                         new String[]{
                                 'Account_2_Country',
                                 'Account_2_City'
                         });
 
-        FORM_Section formSection =
-                new FORM_Section('', '', '', '',
-                        new FORM_Element[]{
+        GE_Template.Section formSection =
+                new GE_Template.Section('', '', '', '',
+                        new GE_Template.Element[]{
                                 widgetElement
                         });
 
-        FORM_Layout formLayout =
-                new FORM_Layout('', new FORM_Section[]{
+        GE_Template.Layout formLayout =
+                new GE_Template.Layout('', new GE_Template.Section[]{
                         formSection
                 });
 
-        FORM_Template formTemplate =
-                new FORM_Template(
+        GE_Template.Template formTemplate =
+                new GE_Template.Template(
                         'testTemplate', '', '', formLayout);
 
         Form_Template__c template = new Form_Template__c(
