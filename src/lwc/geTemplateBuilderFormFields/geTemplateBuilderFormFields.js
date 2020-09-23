@@ -542,8 +542,9 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     */
     handleDeleteFormElement(event) {
         const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
-
-        element.checked = false;
+        if (element) {
+            element.checked = false;
+        }
 
         this.validate();
 
