@@ -457,7 +457,7 @@ public with sharing class GE_Template {
                     }
                 }
             }
-            handlePermissionsErrors(permissionErrorsBySObject);
+            handlePermissionsErrors();
             return template;
         }
 
@@ -555,9 +555,8 @@ public with sharing class GE_Template {
 
         /*******************************************************************************************************
         * @description Format any CRUD or FLS errors for display in UI
-        * @param permissionErrorsBySObject - a map of all permission errors by SObject
         */
-        private void handlePermissionsErrors(Map<String, Set<String>> permissionErrorsBySObject) {
+        private void handlePermissionsErrors() {
 
             Set<String> crudErrors = new Set<String>();
 
@@ -572,7 +571,7 @@ public with sharing class GE_Template {
                 template.permissionErrors = String.join(new List<String>(crudErrors), ', ');
             } else if(crudErrors.isEmpty() && !permissionErrorsBySObject.values().isEmpty()){
                 template.permissionErrorType = FLS_ERROR;
-                template.permissionErrors = formatFLSError(permissionErrorsBySObject);
+                template.permissionErrors = formatFLSError();
             }
         }
 
@@ -581,7 +580,7 @@ public with sharing class GE_Template {
         * @param permissionErrorsBySObject - map of all FLS fields in error with their associated SObject
          * @return {String} message
         */
-        private String formatFLSError(Map<String, Set<String>> permissionErrorsBySObject) {
+        private String formatFLSError() {
             String message;
             if(!permissionErrorsBySObject.isEmpty()) {
                 message = '';
