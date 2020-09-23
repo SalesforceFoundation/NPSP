@@ -56,8 +56,12 @@
         component.set('v.iAddrSelected', addressIndex);
     },
 
+    /*******************************************************************************************************
+     * @description Toggle open and close the accordion sections
+     */
      toggleSection : function(component, event, helper) {
         helper.toggleSections(component);
+
         let isExistingAddressSectionOpen = component.get('v.isExistingAddrSectionOpen');
         component.set('v.isExistingAddrSectionOpen', !isExistingAddressSectionOpen);
      }

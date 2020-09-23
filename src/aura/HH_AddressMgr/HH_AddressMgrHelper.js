@@ -36,6 +36,9 @@
         event.fire();
     },
 
+    /**
+    * @description Control the state of the two sections.
+    */
     toggleSections : function(component) {
         let buttons = component.find('sectionButton');
         for (let cmp in buttons) {
