@@ -1,7 +1,7 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormTemplate';
-import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
+import storeFormTemplate from '@salesforce/apex/GE_GiftEntryController.storeFormTemplate';
+import retrieveFormTemplateById from '@salesforce/apex/GE_GiftEntryController.retrieveFormTemplateById';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';

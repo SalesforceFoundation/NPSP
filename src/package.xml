@@ -281,32 +281,16 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
-        <members>FORM_BatchHeaderField</members>
-        <members>FORM_Element</members>
-        <members>FORM_Layout</members>
-        <members>FORM_PermissionValidator</members>
-        <members>FORM_PermissionsValidator_TEST</members>
-        <members>FORM_RenderWrapper</members>
-        <members>FORM_Section</members>
-        <members>FORM_Service</members>
-        <members>FORM_ServiceGiftEntry</members>
-        <members>FORM_ServiceGiftEntry_TEST</members>
-        <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
-        <members>GE_DefaultTemplate</members>
-        <members>GE_DefaultTemplate_TEST</members>
-        <members>GE_FormRendererService</members>
-        <members>GE_FormRendererService_TEST</members>
-        <members>GE_FormServiceController</members>
         <members>GE_GiftEntryController</members>
         <members>GE_GiftEntryController_TEST</members>
-        <members>GE_GiftEntry_UTIL</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_PaymentServices</members>
         <members>GE_PaymentServices_TEST</members>
-        <members>GE_TemplateBuilderCtrl</members>
+        <members>GE_Template</members>
+        <members>GE_Template_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
