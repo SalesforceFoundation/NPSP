@@ -10,7 +10,7 @@
         var iAddrSelected;
 
         // figure out if changing default address or creating a new one
-        if (component.get('v.isExistingAddrSectionOpen') == true) {
+        if (component.get('v.isExistingAddrSectionOpen') === true) {
             iAddrSelected = component.get('v.iAddrSelected');
             addr = listAddr[iAddrSelected];
         } else {

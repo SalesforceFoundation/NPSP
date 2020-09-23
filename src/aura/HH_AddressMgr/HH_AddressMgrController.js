@@ -30,6 +30,7 @@
      */
     openChangeAddress : function(component /* , event, helper */) {
         component.set('v.showChangeAddressPopup', true);
+        component.set('v.isExistingAddrSectionOpen', true);
     },
 
     /*******************************************************************************************************
