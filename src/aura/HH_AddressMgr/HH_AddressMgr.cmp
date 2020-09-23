@@ -60,7 +60,7 @@
                                 <h2 class="slds-accordion__summary-heading">
                                     <lightning:button aura:id="sectionButton" 
                                         variant="base"
-                                        class="slds-accordion__summary-action"
+                                        class="slds-accordion__summary-action slds-text-color_default"
                                         label="{!$Label.npo02.SelectExistingAddress}" 
                                         title="{!$Label.npo02.SelectExistingAddress}"
                                         onclick="{!c.toggleSection}"
@@ -100,7 +100,7 @@
                                 <h2 class="slds-accordion__summary-heading">
                                     <lightning:button aura:id="sectionButton"
                                         variant="base"
-                                        class="slds-accordion__summary-action"
+                                        class="slds-accordion__summary-action slds-text-color_default"
                                         label="{!$Label.npo02.EnterNewAddress}"
                                         title="{!$Label.npo02.EnterNewAddress}"
                                         onclick="{!c.toggleSection}"

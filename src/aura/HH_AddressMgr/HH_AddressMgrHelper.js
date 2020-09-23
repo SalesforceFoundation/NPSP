@@ -38,19 +38,21 @@
 
     toggleSections : function(component) {
         let buttons = component.find('sectionButton');
-
         for (let cmp in buttons) {
             let currentIcon = buttons[cmp].get("v.iconName");
 
             if (currentIcon === 'utility:chevronright') {
-                buttons[cmp].set("v.iconName","utility:chevrondown");
+                buttons[cmp].set('v.iconName','utility:chevrondown');
             } else {
-                buttons[cmp].set("v.iconName","utility:chevronright");
+                buttons[cmp].set('v.iconName','utility:chevronright');
             }
+
+            ariaExpaned = buttons[cmp].get('v.ariaExpanded');
+            buttons[cmp].set('v.ariaExpanded', (ariaExpaned == 'true') ? 'false' : 'true');
         }
 
-        var sections = component.find('accordionSection');
-        for(var cmp in sections) {
+        let sections = component.find('accordionSection');
+        for(let cmp in sections) {
             $A.util.toggleClass(sections[cmp], 'slds-show');  
             $A.util.toggleClass(sections[cmp], 'slds-hide');  
         }
