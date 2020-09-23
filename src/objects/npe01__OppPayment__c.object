@@ -149,6 +149,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Donor_Cover_Amount__c</fullName>
+        <description>The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation.</inlineHelpText>
+        <label>Donor Cover Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
         <fullName>Elevate_Original_Payment_ID__c</fullName>
         <description>For refunds only. Shows the ID of the original payment transaction from Elevate.</description>
         <externalId>false</externalId>
