@@ -66,11 +66,11 @@ private with sharing class PS_CommitmentRequest_TEST {
     }
 
     /****
-    * @description Verifies Commitment Request is built based on
-    * Recurring Donation fields and its schedule
+    * @description Verifies Commitment Request body to attach to the HttpRequest
+    * is built based on Recurring Donation fields and its schedule
     */
     @isTest
-    private static void shouldBuildCommitmentRequest() {
+    private static void shouldBuildCommitmentRequestBody() {
         RD2_ScheduleService.currentDate = CURRENT_DATE;
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -160,6 +160,26 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         System.assertEquals(organization.Name, requestBody.firstName, 'Request First Name should match Organization Name');
         System.assertEquals(organization.Name, requestBody.lastName, 'Request Last Name should match Organization Name');
+    }
+
+    /**
+    * @description Verifies a valid create commitment HttpRequest is returned
+    */
+    @isTest
+    private static void shouldBuildCreateCommitmentRequest() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        final String jsonRequestBody = 'commitment request body';
+
+        Test.startTest();
+        HttpRequest request = new PS_CommitmentRequest().buildCreateRequest(jsonRequestBody);
+        Test.stopTest();
+
+        final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
+            + '/v1/payments/verified/commitments';
+        System.assertEquals(expectedEndpoint, request.getEndpoint(), 'Endpoint should match');
+
+        System.assertEquals(UTIL_Http.Method.POST.name(), request.getMethod(), 'The HttpRequest method should match');
+        System.assertEquals(jsonRequestBody, request.getBody(), 'Request body should match');
     }
 
 

@@ -60,6 +60,8 @@ public inherited sharing class PS_Request {
     public static String JWT_PRODUCT_PARAM = 'sfdo.product';
     public static String JWT_ROLES_PARAM = 'sfdo.roles';
 
+    private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
+
 
     /***
     * @description Builds an HttpRequest
@@ -82,6 +84,7 @@ public inherited sharing class PS_Request {
         private ElevateEndpoint endpoint;
         private String jsonBody;
         private String commitmentId;
+        private Integer timeout;
 
         /***
         * @description Sets HttpRequest method
@@ -114,6 +117,24 @@ public inherited sharing class PS_Request {
         }
 
         /***
+        * @description Sets HttpRequest timeout
+        * @return Builder This request builder instance
+        */
+        public Builder withRecommendedTimeout() {
+            return withTimeout(RECOMMENDED_TIMEOUT_MS);
+        }
+
+        /***
+        * @description Sets the timeout in milliseconds for the request
+        * @param timeout Timeout value in milliseconds
+        * @return Builder This request builder instance
+        */
+        public Builder withTimeout(Integer timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+        /***
         * @description Sets HttpRequest body
         * @param jsonBody HttpRequest JSON body
         * @return Builder This request builder instance
@@ -133,6 +154,11 @@ public inherited sharing class PS_Request {
             request.setEndpoint(getEndpoint(endpoint, commitmentId));
             request.setMethod(method.name());
             setHeader(request, endpoint);
+
+            // Default timeout is 10s if the value is not specified
+            if (timeout != null) {
+                request.setTimeout(timeout);
+            }
 
             // Set the body as a JSON object...
             if (String.isNotBlank(jsonBody)) {

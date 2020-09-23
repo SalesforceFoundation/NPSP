@@ -81,6 +81,20 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
+    * @description Creates an HttpRequest for a new commitment creation
+    * @param jsonRequestBody JSON containing parameters for the purchase call request body
+    * @return HttpRequest
+    */
+    public HttpRequest buildCreateRequest(String jsonRequestBody) {
+        return new PS_Request.Builder()
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withRecommendedTimeout()
+            .withBody(jsonRequestBody)
+            .build();
+    }
+
+    /***
     * @description Constructs the Commitment request body for the specified Recurring Donation
     * @param recordId Recurring Donation Id
     * @param token Payment Method Token

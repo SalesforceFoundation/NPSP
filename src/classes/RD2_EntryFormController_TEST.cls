@@ -263,7 +263,7 @@ private with sharing class RD2_EntryFormController_TEST {
         Test.setMock(HttpCalloutMock.class, callout);
 
         String jsonRequestBody = RD2_EntryFormController.getCommitmentRequestBody(recordId, paymentMethodToken);
-        UTIL_Http.Response response = RD2_EntryFormController.sendCommitmentRequest(recordId, jsonRequestBody);
+        UTIL_Http.Response response = RD2_EntryFormController.sendCommitmentRequest(jsonRequestBody);
         Test.stopTest();
 
         System.assertNotEquals(null, response, 'The Commitment response should be returned');

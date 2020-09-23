@@ -292,13 +292,14 @@ public with sharing class RD2_EntryFormController {
         UTIL_Http.Response response;
         
         try {
-            response = sendCommitmentRequest(recordId, jsonRequestBody);
+            response = sendCommitmentRequest(jsonRequestBody);
 
             if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
                 // If the commitment is created, then update RD fields: 
                 // Commitment Id, credit card expiry date and last 4.
 
-                // Ensure DML error (if any) on the RD update is returned to the LWC as a response.
+                // Ensure DML error (if any) on the RD update is returned to the LWC 
+                // as a response or an AuraHandled exception (either will work).
             }        
         
         } catch (Exception ex) {
@@ -314,16 +315,12 @@ public with sharing class RD2_EntryFormController {
 
     /***
     * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
-    * @param recordId Recurring Donation Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return String: JSON containing the response with success/error status and message
     */
-    public static UTIL_Http.Response sendCommitmentRequest(Id recordId, String jsonRequestBody) {
-        HttpRequest request = new PS_Request.Builder()
-            .withMethod(UTIL_Http.Method.POST)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
-            .withBody(jsonRequestBody)
-            .build();
+    public static UTIL_Http.Response sendCommitmentRequest(String jsonRequestBody) {
+        HttpRequest request = new PS_CommitmentRequest()
+            .buildCreateRequest(jsonRequestBody);
 
         return requestService.sendRequest(request);
     }
