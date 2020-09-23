@@ -525,5 +525,6 @@ API Check And Enable Gift Entry
     ...                Enable Gift Entry
 
 Add instance to suite metadata
+    Documentation]    Logs the org instance number in the metadata on the log
     &{org_info} =  Get Org Info
     Set suite metadata  Org Instance:  ${org_info['instance_name']}  top=True
