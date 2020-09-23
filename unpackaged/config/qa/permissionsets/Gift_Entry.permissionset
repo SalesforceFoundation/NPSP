@@ -30,59 +30,11 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_BatchHeaderField</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_Element</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_Layout</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_PermissionValidator</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_RenderWrapper</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_Section</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_Service</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_ServiceGiftEntry</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%FORM_Template</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%GE_DefaultTemplate</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%GE_FormRendererService</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%GE_FormServiceController</apexClass>
+        <apexClass>%%%NAMESPACE%%%GE_Template</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>%%%NAMESPACE%%%GE_GiftEntryController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%GE_GiftEntry_UTIL</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -91,10 +43,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>%%%NAMESPACE%%%GE_PaymentServices</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>%%%NAMESPACE%%%GE_TemplateBuilderCtrl</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -973,16 +921,6 @@
         <editable>true</editable>
         <field>%%%NAMESPACE%%%Form_Template__c.%%%NAMESPACE%%%Template_JSON__c</field>
         <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>npe01__OppPayment__c.%%%NAMESPACE%%%Payment_Status__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>npe5__Affiliation__c.%%%NAMESPACE%%%Contact_Link__c</field>
-        <readable>false</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Gift Entry</label>
