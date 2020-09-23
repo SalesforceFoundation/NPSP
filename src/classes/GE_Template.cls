@@ -513,6 +513,11 @@ public with sharing class GE_Template {
 
             SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
             SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
+
+            if(objField == null) {
+                return false;
+            }
+
             Set<SObjectField> fields = new Set<SObjectField>{objField};
 
             if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
