@@ -299,8 +299,11 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         let recurringType = event.target.value;
         this.updatePlannedInstallmentsVisibility(recurringType);
 
-        // When recurring type changes, parent form needs to reevaluate Elevate widget
-        this.dispatchEvent(new CustomEvent('recurringtypeevent', { detail: { 'recurringType': recurringType }}));
+        // Notify the main entry form about the Recurring Type value change
+        this.dispatchEvent(new CustomEvent(
+            'typechange', 
+            { detail: { 'recurringType': recurringType }}
+        ));
     }
 
     /**
@@ -473,11 +476,13 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /***
-     * @description Returns value of RecurringType__c
+     * @description Returns value of the Recurring Type field
      */
     @api
     getRecurringType() {
-        return this.template.querySelector(`lightning-input-field[data-id='${FIELD_RECURRING_TYPE.fieldApiName}']`).value;
+        const recurringType = this.template.querySelector(`lightning-input-field[data-id='${FIELD_RECURRING_TYPE.fieldApiName}']`)
+        
+        return recurringType ? recurringType.value : null;
     }
 
     /**

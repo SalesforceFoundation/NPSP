@@ -1,4 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
+import CURRENCY from '@salesforce/i18n/currency';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
 
@@ -76,7 +77,6 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isElevateWidgetDisplayed = false;
     isElevateCustomer = false;
-    userDefaultCurrency;
 
     @track error = {};
 
@@ -98,7 +98,6 @@ export default class rd2EntryForm extends LightningElement {
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
-                this.userDefaultCurrency = response.userDefaultCurrency;
                 this.isSettingReady = true;
                 this.rdSettings = response;
                 this.customFields = response.customFieldSets;
@@ -218,31 +217,67 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Changing recurring type requires reevaluation of Elevate widget
+    * @description Recurring Type change might hide or display the credit card widget
     * @param event
     */
-    handleRecurringTypeEvent(event) {
-        this.evaluateElevateWidget(this.getPaymentMethod());
+    handleRecurringTypeChange(event) {
+        this.handleElevateWidgetDisplay();
     }
 
     /***
-     * @description Changing recurring type requires reevaluation of Elevate widget
+     * @description Currency change might hide or display the credit card widget
      * @param event
      */
     handleCurrencyChange(event) {
-        this.evaluateElevateWidget(this.getPaymentMethod());
+        this.handleElevateWidgetDisplay();
     }
 
     /***
-    * @description Checks if credit card widget should be displayed.
+    * @description Checks if the credit card widget should be displayed.
+    */
+    handleElevateWidgetDisplay() {
+        if (this.isElevateCustomer) {
+            this.evaluateElevateWidget(this.getPaymentMethod());
+        }
+    }
+
+    /***
+    * @description Checks if the credit card widget should be displayed.
+    * The Elevate widget is applicable to new RDs only.
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetDisplayed = this.isElevateCustomer === true
-            && !this.isEdit // The Elevate widget is applicable to new RDs only
-            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD // Verify the payment method value
-            && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN // Elevate currently doesn't support fixed length
+            && !this.isEdit
+            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+            && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN
             && this.isCurrencyUSD();
+    }
+
+    /***
+     * @description Returns value of the Payment Method field
+     */
+    getPaymentMethod() {
+        const paymentMethod = this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`);
+        
+        return paymentMethod ? paymentMethod.value : null;
+    }
+
+    /***
+     * @description Returns true if the currency code on the Recurring Donatation is USD
+     */
+    isCurrencyUSD() {
+        let currencyCode;
+
+        if (this.isMultiCurrencyEnabled) {
+            currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
+
+        } else {
+            currencyCode = CURRENCY;
+        }
+
+        console.log('currencyCode: ' + currencyCode);
+        return CURRENCY === CURRENCY_CODE_USD;
     }
 
     /***
@@ -306,23 +341,6 @@ export default class rd2EntryForm extends LightningElement {
             : this.customFieldsComponent.returnValues();
 
         return { ...scheduleFields, ...donorFields, ...extrafields, ...this.returnValues() };
-    }
-
-    /***
-     * @description Returns value of PaymentMethod__c
-     */
-    getPaymentMethod() {
-        return this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`).value;
-    }
-
-    /***
-     * @description Returns boolean true if currency is USD
-     */
-    isCurrencyUSD() {
-        let isoCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
-        return isNull(isoCode)
-            ? this.userDefaultCurrency === CURRENCY_CODE_USD
-            : isoCode === CURRENCY_CODE_USD;
     }
 
     /***

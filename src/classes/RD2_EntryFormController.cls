@@ -77,7 +77,6 @@ public with sharing class RD2_EntryFormController {
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
             'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
-            'userDefaultCurrency' => UserInfo.getDefaultCurrency(),
             'parentSObjectType' => parentSObjectType,
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),

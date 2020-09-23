@@ -52,8 +52,6 @@ private with sharing class RD2_EntryFormController_TEST {
             'Recurring Donation Auto Naming setting should be returned accordingly');
         System.assertEquals(UserInfo.isMultiCurrencyOrganization(), (Boolean) orgSettingsByKey.get('isMultiCurrencyEnabled'),
             'Multi Currency Org should be detected in the configuration.');
-        System.assertEquals(UserInfo.getDefaultCurrency(), (String) orgSettingsByKey.get('userDefaultCurrency'),
-            'User Default Currency should be detected in the configuration.');
         System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
             'Parent Sobject type should be correctly identified when value is not null');
 
