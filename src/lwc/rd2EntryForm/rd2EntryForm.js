@@ -30,13 +30,15 @@ import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccess
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
 
-import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
-import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
-import contactHasUSAddress from '@salesforce/apex/RD2_entryFormController.contactHasUSAddress';
+import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
+import checkRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.checkRequiredFieldPermissions';
+
+import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 
 const RECURRING_TYPE_OPEN = 'Open';
 const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
-const CURRENCY_CODE_USD = 'USD';
+const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
+const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -77,6 +79,11 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isElevateWidgetDisplayed = false;
     isElevateCustomer = false;
+    contactId;
+    contact = {
+        MailingCountry: null
+    };
+
 
     @track error = {};
 
@@ -207,6 +214,34 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
+    /**
+     * @description Handles contact change only when the org is connected to Elevate
+     * and a new Recurring Donation is being created.
+     * Otherwise, contact data should not be retrieved from database.
+     */
+    handleContactChange(event) {
+        if (this.isElevateCustomer && !this.isEdit) {
+            this.contactId = event.detail && event.detail.value ? event.detail.value : event.detail;
+            this.contact.MailingCountry = null;
+        }
+    }
+
+    /**
+     * @description Retrieves the contact data whenever a contact is changed
+     * The data is not refreshed when the contact Id is null.
+     */
+    @wire(getRecord, { recordId: '$contactId', fields: MAILING_COUNTRY_FIELD })
+    wiredGetRecord({ error, data }) {
+        if (data) {
+            this.contact.MailingCountry = data.fields.MailingCountry.value;
+
+            this.handleElevateWidgetDisplay();
+            
+        } else if (error) {
+            this.handleError(error);
+        }
+    }
+
     /***
     * @description Checks if form re-rendering is required due to payment method change
     * @param event Contains new payment method value
@@ -251,22 +286,15 @@ export default class rd2EntryForm extends LightningElement {
             && !this.isEdit
             && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
             && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN
-            && this.isCurrencyUSD();
+            && this.isCurrencySupported()
+            && this.isCountrySupported();
     }
 
     /***
-     * @description Returns value of the Payment Method field
+     * @description Returns true if the currency code on the Recurring Donatation 
+     * is supported by the Elevate credit card widget
      */
-    getPaymentMethod() {
-        const paymentMethod = this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`);
-
-        return paymentMethod ? paymentMethod.value : null;
-    }
-
-    /***
-     * @description Returns true if the currency code on the Recurring Donatation is USD
-     */
-    isCurrencyUSD() {
+    isCurrencySupported() {
         let currencyCode;
 
         if (this.isMultiCurrencyEnabled) {
@@ -276,7 +304,20 @@ export default class rd2EntryForm extends LightningElement {
             currencyCode = CURRENCY;
         }
 
-        return currencyCode === CURRENCY_CODE_USD;
+        return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
+    }
+
+    /***
+     * @description Returns true if the Contact.MailingCountry
+     * is supported by the Elevate credit card widget
+     */
+    isCountrySupported() {
+        const country = (this.contactId && this.contact && this.contact.MailingCountry)
+            ? this.contact.MailingCountry
+            : null;
+
+        return isNull(country)
+            || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
     }
 
     /***
@@ -479,6 +520,15 @@ export default class rd2EntryForm extends LightningElement {
      */
     get saveButton() {
         return this.template.querySelector("[data-id='submitButton']");
+    }
+
+    /***
+     * @description Returns value of the Payment Method field
+     */
+    getPaymentMethod() {
+        const paymentMethod = this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`);
+
+        return paymentMethod ? paymentMethod.value : null;
     }
 
     /**
