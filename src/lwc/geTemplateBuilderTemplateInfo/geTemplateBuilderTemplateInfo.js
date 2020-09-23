@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch } from 'c/utilTemplateBuilder';
 import { isEmpty, isFunction, handleError } from 'c/utilCommon';
-import checkNameUniqueness from '@salesforce/apex/FORM_ServiceGiftEntry.checkNameUniqueness';
+import checkNameUniqueness from '@salesforce/apex/GE_GiftEntryController.checkNameUniqueness';
 import GeLabelService from 'c/geLabelService';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
