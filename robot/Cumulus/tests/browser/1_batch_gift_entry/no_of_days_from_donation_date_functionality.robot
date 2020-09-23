@@ -9,13 +9,17 @@ Library         DateTime
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Run Keywords
+...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
+...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
 Match Based on Number of Days from Donation Date Functionality
-    [Documentation]    The number of days from donation date field on the BGE wizard allows matching to be made by providing a margin of error on the Donation Date field for a record. If the gift created is within range of that date, gift is matched to the existing donation
-    [tags]  stable
+    [Documentation]    The number of days from donation date field on the BGE wizard allows matching to be made by providing
+    ...                a margin of error on the Donation Date field for a record. If the gift created is within range of that date,
+    ...                gift is matched to the existing donation
+    [tags]             stable
     Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
     Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account

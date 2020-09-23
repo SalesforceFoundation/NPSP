@@ -7,7 +7,9 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
-Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Run Keywords
+...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
+...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -15,6 +17,7 @@ Create a new opportunity for a contact with open donations
     #Enter an account with open donations, then clear it and enter a contact with open donations, then choose to create a new opp and process it
     [tags]  stable
     ${ns} =  Get NPSP Namespace Prefix
+    Set Suite Variable      ${ns}
     &{batch} =       API Create DataImportBatch
     ...    ${ns}Batch_Process_Size__c=50
     ...    ${ns}Batch_Description__c=Created via API
@@ -24,6 +27,7 @@ Create a new opportunity for a contact with open donations
     ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true
     ...    ${ns}GiftBatch__c=true
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]
+    Set Suite Variable    &{batch}
     &{account} =     API Create Organization Account
     &{contact} =     API Create Contact
     Store Session Record      Account    ${contact}[AccountId]
