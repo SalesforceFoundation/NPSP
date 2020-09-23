@@ -46,23 +46,13 @@
         helper.setDefaultAddress(component);
         component.set('v.showChangeAddressPopup', false);
         component.set('v.addrNew', {});
-        component.set('v.isExistingAddrSectionOpen', true);
     },
 
     /*******************************************************************************************************
      * @description tracks which existing address was last selected in the popup
      */
     onPressAddrTile : function(component, event /* , helper */) {
-        var iAddr = Number(event.currentTarget.getAttribute('data-iAddr'));
-        component.set('v.iAddrSelected', iAddr);
-    },
-
-    /*******************************************************************************************************
-     * @description hides/shows the existing address/new address sections of the popup
-     */
-    toggleAddrSection : function(component /* , event, helper */) {
-        var isOpen = component.get('v.isExistingAddrSectionOpen');
-        component.set('v.isExistingAddrSectionOpen', !isOpen);
-    },
-
+        let addressIndex = event.getSource().get('v.value');
+        component.set('v.iAddrSelected', addressIndex);
+    }
 })

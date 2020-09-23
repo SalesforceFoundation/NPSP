@@ -10,7 +10,7 @@
         var iAddrSelected;
 
         // figure out if changing default address or creating a new one
-        if (component.get('v.isExistingAddrSectionOpen')) {
+        if (component.find("addressSelectionAccordion").get('v.activeSectionName') === $A.get('$Label.npo02.SelectExistingAddress')) {
             iAddrSelected = component.get('v.iAddrSelected');
             addr = listAddr[iAddrSelected];
         } else {

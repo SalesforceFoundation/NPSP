@@ -1,5 +1,11 @@
-.THIS li.selected {
+.THIS .selected-address {
     background-color: token(colorBackgroundRowSelected);
+}
+
+.THIS .address-button {
+    width: 100%;
+    line-height: 1.25rem;
+    margin-bottom: 2px;
 }
 
 .THIS .slds-modal__container {
@@ -8,6 +14,7 @@
     max-width: 400px;
 }
 
-.THIS .slds-section-title_divider {
-    padding: 8px;
+.THIS .address-text {
+    margin-left: -10rem;
+    text-align: left;
 }
