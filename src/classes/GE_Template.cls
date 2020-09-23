@@ -470,12 +470,14 @@ public with sharing class GE_Template {
         }
 
         private void validate(String objDevName, String fieldDevName) {
-            if (permissionErrorsBySObject.containsKey(objDevName)) {
-                permissionErrorsBySObject.get(objDevName).add(fieldDevName);
-            } else {
-                permissionErrorsBySObject.put(objDevName, new Set<String>{
-                        fieldDevName
-                });
+            if(!isValid(objDevName, fieldDevName)) {
+                if (permissionErrorsBySObject.containsKey(objDevName)) {
+                    permissionErrorsBySObject.get(objDevName).add(fieldDevName);
+                } else {
+                    permissionErrorsBySObject.put(objDevName, new Set<String>{
+                            fieldDevName
+                    });
+                }
             }
         }
 
