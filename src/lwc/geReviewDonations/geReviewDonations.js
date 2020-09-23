@@ -5,7 +5,7 @@ import { handleError } from 'c/utilTemplateBuilder';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
-import getOpenDonations from '@salesforce/apex/GE_FormRendererService.getOpenDonations';
+import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
 
 const PAYMENT = 'payment';
 const OPPORTUNITY = 'opportunity';
