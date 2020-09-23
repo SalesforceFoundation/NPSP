@@ -577,8 +577,7 @@ public with sharing class GE_Template {
 
         /*******************************************************************************************************
         * @description Format FLS errors for the UI in a readable format, pairing all fields with their associated SObject
-        * @param permissionErrorsBySObject - map of all FLS fields in error with their associated SObject
-         * @return {String} message
+        * @return {String} message
         */
         private String formatFLSError() {
             String message;
