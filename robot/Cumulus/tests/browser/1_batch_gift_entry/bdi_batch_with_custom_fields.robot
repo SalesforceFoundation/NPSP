@@ -8,7 +8,7 @@ Suite Setup     Run keywords
 ...             Setup Variables
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/DataImportPageObject.py
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
