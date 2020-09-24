@@ -30,10 +30,6 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>%%%NAMESPACE%%%GE_Template</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>%%%NAMESPACE%%%GE_GiftEntryController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
