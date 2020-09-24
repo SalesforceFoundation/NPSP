@@ -40,6 +40,7 @@ Change Name Display Settings on Manage Household Page
     ...                                     object_id=${contact1}[AccountId]
     Click Actions Link                      Manage Household
     Go To Page                              Custom                                                              ManageHousehold
+    Current Page Should Be                  Custom                                                              ManageHousehold
     Add contact                             Existing                                                            ${contact2}[FirstName] ${contact2}[LastName]
     Current Page Should Be                  Details                                                             Account
     Wait Until Loading Is Complete
