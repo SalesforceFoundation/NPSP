@@ -131,8 +131,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                                 fieldMapping.Source_Field_API_Name :
                                 isObjectMappedLookup ?
                                         fieldMappingName : null;
-                        // Add the source fields used in the Template
-                        if (!fieldApiNames.contains(sourceFieldName.toLowerCase())) {
+                        SObjectField field = DataImport__c.SObjectType.getDescribe()
+                                .fields.getMap().get(sourceFieldName);
+
+                        // Add the source fields used in the Template but only if the source field name is valid
+                        if (!fieldApiNames.contains(sourceFieldName.toLowerCase()) && field != null) {
                             fieldApiNames.add(sourceFieldName.toLowerCase());
                         }
 
@@ -141,9 +144,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                         if ((fieldMapping != null &&
                                 fieldMapping.Source_Field_Data_Type == 'REFERENCE')
                                 || isObjectMappedLookup) {
-
-                            SObjectField field = DataImport__c.SObjectType.getDescribe()
-                                    .fields.getMap().get(sourceFieldName);
 
                             if (field != null) {
                                 String relatedObjNameField =
@@ -160,6 +160,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 }
             }
         }
+        System.debug(JSON.serializePretty(fieldApiNames));
         return fieldApiNames;
     }
 
