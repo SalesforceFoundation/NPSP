@@ -8,6 +8,7 @@ Library         cumulusci.robotframework.PageObjects
 Library         DateTime
 Suite Setup     Run keywords
 ...             Open Test Browser
+...             Add instance to suite metadata
 ...             Setup Test Data
 Suite Teardown  Run Keywords
 ...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
