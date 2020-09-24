@@ -435,35 +435,45 @@ public with sharing class GE_Template {
 
                     if (element.elementType == FIELD_ELEMENT_TYPE) {
                         for (String fieldDevName : element.dataImportFieldMappingDevNames) {
-                            if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
+                            if (fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
                                 BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
 
-                                String targetObjDevName = fieldMapping.Target_Object_API_Name;
-                                String targetFieldDevName = fieldMapping.Target_Field_API_Name;
-                                String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
-                                String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
+                                if (fieldMapping.isDescribable) {
+                                    String targetObjDevName = fieldMapping.Target_Object_API_Name;
+                                    String targetFieldDevName = fieldMapping.Target_Field_API_Name;
+                                    String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
+                                    String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
 
-                                if(!isValid(sourceObjDevName, accessLevels)) {
-                                    permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
-                                }
-
-                                if(!isValid(targetObjDevName, accessLevels)) {
-                                    permissionErrorsBySObject.put(targetObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
-                                }
-
-                                if(!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
-                                    if(permissionErrorsBySObject.containsKey(sourceObjDevName)) {
-                                        permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
-                                    } else {
-                                        permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{sourceFieldDevName});
+                                    if (!isValid(sourceObjDevName, accessLevels)) {
+                                        permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
+                                            OBJECT_CRUD_ERROR
+                                        });
                                     }
-                                }
 
-                                if(!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
-                                    if(permissionErrorsBySObject.containsKey(targetObjDevName)) {
-                                        permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
-                                    } else {
-                                        permissionErrorsBySObject.put(targetObjDevName, new Set<String>{targetFieldDevName});
+                                    if (!isValid(targetObjDevName, accessLevels)) {
+                                        permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
+                                            OBJECT_CRUD_ERROR
+                                        });
+                                    }
+
+                                    if (!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
+                                        if (permissionErrorsBySObject.containsKey(sourceObjDevName)) {
+                                            permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
+                                        } else {
+                                            permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
+                                                sourceFieldDevName
+                                            });
+                                        }
+                                    }
+
+                                    if (!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
+                                        if (permissionErrorsBySObject.containsKey(targetObjDevName)) {
+                                            permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
+                                        } else {
+                                            permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
+                                                targetFieldDevName
+                                            });
+                                        }
                                     }
                                 }
                             }

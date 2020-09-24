@@ -65,10 +65,10 @@ export default class GeFormField extends LightningElement {
 
         if (this.isLookup || this.isLookupRecordType) {
             const objMappingDevName =
-                GeFormService.importedRecordFieldNames.includes(this.fieldApiName) ?
-                    GeFormService.getObjectMappingWrapperByImportedFieldName(this.fieldApiName)
+                GeFormService.importedRecordFieldNames.includes(this.targetFieldApiName) ?
+                    GeFormService.getObjectMappingWrapperByImportedFieldName(this.targetFieldApiName)
                         .DeveloperName :
-                    this.objectMappingDevName;
+                    this.targetObjectMappingDevName;
             const lookupDetail = {
                 ...event.detail,
                 fieldApiName: this.element.fieldApiName,
@@ -102,7 +102,7 @@ export default class GeFormField extends LightningElement {
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
     handlePicklistChange() {
-        if (this.fieldApiName === DONATION_DONOR_FIELD.fieldApiName) {
+        if (this.targetFieldApiName === DONATION_DONOR_FIELD.fieldApiName) {
             const changeDonationDonorEvent = new CustomEvent(
                 'changedonationdonor',
                 {detail: {value: this.value}});
@@ -257,7 +257,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get required() {
-        return (this.fieldInfo && this.fieldInfo.Is_Required && this.fieldType !== BOOLEAN_TYPE) || 
+        return (this.fieldMapping && this.fieldMapping.Is_Required && this.fieldType !== BOOLEAN_TYPE) ||
             (this.element && this.element.required);
     }
 
@@ -277,25 +277,25 @@ export default class GeFormField extends LightningElement {
         return undefined;
     }
 
-    get fieldInfo() {
+    get fieldMapping() {
         return isNotEmpty(this.targetFieldName) ?
             GeFormService.getFieldMappingWrapperFromTarget(this.targetFieldName) :
             GeFormService.getFieldMappingWrapper(this.formElementName);
     }
 
-    get fieldDescribeInfo() {
-        if(this.objectDescribeInfo) {
-            return this.objectDescribeInfo.fields[this.fieldApiName];
+    get targetFieldDescribeInfo() {
+        if(this.objectDescribeInfo && this.objectDescribeInfo.fields) {
+            return this.objectDescribeInfo.fields[this.targetFieldApiName];
         }
     }
 
-    get objectInfo() {
-        return GeFormService.getObjectMappingWrapper(this.objectMappingDevName);
+    get objectMapping() {
+        return GeFormService.getObjectMappingWrapper(this.targetObjectMappingDevName);
     }
 
     get fieldType() {
-        if(isNotEmpty(this.fieldInfo)) {
-            return this.fieldInfo.Target_Field_Data_Type;
+        if(isNotEmpty(this.fieldMapping)) {
+            return this.fieldMapping.Target_Field_Data_Type;
         }
     }
 
@@ -304,18 +304,18 @@ export default class GeFormField extends LightningElement {
     }
 
     get isRichText() {
-        if(typeof this.fieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
-            return this.fieldDescribeInfo.htmlFormatted;
+        if(typeof this.targetFieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
+            return this.targetFieldDescribeInfo.htmlFormatted;
         }
     }
 
     get isLookupRecordType() {
-        return this.fieldType === LOOKUP_TYPE && this.fieldApiName === RECORD_TYPE_FIELD.fieldApiName;
+        return this.fieldType === LOOKUP_TYPE && this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
     @api
     get isLookup() {
-        return this.fieldType === LOOKUP_TYPE && this.fieldApiName !== RECORD_TYPE_FIELD.fieldApiName;
+        return this.fieldType === LOOKUP_TYPE && this.targetFieldApiName !== RECORD_TYPE_FIELD.fieldApiName;
     }
 
     @api
@@ -324,35 +324,35 @@ export default class GeFormField extends LightningElement {
     }
 
     get isTextArea() {
-        if(typeof this.fieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
-            return !this.fieldDescribeInfo.htmlFormatted;
+        if(typeof this.targetFieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
+            return !this.targetFieldDescribeInfo.htmlFormatted;
         }
     }
 
     @api
-    get objectMappingDevName() {
-        if(isNotEmpty(this.fieldInfo)) {
-            return this.fieldInfo.Target_Object_Mapping_Dev_Name;
+    get targetObjectMappingDevName() {
+        if(isNotEmpty(this.fieldMapping)) {
+            return this.fieldMapping.Target_Object_Mapping_Dev_Name;
         }
     }
 
     get objectApiName() {
-        if(typeof this.objectInfo !== 'undefined') {
-            return this.objectInfo.Object_API_Name;
+        if(typeof this.objectMapping !== 'undefined') {
+            return this.objectMapping.Object_API_Name;
         }
     }
 
     @api
-    get fieldApiName() {
-        if(isNotEmpty(this.fieldInfo)) {
-            return this.fieldInfo.Target_Field_API_Name;
+    get targetFieldApiName() {
+        if(isNotEmpty(this.fieldMapping)) {
+            return this.fieldMapping.Target_Field_API_Name;
         }
     }
 
     @api
     get sourceFieldAPIName() {
-        if(isNotEmpty(this.fieldInfo)) {
-            return this.fieldInfo.Source_Field_API_Name;
+        if(isNotEmpty(this.fieldMapping)) {
+            return this.fieldMapping.Source_Field_API_Name;
         }
     }
 
@@ -360,19 +360,19 @@ export default class GeFormField extends LightningElement {
     // we bind to Opportunity.AccountId / Opportunity.Primary_Contact__c
     get lookupFieldApiName() {
         if (this.objectApiName === DATA_IMPORT.objectApiName) {
-            if (this.fieldApiName === ACCOUNT1_IMPORTED.fieldApiName) {
+            if (this.targetFieldApiName === ACCOUNT1_IMPORTED.fieldApiName) {
                 return ACCOUNT_ID.fieldApiName;
-            } else if (this.fieldApiName === CONTACT1_IMPORTED.fieldApiName) {
+            } else if (this.targetFieldApiName === CONTACT1_IMPORTED.fieldApiName) {
                 return PRIMARY_CONTACT.fieldApiName;
             }
         }
-        return this.fieldApiName;
+        return this.targetFieldApiName;
     }
 
     get lookupObjectApiName() {
         if(this.objectApiName === DATA_IMPORT.objectApiName) {
-            if(this.fieldApiName === ACCOUNT1_IMPORTED.fieldApiName
-                || this.fieldApiName === CONTACT1_IMPORTED.fieldApiName) {
+            if(this.targetFieldApiName === ACCOUNT1_IMPORTED.fieldApiName
+                || this.targetFieldApiName === CONTACT1_IMPORTED.fieldApiName) {
                 return OPPORTUNITY.objectApiName;
             }
         }
@@ -409,9 +409,9 @@ export default class GeFormField extends LightningElement {
 
     @api
     get fieldValueAndFieldApiName() {
-        let fieldWrapper = { value: this.value, apiName: this.fieldApiName };
+        let fieldWrapper = { value: this.value, apiName: this.targetFieldApiName };
         let returnMap = {};
-        returnMap[ this.fieldApiName ] = fieldWrapper;
+        returnMap[ this.targetFieldApiName ] = fieldWrapper;
 
         return returnMap;
     }
@@ -565,8 +565,8 @@ export default class GeFormField extends LightningElement {
                 detail: {
                     value: this.value,
                     displayValue: this.value,
-                    fieldApiName: this.fieldApiName,
-                    objectMappingDevName: this.objectMappingDevName
+                    fieldApiName: this.targetFieldApiName,
+                    objectMappingDevName: this.targetObjectMappingDevName
                 }
             }
         ));
