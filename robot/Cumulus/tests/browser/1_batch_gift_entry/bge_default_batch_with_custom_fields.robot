@@ -89,7 +89,8 @@ Create New gift and process batch and validate
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Batch To Process    BDI_DataImport_BATCH    Completed
-    Click Button With Value   Close
+    Click Button With Value      Close
+    Reload Page
     Wait Until Element Is Visible    text:All Gifts
     Verify Row Count    1
 
