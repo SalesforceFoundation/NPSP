@@ -34,7 +34,7 @@ Setup Variables
 *** Test Cases ***
 
 Create Data Import Via API
-    [tags]  stable
+    [tags]  unstable
     &{data_import} =  API Create DataImport    
     ...        ${ns}Account1_Name__c=${acc1}    
     ...        ${ns}Account2_Name__c=${acc2} 
