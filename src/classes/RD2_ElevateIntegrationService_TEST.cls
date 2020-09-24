@@ -500,6 +500,68 @@ public class RD2_ElevateIntegrationService_TEST {
             'The Opportunity should not link to any RD through CommitmentId on update');
     }
 
+    /**
+    * @description Verifies that when the Commitment in Elevate is cancelled then
+    * the RD Closed Reason will be switched to the user provided Closed Reason value. 
+    */
+    @isTest
+    private static void shouldUpdateClosedReasonWhenCommitmentIsCancelled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
+        insert rd;
+
+        UTIL_Http_TEST.CalloutMock response = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_OK);
+    
+        String closedReason = 'Original Reason';
+
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, response);
+
+        rd.ClosedReason__c = closedReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(closedReason, rd.ClosedReason__c,
+            'RD Closed Reason should be swapped back to the user provided value when the callout succeeds');
+    }
+
+    /**
+    * @description Verifies that when Elevate callout is completed and fail, RD Close Reason will not be updated back to the original Closed Reason
+    */
+    @isTest
+    private static void shouldNotUpdateClosedReasonWhenCommitmentCannotBeCancelled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
+        insert rd;
+
+        UTIL_Http_TEST.CalloutMock response = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST)
+            .withStatus('Fail');
+
+        String closedReason = 'Original Reason';
+
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, response);
+
+        rd.ClosedReason__c = closedReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertNotEquals(closedReason, rd.ClosedReason__c,
+            'RD Closed Reason should not swapped back to the user provided value when the callout fails');
+    }
+
     // Helpers
     ///////////////////
 

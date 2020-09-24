@@ -373,6 +373,8 @@
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
         <members>PS_IntegrationService_TEST</members>
+        <members>PS_Request</members>
+        <members>PS_Request_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
@@ -581,6 +583,8 @@
         <members>UTIL_FiscalYearInfo_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
+        <members>UTIL_Http</members>
+        <members>UTIL_Http_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
@@ -1664,6 +1668,7 @@
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
@@ -1708,6 +1713,7 @@
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_EnablementSimpleIntro</members>
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
+        <members>RD2_EndDateElevateCannotBeInFuture</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>
         <members>RD2_EntryFormDonationSectionHeader</members>

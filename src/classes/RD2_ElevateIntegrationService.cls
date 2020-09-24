@@ -189,4 +189,33 @@ public inherited sharing class RD2_ElevateIntegrationService {
             }
         }
     }
+
+    /**
+    * @description Sends HttpRequest to Elevate to cancel Commitments for close Recurring Donations
+    * @param closedRDs Closed RDs with the user specified closed reason
+    * @return void
+    */
+    public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
+        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
+        List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
+
+        for (npe03__Recurring_Donation__c rd : closedRDs) {
+            HttpRequest request = new PS_Request.Builder()
+                .withCommitmentId(rd.CommitmentId__c)
+                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_CANCEL)
+                .withMethod(UTIL_Http.Method.POST)
+                .build();
+            
+            responses.add(requestService.sendRequest(request));
+        }
+
+        for (Integer i = 0; i < responses.size(); i++) {
+            if (responses[i].statusCode != UTIL_Http.STATUS_CODE_OK) {
+                //error handling, currently just populate the failing body onto the closed reason
+                closedRDs[i].ClosedReason__c = responses[i].body;
+            }
+        }
+
+        update closedRDs;
+    }
 }
