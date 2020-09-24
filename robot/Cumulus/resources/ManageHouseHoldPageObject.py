@@ -47,10 +47,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         lookup_ele=npsp_lex_locators['household_lookup_dropdown_menu']
         self.selenium.wait_until_element_is_visible(lookup_ele)
 
-        if option.lower() == "existing":
-            self.selenium.click_button("Add")
-
-        elif option.lower() == "new":
+        if option.lower() in ("new", "existing"):
             new_contact_locator=npsp_lex_locators['manage_hh_page']['add_contact_option'].format("New Contact")
             new_contact_btn=npsp_lex_locators['button-title'].format("New Contact")
             self.selenium.wait_until_element_is_visible(new_contact_locator)
