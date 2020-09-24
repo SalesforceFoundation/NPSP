@@ -1134,6 +1134,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         field.send_keys(value)
         time.sleep(3)
         field.send_keys(Keys.ENTER)
+        field.send_keys(Keys.ENTER)
         self.salesforce.wait_until_modal_is_open()
 
 
