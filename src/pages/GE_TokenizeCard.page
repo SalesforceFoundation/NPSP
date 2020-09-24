@@ -63,7 +63,7 @@
 
         /*******************************************************************************
         * @description Method listens for messages from a credit card widget LWC
-        * Event.data contains at least an "action" and optinally a "nameOnCard" value.
+        * Event.data contains at least an "action" and optionally a "nameOnCard" value.
         */
         window.onmessage = function (event) {
             if (event && event.origin !== lightningOrigin) {

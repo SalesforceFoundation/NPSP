@@ -5073,6 +5073,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batches</value>
     </labels>
     <labels>
+        <fullName>commonCardholderName</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the cardholder name during credit card entry</shortDescription>
+        <value>Cardholder Name</value>
+    </labels>
+    <labels>
         <fullName>commonCVV</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7027,14 +7035,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for the Template Name field</shortDescription>
         <value>Template Name</value>
-    </labels>
-    <labels>
-        <fullName>gePaymentRequestCardholderName</fullName>
-        <categories>Gift Entry, Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for the cardholder name during credit card entry</shortDescription>
-        <value>Cardholder Name</value>
     </labels>
     <labels>
         <fullName>gePaymentRequestTimedOut</fullName>
