@@ -8,6 +8,10 @@
     margin-bottom: 8px;
 }
 
+.THIS .address-text {
+    margin-right: auto;
+}
+
 .THIS .slds-modal__container {
     width: 35%;
     min-width: 270px;

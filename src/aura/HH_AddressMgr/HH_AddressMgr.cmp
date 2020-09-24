@@ -74,18 +74,17 @@
                                     <li>
                                         <lightning:button class="{!iAddr == v.iAddrSelected ? 'selected-address address-button' : 'address-button'}" 
                                             onclick="{!c.onPressAddrTile}" value="{!iAddr}" ariaDescribedBy="existingAdd">
-                                            <div class="slds-tile slds-tile_board">
-                                                <div class="slds-tile__detail" >
-                                                    <!-- address -->
-                                                    <p class="slds-text-body_small slds-text-color_default" id="existingAdd">
-                                                        {!addr.MailingStreet__c + (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}
-                                                        <br/>
-                                                        {!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}
-                                                        <br/>
-                                                        {!addr.MailingCountry__c}
-                                                    </p>
-                                                </div> 
-                                            </div>
+                                            <div class="slds-tile__detail address-text" >
+                                                <!-- address -->
+                                                <p class="slds-text-body_small slds-text-color_default slds-text-align_left" id="existingAdd">
+                                                    {!addr.MailingStreet__c + (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}
+                                                    <br/>
+                                                    {!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}
+                                                    <br/>
+                                                    {!addr.MailingCountry__c}
+                                                </p>
+                                            </div> 
+
                                         </lightning:button>
                                         </li>
                                     </aura:iteration>
