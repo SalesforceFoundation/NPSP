@@ -306,6 +306,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.click_element(option)
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+                self.selenium.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
             elif 'datetime' in type :
                 locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
@@ -314,6 +315,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.click_button(value)
                 self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
             else:
+                self.selenium.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
 
     def verify_error_for_field(self,**kwargs):
@@ -333,13 +335,36 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         value=self.npsp.return_locator_value("bge.value",field_name)
         self.npsp.click_link_with_text(value)
 
-    def verify_table_field_values(self,table,**kwargs):
+    def verify_table_field_values(self,name,byname=None,**kwargs):
         """Verifies that table has given field name with value.
-        Arguments are: table=table name, fieldname=fieldvalue
-        Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |"""
-        for field,value in kwargs.items():
-            locator=npsp_lex_locators["gift_entry"]["table"].format(table,field,value)
-            self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {table} table')
+        Arguments are: name which could be table name or a specific contact name, byname to search by contact name,
+        fieldname=fieldvalue
+        if the validation is to ensure the value exists in the table
+        Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |
+        If the validation is to ensure the value specified exists for a specific contact in the table
+        Eg: |Verify Table Field Values  |  John Doe  | True | Opportunity Amount=$150.00  |
+        """
+        if byname == "True":
+            for field,value in kwargs.items():
+                locator=npsp_lex_locators["gift_entry"]["datatable_field_by_name"].format(name,field,value)
+            self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} for row with {name}')
+        else:
+            for field,value in kwargs.items():
+                locator=npsp_lex_locators["gift_entry"]["table"].format(name,field,value)
+            self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {name} table')
+    
+    def perform_action_on_datatable_row(self,name,action):
+        """Select the specific gift entry data row based on the name parameter and
+        selects the action from the dropdown menu.
+        Eg: |Perform Action On Datatable Row  | ${contact2}[Name]     |     Delete
+        """
+        locator=npsp_lex_locators["gift_entry"]["datatable_options_icon"].format(name)
+        self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.scroll_element_into_view(locator)
+        self.selenium.click_element(locator)
+        menuitem=npsp_lex_locators["gift_entry"]["datatable-menu-item"].format(action)
+        self.selenium.wait_until_element_is_visible(menuitem,error= f"'{action}' is not displayed on the page")
+        self.selenium.click_element(menuitem)
 
     def verify_link_status(self, **kwargs):
         """ Verify the link is disabled/enabled, pass the name of the link
