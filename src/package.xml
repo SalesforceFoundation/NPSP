@@ -3785,7 +3785,17 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsApplicationStatus</members>
         <members>libsMoment</members>
+        <members>nonProfitAdminCheckGroup</members>
+        <members>nonProfitAdminCheckGroupIcon</members>
+        <members>nonProfitAdminCheckItem</members>
+        <members>nonProfitAdminChecklist</members>
+        <members>nonProfitGetProduct</members>
+        <members>nonProfitPage</members>
+        <members>nonProfitPrincipal</members>
+        <members>nonProfitResources</members>
+        <members>nonProfitVideoBanner</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>rd2EntryForm</members>

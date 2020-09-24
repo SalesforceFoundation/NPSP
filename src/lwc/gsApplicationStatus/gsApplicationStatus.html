@@ -1,20 +1,22 @@
 <template>
     <div class="container">
         <div class="imagen">Imagen</div>
-        <div if:false={penndig} class="info penndig">
-            <p>No Application Submitted | <a>Lear More</a></p>
-            <p>30 Days Remaining in Free Trail</p>
-            <button onclick={onGetFreeSldc} 
-                class="slds-button slds-button_brand">
-                Get Salesforce for Free
-            </button>
+        <div if:false={isApplicationSubmitted} class="info penndig">
+            <p>{labels.gsNoApplicationSubmitted} | <a>{labels.gsLearnMore}</a></p>
+            <p>{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
+            <a class="slds-button slds-button_brand" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">
+                {labels.gsApplyForFreeLicenses}
+            </a>
+                
+                
+            
         </div>
-        <div if:true={penndig} class="info submitted">
-            <p>Application Status: <span>Submitted</span></p>
-            <p>60 Days Remaining in Free Trail | <span>30 Days Added</span></p>
+        <div if:true={isApplicationSubmitted} class="info submitted">
+            <p>{labels.gsApplicationStatus}<span>{labels.gsSubmitted}</span></p>
+            <p>{diffInDays} {labels.gsDaysRemainingInFreeTrial} | <span>{labels.gsDaysAdded}</span></p>
             <button 
                 class="slds-button slds-button_outline-brand">
-                Check Status
+                {labels.gsCheckStatus}
             </button>
         </div>
     </div>

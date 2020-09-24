@@ -12691,4 +12691,78 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
     </labels>
+
+    <labels>
+        <fullName>gsNoApplicationSubmitted</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsNoApplicationSubmitted</shortDescription>
+        <value>No Application Submitted</value>
+    </labels>
+
+    <labels>
+        <fullName>gsLearnMore</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsLearnMore</shortDescription>
+        <value>Learn More</value>
+    </labels>
+
+    <labels>
+        <fullName>gsDaysRemainingInFreeTrial</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsDaysRemainingInFreeTrial</shortDescription>
+        <value>Days Remaining in Free Trial</value>
+    </labels>
+
+    <labels>
+        <fullName>gsApplyForFreeLicenses</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsApplyForFreeLicenses</shortDescription>
+        <value>Apply for Your Salesforce Licenses</value>
+    </labels>
+
+    <labels>
+        <fullName>gsApplicationStatus</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsApplicationStatus</shortDescription>
+        <value>Application Status: </value>
+    </labels>
+
+    <labels>
+        <fullName>gsSubmitted</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsSubmitted</shortDescription>
+        <value>Submitted</value>
+    </labels>
+
+    <labels>
+        <fullName>gsDaysAdded</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsDaysAdded</shortDescription>
+        <value>30 Days Added</value>
+    </labels>
+
+    <labels>
+        <fullName>gsCheckStatus</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsCheckStatus</shortDescription>
+        <value>Check Status</value>
+    </labels>
+
+    
 </CustomLabels>
