@@ -67,7 +67,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
         for (String dataImportObjectName : fieldMappingsByObjMappingDevName.keySet()) {
             BDI_ObjectMapping targetObjectMapping = objectMappingByDevName.get(dataImportObjectName);
-            if(targetObjectMapping != null) {
+            if (targetObjectMapping != null) {
                 String targetObject = targetObjectMapping.Object_API_Name;
                 List<BDI_FieldMapping> fieldMappingsForThisDataImportObject =
                         fieldMappingsByObjMappingDevName.get(dataImportObjectName);

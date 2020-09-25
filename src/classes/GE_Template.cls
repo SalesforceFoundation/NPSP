@@ -470,7 +470,7 @@ public with sharing class GE_Template {
         }
 
         private void validate(String objDevName, String fieldDevName) {
-            if(!isValid(objDevName, fieldDevName)) {
+            if (!isValid(objDevName, fieldDevName)) {
                 if (permissionErrorsBySObject.containsKey(objDevName)) {
                     permissionErrorsBySObject.get(objDevName).add(fieldDevName);
                 } else {
@@ -490,7 +490,7 @@ public with sharing class GE_Template {
 
             SObjectType objType = ((SObject) Type.forName(objDevName).newInstance()).getSObjectType();
 
-            if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
+            if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
                     && !permissionsService.canCreate(objType))
                     || (accessLevels.contains(AccessLevel.VALIDATE_READ)
                     && !permissionsService.canRead(objType))
@@ -514,13 +514,13 @@ public with sharing class GE_Template {
             SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
             SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
 
-            if(objField == null) {
+            if (objField == null) {
                 return false;
             }
 
             Set<SObjectField> fields = new Set<SObjectField>{objField};
 
-            if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
+            if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
                     && !permissionsService.canCreate(fields))
                     || (accessLevels.contains(AccessLevel.VALIDATE_READ)
                     && !permissionsService.canRead(fields))
@@ -562,14 +562,14 @@ public with sharing class GE_Template {
 
             // The map will contain only the object key if there is a CRUD error
             for (String objDevName : permissionErrorsBySObject.keySet()) {
-                if(permissionErrorsBySObject.get(objDevName).contains(OBJECT_CRUD_ERROR)) {
+                if (permissionErrorsBySObject.get(objDevName).contains(OBJECT_CRUD_ERROR)) {
                     crudErrors.add(objDevName);
                 }
             }
-            if(!crudErrors.isEmpty()) {
+            if (!crudErrors.isEmpty()) {
                 template.permissionErrorType = OBJECT_CRUD_ERROR;
                 template.permissionErrors = String.join(new List<String>(crudErrors), ', ');
-            } else if(crudErrors.isEmpty() && !permissionErrorsBySObject.values().isEmpty()){
+            } else if (crudErrors.isEmpty() && !permissionErrorsBySObject.values().isEmpty()){
                 template.permissionErrorType = FLS_ERROR;
                 template.permissionErrors = formatFLSError();
             }
@@ -581,7 +581,7 @@ public with sharing class GE_Template {
         */
         private String formatFLSError() {
             String message;
-            if(!permissionErrorsBySObject.isEmpty()) {
+            if (!permissionErrorsBySObject.isEmpty()) {
                 message = '';
                 List<String> crudErrors = new List<String>();
                 for (String objDevName : permissionErrorsBySObject.keySet()) {
