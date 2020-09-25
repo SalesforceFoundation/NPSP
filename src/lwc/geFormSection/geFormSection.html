@@ -5,7 +5,7 @@
                                is-collapsed={isCollapsed}
                                body-class="slds-m-bottom_large">
         <lightning-layout multiple-rows='true'>
-            <template for:each={section.elements}
+            <template for:each={renderableElements}
                       for:item='element'>
                 <!-- TODO: It would be great to make the layout sizing more dynamic,
                     but the lightning-layout-item needs to be in the same component as the lightning-layout.
@@ -13,7 +13,8 @@
                 <template if:false={element.componentName}>
                     <lightning-layout-item key={element.id}
                                            size='6'
-                                           medium-device-size='3'>
+                                           medium-device-size='3'
+                    >
                         <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
                             <c-ge-form-field element={element}
                                              oncreditcardvaluechange={handleChangeNameOnCardField}
