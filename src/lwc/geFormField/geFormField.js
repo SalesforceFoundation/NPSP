@@ -83,11 +83,11 @@ export default class GeFormField extends LightningElement {
             this.handlePicklistChange();
         }
 
-        if(this.isRichText) {
+        if (this.isRichText) {
             this.checkRichTextValidity();
         }
 
-        if(this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
+        if (this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
             // fire event for reactive widget component containing the Data Import field API name and Value
             // currently only used for the Donation Amount.
             fireEvent(null, 'widgetData', { donationAmount: this.value });
@@ -115,7 +115,7 @@ export default class GeFormField extends LightningElement {
      */
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
     wiredObjectInfo(response) {
-        if(response.data) {
+        if (response.data) {
             this.objectDescribeInfo = response.data;
         }
     }
@@ -123,11 +123,11 @@ export default class GeFormField extends LightningElement {
     connectedCallback() {
         const { defaultValue, recordValue } = this.element;
 
-        if(recordValue) {
+        if (recordValue) {
 
             // set the record value to the element value
             this.value = recordValue;
-        } else if(defaultValue) {
+        } else if (defaultValue) {
 
             // Set the default value if there is one
             // and no record value.
@@ -138,15 +138,15 @@ export default class GeFormField extends LightningElement {
     }
 
     getValueFromChangeEvent(event) {
-        if(this.fieldType === BOOLEAN_TYPE) {
+        if (this.fieldType === BOOLEAN_TYPE) {
             return event.detail.checked.toString();
-        } else if(this.isRichText) {
+        } else if (this.isRichText) {
             return event.target.value;
-        } else if(this.isLookup && event.detail.value) {
+        } else if (this.isLookup && event.detail.value) {
             const val = event.detail.value;
-            if(typeof val === 'string') {
+            if (typeof val === 'string') {
                 return val;
-            } else if(Array.isArray(val)) {
+            } else if (Array.isArray(val)) {
                 return val[0] ? val[0] : null;
             }
         }
@@ -163,7 +163,7 @@ export default class GeFormField extends LightningElement {
         // We need to check for invalid values, regardless if the field is required
         let fieldIsValid = this.checkFieldValidity();
 
-        if(this.element !== null && this.element.required) {
+        if (this.element !== null && this.element.required) {
             return isNotEmpty(this.value)
                 && this.value !== this.CUSTOM_LABELS.commonLabelNone
                 && fieldIsValid;
@@ -179,15 +179,15 @@ export default class GeFormField extends LightningElement {
     checkFieldValidity() {
         // TODO: Handle other input types, if needed
         const inputField = this.template.querySelector('[data-id="inputComponent"]');
-        if(typeof inputField !== 'undefined'
+        if (typeof inputField !== 'undefined'
             && inputField !== null
             && typeof inputField.reportValidity === 'function'
             && typeof inputField.checkValidity === 'function') {
                 inputField.reportValidity();
                 return inputField.checkValidity();
-        } else if(this.isRichText) {
+        } else if (this.isRichText) {
             this.checkRichTextValidity();
-            if(!this.richTextValid) {
+            if (!this.richTextValid) {
                 // workaround, field will not display as invalid if it is untouched
                 inputField.focus();
                 inputField.blur();
@@ -198,7 +198,7 @@ export default class GeFormField extends LightningElement {
     }
 
     checkRichTextValidity() {
-        if(this.element.required) {
+        if (this.element.required) {
             const isValid = isNotEmpty(this.value) && this.value.length > 0;
             this.richTextValid = isValid;
             return isValid;
@@ -284,7 +284,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get targetFieldDescribeInfo() {
-        if(this.objectDescribeInfo && this.objectDescribeInfo.fields) {
+        if (this.objectDescribeInfo && this.objectDescribeInfo.fields) {
             return this.objectDescribeInfo.fields[this.targetFieldApiName];
         }
     }
@@ -294,7 +294,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldType() {
-        if(isNotEmpty(this.fieldMapping)) {
+        if (isNotEmpty(this.fieldMapping)) {
             return this.fieldMapping.Target_Field_Data_Type;
         }
     }
@@ -304,7 +304,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get isRichText() {
-        if(typeof this.targetFieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
+        if (typeof this.targetFieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
             return this.targetFieldDescribeInfo.htmlFormatted;
         }
     }
@@ -324,34 +324,34 @@ export default class GeFormField extends LightningElement {
     }
 
     get isTextArea() {
-        if(typeof this.targetFieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
+        if (typeof this.targetFieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
             return !this.targetFieldDescribeInfo.htmlFormatted;
         }
     }
 
     @api
     get targetObjectMappingDevName() {
-        if(isNotEmpty(this.fieldMapping)) {
+        if (isNotEmpty(this.fieldMapping)) {
             return this.fieldMapping.Target_Object_Mapping_Dev_Name;
         }
     }
 
     get objectApiName() {
-        if(typeof this.objectMapping !== 'undefined') {
+        if (typeof this.objectMapping !== 'undefined') {
             return this.objectMapping.Object_API_Name;
         }
     }
 
     @api
     get targetFieldApiName() {
-        if(isNotEmpty(this.fieldMapping)) {
+        if (isNotEmpty(this.fieldMapping)) {
             return this.fieldMapping.Target_Field_API_Name;
         }
     }
 
     @api
     get sourceFieldAPIName() {
-        if(isNotEmpty(this.fieldMapping)) {
+        if (isNotEmpty(this.fieldMapping)) {
             return this.fieldMapping.Source_Field_API_Name;
         }
     }
@@ -370,8 +370,8 @@ export default class GeFormField extends LightningElement {
     }
 
     get lookupObjectApiName() {
-        if(this.objectApiName === DATA_IMPORT.objectApiName) {
-            if(this.targetFieldApiName === ACCOUNT1_IMPORTED.fieldApiName
+        if (this.objectApiName === DATA_IMPORT.objectApiName) {
+            if (this.targetFieldApiName === ACCOUNT1_IMPORTED.fieldApiName
                 || this.targetFieldApiName === CONTACT1_IMPORTED.fieldApiName) {
                 return OPPORTUNITY.objectApiName;
             }
@@ -490,9 +490,9 @@ export default class GeFormField extends LightningElement {
     loadLookUp(data, value) {
         const lookup = this.template.querySelector('[data-id="inputComponent"]');
         lookup.reset();
-        if(this.isLookup) {
+        if (this.isLookup) {
             lookup.value = value;
-        } else if(this.isLookupRecordType) {
+        } else if (this.isLookupRecordType) {
 
             let displayValue;
             const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
@@ -526,7 +526,7 @@ export default class GeFormField extends LightningElement {
         if (this.isLookupRecordType || this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if(this.isLookupRecordType) {
+            if (this.isLookupRecordType) {
                 // Using setTimeout here ensures that this recordTypeId
                 // will be set on sibling fields after they are reset by queueing the event.
                 setTimeout(() => {
@@ -601,7 +601,7 @@ export default class GeFormField extends LightningElement {
 
     get qaLocatorBase() {
         const rowIndex = this.getAttribute('data-qa-row');
-        if(rowIndex) {
+        if (rowIndex) {
             return `${this.fieldLabel} ${rowIndex}`;
         } else {
             return this.fieldLabel;
