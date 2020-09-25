@@ -10,8 +10,11 @@ import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableBut
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 
-const WIDGET_EVENT_NAME = 'rd2ElevateWidget';
-
+/***
+* @description Event name fired when the Elevate credit card widget is displayed or hidden
+* on the RD2 entry form
+*/
+const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form
@@ -88,7 +91,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     handleUserDisabledWidget() {
         this.hideWidget();
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isWidgetDisabled: true
+            isDisabled: true
         });
     }
 
@@ -99,7 +102,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.isLoading = true;
         this.displayWidget();
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isWidgetDisabled: false
+            isDisabled: false
         });
     }
 

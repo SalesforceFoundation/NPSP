@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { fireEvent } from 'c/pubsubNoPageRef';
-import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
+import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
+import { HTTP_CODES } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -28,9 +29,28 @@ import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccess
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
 import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
+import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
+import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
+import loadingMessage from '@salesforce/label/c.labelMessageLoading';
+import waitMessage from '@salesforce/label/c.commonWaitMessage';
+import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
+import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
+import creatingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
+import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage';
+import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
+import unknownError from '@salesforce/label/c.commonUnknownError';
+
 
 import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
+import getCommitmentRequestBody from '@salesforce/apex/RD2_entryFormController.getCommitmentRequestBody';
+import createCommitment from '@salesforce/apex/RD2_entryFormController.createCommitment';
+
+/***
+* @description Event name fired when the Elevate credit card widget 
+* is displayed or hidden on the RD2 entry form
+*/
+const ELEVATE_WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
 export default class rd2EntryForm extends LightningElement {
 
@@ -46,7 +66,17 @@ export default class rd2EntryForm extends LightningElement {
         customFieldsSectionHeader,
         currencyFieldLabel,
         flsErrorHeader,
-        flsErrorDetail
+        flsErrorDetail,
+        elevateWidgetLabel,
+        spinnerAltText,
+        loadingMessage,
+        waitMessage,
+        savingRDMessage,
+        validatingCardMessage,
+        creatingCommitmentMessage,
+        commitmentFailedMessage,
+        contactAdminMessage,
+        unknownError
     });
 
     @api parentId;
@@ -54,6 +84,7 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isEdit = false;
     @track record;
+    recordName;
     @track isMultiCurrencyEnabled = false;
     @track fields = {};
     @track rdSettings = {};
@@ -64,13 +95,15 @@ export default class rd2EntryForm extends LightningElement {
 
     @track isAutoNamingEnabled;
     @track isLoading = true;
+    @track loadingText = this.customLabels.loadingMessage;
     @track hasCustomFields = false;
-
     isRecordReady = false;
     isSettingReady = false;
 
-    @track isElevateWidgetDisplayed = false;
+    @track isElevateWidgetEnabled = false;
     isElevateCustomer = false;
+    hasUserDisabledElevateWidget = false;
+    paymentMethodToken;
 
     @track error = {};
 
@@ -116,7 +149,9 @@ export default class rd2EntryForm extends LightningElement {
                         detail: this.customLabels.flsErrorDetail
                     };
                 }
-            })
+            });
+
+        registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
     }
 
     /***
@@ -206,7 +241,9 @@ export default class rd2EntryForm extends LightningElement {
     * @param event Contains new payment method value
     */
     handlePaymentChange(event) {
+        //reset the widget and the form related to the payment method
         this.clearError();
+        this.hasUserDisabledElevateWidget = false;
         this.evaluateElevateWidget(event.detail.value);
     }
 
@@ -215,9 +252,19 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
-        this.isElevateWidgetDisplayed = this.isElevateCustomer === true
+        this.isElevateWidgetEnabled = this.isElevateCustomer === true
+            && !this.hasUserDisabledElevateWidget
             && !this.isEdit // The Elevate widget is applicable to new RDs only
             && paymentMethod === 'Credit Card';// Verify the payment method value
+    }
+
+    /**
+     * @description Set variable that informs the RD form when the
+     *  credit card widget is displayed or hidden by a user
+     * @param event
+     */
+    handleElevateWidgetDisplayState(event) {
+        this.hasUserDisabledElevateWidget = event.isDisabled;
     }
 
     /***
@@ -228,6 +275,7 @@ export default class rd2EntryForm extends LightningElement {
     handleSubmit(event) {
         this.clearError();
         this.isLoading = true;
+        this.loadingText = this.customLabels.waitMessage;
         this.saveButton.disabled = true;
 
         const allFields = this.getAllSectionsInputValues();
@@ -247,10 +295,11 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     processSubmit = async (allFields) => {
-        if (this.isElevateWidgetDisplayed) {
+        if (this.isElevateWidgetEnabled) {
             try {
+                this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-                const token = await elevateWidget.returnValues().payload;
+                this.paymentMethodToken = await elevateWidget.returnValues().payload;
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;
@@ -258,6 +307,7 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         try {
+            this.loadingText = this.customLabels.savingRDMessage;
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
         } catch (error) {
             this.handleSaveError(error);
@@ -381,19 +431,180 @@ export default class rd2EntryForm extends LightningElement {
     * @description Fires an event to utilDedicatedListener with the success action
     */
     handleSuccess(event) {
-        const recordName = event.detail.fields.Name.value;
-        const message = (this.recordId)
-            ? updateSuccessMessage.replace("{0}", recordName)
-            : insertSuccessMessage.replace("{0}", recordName);
+        this.recordName = event.detail.fields.Name.value;
+        const recordId = event.detail.id;
 
-        showToast(message, '', 'success', []);
+        if (this.isElevateWidgetEnabled && this.paymentMethodToken) {
+            this.handleElevateCommitment(recordId);
 
-        fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: event.detail.id });
+        } else {
+            this.showToastSuccess();
+            this.closeModal(recordId);
+        }
+    }
+
+    /**
+     * @description Sends Commitment request to the Elevate API and
+     * updates the Recurring Donation Commitment Id on the successfull creation
+     * If an error occurs when the Commitment is created,
+     * it should be displayed, and the modal closed since
+     * the another creation of the same Recurring Donation should be prevented.
+     */
+    handleElevateCommitment(recordId) {
+        this.loadingText = this.customLabels.creatingCommitmentMessage;
+        
+        getCommitmentRequestBody({
+            recordId: recordId,
+            paymentMethodToken: this.paymentMethodToken
+        })
+            .then(jsonRequestBody => {
+                createCommitment({ record: recordId, jsonRequestBody: jsonRequestBody })
+                    .then(jsonResponse => {
+                        this.processCommitmentResponse(jsonResponse);
+                    })
+                    .catch((error) => {
+                        this.displayCommitmentError(error);
+                    })
+                    .finally(() => {
+                        this.closeModal(recordId);
+                    });
+            })
+            .catch(error => {
+                this.displayCommitmentError(error);
+                this.closeModal(recordId);
+            });        
+    }
+
+    /**
+     * @description Verifies if the Commitment was successfully created,
+     * and displays the error if the error response has been returned.
+     */
+    processCommitmentResponse(jsonResponse) {
+        let response = JSON.parse(jsonResponse);
+
+        if (response.statusCode === HTTP_CODES.Created) {
+            this.showToastSuccess();
+
+        } else {
+            this.displayCommitmentErrorResponse(response);
+        } 
+    }
+
+    /**
+     * @description Displayes errors extracted from the error response
+     * returned from the Elevate API when the Commitment cannot be created
+     */
+    displayCommitmentErrorResponse(response) {
+        if (response.body) {
+            // Errors returned in the response body can contain a single quote, for example:
+            // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
+            // However, the JSON parser does not work with a single quote, 
+            // so need to replace it with the double quote but after
+            // replacing \" with an empty string, otherwise the message content
+            // will be misformatted.
+            if (JSON.stringify(response.body).includes("'errors'")) {
+                response.body = response.body.replace(/\"/g, '').replace(/\'/g, '"');
+            }
+
+            //parse the error response
+            try {
+                response.body = JSON.parse(response.body);
+            } catch (error) { }
+        }
+
+        let errors = this.getErrors(response);
+        this.showToastCommitmentError(errors);
+    }
+
+    /***
+    * @description Get the message or errors from a failed API call.
+    * @param {object} response: Http response object
+    * @return {string}: Message from a failed API call response
+    */
+    getErrors(response) {
+        if (response.body && response.body.errors) {
+            return response.body.errors.map(error => error.message).join('\n ');
+        }
+
+        // For some reason the key in the body object for 'Message'
+        // in the response we receive from Elevate is capitalized.
+        // Also checking for lowercase M in message in case they fix it.        
+        return response.body.Message
+            || response.body.message
+            || response.errorMessage
+            || JSON.stringify(response.body);
+    }
+
+    /**
+     * @description Processes unexpected error from the commitment response
+     */
+    displayCommitmentError(errorException) {
+        let error = constructErrorMessage(errorException);
+
+        let message;
+        if (error) {
+            if (error.body && error.body.message) {
+                message = error.body.message;
+            } else if (error.message) {
+                message = error.message;
+            } else if (error.detail) {
+                message = error.detail;
+            }
+        }
+        if (isNull(message)) {
+            message = JSON.stringify(error);
+        }
+
+        this.showToastCommitmentError(message);
+    }
+
+    /**
+     * @description Displays errors generated during commitment callout
+     */
+    showToastCommitmentError(errors) {
+        const title = this.customLabels.elevateWidgetLabel;
+
+        // The space is required before the param {0}, 
+        // otherwise the errors are duplicated when the message is formatted.
+        // Moreover, the '\n {0}' cannot be part of the commitment failed message
+        // since the new line is not replaced with a return.
+        const message = this.getRecurringDonationSuccessMessage()
+            + '\n' + this.customLabels.commitmentFailedMessage
+            + '\n {0}'
+            + '\n' + this.customLabels.contactAdminMessage;
+
+        let replacements = [errors];
+        let formattedMessage = format(message, replacements);
+
+        showToast(title, formattedMessage, 'error', 'sticky');
+    }
+
+    /**
+     * @description Displays toast message on successful save
+     */
+    showToastSuccess() {
+        showToast(this.getRecurringDonationSuccessMessage(), '', 'success');
+    }
+
+    /**
+     * @description Message displayed when the Recurring Donation is created or updated successfully
+     */
+    getRecurringDonationSuccessMessage() {
+        return (this.isEdit)
+            ? updateSuccessMessage.replace("{0}", this.recordName)
+            : insertSuccessMessage.replace("{0}", this.recordName);
+    }
+
+    /**
+     * @description Dispatches an event to close the Recurring Donation entry form modal
+     */
+    closeModal(recordId) {
+        fireEvent(this.pageRef, this.listenerEvent, { action: 'success', recordId: recordId });
     }
 
     /**
      * @description Returns the Schedule Child Component instance
-     * @returns rd2EntryFormScheduleSection component dom
+     * @return rd2EntryFormScheduleSection component dom
      */
     get scheduleComponent() {
         return this.template.querySelectorAll('[data-id="scheduleComponent"]')[0];
@@ -401,7 +612,7 @@ export default class rd2EntryForm extends LightningElement {
 
     /**
      * @description Returns the Donor Child Component instance
-     * @returns rd2EntryFormDonorSection component dom
+     * @return rd2EntryFormDonorSection component dom
      */
     get donorComponent() {
         return this.template.querySelectorAll('[data-id="donorComponent"]')[0];
@@ -409,7 +620,7 @@ export default class rd2EntryForm extends LightningElement {
 
     /**
      * @description Returns the Custom Field Child Component instance
-     * @returns rd2EntryFormCustomFieldsSection component dom
+     * @return rd2EntryFormCustomFieldsSection component dom
      */
     get customFieldsComponent() {
         return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];

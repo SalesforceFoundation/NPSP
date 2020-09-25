@@ -32,30 +32,34 @@
 */
 @IsTest
 public with sharing class PS_IntegrationServiceConfig_TEST {
-    
-    private static String testMerchantId = 'abc123-xyz456';
-    private static String testApiKey = 'def1234-tuv4567';
-    private static String testMakanaApiKey = 'ghi12345-qrs45678';
+
+    public static String testMerchantId = 'abc123-xyz456';
+    public static String testGatewayId = 'def123-ghi456';
+    public static String testApiKey = 'def1234-tuv4567';
+    public static String testMakanaApiKey = 'ghi12345-qrs45678';
+    public static String testBaseUrl = 'https://elevate.test.com';
 
     // Key-Values by service name
-    @TestVisible 
-    private static final Map<String, List<Map<String, String>>> testConfig =
-            new Map<String, List<Map<String, String>>> {
-                PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
-                            new List<Map<String, String>> {
-                                    new Map<String, String> {
-                                            'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
-                                            'value' => testMerchantId
-                                    },
-                                    new Map<String, String> {
-                                            'key' => 'sfdo.roles',
-                                            'value' => 'Payments.Purchase'
-                                    },
-                                    new Map<String, String> {
-                                            'key' => PS_IntegrationServiceConfig.API_KEY,
-                                            'value' => testApiKey
-                                    }
+    public static final Map<String, List<Map<String, String>>> testConfig = new Map<String, List<Map<String, String>>>{
+        PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
+            new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
+                    'value' => testMerchantId
+                },
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.SFDO_GATEWAYIDS,
+                    'value' => testGatewayId
+                },
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => testApiKey
+                },
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.BASE_URL,
+                    'value' => testBaseUrl
                 }
+            }
         };
 
     /***
@@ -99,14 +103,13 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
     @IsTest
     private static void shouldHaveIntegrationPermissions() {
-        List<Payment_Services_Configuration__c> requiredConfigs = new
-                List<Payment_Services_Configuration__c>();
+        List<Payment_Services_Configuration__c> requiredConfigs = new List<Payment_Services_Configuration__c>();
 
         for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
             requiredConfigs.add(new Payment_Services_Configuration__c(
-                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-                    Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-                    Value__c = String.valueOf(i)
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
+                Value__c = String.valueOf(i)
             ));
         }
         insert requiredConfigs;
@@ -120,8 +123,8 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     private static void shouldNotHaveIntegrationPermissions() {
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
         Boolean hasIntegrationPermissions = ps.hasIntegrationPermissions();
-        System.assert(!hasIntegrationPermissions, 'The user should not have integration ' +
-                                                    'permissions without configuration keys.');
+        System.assert(!hasIntegrationPermissions,
+            'The user should not have integration permissions without configuration keys.');
     }
 
     @IsTest
@@ -131,17 +134,17 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
             requiredConfigs.add(new Payment_Services_Configuration__c(
-                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-                    Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-                    Value__c = String.valueOf(i)
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
+                Value__c = String.valueOf(i)
             ));
         }
         insert requiredConfigs;
 
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
         System.assert(ps.isIntegrationEnabled(),
-                'The org should have Integration Enabled when ' +
-                        'all required configuration keys are present.');
+            'The org should have Integration Enabled when '
+            + 'all required configuration keys are present.');
 
     }
 
@@ -149,8 +152,8 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     private static void shouldNotHaveIntegrationEnabled() {
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
         System.assertEquals(false, ps.isIntegrationEnabled(),
-                'The org should not have Integration Enabled without ' +
-                        'all required configuration keys present.');
+            'The org should not have Integration Enabled without '
+            + 'all required configuration keys present.');
     }
 
     @IsTest
@@ -163,8 +166,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         // Verify that the config properties of the class are
         // the same as those of the inserted config records
-        System.assertEquals(testMerchantId,
-                service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
+        System.assertEquals(testMerchantId, service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
         System.assertEquals(testApiKey, service.config.get(PS_IntegrationServiceConfig.API_KEY));
     }
 
@@ -178,34 +180,27 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         PS_IntegrationService.setConfiguration(testConfig);
 
         // Set payments Api key to null and set an Api key for makana
-        PS_IntegrationService.setConfiguration(
-                new Map<String, List<Map<String, String>>> {
-                        PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME =>
-                                new List<Map<String, String>> {
-                                        new Map<String, String> {
-                                                'key' => PS_IntegrationServiceConfig.API_KEY,
-                                                'value' => null
-                                        }
-                                },
-                        PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME =>
-                                new List<Map<String, String>> {
-                                        new Map<String, String> {
-                                                'key' => PS_IntegrationServiceConfig.API_KEY,
-                                                'value' => testMakanaApiKey
-                                        }
-                                }
+        PS_IntegrationService.setConfiguration(new Map<String, List<Map<String, String>>>{
+            PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME => new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => null
                 }
-        );
+            },
+            PS_IntegrationServiceConfig.MAKANA_SERVICE_NAME => new List<Map<String, String>>{
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.API_KEY,
+                    'value' => testMakanaApiKey
+                }
+            }
+        });
 
         Test.startTest();
         GE_PaymentServices service = new GE_PaymentServices();
         Test.stopTest();
 
         // Verify apiKey matches makana, while the rest match payments
-        System.assertEquals(testMakanaApiKey,
-                service.config.get(PS_IntegrationServiceConfig.API_KEY));
-        System.assertEquals(testMerchantId,
-                service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
+        System.assertEquals(testMakanaApiKey, service.config.get(PS_IntegrationServiceConfig.API_KEY));
+        System.assertEquals(testMerchantId,service.config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
     }
-
 }
