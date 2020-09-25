@@ -161,6 +161,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             return rows;
         }
         catch (Exception ex) {
+            System.debug(ex.getStackTraceString());
             throw new AuraHandledException(ex.getMessage());
         }
     }
