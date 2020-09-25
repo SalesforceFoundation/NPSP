@@ -497,7 +497,7 @@ public with sharing class GE_GiftEntryController {
                         // Update the element's required to make sure we are respecting the source/target/template builder's required
                         // with the most up to date information.
                         element.required = element.required ||
-                                (fieldMapping.Source_Field_Required &&
+                                (fieldMapping.Source_Field_Required == true &&
                                         fieldMapping.Source_Field_Data_Type != BOOLEAN_DATA_TYPE);
                     }
                 }
