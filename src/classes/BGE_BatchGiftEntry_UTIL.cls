@@ -160,7 +160,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 }
             }
         }
-        System.debug(JSON.serializePretty(fieldApiNames));
         return fieldApiNames;
     }
 
