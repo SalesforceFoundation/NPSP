@@ -3,23 +3,30 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import {isEmpty} from 'c/utilCommon';
+import hasViewSetup from '@salesforce/userPermission/ViewSetup';
+
+import DATA_IMPORT_BATCH from '@salesforce/schema/DataImportBatch__c';
 
 const WIDGET = 'widget';
 const YES = 'Yes';
+const FIELD_METADATA_VALIDATION = 'fieldmetadatavalidation';
 
 export default class geTemplateBuilderFormField extends LightningElement {
-
-    // Expose custom labels to template
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    @track targetObjectDescribeInfo;
 
     @api isFirst;
     @api isLast;
     @api objectApiName;
     @api field;
+    @api sourceObjectFieldsDescribe;
 
-    @track objectDescribeInfo;
-
+    // Expose custom labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     isBatchHeaderField = false;
+    hasRendered = false;
+    hasPermission = hasViewSetup;
+    shouldRender = true;
 
 
     /*******************************************************************************
@@ -31,7 +38,54 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @wire(getObjectInfo, { objectApiName: '$targetObjectApiName' })
     wiredObjectInfo(response) {
         if (response.data) {
-            this.objectDescribeInfo = response.data;
+            this.targetObjectDescribeInfo = response.data;
+
+            this.validate();
+        }
+    }
+
+    renderedCallback() {
+        if (!this.hasRendered) {
+            this.hasRendered = true;
+
+            if (this.objectApiName === DATA_IMPORT_BATCH.objectApiName) {
+                return;
+            }
+
+            if (isEmpty(this.fieldMapping)) {
+                const inputField = this.template.querySelector('[data-id="formField"]');
+
+                inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
+                inputField.reportValidity();
+
+                this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: true}}));
+            }
+        }
+    }
+
+    /*******************************************************************************
+     * @description Performs form field-level validations that require data not present in the parent component
+     * such as target object describe metadata.
+     */
+    validate() {
+        if (isEmpty(this.fieldMapping)) {
+            return;
+        }
+
+        if (isEmpty(this.targetObjectDescribeInfo.fields[this.fieldMapping.Target_Field_API_Name]) ||
+            isEmpty(this.sourceObjectFieldsDescribe[this.fieldMapping.Source_Field_API_Name])) {
+
+            const inputField = this.template.querySelector('[data-id="formField"]');
+
+            inputField.setCustomValidity(this.CUSTOM_LABELS.commonFieldNotFound);
+            inputField.reportValidity();
+
+            if (!hasViewSetup) {
+                this.field = {};
+                this.shouldRender = false;
+            }
+
+            this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: true}}));
         }
     }
 
@@ -262,6 +316,8 @@ export default class geTemplateBuilderFormField extends LightningElement {
         this.stopPropagation(event);
         let detail = { id: this.field.id, fieldName: this.name };
         dispatch(this, 'deleteformelement', detail);
+
+        this.dispatchEvent(new CustomEvent(FIELD_METADATA_VALIDATION, {detail: {showError: false}}));
     }
 
     /*******************************************************************************

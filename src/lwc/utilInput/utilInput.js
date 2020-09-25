@@ -178,7 +178,10 @@ export default class utilInput extends LightningElement {
         if (response.data) {
             this.objectInfo = response.data;
             if (!this.type) {
-                this.type = this.objectInfo.fields[this.fieldApiName].dataType;
+                let field = this.objectInfo.fields[this.fieldApiName];
+                if (isNotEmpty(field)) {
+                    this.type = field.dataType;
+                }
             }
         }
     }

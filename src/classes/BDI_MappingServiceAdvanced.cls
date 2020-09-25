@@ -76,20 +76,24 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
                     fieldMappingsForThisDataImportObject) {
 
                 String sourceField = dataImportFieldMapping.Source_Field_API_Name;
+                try {
+                    SObjectField sourceSObjectField =
+                            UTIL_Describe.getFieldDescribe(
+                                    sourceObject, sourceField).getSobjectField();
 
-                SObjectField sourceSObjectField =
-                        UTIL_Describe.getFieldDescribe(
-                                sourceObject, sourceField).getSobjectField();
+                    String targetField = dataImportFieldMapping.Target_Field_API_Name;
 
-                String targetField = dataImportFieldMapping.Target_Field_API_Name;
-
-                if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
-                    targetFieldsBySourceField.get(
-                            sourceSObjectField).addTargetField(targetObject, targetField);
-                } else {
-                    BDI_TargetFields targetFields = new BDI_TargetFields();
-                    targetFields.addTargetField(targetObject, targetField);
-                    targetFieldsBySourceField.put(sourceSObjectField, targetFields);
+                    if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
+                        targetFieldsBySourceField.get(
+                                sourceSObjectField).addTargetField(targetObject, targetField);
+                    } else {
+                        BDI_TargetFields targetFields = new BDI_TargetFields();
+                        targetFields.addTargetField(targetObject, targetField);
+                        targetFieldsBySourceField.put(sourceSObjectField, targetFields);
+                    }
+                } catch (UTIL_Describe.SchemaDescribeException ex) {
+                    // exception thrown if source field is not found
+                    // do not add to targetFieldsBySourceField map
                 }
             }
         }
