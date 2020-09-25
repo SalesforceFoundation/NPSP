@@ -5,6 +5,7 @@ export default class UtilIllustration extends LightningElement {
     @api size;
     @api title;
     @api message;
+    @api shouldWrapText;
 
     // Valid values: lake-mountain, going-camping
     // Pulled from https://lightningdesignsystem.com/components/illustration
