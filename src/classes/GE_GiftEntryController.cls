@@ -222,8 +222,7 @@ public with sharing class GE_GiftEntryController {
     private static void processDataImport(DataImport__c dataImport, Boolean isDryRun, Boolean updateGift) {
         try {
 
-            Data_Import_Settings__c diSettings = getGiftEntrySettingsWithUpdateGiftFlag
-                    (updateGift);
+            Data_Import_Settings__c diSettings = getGiftEntrySettingsWithUpdateGiftFlag(updateGift);
 
             List<DataImport__c> listDI = new List<DataImport__c>{dataImport};
 
