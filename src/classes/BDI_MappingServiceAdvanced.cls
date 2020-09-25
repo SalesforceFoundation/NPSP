@@ -66,34 +66,35 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
         String sourceObject = DataImport__c.SObjectType.getDescribe().getName();
         for (String dataImportObjectName : fieldMappingsByObjMappingDevName.keySet()) {
+            BDI_ObjectMapping targetObjectMapping = objectMappingByDevName.get(dataImportObjectName);
+            if (targetObjectMapping != null) {
+                String targetObject = targetObjectMapping.Object_API_Name;
+                List<BDI_FieldMapping> fieldMappingsForThisDataImportObject =
+                        fieldMappingsByObjMappingDevName.get(dataImportObjectName);
 
-            String targetObject =
-                    objectMappingByDevName.get(dataImportObjectName).Object_API_Name;
-            List<BDI_FieldMapping> fieldMappingsForThisDataImportObject =
-                    fieldMappingsByObjMappingDevName.get(dataImportObjectName);
+                for (BDI_FieldMapping dataImportFieldMapping :
+                        fieldMappingsForThisDataImportObject) {
 
-            for (BDI_FieldMapping dataImportFieldMapping :
-                    fieldMappingsForThisDataImportObject) {
+                    String sourceField = dataImportFieldMapping.Source_Field_API_Name;
+                    try {
+                        SObjectField sourceSObjectField =
+                                UTIL_Describe.getFieldDescribe(
+                                        sourceObject, sourceField).getSobjectField();
 
-                String sourceField = dataImportFieldMapping.Source_Field_API_Name;
-                try {
-                    SObjectField sourceSObjectField =
-                            UTIL_Describe.getFieldDescribe(
-                                    sourceObject, sourceField).getSobjectField();
+                        String targetField = dataImportFieldMapping.Target_Field_API_Name;
 
-                    String targetField = dataImportFieldMapping.Target_Field_API_Name;
-
-                    if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
-                        targetFieldsBySourceField.get(
-                                sourceSObjectField).addTargetField(targetObject, targetField);
-                    } else {
-                        BDI_TargetFields targetFields = new BDI_TargetFields();
-                        targetFields.addTargetField(targetObject, targetField);
-                        targetFieldsBySourceField.put(sourceSObjectField, targetFields);
+                        if (targetFieldsBySourceField.keySet().contains(sourceSObjectField)) {
+                            targetFieldsBySourceField.get(
+                                    sourceSObjectField).addTargetField(targetObject, targetField);
+                        } else {
+                            BDI_TargetFields targetFields = new BDI_TargetFields();
+                            targetFields.addTargetField(targetObject, targetField);
+                            targetFieldsBySourceField.put(sourceSObjectField, targetFields);
+                        }
+                    } catch (UTIL_Describe.SchemaDescribeException ex) {
+                        // exception thrown if source field is not found
+                        // do not add to targetFieldsBySourceField map
                     }
-                } catch (UTIL_Describe.SchemaDescribeException ex) {
-                    // exception thrown if source field is not found
-                    // do not add to targetFieldsBySourceField map
                 }
             }
         }
@@ -346,8 +347,13 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
                 }
                 importedRecordFieldNames.add(diom.Imported_Record_Field_Name__c.toLowerCase());
             }
-            BDI_ObjectMapping objectMapping = new BDI_ObjectMapping(diom);
-            this.objectMappingByDevName.put(objectMapping.DeveloperName, objectMapping);
+            try {
+                BDI_ObjectMapping objectMapping = new BDI_ObjectMapping(diom);
+                this.objectMappingByDevName.put(objectMapping.DeveloperName, objectMapping);
+            } catch (UTIL_Describe.SchemaDescribeException ex) {
+                // if the object itself is not describable
+                // do not add it to objectMappingByDevName since we can't map it
+            }
         }
     }
 
