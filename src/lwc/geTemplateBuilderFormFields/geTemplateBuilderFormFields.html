@@ -224,14 +224,14 @@
 
         <div class="slds-size_9-of-12 slds-p-around_large slds-border_left">
             <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
-                <template if:true={hasErrors}>
+                <template if:true={pageLevelError.hasErrors}>
                     <div class="slds-size_1-of-1">
-                        <c-util-page-level-message title={CUSTOM_LABELS.commonError}
-                                                   subtitle={CUSTOM_LABELS.geErrorPageLevelMissingRequiredFields}
-                                                   variant='error'>
+                        <c-util-page-level-message title={pageLevelError.title}
+                                                   subtitle={pageLevelError.message}
+                                                   variant={pageLevelError.variant}>
                             <ul slot="body"
                                 class="slds-list_dotted">
-                                <template for:each={errors}
+                                <template for:each={pageLevelError.errors}
                                           for:item="error">
                                     <li key={error}
                                         aria-label={error}
@@ -259,6 +259,7 @@
                                                             active-form-section-id={activeFormSectionId}
                                                             is-first={it.first}
                                                             is-last={it.last}
+                                                            source-object-fields-describe={sourceObjectFieldsDescribe}
                                                             onchangeactivesection={handleChangeActiveSection}
                                                             onformsectionup={handleFormSectionUp}
                                                             onformsectiondown={handleFormSectionDown}
@@ -267,7 +268,8 @@
                                                             onformelementdown={handleFormElementDown}
                                                             ondeleteformelement={handleDeleteFormElement}
                                                             onupdateformelement={handleUpdateFormElement}
-                                                            ontogglemodal={toggleModal}>
+                                                            ontogglemodal={toggleModal}
+                                                            onfieldmetadatavalidation= {handleFieldMetadataValidation}>
                         </c-ge-template-builder-form-section>
                     </template>
 
