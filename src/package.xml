@@ -291,6 +291,7 @@
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
+        <members>GS_ApplicationStatusController</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -2374,6 +2375,14 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsApplicationStatus</members>
+        <members>gsApplyForFreeLicenses</members>
+        <members>gsCheckStatus</members>
+        <members>gsDaysAdded</members>
+        <members>gsDaysRemainingInFreeTrial</members>
+        <members>gsLearnMore</members>
+        <members>gsNoApplicationSubmitted</members>
+        <members>gsSubmitted</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3776,16 +3785,8 @@
         <members>geTemplates</members>
         <members>geWidgetService</members>
         <members>gsApplicationStatus</members>
+        <members>gsModal</members>
         <members>libsMoment</members>
-        <members>nonProfitAdminCheckGroup</members>
-        <members>nonProfitAdminCheckGroupIcon</members>
-        <members>nonProfitAdminCheckItem</members>
-        <members>nonProfitAdminChecklist</members>
-        <members>nonProfitGetProduct</members>
-        <members>nonProfitPage</members>
-        <members>nonProfitPrincipal</members>
-        <members>nonProfitResources</members>
-        <members>nonProfitVideoBanner</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>rd2EntryForm</members>

@@ -8,11 +8,15 @@ import gsApplicationStatus from '@salesforce/label/c.gsApplicationStatus'
 import gsSubmitted from '@salesforce/label/c.gsSubmitted'
 import gsDaysAdded from '@salesforce/label/c.gsDaysAdded'
 import gsCheckStatus from '@salesforce/label/c.gsCheckStatus'
+import gsApplicationStatusModalHeader from '@salesforce/label/c.gsApplicationStatusModalHeader'
+import gsClose from '@salesforce/label/c.gsClose'
+import gsFollowUpApplicationStatus from '@salesforce/label/c.gsFollowUpApplicationStatus'
 export default class NonProfit_GetProduct extends LightningElement {
     
     @track errorMessage = "";
     @track diffInDays = null;
     @track isApplicationSubmitted = false;
+    @track isLoading = false;
 
     labels = {
         gsNoApplicationSubmitted,
@@ -22,30 +26,46 @@ export default class NonProfit_GetProduct extends LightningElement {
         gsApplicationStatus,
         gsSubmitted,
         gsDaysAdded,
-        gsCheckStatus
+        gsCheckStatus,
+        gsApplicationStatusModalHeader,
+        gsClose,
+        gsFollowUpApplicationStatus
     }
     
     connectedCallback() {
+        this.showSpinner();
+
         getApplicationStatus()
         .then(result => {
-            console.info(result.isSandbox);
-            console.info(result.trialExpirationDate);
-            this.diffInDays = this.calculateDiffDays(new Date(result.trialExpirationDate));
-            this.isApplicationSubmitted = true; 
-            
+            this.diffInDays = this.calculateDiffDays(result);
+            this.isApplicationSubmitted = this.checkApplicationSubmitted(result); 
+            this.hideSpinner();
         })
         .catch(error => {
             this.errorMessage = error;
+            this.hideSpinner();
         });
     }
 
-    calculateDiffDays(date) {
-        const oneDay = 24 * 60 * 60 * 1000
+    showSpinner() {
+        this.isLoading = true;
+    }
 
-        console.info("date", date);
-        
-        let today = new Date();
-        console.info("today", today);
+    hideSpinner() {
+        this.isLoading = false;
+    }
+    calculateDiffDays(result) {
+        const date = new Date(result.trialExpirationDate)
+        const oneDay = 24 * 60 * 60 * 1000
+        const today = new Date();
         return Math.ceil(Math.abs(date - today)/oneDay);
+    }
+
+    checkApplicationSubmitted(result) {
+        return result.applicationDate != null;
+    }
+
+    onCheckStatusClick() {
+        this.template.querySelector("c-gs-modal").openModal();
     }
 }

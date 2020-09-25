@@ -32,27 +32,51 @@
  * @description Controller for getting the org status(is trial? when it expires?, did customer applied for the licenses?).
  */
 public with sharing class GS_ApplicationStatusController {
-    
+    private static final String APPLICATION_DATE = 'P10_Application_Date';
     /**
      * 
      */
      @AuraEnabled
     public static ApplicationStatus getApplicationStatus() { 
-        Organization org = [SELECT TrialExpirationDate,
-                                   IsSandbox
-                            FROM Organization
-                            WITH_SECURITY_ENFORCED];
         ApplicationStatus status = new ApplicationStatus();
-        status.isSandbox = org.IsSandbox;
-        status.trialExpirationDate = org.TrialExpirationDate;
+        
+        GS_ApplicationStatusController controller = new GS_ApplicationStatusController();
+        Organization org = controller.getOrgInformation();
+        if (org != null) {
+            status.isSandbox = org.IsSandbox;
+            status.trialExpirationDate = org.TrialExpirationDate;
+        }
+        Date applicationDate = controller.getApplicationDate();
+        System.debug('applicationDate -> ' + applicationDate);
+        status.applicationDate = applicationDate;
         return status;
+    }
+
+    private Date getApplicationDate() {
+        try {
+            return System.FeatureManagement.checkPackageDateValue(APPLICATION_DATE);
+        } catch (System.NoDataFoundException ex) {
+            return Date.Today();
+        }
+        
+    }
+    private Organization getOrgInformation() {
+        return [SELECT TrialExpirationDate,
+                       IsSandbox
+                FROM   Organization
+                WITH_SECURITY_ENFORCED];
     }
     /**
      * @description Internal class used for returning the current status of the org. 
      */
     public class ApplicationStatus {
+        
         @AuraEnabled
         public boolean isSandbox {get; set;}
+        
+        @AuraEnabled
+        public DateTime applicationDate {get; set;}
+        
         @AuraEnabled
         public DateTime trialExpirationDate {get; set;}
     }

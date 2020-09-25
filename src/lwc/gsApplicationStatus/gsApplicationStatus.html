@@ -1,23 +1,27 @@
 <template>
-    <div class="container">
+   <div class="container slds-is-relative">
+        <div class="spinner" if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </div>
         <div class="imagen">Imagen</div>
         <div if:false={isApplicationSubmitted} class="info penndig">
             <p>{labels.gsNoApplicationSubmitted} | <a>{labels.gsLearnMore}</a></p>
             <p>{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
             <a class="slds-button slds-button_brand" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">
                 {labels.gsApplyForFreeLicenses}
-            </a>
-                
-                
-            
+            </a>    
         </div>
         <div if:true={isApplicationSubmitted} class="info submitted">
             <p>{labels.gsApplicationStatus}<span>{labels.gsSubmitted}</span></p>
             <p>{diffInDays} {labels.gsDaysRemainingInFreeTrial} | <span>{labels.gsDaysAdded}</span></p>
-            <button 
+            <button onclick={onCheckStatusClick}
                 class="slds-button slds-button_outline-brand">
                 {labels.gsCheckStatus}
             </button>
         </div>
     </div>
+
+    <c-gs-modal header={labels.gsApplicationStatusModalHeader}  button-label={labels.gsClose}>
+        <p>{labels.gsFollowUpApplicationStatus}</p>
+    </c-gs-modal>
 </template>
