@@ -1769,7 +1769,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bdiContactMatchFnameLnamePhone</name>
-        <label>Nombre, apellidos y correo electrónico</label>
+        <label>Nombre, apellidos y teléfono</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchLnameEmail</name>
@@ -2224,6 +2224,18 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <name>bdiOMUIErrorNoUnmappedFieldsPt2</name>
         <label>Cree nuevos campos en el objeto Importación de datos de NPSP si es necesario.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+        <label>Comprobar asignaciones de campos</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+        <label>Existe un problema con las asignaciones de campos enumeradas a continuación.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
+        <label>Asegúrese de que los campos Importación de datos de NPSP y de destino aún existen y modifique o elimine la asignación de campo.</label>
     </customLabels>
     <customLabels>
         <name>bdiPositiveNumber</name>
@@ -3072,7 +3084,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftCol</name>
-        <label>Seleccione los campos para incluir en su formulario. Antes de agregar los campos, haga clic en la sección en la pantalla principal donde desea que vayan los campos. En la barra lateral, seleccione la casilla de verificación para agregar un campo, y anule la selección para retirar el campo del formulario. Si el objeto o el campo que desea utilizar no está en la lista, asegúrese de que configura el campo con Asignación avanzada.</label>
+        <label>Seleccione los campos para incluir en su formulario. Antes de agregar los campos, haga clic en la sección en la pantalla principal Configurar campos de formulario donde desea que vayan los campos. En la barra lateral Campos de formulario y paquetes de campos, seleccione la casilla de verificación para agregar un campo, y anule la selección para retirar el campo del formulario. Si el objeto o el campo que desea utilizar no está en la lista, asegúrese de que configura el campo con Asignación avanzada.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsDescLeftCol</name>
@@ -3097,7 +3109,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsRightCol</name>
-        <label>Haga clic en una sección, luego seleccione un campo en la barra lateral para agregarlo a la sección de la pantalla principal. Para cada campo, puede modificar la etiqueta de campo, marcarlo como obligatorio, asignarle un valor predeterminado o retirarlo de la sección. Ajuste el formato del formulario de entrada de regalos creando secciones y reordenando secciones o campos.</label>
+        <label>Seleccione en una sección, luego seleccione un campo en la barra lateral Campos de formulario y paquetes de campos para agregarlo a esta sección de la pantalla principal Configurar campos de formulario. Para cada campo, puede modificar la etiqueta de campo, marcarlo como obligatorio, asignarle un valor predeterminado o retirarlo de la sección. Ajuste el formato del formulario Entrada de regalos creando secciones y reordenando secciones o campos.</label>
     </customLabels>
     <customLabels>
         <name>geBodyGiftEntryHelp</name>

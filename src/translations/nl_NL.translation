@@ -2223,6 +2223,18 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <label>. Maak nieuwe velden voor het object NPSP-gegevensimport, indien benodigd.</label>
     </customLabels>
     <customLabels>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+        <label>Veldtoewijzingen controleren</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+        <label>Er is een probleem met de onderstaande veldtoewijzingen.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
+        <label>Controleer of het veld 'NPSP-Gegevensimport' en de doelvelden nog bestaan en bewerk of verwijder de veldtoewijzing.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiPositiveNumber</name>
         <label>{0} moet een positief cijfer zijn.</label>
     </customLabels>
@@ -3068,7 +3080,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftCol</name>
-        <label>Kies in uw formulier op te nemen velden. Klik vóór het toevoegen van velden op de sectie in het hoofdscherm waar u de velden wilt hebben. Vink in de zijbalk het selectievakje aan om een veld toe te voegen en hef de selectie ervan op om het veld te verwijderen uit het formulier. Als het te gebruiken object of veld niet wordt vermeld, zorgt u ervoor dat u het veld hetbt ingesteld met Geavanceerd toewijzen.</label>
+        <label>Kies in uw formulier op te nemen velden. Klik vóór het toevoegen van velden op de sectie in het hoofdscherm 'Formuliervelden configureren' waar u de velden wilt hebben. Vink in de zijbalk 'Formuliervelden en veldbundels' het selectievakje aan om een veld toe te voegen en hef de selectie ervan op om het veld te verwijderen uit het formulier. Als het te gebruiken object of veld niet wordt vermeld, zorgt u ervoor dat u het veld hebt ingesteld met Geavanceerd toewijzen.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsDescLeftCol</name>
@@ -3093,7 +3105,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsRightCol</name>
-        <label>Klik op een sectie en selecteer vervolgens een veld in de zijbalk om het toe te voegen aan de sectie in het hoofdscherm. Voor elk veld kunt u het veldlabel bewerken, het als verplicht aanduiden, er een standaardwaarde aan toewijzen of het verwijderen uit de sectie. Pas de lay-out van het formulier voor Opgave van gift aan door secties te maken en secties of velden opnieuw te ordenen.</label>
+        <label>Klik op een sectie en selecteer vervolgens een veld in de zijbalk 'Formuliervelden en veldbundels' om het toe te voegen aan de sectie in het hoofdscherm 'Formuliervelden configureren'. Voor elk veld kunt u het veldlabel bewerken, het als verplicht aanduiden, er een standaardwaarde aan toewijzen of het verwijderen uit de sectie. Pas de lay-out van het formulier voor Opgave van gift aan door secties te maken en secties of velden opnieuw te ordenen.</label>
     </customLabels>
     <customLabels>
         <name>geBodyGiftEntryHelp</name>

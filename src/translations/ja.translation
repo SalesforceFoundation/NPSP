@@ -2225,6 +2225,18 @@
         <label>必要に応じて、NPSP データインポートオブジェクトに新しい項目を作成してください。</label>
     </customLabels>
     <customLabels>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+        <label>項目の対応付けを確認</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+        <label>以下の項目の対応付けに問題があります。</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
+        <label>NPSP データインポートと対象項目がまだ存在することを確認してから、項目の対応付けを編集または削除してください。</label>
+    </customLabels>
+    <customLabels>
         <name>bdiPositiveNumber</name>
         <label>{0} は正の数値である必要があります。</label>
     </customLabels>
@@ -3068,7 +3080,7 @@
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftCol</name>
-        <label>フォームに含める項目を選択します。項目を追加する前に、項目を移動するメイン画面のセクションをクリックします。サイドバーで、項目を追加するにはチェックボックスをオンにし、フォームから項目を削除するにはオフにします。使用するオブジェクトまたは項目がリストされていない場合、高度な対応付けを使用して項目を設定していることを確認します。</label>
+        <label>フォームに含める項目を選択します。項目を追加する前に、項目の移動先となるメイン画面の [フォーム項目を設定] セクションをクリックします。この [フォーム項目 &amp; 項目バンドル] サイドバーで、項目を追加するにはチェックボックスをオンにし、フォームから項目を削除するにはオフにします。使用するオブジェクトまたは項目がリストされていない場合、高度な対応付けを使用して項目を設定していることを確認します。</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsDescLeftCol</name>
@@ -3093,7 +3105,7 @@
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsRightCol</name>
-        <label>セクションをクリックし、サイドバーで項目を選択してメイン画面のセクションに追加します。各項目で、項目表示ラベルを編集したり、必須としてマークしたり、デフォルト値を割り当てたり、セクションから削除したりできます。セクションの作成やセクションまたは項目の並び替えを行って支援エントリフォームのレイアウトを調整します。</label>
+        <label>セクションをクリックし、[フォーム項目 &amp; 項目バンドル] サイドバーで項目を選択してメイン画面の [フォーム項目 &amp; 項目バンドル] セクションに追加します。各項目で、項目表示ラベルの編集や、必須としてマーク、デフォルト値の割り当て、セクションからの削除を行うことができます。セクションを作成するか、セクションまたは項目を並び替えて、支援エントリフォームのレイアウトを調整してください。</label>
     </customLabels>
     <customLabels>
         <name>geBodyGiftEntryHelp</name>

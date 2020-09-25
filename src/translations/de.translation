@@ -2228,6 +2228,18 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <label>. Erstellen Sie im NPSP-Datenimportobjekt bei Bedarf neue Felder.</label>
     </customLabels>
     <customLabels>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+        <label>Feldzuordnungen überprüfen</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+        <label>Es besteht ein Problem mit den unten aufgeführten Feldzuordnungen.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
+        <label>Vergewissern Sie sich, dass die NPSP-Datenimport- und Zielfelder noch vorhanden sind, und bearbeiten oder löschen Sie die Feldzuordnung.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiPositiveNumber</name>
         <label>{0} muss eine positive Zahl sein.</label>
     </customLabels>
@@ -3073,7 +3085,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftCol</name>
-        <label>Wählen Sie Felder aus, die Sie in Ihr Formular aufnehmen möchten. Klicken Sie vor dem Hinzufügen von Feldern auf den Abschnitt auf dem Hauptbildschirm, dem Sie die Felder hinzufügen möchten. Aktivieren Sie auf der Seitenleiste das Kontrollkästchen, um ein Feld hinzuzufügen, und deaktivieren Sie es, um das Feld zu entfernen. Wenn das Objekt oder Feld, das Sie verwenden möchten, nicht aufgeführt ist, vergewissern Sie sich, dass Sie das Feld mit "Erweiterte Zuordnung" eingerichtet haben.</label>
+        <label>Wählen Sie Felder aus, die Sie in Ihr Formular aufnehmen möchten. Klicken Sie vor dem Hinzufügen von Feldern auf den Abschnitt auf dem Hauptbildschirm "Formularfelder konfigurieren", dem Sie die Felder hinzufügen möchten. Aktivieren Sie auf der Seitenleiste "Formularfelder und Feldpakete" das Kontrollkästchen, um ein Feld hinzuzufügen, und deaktivieren Sie es, um das Feld zu entfernen. Wenn das Objekt oder Feld, das Sie verwenden möchten, nicht aufgeführt ist, vergewissern Sie sich, dass Sie das Feld mit "Erweiterte Zuordnung" eingerichtet haben.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsDescLeftCol</name>
@@ -3098,7 +3110,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsRightCol</name>
-        <label>Klicken Sie auf einen Abschnitt, und wählen Sie dann ein Feld in der Seitenleiste aus, um es dem Abschnitt auf dem Hauptbildschirm hinzuzufügen. Für jedes Feld können Sie die Feldbezeichnung bearbeiten, es als erforderlich kennzeichnen, einen Standardwert zuweisen oder es aus dem Abschnitt entfernen. Passen Sie das Layout des Schenkungseintragsformulars an, indem Sie Abschnitte erstellen oder Abschnitte oder Felder neu anordnen.</label>
+        <label>Wählen Sie einen Abschnitt und dann ein Feld in der Seitenleiste "Formularfelder und Feldpakete" aus, um es diesem Abschnitt auf dem Hauptbildschirm "Formularfelder konfigurieren" hinzuzufügen. Für jedes Feld können Sie die Feldbezeichnung bearbeiten, es als erforderlich kennzeichnen, einen Standardwert zuweisen oder es aus dem Abschnitt entfernen. Passen Sie das Layout des Schenkungseintragsformulars an, indem Sie Abschnitte erstellen oder Abschnitte oder Felder neu anordnen.</label>
     </customLabels>
     <customLabels>
         <name>geBodyGiftEntryHelp</name>

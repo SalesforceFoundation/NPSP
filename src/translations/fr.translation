@@ -1243,9 +1243,9 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingDefinitions</name>
-        <label>&lt;b&gt;Définitions de l’état&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : les dons sont réguliers. NPSP crée des Opportunités de versement selon le calendrier de Dons récurrents.&lt;/li&gt;
+        <label>&lt;b&gt;Définitions de l’état&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : les dons sont réguliers. NPSP crée des Opportunités de versement tel que défini par le calendrier de Dons récurrents.&lt;/li&gt;
 &lt;li&gt;Échelonné : les dons ne sont pas reçus comme prévu, mais NPSP crée toujours des Opportunités de versement selon le calendrier de Dons récurrents.&lt;/li&gt;
-&lt;li&gt;Clôturé : les dons récurrents ont été arrêtés. NPSP ne crée pas d'autre Opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Clôturé : les dons récurrents ont été arrêtés. NPSP ne crée aucune nouvelle Opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingDeploymentAlreadyInProgress</name>
@@ -2229,6 +2229,18 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Si nécessaire, créez d'autres champs dans l'objet Importation de données NPSP.</label>
     </customLabels>
     <customLabels>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+        <label>Vérifier les mappages de champs</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+        <label>Un problème est survenu avec les mappages de champ répertoriés ci-dessous.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
+        <label>Assurez-vous que l’importation de données NPSP et les champs cibles existent encore et modifiez ou supprimez le mappage de champs.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiPositiveNumber</name>
         <label>{0} doit être un nombre positif.</label>
     </customLabels>
@@ -3075,7 +3087,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftCol</name>
-        <label>Choisissez les champs à inclure dans votre formulaire. Avant d'ajouter des champs, cliquez sur la section de l'écran principal à laquelle les champs sont destinés. Dans le menu latéral, cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si l'objet ou le champ que vous souhaitez utiliser n'est pas répertorié, assurez-vous qu'il est configuré dans Mappage avancé.</label>
+        <label>Choisissez les champs à inclure dans votre formulaire. Avant d'ajouter des champs, cliquez sur la section de l'écran principal Configurer les champs du formulaire à laquelle les champs sont destinés. Dans le menu latéral Champs de formulaire et paquets de champs, cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si l'objet ou le champ que vous souhaitez utiliser n'est pas répertorié, assurez-vous qu'il est configuré dans Mappage avancé.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsDescLeftCol</name>
@@ -3100,7 +3112,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsRightCol</name>
-        <label>Cliquez sur une section, puis sélectionnez un champ dans le menu latéral pour l'ajouter à la section dans l'écran principal. Vous pouvez modifier l'étiquette de chaque champ, le marquer comme obligatoire, lui attribuer une valeur par défaut ou le retirer de la section. Ajustez la présentation du formulaire de saisie de dons en créant des sections et en réorganisant les sections ou les champs.</label>
+        <label>Sélectionnez une section, puis sélectionnez un champ dans le menu latéral Champs de formulaire et paquets de champs pour l'ajouter à cette section dans l'écran principal Configurer les champs du formulaire. Vous pouvez modifier l'étiquette de chaque champ, le marquer comme obligatoire, lui attribuer une valeur par défaut ou le retirer de la section. Ajustez la présentation du formulaire de Saisie de dons en créant des sections et en réorganisant les sections ou les champs.</label>
     </customLabels>
     <customLabels>
         <name>geBodyGiftEntryHelp</name>
