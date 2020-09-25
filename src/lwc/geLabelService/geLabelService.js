@@ -20,6 +20,7 @@ import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonFieldsNotFound from '@salesforce/label/c.commonFieldsNotFound';
 import commonGauAllocations from '@salesforce/label/c.commonGauAllocations';
 import commonGeneralAccountUnit from '@salesforce/label/c.commonGeneralAccountUnit';
 import commonLabelNone from '@salesforce/label/c.stgLabelNone';
@@ -137,6 +138,7 @@ import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertai
 import geErrorUncertainCardChargePart3 from '@salesforce/label/c.geErrorUncertainCardChargePart3';
 import geErrorUncertainCardChargePart4 from '@salesforce/label/c.geErrorUncertainCardChargePart4';
 import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
+import geFieldsNotFoundMessage from '@salesforce/label/c.geFieldsNotFoundMessage';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
@@ -212,6 +214,7 @@ import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDel
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
+import commonFieldNotFound from '@salesforce/label/c.commonFieldNotFound';
 
 class GeLabelService {
 
@@ -241,6 +244,8 @@ class GeLabelService {
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonFieldNotFound,
+        commonFieldsNotFound,
         commonGauAllocations,
         commonGeneralAccountUnit,
         commonLabelNone,
@@ -357,6 +362,7 @@ class GeLabelService {
         geErrorUncertainCardChargePart2,
         geErrorUncertainCardChargePart3,
         geErrorUncertainCardChargePart4,
+        geFieldsNotFoundMessage,
         geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
         geHeaderBatchGiftEntry,
