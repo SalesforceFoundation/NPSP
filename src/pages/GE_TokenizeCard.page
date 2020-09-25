@@ -18,6 +18,7 @@
         let domain = arr[0].replace('--npsp', '');
         domain = domain.replace('--c', '');
         const lightningOrigin = `https://${domain}.lightning.force.com`;
+        let nameOnCard = 'test name';
 
         const sfdo = new sfdoPaymentsJsSdk();
         sfdo.mount({
@@ -62,12 +63,16 @@
 
         /*******************************************************************************
         * @description Method listens for messages from a credit card widget LWC
+        * Event.data contains at least an "action" and optionally a "nameOnCard" value.
         */
         window.onmessage = function (event) {
             if (event && event.origin !== lightningOrigin) {
                 // Reject any messages from an unexpected origin
                 return;
             } else if (event.data && event.data.action === 'createToken') {
+                if (event.data.nameOnCard) {
+                    nameOnCard = event.data.nameOnCard;
+                }
                 handleTokenCreation();
             }
         }
@@ -76,9 +81,11 @@
         * @description Creates a token and posts the response to a credit card widget LWC
         */
         function handleTokenCreation() {
+// TODO Remove this line in W-8021204
+console.log('>>> Tokenize with Name On Card: "' + nameOnCard + '"');
             sfdo
                 .createToken({
-                    nameOnCard: 'test name'
+                    nameOnCard: nameOnCard
                 })
                 .then(function response(resp) {
                     if (resp.token) {

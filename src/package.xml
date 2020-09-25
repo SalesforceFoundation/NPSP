@@ -2357,6 +2357,7 @@
         <members>gePS_IntegrationTestInvalidConfigParams</members>
         <members>gePaymentProcessError</members>
         <members>gePaymentProcessingErrorBanner</members>
+        <members>gePaymentRequestCardholderName</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>

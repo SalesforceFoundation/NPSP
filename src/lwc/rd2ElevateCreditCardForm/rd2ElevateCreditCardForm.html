@@ -3,6 +3,7 @@
 
         <lightning-layout-item size='12' padding='horizontal-small'>
             <article class='credit-card-container slds-m-top_small'>
+
                 <lightning-layout vertical-align='center' multiple-rows='true'>
 
                     <lightning-layout-item size='12'>
@@ -26,11 +27,21 @@
                         </div>
                     </lightning-layout-item>
 
+                    <template if:false={isDisabled}>
+                        <lightning-layout-item padding="horizontal-small" size="6">
+                            <lightning-input name="cardholderName"
+                                             label={labels.cardholderNameLabel}
+                                             data-qa-locator="input Elevate Cardholder Name"
+                                             data-id="cardholderName"
+                            ></lightning-input>
+                        </lightning-layout-item>
+                    </template>
+
                     <lightning-layout-item size='12' padding='around-small'>
                         <template if:true={isDisabled}>
                             <p class='fade-in'>
-                                <span class='slds-content-message'>                                    
-                                    <lightning-formatted-rich-text value={labels.elevateDisabledMessage} 
+                                <span class='slds-content-message'>
+                                    <lightning-formatted-rich-text value={labels.elevateDisabledMessage}
                                         data-qa-locator="richtext Elevate Disabled Message">
                                     </lightning-formatted-rich-text>
                                 </span>

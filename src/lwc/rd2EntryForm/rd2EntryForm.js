@@ -104,6 +104,7 @@ export default class rd2EntryForm extends LightningElement {
     isElevateCustomer = false;
     hasUserDisabledElevateWidget = false;
     paymentMethodToken;
+    cardholderName;
 
     @track error = {};
 
@@ -256,6 +257,21 @@ export default class rd2EntryForm extends LightningElement {
             && !this.hasUserDisabledElevateWidget
             && !this.isEdit // The Elevate widget is applicable to new RDs only
             && paymentMethod === 'Credit Card';// Verify the payment method value
+
+        if (this.isElevateWidgetDisplayed === true) {
+            // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
+            // when the component first registers, and ideally if the Contact or Org is changed.
+
+            // const creditCardForm = this.creditCardComponent;
+            // creditCardForm.setCardholderName('Test Name');
+
+            // const contactId = event.detail.fields.npe03__Contact__c.value;
+            // const accountId = event.detail.fields.npe03__Organization__c.value;
+            // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
+            //     .then(response => {
+            //         this.cardholderName = response;
+            //     });
+        }
     }
 
     /**
@@ -299,7 +315,7 @@ export default class rd2EntryForm extends LightningElement {
             try {
                 this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-                this.paymentMethodToken = await elevateWidget.returnValues().payload;
+                this.paymentMethodToken = await elevateWidget.returnToken().payload;
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;
@@ -334,7 +350,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Validate all fields on the integrated LWC sections 
+    * @description Validate all fields on the integrated LWC sections
     */
     isSectionInputsValid() {
         const isDonorSectionValid = (isNull(this.donorComponent))
@@ -624,6 +640,14 @@ export default class rd2EntryForm extends LightningElement {
      */
     get customFieldsComponent() {
         return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];
+    }
+
+    /**
+     * @description Returns the Credit Card Child Component instance
+     * @returns rd2ElevateCreditCardForm component dom
+     */
+    get creditCardComponent() {
+        return this.template.querySelector('[data-id="elevateWidget"]');
     }
 
     /**
