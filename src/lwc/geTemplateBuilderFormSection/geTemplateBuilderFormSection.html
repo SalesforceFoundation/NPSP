@@ -5,6 +5,7 @@
              data-section-id={formSection.id}
              data-qa-locator={qaLocatorSection}>
 
+
         <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
             <div class="slds-media__body">
                 <h2 class="slds-card__header-title">
@@ -58,7 +59,6 @@
                                      variant="lake-mountain">
                 </c-util-illustration>
             </template>
-
             <template if:false={isEmptySection}>
                 <div class="slds-grid slds-grid_vertical-align-center">
                     <div class="slds-size_5-of-12 slds-truncate">
@@ -79,16 +79,17 @@
                         </p>
                     </div>
                 </div>
-
                 <template iterator:it={formSection.elements}>
                     <c-ge-template-builder-form-field key={it.value.id}
                                                       field={it.value}
                                                       is-first={it.first}
                                                       is-last={it.last}
+                                                      source-object-fields-describe={sourceObjectFieldsDescribe}
                                                       onformelementup={handleFormElementUp}
                                                       onformelementdown={handleFormElementDown}
                                                       onupdateformelement={handleUpdateFormElement}
-                                                      ondeleteformelement={handleDeleteFormElement}>
+                                                      ondeleteformelement={handleDeleteFormElement}
+                                                      onfieldmetadatavalidation={handleFieldMetadataValidation}>
                     </c-ge-template-builder-form-field>
                 </template>
 
