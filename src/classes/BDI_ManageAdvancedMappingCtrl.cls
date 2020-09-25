@@ -131,7 +131,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             }
             if (!fieldMappings.isEmpty()) {
                for (BDI_FieldMapping fieldMapping : fieldMappings) {
-                   if(!fieldMapping.isValid && !fieldMapping.Is_Deleted) {
+                   if(!fieldMapping.isDescribable && !fieldMapping.Is_Deleted) {
                        objectMapping.Field_Mappings.add(fieldMapping);
                    }
                }
@@ -573,7 +573,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.Target_Object_Mapping_Dev_Name = fieldMapping.Target_Object_Mapping_Dev_Name;
             this.Required = fieldMapping.Required;
             this.Is_Deleted = fieldMapping.Is_Deleted;
-            this.isValid = fieldMapping.isValid;
+            this.isDescribable = fieldMapping.isDescribable;
         }
     }
 
