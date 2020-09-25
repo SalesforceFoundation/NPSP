@@ -437,7 +437,7 @@ public with sharing class GE_Template {
 
                     if (element.elementType == FIELD_ELEMENT_TYPE) {
                         for (String fieldDevName : element.dataImportFieldMappingDevNames) {
-                            if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
+                            if (fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
                                 BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
                                 if (fieldMapping.isDescribable) {
 

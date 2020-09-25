@@ -111,6 +111,14 @@ public virtual with sharing class BDI_FieldMapping {
         } catch (UTIL_Describe.SchemaDescribeException sde) {
             if (sde.getMessage().contains('Invalid')) {
                 this.isDescribable = false;
+
+                if (targetFieldDescribe == null) {
+                    this.Target_Field_Label = System.Label.commonFieldNotFound;
+                }
+                if (sourceFieldDescribe == null) {
+                    this.Source_Field_Label = System.Label.commonFieldNotFound;
+                }
+
                 return this;
             }
         }
