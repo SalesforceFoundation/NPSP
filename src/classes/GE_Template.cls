@@ -403,23 +403,26 @@ public with sharing class GE_Template {
         Set<AccessLevel> accessLevels;
         UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();
         UTIL_Describe describeService = UTIL_Describe.getInstance();
+        Map<String, Set<String>> permissionErrorsBySObject;
 
         public PermissionValidator(Template template, Set<AccessLevel>
                 accessLevels) {
             this.template = template;
             this.accessLevels = accessLevels;
+            this.permissionErrorsBySObject = new Map<String, Set<String>>();
         }
 
         public PermissionValidator(Set<AccessLevel> accessLevels) {
             this.accessLevels = accessLevels;
+            this.permissionErrorsBySObject = new Map<String, Set<String>>();
         }
 
         public Boolean hasObjectPermissions (String objectDevName) {
-            return isValid(objectDevName, accessLevels);
+            return isValid(objectDevName);
         }
 
         public Boolean hasFieldPermissions (String objectDevName, String fieldDevName) {
-            return isValid(objectDevName, fieldDevName, accessLevels);
+            return isValid(objectDevName, fieldDevName);
         }
 
         /*******************************************************************************************************
@@ -427,7 +430,6 @@ public with sharing class GE_Template {
         * @return {Template} template
         * */
         public Template validateTemplate() {
-            Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
 
             BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
             for (Section section : template.layout.sections) {
@@ -437,65 +439,58 @@ public with sharing class GE_Template {
                         for (String fieldDevName : element.dataImportFieldMappingDevNames) {
                             if (fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
                                 BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
-
                                 if (fieldMapping.isDescribable) {
+
                                     String targetObjDevName = fieldMapping.Target_Object_API_Name;
                                     String targetFieldDevName = fieldMapping.Target_Field_API_Name;
                                     String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
                                     String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
 
-                                    if (!isValid(sourceObjDevName, accessLevels)) {
-                                        permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
-                                            OBJECT_CRUD_ERROR
-                                        });
-                                    }
+                                    validate(sourceObjDevName);
+                                    validate(targetObjDevName);
+                                    validate(sourceObjDevName, sourceFieldDevName);
+                                    validate(targetObjDevName, targetFieldDevName);
 
-                                    if (!isValid(targetObjDevName, accessLevels)) {
-                                        permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
-                                            OBJECT_CRUD_ERROR
-                                        });
-                                    }
-
-                                    if (!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
-                                        if (permissionErrorsBySObject.containsKey(sourceObjDevName)) {
-                                            permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
-                                        } else {
-                                            permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{
-                                                sourceFieldDevName
-                                            });
-                                        }
-                                    }
-
-                                    if (!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
-                                        if (permissionErrorsBySObject.containsKey(targetObjDevName)) {
-                                            permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
-                                        } else {
-                                            permissionErrorsBySObject.put(targetObjDevName, new Set<String>{
-                                                targetFieldDevName
-                                            });
-                                        }
-                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            handlePermissionsErrors(permissionErrorsBySObject);
+            handlePermissionsErrors();
             return template;
+        }
+
+        private void validate(String objDevName) {
+            if (!isValid(objDevName)) {
+                permissionErrorsBySObject.put(objDevName, new Set<String>{
+                        OBJECT_CRUD_ERROR
+                });
+            }
+        }
+
+        private void validate(String objDevName, String fieldDevName) {
+            if (!isValid(objDevName, fieldDevName)) {
+                if (permissionErrorsBySObject.containsKey(objDevName)) {
+                    permissionErrorsBySObject.get(objDevName).add(fieldDevName);
+                } else {
+                    permissionErrorsBySObject.put(objDevName, new Set<String>{
+                            fieldDevName
+                    });
+                }
+            }
         }
 
         /*******************************************************************************************************
         * @description Perform CRUD validation on an SObject
         * @param objDevName - the API name of the SObject to validate
-        * @param accessLevels - the levels of access to validate on the SObject
         * @return {Boolean}
         */
-        private Boolean isValid(String objDevName, Set<AccessLevel> accessLevels) {
+        private Boolean isValid(String objDevName) {
 
             SObjectType objType = ((SObject) Type.forName(objDevName).newInstance()).getSObjectType();
 
-            if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
+            if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
                     && !permissionsService.canCreate(objType))
                     || (accessLevels.contains(AccessLevel.VALIDATE_READ)
                     && !permissionsService.canRead(objType))
@@ -512,16 +507,20 @@ public with sharing class GE_Template {
         * @description Perform FLS validation on an SObject field
         * @param objDevName - the API name of the SObject
         * @param fieldDevName - the API name of the SObject field to validate
-        * @param accessLevels - the levels of access to validate on the SObject
         * @return {Boolean}
         */
-        private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
+        private Boolean isValid(String objDevName, String fieldDevName) {
 
             SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
             SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
+
+            if (objField == null) {
+                return false;
+            }
+
             Set<SObjectField> fields = new Set<SObjectField>{objField};
 
-            if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
+            if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
                     && !permissionsService.canCreate(fields))
                     || (accessLevels.contains(AccessLevel.VALIDATE_READ)
                     && !permissionsService.canRead(fields))
@@ -556,35 +555,33 @@ public with sharing class GE_Template {
 
         /*******************************************************************************************************
         * @description Format any CRUD or FLS errors for display in UI
-        * @param permissionErrorsBySObject - a map of all permission errors by SObject
         */
-        private void handlePermissionsErrors(Map<String, Set<String>> permissionErrorsBySObject) {
+        private void handlePermissionsErrors() {
 
             Set<String> crudErrors = new Set<String>();
 
             // The map will contain only the object key if there is a CRUD error
             for (String objDevName : permissionErrorsBySObject.keySet()) {
-                if(permissionErrorsBySObject.get(objDevName).contains(OBJECT_CRUD_ERROR)) {
+                if (permissionErrorsBySObject.get(objDevName).contains(OBJECT_CRUD_ERROR)) {
                     crudErrors.add(objDevName);
                 }
             }
-            if(!crudErrors.isEmpty()) {
+            if (!crudErrors.isEmpty()) {
                 template.permissionErrorType = OBJECT_CRUD_ERROR;
                 template.permissionErrors = String.join(new List<String>(crudErrors), ', ');
-            } else if(crudErrors.isEmpty() && !permissionErrorsBySObject.values().isEmpty()){
+            } else if (crudErrors.isEmpty() && !permissionErrorsBySObject.values().isEmpty()){
                 template.permissionErrorType = FLS_ERROR;
-                template.permissionErrors = formatFLSError(permissionErrorsBySObject);
+                template.permissionErrors = formatFLSError();
             }
         }
 
         /*******************************************************************************************************
         * @description Format FLS errors for the UI in a readable format, pairing all fields with their associated SObject
-        * @param permissionErrorsBySObject - map of all FLS fields in error with their associated SObject
-         * @return {String} message
+        * @return {String} message
         */
-        private String formatFLSError(Map<String, Set<String>> permissionErrorsBySObject) {
+        private String formatFLSError() {
             String message;
-            if(!permissionErrorsBySObject.isEmpty()) {
+            if (!permissionErrorsBySObject.isEmpty()) {
                 message = '';
                 List<String> crudErrors = new List<String>();
                 for (String objDevName : permissionErrorsBySObject.keySet()) {
