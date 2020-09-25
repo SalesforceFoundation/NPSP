@@ -2118,6 +2118,7 @@
         <members>commonCVV</members>
         <members>commonCancel</members>
         <members>commonCardType</members>
+        <members>commonCardholderName</members>
         <members>commonClone</members>
         <members>commonConcurrentBatchError</members>
         <members>commonContactSystemAdminMessage</members>
@@ -2357,7 +2358,6 @@
         <members>gePS_IntegrationTestInvalidConfigParams</members>
         <members>gePaymentProcessError</members>
         <members>gePaymentProcessingErrorBanner</members>
-        <members>gePaymentRequestCardholderName</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>
