@@ -31,6 +31,10 @@ public static void before_data_load() {
     rdSettings.%%%NAMESPACE%%%InstallmentOppFirstCreateMode__c = 'Synchronous';
     rdSettings.%%%NAMESPACE%%%InstallmentOppAutoCreateOption__c = 'Disable_First_Installment';
 
+    // Performance Settings for the RD batch job
+    rdSettings.%%%NAMESPACE%%%DisableRollupsWhenCreatingInstallments__c = true;
+    rdSettings.%%%NAMESPACE%%%Recurring_Donation_Batch_Size__c = 200;
+
     // Enable and configure automatic naming for the data load
     rdSettings.%%%NAMESPACE%%%EnableAutomaticNaming__c = true;
     rdSettings.%%%NAMESPACE%%%RecurringDonationNameFormat__c = '{!npe03__Donor_Name__c} {!npe03__Installment_Period__c} $RECURRING_OBJECT_NAME$ - {!npe03__Amount__c}';
