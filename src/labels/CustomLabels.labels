@@ -12788,5 +12788,34 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Check Status</value>
     </labels>
 
+    <labels>
+        <fullName>gsApplicationStatusModalHeader</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsApplicationStatusModalHeader</shortDescription>
+        <value>Check Application Status</value>
+    </labels>
+
+    <labels>
+        <fullName>gsClose</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsClose</shortDescription>
+        <value>Close</value>
+    </labels>
+
+    <labels>
+        <fullName>gsFollowUpApplicationStatus</fullName>
+        <categories>gettingStarted</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>gsFollowUpApplicationStatus</shortDescription>
+        <value>To follow up on your application status, please email us at: something@salesforce.com</value>
+    </labels>
+
+
+
     
 </CustomLabels>
