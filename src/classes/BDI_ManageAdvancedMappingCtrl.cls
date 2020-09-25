@@ -131,7 +131,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             }
             if (!fieldMappings.isEmpty()) {
                for (BDI_FieldMapping fieldMapping : fieldMappings) {
-                   if(!fieldMapping.isDescribable && !fieldMapping.Is_Deleted) {
+                   if (!fieldMapping.isDescribable && !fieldMapping.Is_Deleted) {
                        objectMapping.Field_Mappings.add(fieldMapping);
                    }
                }
@@ -139,7 +139,7 @@ public class BDI_ManageAdvancedMappingCtrl {
             BDI_ObjectMapping predecessorObjMapping =
                 bdiMsAdv.objectMappingByDevName.get(objectMapping.Predecessor);
             //Assign the label name field for the predecessor using the constructed map by dev name.
-            if(predecessorObjMapping != null) {
+            if (predecessorObjMapping != null) {
                 objectMapping.Predecessor_Label_Name = predecessorObjMapping.MasterLabel;
             }
         }
