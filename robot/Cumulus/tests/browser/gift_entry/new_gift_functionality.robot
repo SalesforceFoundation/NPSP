@@ -15,6 +15,10 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Keywords ***
 Setup Test Data
     &{account} =         API Create Organization Account    Name=${faker.company()}
+    ...                  BillingStreet=${faker.street_address()}
+    ...                  BillingCity=${faker.city()}
+    ...                  BillingState=California
+    ...                  BillingPostalCode=${faker.postcode()}
     Set suite variable   &{ACCOUNT}
     ${date} =            Get Current Date         result_format=%Y-%m-%d
     Set suite variable   ${DATE}
@@ -26,9 +30,9 @@ Setup Test Data
 
 *** Test Cases ***
 Create Gift For Contact Using New Gift Button
-    # [Documentation]                      Create an organization account with open opportunity (with payment record) via API. Go to SGE form
-    # ...                                  select the donor as account and the account created. Verify review donations modal but select to create alternative opportunity.
-    # ...                                  Enter details and save. Verify that new opportunity and payment are created with right info
+    [Documentation]                      Open a contact record and click on New Gift button from the actions menu of the page.
+    ...                                  Verify that Single Gift form is loaded with prepopulated contact info and create a gift.
+    ...                                  Verify that opp page is loaded on save. Verify that new opportunity and payment are created with right info
     [tags]                               unstable      feature:GE                    W-039584
     Go To Page                           Details              Contact       object_id=${CONTACT}[Id]
     Current Page Should Be               Details              Contact
@@ -57,9 +61,9 @@ Create Gift For Contact Using New Gift Button
     ...                                  npe01__Paid__c=True
 
 Create Gift For Account Using New Gift Button
-    # [Documentation]                      Create an organization account with open opportunity (with payment record) via API. Go to SGE form
-    # ...                                  select the donor as account and the account created. Verify review donations modal but select to create alternative opportunity.
-    # ...                                  Enter details and save. Verify that new opportunity and payment are created with right info
+    [Documentation]                      Open a Organization Account record and click on New Gift button from the actions menu of the page.
+    ...                                  Verify that Single Gift form is loaded with prepopulated Account info and create a gift.
+    ...                                  Verify that opp page is loaded on save. Verify that new opportunity and payment are created with right info
     [tags]                               unstable      feature:GE                    W-039584
     Go To Page                           Details              Account       object_id=${ACCOUNT}[Id]
     Current Page Should Be               Details              Account
@@ -67,9 +71,10 @@ Create Gift For Account Using New Gift Button
     Current Page Should Be               Form                          Gift Entry
     Verify Field Default Value
     ...                                  Existing Donor Organization=${ACCOUNT}[Name]
-    # ...                                  Contact First Name=${CONTACT}[FirstName]
-    # ...                                  Contact Last Name=${CONTACT}[LastName]
-    # ...                                  Contact Personal Email=${CONTACT}[npe01__HomeEmail__c]
+    ...                                  Organization Account Street=${ACCOUNT}[BillingStreet]
+    ...                                  Organization Account City=${ACCOUNT}[BillingCity]
+    ...                                  Organization Account State/Province=${ACCOUNT}[BillingState]
+    ...                                  Organization Account Zip/Postal Code=${ACCOUNT}[BillingPostalCode]
     Fill Gift Entry Form
     ...                                  Donation Date=Today
     ...                                  Donation Amount=1500
