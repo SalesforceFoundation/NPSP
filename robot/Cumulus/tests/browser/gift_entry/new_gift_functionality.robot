@@ -14,6 +14,8 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
+    [Documentation]      Creates the organiation account and household contact record
+    ...                  along with getting dates required for test.
     &{account} =         API Create Organization Account    Name=${faker.company()}
     ...                  BillingStreet=${faker.street_address()}
     ...                  BillingCity=${faker.city()}
