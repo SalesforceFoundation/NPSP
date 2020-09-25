@@ -1,4 +1,4 @@
-import { api, track, LightningElement } from 'lwc';
+import {api, track, LightningElement } from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
 
 import tokenHandler from 'c/psElevateTokenHandler';
@@ -8,10 +8,14 @@ import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
+import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
 
-const WIDGET_EVENT_NAME = 'rd2ElevateWidget';
-
+/***
+* @description Event name fired when the Elevate credit card widget is displayed or hidden
+* on the RD2 entry form
+*/
+const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form
@@ -23,7 +27,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         spinnerAltText,
         elevateDisableButtonLabel,
         elevateDisabledMessage,
-        elevateEnableButtonLabel
+        elevateEnableButtonLabel,
+        cardholderNameLabel
     };
 
     @track visualforceOrigin;
@@ -74,12 +79,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting a token. 
+    * @description Method sends a message to the visualforce page iframe requesting a token.
     */
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-
-        return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.handleError);
+        return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.getCardholderName(), this.handleError);
     }
 
     /***
@@ -88,7 +92,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     handleUserDisabledWidget() {
         this.hideWidget();
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isWidgetDisabled: true
+            isDisabled: true
         });
     }
 
@@ -99,7 +103,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.isLoading = true;
         this.displayWidget();
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isWidgetDisabled: false
+            isDisabled: false
         });
     }
 
@@ -166,14 +170,32 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /**
+     * @description Concatenate the cardholder first and last names if there are any
+     * @returns A concatenated Cardholder Name string from the First and Last Name fields
+     */
+    getCardholderName() {
+        const nameField = this.template.querySelector('[data-id="cardholderName"]');
+        return nameField.value;
+    }
+
+    /**
+     * @description Concatenate the cardholder first and last names if there are any
+     * @returns A concatenated Cardholder Name string from the First and Last Name fields
+     */
+    @api
+    setCardholderName(donorName) {
+        const nameField = this.template.querySelector('[data-id="cardholderName"]');
+        nameField.value = donorName;
+    }
+
+    /**
      * Requests a payment token when the form is saved
      * @return {paymentToken: Promise<*>} Promise that will resolve to the token
      */
     @api
-    returnValues() {
+    returnToken() {
         return {
             payload: this.requestToken()
         };
     }
-
 }

@@ -37,7 +37,6 @@
 public with sharing class RD2_EntryFormController {
 
     /**
-    * @param parentId The parentId to use when creating the new RD record (if New from Account or Contact)
     * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
     */
     @TestVisible
@@ -56,6 +55,19 @@ public with sharing class RD2_EntryFormController {
         'SystemModStamp'
     };
 
+    /**
+    * @description Sends requests and constructs the response
+    */
+    private static UTIL_Http.RequestService requestService {
+        get {
+            if (requestService == null) {
+                requestService = new UTIL_Http.RequestService();
+            }
+            return requestService;
+        }
+        set;
+    }
+
 
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
@@ -72,7 +84,7 @@ public with sharing class RD2_EntryFormController {
         // on the form to enter a new Recurring Donation in NPSP and the related commitment in Elevate.
         // The RD2 controller should be using isIntegrationEnabled() only when GA.
         Boolean isElevateCustomer = RD2_ElevateIntegrationService.isIntegrationEnabled()
-            && UTIL_FeatureEnablement.isPilotEnabled();	
+            && UTIL_FeatureEnablement.isPilotEnabled();
 
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
@@ -240,11 +252,76 @@ public with sharing class RD2_EntryFormController {
         /***
         * @description Constructor for the CustomField class
         * @param apiName Api name of the field
-        * @param required Indicate if the field is required 
+        * @param required Indicate if the field is required
         */
         public CustomField(Schema.FieldSetMember field) {
             this.apiName = field.getFieldPath();
             this.required = field.getDbRequired() || field.getRequired();
         }
+    }
+
+    /***
+    * @description Builds an Elevate Commitment request body
+    * @param recordId Recurring Donation Id
+    * @param paymentMethodToken Payment Method Token
+    * @return String: JSON containing the Commitment Request Body
+    */
+    @AuraEnabled
+    public static String getCommitmentRequestBody(Id recordId, String paymentMethodToken) {
+        try {
+            PS_CommitmentRequest request = new PS_CommitmentRequest();
+            PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(recordId, paymentMethodToken);
+            return JSON.serialize(requestBody);
+
+        } catch (Exception ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+
+        return null;
+    }
+
+    /***
+    * @description Creates Elevate Commitment and 
+    * updates the Recurring Donation with returned Commitment data
+    * @param recordId Recurring Donation Id
+    * @param jsonRequestBody JSON containing parameters for the purchase call request body
+    * @return String: JSON containing the response with success or error status and message
+    */
+    @AuraEnabled
+    public static String createCommitment(Id recordId, String jsonRequestBody) {
+        UTIL_Http.Response response;
+        
+        try {
+            response = sendCommitmentRequest(jsonRequestBody);
+
+            if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
+                // If the commitment is created, then update RD fields: 
+                // Commitment Id, credit card expiry date and last 4.
+
+                // Ensure DML error (if any) on the RD update is returned to the LWC 
+                // as a response or an AuraHandled exception (either will work).
+            }        
+        
+        } catch (Exception ex) {
+            response = requestService.buildErrorResponse(ex);
+
+        } finally {
+            // If the response contains an error, regardless if the commitment is created, or
+            // the RD update failed, create an error log
+        }
+
+        return JSON.serialize(response);
+    }
+
+    /***
+    * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
+    * @param jsonRequestBody JSON containing parameters for the purchase call request body
+    * @return String: JSON containing the response with success/error status and message
+    */
+    public static UTIL_Http.Response sendCommitmentRequest(String jsonRequestBody) {
+        HttpRequest request = new PS_CommitmentRequest()
+            .buildCreateRequest(jsonRequestBody);
+
+        return requestService.sendRequest(request);
     }
 }

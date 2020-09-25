@@ -75,8 +75,8 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Dispatches the application event when the Elevate credit card iframe 
-    * is displayed or hidden 
+    * @description Dispatches the application event when the Elevate credit card iframe
+    * is displayed or hidden
     */
     dispatchApplicationEvent(eventName, payload) {
         fireEvent(null, eventName, payload);
@@ -114,14 +114,15 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting a token. 
+    * @description Method sends a message to the visualforce page iframe requesting a token.
     * This request response is found and handled in the registerPostMessageListener().
     * @param visualforceOrigin Visualforce origin
     * @param iframe The payment services iframe displayed within the credit card widget LWC
+    * @param nameOnCard The cardholder name value
     * @param handleError An error handler function
     * @return Promise A token promise
     */
-    requestToken(visualforceOrigin, iframe, handleError) {
+    requestToken(visualforceOrigin, iframe, nameOnCard, handleError) {
         if (isNull(iframe)) {
             return;
         }
@@ -147,7 +148,10 @@ class psElevateTokenHandler {
         });
 
         iframe.contentWindow.postMessage(
-            { action: TOKENIZE_EVENT_ACTION },
+            {
+                action: TOKENIZE_EVENT_ACTION,
+                nameOnCard: nameOnCard
+            },
             visualforceOrigin
         );
 
@@ -155,7 +159,7 @@ class psElevateTokenHandler {
     }
 
     /**
-     * Handles a timeout error display when the tokenization 
+     * Handles a timeout error display when the tokenization
      * request does not result in a response
      */
     handleTimeout(handleError) {

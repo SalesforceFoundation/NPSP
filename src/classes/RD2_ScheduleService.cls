@@ -528,7 +528,7 @@ public without sharing class RD2_ScheduleService {
     * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
     * @return Date The Next Donation Date
     */
-    private Date getNextDonationDateGreaterThan(RecurringDonationSchedule__c schedule, Date referenceDate) {
+    public Date getNextDonationDateGreaterThan(RecurringDonationSchedule__c schedule, Date referenceDate) {
         Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
 
         if (firstValid >= referenceDate) {

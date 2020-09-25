@@ -13,7 +13,9 @@
             <template if:true={isLoading}>
                 <div class="slds-grid slds-grid_align-center">
                     <div class="slds-is-relative slds-size_1-of-1">
-                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                        <lightning-spinner alternative-text={customLabels.spinnerAltText} data-text={loadingText}
+                            class="loading-spinner">
+                        </lightning-spinner>
                         <c-util-stencil row-count="20" column-count="2"></c-util-stencil>
                     </div>
                 </div>
@@ -111,8 +113,9 @@
                             </lightning-layout-item>
 
                             <lightning-layout-item size="12" class="slds-p-bottom_small"
-                                if:true={isElevateWidgetDisplayed}>
-                                <c-rd2-elevate-credit-card-form data-id='elevateWidget' data-qa-locator='widget Elevate'>
+                                if:true={isElevateWidgetEnabled}>
+                                <c-rd2-elevate-credit-card-form data-id='elevateWidget'
+                                    data-qa-locator='widget Elevate'>
                                 </c-rd2-elevate-credit-card-form>
                             </lightning-layout-item>
                         </lightning-layout>
