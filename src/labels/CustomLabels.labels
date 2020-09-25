@@ -6358,6 +6358,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Donor Name</value>
     </labels>
     <labels>
+        <fullName>geFieldsNotFoundMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
+        <value>This form contains fields that can't be found. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldsNotFound</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fields Not Found</shortDescription>
+        <value>Fields Not Found</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldNotFound</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field not found</shortDescription>
+        <value>Field not found</value>
+    </labels>
+    <labels>
         <fullName>geEnableGiftEntrySuccess</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
