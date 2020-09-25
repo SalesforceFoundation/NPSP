@@ -232,7 +232,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     collectMappedTargetMappings(fieldMappings) {
         this.mappedTargetFieldApiNames =
             fieldMappings.map(fieldMapping => {
-               if (fieldMapping.isValid) {
+               if (fieldMapping.isDescribable) {
                    fieldMapping.Target_Field_API_Name
                }
             });
