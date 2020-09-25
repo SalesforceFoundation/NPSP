@@ -2072,6 +2072,14 @@
         <value>You don&apos;t have the required Recurring Donations field permissions. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
+        <value>Other Information</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormPeriodAdvanced</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2128,6 +2136,38 @@
         <value>Years</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormSaveCommitmentMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
+        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed as prefix to errors returned from Elevate API</shortDescription>
+        <value>However, an Elevate recurring payment could not be created due to the following errors:</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
+        <value>Validating credit card...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveRecurringDonationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Recurring Donation record is being saved</shortDescription>
+        <value>Saving Recurring Donation...</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormScheduleEveryLabel</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2150,14 +2190,6 @@
         <protected>true</protected>
         <shortDescription>Recurring Donation Entry Form message when record is updated</shortDescription>
         <value>Recurring Donation &quot;{0}&quot; was saved.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
-        <categories>Recurring-Donations, Entry-Form</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
-        <value>Other Information</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
@@ -5121,6 +5153,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
     </labels>
     <labels>
+        <fullName>commonContactSystemAdminMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message indicating user should contact the system administrator for help</shortDescription>
+        <value>Contact your system administrator for help.</value>
+    </labels>
+    <labels>
         <fullName>commonCreditNumber</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5415,6 +5455,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Unknown Error</shortDescription>
         <value>Unknown Error</value>
+    </labels>
+    <labels>
+        <fullName>commonWaitMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text displayed to indicate process might take long time</shortDescription>
+        <value>Please wait...</value>
     </labels>
     <labels>
         <fullName>commonWarning</fullName>

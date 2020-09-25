@@ -369,11 +369,14 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
-        <members>PS_ElevateService</members>
+        <members>PS_CommitmentRequest</members>
+        <members>PS_CommitmentRequest_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
         <members>PS_IntegrationService_TEST</members>
+        <members>PS_Request</members>
+        <members>PS_Request_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
@@ -584,6 +587,8 @@
         <members>UTIL_FiscalYearInfo_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
+        <members>UTIL_Http</members>
+        <members>UTIL_Http_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_IntegrationConfig</members>
         <members>UTIL_IntegrationConfig_TEST</members>
@@ -1731,6 +1736,10 @@
         <members>RD2_EntryFormPeriodPluralMonthly</members>
         <members>RD2_EntryFormPeriodPluralWeekly</members>
         <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormSaveCommitmentFailedMessage</members>
+        <members>RD2_EntryFormSaveCommitmentMessage</members>
+        <members>RD2_EntryFormSaveCreditCardValidationMessage</members>
+        <members>RD2_EntryFormSaveRecurringDonationMessage</members>
         <members>RD2_EntryFormScheduleEveryLabel</members>
         <members>RD2_EntryFormStatusSectionHeader</members>
         <members>RD2_EntryFormUpdateSuccessMessage</members>
@@ -2111,6 +2120,7 @@
         <members>commonCardType</members>
         <members>commonClone</members>
         <members>commonConcurrentBatchError</members>
+        <members>commonContactSystemAdminMessage</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
         <members>commonDefaultValue</members>
@@ -2149,6 +2159,7 @@
         <members>commonUpdate</members>
         <members>commonViewAll</members>
         <members>commonViewMore</members>
+        <members>commonWaitMessage</members>
         <members>commonWarning</members>
         <members>commonYes</members>
         <members>conFailedAccountCreate</members>
