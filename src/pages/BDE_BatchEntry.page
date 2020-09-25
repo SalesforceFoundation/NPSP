@@ -190,15 +190,15 @@
         }
 
         $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
-           $Lightning.createComponent("{!namespace}" + ":bdeRetirementAlert",
+           $Lightning.createComponent(
+               "{!namespace}" + ":utilIllustration",
                {
-                  headerTitle : "{!$Label.bdeRetirementWarningHeader}",
-                  hasBackDrop : false,
-                  variant: "{!$Label.commonAssistiveError}",
-                  position: "right",
-                  confirmButtonTitle: "{!$Label.commonOkay}",
-                  confirmButtonVariant: "neutral",
-                  promptMessage: "{!$Label.bdeRetirementWarningBody}"
+                  size: "large",
+                  title: "{!$Label.bdeRetirementBlockerHeader}",
+                  message: "{!$Label.bdeRetirementBlockerMessage}",
+                  variant: "lake-mountain",
+                  illustrationClass: "slds-p-top_x-large slds-m-top_x-large",
+                  shouldWrapText: true
                },
                "retirementPrompt",
                function () { }
@@ -209,92 +209,96 @@
     <style>
         .ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
     </style>
-    
-    <apex:sectionHeader title="Batch Data Entry" subtitle="{!pageSubtitle}" />
-    <apex:messages />
+
+    <apex:outputPanel rendered="true">
+        <apex:sectionHeader title="{!$Label.stgNavBDE}" subtitle="{!pageSubtitle}" />
+        <div id='retirementPrompt'></div>
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="false">
+        <apex:messages />
         <apex:pageBlock rendered="{!displaySettingsSection}">
             <apex:form >
-            <apex:outputText value="Select the object that you want to batch enter: "/>         
-            <apex:selectList id="objectSelect" value="{!objName}" size="1">
-                <apex:selectOptions value="{!objectSettingsList}"/>
-            </apex:selectList>
-            &nbsp; 
-            <apex:commandButton id="newBatch" value="New Batch" title="Create a new Batch for the selected object" action="{!openBatchEnterPage}"/>   
-            &nbsp;
-            <br/><br/>
+                <apex:outputText value="Select the object that you want to batch enter: "/>
+                <apex:selectList id="objectSelect" value="{!objName}" size="1">
+                    <apex:selectOptions value="{!objectSettingsList}"/>
+                </apex:selectList>
+                &nbsp;
+                <apex:commandButton id="newBatch" value="New Batch" title="Create a new Batch for the selected object" action="{!openBatchEnterPage}"/>
+                &nbsp;
+                <br/><br/>
             </apex:form>
             <apex:pageblocksection title="Existing Batches" columns="1">
                 <apex:listViews type="Batch__c" />
             </apex:pageblocksection>
         </apex:pageBlock>
-         
-    <apex:form styleClass="formClass" >
-        <apex:pageBlock mode="edit" rendered="{!displayBatchSection}" >    
-        <apex:actionFunction name="saveBatch" action="{!saveBatch}" />
-        <apex:outputpanel id="batchinfo">    
-            <apex:pageBlockSection columns="2" title="Batch Summary" >
-                <apex:repeat value="{!$ObjectType.Batch__c.FieldSets.BatchDetailView}" var="b">
-                <apex:inputField value="{!batch[b]}" style="width:200px;" onChange="saveBatch();"/>
-                </apex:repeat>      
-                <apex:PageBlockSectionItem id="batchsizefield">
-                    <apex:OutputLabel for="itemcountfield" value="Batch Size" />
-                    <apex:OutputText id="itemcountfield" value="{!itemCount}"/>
-                </apex:PageBlockSectionItem>                                       
-            </apex:pageBlockSection>
-        </apex:outputpanel>
-        </apex:pageBlock>      
-    </apex:form>  
-        
-    <apex:form styleClass="formClass" >        
-        <apex:pageBlock mode="edit" rendered="{!displayRecInfoSection}" id="pbEdit" >
-            <apex:pageMessages />
-            <apex:pageBlockButtons location="bottom" >
-                <apex:commandButton value="Save" action="{!save}" styleclass="btnSave" rerender="recInfo,recList,pbEdit,itemCount,batchinfo" oncomplete="resetDefaults();" />
-                <apex:commandButton value="Clear" action="{!clear}" immediate="true" rerender="recInfo" oncomplete="getSetUp();" />
-            </apex:pageBlockButtons>            
-            <apex:pageBlockSection title="Record Information" id="recInfo" columns="2" >
-                <apex:pageblocksectionitem rendered="{!currentItem.renderNPSPContact}">
-                    <apex:outputLabel value="NPSP Contact" style="line-height:25px;" /> 
-                    <apex:outputPanel layout="block" styleclass="sticky" >
-                        <apex:inputField id="npspcontactid" value="{!currentItem.npspocr.ContactID}" required="false" styleClass="sticky-npspcontactid"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
-                        <input type="checkbox" id="sticky-npspcontactid" class="defaultCheckbox" style="display:none;" />
-                        <label for="sticky-npspcontactid" class="ui-icon ui-icon-pin-s" style="position:relative;top:0px;">Toggle</label>
-                    </apex:outputPanel>
-                </apex:pageblocksectionitem>             
-             
-                <apex:repeat var="field" value="{!entryFieldList}" >
-                <apex:pageblocksectionitem >
-                    <apex:outputLabel value="{!field.fieldLabel}" style="line-height:25px;" /> 
-                    <apex:outputPanel layout="block" styleclass="sticky" >
-                        <apex:inputField value="{!currentItem.sobj[field.fieldName]}" styleClass="sticky-{!field.fieldName}"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
-                        <input type="checkbox" id="sticky-{!field.fieldName}" class="defaultCheckbox" style="display:none;" />
-                        <label title="Click to make this value the default" for="sticky-{!field.fieldName}" class="ui-icon ui-icon-pin-s">Toggle</label>
-                    </apex:outputPanel>
-                    </apex:pageblocksectionitem> 
-                </apex:repeat>
-            </apex:pageBlockSection>            
-        </apex:pageBlock>
-        
-        <apex:outputPanel id="recList">
-        <apex:pageBlock mode="detail" rendered="{!itemCount>0}" >
-            <apex:pageBlockSection columns="1" title="Saved Record List ({!itemCount} records)">
-                <apex:pageBlockTable var="item" value="{!itemList}" width="90%" >                   
-                    <apex:column >
-                        <apex:facet name="header">Action</apex:facet>
-                        <apex:commandLink value="edit" action="{!item.editItem}" styleclass="editLink" immediate="true" rerender="recInfo" onclick="rememberDefaults();" oncomplete="resetSticky();" />
-                        &nbsp;|&nbsp;
-                        <apex:commandLink styleclass="delLink" value="del" action="{!item.deleteItem}" immediate="true" rerender="recList,itemCount,batchinfo"  oncomplete="resetDefaults();" />&nbsp;|&nbsp;
-                        <apex:outputLink value="/{!item.sobj.Id}" target="_blank">view</apex:outputLink>
-                    </apex:column>
-                    <apex:repeat var="fieldname" value="{!listFieldList}" > 
-                        <apex:column value="{!item.sobj[fieldname]}" styleClass="{!fieldname}" />
-                    </apex:repeat>
-                    <apex:column value="{!item.npspocr.Contactid}" rendered="{!item.renderNPSPContact}"/> 
-                </apex:pageBlockTable> 
-            </apex:pageBlockSection>
-        </apex:pageBlock>
-        </apex:outputPanel>
-    </apex:form>
 
-    <div id="retirementPrompt" style="position: fixed; right: 0; bottom: 0; padding-right: 1rem;"/>
+        <apex:form styleClass="formClass" >
+            <apex:pageBlock mode="edit" rendered="{!displayBatchSection}" >
+                <apex:actionFunction name="saveBatch" action="{!saveBatch}" />
+                <apex:outputpanel id="batchinfo">
+                    <apex:pageBlockSection columns="2" title="Batch Summary" >
+                        <apex:repeat value="{!$ObjectType.Batch__c.FieldSets.BatchDetailView}" var="b">
+                            <apex:inputField value="{!batch[b]}" style="width:200px;" onChange="saveBatch();"/>
+                        </apex:repeat>
+                        <apex:PageBlockSectionItem id="batchsizefield">
+                            <apex:OutputLabel for="itemcountfield" value="Batch Size" />
+                            <apex:OutputText id="itemcountfield" value="{!itemCount}"/>
+                        </apex:PageBlockSectionItem>
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+            </apex:pageBlock>
+        </apex:form>
+
+        <apex:form styleClass="formClass" >
+            <apex:pageBlock mode="edit" rendered="{!displayRecInfoSection}" id="pbEdit" >
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton value="Save" action="{!save}" styleclass="btnSave" rerender="recInfo,recList,pbEdit,itemCount,batchinfo" oncomplete="resetDefaults();" />
+                    <apex:commandButton value="Clear" action="{!clear}" immediate="true" rerender="recInfo" oncomplete="getSetUp();" />
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection title="Record Information" id="recInfo" columns="2" >
+                    <apex:pageblocksectionitem rendered="{!currentItem.renderNPSPContact}">
+                        <apex:outputLabel value="NPSP Contact" style="line-height:25px;" />
+                        <apex:outputPanel layout="block" styleclass="sticky" >
+                            <apex:inputField id="npspcontactid" value="{!currentItem.npspocr.ContactID}" required="false" styleClass="sticky-npspcontactid"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
+                            <input type="checkbox" id="sticky-npspcontactid" class="defaultCheckbox" style="display:none;" />
+                            <label for="sticky-npspcontactid" class="ui-icon ui-icon-pin-s" style="position:relative;top:0px;">Toggle</label>
+                        </apex:outputPanel>
+                    </apex:pageblocksectionitem>
+
+                    <apex:repeat var="field" value="{!entryFieldList}" >
+                        <apex:pageblocksectionitem >
+                            <apex:outputLabel value="{!field.fieldLabel}" style="line-height:25px;" />
+                            <apex:outputPanel layout="block" styleclass="sticky" >
+                                <apex:inputField value="{!currentItem.sobj[field.fieldName]}" styleClass="sticky-{!field.fieldName}"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
+                                <input type="checkbox" id="sticky-{!field.fieldName}" class="defaultCheckbox" style="display:none;" />
+                                <label title="Click to make this value the default" for="sticky-{!field.fieldName}" class="ui-icon ui-icon-pin-s">Toggle</label>
+                            </apex:outputPanel>
+                        </apex:pageblocksectionitem>
+                    </apex:repeat>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="recList">
+                <apex:pageBlock mode="detail" rendered="{!itemCount>0}" >
+                    <apex:pageBlockSection columns="1" title="Saved Record List ({!itemCount} records)">
+                        <apex:pageBlockTable var="item" value="{!itemList}" width="90%" >
+                            <apex:column >
+                                <apex:facet name="header">Action</apex:facet>
+                                <apex:commandLink value="edit" action="{!item.editItem}" styleclass="editLink" immediate="true" rerender="recInfo" onclick="rememberDefaults();" oncomplete="resetSticky();" />
+                                &nbsp;|&nbsp;
+                                <apex:commandLink styleclass="delLink" value="del" action="{!item.deleteItem}" immediate="true" rerender="recList,itemCount,batchinfo"  oncomplete="resetDefaults();" />&nbsp;|&nbsp;
+                                <apex:outputLink value="/{!item.sobj.Id}" target="_blank">view</apex:outputLink>
+                            </apex:column>
+                            <apex:repeat var="fieldname" value="{!listFieldList}" >
+                                <apex:column value="{!item.sobj[fieldname]}" styleClass="{!fieldname}" />
+                            </apex:repeat>
+                            <apex:column value="{!item.npspocr.Contactid}" rendered="{!item.renderNPSPContact}"/>
+                        </apex:pageBlockTable>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:outputPanel>
+        </apex:form>
+    </apex:outputPanel>
 </apex:page>
