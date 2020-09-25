@@ -1,4 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
+import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import { isNull, showToast, constructErrorMessage, format } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
@@ -40,14 +41,20 @@ import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommit
 import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
 import unknownError from '@salesforce/label/c.commonUnknownError';
 
+import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
+import checkRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.checkRequiredFieldPermissions';
+import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
+import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
 
-import getSetting from '@salesforce/apex/RD2_entryFormController.getRecurringSettings';
-import checkRequiredFieldPermissions from '@salesforce/apex/RD2_entryFormController.checkRequiredFieldPermissions';
-import getCommitmentRequestBody from '@salesforce/apex/RD2_entryFormController.getCommitmentRequestBody';
-import createCommitment from '@salesforce/apex/RD2_entryFormController.createCommitment';
+import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
+
+const RECURRING_TYPE_OPEN = 'Open';
+const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
+const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
+const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 
 /***
-* @description Event name fired when the Elevate credit card widget 
+* @description Event name fired when the Elevate credit card widget
 * is displayed or hidden on the RD2 entry form
 */
 const ELEVATE_WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
@@ -106,6 +113,11 @@ export default class rd2EntryForm extends LightningElement {
     paymentMethodToken;
     cardholderName;
 
+    contactId;
+    contact = {
+        MailingCountry: null
+    };
+
     @track error = {};
 
     /***
@@ -153,6 +165,15 @@ export default class rd2EntryForm extends LightningElement {
             });
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
+    }
+
+    /**
+     * @description Set variable that informs the RD form when the
+     *  credit card widget is displayed or hidden by a user
+     * @param event
+     */
+    handleElevateWidgetDisplayState(event) {
+        this.hasUserDisabledElevateWidget = event.isDisabled;
     }
 
     /***
@@ -237,6 +258,34 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
+    /**
+     * @description Handles contact change only when the org is connected to Elevate
+     * and a new Recurring Donation is being created.
+     * Otherwise, contact data should not be retrieved from database.
+     */
+    handleContactChange(event) {
+        if (this.isElevateCustomer && !this.isEdit) {
+            this.contactId = event.detail && event.detail.value ? event.detail.value : event.detail;
+            this.contact.MailingCountry = null;
+        }
+    }
+
+    /**
+     * @description Retrieves the contact data whenever a contact is changed
+     * The data is not refreshed when the contact Id is null.
+     */
+    @wire(getRecord, { recordId: '$contactId', fields: MAILING_COUNTRY_FIELD })
+    wiredGetRecord({ error, data }) {
+        if (data) {
+            this.contact.MailingCountry = data.fields.MailingCountry.value;
+
+            this.handleElevateWidgetDisplay();
+
+        } else if (error) {
+            this.handleError(error);
+        }
+    }
+
     /***
     * @description Checks if form re-rendering is required due to payment method change
     * @param event Contains new payment method value
@@ -249,16 +298,44 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Checks if credit card widget should be displayed
+    * @description Recurring Type change might hide or display the credit card widget
+    * @param event
+    */
+    handleRecurringTypeChange(event) {
+        this.handleElevateWidgetDisplay();
+    }
+
+    /***
+     * @description Currency change might hide or display the credit card widget
+     * @param event
+     */
+    handleCurrencyChange(event) {
+        this.handleElevateWidgetDisplay();
+    }
+
+    /***
+    * @description Checks if the credit card widget should be displayed.
+    */
+    handleElevateWidgetDisplay() {
+        if (this.isElevateCustomer) {
+            this.evaluateElevateWidget(this.getPaymentMethod());
+        }
+    }
+
+    /***
+    * @description Checks if the credit card widget should be displayed.
+    * The Elevate widget is applicable to new RDs only.
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget(paymentMethod) {
         this.isElevateWidgetEnabled = this.isElevateCustomer === true
-            && !this.hasUserDisabledElevateWidget
-            && !this.isEdit // The Elevate widget is applicable to new RDs only
-            && paymentMethod === 'Credit Card';// Verify the payment method value
+            && !this.isEdit
+            && paymentMethod === PAYMENT_METHOD_CREDIT_CARD
+            && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN
+            && this.isCurrencySupported()
+            && this.isCountrySupported();
 
-        if (this.isElevateWidgetDisplayed === true) {
+        if (this.isElevateWidgetEnabled === true) {
             // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
             // when the component first registers, and ideally if the Contact or Org is changed.
 
@@ -274,13 +351,34 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
-    /**
-     * @description Set variable that informs the RD form when the
-     *  credit card widget is displayed or hidden by a user
-     * @param event
+    /***
+     * @description Returns true if the currency code on the Recurring Donatation 
+     * is supported by the Elevate credit card widget
      */
-    handleElevateWidgetDisplayState(event) {
-        this.hasUserDisabledElevateWidget = event.isDisabled;
+    isCurrencySupported() {
+        let currencyCode;
+
+        if (this.isMultiCurrencyEnabled) {
+            currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
+
+        } else {
+            currencyCode = CURRENCY;
+        }
+
+        return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
+    }
+
+    /***
+     * @description Returns true if the Contact.MailingCountry
+     * is supported by the Elevate credit card widget
+     */
+    isCountrySupported() {
+        const country = (this.contactId && this.contact && this.contact.MailingCountry)
+            ? this.contact.MailingCountry
+            : null;
+
+        return isNull(country)
+            || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
     }
 
     /***
@@ -468,7 +566,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleElevateCommitment(recordId) {
         this.loadingText = this.customLabels.creatingCommitmentMessage;
-        
+
         getCommitmentRequestBody({
             recordId: recordId,
             paymentMethodToken: this.paymentMethodToken
@@ -488,7 +586,7 @@ export default class rd2EntryForm extends LightningElement {
             .catch(error => {
                 this.displayCommitmentError(error);
                 this.closeModal(recordId);
-            });        
+            });
     }
 
     /**
@@ -503,7 +601,7 @@ export default class rd2EntryForm extends LightningElement {
 
         } else {
             this.displayCommitmentErrorResponse(response);
-        } 
+        }
     }
 
     /**
@@ -655,6 +753,15 @@ export default class rd2EntryForm extends LightningElement {
      */
     get saveButton() {
         return this.template.querySelector("[data-id='submitButton']");
+    }
+
+    /***
+     * @description Returns value of the Payment Method field
+     */
+    getPaymentMethod() {
+        const paymentMethod = this.template.querySelector(`lightning-input-field[data-id='${FIELD_PAYMENT_METHOD.fieldApiName}']`);
+
+        return paymentMethod ? paymentMethod.value : null;
     }
 
     /**

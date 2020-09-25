@@ -39,7 +39,7 @@
 
                         <c-rd2-entry-form-donor-section record-id={recordId} parent-id={parentId}
                             parent-s-object-type={rdSettings.parentSObjectType} data-id="donorComponent"
-                            onerrorevent={handleChildComponentError} if:true={isSettingReady}>
+                            onerrorevent={handleChildComponentError} oncontactchange={handleContactChange} if:true={isSettingReady}>
                         </c-rd2-entry-form-donor-section>
 
                     </div>
@@ -89,8 +89,9 @@
                                     <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
                                         <label for="currencyField"
                                             class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                        <lightning-input-field id="currencyField" field-name={fields.currency.apiName}
-                                            variant="label-hidden" required>
+                                        <lightning-input-field id="currencyField" data-id="currencyField"
+                                            field-name={fields.currency.apiName} variant="label-hidden" 
+                                            required onchange={handleCurrencyChange}>
                                         </lightning-input-field>
                                     </div>
                                 </lightning-layout-item>
@@ -99,14 +100,15 @@
                         </lightning-layout>
 
                         <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"
-                            onerrorevent={handleChildComponentError} if:true={isSettingReady}>
+                            onerrorevent={handleChildComponentError} ontypechange={handleRecurringTypeChange} if:true={isSettingReady}>
                         </c-rd2-entry-form-schedule-section>
 
                         <lightning-layout horizontal-align="spread" multiple-rows="true">
                             <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6"
                                 if:true={fields.paymentMethod}>
                                 <lightning-input-field field-name={fields.paymentMethod.apiName}
-                                    onchange={handlePaymentChange}>
+                                    onchange={handlePaymentChange}
+                                    data-id='{fields.paymentMethod.apiName}'>
                                 </lightning-input-field>
                             </lightning-layout-item>
 
