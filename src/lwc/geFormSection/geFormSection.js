@@ -1,6 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 import { getSubsetObject, isUndefined, isNotEmpty } from 'c/utilCommon';
-import GeFormService from 'c/geFormService';
+import GeFormElementHelper from './geFormElementHelper.js';
 
 const COLLAPSED_DISPLAY_MODE = 'collapsed';
 
@@ -244,11 +244,10 @@ export default class GeFormSection extends LightningElement {
     }
 
     get renderableElements() {
-        if (!isUndefined(this.section)) {
-            return this.section.elements.filter(element => new GeFormElement(element).isRenderable);
-        } else {
+        if (isUndefined(this.section)) {
             return [];
         }
+        return this.section.elements.filter(element => new GeFormElementHelper(element).isRenderable());
     }
 
     @api
@@ -263,8 +262,6 @@ export default class GeFormSection extends LightningElement {
         return fieldData;
     }
 
-
-
     @api
     setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
         this.template.querySelectorAll('c-ge-form-field')
@@ -277,53 +274,6 @@ export default class GeFormSection extends LightningElement {
                     }
                 }
             });
-    }
-
-}
-
-class GeFormElement {
-    element;
-
-    constructor(element) {
-        this.element = element;
-    }
-
-    get fieldMapping() {
-        return GeFormService.getFieldMappingWrapper(this.formElementName);
-    }
-
-    get targetObjectMappingDevName() {
-        if(isNotEmpty(this.fieldMapping)) {
-            return this.fieldMapping.Target_Object_Mapping_Dev_Name;
-        }
-    }
-
-    get formElementName() {
-        return this.element.componentName ? this.element.componentName : this.element.dataImportFieldMappingDevNames[0];
-    }
-
-    get objectMapping() {
-        return GeFormService.getObjectMappingWrapper(this.targetObjectMappingDevName);
-    }
-
-    get hasMappingInformation() {
-        return isNotEmpty(this.objectMapping) && isNotEmpty(this.fieldMapping);
-    }
-
-    get isWidget() {
-        return !!this.element.componentName;
-    }
-
-    get isRenderable() {
-        if(this.isWidget) {
-            // always render widgets
-            return true;
-        } else if(isNotEmpty(this.fieldMapping)) {
-            // the mapping record for this field is valid when it exists and
-            // the source and target fields are describable
-            return this.hasMappingInformation && this.fieldMapping.isDescribable;
-        }
-        return false;
     }
 
 }
