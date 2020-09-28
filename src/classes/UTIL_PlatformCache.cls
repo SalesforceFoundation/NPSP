@@ -36,12 +36,18 @@
 public class UTIL_PlatformCache {
 
     /**
-     * @description The expected name for the platform cache partition created by the customer org
+     * @description The CacheBuilder.doLoad() method always requries a string parameter, even if it's not being used
+     * This acts as a placeholder for implementations of CacheBuilder that are not using the parameter
+     */
+    public final static String CacheBuilderStubParameter = 'npsp';
+
+    /**
+     * @description The expected name for the platform cache partition created in the customer org
      */
     private static final String NPSP_CACHE_NAME = 'local.npsp';
 
     /**
-     * @description Platform Organization Cache
+     * @description Platform Organization Cache. This is set by isOrgCacheAvailabe() when called
      */
     public static Cache.OrgPartition orgCache;
 
@@ -67,4 +73,25 @@ public class UTIL_PlatformCache {
         return orgCache != null;
     }
 
+    /**
+     * @description Remove all CacheBuilder implementations in the current organization cache
+     */
+    public static void fireInvalidatePlatformCacheEvent(String context) {
+        CacheInvalidation__e ci = new CacheInvalidation__e(
+            DataModified__c = context
+        );
+        EventBus.publish(ci);
+    }
+
+    /**
+     * @description Remove all CacheBuilder implementations in the current organization cache
+     */
+    public static void invalidatePlatformCache() {
+        if (!UTIL_PlatformCache.isOrgCacheAvailable() || orgCache.getKeys().size() == 0) {
+          return;
+        }
+
+        orgCache.remove(UTIL_CurrencyCache.CurrencyCache.class, CacheBuilderStubParameter);
+        orgCache.remove(TDTM_ObjectDataGateway.TriggerHandlerCache.class, CacheBuilderStubParameter);
+    }
 }
