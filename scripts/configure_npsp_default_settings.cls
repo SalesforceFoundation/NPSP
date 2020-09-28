@@ -31,6 +31,8 @@ public static void initializeNPSPSettings() {
     // "NAMESPACE__" via the cumulusci task in cumulusci.tasks.apex.anon.AnonymousApexTask.
     // Similarly %%%NAMESPACED_RT%%% will be replaced by "NAMESPACE." for namespaced record type support
 
+    setAffiliationSettings();
+    setAllocationSettings();
     setCustomizableRollupSettings();
     setHouseholdSettings();
     setContactAndOrgSettings();
@@ -41,6 +43,36 @@ public static void initializeNPSPSettings() {
 // ==============================================================================================================
 // NPSP SETTINGS METHODS
 // ==============================================================================================================
+
+/**
+ * @description Configure the default Affiliations settings mimicking what is in UTIL_CustomSettingsFacade
+ */
+private static void setAffiliationSettings() {
+    npe5__Affiliations_Settings__c settings = npe5__Affiliations_Settings__c.getOrgDefaults();
+
+    if (settings.Id == null) {
+        settings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
+        upsert settings;
+    }
+}
+
+/**
+ * @description Configure the default Allocation settings mimicking what is in UTIL_CustomSettingsFacade
+ */
+private static void setAllocationSettings() {
+    %%%NAMESPACE%%%Allocations_Settings__c settings = %%%NAMESPACE%%%Allocations_Settings__c.getOrgDefaults();
+
+    if (settings.Id == null) {
+        settings.%%%NAMESPACE%%%Default_Allocations_Enabled__c = false;
+        settings.%%%NAMESPACE%%%Default__c = null;
+        settings.%%%NAMESPACE%%%Excluded_Opp_RecTypes__c = null;
+        settings.%%%NAMESPACE%%%Excluded_Opp_Types__c = null;
+        settings.%%%NAMESPACE%%%Payment_Allocations_Enabled__c = false;
+        settings.%%%NAMESPACE%%%Rollup_N_Day_Value__c = 365;
+        settings.%%%NAMESPACE%%%Use_Fiscal_Year_for_Rollups__c = false;
+        upsert settings;
+    }
+}
 
 /**
  * @description Configure the default Customizable Rollup settings mimicking what is in UTIL_CustomSettingsFacade
@@ -198,7 +230,7 @@ private static String getClosedWonStage() {
 /**
  * @description Retrieve the specified record type, or the first active RT if that fails
  */
-private static String getOppRecordType(String rtDevName) {   
+private static String getOppRecordType(String rtDevName) {
     Recordtypeinfo oppRt = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get(rtDevName);
     if (oppRt == null) {
         oppRt = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('NPSP_Default');
