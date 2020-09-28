@@ -6,14 +6,14 @@
         <div class="imagen">Imagen</div>
         <div if:false={isApplicationSubmitted} class="info penndig">
             <p>{labels.gsNoApplicationSubmitted} | <a>{labels.gsLearnMore}</a></p>
-            <p>{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
+            <p class="daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
             <a class="slds-button slds-button_brand" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">
                 {labels.gsApplyForFreeLicenses}
             </a>    
         </div>
         <div if:true={isApplicationSubmitted} class="info submitted">
             <p>{labels.gsApplicationStatus}<span>{labels.gsSubmitted}</span></p>
-            <p>{diffInDays} {labels.gsDaysRemainingInFreeTrial} | <span>{labels.gsDaysAdded}</span></p>
+            <p class='daysLeft'>{diffInDays} {labels.gsDaysRemainingInFreeTrial} | <span>{labels.gsDaysAdded}</span></p>
             <button onclick={onCheckStatusClick}
                 class="slds-button slds-button_outline-brand">
                 {labels.gsCheckStatus}

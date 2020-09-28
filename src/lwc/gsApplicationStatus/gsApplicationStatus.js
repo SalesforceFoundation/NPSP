@@ -11,7 +11,7 @@ import gsCheckStatus from '@salesforce/label/c.gsCheckStatus'
 import gsApplicationStatusModalHeader from '@salesforce/label/c.gsApplicationStatusModalHeader'
 import gsClose from '@salesforce/label/c.gsClose'
 import gsFollowUpApplicationStatus from '@salesforce/label/c.gsFollowUpApplicationStatus'
-export default class NonProfit_GetProduct extends LightningElement {
+export default class GsApplicationStatus extends LightningElement {
     
     @track errorMessage = "";
     @track diffInDays = null;
