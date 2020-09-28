@@ -2,6 +2,7 @@
 
 Resource       cumulusci/robotframework/Salesforce.robot
 Library        DateTime
+Library        Collections
 Library        robot/Cumulus/resources/NPSPSettingsPageObject.py
 Library        NPSP.py
 
