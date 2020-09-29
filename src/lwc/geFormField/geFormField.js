@@ -55,13 +55,7 @@ export default class GeFormField extends LightningElement {
 
     handleValueChangeSync = (event) => {
         this.value = this.getValueFromChangeEvent(event);
-        const detail = {
-            element: this.element,
-            value: this.value,
-            targetFieldName: this.targetFieldName
-        };
-        const evt = new CustomEvent('valuechange', {detail, bubbles: true});
-        this.dispatchEvent(evt);
+        this.fireChangeEvent();
 
         if (this.isLookup || this.isLookupRecordType) {
             const objMappingDevName =
@@ -133,7 +127,13 @@ export default class GeFormField extends LightningElement {
             // and no record value.
             this._defaultValue = defaultValue;
             this.value = defaultValue;
+            //todo: merge this specific call to handlePicklistChange, which fires a
+            // changedonationdonor event with this standard change formfieldchange event
             this.handlePicklistChange();
+            //todo: instead of setting the default val here and firing the change event,
+            // geFormRenderer could set it in formState, and have this cmp set its value
+            // by reacting to formState
+            this.fireChangeEvent();
         }
     }
 
@@ -636,4 +636,24 @@ export default class GeFormField extends LightningElement {
         return `textarea ${this.qaLocatorBase}`;
     }
 
+    _formState;
+    @api
+    set formState(formState) {
+        this._formState = formState;
+        console.log('geFF JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this.formState)));
+    }
+
+    get formState() {
+        return this._formState;
+    }
+
+    fireChangeEvent() {
+        const changeEvent = new CustomEvent('formfieldchange', {
+            detail:
+                {
+                    [this.sourceFieldAPIName]: {value: this.value}
+                }
+        })
+        this.dispatchEvent(changeEvent);
+    }
 }

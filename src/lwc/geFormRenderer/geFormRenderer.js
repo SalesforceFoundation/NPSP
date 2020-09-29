@@ -1412,9 +1412,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             selectedRecordId
         );
 
+        this.lookupFieldApiNameToSelectedRecordId[selectedRecordId] = lookupFieldApiName;
         this.queueSelectedRecordForRetrieval(selectedRecordId, selectedRecordFields);
     }
 
+    lookupFieldApiNameToSelectedRecordId = {};
+    
     getQualifiedFieldName(objectInfo, fieldInfo) {
         return `${objectInfo.objectApiName}.${fieldInfo.fieldApiName}`;
     }
@@ -1453,7 +1456,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (error) {
             handleError(error);
         } else if (data) {
+            //todo: replace with call to updateFormState
+            const relationshipFieldName = this.lookupFieldApiNameToSelectedRecordId[this.selectedRecordId].replace('__c','__r');
+            this._formState[relationshipFieldName] = data;
+
             const dataImport = this.mapRecordValuesToDataImportFields(data);
+            this.updateFormState(dataImport);
             this.load(dataImport, false);
 
             // If the record being loaded is an object-mapped lookup, then set the
@@ -1766,4 +1774,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get qaLocatorSaveButton() {
         return `button ${this.saveActionLabel}`;
     }
+
+    @track
+    _formState = {
+        // Tracking fields in a nested property does not provide the reactivity
+        // needed to pass changes down to child components
+        // fields: {}
+    }
+
+    // get appState() {
+    //     return this._formState;
+    // }
+
+    updateFormState(fields) {
+        console.log('JSON.parse(JSON.stringify(fields)): ', JSON.parse(JSON.stringify(fields)));
+
+        // Does Not Work
+        // Object.assign(this._formState.fields, fields); // shallow copy
+        // this._appState.fields = JSON.parse(JSON.stringify(this._formState.fields));
+        // Does Not Work
+
+        //WORKS
+        Object.assign(this._formState, fields); // shallow copy
+        this._formState = JSON.parse(JSON.stringify(this._formState));
+        //WORKS
+
+        // this._formState.fields = Object.create({}, Object.assign(this._formState.fields, fields));
+        // this._formState.fields = Object.create({}, this._formState.fields);
+        // const nO = JSON.parse(JSON.stringify(this._formState.fields));
+
+        // this._formState.fields = nO;
+        // console.log(this._formState.fields);
+        console.log('render after- JSON.parse(JSON.stringify(this._formState)): ', JSON.parse(JSON.stringify(this._formState)));
+    }
+
+    handleFormFieldChange(event) {
+        console.log(' render JSON.parse(JSON.stringify(event)): ', JSON.parse(JSON.stringify(event)));
+        this.updateFormState(event.detail);
+    }
+
 }
