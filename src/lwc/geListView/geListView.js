@@ -12,8 +12,8 @@ import {
     isNotEmpty,
     hasNestedProperty,
     getNamespace,
-    showToast
-} from 'c/utilCommon'
+    showToast,
+} from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef'
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
@@ -306,34 +306,19 @@ export default class geListView extends LightningElement {
     * @description Method takes in the currently selected column headers and builds
     * a query string that's used to get records with the relevant fields.
     *
-    * @param {list} displayColumns: List of display columns used by lightning-datatable.
+    * @param {Array} columns: List of display columns used by lightning-datatable.
     */
     getRecords = async (columns) => {
-        const fields = columns.filter(column => column.fieldApiName).map(column => column.fieldApiName);
+        const fields = columns.filter(column =>
+            column.fieldApiName).map(column => column.fieldApiName);
         if (fields.length > 0) {
-            let orderBy = DEFAULT_ORDER_BY;
-            if (this.sortedBy && this.sortedDirection) {
-                const columnEntry = this.columnEntriesByName[this.sortedBy];
-                let orderedByFieldApiName;
-
-                if (columnEntry) {
-                    if (hasNestedProperty(this.columnEntriesByName[this.sortedBy],
-                        'typeAttributes', 'label', 'fieldName')) {
-                        orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
-                    } else {
-                        orderedByFieldApiName = columnEntry.fieldApiName;
-                    }
-                    orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
-                }
-            }
             try {
                 const records = await retrieveRecords({
                     selectFields: fields,
                     sObjectApiName: this.objectApiName,
-                    orderByClause: orderBy,
+                    orderByClause: this.buildOrderByClause(),
                     limitClause: this.limit + 1
                 });
-
                 if (records.length > this.limit) {
                     this.hasAdditionalRows = true;
                     this.setDatatableRecordsForImperativeCall(records.slice(0, -1));
@@ -347,6 +332,37 @@ export default class geListView extends LightningElement {
             }
         }
     };
+
+    /*********************************************************************************
+     * @description Function builds an 'Order By' clause based on the sortedBy
+     * field selected on the datatable
+     * @returns {string}
+     *
+     */
+    buildOrderByClause () {
+        let orderBy = DEFAULT_ORDER_BY;
+        if (this.sortedBy && this.sortedDirection) {
+            const columnEntry = this.columnEntriesByName[this.sortedBy];
+            let orderedByFieldApiName;
+            if (columnEntry) {
+                if (hasNestedProperty(columnEntry, 'typeAttributes',
+                    'label', 'fieldName')) {
+                    const columnEntryFieldApiName =
+                        columnEntry.typeAttributes.label.fieldName;
+                    const column = this.columns.find(column =>
+                        (hasNestedProperty(column, 'typeAttributes',
+                            'label', 'fieldName')) &&
+                        columnEntryFieldApiName === column.typeAttributes.label.fieldName
+                    );
+                    orderedByFieldApiName = column.fieldApiName;
+                } else {
+                    orderedByFieldApiName = columnEntry.fieldApiName;
+                }
+                orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
+            }
+        }
+        return orderBy;
+    }
 
     /*******************************************************************************
     * @description Method retrieves the column header data held in the List Custom
@@ -629,7 +645,6 @@ export default class geListView extends LightningElement {
                 if (isNotEmpty(fieldDescribe)
                     && (fieldDescribe.nameField ||
                         fieldDescribe.reference)) {
-
                     let _objectApiName = fieldDescribe.nameField ? this.objectInfo.apiName :
                         fieldDescribe.referenceToInfos[0].apiName;
 
@@ -661,7 +676,7 @@ export default class geListView extends LightningElement {
     getRecordUrl(objectApiName) {
         let url;
 
-        if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
+        if (objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
             const giftEntryTabName =
                 TemplateBuilderService.alignSchemaNSWithEnvironment(
                     'GE_Gift_Entry',
@@ -682,15 +697,7 @@ export default class geListView extends LightningElement {
     */
     handleColumnSorting(event) {
         this.sortedBy = event.detail.fieldName;
-        const columnEntry = this.columnEntriesByName[this.sortedBy];
         this.sortedDirection = event.detail.sortDirection;
-
-        // Set sortedBy to correct fieldName if a URL type column.
-        let sortedBy = this.sortedBy;
-        if (hasNestedProperty(columnEntry, 'typeAttributes', 'label', 'fieldName')) {
-            sortedBy = columnEntry.typeAttributes.label.fieldName;
-        }
-
         this.getRecords(this.columns);
     }
 
