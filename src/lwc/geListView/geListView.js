@@ -4,17 +4,17 @@ import { getRecord } from 'lightning/uiRecordApi';
 import {
     dispatch,
     handleError,
-    generateId,
-} from 'c/utilTemplateBuilder'
+    generateId
+} from 'c/utilTemplateBuilder';
 import {
     format,
     deepClone,
     isNotEmpty,
     hasNestedProperty,
     getNamespace,
-    showToast,
+    showToast
 } from 'c/utilCommon';
-import { fireEvent } from 'c/pubsubNoPageRef'
+import { fireEvent } from 'c/pubsubNoPageRef';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
