@@ -16,13 +16,13 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 Setup Test Data
     [Documentation]      Creates the organiation account and household contact record
     ...                  along with getting dates required for test.
-    &{account} =         API Create Organization Account    Name=${faker.company()}
+    &{ACCOUNT} =         API Create Organization Account    Name=${faker.company()}
     ...                  BillingStreet=${faker.street_address()}
     ...                  BillingCity=${faker.city()}
     ...                  BillingState=California
     ...                  BillingPostalCode=${faker.postcode()}
     Set suite variable   &{ACCOUNT}
-    ${date} =            Get Current Date         result_format=%Y-%m-%d
+    ${DATE} =            Get Current Date         result_format=%Y-%m-%d
     Set suite variable   ${DATE}
     &{CONTACT} =         API Create Contact
     ...                  FirstName=${faker.first_name()}
