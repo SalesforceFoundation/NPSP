@@ -1,0 +1,18 @@
+<aura:component implements="lightning:homeTemplate"
+                description="A home page you always dreamed of, 3 columns." >
+    <aura:attribute name="main" type="Aura.Component[]" />
+    <aura:attribute name="right" type="Aura.Component[]" />
+     
+    <div>
+        <lightning:layout horizontalAlign="spread" pullToBoundary="small">
+            <lightning:layoutItem size="8" flexibility="grow"
+                                  padding="around-small">
+                {!v.main}
+            </lightning:layoutItem>
+            <lightning:layoutItem size="4" flexibility="grow"
+                                  padding="around-small">        
+                {!v.right}
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+</aura:component>
