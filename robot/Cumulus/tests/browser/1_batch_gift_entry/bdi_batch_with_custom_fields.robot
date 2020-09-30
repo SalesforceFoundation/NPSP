@@ -49,6 +49,8 @@ Create Data Import Via API
     ...        ${org_ns}Custom_add_date__c=${date}
     ...        ${org_ns}custom_cont_num__c=9876543210
     Set Global Variable     &{data_import}       &{data_import}
+    # Navigating to the NPSP Settings page as a workaround for the DML error.
+    # will remove below line once this W-8119513 in GUS is fixed
     Go To Page        Custom        NPSP_Settings
     Go To Page        Listing       DataImport__c
     Change View To    To Be Imported
