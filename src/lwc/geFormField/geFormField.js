@@ -653,7 +653,23 @@ export default class GeFormField extends LightningElement {
                 {
                     [this.sourceFieldAPIName]: {value: this.value}
                 }
-        })
+        });
         this.dispatchEvent(changeEvent);
+    }
+
+    get importedRecordFieldName() {
+        if (this.objectMapping) {
+            return this.objectMapping.Imported_Record_Field_Name;
+        }
+    }
+
+    get importedRecordRecordTypeId() {
+        if (this.importedRecordFieldName) {
+            const relationshipFieldName = this.importedRecordFieldName.replace('__c','__r');
+            const parentObject = this.formState[relationshipFieldName];
+            if (parentObject) {
+                return parentObject.recordTypeId;
+            }
+        }
     }
 }
