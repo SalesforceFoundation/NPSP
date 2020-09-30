@@ -163,6 +163,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """Find the element containing warning message on the pause modal and
         asserts the text displayed matches with the expected text"""
         locator = npsp_lex_locators["erd"]["warning_message"]
+        self.selenium.wait_until_element_is_visible(locator)
         self.selenium.element_text_should_be(locator, txt)
 
     @capture_screenshot_on_error

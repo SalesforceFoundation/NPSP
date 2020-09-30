@@ -15,6 +15,9 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Keywords ***
 
 Setup Test Data
+        [Documentation]         Create a contact and recurring donation record of type open using API
+        ...                     Associate the recurring donation to the contact
+
         ${NS} =             Get NPSP Namespace Prefix
         Set Suite Variable  ${NS}
 
@@ -55,10 +58,13 @@ Edit An Enhanced Recurring donation record of type open
     ...                                     object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
     Current Page Should be                  Details                                  npe03__Recurring_Donation__c
+
+    # Editing the recurring donation to set the status closed with reason financial difficulty
     Edit Recurring Donation Status
     ...                                     Status=Closed
     ...                                     Status Reason=Financial Difficulty
 
     Current Page Should be                  Details                                  npe03__Recurring_Donation__c
+    #Pause the recurring donation and validate the warning message displayed
     Pause_Recurring Donation
     Validate Warning Text                   You can't Pause a Closed Recurring Donation
