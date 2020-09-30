@@ -1413,6 +1413,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         scroll_loc=npsp_lex_locators["span_button"].format(field)
         # To make sure the field we want to edit has rendered
         # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.wait_until_element_is_visible(scroll_loc)
         self.selenium.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
