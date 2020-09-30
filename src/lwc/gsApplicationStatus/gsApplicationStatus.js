@@ -1,4 +1,5 @@
 import { LightningElement, track, wire } from 'lwc';
+import Resources from '@salesforce/resourceUrl/gsResources'
 import getApplicationStatus from '@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
 import gsNoApplicationSubmitted from '@salesforce/label/c.gsNoApplicationSubmitted'
 import gsLearnMore from '@salesforce/label/c.gsLearnMore'
@@ -17,6 +18,10 @@ export default class GsApplicationStatus extends LightningElement {
     @track diffInDays = null;
     @track isApplicationSubmitted = false;
     @track isLoading = false;
+    @track img = "";
+
+    applyForFreeLicensesImg = Resources + '/img/gift_illustration.svg';
+    checkForStatusImg = Resources + '/img/gift_illustration_2.svg';
 
     labels = {
         gsNoApplicationSubmitted,
@@ -38,7 +43,8 @@ export default class GsApplicationStatus extends LightningElement {
         getApplicationStatus()
         .then(result => {
             this.diffInDays = this.calculateDiffDays(result);
-            this.isApplicationSubmitted = this.checkApplicationSubmitted(result); 
+            this.isApplicationSubmitted = this.checkApplicationSubmitted(result);
+            this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg
             this.hideSpinner();
         })
         .catch(error => {

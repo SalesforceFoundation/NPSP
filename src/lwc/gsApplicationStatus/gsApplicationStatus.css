@@ -1,26 +1,38 @@
-.imagen {
-    padding: 5rem 0;
-    text-align: center;
-}
-.info {
-    text-align: center;
-}
 .container {
-    padding: 1.5rem;
+    padding-left: 24px;
+    padding-top: 12px;
+    padding-right: 24px;
     background-color: white;
     border: solid 1px #b5b5b5;
     box-shadow: 0px 6px 3px 0px #b5b5b5;
+    text-align: center;
     
 }
+
+.image-container {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 24px;
+}
+.image {
+    object-fit: fill;
+    background-color:black;
+}
+
+.info {
+    text-align: center;
+}
+
 .info p {
-    padding: 0 0 1rem 0;
+    margin-bottom: 18px;
 }
 
 .info .slds-button {
    
     width: 100%;
-    font-size: larger;
-    padding: 0.5rem;
+    font-size: 15px;
+    margin-bottom: 24px;
+    padding: 10px;
 }
 
 .slds-button_outline-brand {
