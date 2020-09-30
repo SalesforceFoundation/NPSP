@@ -1569,19 +1569,3 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if records:
             for i in records:
                 self.salesforce.store_session_record(object_name,i)
-
-    def return_template_builder_fields(self):
-        """Scrapes the template builder page for the form field titles and
-        stores them for recalling."""
-        temp_builder_form_fields=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['temp_builder_labels'])
-        return temp_builder_form_fields
-
-    def return_gift_form_fields(self):
-        """Scrapes the gift entry form page for the form field titles and
-        stores them for recalling."""
-        gift_form_fields=self.selenium.get_webelements(npsp_lex_locators['gift_entry']['ge_form_labels'])
-        return gift_form_fields
-
-    
-
-
