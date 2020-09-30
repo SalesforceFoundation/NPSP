@@ -12,7 +12,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 *** Keywords ***
 
 Get Template Builder Field Names
-  @{builder_form_fields} =  Get Webelements  xpath://lightning-input[@class="slds-truncate slds-form-element"]//label
+  @{builder_form_fields} =  Return Template Builder Fields
   ${builder_labels} =  Create List
 
   FOR  ${label}  IN  @{builder_form_fields}
@@ -23,7 +23,7 @@ Get Template Builder Field Names
 
 
 Get Template Form Field Names
-  @{gift_form_fields} =  Get Webelements  xpath://label[@class="slds-form-element__label" or @class="slds-form-element__label slds-no-flex"]
+  @{gift_form_fields} =  Return Gift Form Fields
   ${form_labels} =  Create List
 
   FOR  ${label}  IN  @{gift_form_fields}
@@ -35,8 +35,9 @@ Get Template Form Field Names
 *** Test Cases ***
 
 Reorder and Modify GE Template Fields
-  [Documentation]                       This tests reordering, adding, and deleting sections
-  ...                                   from a newly created GE template.
+  [Documentation]                       Tests adding, deleting, and reordering form fields on the template builder,
+  ...                                   and compares the order of the template form fields with the order of the 
+  ...                                   gift form in a batch created from that template.
   [tags]                                unstable                    feature:GE          W-039563
   ${template} =                         Generate Random String
   Go to Page                            Landing                     GE_Gift_Entry
