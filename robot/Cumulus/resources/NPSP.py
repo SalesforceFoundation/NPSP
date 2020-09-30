@@ -1115,7 +1115,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)
 
-
+    @capture_screenshot_on_error
     def search_field_by_value(self, fieldname, value):
          """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
          """
@@ -1126,7 +1126,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
          time.sleep(3)
          field.send_keys(Keys.ENTER)
 
-
+    @capture_screenshot_on_error
     def search_field_and_perform_action(self, fieldname, value, type=None):
         """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
         and clicks on the option containing the value from the dropdown if the value is found
@@ -1137,7 +1137,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         field = self.selenium.get_webelement(xpath)
         self.salesforce._clear(field)
         field.send_keys(value)
-        time.sleep(1)
+        time.sleep(3)
         if type == 'New':
            field.send_keys(Keys.ENTER)
            field.send_keys(Keys.ENTER)
@@ -1302,6 +1302,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 					# While populating the number of payments if a desired scheduled payment date is provided use it if not use the current date
                     if 'Scheduledate' in payment_data:
                         scheduled_date = payment_data['Scheduledate']
+                        payment_date = payment_data['Scheduledate']
                         scheduled_date = (datetime.strptime(scheduled_date , '%Y-%m-%d').date() + relativedelta(months=i)).strftime('%Y-%m-%d')
                     else:
                         scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
@@ -1310,7 +1311,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
 					# Out of the total number of payments being generated if user paid the payements for n number of payments specified in the field completedPyaments
 					# Mark the payments as paid and populate the payment date
-                    payment_date = payment_data['Scheduledate']
+                    
                     if 'CompletedPayments' in payment_data:
                         if i<= int(payment_data['CompletedPayments']):
                             payment_update_data = {}
