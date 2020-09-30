@@ -34,18 +34,17 @@
         </lightning-record-edit-form>
     </template>
     <template if:true={isLookupRecordType}>
-        <c-ge-form-field-lookup data-id='inputComponent'
-                                field-api-name={targetFieldApiName}
-                                object-api-name={objectApiName}
-                                onchange={handleValueChange}
-                                default-value={element.defaultValue}
-                                required={required}
-                                id={element.id}
-                                object-describe-info={objectDescribeInfo}
-                                label={fieldLabel}
-                                disabled={disabled}
-                                qa-locator-base={qaLocatorBase}>
-        </c-ge-form-field-lookup>
+        <c-ge-form-field-picklist data-id='inputComponent'
+                                  value={value}
+                                  required={required}
+                                  field-name={targetFieldApiName}
+                                  object-name={objectApiName}
+                                  onchange={handleValueChange}
+                                  label={fieldLabel}
+                                  object-describe-info={objectDescribeInfo}
+                                  record-type-id={recordTypeId}
+                                  qa-locator-base={qaLocatorBase}>
+        </c-ge-form-field-picklist>
     </template>
     <template if:true={isRichText}>
         <label class="slds-form-element__label">
