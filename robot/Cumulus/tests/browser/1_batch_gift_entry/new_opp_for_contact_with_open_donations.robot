@@ -6,9 +6,9 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
-Suite Teardown  Run Keywords
-...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
-...   AND       Capture Screenshot and Delete Records and Close Browser
+#Suite Teardown  Run Keywords
+#...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
+#...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -39,15 +39,13 @@ Create a new opportunity for a contact with open donations
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
-        ...                              Search Field And Wait For Modal    Search Accounts    ${account}[Name]
+        ...                              Search Field And Perform Action    Search Accounts    ${account}[Name]
 
-    Click Link    ${account}[Name]
     Click Link With Text    Review Donations
     Click BGE Button    Update this Opportunity
     Select Value From BGE DD    Donor Type    Contact
     Page Should Not Contain Link    Review Donations
-    Search Field By Value    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
-    Click Link    ${contact}[FirstName] ${contact}[LastName]
+    Search Field And Perform Action    Search Contacts   ${contact}[FirstName] ${contact}[LastName]
     Click Link With Text    Review Donations
     Click Link    Alternatively, create a new Opportunity.
     Fill BGE Form

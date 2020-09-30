@@ -3,6 +3,7 @@ from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
+import time
 
 
 
@@ -114,6 +115,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains_element(select_locator)
             self.populate_crlp_form(**kwargs)
             self.selenium.click_button("Save")
+            time.sleep(2)
             self.selenium.wait_until_page_contains_element(toast_visible)
             self.selenium.wait_until_page_contains_element(toast_hide)
 

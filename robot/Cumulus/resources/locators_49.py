@@ -224,6 +224,7 @@ npsp_lex_locators={
         'gift-amount':'//div[./label[text()="{}"]]',
         'modal-link':'//tbody/tr/td/a[text()="{}"]',
         'datepicker_open':"//div[contains(@class,'slds-is-open')][./label[contains(text(),'{}')]]",
+        'lookup_option': "//span/lightning-base-combobox-formatted-text[@title='{}']"
         
     },
     'bge-lists':{
