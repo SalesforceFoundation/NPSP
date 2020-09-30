@@ -10,7 +10,7 @@ Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 
@@ -41,6 +41,7 @@ Validate Opportunity Details
        ...                     opportunity and validate stage and Close date fields
        [Arguments]                       ${opportunityid}          ${stage}        ${date}
        Go To Page                              Details                        Opportunity                    object_id=${opportunityid}
+       Current Page Should be                  Details                        Opportunity
        Navigate To And Validate Field Value    Stage                          contains                      ${stage}
        Navigate To And Validate Field Value    Close Date                     contains                      ${date}
 
@@ -88,11 +89,15 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
-    ${next_payment_date}               get next payment date number                    1
+    ${next_payment_date}               get next payment date number                    2
 
     #Validate that the number of opportunities now show as 2 .
     Validate Related Record Count      Opportunities                                   2
     @{opportunity} =                   API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
     #Verify the details on the respective opportunities
     Validate Opportunity Details       ${opportunity}[0][Id]        Closed Won                       ${CURRENT_DATE}
+    Go To Page                         Details
+    ...                                npe03__Recurring_Donation__c
+    ...                                object_id=${data}[contact_rd][Id]
+    Current Page Should be             Details    npe03__Recurring_Donation__c
     Validate Opportunity Details       ${opportunity}[1][Id]        Pledged                          ${next_payment_date}
