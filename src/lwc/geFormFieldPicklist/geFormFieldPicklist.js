@@ -1,4 +1,4 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import GeLabelService from 'c/geLabelService';
 import { isEmpty } from 'c/utilCommon';
