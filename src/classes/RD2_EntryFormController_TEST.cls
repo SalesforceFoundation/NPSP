@@ -338,6 +338,31 @@ private with sharing class RD2_EntryFormController_TEST {
             'The temp Commitment Id should stay when commitment cannot be created: ' + jsonResponse);
     }
 
+    /***
+    * @description Verifies an exception is generated when Recurring Donation Id 
+    * is not provided as a prerequisite for the commitment creation
+    */
+    @isTest
+    private static void shouldNotSentCommitmentRequestWhenRDIdIsNotProvided() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Exception actualException;
+        Test.startTest();
+        try {
+            Id recordId = null;
+            RD2_EntryFormController.createCommitment(recordId, PAYMENT_METHOD_TOKEN);
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, actualException,
+            'An exception should be generated when Recurring Donation Id is not provided');
+        System.assertEquals(System.Label.RD2_ErrorRDIdIsMissingForCommitment, actualException.getMessage(),
+            'The exception should be match');
+    }
+
     // Helpers
     ////////////////
 

@@ -2208,6 +2208,14 @@
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
     </labels>
     <labels>
+        <fullName>RD2_ErrorRDIdIsMissingForCommitment</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Id must be specified</shortDescription>
+        <value>Cannot create a commitment in Elevate since Recurring Donation ID has not been provided.</value>
+    </labels>
+    <labels>
         <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>

@@ -297,7 +297,7 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static String createCommitment(Id recordId, String jsonRequestBody) {
         if (recordId == null) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException('Programatic error: Recurring Donation Id must be provided.');
+            UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.RD2_ErrorRDIdIsMissingForCommitment);
         }
 
         UTIL_Http.Response response;
