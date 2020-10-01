@@ -384,8 +384,9 @@ public with sharing class RD2_EntryFormController {
                     npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
                         Id = recordId,
                         CommitmentId__c = commitment.id,
-                        CardExpirationDate__c = commitment.getCardExpirationDate(),
-                        CardLast4__c = commitment.getCardLast4()
+                        CardLast4__c = commitment.getCardLast4(),
+                        CardExpirationMonth__c = commitment.getCardExpirationMonth(),
+                        CardExpirationYear__c = commitment.getCardExpirationYear()
                     );
 
                     UTIL_DMLService.updateRecordBatchAndLogErrors(

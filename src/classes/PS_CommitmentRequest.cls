@@ -489,19 +489,27 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         /** 
-         * @description Returns credit card expiration date
-         * @return String
-         */
-        public String getCardExpirationDate() {
-            return hasCardData() ? cardData.getExpirationDate() : null;
-        }
-
-        /** 
          * @description Returns credit card last 4 digits
          * @return String
          */
         public String getCardLast4() {
-            return hasCardData() ? cardData.getLast4() : null;
+            return hasCardData() ? cardData.last4 : null;
+        }
+
+        /** 
+         * @description Returns credit card expiration month
+         * @return String
+         */
+        public String getCardExpirationMonth() {
+            return hasCardData() ? cardData.expirationMonth : null;
+        }
+
+        /** 
+         * @description Returns credit card expiration year
+         * @return String
+         */
+        public String getCardExpirationYear() {
+            return hasCardData() ? cardData.expirationYear : null;
         }
     }
 
@@ -512,21 +520,5 @@ public inherited sharing class PS_CommitmentRequest {
         public String last4;
         public String expirationMonth;
         public String expirationYear;
-
-        /** 
-         * @description Returns credit card expiration date
-         * @return String
-         */
-        public String getExpirationDate() {
-            return expirationMonth + '/' + expirationYear;
-        }
-
-        /** 
-         * @description Returns credit card last 4 digits
-         * @return String
-         */
-        public String getLast4() {
-            return last4;
-        }
     }
 }
