@@ -13,25 +13,36 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api label;
     @api variant;
     @api required;
-    @api value;
     @api className;
     @api qaLocatorBase;
-
-    // ================================================================================
-    // REACTIVE PROPERTIES
-    // ================================================================================
-    @track _objectDescribeInfo;
 
     // ================================================================================
     // PRIVATE PROPERTIES
     // ================================================================================
     _recordTypeId;
     _picklistValues;
+    _objectDescribeInfo;
+    _value;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     // ================================================================================
     // ACCESSOR METHODS
     // ================================================================================
+    @api
+    get value() {
+        if (this.isValueInOptions(this._value, this.picklistValues)) {
+            return this._value;
+        }
+        if (this.isValueInOptions(this.CUSTOM_LABELS.commonLabelNone, this.picklistValues )) {
+            return this._value = this.CUSTOM_LABELS.commonLabelNone;
+        }
+        return '';
+    }
+
+    set value(val) {
+        this._value = val;
+    }
+
     @api
     get recordTypeId() {
         return this._recordTypeId;
@@ -60,6 +71,10 @@ export default class GeFormFieldPicklist extends LightningElement {
     }
 
     @api
+    get objectDescribeInfo() {
+        return this._objectDescribeInfo;
+    }
+
     set objectDescribeInfo(val) {
         this._objectDescribeInfo = val;
         if (val) {
@@ -67,10 +82,6 @@ export default class GeFormFieldPicklist extends LightningElement {
                 this.recordTypeId = this.defaultRecordTypeId;
             }
         }
-    }
-
-    get objectDescribeInfo() {
-        return this._objectDescribeInfo;
     }
 
     get fullFieldApiName() {
@@ -113,16 +124,6 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api
     reset() {
         this.recordTypeId = this.defaultRecordTypeId;
-    }
-
-    // ================================================================================
-    // LIFECYCLE METHODS
-    // ================================================================================
-    connectedCallback() {
-        if (isEmpty(this.value)) {
-            // Default picklist values to --None-- if no value is loaded
-            this.value = this.CUSTOM_LABELS.commonLabelNone;
-        }
     }
 
     // ================================================================================
@@ -171,6 +172,27 @@ export default class GeFormFieldPicklist extends LightningElement {
         validFor: validFor,
         value: value
     });
+
+    isValueInOptions(value, options) {
+        if (!options || options.length === 0) {
+            return false;
+        }
+
+        const valueIsInOptions = valueToCheck =>
+            options.some(option => {
+                return option.value === valueToCheck;
+            });
+
+        let valueExists = false;
+        if (Array.isArray(value)) {
+            valueExists = value.every(valueToCheck => {
+                return valueIsInOptions(valueToCheck);
+            });
+        } else {
+            valueExists = valueIsInOptions(value);
+        }
+        return valueExists;
+    }
 
     // ================================================================================
     // AUTOMATION ACCESSOR METHODS
