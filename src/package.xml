@@ -811,6 +811,7 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
+        <members>gs_homepageTemplate</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>pageNotification</members>
@@ -3684,6 +3685,7 @@
     </types>
     <types>
         <members>Data_Import_Batch_Record_Home</members>
+        <members>Getting_Started</members>
         <name>FlexiPage</name>
     </types>
     <types>
