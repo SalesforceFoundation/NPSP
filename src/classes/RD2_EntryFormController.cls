@@ -289,26 +289,13 @@ public with sharing class RD2_EntryFormController {
     */
     @AuraEnabled
     public static String createCommitment(Id recordId, String jsonRequestBody) {
-        UTIL_Http.Response response;
-        
-        try {
-            response = sendCommitmentRequest(jsonRequestBody);
-
-            if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
-                // If the commitment is created, then update RD fields: 
-                // Commitment Id, credit card expiry date and last 4.
-
-                // Ensure DML error (if any) on the RD update is returned to the LWC 
-                // as a response or an AuraHandled exception (either will work).
-            }        
-        
-        } catch (Exception ex) {
-            response = requestService.buildErrorResponse(ex);
-
-        } finally {
-            // If the response contains an error, regardless if the commitment is created, or
-            // the RD update failed, create an error log
+        if (recordId == null) {            
+            UTIL_AuraEnabledCommon.throwAuraHandledException('Programatic error: Recurring Donation Id must be provided.');
         }
+
+        UTIL_Http.Response response = sendCommitmentRequest(recordId, jsonRequestBody);  
+        
+        saveCommitment(recordId, response);
 
         return JSON.serialize(response);
     }
@@ -318,10 +305,77 @@ public with sharing class RD2_EntryFormController {
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return String: JSON containing the response with success/error status and message
     */
-    public static UTIL_Http.Response sendCommitmentRequest(String jsonRequestBody) {
-        HttpRequest request = new PS_CommitmentRequest()
-            .buildCreateRequest(jsonRequestBody);
+    public static UTIL_Http.Response sendCommitmentRequest(Id recordId, String jsonRequestBody) {
+        UTIL_Http.Response response;
 
-        return requestService.sendRequest(request);
+        try {
+            HttpRequest request = new PS_CommitmentRequest()
+                .buildCreateRequest(jsonRequestBody);
+
+            response = requestService.sendRequest(request);
+
+        } catch (Exception ex) {
+            response = requestService.buildErrorResponse(ex);
+
+        } finally {
+            if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
+                logError(recordId, response);
+            }
+        }
+
+        return response;
     }
+
+    /***
+    * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
+    * @param recordId Recurring Donation Id
+    * @param response Response from Elevate on the commitment create request
+    * @return void
+    */
+    private static void saveCommitment(Id recordId, UTIL_Http.Response response) {  
+        try {
+            PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+
+            if (commitment.hasId()) {
+                npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                    Id = recordId,
+                    CommitmentId__c = commitment.id,
+                    CardExpirationDate__c = commitment.getCardExpirationDate(),
+                    CardLast4__c = commitment.getCardLast4()
+                );
+
+                update rd;
+            } 
+
+        } catch (Exception e) {
+            logError(recordId, e);
+
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+        }
+    }
+
+    /***
+    * @description Creates an error record for the specified Recurring Donation 
+    * and the error message specified in the Elevate response.
+    * @param recordId Recurring Donation Id
+    * @param response Response from Elevate on the commitment create request
+    */
+    private static void logError(Id recordId, UTIL_Http.Response response) {
+        //has to be in the try/catch block
+        //do not throw an exception
+
+    }
+
+    /***
+    * @description Creates an error record for the specified Recurring Donation 
+    * and the exception error message.
+    * @param recordId Recurring Donation Id
+    * @param e Unexpected exception
+    */
+    private static void logError(Id recordId, Exception e) {
+        //has to be in the try/catch block
+        //do not throw an exception
+        
+    }
+
 }

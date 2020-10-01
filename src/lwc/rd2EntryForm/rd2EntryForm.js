@@ -271,8 +271,8 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Retrieves the contact data whenever a contact is changed
-     * The data is not refreshed when the contact Id is null.
+     * @description Retrieves the contact data whenever a contact is changed.
+     * Data is not refreshed when the contact Id is null.
      */
     @wire(getRecord, { recordId: '$contactId', fields: MAILING_COUNTRY_FIELD })
     wiredGetRecord({ error, data }) {
@@ -335,20 +335,31 @@ export default class rd2EntryForm extends LightningElement {
             && this.isCurrencySupported()
             && this.isCountrySupported();
 
-        if (this.isElevateWidgetEnabled === true) {
-            // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
-            // when the component first registers, and ideally if the Contact or Org is changed.
+        this.populateCardHolderName();
+    }
 
-            // const creditCardForm = this.creditCardComponent;
-            // creditCardForm.setCardholderName('Test Name');
-
-            // const contactId = event.detail.fields.npe03__Contact__c.value;
-            // const accountId = event.detail.fields.npe03__Organization__c.value;
-            // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
-            //     .then(response => {
-            //         this.cardholderName = response;
-            //     });
+    /***
+    * @description Prepopulates the card holder name field on the Elevate credit card widget
+    */
+    populateCardHolderName() {
+        if (this.isElevateWidgetEnabled !== true
+            || this.hasUserDisabledElevateWidget === true
+        ) {
+            return;
         }
+
+        // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
+        // when the component first registers, and ideally if the Contact or Org is changed.
+
+        // const creditCardForm = this.creditCardComponent;
+        // creditCardForm.setCardholderName('Test Name');
+
+        // const contactId = event.detail.fields.npe03__Contact__c.value;
+        // const accountId = event.detail.fields.npe03__Organization__c.value;
+        // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
+        //     .then(response => {
+        //         this.cardholderName = response;
+        //     });
     }
 
     /***
@@ -414,6 +425,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
+
             } catch (error) {
                 this.handleTokenizeCardError(error);
                 return;
@@ -423,6 +435,7 @@ export default class rd2EntryForm extends LightningElement {
         try {
             this.loadingText = this.customLabels.savingRDMessage;
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
+
         } catch (error) {
             this.handleSaveError(error);
         }
@@ -572,7 +585,7 @@ export default class rd2EntryForm extends LightningElement {
             paymentMethodToken: this.paymentMethodToken
         })
             .then(jsonRequestBody => {
-                createCommitment({ record: recordId, jsonRequestBody: jsonRequestBody })
+                createCommitment({ recordId: recordId, jsonRequestBody: jsonRequestBody })
                     .then(jsonResponse => {
                         this.processCommitmentResponse(jsonResponse);
                     })
