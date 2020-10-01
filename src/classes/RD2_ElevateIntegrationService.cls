@@ -41,7 +41,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * created for this Recurring Donation and any user can change it
      * from a temp value to the actual value.
      */
-    public static final String TEMP_COMMITMENT_ID_PREFIX = '_TEMP_';
+    public static final String TEMP_COMMITMENT_ID_PREFIX = '_PENDING_';
 
     /***
      * @description CurrencyIsoCode field name
