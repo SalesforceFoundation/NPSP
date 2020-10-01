@@ -170,24 +170,10 @@ export default class GeFormFieldPicklist extends LightningElement {
     });
 
     isValueInOptions(value, options) {
-        if (!options || options.length === 0) {
-            return false;
-        }
-
-        const valueIsInOptions = valueToCheck =>
-            options.some(option => {
-                return option.value === valueToCheck;
-            });
-
-        let valueExists = false;
-        if (Array.isArray(value)) {
-            valueExists = value.every(valueToCheck => {
-                return valueIsInOptions(valueToCheck);
-            });
-        } else {
-            valueExists = valueIsInOptions(value);
-        }
-        return valueExists;
+        if (!options || options.length === 0) return false;
+        return options.some(option => {
+            return option.value === value;
+        });
     }
 
     // ================================================================================
