@@ -34,6 +34,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CardExpirationDate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CardLast4__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CurrentYearValue__c</field>
         <readable>true</readable>
     </fieldPermissions>

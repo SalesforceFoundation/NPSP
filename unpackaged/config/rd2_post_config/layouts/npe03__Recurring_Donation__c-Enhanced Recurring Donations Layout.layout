@@ -51,9 +51,13 @@
                 <field>npe03__Next_Payment_Date__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%PaymentMethod__c</field>
+                <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%CardExpirationDate__c</field>
             </layoutItems> 
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%CardLast4__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
