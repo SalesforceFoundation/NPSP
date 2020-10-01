@@ -12691,4 +12691,124 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
     </labels>
+     <labels>
+        <fullName>gsResourcesTitle</fullName>
+        <categories>Adoption, Resources, Title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesTitle</shortDescription>
+        <value>Resources</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemNonprofitCloudLabel</fullName>
+        <categories>Adoption, Resources, Item, Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemNonprofitCloudLabel</shortDescription>
+        <value>Nonprofit Cloud Basics</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemNonprofitCloudLink</fullName>
+        <categories>Adoption, Resources, Item, Link</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemNonprofitCloudLink</shortDescription>
+        <value>Get to Know Nonprofit Cloud</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemFundraisingLabel</fullName>
+        <categories>Adoption, Resources, Item, Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemFundraisingLabel</shortDescription>
+        <value>Fundraising Learning Path</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemFundraisingLink</fullName>
+        <categories>Adoption, Resources, Item, Link</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemFundraisingLink</shortDescription>
+        <value>Start Fundrasing</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemProgramManagementLabel</fullName>
+        <categories>Adoption, Resources, Item, Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemProgramManagementLabel</shortDescription>
+        <value>Program Management Learing Path</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemProgramManagementLink</fullName>
+        <categories>Adoption, Resources, Item, Link</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemProgramManagementLink</shortDescription>
+        <value>Get Started</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
+        <categories>Adoption, Resources, Item, Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemMarketingEngagementLabel</shortDescription>
+        <value>Marketing/Engagement Learning Path</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemMarketingEngagementLink</fullName>
+        <categories>Adoption, Resources, Item, Link</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemMarketingEngagementLink</shortDescription>
+        <value>Get Started</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemWebinarsLabel</fullName>
+        <categories>Adoption, Resources, Item, Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemWebinarsLabel</shortDescription>
+        <value>Free Webinars</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemWebinarsLink</fullName>
+        <categories>Adoption, Resources, Item, Link</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemWebinarsLink</shortDescription>
+        <value>Join Webinars</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemHubLabel</fullName>
+        <categories>Adoption, Resources, Item, Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemHubLabel</shortDescription>
+        <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemHubLink</fullName>
+        <categories>Adoption, Resources, Item, Link</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemHubLink</shortDescription>
+        <value>Learn from Other Nonprofits</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemPartnersLabel</fullName>
+        <categories>Adoption, Resources, Item, Label</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemPartnersLabel</shortDescription>
+        <value>Implementation Partners</value>
+    </labels>
+    <labels>
+        <fullName>gsResourcesItemPartnersLink</fullName>
+        <categories>Adoption, Resources, Item, Link</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>gsResourcesItemPartnersLink</shortDescription>
+        <value>Find a Partner</value>
+    </labels>
 </CustomLabels>

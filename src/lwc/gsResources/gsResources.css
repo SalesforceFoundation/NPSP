@@ -1,0 +1,27 @@
+.container > h1 {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.container {
+    padding: 1.5rem;
+    background-color: white;
+    border: solid 1px #b5b5b5;
+    box-shadow: 0px 6px 3px 0px #b5b5b5;
+}
+
+.container .resource-list .resource-item {
+    padding: 1rem 0;
+    border-top: solid 1px #b5b5b5;
+    display: flex;
+    justify-content: space-between;
+}
+
+.container .resource-list .resource-item span {
+    text-align: left;
+}
+
+.container .resource-list .resource-item a {
+    text-align: right;
+    font-weight: bold;
+}
