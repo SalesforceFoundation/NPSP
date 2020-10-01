@@ -1,7 +1,7 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormTemplate';
-import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
+import storeFormTemplate from '@salesforce/apex/GE_GiftEntryController.storeFormTemplate';
+import retrieveFormTemplateById from '@salesforce/apex/GE_GiftEntryController.retrieveFormTemplateById';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -249,7 +249,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.currentNamespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
             const queryParameters = getQueryParameters();
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-            await this.checkForFormTemplateRecordId(queryParameters);
+            await this.loadFormTemplateRecord(queryParameters);
 
             this.buildBatchHeaderFields();
             this.buildDefaultFormFields();
@@ -296,7 +296,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     *
     * @param {object} queryParameters: Object containing query parameters
     */
-    checkForFormTemplateRecordId = async (queryParameters) => {
+    loadFormTemplateRecord = async (queryParameters) => {
         if (!this.formTemplateRecordId) {
             this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
         }
@@ -406,7 +406,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             const fieldMapping =
                 TemplateBuilderService.fieldMappingByDevName[formField.dataImportFieldMappingDevNames[0]];
-            if (SKIPPED_BATCH_TABLE_HEADER_FIELDS.includes(fieldMapping.Source_Field_API_Name)) return;
+
+            if (isEmpty(fieldMapping) ||
+                SKIPPED_BATCH_TABLE_HEADER_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
+
+                return;
+            }
 
             this.availableBatchTableColumnOptions = [
                 ...this.availableBatchTableColumnOptions,
@@ -1198,7 +1203,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (this.hasTemplateInfoTabError) {
-            tabsWithErrors.add(this.tabs.INFO.id);
+            tabsWithErrors.add(this.tabs.INFO.label);
         }
     };
 
@@ -1226,7 +1231,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (this.hasSelectFieldsTabError) {
-            tabsWithErrors.add(this.tabs.FORM_FIELDS.id);
+            tabsWithErrors.add(this.tabs.FORM_FIELDS.label);
         }
     }
 
@@ -1257,7 +1262,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             if (isMissingBatchTableColumns) {
                 this.hasBatchSettingsTabError = true;
-                tabsWithErrors.add(this.tabs.BATCH_SETTINGS.id);
+                tabsWithErrors.add(this.tabs.BATCH_SETTINGS.label);
             } else {
                 this.hasBatchSettingsTabError = false;
             }

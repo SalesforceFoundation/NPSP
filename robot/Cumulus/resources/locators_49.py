@@ -135,6 +135,7 @@ npsp_lex_locators={
         'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
         'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
         'button':'//*[text()="{}"]',
+        'add_contact_option':'//li/span[text()="{}"]'
 
     },
     'opportunity':{
@@ -223,7 +224,8 @@ npsp_lex_locators={
         'gift-amount':'//div[./label[text()="{}"]]',
         'modal-link':'//tbody/tr/td/a[text()="{}"]',
         'datepicker_open':"//div[contains(@class,'slds-is-open')][./label[contains(text(),'{}')]]",
-        },
+        
+    },
     'bge-lists':{
         'list1':"//div[./label[text()='{}']]/div//select",
         'list2':"//div[contains(@class,'slds-grid')]/div[contains(@class,'slds-text-align_left')]/span[text()='{}']/../following-sibling::div//select",
@@ -283,7 +285,10 @@ npsp_lex_locators={
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]',
         'lookup-option':'//li/lightning-base-combobox-item[.//*[@title="{}"]]',
-        },
+        'datatable_options_icon':"//th/lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-actions//button[@aria-expanded='false']/lightning-primitive-icon",
+        'datatable_field_by_name':"//lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-factory[@data-label='{}'][.//*[text()='{}']]",
+        'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']"
+    },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
         'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",

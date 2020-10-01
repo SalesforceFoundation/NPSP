@@ -1,13 +1,14 @@
-import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
-import getFormRenderWrapper from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
-import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
+import getRenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
+import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
+import getAllocationSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
+
 
 import { handleError } from 'c/utilTemplateBuilder';
-import { api } from 'lwc';
 import { isNotEmpty, isEmpty } from 'c/utilCommon';
 
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -43,9 +44,8 @@ class GeFormService {
 
     /**
      * Retrieve the default form render wrapper.
-     * @returns {Promise<FORM_RenderWrapper>}
+     * @returns {Promise<GE_GiftEntryController.RenderWrapper>}
      */
-    @api
     getFormTemplate() {
         return new Promise((resolve, reject) => {
             getRenderWrapper({})
