@@ -275,6 +275,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleCancel() {
         this.reset();
+        this.initializeState();
 
         // if not in batch mode, go back to point of origin
         if (isEmpty(this.batchId)) {
@@ -931,6 +932,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    //todo: not sure if this reset logic will still be needed or if calling
+    // initialize state again will suffice (eventually when everything is being
+    // read from state instead of stored in some of these other properties listed
+    // below like StoredDonationDonorProperties
     @api
     reset(objectMappingDeveloperName = null, setDefaults = true) {
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
