@@ -146,8 +146,9 @@ export default class GeFormFieldPicklist extends LightningElement {
     // PRIVATE METHODS
     // ================================================================================
     handleValueChange(event) {
+        event.stopPropagation();
         this.value = event.detail.value;
-        this.dispatchEvent(new CustomEvent('onchange', event)); // bubble up to ge-form-field
+        this.dispatchEvent(new CustomEvent('change', event));
     }
 
     getPicklistOptionsForRecordTypeIds() {
