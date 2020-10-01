@@ -186,18 +186,12 @@ class GeFormService {
     }
 
     getFieldMappingsForImportedRecordFieldName(importedRecordFieldName) {
-        // console.log('importedRecordFieldName: ', importedRecordFieldName);
         const objectMappingWrapper = this.getObjectMappingWrapperByImportedFieldName(importedRecordFieldName);
-        // console.log('objectMappingWrapper: ', objectMappingWrapper);
-        // console.log('JSON.parse(JSON.stringify(objectMappingWrapper)): ', JSON.parse(JSON.stringify(objectMappingWrapper)));
         if (this.fieldMappings) {
-            // console.log('this.fieldMappings: ', this.fieldMappings);
-            // console.log('JSON.parse(JSON.stringify(this.fieldMappings)): ', JSON.parse(JSON.stringify(this.fieldMappings)));
             const matchingFieldMappings = Object.values(this.fieldMappings).filter(
                 fieldMapping =>
                     fieldMapping.Target_Object_Mapping_Dev_Name === objectMappingWrapper.DeveloperName
             );
-            // console.log('JSON.parse(JSON.stringify(matchingFieldMappings)): ', JSON.parse(JSON.stringify(matchingFieldMappings)));
             return matchingFieldMappings;
         }
     }

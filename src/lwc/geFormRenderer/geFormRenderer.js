@@ -889,10 +889,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // Set the recordTypeId property on sibling fields that need it
         // todo: DO NOT Set Record Type from here to see if it works from formState
-        this.setRecordTypeIdOnSiblingFieldsForSourceField(
-            DONATION_RECORD_TYPE_NAME.fieldApiName,
-            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName]
-        );
+        //TRYING
+        // this.setRecordTypeIdOnSiblingFieldsForSourceField(
+        //     DONATION_RECORD_TYPE_NAME.fieldApiName,
+        //     dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName]
+        // );
     }
 
     setRecordTypeIdOnSiblingFieldsForSourceField(sourceFieldApiName, recordTypeId) {
@@ -1204,7 +1205,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         if (fieldApiName === 'RecordTypeId') { // fieldApiName is the target field
-            this.setRecordTypeOnFields(event.detail.objectMappingDevName, recordId);
+            // TRYING
+            console.log('*** ' + 'NOT calling setRecordTypeOnFields from renderer' + ' ***');
+            // replaced with reading from formState inside formField cmp
+            // this.setRecordTypeOnFields(event.detail.objectMappingDevName, recordId);
         } else if (event.detail.hasOwnProperty('value') && recordId !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {
@@ -1798,6 +1802,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         //WORKS
         Object.assign(this._formState, fields); // shallow copy
+        // re-assign to new object to get reactivity to work since not used in template
         this._formState = JSON.parse(JSON.stringify(this._formState));
         //WORKS
 
@@ -1821,9 +1826,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     initializeState() {
-        console.log('JSON.parse(JSON.stringify(this.sections)): ', JSON.parse(JSON.stringify(this.sections)));
-        console.log('*** ' + 'state initialization starting' + ' ***');
-        console.log('JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this._formState)));
         if (this.sections) {
             this.sections.forEach(section => {
                 if (section.elements) {
