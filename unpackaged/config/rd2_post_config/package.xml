@@ -10,8 +10,6 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CardExpirationDate__c</members>
-        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CardLast4__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Day_of_Month__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%RecurringType__c</members>

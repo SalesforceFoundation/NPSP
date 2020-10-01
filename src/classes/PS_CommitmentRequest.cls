@@ -104,6 +104,11 @@ public inherited sharing class PS_CommitmentRequest {
     private static Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
 
     /***
+     * @description Contains max length for a first/last name passed to the Elevate commitment request
+     */
+    private static Integer MAX_NAME_LENGTH = 60;
+
+    /***
      * @description Payment Services configuration
      */
     @TestVisible
@@ -351,8 +356,8 @@ public inherited sharing class PS_CommitmentRequest {
                 return this;
             }
 
-            this.firstName = getMaxLenName(contact.FirstName);
-            this.lastName = getMaxLenName(contact.LastName);
+            this.firstName = trimNameField(contact.FirstName);
+            this.lastName = trimNameField(contact.LastName);
 
             return this;
         }
@@ -367,8 +372,8 @@ public inherited sharing class PS_CommitmentRequest {
                 return this;
             }
 
-            this.firstName = getMaxLenName(organization.Name);
-            this.lastName = getMaxLenName(organization.Name);
+            this.firstName = trimNameField(organization.Name);
+            this.lastName = trimNameField(organization.Name);
 
             return this;
         }
@@ -378,8 +383,8 @@ public inherited sharing class PS_CommitmentRequest {
          * @param name First or Last Name
          * @return String
          */
-        private String getMaxLenName(String name) {
-            return String.isBlank(name) ? name : name.left(60);
+        private String trimNameField(String name) {
+            return String.isBlank(name) ? name : name.abbreviate(MAX_NAME_LENGTH);
         }
 
         /**

@@ -28,7 +28,7 @@
         <externalId>false</externalId>
         <inlineHelpText>The expiration month and year of the card used for this Recurring Donation.</inlineHelpText>
         <label>Card Expiration Date</label>
-        <length>8</length>
+        <length>7</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

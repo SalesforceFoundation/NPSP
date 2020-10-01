@@ -56,14 +56,14 @@ public with sharing class RD2_EntryFormController {
     };
 
     /**
-    * @description Sends requests and constructs the response
+    * @description Handles commitment request creation, response parsing and RD Commitment Id update
     */
-    private static UTIL_Http.RequestService requestService {
+    private static CommitmentService commitmentService {
         get {
-            if (requestService == null) {
-                requestService = new UTIL_Http.RequestService();
+            if (commitmentService == null) {
+                commitmentService = new CommitmentService();
             }
-            return requestService;
+            return commitmentService;
         }
         set;
     }
@@ -302,96 +302,101 @@ public with sharing class RD2_EntryFormController {
             UTIL_AuraEnabledCommon.throwAuraHandledException('Programatic error: Recurring Donation Id must be provided.');
         }
 
-        UTIL_Http.Response response = sendCommitmentRequest(recordId, jsonRequestBody);
+        UTIL_Http.Response response;
 
-        saveCommitment(recordId, response);
+        try {
+            response = commitmentService.sendCommitmentRequest(recordId, jsonRequestBody);
+            
+            if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
+                commitmentService.saveCommitment(recordId, response); 
+            }
+
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+
+        } finally {
+            if (response != null && response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
+                //create an error log for the RD and the failed response error message
+            }
+        }
 
         return JSON.serialize(response);
     }
 
-    /***
-    * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
-    * @param jsonRequestBody JSON containing parameters for the purchase call request body
-    * @return String: JSON containing the response with success/error status and message
+
+    /**
+    * @description Handles sending commitment request and saving its values on the RD
     */
-    public static UTIL_Http.Response sendCommitmentRequest(Id recordId, String jsonRequestBody) {
-        UTIL_Http.Response response;
+    public without sharing class CommitmentService {
 
-        try {
-            HttpRequest request = new PS_CommitmentRequest()
-                .buildCreateRequest(jsonRequestBody);
-
-            response = requestService.sendRequest(request);
-
-        } catch (Exception ex) {
-            response = requestService.buildErrorResponse(ex);
-
-        } finally {
-            if (response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
-                logError(recordId, response);
+        /**
+        * @description Sends requests and constructs the response
+        */
+        private UTIL_Http.RequestService requestService {
+            get {
+                if (requestService == null) {
+                    requestService = new UTIL_Http.RequestService();
+                }
+                return requestService;
             }
+            set;
         }
 
-        return response;
-    }
+        /***
+        * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
+        * @param jsonRequestBody JSON containing parameters for the purchase call request body
+        * @return String: JSON containing the response with success/error status and message
+        */
+        public UTIL_Http.Response sendCommitmentRequest(Id recordId, String jsonRequestBody) {
+            UTIL_Http.Response response;
 
-    /***
-    * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
-    * @param recordId Recurring Donation Id
-    * @param response Response from Elevate on the commitment create request
-    * @return void
-    */
-    @TestVisible
-    private static void saveCommitment(Id recordId, UTIL_Http.Response response) {
-        if (response == null 
-            || response.statusCode != UTIL_Http.STATUS_CODE_CREATED
-        ) {
-            return;
-        }
+            try {
+                HttpRequest request = new PS_CommitmentRequest()
+                    .buildCreateRequest(jsonRequestBody);
 
-        try {
-            PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+                response = requestService.sendRequest(request);
 
-            if (commitment.hasId()) {
-                npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                    Id = recordId,
-                    CommitmentId__c = commitment.id,
-                    CardExpirationDate__c = commitment.getCardExpirationDate(),
-                    CardLast4__c = commitment.getCardLast4()
-                );
-
-                update rd;
+            } catch (Exception ex) {
+                response = requestService.buildErrorResponse(ex);
             }
 
-        } catch (Exception e) {
-            logError(recordId, e);
-
-            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+            return response;
         }
-    }
 
-    /***
-    * @description Creates an error record for the specified Recurring Donation
-    * and the error message specified in the Elevate response.
-    * @param recordId Recurring Donation Id
-    * @param response Response from Elevate on the commitment create request
-    */
-    private static void logError(Id recordId, UTIL_Http.Response response) {
-        //has to be in the try/catch block
-        //do not throw an exception
 
-    }
+        /***
+        * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
+        * @param recordId Recurring Donation Id
+        * @param response Response from Elevate on the commitment create request
+        * @return void
+        */
+        public void saveCommitment(Id recordId, UTIL_Http.Response response) {
+            if (response == null 
+                || response.statusCode != UTIL_Http.STATUS_CODE_CREATED
+            ) {
+                return;
+            }
 
-    /***
-    * @description Creates an error record for the specified Recurring Donation
-    * and the exception error message.
-    * @param recordId Recurring Donation Id
-    * @param e Unexpected exception
-    */
-    private static void logError(Id recordId, Exception e) {
-        //has to be in the try/catch block
-        //do not throw an exception
+            try {
+                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
 
+                if (commitment.hasId()) {
+                    npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                        Id = recordId,
+                        CommitmentId__c = commitment.id,
+                        CardExpirationDate__c = commitment.getCardExpirationDate(),
+                        CardLast4__c = commitment.getCardLast4()
+                    );
+
+                    UTIL_DMLService.updateRecordBatchAndLogErrors(
+                        new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
+                    );
+                }
+
+            } catch (Exception e) {
+                throw e;
+            }
+        }
     }
 
 }

@@ -59,30 +59,6 @@
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>%%%NAMESPACE%%%CardExpirationDate__c</fullName>
-        <description>The expiration month and year of the card used for this Recurring Donation.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The expiration month and year of the card used for this Recurring Donation.</inlineHelpText>
-        <label>Card Expiration Date</label>
-        <length>8</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>%%%NAMESPACE%%%CardLast4__c</fullName>
-        <description>The last four digits of the card used for this Recurring Donation.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The last four digits of the card used for this Recurring Donation.</inlineHelpText>
-        <label>Card Last 4</label>
-        <length>4</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>%%%NAMESPACE%%%ClosedReason__c</fullName>
         <description>The reason this Recurring Donation has its current Status value.</description>
         <externalId>false</externalId>
