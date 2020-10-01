@@ -129,6 +129,53 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
+    * @description Verifies user cannot update Elevate Recurring Id (Commitment Id)
+    * on an active RD originated in Elevate when
+    * integration is enabled and user does not have permissions assigned
+    */
+    @isTest
+    private static void shouldPreventElevateRDUpdateWhenNonElevateUserChangesCommitmentId() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService service = configureNonElevateUserService();
+
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(UTIL_String.getGUID())
+            .build();
+
+        System.assertEquals(false, service.hasUpdatePermissions(rd, oldRd),
+            'Non-Elevate user should have not permission to update Commitment Id on an active Elevate RD');
+    }
+
+    /***
+    * @description Verifies user can update Elevate Recurring Id (Commitment Id)
+    * from a temp value to the valid value
+    * on an active RD originated in Elevate when
+    * integration is enabled and user does not have permissions assigned.
+    * This scenario is applicable when user creates a new Recurring Donation on the RD entry form
+    * but connects the record to an Elevate commitment by specifying the Payment Method = Credit Card.
+    */
+    @isTest
+    private static void shouldAllowElevateRDUpdateWhenNonElevateUserChangesTempCommitmentId() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService service = configureNonElevateUserService();
+
+        String tempCommitmentId = RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + UTIL_String.getGUID();
+
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(tempCommitmentId)
+            .build();
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
+            'Non-Elevate user should have permission to update Commitment Id from a temp value to the actual Id');
+    }
+
+    /***
     * @description Verifies user cannot update Closed Reason on an active RD originated in Elevate when
     * integration is enabled and user does not have permissions assigned
     */
@@ -366,7 +413,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
     /***
     * @description Verifies that a new opportunity is linked to an existing RD
-    * when the CommitmentId matches and the opportunity is not referencing any RD 
+    * when the CommitmentId matches and the opportunity is not referencing any RD
     */
     @isTest
     private static void shouldLinkOppToRDMatchingCommitmentIdOnOppInsert() {
@@ -386,14 +433,14 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
             'The Recurring Donation field on Opp should be linked to the matching RD');
     }
 
     /***
     * @description Verifies that a new opportunity is not linked to an existing RD
-    * when the CommitmentId does not matches and the opportunity is not referencing any RD 
+    * when the CommitmentId does not matches and the opportunity is not referencing any RD
     */
     @isTest
     private static void shouldNotLinkOppToRDWhenCommitmentIdDoesNotMatch() {
@@ -413,7 +460,7 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(null, opp.npe03__Recurring_Donation__c,
             'The Opp should not link to any RD if the Commitment Id field does not match');
     }
@@ -444,7 +491,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
     /***
     * @description Verifies that a new opportunity is not linked to an existing RD
-    * when the CommitmentId matches and the opportunity is already referencing an RD 
+    * when the CommitmentId matches and the opportunity is already referencing an RD
     */
     @isTest
     private static void shouldNotLinkAlreadyAssignedOppToRDMatchingCommitmentIdOnOppInsert() {
@@ -495,7 +542,7 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
             'The Opportunity should not link to any RD through CommitmentId on update');
     }

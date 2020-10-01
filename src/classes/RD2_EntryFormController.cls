@@ -98,6 +98,15 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
+    * @description Get a GUID to store as a temp Commitment Id
+    * @return String
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getTempCommitmentId() {
+        return RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + UTIL_String.getGUID();
+    }
+
+    /**
     * @description Retrieve the donor type for an existing RD record
     * @param recordId RecurringDonation.RecordId
     * @return Map<String, Object> of specific type of RD data
@@ -281,7 +290,7 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
-    * @description Creates Elevate Commitment and 
+    * @description Creates Elevate Commitment and
     * updates the Recurring Donation with returned Commitment data
     * @param recordId Recurring Donation Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
@@ -289,12 +298,12 @@ public with sharing class RD2_EntryFormController {
     */
     @AuraEnabled
     public static String createCommitment(Id recordId, String jsonRequestBody) {
-        if (recordId == null) {            
+        if (recordId == null) {
             UTIL_AuraEnabledCommon.throwAuraHandledException('Programatic error: Recurring Donation Id must be provided.');
         }
 
-        UTIL_Http.Response response = sendCommitmentRequest(recordId, jsonRequestBody);  
-        
+        UTIL_Http.Response response = sendCommitmentRequest(recordId, jsonRequestBody);
+
         saveCommitment(recordId, response);
 
         return JSON.serialize(response);
@@ -332,7 +341,7 @@ public with sharing class RD2_EntryFormController {
     * @param response Response from Elevate on the commitment create request
     * @return void
     */
-    private static void saveCommitment(Id recordId, UTIL_Http.Response response) {  
+    private static void saveCommitment(Id recordId, UTIL_Http.Response response) {
         try {
             PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
 
@@ -345,7 +354,7 @@ public with sharing class RD2_EntryFormController {
                 );
 
                 update rd;
-            } 
+            }
 
         } catch (Exception e) {
             logError(recordId, e);
@@ -355,7 +364,7 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
-    * @description Creates an error record for the specified Recurring Donation 
+    * @description Creates an error record for the specified Recurring Donation
     * and the error message specified in the Elevate response.
     * @param recordId Recurring Donation Id
     * @param response Response from Elevate on the commitment create request
@@ -367,7 +376,7 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
-    * @description Creates an error record for the specified Recurring Donation 
+    * @description Creates an error record for the specified Recurring Donation
     * and the exception error message.
     * @param recordId Recurring Donation Id
     * @param e Unexpected exception
@@ -375,7 +384,7 @@ public with sharing class RD2_EntryFormController {
     private static void logError(Id recordId, Exception e) {
         //has to be in the try/catch block
         //do not throw an exception
-        
+
     }
 
 }

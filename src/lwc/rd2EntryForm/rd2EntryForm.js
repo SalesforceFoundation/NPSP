@@ -15,6 +15,7 @@ import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03_
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
+import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -43,6 +44,7 @@ import unknownError from '@salesforce/label/c.commonUnknownError';
 
 import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import checkRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.checkRequiredFieldPermissions';
+import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
 
@@ -108,8 +110,8 @@ export default class rd2EntryForm extends LightningElement {
     isSettingReady = false;
 
     @track isElevateWidgetEnabled = false;
-    isElevateCustomer = false;
     hasUserDisabledElevateWidget = false;
+    isElevateCustomer = false;
     paymentMethodToken;
     cardholderName;
 
@@ -339,12 +341,19 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
+    * @description Returns true if the Elevate widget is enabled and
+    * user did not click on the link to hide it
+    */
+    isElevateWidgetDisplayed() {
+        return this.isElevateWidgetEnabled === true
+            && this.hasUserDisabledElevateWidget !== true;
+    }
+
+    /***
     * @description Prepopulates the card holder name field on the Elevate credit card widget
     */
     populateCardHolderName() {
-        if (this.isElevateWidgetEnabled !== true
-            || this.hasUserDisabledElevateWidget === true
-        ) {
+        if (!this.isElevateWidgetDisplayed()) {
             return;
         }
 
@@ -363,7 +372,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-     * @description Returns true if the currency code on the Recurring Donatation 
+     * @description Returns true if the currency code on the Recurring Donatation
      * is supported by the Elevate credit card widget
      */
     isCurrencySupported() {
@@ -420,11 +429,16 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     processSubmit = async (allFields) => {
-        if (this.isElevateWidgetEnabled) {
+        if (this.isElevateWidgetDisplayed()) {
             try {
                 this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
+
+                if (!this.isEdit) {
+                    const tempId = await getTempCommitmentId();
+                    allFields[FIELD_COMMITMENT_ID.fieldApiName] = tempId;
+                }
 
             } catch (error) {
                 this.handleTokenizeCardError(error);
@@ -561,7 +575,7 @@ export default class rd2EntryForm extends LightningElement {
         this.recordName = event.detail.fields.Name.value;
         const recordId = event.detail.id;
 
-        if (this.isElevateWidgetEnabled && this.paymentMethodToken) {
+        if (this.isElevateWidgetDisplayed()) {
             this.handleElevateCommitment(recordId);
 
         } else {
@@ -625,7 +639,7 @@ export default class rd2EntryForm extends LightningElement {
         if (response.body) {
             // Errors returned in the response body can contain a single quote, for example:
             // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
-            // However, the JSON parser does not work with a single quote, 
+            // However, the JSON parser does not work with a single quote,
             // so need to replace it with the double quote but after
             // replacing \" with an empty string, otherwise the message content
             // will be misformatted.
@@ -655,7 +669,7 @@ export default class rd2EntryForm extends LightningElement {
 
         // For some reason the key in the body object for 'Message'
         // in the response we receive from Elevate is capitalized.
-        // Also checking for lowercase M in message in case they fix it.        
+        // Also checking for lowercase M in message in case they fix it.
         return response.body.Message
             || response.body.message
             || response.errorMessage
@@ -691,7 +705,7 @@ export default class rd2EntryForm extends LightningElement {
     showToastCommitmentError(errors) {
         const title = this.customLabels.elevateWidgetLabel;
 
-        // The space is required before the param {0}, 
+        // The space is required before the param {0},
         // otherwise the errors are duplicated when the message is formatted.
         // Moreover, the '\n {0}' cannot be part of the commitment failed message
         // since the new line is not replaced with a return.
