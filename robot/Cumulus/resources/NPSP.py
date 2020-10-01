@@ -1140,7 +1140,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         time.sleep(3)
         if type == 'New':
            field.send_keys(Keys.ENTER)
-           field.send_keys(Keys.ENTER)
            self.salesforce.wait_until_modal_is_open()
         else:
            self.selenium.wait_until_element_is_visible(lookup_option)
@@ -1301,8 +1300,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     # Based on the number of payments parameter numpayments, populate the number of payments and associate it to the opportunity
 					# While populating the number of payments if a desired scheduled payment date is provided use it if not use the current date
                     if 'Scheduledate' in payment_data:
+                        # Referring the payment date and scheduled date to be the same value
                         scheduled_date = payment_data['Scheduledate']
                         payment_date = payment_data['Scheduledate']
+                        #Altering shceduled date to increemnt by every month
                         scheduled_date = (datetime.strptime(scheduled_date , '%Y-%m-%d').date() + relativedelta(months=i)).strftime('%Y-%m-%d')
                     else:
                         scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
@@ -1315,6 +1316,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     if 'CompletedPayments' in payment_data:
                         if i<= int(payment_data['CompletedPayments']):
                             payment_update_data = {}
+                            #Altering Payment date to increment by every month for the set number of installments
                             payment_date =  (datetime.strptime(payment_date , '%Y-%m-%d').date() + relativedelta(months=i*2)).strftime('%Y-%m-%d')
                             payment_update_data.update( {'npe01__Payment_Date__c' : payment_date ,'npe01__Paid__c': "true"} )
                             payment_id = self.salesforce.salesforce_update("npe01__OppPayment__c",payment_id , **payment_update_data)
