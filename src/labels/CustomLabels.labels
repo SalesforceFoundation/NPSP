@@ -7103,7 +7103,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to show the record count in the list view, one record</shortDescription>
-        <value>{0} item</value>
+        <value>{0} link label</value>
     </labels>
     <labels>
         <fullName>geTextListViewItemsCount</fullName>
@@ -12693,122 +12693,122 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
      <labels>
         <fullName>gsResourcesTitle</fullName>
-        <categories>Getting Started Page, Resources, Title</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesTitle</shortDescription>
+        <shortDescription>The page title in the Getting Started Resources section</shortDescription>
         <value>Resources</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemNonprofitCloudLabel</fullName>
-        <categories>Getting Started Page, Resources, Label</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemNonprofitCloudLabel</shortDescription>
+        <shortDescription>Resource NonprofitCloud label in Getting Started Resources section</shortDescription>
         <value>Nonprofit Cloud Basics</value>
     </labels>
     <labels>
-        <fullName>gsResourcesItemNonprofitCloudLink</fullName>
-        <categories>Getting Started Page, Resources, Link</categories>
+        <fullName>gsResourcesItemNonprofitCloudLinkLabel</fullName>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemNonprofitCloudLink</shortDescription>
+        <shortDescription>Resource NonprofitCloud link label in Getting Started Resources section</shortDescription>
         <value>Get to Know Nonprofit Cloud</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemFundraisingLabel</fullName>
-        <categories>Getting Started Page, Resources, Label</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemFundraisingLabel</shortDescription>
+        <shortDescription>Resource Fundraising label in Getting Started Resources section</shortDescription>
         <value>Fundraising Learning Path</value>
     </labels>
     <labels>
-        <fullName>gsResourcesItemFundraisingLink</fullName>
-        <categories>Getting Started Page, Resources, Link</categories>
+        <fullName>gsResourcesItemFundraisingLinkLabel</fullName>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemFundraisingLink</shortDescription>
+        <shortDescription>Resource Fundraising link label in Getting Started Resources section</shortDescription>
         <value>Start Fundrasing</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLabel</fullName>
-        <categories>Getting Started Page, Resources, Label</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemProgramManagementLabel</shortDescription>
+        <shortDescription>Resource Program Management label in Getting Started Resources section</shortDescription>
         <value>Program Management Learing Path</value>
     </labels>
     <labels>
-        <fullName>gsResourcesItemProgramManagementLink</fullName>
-        <categories>Getting Started Page, Resources, Link</categories>
+        <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemProgramManagementLink</shortDescription>
+        <shortDescription>Resource Program Management link label in Getting Started Resources section</shortDescription>
         <value>Get Started</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
-        <categories>Getting Started Page, Resources, Label</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemMarketingEngagementLabel</shortDescription>
+        <shortDescription>Resource Marketing Engagement label in Getting Started Resources section</shortDescription>
         <value>Marketing/Engagement Learning Path</value>
     </labels>
     <labels>
-        <fullName>gsResourcesItemMarketingEngagementLink</fullName>
-        <categories>Getting Started Page, Resources, Link</categories>
+        <fullName>gsResourcesItemMarketingEngagementLinkLabel</fullName>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemMarketingEngagementLink</shortDescription>
+        <shortDescription>Resource Marketing Engagement link label in Getting Started Resources section</shortDescription>
         <value>Get Started</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemWebinarsLabel</fullName>
-        <categories>Getting Started Page, Resources, Label</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemWebinarsLabel</shortDescription>
+        <shortDescription>Resource Webinars label in Getting Started Resources section</shortDescription>
         <value>Free Webinars</value>
     </labels>
     <labels>
-        <fullName>gsResourcesItemWebinarsLink</fullName>
-        <categories>Getting Started Page, Resources, Link</categories>
+        <fullName>gsResourcesItemWebinarsLinkLabel</fullName>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemWebinarsLink</shortDescription>
+        <shortDescription>Resource Webinars link label in Getting Started Resources section</shortDescription>
         <value>Join Webinars</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLabel</fullName>
-        <categories>Getting Started Page, Resources, Label</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemHubLabel</shortDescription>
+        <shortDescription>Resource Hub label in Getting Started Resources section</shortDescription>
         <value>Power of Us Hub</value>
     </labels>
     <labels>
-        <fullName>gsResourcesItemHubLink</fullName>
-        <categories>Getting Started Page, Resources, Link</categories>
+        <fullName>gsResourcesItemHubLinkLabel</fullName>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemHubLink</shortDescription>
+        <shortDescription>Resource Hub link label in Getting Started Resources section</shortDescription>
         <value>Learn from Other Nonprofits</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemPartnersLabel</fullName>
-        <categories>Getting Started Page, Resources, Label</categories>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemPartnersLabel</shortDescription>
+        <shortDescription>Resource Partners label in Getting Started Resources section</shortDescription>
         <value>Implementation Partners</value>
     </labels>
     <labels>
-        <fullName>gsResourcesItemPartnersLink</fullName>
-        <categories>Getting Started Page, Resources, Link</categories>
+        <fullName>gsResourcesItemPartnersLinkLabel</fullName>
+        <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>gsResourcesItemPartnersLink</shortDescription>
+        <shortDescription>Resource Partners link label in Getting Started Resources section</shortDescription>
         <value>Find a Partner</value>
     </labels>
 </CustomLabels>

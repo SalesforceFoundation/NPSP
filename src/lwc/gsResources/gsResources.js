@@ -1,26 +1,36 @@
 import { LightningElement } from 'lwc';
 import gsResourcesTitle from '@salesforce/label/c.gsResourcesTitle';
 import gsResourcesItemNonprofitCloudLabel from '@salesforce/label/c.gsResourcesItemNonprofitCloudLabel';
-import gsResourcesItemNonprofitCloudLink from '@salesforce/label/c.gsResourcesItemNonprofitCloudLink';
+import gsResourcesItemNonprofitCloudLink from '@salesforce/label/c.gsResourcesItemNonprofitCloudLinkLabel';
 import gsResourcesItemFundraisingLabel from '@salesforce/label/c.gsResourcesItemFundraisingLabel';
-import gsResourcesItemFundraisingLink from '@salesforce/label/c.gsResourcesItemFundraisingLink';
+import gsResourcesItemFundraisingLink from '@salesforce/label/c.gsResourcesItemFundraisingLinkLabel';
 import gsResourcesProgramManagementLabel from '@salesforce/label/c.gsResourcesItemProgramManagementLabel';
-import gsResourcesProgramManagementLink from '@salesforce/label/c.gsResourcesItemProgramManagementLink';
+import gsResourcesProgramManagementLink from '@salesforce/label/c.gsResourcesItemProgramManagementLinkLabel';
 import gsResourcesMarketingEngagementLabel from '@salesforce/label/c.gsResourcesItemMarketingEngagementLabel';
-import gsResourcesMarketingEngagementLink from '@salesforce/label/c.gsResourcesItemMarketingEngagementLink';
+import gsResourcesMarketingEngagementLink from '@salesforce/label/c.gsResourcesItemMarketingEngagementLinkLabel';
 import gsResourcesWebinarsLabel from '@salesforce/label/c.gsResourcesItemWebinarsLabel';
-import gsResourcesWebinarsLink from '@salesforce/label/c.gsResourcesItemWebinarsLink';
+import gsResourcesWebinarsLink from '@salesforce/label/c.gsResourcesItemWebinarsLinkLabel';
 import gsResourcesHubLabel from '@salesforce/label/c.gsResourcesItemHubLabel';
-import gsResourcesHubLink from '@salesforce/label/c.gsResourcesItemHubLink';
+import gsResourcesHubLink from '@salesforce/label/c.gsResourcesItemHubLinkLabel';
 import gsResourcesPartnersLabel from '@salesforce/label/c.gsResourcesItemPartnersLabel';
-import gsResourcesPartnersLink from '@salesforce/label/c.gsResourcesItemPartnersLink';
+import gsResourcesPartnersLink from '@salesforce/label/c.gsResourcesItemPartnersLinkLabel';
 
 export default class gsResources extends LightningElement {
 
+    /**
+    * Return the Resource list title to display in UI
+    * @return      Title text
+    * @see         Label
+    */
     get title() {
         return gsResourcesTitle;
     }
 
+    /**
+    * Return the list of resources to display in UI
+    * @return      List of resources
+    * @see         List
+    */
     get resources() {
         return [
             {

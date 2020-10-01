@@ -2386,19 +2386,19 @@
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>gsResourcesItemFundraisingLabel</members>
-        <members>gsResourcesItemFundraisingLink</members>
+        <members>gsResourcesItemFundraisingLinkLabel</members>
         <members>gsResourcesItemHubLabel</members>
-        <members>gsResourcesItemHubLink</members>
+        <members>gsResourcesItemHubLinkLabel</members>
         <members>gsResourcesItemMarketingEngagementLabel</members>
-        <members>gsResourcesItemMarketingEngagementLink</members>
+        <members>gsResourcesItemMarketingEngagementLinkLabel</members>
         <members>gsResourcesItemNonprofitCloudLabel</members>
-        <members>gsResourcesItemNonprofitCloudLink</members>
+        <members>gsResourcesItemNonprofitCloudLinkLabel</members>
         <members>gsResourcesItemPartnersLabel</members>
-        <members>gsResourcesItemPartnersLink</members>
+        <members>gsResourcesItemPartnersLinkLabel</members>
         <members>gsResourcesItemProgramManagementLabel</members>
-        <members>gsResourcesItemProgramManagementLink</members>
+        <members>gsResourcesItemProgramManagementLinkLabel</members>
         <members>gsResourcesItemWebinarsLabel</members>
-        <members>gsResourcesItemWebinarsLink</members>
+        <members>gsResourcesItemWebinarsLinkLabel</members>
         <members>gsResourcesTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
