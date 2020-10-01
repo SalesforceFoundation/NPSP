@@ -100,4 +100,5 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
     Current Page Should be             Details    npe03__Recurring_Donation__c
+    Wait Until Loading Is Complete
     Validate Opportunity Details       ${opportunity}[1][Id]        Pledged                          ${next_payment_date}

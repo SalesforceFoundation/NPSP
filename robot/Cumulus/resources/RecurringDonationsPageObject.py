@@ -154,7 +154,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):
         """Verify that the schedule warning messages are present when there are no schedules"""
-        time.sleep(1)
+        time.sleep(2)
         message_locator = npsp_lex_locators["erd"]["text_message"]
         list_ele = self.selenium.get_webelements(message_locator)
         p_count = len(list_ele)
