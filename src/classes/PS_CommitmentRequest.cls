@@ -351,8 +351,8 @@ public inherited sharing class PS_CommitmentRequest {
                 return this;
             }
 
-            this.firstName = contact.FirstName;
-            this.lastName = contact.LastName;
+            this.firstName = getMaxLenName(contact.FirstName);
+            this.lastName = getMaxLenName(contact.LastName);
 
             return this;
         }
@@ -367,10 +367,19 @@ public inherited sharing class PS_CommitmentRequest {
                 return this;
             }
 
-            this.firstName = organization.Name;
-            this.lastName = organization.Name;
+            this.firstName = getMaxLenName(organization.Name);
+            this.lastName = getMaxLenName(organization.Name);
 
             return this;
+        }
+
+        /**
+         * @description Return max number of character allowed for the first/last name in Elevate
+         * @param name First or Last Name
+         * @return String
+         */
+        private String getMaxLenName(String name) {
+            return String.isBlank(name) ? name : name.left(60);
         }
 
         /**

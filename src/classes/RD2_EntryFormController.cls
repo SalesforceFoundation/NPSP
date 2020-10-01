@@ -341,7 +341,14 @@ public with sharing class RD2_EntryFormController {
     * @param response Response from Elevate on the commitment create request
     * @return void
     */
+    @TestVisible
     private static void saveCommitment(Id recordId, UTIL_Http.Response response) {
+        if (response == null 
+            || response.statusCode != UTIL_Http.STATUS_CODE_CREATED
+        ) {
+            return;
+        }
+
         try {
             PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
 
