@@ -1,5 +1,5 @@
 <aura:component implements="lightning:homeTemplate"
-                description="A home page you always dreamed of, 3 columns." >
+                description="Template for Getting Started page with 2 regions: A main and a Right Sidebar" >
     <aura:attribute name="main" type="Aura.Component[]" />
     <aura:attribute name="right" type="Aura.Component[]" />
      
