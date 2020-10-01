@@ -565,11 +565,15 @@ export default class GeFormField extends LightningElement {
 
     @api
     set recordTypeId(id) {
+        console.log('*** ' + 'SET recordTypeId on geFF called!!' + ' ***');
         this._recordTypeId = id;
         this.setRecordTypeIdOnChildComponents();
     }
 
     get recordTypeId() {
+        console.log('*** ' + 'GET recordTypeId on geFF called!!' + ' ***');
+        console.log('this._recordTypeId: ', this._recordTypeId);
+        console.log('this.recordTypeId2: ', this.recordTypeId2);
         return this._recordTypeId;
     }
 
@@ -675,6 +679,12 @@ export default class GeFormField extends LightningElement {
                 console.log('this.value after making update: ', JSON.stringify(this.value));
             }
         }
+        // console.log('JSON.parse(JSON.stringify()): ', JSON.parse(JSON.stringify(GeFormService.getFieldMappingsForImportedRecordFieldName())));
+        // console.log('JSON.parse(JSON.stringify(siblingFMs)): ', JSON.parse(JSON.stringify(siblingFMs)));
+        console.log('*** ' + 'set formState' + ' ***');
+        console.log('this.recordTypeId2: ', this.recordTypeId2);
+        console.log('this.siblingRecordTypeIdFieldMapping: ', this.siblingRecordTypeIdFieldMapping);
+        console.log('this.sourceFieldForSiblingRecordTypeId: ', this.sourceFieldForSiblingRecordTypeId);
     }
 
     get formState() {
@@ -685,6 +695,7 @@ export default class GeFormField extends LightningElement {
         console.log('*** ' + 'firing formfieldchange' + ' ***');
         console.log('this.sourceFieldAPIName: ', this.sourceFieldAPIName);
         console.log('value: ', value);
+        // console.log('JSON.parse(JSON.stringify(this.siblingFieldMappings)): ', JSON.parse(JSON.stringify(this.siblingFieldMappings)));
         const formFieldChangeEvent = new CustomEvent('formfieldchange', {
             detail:
                 {
@@ -702,7 +713,7 @@ export default class GeFormField extends LightningElement {
 
     get importedRecordRecordTypeId() {
         if (this.importedRecordFieldName) {
-            const relationshipFieldName = this.importedRecordFieldName.replace('__c','__r');
+            const relationshipFieldName = this.importedRecordFieldName.replace('__c', '__r');
             const parentObject = this.formState[relationshipFieldName];
             if (parentObject) {
                 return parentObject.recordTypeId;
@@ -710,10 +721,62 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    get siblingRecordTypeId() {
+        if (this.formState[this.sourceFieldForSiblingRecordTypeId]) {
+            return this.formState[this.sourceFieldForSiblingRecordTypeId].value;
+        }
+    }
+
+    get siblingRecordTypeIdFieldMapping() {
+        if (this.fieldMappingsForImportedRecord) {
+            // console.log('JSON.parse(JSON.stringify(this.siblingFieldMappings)): ', JSON.parse(JSON.stringify(this.siblingFieldMappings)));
+
+            // console.log('JSON.parse(JSON.stringify(this.fieldMappingsForImportedRecord)): ', JSON.parse(JSON.stringify(this.fieldMappingsForImportedRecord)));
+            const siblingRecordTypeFieldMapping = this.fieldMappingsForImportedRecord.find(fieldMapping =>
+                fieldMapping.Target_Field_API_Name === 'RecordTypeId'
+            );
+            // console.log('JSON.parse(JSON.stringify(siblingRecordTypeFieldMapping)): ', JSON.parse(JSON.stringify(siblingRecordTypeFieldMapping)));
+            // console.log('siblingRecordTypeFieldMapping: ', siblingRecordTypeFieldMapping);
+            // console.log('JSON.stringify(siblingRecordTypeFieldMapping): ', JSON.stringify(siblingRecordTypeFieldMapping));
+            return siblingRecordTypeFieldMapping;
+        }
+    }
+
+    get sourceFieldForSiblingRecordTypeId() {
+        if (this.siblingRecordTypeIdFieldMapping) {
+            return this.siblingRecordTypeIdFieldMapping.Source_Field_API_Name;
+        }
+    }
+
+    //DOESNT work - seems like Field_Mappings var is NOT populated with the field mappings
+    // get siblingFieldMappings() {
+    //     return this.objectMappingWrapper.Field_Mappings;
+    // }
+
+    // get objectMappingWrapper() {
+    //     return GeFormService.getObjectMappingWrapperByImportedFieldName(this.importedRecordFieldName);
+    // }
+
     get valueFromFormState() {
         if (this.formState && this.formState[this.sourceFieldAPIName]) {
             return this.formState[this.sourceFieldAPIName].value;
         }
     }
 
+    get fieldMappingsForImportedRecord() {
+        return GeFormService
+            .getFieldMappingsForImportedRecordFieldName(this.importedRecordFieldName);
+    }
+
+    get recordTypeId2() {
+        console.log('in recordtypeId2 for this.fieldAndValue: ', this.fieldAndValue);
+        console.log('this._recordTypeId: ', this._recordTypeId);
+        console.log('this.siblingRecordTypeId: ', this.siblingRecordTypeId);
+        console.log('this.importedRecordRecordTypeId: ', this.importedRecordRecordTypeId);
+        if (this.siblingRecordTypeId !== undefined) {
+            return this.siblingRecordTypeId;
+        } else {
+            return this.importedRecordRecordTypeId;
+        }
+    }
 }

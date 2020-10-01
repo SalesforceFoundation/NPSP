@@ -888,6 +888,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         // Set the recordTypeId property on sibling fields that need it
+        // todo: DO NOT Set Record Type from here to see if it works from formState
         this.setRecordTypeIdOnSiblingFieldsForSourceField(
             DONATION_RECORD_TYPE_NAME.fieldApiName,
             dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName]
@@ -1202,7 +1203,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
 
-        if (fieldApiName === 'RecordTypeId') {
+        if (fieldApiName === 'RecordTypeId') { // fieldApiName is the target field
             this.setRecordTypeOnFields(event.detail.objectMappingDevName, recordId);
         } else if (event.detail.hasOwnProperty('value') && recordId !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
