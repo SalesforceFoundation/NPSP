@@ -40,7 +40,15 @@ const DATETIME = 'datetime-local';
 const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
-    @track value;
+    // _value;
+    get value() {
+        return this.valueFromFormState;
+    }
+
+    // set value(val) {
+    //     this._value = val;
+    // }
+
     @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
@@ -54,11 +62,13 @@ export default class GeFormField extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     handleValueChangeSync = (event) => {
+        console.log('*** ' + 'hVCS' + ' ***');
         //todo: don't set own value here.  Set own value based on formState
         const value = this.getValueFromChangeEvent(event);
-        if (!this.isPicklist) {
-            this.value = value;
-        }
+        //no need to set this.value when it is now a getter that reads formState
+        // if (!this.isPicklist) {
+        // this.value = value;
+        // }
         this.fireFormFieldChangeEvent(value);
 
         if (this.isLookup || this.isLookupRecordType) {
@@ -124,20 +134,22 @@ export default class GeFormField extends LightningElement {
         if (recordValue) {
 
             // set the record value to the element value
-            this.value = recordValue;
+            //todo? is this used? Is there a recordValue prop on element?
+            // this.value = recordValue;
         } else if (defaultValue) {
 
             // Set the default value if there is one
             // and no record value.
             this._defaultValue = defaultValue;
-            this.value = defaultValue;
+            //todo: should
+            // this.value = defaultValue;
             //todo: merge this specific call to handlePicklistChange, which fires a
             // changedonationdonor event with this standard change formfieldchange event
-            this.handlePicklistChange();
+            // this.handlePicklistChange();
             //todo: instead of setting the default val here and firing the change event,
             // geFormRenderer could set it in formState, and have this cmp set its value
             // by reacting to formState
-            this.fireFormFieldChangeEvent(defaultValue);
+            // this.fireFormFieldChangeEvent(defaultValue);
         }
     }
 
@@ -162,6 +174,7 @@ export default class GeFormField extends LightningElement {
      * TRUE when a field is required and filled in correctly, or not required at all.
      * @returns {boolean}
      */
+    //todo: test for this and all of the other functions that use this.value
     @api
     isValid() {
         // We need to check for invalid values, regardless if the field is required
@@ -225,7 +238,7 @@ export default class GeFormField extends LightningElement {
         let fieldAndValue = {};
 
         // KIET TBD: This is where we are keeping the field mapping
-        // CMT record name at, element.value. 
+        // CMT record name at, element.value.
         // However, it may change to the array dataImportFieldMappingDevNames
         // If so, we need to update this to reflect that.
         // In the Execute Anonymous code, both fields are populated.
@@ -450,7 +463,8 @@ export default class GeFormField extends LightningElement {
             if (value === null || value.value === null) {
                 this.reset();
             } else {
-                this.value = value.value || value;
+                //todo: just commenting out to see how value getter from formState works
+                // this.value = value.value || value;
 
                 if (this.isLookupRecordType || this.isLookup) {
                     if (value && !value.displayName) {
@@ -479,7 +493,9 @@ export default class GeFormField extends LightningElement {
             // and passes an {value: <value>} object.  To support that case this block
             // loads the value directly even though data does not have a property for
             // this.sourceFieldAPIName
-           this.value = data.value;
+
+            //todo: just commenting out to see how value getter from formState works
+            // this.value = data.value;
         } else {
             // Property isn't defined.  Don't do anything.
             return false;
@@ -521,9 +537,11 @@ export default class GeFormField extends LightningElement {
     @api
     reset(setDefaults = true) {
         if (setDefaults) {
-            this.value = this._defaultValue;
+            //todo: commenting out to see - default should be provided from
+            // value getter now
+            // this.value = this._defaultValue;
         } else {
-            this.value = null;
+            // this.value = null;
         }
 
         // reset lookups and recordtype fields
@@ -640,16 +658,22 @@ export default class GeFormField extends LightningElement {
         return `textarea ${this.qaLocatorBase}`;
     }
 
+    @track
     _formState;
+
     @api
     set formState(formState) {
         this._formState = formState;
         // console.log('geFF JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this.formState)));
         if (this.isPicklist) {
-            console.log('*** ' + 'setting value by reading formState in field' + this.sourceFieldAPIName + ' ***');
-            console.log('JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this.formState)));
-            this.value = this.formState[this.sourceFieldAPIName];
-            console.log('JSON.stringify(this.value): ', JSON.stringify(this.value));
+            const prevVal = this.value;
+            // this.value = this.formState[this.sourceFieldAPIName];
+            if (prevVal != this.value) {
+                console.log('*** ' + 'value changed! setting value by reading formState in' +
+                    ' field: ' + this.sourceFieldAPIName + ' ***');
+                console.log('passed in state: ', JSON.parse(JSON.stringify(this.formState)));
+                console.log('this.value after making update: ', JSON.stringify(this.value));
+            }
         }
     }
 
@@ -658,6 +682,9 @@ export default class GeFormField extends LightningElement {
     }
 
     fireFormFieldChangeEvent(value) {
+        console.log('*** ' + 'firing formfieldchange' + ' ***');
+        console.log('this.sourceFieldAPIName: ', this.sourceFieldAPIName);
+        console.log('value: ', value);
         const formFieldChangeEvent = new CustomEvent('formfieldchange', {
             detail:
                 {
