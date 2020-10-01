@@ -54,8 +54,12 @@ export default class GeFormField extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     handleValueChangeSync = (event) => {
-        this.value = this.getValueFromChangeEvent(event);
-        this.fireChangeEvent();
+        //todo: don't set own value here.  Set own value based on formState
+        const value = this.getValueFromChangeEvent(event);
+        if (!this.isPicklist) {
+            this.value = value;
+        }
+        this.fireFormFieldChangeEvent(value);
 
         if (this.isLookup || this.isLookupRecordType) {
             const objMappingDevName =
@@ -133,7 +137,7 @@ export default class GeFormField extends LightningElement {
             //todo: instead of setting the default val here and firing the change event,
             // geFormRenderer could set it in formState, and have this cmp set its value
             // by reacting to formState
-            this.fireChangeEvent();
+            this.fireFormFieldChangeEvent(defaultValue);
         }
     }
 
@@ -640,21 +644,27 @@ export default class GeFormField extends LightningElement {
     @api
     set formState(formState) {
         this._formState = formState;
-        console.log('geFF JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this.formState)));
+        // console.log('geFF JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this.formState)));
+        if (this.isPicklist) {
+            console.log('*** ' + 'setting value by reading formState in field' + this.sourceFieldAPIName + ' ***');
+            console.log('JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this.formState)));
+            this.value = this.formState[this.sourceFieldAPIName];
+            console.log('JSON.stringify(this.value): ', JSON.stringify(this.value));
+        }
     }
 
     get formState() {
         return this._formState;
     }
 
-    fireChangeEvent() {
-        const changeEvent = new CustomEvent('formfieldchange', {
+    fireFormFieldChangeEvent(value) {
+        const formFieldChangeEvent = new CustomEvent('formfieldchange', {
             detail:
                 {
-                    [this.sourceFieldAPIName]: {value: this.value}
+                    [this.sourceFieldAPIName]: {value}
                 }
         });
-        this.dispatchEvent(changeEvent);
+        this.dispatchEvent(formFieldChangeEvent);
     }
 
     get importedRecordFieldName() {
@@ -672,4 +682,11 @@ export default class GeFormField extends LightningElement {
             }
         }
     }
+
+    get valueFromFormState() {
+        if (this.formState && this.formState[this.sourceFieldAPIName]) {
+            return this.formState[this.sourceFieldAPIName].value;
+        }
+    }
+
 }
