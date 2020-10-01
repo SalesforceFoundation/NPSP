@@ -120,6 +120,22 @@ public inherited sharing class RD2_ElevateIntegrationService {
         return !isChanged;
     }
 
+    /***
+     * @description Determines whether an Elevate Recurring Donation is changing from Closed to some other state
+     * @param rd Changed Recurring Donation
+     * @param oldRd Old Recurring Donation
+     * @return Boolean true if RD Status is changing from Closed to another state on an Elevate RD
+     */
+    public Boolean isElevateStatusChangeFromClosed(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        if (String.isNotBlank(oldRd.CommitmentId__c)
+            && new RD2_RecurringDonation(oldRd).isClosed()
+            && !new RD2_RecurringDonation(rd).isClosed()
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     /**
     * @description For each CommitmentId, find any existing Opportunities with the matching Commitmentid
     * and update the RecuringDonation lookup field (only if null).
