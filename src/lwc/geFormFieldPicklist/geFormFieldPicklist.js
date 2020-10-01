@@ -2,6 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import GeLabelService from 'c/geLabelService';
 import { isEmpty } from 'c/utilCommon';
+import * as CONSTANTS from './constants';
 
 export default class GeFormFieldPicklist extends LightningElement {
     // ================================================================================
@@ -67,6 +68,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     }
 
     get fullFieldApiName() {
+        if (this.fieldName === CONSTANTS.RECORD_TYPE_ID) return null;
         return `${this.objectName}.${this.fieldName}`;
     }
 
