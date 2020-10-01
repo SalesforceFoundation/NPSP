@@ -12693,7 +12693,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
      <labels>
         <fullName>gsResourcesTitle</fullName>
-        <categories>Adoption, Resources, Title</categories>
+        <categories>Getting Started Page, Resources, Title</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesTitle</shortDescription>
@@ -12701,7 +12701,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemNonprofitCloudLabel</fullName>
-        <categories>Adoption, Resources, Item, Label</categories>
+        <categories>Getting Started Page, Resources, Label</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemNonprofitCloudLabel</shortDescription>
@@ -12709,7 +12709,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemNonprofitCloudLink</fullName>
-        <categories>Adoption, Resources, Item, Link</categories>
+        <categories>Getting Started Page, Resources, Link</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemNonprofitCloudLink</shortDescription>
@@ -12717,7 +12717,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemFundraisingLabel</fullName>
-        <categories>Adoption, Resources, Item, Label</categories>
+        <categories>Getting Started Page, Resources, Label</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemFundraisingLabel</shortDescription>
@@ -12725,7 +12725,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemFundraisingLink</fullName>
-        <categories>Adoption, Resources, Item, Link</categories>
+        <categories>Getting Started Page, Resources, Link</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemFundraisingLink</shortDescription>
@@ -12733,7 +12733,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLabel</fullName>
-        <categories>Adoption, Resources, Item, Label</categories>
+        <categories>Getting Started Page, Resources, Label</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemProgramManagementLabel</shortDescription>
@@ -12741,7 +12741,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLink</fullName>
-        <categories>Adoption, Resources, Item, Link</categories>
+        <categories>Getting Started Page, Resources, Link</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemProgramManagementLink</shortDescription>
@@ -12749,7 +12749,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
-        <categories>Adoption, Resources, Item, Label</categories>
+        <categories>Getting Started Page, Resources, Label</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemMarketingEngagementLabel</shortDescription>
@@ -12757,7 +12757,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLink</fullName>
-        <categories>Adoption, Resources, Item, Link</categories>
+        <categories>Getting Started Page, Resources, Link</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemMarketingEngagementLink</shortDescription>
@@ -12765,7 +12765,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemWebinarsLabel</fullName>
-        <categories>Adoption, Resources, Item, Label</categories>
+        <categories>Getting Started Page, Resources, Label</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemWebinarsLabel</shortDescription>
@@ -12773,7 +12773,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemWebinarsLink</fullName>
-        <categories>Adoption, Resources, Item, Link</categories>
+        <categories>Getting Started Page, Resources, Link</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemWebinarsLink</shortDescription>
@@ -12781,7 +12781,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLabel</fullName>
-        <categories>Adoption, Resources, Item, Label</categories>
+        <categories>Getting Started Page, Resources, Label</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemHubLabel</shortDescription>
@@ -12789,7 +12789,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLink</fullName>
-        <categories>Adoption, Resources, Item, Link</categories>
+        <categories>Getting Started Page, Resources, Link</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemHubLink</shortDescription>
@@ -12797,7 +12797,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemPartnersLabel</fullName>
-        <categories>Adoption, Resources, Item, Label</categories>
+        <categories>Getting Started Page, Resources, Label</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemPartnersLabel</shortDescription>
@@ -12805,7 +12805,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
     <labels>
         <fullName>gsResourcesItemPartnersLink</fullName>
-        <categories>Adoption, Resources, Item, Link</categories>
+        <categories>Getting Started Page, Resources, Link</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>gsResourcesItemPartnersLink</shortDescription>
