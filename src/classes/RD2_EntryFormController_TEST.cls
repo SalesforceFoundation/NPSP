@@ -36,6 +36,15 @@
 */
 @isTest
 private with sharing class RD2_EntryFormController_TEST {
+
+    private static final Date START_DATE = Date.newInstance(2019, 3, 1);
+    private static final String COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+    private static final String TEMP_COMMITMENT_ID = RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + COMMITMENT_ID;
+    private static final String PAYMENT_METHOD_TOKEN = 'token-abcd-efgh-ijkl-mnop-qrst';
+    private static final String CARD_LAST_4 = '1234';
+    private static final String CARD_EXPIRATION_MONTH = '11';
+    private static final String CARD_EXPIRATION_YEAR = '2019';
+
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     /****
@@ -44,7 +53,7 @@ private with sharing class RD2_EntryFormController_TEST {
     @TestSetup
     private static void setUp() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        
+
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
@@ -84,7 +93,7 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies whether the org is the Elevate customer 
+    * @description Verifies whether the org is the Elevate customer
     * in order to display the Elevate credit card widget if so.
     */
     @isTest
@@ -103,7 +112,7 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies whether the org is the Elevate customer 
+    * @description Verifies whether the org is the Elevate customer
     * in order to display the Elevate credit card widget if so.
     */
     @isTest
@@ -206,7 +215,7 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields 
+    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields
     */
     @isTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
@@ -225,50 +234,169 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies Commitment Request Body is built as expected 
+    * @description Verifies Commitment Request Body is built as expected
     */
     @isTest
-    private static void shouldReturnCommitmentRequestBody() {        
+    private static void shouldReturnCommitmentRequestBody() {
         Id recordId = rdGateway.getRecords()[0].Id;
-        final String paymentMethodToken = 'token-abcd-efgh-ijkl-mnop-qrst';
 
-        String jsonRequestBody = RD2_EntryFormController.getCommitmentRequestBody(recordId, paymentMethodToken);
-        System.assert(String.isNotBlank(jsonRequestBody), 'The Commitment request body should be returned');
-
-        PS_CommitmentRequest.RequestBody requestBody = (PS_CommitmentRequest.RequestBody) JSON.deserialize(
-            jsonRequestBody, PS_CommitmentRequest.RequestBody.class
-        );
+        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+        PS_CommitmentRequest.RequestBody requestBody = service.getRequestBody(recordId, PAYMENT_METHOD_TOKEN);
 
         System.assertNotEquals(null, requestBody, 'The Commitment request body should be converted successfully');
-        System.assertEquals(paymentMethodToken, requestBody.paymentMethodToken, 'The payment token should match');        
+        System.assertEquals(PAYMENT_METHOD_TOKEN, requestBody.paymentMethodToken, 'The payment token should match');
     }
 
     /***
-    * @description Verifies Commitment response is created upon successful creation
+    * @description Verifies Commitment record created response is returned upon successful creation
     */
     @isTest
-    private static void shouldReturnResponseWhenCommitmentIsCreated() {     
+    private static void shouldReturnResponseWhenCommitmentIsCreated() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Id recordId = rdGateway.getRecords()[0].Id;
-        final String paymentMethodToken = 'token-abcd-efgh-ijkl-mnop-qrst';
-        final String jsonResponseBody = '{"id":"test commitment id","status":"ACTIVE"}';
-
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_CREATED)
-            .withStatus(UTIL_Http.STATUS_OK)
-            .withBody(jsonResponseBody);
 
         Test.startTest();
-        Test.setMock(HttpCalloutMock.class, callout);
+        mockSuccessCalloutResponse();
 
-        String jsonRequestBody = RD2_EntryFormController.getCommitmentRequestBody(recordId, paymentMethodToken);
-        UTIL_Http.Response response = new RD2_EntryFormController.CommitmentService().sendCommitmentRequest(recordId, jsonRequestBody);
+        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+
+        PS_CommitmentRequest.RequestBody requestBody = service.getRequestBody(recordId, PAYMENT_METHOD_TOKEN);
+        UTIL_Http.Response response = service.sendRequest(recordId, JSON.serialize(requestBody));
         Test.stopTest();
 
         System.assertNotEquals(null, response, 'The Commitment response should be returned');
-        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 
-            'The response status code should match: ' + response);        
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode,
+            'The response status code should match: ' + response);
+    }
+
+    /***
+    * @description Verifies Recurring Donation fields are updated with the commitment data
+    * returned from Elevate on a successful commitment creation.
+    */
+    @isTest
+    private static void shouldUpdateRDCommitmentIdWhenCommitmentIsCreated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withDayOfMonth('1')
+            .withCommitmentId(TEMP_COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        Test.startTest();
+        mockSuccessCalloutResponse();
+
+        String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(COMMITMENT_ID, rd.CommitmentId__c,
+            'The Commitment Id should be saved on the RD record: ' + jsonResponse);
+        System.assertEquals(CARD_LAST_4, rd.CardLast4__c,
+            'The card last 4 value should be saved on the RD record: ' + jsonResponse);
+        System.assertEquals(CARD_EXPIRATION_MONTH, rd.CardExpirationMonth__c,
+            'The card expiration month value should be saved on the RD record: ' + jsonResponse);
+        System.assertEquals(CARD_EXPIRATION_YEAR, rd.CardExpirationYear__c,
+            'The card expiration year value should be saved on the RD record: ' + jsonResponse);
+    }
+
+    /***
+    * @description Verifies Recurring Donation commitment fields are not updated
+    * when an error response is received from the Elevate API.
+    */
+    @isTest
+    private static void shouldNotUpdateRDCommitmentIdWhenElevateReturnsErrorResponse() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withDayOfMonth('1')
+            .withCommitmentId(TEMP_COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        Test.startTest();
+        mockErrorCalloutResponse();
+
+        String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(TEMP_COMMITMENT_ID, rd.CommitmentId__c,
+            'The temp Commitment Id should stay when commitment cannot be created: ' + jsonResponse);
+    }
+
+    // Helpers
+    ////////////////
+
+    /****
+    * @description Simulates a successful commitment creation callout
+    * @return String
+    */
+    private static void mockSuccessCalloutResponse() {
+        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_CREATED)
+            .withStatus(UTIL_Http.STATUS_OK)
+            .withBody(mockSuccessResponseBody());
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
+    /****
+    * @description Returns a mock response body that mimics response body returned from Elevate
+    * when a commitment is created
+    * @return String
+    */
+    private static String mockSuccessResponseBody() {
+        return '{"id":"' + COMMITMENT_ID
+            + '","status":"ACTIVE","statusReason":"COMMITMENT_CREATED"'
+            + ',"cardData":{"last4":"' + CARD_LAST_4
+            + '","expirationMonth":"' + CARD_EXPIRATION_MONTH
+            + '","expirationYear":"' + CARD_EXPIRATION_YEAR
+            + '"}}';
+    }
+
+    /****
+    * @description Simulates an error response from the commitment creation callout
+    * @return String
+    */
+    private static void mockErrorCalloutResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"schedules[0].firstOccurrenceOnTimestamp: Exactly one of firstOccurrenceOnTimestamp and firstOccurrenceOn must not be null",'
+            + '"localizedPaymentsMessage":"Bad Request",'
+            + '"detailedMessage":"schedules[0].firstOccurrenceOnTimestamp: Exactly one of firstOccurrenceOnTimestamp and firstOccurrenceOn must not be null"'
+            + '}]}"';
+
+        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST)
+            .withStatus(System.Label.commonUnknownError)
+            .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, AccountId, Account.Name
+            FROM Contact
+            LIMIT 1
+        ];
     }
 
 }

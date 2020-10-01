@@ -35,12 +35,13 @@
 */
 @IsTest
 public class RD2_ElevateIntegrationService_TEST {
+    public static final String COMMITMENT_ID = '11a1c101-bcde-001-111f-g1dh00i0jk111';
+
     private static final String CURRENCY_CAD = 'CAD';
     private static final String CURRENCY_USD = 'USD';
+
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
-
-    public static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
 
     /****
     * @description Creates data required for unit tests
