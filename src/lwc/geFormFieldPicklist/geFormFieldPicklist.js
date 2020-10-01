@@ -131,15 +131,11 @@ export default class GeFormFieldPicklist extends LightningElement {
     // ================================================================================
     @wire(getPicklistValues, {
         fieldApiName: '$fullFieldApiName',
-        recordTypeId: '$_recordTypeId'
+        recordTypeId: '$recordTypeId'
     })
     wiredPicklistValues({ error, data }) {
         if (data) {
-            let valueNone = {
-                label: this.CUSTOM_LABELS.commonLabelNone,
-                value: this.CUSTOM_LABELS.commonLabelNone
-            }
-            this.picklistValues = [valueNone, ...data.values];
+            this.picklistValues = [CONSTANTS.PICKLIST_OPTION_NONE, ...data.values];
         }
         if (error) {
             console.error(error);
@@ -158,7 +154,7 @@ export default class GeFormFieldPicklist extends LightningElement {
         if (!this.accessibleRecordTypes || this.accessibleRecordTypes.length <= 0) {
             return [CONSTANTS.PICKLIST_OPTION_NONE];
         }
-        // TODO: Potentially exclude 'Master' default record type
+
         const recordTypeIdPicklistOptions = this.accessibleRecordTypes.map(recordType => {
             return this.createPicklistOption(recordType.name, recordType.recordTypeId);
         });
