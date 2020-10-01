@@ -2,17 +2,27 @@
                 description="Template for Getting Started page with 2 regions: A main and a Right Sidebar" >
     <aura:attribute name="main" type="Aura.Component[]" />
     <aura:attribute name="right" type="Aura.Component[]" />
-     
     <div>
-        <lightning:layout horizontalAlign="spread" pullToBoundary="small">
-            <lightning:layoutItem size="8" flexibility="grow"
-                                  padding="around-small">
+         <lightning:layout horizontalAlign="spread" multipleRows="true" pullToBoundary="small">
+            <lightning:layoutItem padding="around-small" 
+                                  flexibility="grow" 
+                                  size="8" 
+                                  smallDeviceSize="12" 
+                                  mediumDeviceSize="12" 
+                                  largeDeviceSize="8">
+            
                 {!v.main}
             </lightning:layoutItem>
-            <lightning:layoutItem size="4" flexibility="grow"
-                                  padding="around-small">        
+            <lightning:layoutItem padding="around-small" 
+                                  flexibility="grow"
+                                  size="12" 
+                                  smallDeviceSize="12" 
+                                  mediumDeviceSize="12" 
+                                  largeDeviceSize="4">
                 {!v.right}
             </lightning:layoutItem>
         </lightning:layout>
     </div>
+    
+  
 </aura:component>
