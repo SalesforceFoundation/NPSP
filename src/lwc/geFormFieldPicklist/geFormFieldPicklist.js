@@ -43,6 +43,9 @@ export default class GeFormFieldPicklist extends LightningElement {
     }
 
     get picklistValues() {
+        if (this.fieldName === CONSTANTS.RECORD_TYPE_ID) {
+            return this.getPicklistOptionsForRecordTypeIds();
+        }
         return this._picklistValues;
     }
 
@@ -72,13 +75,10 @@ export default class GeFormFieldPicklist extends LightningElement {
         return `${this.objectName}.${this.fieldName}`;
     }
 
-    @api
-    get recordTypeId() {
-        return this._recordTypeId;
-    }
-
-    set recordTypeId(id) {
-        this._recordTypeId = id || this.defaultRecordTypeId;
+    get accessibleRecordTypes() {
+        if (!this.objectDescribeInfo) return [];
+        const allRecordTypes = Object.values(this.objectDescribeInfo.recordTypeInfos);
+        return allRecordTypes.filter(recordType => recordType.available && !recordType.master);
     }
 
     // ================================================================================
@@ -152,6 +152,25 @@ export default class GeFormFieldPicklist extends LightningElement {
         this.value = event.detail.value;
         this.dispatchEvent(new CustomEvent('onchange', event)); // bubble up to ge-form-field
     }
+
+    getPicklistOptionsForRecordTypeIds() {
+        if (!this.accessibleRecordTypes || this.accessibleRecordTypes.length <= 0) {
+            return [CONSTANTS.PICKLIST_OPTION_NONE];
+        }
+        // TODO: Potentially exclude 'Master' default record type
+        const recordTypeIdPicklistOptions = this.accessibleRecordTypes.map(recordType => {
+            return this.createPicklistOption(recordType.name, recordType.recordTypeId);
+        });
+
+        return recordTypeIdPicklistOptions;
+    }
+
+    createPicklistOption = (label, value, attributes = null, validFor = []) => ({
+        attributes: attributes,
+        label: label,
+        validFor: validFor,
+        value: value
+    });
 
     // ================================================================================
     // AUTOMATION ACCESSOR METHODS
