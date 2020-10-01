@@ -117,7 +117,6 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.click_button("Save")
             time.sleep(2)
             self.selenium.wait_until_page_contains_element(toast_visible)
-            self.selenium.wait_until_page_contains_element(toast_hide)
 
     @capture_screenshot_on_error
     def clone_rollup(self, rollup_name, **kwargs):
