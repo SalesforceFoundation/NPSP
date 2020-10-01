@@ -262,15 +262,13 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         count = len(installments)
         print(f"Number of installments created is {count}")
         assert count == int(num_payments), "Expected installments to be {} but found {}".format(num_payments, count)
+        date_object = datetime.strptime(startdate, "%m/%d/%Y").date()
         if count == int(num_payments):
             i = 1
             while i < count:
                 datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
                 installment_date = self.selenium.get_webelement(datefield)
-                date_object = datetime.strptime(startdate, "%m/%d/%Y").date()
-                expected_date = (date_object + relativedelta(months=+i)).replace(
-                    day=int(dayofmonth)
-                )
+                expected_date = date_object
                 actual_date = self.selenium.get_webelement(installment_date).text
                 formatted_actual = datetime.strptime(actual_date, "%m/%d/%Y").date()
                 assert (
@@ -278,4 +276,5 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                 ), "Expected date to be {} but found {}".format(
                     expected_date, formatted_actual
                 )
+                date_object = (expected_date + relativedelta(months=+1))
                 i = i + 1
