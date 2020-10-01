@@ -20,18 +20,35 @@ export default class GeFormFieldPicklist extends LightningElement {
     // REACTIVE PROPERTIES
     // ================================================================================
     @track _objectDescribeInfo;
-    @track picklistValues;
     @track defaultRecordTypeId;
 
     // ================================================================================
     // PRIVATE PROPERTIES
     // ================================================================================
     _recordTypeId;
+    _picklistValues;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     // ================================================================================
     // ACCESSOR METHODS
     // ================================================================================
+    @api
+    get recordTypeId() {
+        return this._recordTypeId;
+    }
+
+    set recordTypeId(id) {
+        this._recordTypeId = id || this.defaultRecordTypeId;
+    }
+
+    get picklistValues() {
+        return this._picklistValues;
+    }
+
+    set picklistValues(values) {
+        this._picklistValues = values;
+    }
+
     @api
     set objectDescribeInfo(val) {
         this._objectDescribeInfo = val;
