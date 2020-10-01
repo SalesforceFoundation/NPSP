@@ -235,6 +235,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
         }
+        this.initializeState();
     }
 
     setPermissionsError(errorObject) {
@@ -1194,7 +1195,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const recordId = event.detail.value; // Reset the field if null
         const fieldApiName = event.detail.fieldApiName;
 
-        if(!fieldApiName ||
+        if (!fieldApiName ||
             fieldApiName !== 'RecordTypeId') {
             if (!GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
                 return false;
@@ -1787,7 +1788,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     // }
 
     updateFormState(fields) {
-        console.log('JSON.parse(JSON.stringify(fields)): ', JSON.parse(JSON.stringify(fields)));
+        console.log('updateFormState called with (fields)): ', JSON.parse(JSON.stringify(fields)));
 
         // Does Not Work
         // Object.assign(this._formState.fields, fields); // shallow copy
@@ -1805,12 +1806,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // this._formState.fields = nO;
         // console.log(this._formState.fields);
-        console.log('render after- JSON.parse(JSON.stringify(this._formState)): ', JSON.parse(JSON.stringify(this._formState)));
+        // debugger;
+        console.log('in renderer, formState after update in updateFormState' +
+            '', JSON.parse(JSON.stringify(this._formState)));
     }
 
     handleFormFieldChange(event) {
-        console.log(' render JSON.parse(JSON.stringify(event)): ', JSON.parse(JSON.stringify(event)));
+        console.log('*** ' + 'handling formFieldChangeEvent' + ' ***');
+        console.log(' render JSON.parse(JSON.stringify(event)): ', JSON.parse(JSON.stringify(event.detail)));
         this.updateFormState(event.detail);
+        console.log('in renderer, formState after handling ffChange Evt' +
+            '', JSON.parse(JSON.stringify(this._formState)));
     }
 
+    initializeState() {
+        console.log('JSON.parse(JSON.stringify(this.sections)): ', JSON.parse(JSON.stringify(this.sections)));
+        console.log('*** ' + 'state initialization starting' + ' ***');
+        console.log('JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this._formState)));
+        if (this.sections) {
+            this.sections.forEach(section => {
+                if (section.elements) {
+                    section.elements.forEach(element => {
+                        this.setDefaultValueInFormStateFor(element);
+                    });
+                }
+            });
+        }
+        console.log('*** ' + 'state initialized' + ' ***');
+        console.log('JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this._formState)));
+    }
+
+    setDefaultValueInFormStateFor(element) {
+        const fieldMappingWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+        const value = element.hasOwnProperty('defaultValue') ? element.defaultValue : null;
+        this.updateFormState(
+            {
+                [fieldMappingWrapper.Source_Field_API_Name]: {value}
+            }
+        );
+    }
 }
