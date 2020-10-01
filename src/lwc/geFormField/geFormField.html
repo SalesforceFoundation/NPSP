@@ -1,7 +1,7 @@
 <template>
     <template if:true={isLightningInput}>
 <!--        todo:with current changes, all fields below getting their values from state-->
-<!--        need to check to validate thouroughly what is missing-->
+<!--        need to check to validate thoroughly what is missing-->
 <!--        but since formfieldchange is being fired for all changes-->
 <!--        maybe this is OK ? -->
         <lightning-input data-id='inputComponent'
@@ -73,7 +73,7 @@
             onchange={handleValueChange}
             label={fieldLabel}
             object-describe-info={objectDescribeInfo}
-            record-type-id={importedRecordRecordTypeId}
+            record-type-id={recordTypeId2}
             qa-locator-base={qaLocatorBase}>
         </c-ge-form-field-picklist>
     </template>
