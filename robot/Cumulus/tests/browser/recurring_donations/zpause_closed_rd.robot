@@ -52,7 +52,6 @@ Edit An Enhanced Recurring donation record of type open
     Click Object Button                     New
     Wait For Modal                          New                                       Recurring Donation
     Reload Page
-
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${data}[contact_rd][Id]
