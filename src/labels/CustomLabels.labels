@@ -1631,7 +1631,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
-        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed</value>
+        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
