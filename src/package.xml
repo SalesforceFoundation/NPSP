@@ -205,6 +205,7 @@
         <members>CRLP_Operation</members>
         <members>CRLP_Operation_SVC</members>
         <members>CRLP_Operation_TEST</members>
+        <members>CRLP_PlatformCache</members>
         <members>CRLP_Query_SEL</members>
         <members>CRLP_Query_SEL_TEST</members>
         <members>CRLP_RDSkew_BATCH</members>
@@ -935,7 +936,6 @@
         <members>Batch__c.Description__c</members>
         <members>Batch__c.Number_of_Items__c</members>
         <members>Batch__c.Object_Name__c</members>
-        <members>CacheInvalidation__e.DataModified__c</members>
         <members>Contact.Address_Verification_Status__c</members>
         <members>Contact.Batch__c</members>
         <members>Contact.Current_Address__c</members>
@@ -1336,6 +1336,7 @@
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
+        <members>CacheInvalidation__e.DataModified__c</members>
         <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
         <members>Data_Import_Field_Mapping__mdt.Is_Deleted__c</members>
@@ -3191,11 +3192,11 @@
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
+        <members>CacheInvalidation__e</members>
         <members>Data_Import_Field_Mapping_Set__mdt</members>
         <members>Data_Import_Field_Mapping__mdt</members>
         <members>Data_Import_Object_Mapping_Set__mdt</members>
         <members>Data_Import_Object_Mapping__mdt</members>
-        <members>CacheInvalidation__e</members>
         <members>DeploymentEvent__e</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
@@ -3478,6 +3479,12 @@
         <members>Trigger_Handler__c-iw</members>
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
+        <members>CacheInvalidation__e-de</members>
+        <members>CacheInvalidation__e-en_US</members>
+        <members>CacheInvalidation__e-es</members>
+        <members>CacheInvalidation__e-fr</members>
+        <members>CacheInvalidation__e-ja</members>
+        <members>CacheInvalidation__e-nl_NL</members>
         <members>Data_Import_Field_Mapping_Set__mdt-de</members>
         <members>Data_Import_Field_Mapping_Set__mdt-en_US</members>
         <members>Data_Import_Field_Mapping_Set__mdt-es</members>
@@ -3506,12 +3513,6 @@
         <members>Data_Import_Object_Mapping__mdt-iw</members>
         <members>Data_Import_Object_Mapping__mdt-ja</members>
         <members>Data_Import_Object_Mapping__mdt-nl_NL</members>
-        <members>CacheInvalidation__e-de</members>
-        <members>CacheInvalidation__e-en_US</members>
-        <members>CacheInvalidation__e-es</members>
-        <members>CacheInvalidation__e-fr</members>
-        <members>CacheInvalidation__e-ja</members>
-        <members>CacheInvalidation__e-nl_NL</members>
         <members>DeploymentEvent__e-de</members>
         <members>DeploymentEvent__e-en_US</members>
         <members>DeploymentEvent__e-es</members>

@@ -99,8 +99,9 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
                 listTH = ADV_PackageInfo_SVC.getApiNPSP().getDefaultTdtmConfigNpspRecords(listTH);
             } else {
                 if (listTH == null) {
-                    if (UTIL_PlatformCache.isOrgCacheAvailable()) {
-                        listTH = (List<Trigger_Handler__c>)UTIL_PlatformCache.orgCache.get(
+                    UTIL_PlatformCache platformCache = UTIL_PlatformCache.getInstance();
+                    if (platformCache.isOrgCacheAvailable) {
+                        listTH = (List<Trigger_Handler__c>)platformCache.orgCache.get(
                             TriggerHandlerCache.class, UTIL_PlatformCache.CacheBuilderStubParameter
                         );
                         if (listTH != null && listTH.isEmpty()) {

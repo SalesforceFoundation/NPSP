@@ -32,6 +32,7 @@ trigger NPSP_CacheInvalidation on CacheInvalidation__e (After Insert) {
     /**
      * Call the method to invalidate the cache if it is both available and populated
      */
-    UTIL_PlatformCache.invalidatePlatformCache();
+    UTIL_PlatformCache platformCache = UTIL_PlatformCache.getInstance();
+    platformCache.invalidatePlatformCacheImmediate();
 
 }
