@@ -121,6 +121,27 @@ public inherited sharing class RD2_ElevateIntegrationService {
     }
 
     /***
+     * @description Determines whether an Elevate Recurring Donation is changing from closed state to another state
+     * @param rd Changed Recurring Donation
+     * @param oldRd Old Recurring Donation
+     * @return Boolean
+     */
+    public Boolean isElevateRecordReactivated(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        if (!isIntegrationEnabled()) {
+            return false;
+        }
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        RD2_RecurringDonation oldRDRecord = new RD2_RecurringDonation(oldRd);
+
+        Boolean isReactivated = oldRDRecord.isElevateRecord()
+            && oldRDRecord.isClosed()
+            && !rdRecord.isClosed();
+
+        return isReactivated;
+    }
+
+    /***
      * @description Determines whether an Elevate Recurring Donation is changing from Closed to some other state
      * @param rd Changed Recurring Donation
      * @param oldRd Old Recurring Donation

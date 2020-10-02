@@ -1602,14 +1602,6 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
-        <fullName>RD2_ElevateClosedStatusChangeError</fullName>
-        <categories>Recurring-Donations, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
-        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed</value>
-    </labels>
-    <labels>
         <fullName>RD2_ElevatePermissionRequired</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1632,6 +1624,14 @@
         <protected>true</protected>
         <shortDescription>Status Reason to indicates Elevate Service is in progress.</shortDescription>
         <value>Pending Elevate Process</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
+        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
