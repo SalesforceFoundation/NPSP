@@ -35,6 +35,7 @@
 */
 @IsTest(IsParallel=true)
 public with sharing class UTIL_Http_TEST {
+    public static final String BAD_REQUEST_MESSAGE = 'Unauthorized endpoint, please check Setup->Security->Remote site settings.';
 
     /**
     * @description Verifies response is correctly formatted based on HttpResponse
@@ -118,7 +119,6 @@ public with sharing class UTIL_Http_TEST {
         System.assertEquals(errorMessage, body.errors[0].message, 'The error message should match');
     }
 
-
     /**
     * @description Callout Mock
     */
@@ -183,6 +183,45 @@ public with sharing class UTIL_Http_TEST {
 
             return response;
         }
+    }
+
+    // Helpers
+    /////////////////
+
+    /**
+     * @description Simulates a success callout response
+     * @return void
+     */
+    public static void mockSuccessCalloutResponse(String responseBody) {
+        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+            .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
+    /**
+     * @description Simulates a bad request callout response
+     * @return void
+     */
+    public static void mockBadRequestCalloutResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"' + BAD_REQUEST_MESSAGE + '"'
+            + '}]}"';
+
+        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_BAD_REQUEST, System.Label.commonUnknownError, responseBody);
+    }
+
+    /**
+     * @description Simulates an error callout response
+     * @return void
+     */
+    public static void mockErrorCalloutResponse(Integer statusCode, String status, String responseBody) {
+        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(statusCode)
+            .withStatus(status)
+            .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
     }
     
 }

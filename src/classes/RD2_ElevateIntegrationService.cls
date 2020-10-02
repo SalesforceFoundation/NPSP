@@ -190,32 +190,142 @@ public inherited sharing class RD2_ElevateIntegrationService {
         }
     }
 
+
     /**
-    * @description Sends HttpRequest to Elevate to cancel Commitments for close Recurring Donations
+    * @description Cancels commitments in Elevate connected to the closed Recurring Donations
     * @param closedRDs Closed RDs with the user specified closed reason
     * @return void
     */
     public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
-        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
-        List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
+        new CancelCommitmentService().cancelCommitments(closedRDs);
+    }
 
-        for (npe03__Recurring_Donation__c rd : closedRDs) {
-            HttpRequest request = new PS_Request.Builder()
-                .withCommitmentId(rd.CommitmentId__c)
+    /**
+    * @description Handles cancelation of commitments in Elevate.
+    * If the commitment cannot be closed, the RD closed reason 
+    * is set based on the Elevate error response.
+    */
+    public without sharing class CancelCommitmentService {
+
+        /**
+        * @description Sends requests and constructs the response
+        */
+        private UTIL_Http.RequestService requestService {
+            get {
+                if (requestService == null) {
+                    requestService = new UTIL_Http.RequestService();
+                }
+                return requestService;
+            }
+            set;
+        }
+
+        /**
+        * @description Sends cancel commitment reqeusts for closed Recurring Donations.
+        * Sets RD closed reason an an error.
+        * @param closedRDs Closed RDs with the user specified closed reason
+        * @return void
+        */
+        public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
+            List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
+
+            for (npe03__Recurring_Donation__c rd : closedRDs) {                
+                responses.add(sendRequest(rd.CommitmentId__c));
+            }
+
+            for (Integer i = 0; i < responses.size(); i++) {
+                setClosedReason(closedRDs[i], responses[i]);
+            }
+
+            update closedRDs;
+        }
+
+        /**
+        * @description Sends cancel commitment reqeusts for closed Recurring Donations.
+        * @param closedRDs Closed RDs with the user specified closed reason
+        * @return UTIL_Http.Response
+        */
+        public UTIL_Http.Response sendRequest(String commitmentId) {
+            UTIL_Http.Response response;
+
+            try {
+                HttpRequest request = buildCancelRequest(commitmentId);
+
+                response = requestService.sendRequest(request);
+            } catch (Exception ex) {
+                response = requestService.buildErrorResponse(ex);
+            }
+
+            return response;
+        }
+
+        /**
+        * @description Builds a cancel commitment request for the provided commitment Id
+        * @param commitmentId Elevate recurring commitment Id
+        * @return HttpRequest
+        */
+        private HttpRequest buildCancelRequest(String commitmentId) {
+            return new PS_Request.Builder()
+                .withCommitmentId(commitmentId)
                 .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_CANCEL)
                 .withMethod(UTIL_Http.Method.POST)
                 .build();
-            
-            responses.add(requestService.sendRequest(request));
         }
 
-        for (Integer i = 0; i < responses.size(); i++) {
-            if (responses[i].statusCode != UTIL_Http.STATUS_CODE_OK) {
-                //error handling, currently just populate the failing body onto the closed reason
-                closedRDs[i].ClosedReason__c = responses[i].body;
+        /**
+        * @description Sets closed reason based on the cancel commitment response.
+        * The passed in Recurring Donation already contains user specified value,
+        * so if the commitment is sucessfully cancelled, its closed reason should not be
+        * overwritten with the error response.
+        * @param rd Recurring Donation
+        * @param response Elevate API response
+        * @return void
+        */
+        public void setClosedReason(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
+
+            if (isCancelled(response)) {
+                return;
             }
+
+            String messages = response.getErrorMessages();
+            // log an error //TODO
+
+            if (isNotFound(response)
+                || isDataConflict(response)
+            ) {
+                return;
+            }
+
+            rd.ClosedReason__c = messages;
         }
 
-        update closedRDs;
+        /**
+        * @description Checks if the commitment has been successfully cancelled in Elevate
+        * @param response Elevate API response
+        * @return Boolean
+        */
+        private Boolean isCancelled(UTIL_Http.Response response) {
+            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_OK;
+        }
+
+        /**
+        * @description Checks if the commitment has not been found in Elevate 
+        * based on the provided commitment Id
+        * @param response Elevate API response
+        * @return Boolean
+        */
+        private Boolean isNotFound(UTIL_Http.Response response) {
+            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_NOT_FOUND;
+        }
+
+        /**
+        * @description Checks if the commitment has data conflicted error response.
+        * Possible reason might be that the commitment has already been cancelled.
+        * @param response Elevate API response
+        * @return Boolean
+        */
+        private Boolean isDataConflict(UTIL_Http.Response response) {
+            return response != null && response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT;
+        }
     }
 }

@@ -35,12 +35,12 @@
 */
 @IsTest
 public class RD2_ElevateIntegrationService_TEST {
+    public static final String COMMITMENT_ID = '11a1c101-bcde-001-111f-g1dh00i0jk111';
+
     private static final String CURRENCY_CAD = 'CAD';
     private static final String CURRENCY_USD = 'USD';
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
-
-    public static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
 
     /****
     * @description Creates data required for unit tests
@@ -501,41 +501,41 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /**
-    * @description Verifies that when the Commitment in Elevate is cancelled then
-    * the RD Closed Reason will be switched to the user provided Closed Reason value. 
+    * @description Verifies RD Closed Reason will be switched to 
+    * the user provided Closed Reason value
+    * when the Commitment in Elevate is cancelled.
     */
     @isTest
-    private static void shouldUpdateClosedReasonWhenCommitmentIsCancelled() {
+    private static void shouldSetClosedReasonToUserSpecifiedValueWhenCancelIsSuccess() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
         insert rd;
-
-        UTIL_Http_TEST.CalloutMock response = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_OK);
     
-        String closedReason = 'Original Reason';
-
         Test.startTest();
-        Test.setMock(HttpCalloutMock.class, response);
+        UTIL_Http_TEST.mockSuccessCalloutResponse(buildCommitmentCanceledResponseBody());
 
+        String closedReason = 'Original Reason';
         rd.ClosedReason__c = closedReason;
         rd.Status__c = RD2_Constants.STATUS_CLOSED;
         update rd;
+
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(closedReason, rd.ClosedReason__c,
-            'RD Closed Reason should be swapped back to the user provided value when the callout succeeds');
+            'RD Closed Reason should be swapped back to the user provided value');
     }
 
     /**
-    * @description Verifies that when Elevate callout is completed and fail, RD Close Reason will not be updated back to the original Closed Reason
+    * @description Verifies RD Close Reason will not be updated back 
+    * to the user provided Closed Reason value
+    * when Elevate callout results in an error response.
     */
     @isTest
-    private static void shouldNotUpdateClosedReasonWhenCommitmentCannotBeCancelled() {
+    private static void shouldSetClosedReasonToErrorResponseMessageStatusWhenCancelFails() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -543,24 +543,87 @@ public class RD2_ElevateIntegrationService_TEST {
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
         insert rd;
 
-        UTIL_Http_TEST.CalloutMock response = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST)
-            .withStatus('Fail');
+        Test.startTest();
+        UTIL_Http_TEST.mockBadRequestCalloutResponse();
 
         String closedReason = 'Original Reason';
-
-        Test.startTest();
-        Test.setMock(HttpCalloutMock.class, response);
-
         rd.ClosedReason__c = closedReason;
         rd.Status__c = RD2_Constants.STATUS_CLOSED;
         update rd;
+
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertNotEquals(closedReason, rd.ClosedReason__c,
-            'RD Closed Reason should not swapped back to the user provided value when the callout fails');
+        System.assertEquals(UTIL_Http_TEST.BAD_REQUEST_MESSAGE, rd.ClosedReason__c,
+            'RD Closed Reason be set to the error response message');
     }
+
+    /**
+    * @description Verifies RD Closed Reason will be switched to 
+    * the user provided Closed Reason value
+    * when the Commitment in Elevate cannot be found.
+    */
+    @isTest
+    private static void shouldSetClosedReasonToUserSpecifiedValueWhenCommitmentCannotBeFound() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
+        insert rd;
+    
+        Test.startTest();
+        UTIL_Http_TEST.mockErrorCalloutResponse(
+            UTIL_Http.STATUS_CODE_NOT_FOUND, 
+            UTIL_Http.STATUS_NOT_FOUND,
+            buildNotFoundResponseBody()
+        );
+
+        String closedReason = 'Original Reason';
+        rd.ClosedReason__c = closedReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(closedReason, rd.ClosedReason__c,
+            'RD Closed Reason should be swapped back to the user provided value');
+    }
+
+    /**
+    * @description Verifies RD Closed Reason will be switched to 
+    * the user provided Closed Reason value
+    * when the Commitment in Elevate is already cancelled.
+    */
+    @isTest
+    private static void shouldSetClosedReasonToUserSpecifiedValueWhenCommitmentIsAlreadyCancelled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
+        insert rd;
+    
+        Test.startTest();
+        UTIL_Http_TEST.mockErrorCalloutResponse(
+            UTIL_Http.STATUS_CODE_CONFLICT, 
+            UTIL_Http.STATUS_CONFLICT,
+            buildDataConflictResponseBody()
+        );
+
+        String closedReason = 'Original Reason';
+        rd.ClosedReason__c = closedReason;
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(closedReason, rd.ClosedReason__c,
+            'RD Closed Reason should be swapped back to the user provided value');
+    }
+
 
     // Helpers
     ///////////////////
@@ -678,6 +741,41 @@ public class RD2_ElevateIntegrationService_TEST {
 
         System.assertEquals(hasPermission, service.hasUpdatePermissions(rd, oldRd),
             'User should ' + (hasPermission ? '' : 'not ') + 'have permission to update Elevate RD: ' + configStub);
+    }
+
+    /****
+    * @description Builds a cancel commitment response body 
+    * returned when the commitment is successfully cancelled
+    * @return String
+    */
+    private static String buildCommitmentCanceledResponseBody() {
+        return '{"id":"' + COMMITMENT_ID
+            + '","status":"INACTIVE","statusReason":"DONOR_CANCELED"'
+            + '"}}';
+    }
+
+    /****
+    * @description Builds a cancel commitment response body 
+    * returned when the commitment is cannot be matched in Elevate
+    * based on the provided commitment Id.
+    * @return String
+    */
+    private static String buildNotFoundResponseBody() {        
+        return '{"errors":[{'
+            + '"message":"404 cancel","localizedPaymentsMessage":"404 cancel"'
+            + '}]}"';
+    }
+
+    /****
+    * @description Builds a cancel commitment response body 
+    * returned when the commitment is already cancelled or
+    * the Elevate commitment is in a state that conflicted.
+    * @return String
+    */
+    private static String buildDataConflictResponseBody() {        
+        return '{"errors":[{'
+            + '"message":"Conflict","localizedPaymentsMessage":"Conflict","detailedMessage":"Conflict"'
+            + '}]}"';
     }
 
 }
