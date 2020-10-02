@@ -7103,7 +7103,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to show the record count in the list view, one record</shortDescription>
-        <value>{0} link label</value>
+        <value>{0} item</value>
     </labels>
     <labels>
         <fullName>geTextListViewItemsCount</fullName>
@@ -12704,7 +12704,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource NonprofitCloud label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Nonprofit Cloud label in Getting Started Resources section</shortDescription>
         <value>Nonprofit Cloud Basics</value>
     </labels>
     <labels>
@@ -12712,7 +12712,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource NonprofitCloud link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Nonprofit Cloud link label in Getting Started Resources section</shortDescription>
         <value>Get to Know Nonprofit Cloud</value>
     </labels>
     <labels>
@@ -12729,7 +12729,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Fundraising link label in Getting Started Resources section</shortDescription>
-        <value>Start Fundrasing</value>
+        <value>Start Fundraising</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLabel</fullName>
@@ -12737,7 +12737,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Program Management label in Getting Started Resources section</shortDescription>
-        <value>Program Management Learing Path</value>
+        <value>Program Management Learning Path</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
