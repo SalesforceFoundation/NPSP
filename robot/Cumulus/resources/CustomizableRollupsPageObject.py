@@ -88,11 +88,12 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         """This is a helper method that gets the filter criteria and adds into the filter modal
 		"""
         modal_save_btn = npsp_lex_locators['crlps']['modal-button']
+        add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
         for arg in args:
-            add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
-            self.salesforce._jsclick(add_filter_btn)
+            self.selenium.click_button(add_filter_btn)
             self.npsp.populate_modal_form(**arg)
-            self.salesforce._jsclick(modal_save_btn)
+            self.selenium.click_button(modal_save_btn)
+        time.sleep(1)
 
     @capture_screenshot_on_error
     def create_new_rollup_setting(self, **kwargs):
