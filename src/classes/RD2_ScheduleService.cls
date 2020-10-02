@@ -1150,6 +1150,7 @@ public without sharing class RD2_ScheduleService {
         */
         public Set<String> getFields() {
             return new Set<String> {
+                'Active__c',
                 'Campaign__c',
                 'Campaign__r.Name',
                 'StartDate__c',
