@@ -80,8 +80,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.npsp.populate_modal_form(**kwargs)
             self._add_filter(*args)
             self.selenium.click_button("Save")
+            time.sleep(2)
             self.selenium.wait_until_element_is_not_visible(success_toast)
-
 
     @capture_screenshot_on_error
     def _add_filter(self, *args):
@@ -104,7 +104,6 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         select_locator = npsp_lex_locators["crlps"]["select_locator"].format(
             "Target Object"
         )
-        toast_hide = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_success slds-hide')
         toast_visible = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_info ')
         if self._is_setting_present(kwargs["Target Object"], kwargs["Target Field"]):
             return
