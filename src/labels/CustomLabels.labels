@@ -2213,7 +2213,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Recurring Donation Id must be specified</shortDescription>
-        <value>Cannot create a commitment in Elevate since Recurring Donation ID has not been provided.</value>
+        <value>There was an error creating the Recurring Donation record. No Recurring payment request was sent to Elevate. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
