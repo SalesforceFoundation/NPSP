@@ -70,14 +70,10 @@ Create Donation and Opportunity and Create Payment Manually
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
     Wait Until Loading Is Complete
+    Current Page Should Be                  Details          Contact
     #Perform Validations
     ${opp_date} =     Get Current Date      result_format=%-m/%-d/%Y
-    Wait Until Keyword Succeeds             1 minute
-            ...                             5 seconds
-            ...                             Navigate To And Validate Field Value    Last Gift Date           contains       ${opp_date}          Donation Totals
-    Wait Until Keyword Succeeds             1 minute
-            ...                             5 seconds
-            ...                             Navigate To And Validate Field Value    Total Gifts              contains       $100.00              Soft Credit Total
-    Wait Until Keyword Succeeds             1 minute
-            ...                             5 seconds
-            ...                             Navigate To And Validate Field Value    Total Number of Gifts    contains       1                    Soft Credit Total
+
+    Navigate To And Validate Field Value    Last Gift Date           contains       ${opp_date}          Donation Totals
+    Navigate To And Validate Field Value    Total Gifts              contains       $100.00              Soft Credit Total
+    Navigate To And Validate Field Value    Total Number of Gifts    contains       1                    Soft Credit Total
