@@ -124,7 +124,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
         RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
 
-        System.assertEquals(true, service.isElevateStatusChangeFromClosed(rd, oldRd),
+        System.assertEquals(true, service.isElevateRecordReactivated(rd, oldRd),
             'Elevate RD Status update should not be permitted when Status is Closed');
     }
 
@@ -145,7 +145,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
         RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
 
-        System.assertEquals(false, service.isElevateStatusChangeFromClosed(rd, oldRd),
+        System.assertEquals(false, service.isElevateRecordReactivated(rd, oldRd),
             'RD Status update should be permitted when Status is Closed for Non Elevate RD');
     }
 
