@@ -177,7 +177,7 @@ private with sharing class RD2_EntryFormController_TEST {
     @IsTest
     private static void shouldReturnTrueWhenUserHasPermissions() {
         Boolean hasPerms = RD2_EntryFormController.hasRequiredFieldPermissions();
-        System.assertEquals(true, hasPerms, 'The Admin User shoud have permissions');
+        System.assertEquals(true, hasPerms, 'The Admin User should have permissions');
     }
 
     /**
