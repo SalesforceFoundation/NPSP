@@ -43,14 +43,13 @@ Setup Test Data
   ...                                                    Field_Name=Lead Lookup
 
   #Create lead record with first name, last name, and company name
-  &{opp_lead} =                                         API Create Lead
-  ...                                                     FirstName=${faker.first_name()}
-  ...                                                     LastName=${faker.last_name()}
-  ...                                                     Company=Generated Leads, Inc.
+  &{opp_lead} =         API Create Lead
+  ...                   FirstName=${faker.first_name()}
+  ...                   LastName=${faker.last_name()}
+  ...                   Company=Generated Leads, Inc.
 
-
-  ${template_name} =                                    Generate Random String
-  Set suite variable                                    ${template_name}
+  ${template_name} =    Generate Random String
+  Set suite variable    ${template_name}
 
 
 *** Test Cases ***

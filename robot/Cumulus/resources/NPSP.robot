@@ -530,19 +530,13 @@ Add instance to suite metadata
     Set suite metadata  Org Instance:  ${org_info['instance_name']}  top=True
 
 API Create Lead
-    [Documentation]     If no arguments are passed, this keyword will create a lead with first name and last name,
-    ...                 and company as random strings. This keyword returns the lead dictionary when called.
+    [Documentation]     creates a lead record using given field api name and value pairs and
+    ...                 returns the lead dictionary when called.
     ...                 Syntax for passing parameters:
     ...
     ...                 | field_api_name=value   | Ex: MobilePhone=1234567098    |
     [Arguments]         &{fields}
-    ${first_name} =     Generate Random String
-    ${last_name} =      Generate Random String
-    ${lead_company} =   Generate Random String
     &{lead_id} =        Salesforce Insert  Lead
-    ...                 FirstName=${first_name}
-    ...                 LastName=${last_name}
-    ...                 Company=${lead_company}
     ...                 &{fields}
     &{lead} =           Salesforce Get  Lead  ${lead_id}
     [return]            &{lead}
