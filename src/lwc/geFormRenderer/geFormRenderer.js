@@ -28,6 +28,7 @@ import {
     getNamespace,
     getSubsetObject,
     validateJSONString,
+    relatedRecordFieldNameFor
 } from 'c/utilCommon';
 import { HttpRequestError, CardChargedBDIError, ExceptionDataError } from 'c/utilCustomErrors';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -1387,11 +1388,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             selectedRecordId
         );
 
-        this.lookupFieldApiNameToSelectedRecordId[selectedRecordId] = lookupFieldApiName;
+        this.lookupFieldApiNameBySelectedRecordId[selectedRecordId] = lookupFieldApiName;
         this.queueSelectedRecordForRetrieval(selectedRecordId, selectedRecordFields);
     }
 
-    lookupFieldApiNameToSelectedRecordId = {};
+    lookupFieldApiNameBySelectedRecordId = {};
     
     getQualifiedFieldName(objectInfo, fieldInfo) {
         return `${objectInfo.objectApiName}.${fieldInfo.fieldApiName}`;
@@ -1431,12 +1432,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (error) {
             handleError(error);
         } else if (data) {
-            //todo: replace with call to updateFormState
-            const relationshipFieldName = this.lookupFieldApiNameToSelectedRecordId[this.selectedRecordId].replace('__c','__r');
-            this._formState[relationshipFieldName] = data;
 
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.updateFormState(dataImport);
+            this.updateFormStateWithRelatedRecord(data);
             this.load(dataImport, false);
 
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
@@ -1445,7 +1444,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
             }
         }
+        this.loadNextSelectedRecordFromQueue();
+    }
 
+    loadNextSelectedRecordFromQueue() {
         // Get the next record if there is one in the queue
         if (this.selectedRecordsQueue.length > 0) {
             const nextSelectedRecord = this.selectedRecordsQueue.pop();
@@ -1723,16 +1725,29 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track
     _formState = {}
 
+    get formState() {
+        return this._formState;
+    }
+
+    set formState(formState) {
+        this._formState = formState;
+    }
+
+    updateFormStateWithRelatedRecord(data) {
+        const lookupField = this.lookupFieldApiNameBySelectedRecordId[this.selectedRecordId];
+        const relatedRecordFieldName = relatedRecordFieldNameFor(lookupField);
+        this.updateFormState({[relatedRecordFieldName]: data});
+    }
+
     updateFormState(fields) {
-        Object.assign(this._formState, fields);
+        Object.assign(this.formState, fields);
 
         if (this.hasImportedRecordFieldsBeingSetToNull(fields)) {
             this.deleteRelationshipFieldsFromStateFor(fields);
         }
 
         // Re-assign to prompt reactivity
-        // todo: test this with team to validate that it is necessary
-        this._formState = JSON.parse(JSON.stringify(this._formState));
+        this.formState = JSON.parse(JSON.stringify(this.formState));
     }
 
     hasImportedRecordFieldsBeingSetToNull(fields) {
@@ -1743,18 +1758,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     deleteRelationshipFieldsFromStateFor(fields) {
-        //todo: replace with importable function that only replaces last instance
-        const relationshipFieldFor = (field) => field.replace('__c', '__r');
         const needsRelationshipFieldDeleted = (field) =>
-            this._formState.hasOwnProperty(relationshipFieldFor(field)) &&
-            fields[field].value === null &&
-            GeFormService.importedRecordFieldNames.includes(field);
+            this.hasRelatedRecordFieldInFormState(field) &&
+            fields[field].value === null;
 
         Object.keys(fields)
             .filter(needsRelationshipFieldDeleted)
             .forEach(field => {
-                delete this._formState[relationshipFieldFor(field)];
+                this.deleteFieldFromFormState(relatedRecordFieldNameFor(field));
             });
+    }
+
+    deleteFieldFromFormState(field) {
+        delete this.formState[field];
+    }
+
+    hasRelatedRecordFieldInFormState(field) {
+        return this.formState.hasOwnProperty(relatedRecordFieldNameFor(field));
     }
 
     handleFormFieldChange(event) {

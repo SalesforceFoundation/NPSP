@@ -1,11 +1,10 @@
 import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify, isUndefined} from 'c/utilCommon';
+import {isNotEmpty, debouncify, isUndefined, relatedRecordFieldNameFor} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
 import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
-import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import CONTACT1_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
@@ -578,15 +577,6 @@ export default class GeFormField extends LightningElement {
     @api
     set formState(formState) {
         this._formState = formState;
-        if (this.isPicklist) {
-            const prevVal = this.value;
-            if (prevVal != this.value) {
-                console.log('*** ' + 'value changed! setting value by reading formState in' +
-                    ' field: ' + this.sourceFieldAPIName + ' ***');
-                console.log('passed in state: ', JSON.parse(JSON.stringify(this.formState)));
-                console.log('this.value after making update: ', JSON.stringify(this.value));
-            }
-        }
     }
 
     get formState() {
@@ -594,13 +584,11 @@ export default class GeFormField extends LightningElement {
     }
 
     get valueFromFormState() {
-        if (this.formState && this.formState[this.sourceFieldAPIName]) {
-            return this.formState[this.sourceFieldAPIName].value;
-        }
+        return this.formState[this.sourceFieldAPIName] &&
+            this.formState[this.sourceFieldAPIName].value;
     }
 
     fireFormFieldChangeEvent(value) {
-        console.log('*** ' + 'firing formfieldchange' + ' ***');
         const formFieldChangeEvent = new CustomEvent('formfieldchange', {
             detail:
                 {
@@ -611,32 +599,39 @@ export default class GeFormField extends LightningElement {
     }
 
     get recordTypeId() {
-        if (this.siblingRecordTypeId !== undefined) {
+        if (this.isSiblingRecordTypeIdInFormState) {
             return this.siblingRecordTypeId;
+        } else if (this.isParentObjectRecordTypeIdInFormState) {
+            return this.parentObjectRecordTypeId;
         } else {
-            return this.importedRecordRecordTypeId;
+            return null;
         }
+    }
+
+    isParentObjectRecordTypeIdInFormState() {
+        return this.parentObjectRecordTypeId !== undefined;
+    }
+
+    isSiblingRecordTypeIdInFormState() {
+        return this.siblingRecordTypeId !== undefined;
     }
 
     get siblingRecordTypeId() {
-        if (this.formState[this.sourceFieldForSiblingRecordTypeId]) {
-            return this.formState[this.sourceFieldForSiblingRecordTypeId].value;
-        }
+        return this.formState[this.sourceFieldForSiblingRecordTypeId] &&
+            this.formState[this.sourceFieldForSiblingRecordTypeId].value;
     }
 
     get sourceFieldForSiblingRecordTypeId() {
-        if (this.siblingRecordTypeIdFieldMapping) {
-            return this.siblingRecordTypeIdFieldMapping.Source_Field_API_Name;
-        }
+        return this.siblingRecordTypeIdFieldMapping &&
+            this.siblingRecordTypeIdFieldMapping.Source_Field_API_Name;
     }
 
     get siblingRecordTypeIdFieldMapping() {
-        if (this.fieldMappingsForImportedRecord) {
-            const siblingRecordTypeFieldMapping = this.fieldMappingsForImportedRecord.find(fieldMapping =>
-                fieldMapping.Target_Field_API_Name === 'RecordTypeId'
-            );
-            return siblingRecordTypeFieldMapping;
-        }
+        return this.fieldMappingsForImportedRecord &&
+            this.fieldMappingsForImportedRecord
+                .find(fieldMapping =>
+                    fieldMapping.Target_Field_API_Name === 'RecordTypeId'
+                );
     }
 
     get fieldMappingsForImportedRecord() {
@@ -644,20 +639,18 @@ export default class GeFormField extends LightningElement {
             .getFieldMappingsForImportedRecordFieldName(this.importedRecordFieldName);
     }
 
-    get importedRecordRecordTypeId() {
-        if (this.importedRecordFieldName) {
-            const relationshipFieldName = this.importedRecordFieldName.replace('__c', '__r');
-            const parentObject = this.formState[relationshipFieldName];
-            if (parentObject) {
-                return parentObject.recordTypeId;
-            }
-        }
+    get parentObjectRecordTypeId() {
+        return this.parentObjectFromFormState &&
+            this.parentObjectFromFormState .recordTypeId;
+    }
+
+    get parentObjectFromFormState() {
+        return this.formState[relatedRecordFieldNameFor(this.importedRecordFieldName)];
     }
 
     get importedRecordFieldName() {
-        if (this.objectMapping) {
-            return this.objectMapping.Imported_Record_Field_Name;
-        }
+        return this.objectMapping &&
+            this.objectMapping.Imported_Record_Field_Name;
     }
 
 }
