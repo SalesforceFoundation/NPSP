@@ -34,6 +34,9 @@
 * @description Services related to the RecurringDonation <-> Elevate integration
 */
 public inherited sharing class RD2_ElevateIntegrationService {
+    public static final String LOG_TYPE_COMMITMENT_CREATE = 'payment.commitment.create';
+    public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
+
     /***
      * @description CurrencyIsoCode field name
      */
@@ -227,6 +230,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
         * @return void
         */
         public void cancelCommitments(List<npe03__Recurring_Donation__c> closedRDs) {
+            Logger logger = new Logger();
             List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
 
             for (npe03__Recurring_Donation__c rd : closedRDs) {                
@@ -234,10 +238,13 @@ public inherited sharing class RD2_ElevateIntegrationService {
             }
 
             for (Integer i = 0; i < responses.size(); i++) {
-                setClosedReason(closedRDs[i], responses[i]);
+                setClosedReason(closedRDs[i], responses[i], logger);
             }
 
-            update closedRDs;
+            List<Database.SaveResult> dmlResults = Database.update(closedRDs, false);                        
+            logger.addErrors(dmlResults, closedRDs);
+
+            logger.processErrors();
         }
 
         /**
@@ -274,21 +281,26 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
         /**
         * @description Sets closed reason based on the cancel commitment response.
-        * The passed in Recurring Donation already contains user specified value,
-        * so if the commitment is sucessfully cancelled, its closed reason should not be
-        * overwritten with the error response.
+        * Recurring Donations already contain user specified closed reason value,
+        * so the value is restored in database when:
+        * - the commitment is sucessfully cancelled,
+        * - the commitment cannot be found in Elevate,
+        * - the request results in data conflict which is usually 
+        *   returned when the commitment is already cancelled.
+        *
         * @param rd Recurring Donation
         * @param response Elevate API response
+        * @param logger Error log container
         * @return void
         */
-        public void setClosedReason(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
+        private void setClosedReason(npe03__Recurring_Donation__c rd, UTIL_Http.Response response, Logger logger) {
 
             if (isCancelled(response)) {
                 return;
             }
 
             String messages = response.getErrorMessages();
-            // log an error //TODO
+            logger.addError(rd.Id, messages, LOG_TYPE_COMMITMENT_CANCEL);
 
             if (isNotFound(response)
                 || isDataConflict(response)
@@ -326,6 +338,74 @@ public inherited sharing class RD2_ElevateIntegrationService {
         */
         private Boolean isDataConflict(UTIL_Http.Response response) {
             return response != null && response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT;
+        }
+    }
+
+
+
+    /**
+    * @description Builds and creates logs for errors and exceptions.
+    * The current logger version is the ERR_Handler wrapper.
+    */
+    public class Logger {
+        private final String context = ERR_Handler_API.Context.Elevate.name();
+        private final String rdSObjectType = String.valueOf(npe03__Recurring_Donation__c.SObjectType);
+
+        /* @description Contains errors */
+        @TestVisible
+        private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+
+        /**
+        * @description Constructs log record and adds it into the error log container
+        * @param recordId Id Recurring Donation record Id
+        * @param message An error message
+        * @param errorType An error type
+        * @return void
+        */
+        public void addError(Id recordId, String message, String errorType) {
+            Error__c error = new Error__c(
+                Context_Type__c = context,
+                Datetime__c = System.now(),
+                Object_Type__c = rdSObjectType,
+                Related_Record_ID__c = recordId,
+                Record_URL__c = ERR_Handler.getRecordURL(recordId),
+                Error_Type__c = errorType,
+                Full_Message__c = message
+            );
+
+            errorResult.errorRecords.add(error);
+        }
+
+        /**
+        * @description Constructs and collects error logs for records that failed in the DML operation
+        * @param dmlResults Insert/update/delete DML operation results
+        * @param records Records which were saved/deleted by the DML operation
+        * @return void
+        */
+        public void addErrors(List<Object> dmlResults, List<SObject> records) {
+            if (records.isEmpty()) {
+                return;
+            }
+
+            ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(dmlResults, records);
+
+            if (!dmlErrors.errorsExist) {
+                return;
+            }
+
+            errorResult.errorRecords.addAll(
+                dmlErrors.errorRecords
+            );
+        }
+
+        /**
+        * @description Saves errors
+        * @return void
+        */
+        public void processErrors() {
+            errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
+
+            ERR_Handler.processErrorsOnly(errorResult, context);
         }
     }
 }

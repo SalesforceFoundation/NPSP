@@ -36,6 +36,8 @@
 @IsTest(IsParallel=true)
 public with sharing class UTIL_Http_TEST {
     public static final String BAD_REQUEST_MESSAGE = 'Unauthorized endpoint, please check Setup->Security->Remote site settings.';
+    public static final String MESSAGE_DATA_CONFLICT = 'Conflict';
+    public static final String MESSAGE_NOT_FOUND = '404 /external/objects';
 
     /**
     * @description Verifies response is correctly formatted based on HttpResponse
@@ -200,7 +202,7 @@ public with sharing class UTIL_Http_TEST {
     }
 
     /**
-     * @description Simulates a bad request callout response
+     * @description Stubs a "bad request" callout response
      * @return void
      */
     public static void mockBadRequestCalloutResponse() {
@@ -209,6 +211,33 @@ public with sharing class UTIL_Http_TEST {
             + '}]}"';
 
         mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_BAD_REQUEST, System.Label.commonUnknownError, responseBody);
+    }
+
+    /**
+     * @description Stubs a "not found" callout response
+     * @return void
+     */
+    public static void mockNotFoundCalloutResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"' + MESSAGE_NOT_FOUND 
+            + '","localizedPaymentsMessage":"' + MESSAGE_NOT_FOUND
+            + '"}]}"';
+
+        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_NOT_FOUND, UTIL_Http.STATUS_NOT_FOUND, responseBody);
+    }
+
+    /**
+     * @description Stubs a "not found" callout response
+     * @return void
+     */
+    public static void mockDataConflictCalloutResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"' + MESSAGE_DATA_CONFLICT 
+            + '","localizedPaymentsMessage":"' + MESSAGE_DATA_CONFLICT 
+            + '","detailedMessage":"' + MESSAGE_DATA_CONFLICT
+            + '"}]}"';
+
+        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_CONFLICT, UTIL_Http.STATUS_CONFLICT, responseBody);
     }
 
     /**

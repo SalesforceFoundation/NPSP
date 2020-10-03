@@ -39,8 +39,14 @@ public class RD2_ElevateIntegrationService_TEST {
 
     private static final String CURRENCY_CAD = 'CAD';
     private static final String CURRENCY_USD = 'USD';
+
+    private static final String RD_SOBJECT_TYPE = String.valueOf(npe03__Recurring_Donation__c.SObjectType);
+    private static final String LOG_TYPE_COMMITMENT_CREATE = RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CREATE;
+    private static final String LOG_TYPE_COMMITMENT_CANCEL = RD2_ElevateIntegrationService.LOG_TYPE_COMMITMENT_CANCEL;
+
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     /****
     * @description Creates data required for unit tests
@@ -527,6 +533,8 @@ public class RD2_ElevateIntegrationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(closedReason, rd.ClosedReason__c,
             'RD Closed Reason should be swapped back to the user provided value');
+
+        assertNoError();
     }
 
     /**
@@ -554,8 +562,12 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(UTIL_Http_TEST.BAD_REQUEST_MESSAGE, rd.ClosedReason__c,
+
+        String expectedMessage = UTIL_Http_TEST.BAD_REQUEST_MESSAGE;
+        System.assertEquals(expectedMessage, rd.ClosedReason__c,
             'RD Closed Reason be set to the error response message');
+        
+        assertCancelCommitmentError(expectedMessage, rd.Id);
     }
 
     /**
@@ -573,11 +585,7 @@ public class RD2_ElevateIntegrationService_TEST {
         insert rd;
     
         Test.startTest();
-        UTIL_Http_TEST.mockErrorCalloutResponse(
-            UTIL_Http.STATUS_CODE_NOT_FOUND, 
-            UTIL_Http.STATUS_NOT_FOUND,
-            buildNotFoundResponseBody()
-        );
+        UTIL_Http_TEST.mockNotFoundCalloutResponse();
 
         String closedReason = 'Original Reason';
         rd.ClosedReason__c = closedReason;
@@ -589,6 +597,8 @@ public class RD2_ElevateIntegrationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(closedReason, rd.ClosedReason__c,
             'RD Closed Reason should be swapped back to the user provided value');
+
+        assertCancelCommitmentError(UTIL_Http_TEST.MESSAGE_NOT_FOUND, rd.Id);
     }
 
     /**
@@ -606,11 +616,7 @@ public class RD2_ElevateIntegrationService_TEST {
         insert rd;
     
         Test.startTest();
-        UTIL_Http_TEST.mockErrorCalloutResponse(
-            UTIL_Http.STATUS_CODE_CONFLICT, 
-            UTIL_Http.STATUS_CONFLICT,
-            buildDataConflictResponseBody()
-        );
+        UTIL_Http_TEST.mockDataConflictCalloutResponse();
 
         String closedReason = 'Original Reason';
         rd.ClosedReason__c = closedReason;
@@ -622,6 +628,8 @@ public class RD2_ElevateIntegrationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(closedReason, rd.ClosedReason__c,
             'RD Closed Reason should be swapped back to the user provided value');
+
+        assertCancelCommitmentError(UTIL_Http_TEST.MESSAGE_DATA_CONFLICT, rd.Id);
     }
 
 
@@ -755,27 +763,45 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /****
-    * @description Builds a cancel commitment response body 
-    * returned when the commitment is cannot be matched in Elevate
-    * based on the provided commitment Id.
-    * @return String
+    * @description Verifies no error is created
+    * @return void
     */
-    private static String buildNotFoundResponseBody() {        
-        return '{"errors":[{'
-            + '"message":"404 cancel","localizedPaymentsMessage":"404 cancel"'
-            + '}]}"';
+    private static void assertNoError() {
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
     }
 
     /****
-    * @description Builds a cancel commitment response body 
-    * returned when the commitment is already cancelled or
-    * the Elevate commitment is in a state that conflicted.
-    * @return String
+    * @description Verifies an error is created with 
+    * the specified error message and referencing expected record Id
+    * @param message Expected error message
+    * @param recordId Expected Recurring Donation Id
+    * @return void
     */
-    private static String buildDataConflictResponseBody() {        
-        return '{"errors":[{'
-            + '"message":"Conflict","localizedPaymentsMessage":"Conflict","detailedMessage":"Conflict"'
-            + '}]}"';
+    private static void assertCancelCommitmentError(String message, Id recordId) {
+        assertError(message, recordId, LOG_TYPE_COMMITMENT_CANCEL);
+    }
+
+    /****
+    * @description Verifies an error is created with 
+    * the specified error message and referencing expected record Id
+    * @param message Expected error message
+    * @param recordId Expected Recurring Donation Id
+    * @param errorType Expected error type
+    * @return void
+    */
+    private static void assertError(String message, Id recordId, String errorType) {
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
+
+        Error__c error = errors[0];
+        System.assertEquals(message, error.Full_Message__c, 'The error message should match');
+        System.assertEquals(errorType, error.Error_Type__c, 'The error type should match');
+
+        System.assertEquals(RD_SOBJECT_TYPE, error.Object_Type__c, 'The SObject type should match');
+        System.assertEquals(recordId, error.Related_Record_ID__c, 'The record Id should match');
+        System.assert(error.Record_URL__c.contains(recordId), 
+            'The record URL (' + error.Record_URL__c + ') should contain record Id: ' + recordId);
     }
 
 }
