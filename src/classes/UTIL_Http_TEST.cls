@@ -50,13 +50,9 @@ public with sharing class UTIL_Http_TEST {
         request.setMethod('POST');
 
         String body = '{"value" : "success"}';
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_OK)
-            .withStatus(UTIL_Http.STATUS_OK)
-            .withBody(body);
 
         Test.startTest();
-        Test.setMock(HttpCalloutMock.class, callout);
+        mockSuccessCalloutResponse(body);
 
         UTIL_Http.RequestService service = new UTIL_Http.RequestService();
         UTIL_Http.Response response = service.sendRequest(request);
@@ -122,6 +118,41 @@ public with sharing class UTIL_Http_TEST {
     }
 
     /**
+    * @description Verifies the error messages are empty when response is success
+    */
+    @isTest
+    private static void shouldNotReturnErrorsWhenResponseIsSuccess() {
+        String body = '{"value" : "success"}';
+        
+        Test.startTest();
+        mockSuccessCalloutResponse(body);
+
+        UTIL_Http.RequestService service = new UTIL_Http.RequestService();
+        UTIL_Http.Response response = service.sendRequest(new HttpRequest());
+        Test.stopTest();
+
+        System.assertEquals('', response.getErrorMessages(),
+            'The response should not return any error message');
+    }
+
+    /**
+    * @description Verifies the error messages are returned from the error response
+    */
+    @isTest
+    private static void shouldReturnErrorsWhenResponseIsBadRequest() {
+        Test.startTest();
+        mockBadRequestCalloutResponse();
+
+        UTIL_Http.RequestService service = new UTIL_Http.RequestService();
+        UTIL_Http.Response response = service.sendRequest(new HttpRequest());
+        Test.stopTest();
+
+        System.assertEquals(BAD_REQUEST_MESSAGE, response.getErrorMessages(),
+            'The response should return expected error message');
+    }
+
+
+    /**
     * @description Callout Mock
     */
     public class CalloutMock implements HttpCalloutMock {
@@ -136,6 +167,7 @@ public with sharing class UTIL_Http_TEST {
             //set defaults
             statusCode = UTIL_Http.STATUS_CODE_OK;
             status = UTIL_Http.STATUS_OK;
+            body = '{"status":"ACTIVE"}';
         }
 
         /**
