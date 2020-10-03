@@ -39,33 +39,68 @@ public with sharing class GS_ApplicationStatusController {
      @AuraEnabled
     public static ApplicationStatus getApplicationStatus() { 
         ApplicationStatus status = new ApplicationStatus();
-        
         GS_ApplicationStatusController controller = new GS_ApplicationStatusController();
+        Testing_Configuration__c testingConfiguration = controller.getTestingConfiguration();
+        
+        Boolean overrideValuesForTesting = controller.isScratchOrg() && testingConfiguration != null;
+        
         Organization org = controller.getOrgInformation();
+        Map<String, Object> parsedConfiguration = (Map<String, Object>) JSON.deserializeUntyped(testingConfiguration.Configuration__c);
         if (org != null) {
-            status.isSandbox = org.IsSandbox;
-            status.trialExpirationDate = org.TrialExpirationDate;
+            status.isSandbox = overrideValuesForTesting ? (Boolean) parsedConfiguration.get('Sandbox') 
+                                                        : org.IsSandbox;
+            status.trialExpirationDate = overrideValuesForTesting ? Date.parse(parsedConfiguration.get('TrialExpiration').toString()) 
+                                                                  : org.TrialExpirationDate;
         }
         Date applicationDate = controller.getApplicationDate();
         System.debug('applicationDate -> ' + applicationDate);
         status.applicationDate = applicationDate;
         return status;
     }
-
+    /**
+     * @description Method to retrieve the application date.
+     * On prod this is populated using the FeatureParameter "P10_Application_Date"
+     * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the custom setting Testing_Configuration__c
+     * @return   return application
+     */
     private Date getApplicationDate() {
+        
+        Testing_Configuration__c testingConfiguration = getTestingConfiguration();
+        
+        if (isScratchOrg() && testingConfiguration != null) { 
+            //Running on scratch org and there is a testing configuration to override
+            Map<String,Object> data = (Map<String,Object>) JSON.deserializeUntyped(testingConfiguration.Configuration__c);
+            return data.get('Application') == null?  null: Date.parse(data.get('Application').toString());
+        }
+
         try {
             return System.FeatureManagement.checkPackageDateValue(APPLICATION_DATE);
         } catch (System.NoDataFoundException ex) {
             return Date.Today();
         }
-        
     }
+
+    private Testing_Configuration__c getTestingConfiguration() {
+        Testing_Configuration__c[] tc = [SELECT Configuration__c 
+                                         FROM   Testing_Configuration__c];
+        if (!tc.IsEmpty()) {
+            return tc[0];
+        }
+        return null;
+    }
+
+    private Boolean isScratchOrg() {
+        Organization org = getOrgInformation();
+        return org.IsSandbox && org.TrialExpirationDate != null;
+    }
+
     private Organization getOrgInformation() {
         return [SELECT TrialExpirationDate,
                        IsSandbox
                 FROM   Organization
                 WITH_SECURITY_ENFORCED];
     }
+
     /**
      * @description Internal class used for returning the current status of the org. 
      */
