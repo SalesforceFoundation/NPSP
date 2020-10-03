@@ -90,9 +90,9 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         modal_save_btn = npsp_lex_locators['crlps']['modal-button']
         add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
         for arg in args:
-            self.selenium.click_button(add_filter_btn)
+            self.selenium.click_element(add_filter_btn)
             self.npsp.populate_modal_form(**arg)
-            self.selenium.click_button(modal_save_btn)
+            self.selenium.click_element(modal_save_btn)
         time.sleep(1)
 
     @capture_screenshot_on_error
