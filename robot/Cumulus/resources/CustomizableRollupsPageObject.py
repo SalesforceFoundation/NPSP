@@ -80,7 +80,6 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.npsp.populate_modal_form(**kwargs)
             self._add_filter(*args)
             self.selenium.click_button("Save")
-            time.sleep(2)
             self.selenium.wait_until_element_is_not_visible(success_toast)
 
     @capture_screenshot_on_error
@@ -88,9 +87,9 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         """This is a helper method that gets the filter criteria and adds into the filter modal
 		"""
         modal_save_btn = npsp_lex_locators['crlps']['modal-button']
-        add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
         for arg in args:
-            self.selenium.click_element(add_filter_btn)
+            add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
+            self.salesforce._jsclick(add_filter_btn)
             self.npsp.populate_modal_form(**arg)
             self.selenium.click_element(modal_save_btn)
         time.sleep(1)
