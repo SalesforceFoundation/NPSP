@@ -66,14 +66,14 @@
     </template>
     <template if:true={isPicklist}>
         <c-ge-form-field-picklist data-id='inputComponent'
-            value={value}
+            value={valueFromFormState}
             required={required}
             field-name={targetFieldApiName}
             object-name={objectApiName}
             onchange={handleValueChange}
             label={fieldLabel}
             object-describe-info={objectDescribeInfo}
-            record-type-id={recordTypeId2}
+            record-type-id={recordTypeId}
             qa-locator-base={qaLocatorBase}>
         </c-ge-form-field-picklist>
     </template>

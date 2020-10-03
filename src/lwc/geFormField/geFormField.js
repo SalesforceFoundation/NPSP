@@ -40,10 +40,7 @@ const DATETIME = 'datetime-local';
 const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
-    get value() {
-        return this.valueFromFormState;
-    }
-
+    @track value;
     @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
@@ -57,8 +54,11 @@ export default class GeFormField extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     handleValueChangeSync = (event) => {
-        //todo: don't set own value here.  Set own value based on formState
         const value = this.getValueFromChangeEvent(event);
+        // As of W-8017324 picklists get their value from formState
+        if (!this.isPicklist) {
+            this.value = value;
+        }
         this.fireFormFieldChangeEvent(value);
 
         if (this.isLookup || this.isLookupRecordType) {
@@ -71,14 +71,11 @@ export default class GeFormField extends LightningElement {
                 ...event.detail,
                 fieldApiName: this.element.fieldApiName,
                 value: this.value,
-                objectMappingDevName: objMappingDevName
+                objectMappingDevName: objMappingDevName,
+                sourceFieldApiName: this.sourceFieldAPIName
             };
             const selectRecordEvent = new CustomEvent('lookuprecordselect', { detail: lookupDetail });
             this.dispatchEvent(selectRecordEvent);
-        }
-
-        if (this.isPicklist) {
-            this.handlePicklistChange();
         }
 
         if (this.isRichText) {
@@ -99,15 +96,6 @@ export default class GeFormField extends LightningElement {
 
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
-    handlePicklistChange() {
-        if (this.targetFieldApiName === DONATION_DONOR_FIELD.fieldApiName) {
-            const changeDonationDonorEvent = new CustomEvent(
-                'changedonationdonor',
-                {detail: {value: this.value}});
-            this.dispatchEvent(changeDonationDonorEvent);
-        }
-    }
-
     /**
      * Retrieve object metadata. Used to configure how fields are displayed on the form.
      */
@@ -124,22 +112,13 @@ export default class GeFormField extends LightningElement {
         if (recordValue) {
 
             // set the record value to the element value
-            //todo? is this used? Is there a recordValue prop on element?
-            // this.value = recordValue;
+            this.value = recordValue;
         } else if (defaultValue) {
 
             // Set the default value if there is one
             // and no record value.
             this._defaultValue = defaultValue;
-            //todo: should
-            // this.value = defaultValue;
-            //todo: merge this specific call to handlePicklistChange, which fires a
-            // changedonationdonor event with this standard change formfieldchange event
-            // this.handlePicklistChange();
-            //todo: instead of setting the default val here and firing the change event,
-            // geFormRenderer could set it in formState, and have this cmp set its value
-            // by reacting to formState
-            // this.fireFormFieldChangeEvent(defaultValue);
+            this.value = defaultValue;
         }
     }
 
@@ -164,7 +143,6 @@ export default class GeFormField extends LightningElement {
      * TRUE when a field is required and filled in correctly, or not required at all.
      * @returns {boolean}
      */
-    //todo: test for this and all of the other functions that use this.value
     @api
     isValid() {
         // We need to check for invalid values, regardless if the field is required
@@ -451,10 +429,11 @@ export default class GeFormField extends LightningElement {
         if (data.hasOwnProperty(this.sourceFieldAPIName)) {
             value = data[this.sourceFieldAPIName];
             if (value === null || value.value === null) {
-                this.reset();
+                //I think in both of these cases we want the value to actually be set to
+                // null.  Need to check in w team about this
+                this.reset(false);
             } else {
-                //todo: just commenting out to see how value getter from formState works
-                // this.value = value.value || value;
+                this.value = value.value || value;
 
                 if (this.isLookupRecordType || this.isLookup) {
                     if (value && !value.displayName) {
@@ -483,9 +462,7 @@ export default class GeFormField extends LightningElement {
             // and passes an {value: <value>} object.  To support that case this block
             // loads the value directly even though data does not have a property for
             // this.sourceFieldAPIName
-
-            //todo: just commenting out to see how value getter from formState works
-            // this.value = data.value;
+            this.value = data.value;
         } else {
             // Property isn't defined.  Don't do anything.
             return false;
@@ -524,59 +501,20 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    //todo: eventually, defaults should just be set in formState
     @api
     reset(setDefaults = true) {
+        if (setDefaults) {
+            this.value = this._defaultValue;
+        } else {
+            this.value = null;
+        }
 
         // reset lookups and recordtype fields
         if (this.isLookupRecordType || this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if (this.isLookupRecordType) {
-                // Using setTimeout here ensures that this recordTypeId
-                // will be set on sibling fields after they are reset by queueing the event.
-                setTimeout(() => {
-                    this.fireLookupRecordSelectEvent();
-                }, 0);
-            }
         }
-
-        if (this.isPicklist) {
-            this.template.querySelector('c-ge-form-field-picklist').reset();
-            this.handlePicklistChange();
-        }
-    }
-
-    //todo: remove!
-    @api
-    set recordTypeId(id) {
-        console.log('*** ' + 'SET recordTypeId on geFF called!!' + ' ***');
-        this._recordTypeId = id;
-        this.setRecordTypeIdOnChildComponents();
-    }
-
-    get recordTypeId() {
-        return this.recordTypeId2;
-    }
-
-    setRecordTypeIdOnChildComponents() {
-        if (this.isPicklist) {
-            this.template.querySelector('c-ge-form-field-picklist')
-                .recordTypeId = this.recordTypeId;
-        }
-    }
-
-    fireLookupRecordSelectEvent() {
-        this.dispatchEvent(new CustomEvent(
-            'lookuprecordselect',
-            {
-                detail: {
-                    value: this.value,
-                    displayValue: this.value,
-                    fieldApiName: this.targetFieldApiName,
-                    objectMappingDevName: this.targetObjectMappingDevName
-                }
-            }
-        ));
     }
 
     /**
@@ -594,15 +532,6 @@ export default class GeFormField extends LightningElement {
             return this.objectDescribeInfo.recordTypeInfos[Id].name;
         } else {
             return null;
-        }
-    }
-
-    renderedCallback() {
-        if (this.value && this.isLookup) {
-            // If this field is a Lookup and has a value when connected,
-            // fire event so that the form knows to populate related fields
-            // and set recordTypeId on sibling fields.
-            this.fireLookupRecordSelectEvent();
         }
     }
 
@@ -681,7 +610,7 @@ export default class GeFormField extends LightningElement {
         this.dispatchEvent(formFieldChangeEvent);
     }
 
-    get recordTypeId2() {
+    get recordTypeId() {
         if (this.siblingRecordTypeId !== undefined) {
             return this.siblingRecordTypeId;
         } else {

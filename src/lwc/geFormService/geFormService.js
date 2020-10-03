@@ -195,6 +195,13 @@ class GeFormService {
             return matchingFieldMappings;
         }
     }
+
+    getFieldMappingsForObjectMappingDevName(objectMappingDevName) {
+        return Object.values(this.fieldMappings)
+            .filter(fieldMapping =>
+                fieldMapping.Target_Object_Mapping_Dev_Name === objectMappingDevName);
+    }
+
 }
 
 const geFormServiceInstance = new GeFormService();

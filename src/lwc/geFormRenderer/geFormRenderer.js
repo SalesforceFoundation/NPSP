@@ -47,9 +47,10 @@ import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
 import DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+import DATA_IMPORT_DONATION_DONOR_FIELD
+    from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
-import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
@@ -848,8 +849,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.selectedDonation[SCHEDULED_DATE.fieldApiName];
         }
 
-        this.preprocessRecordTypeNameField(dataImport);
-
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         sectionsList.forEach(section => {
             section.load(
@@ -859,51 +858,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         });
 
         this.handleNameOnCardFieldChange();
-    }
-
-    /**
-     * @description DataImport__c.Donation_Record_Type_Name__c field is mapped from one
-     *              data type to another (Text to Lookup).  This method:
-     *              1. ensures that when the dataImport object is loaded this field always
-     *              holds the RecordType Id value (not the RecordType Name), and
-     *              2. passes the RecordType Id to the setRecordTypeOnFields method so that
-     *              the recordTypeId property is set on sibling fields.
-     * @param dataImport The object being loaded into the form renderer.
-     * @returns {boolean} Returns false if called with a non-null falsy parameter value.
-     */
-    preprocessRecordTypeNameField(dataImport) {
-        const recordTypeNameValue = dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName];
-        if (!recordTypeNameValue && recordTypeNameValue !== null) {
-            return false;
-        }
-
-        if (this.opportunityRecordTypeNames.includes(recordTypeNameValue)) {
-            // If value is the RecordType Name, change it to the RecordType Id since child
-            // fields are expecting the Id and not the Name.
-            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.getRecordTypeIdByName(
-                this.opportunityObjectInfo.data.recordTypeInfos,
-                recordTypeNameValue
-            );
-        } else if (recordTypeNameValue.value) {
-            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = recordTypeNameValue.value;
-        }
-
-        // Set the recordTypeId property on sibling fields that need it
-        // todo: DO NOT Set Record Type from here to see if it works from formState
-        //TRYING
-        // this.setRecordTypeIdOnSiblingFieldsForSourceField(
-        //     DONATION_RECORD_TYPE_NAME.fieldApiName,
-        //     dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName]
-        // );
-    }
-
-    setRecordTypeIdOnSiblingFieldsForSourceField(sourceFieldApiName, recordTypeId) {
-        const objectMappingDevNames =
-            this.getObjectMappingsForSourceField(sourceFieldApiName);
-
-        for (const objectMappingDevName of objectMappingDevNames) {
-            this.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
-        }
     }
 
     setStoredDonationDonorProperties(dataImport) {
@@ -937,26 +891,35 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     // read from state instead of stored in some of these other properties listed
     // below like StoredDonationDonorProperties
     @api
-    reset(objectMappingDeveloperName = null, setDefaults = true) {
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-
-        let fieldMappingDevNames = null;
+    reset(objectMappingDeveloperName = null) {
         if (objectMappingDeveloperName === null) {
-            this.dataImport = null;
-            this.setReviewDonationsDonorProperties(null);
-            this.resetStoredDonationDonorProperties();
+            this.resetLocalState();
         } else {
-            fieldMappingDevNames =
-                Object.values(GeFormService.fieldMappings).filter(
-                    ({Target_Object_Mapping_Dev_Name, DeveloperName}) =>
-                        Target_Object_Mapping_Dev_Name === objectMappingDeveloperName)
-                    .map(({DeveloperName}) => DeveloperName);
+            this.resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName);
+            this.resetFormStateToDefaultFieldValuesFor(objectMappingDeveloperName);
         }
-
-        sectionsList.forEach(section => {
-            section.reset(fieldMappingDevNames, setDefaults);
-        });
         this.widgetData = {};
+    }
+
+    resetLocalState() {
+        this.dataImport = null;
+        this.setReviewDonationsDonorProperties(null);
+        this.resetStoredDonationDonorProperties();
+        this.initializeState();
+    }
+
+    resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        sectionsList.forEach(section => {
+            section.reset(this.fieldMappingDevNamesFor(objectMappingDeveloperName), true);
+        });
+    }
+
+    fieldMappingDevNamesFor(objectMappingDeveloperName) {
+        return Object.values(GeFormService.fieldMappings).filter(
+            ({Target_Object_Mapping_Dev_Name, DeveloperName}) =>
+                Target_Object_Mapping_Dev_Name === objectMappingDeveloperName)
+            .map(({DeveloperName}) => DeveloperName);
     }
 
     resetStoredDonationDonorProperties() {
@@ -1209,11 +1172,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
 
-        if (fieldApiName === 'RecordTypeId') { // fieldApiName is the target field
-            // TRYING
-            console.log('*** ' + 'NOT calling setRecordTypeOnFields from renderer' + ' ***');
-            // replaced with reading from formState inside formField cmp
+        if (fieldApiName === 'RecordTypeId') {
+            // set value in state so picklists can respond
             // this.setRecordTypeOnFields(event.detail.objectMappingDevName, recordId);
+            this.updateFormState({
+                [event.detail.sourceFieldApiName]: {value: event.detail.value}
+            });
         } else if (event.detail.hasOwnProperty('value') && recordId !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {
@@ -1475,19 +1439,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.updateFormState(dataImport);
             this.load(dataImport, false);
 
-            // If the record being loaded is an object-mapped lookup, then set the
-            // recordTypeId on its sibling fields
-            if (data.recordTypeId &&
-                Object.values(this.selectedRecordIdByObjectMappingDevName)
-                    .includes(data.id)) {
-                for (const [key, value] of
-                    Object.entries(this.selectedRecordIdByObjectMappingDevName)) {
-                    if (value === data.id) {
-                        this.setRecordTypeOnFields(key, data.recordTypeId);
-                    }
-                }
-            }
-
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
                 data.id === this.selectedDonation.Id) {
                 const oppId = this.parentOpportunityId(data);
@@ -1601,27 +1552,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.setReviewDonationsDonorProperties(this.donorId);
     }
 
-    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
-        this.template.querySelectorAll('c-ge-form-section')
-            .forEach(section => {
-                section.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
-            });
-    }
-
-    getRecordTypeIdByName(recordTypeInfos, d) {
-        return Object.values(recordTypeInfos)
-            .find(recordTypeInfo => recordTypeInfo.name === d).recordTypeId;
-    }
-
     getObjectMappingsForSourceField(fieldApiName) {
         return Object.values(GeFormService.fieldMappings)
             .filter(({Source_Field_API_Name}) => Source_Field_API_Name === fieldApiName)
             .map(({Target_Object_Mapping_Dev_Name}) => Target_Object_Mapping_Dev_Name);
-    }
-
-    get opportunityRecordTypeNames() {
-        return Object.values(this.opportunityObjectInfo.data.recordTypeInfos)
-            .map(({name}) => name);
     }
 
     /**
@@ -1787,47 +1721,49 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @track
-    _formState = {
-        // Tracking fields in a nested property does not provide the reactivity
-        // needed to pass changes down to child components
-        // fields: {}
-    }
-
-    // get appState() {
-    //     return this._formState;
-    // }
+    _formState = {}
 
     updateFormState(fields) {
-        console.log('updateFormState called with (fields)): ', JSON.parse(JSON.stringify(fields)));
+        Object.assign(this._formState, fields);
 
-        // Does Not Work
-        // Object.assign(this._formState.fields, fields); // shallow copy
-        // this._appState.fields = JSON.parse(JSON.stringify(this._formState.fields));
-        // Does Not Work
+        if (this.hasImportedRecordFieldsBeingSetToNull(fields)) {
+            this.deleteRelationshipFieldsFromStateFor(fields);
+        }
 
-        //WORKS
-        Object.assign(this._formState, fields); // shallow copy
-        // re-assign to new object to get reactivity to work since not used in template
+        // Re-assign to prompt reactivity
+        // todo: test this with team to validate that it is necessary
         this._formState = JSON.parse(JSON.stringify(this._formState));
-        //WORKS
+    }
 
-        // this._formState.fields = Object.create({}, Object.assign(this._formState.fields, fields));
-        // this._formState.fields = Object.create({}, this._formState.fields);
-        // const nO = JSON.parse(JSON.stringify(this._formState.fields));
+    hasImportedRecordFieldsBeingSetToNull(fields) {
+        return Object.keys(fields).filter(field =>
+            GeFormService.importedRecordFieldNames.includes(field) &&
+            fields[field].value === null
+        ).length > 0;
+    }
 
-        // this._formState.fields = nO;
-        // console.log(this._formState.fields);
-        // debugger;
-        console.log('in renderer, formState after update in updateFormState' +
-            '', JSON.parse(JSON.stringify(this._formState)));
+    deleteRelationshipFieldsFromStateFor(fields) {
+        //todo: replace with importable function that only replaces last instance
+        const relationshipFieldFor = (field) => field.replace('__c', '__r');
+        const needsRelationshipFieldDeleted = (field) =>
+            this._formState.hasOwnProperty(relationshipFieldFor(field)) &&
+            fields[field].value === null &&
+            GeFormService.importedRecordFieldNames.includes(field);
+
+        Object.keys(fields)
+            .filter(needsRelationshipFieldDeleted)
+            .forEach(field => {
+                delete this._formState[relationshipFieldFor(field)];
+            });
     }
 
     handleFormFieldChange(event) {
-        console.log('*** ' + 'handling formFieldChangeEvent' + ' ***');
-        console.log(' render JSON.parse(JSON.stringify(event)): ', JSON.parse(JSON.stringify(event.detail)));
+        //handleChangeDonationDonor logic moved here from geFormField
+        if (event.detail.hasOwnProperty(DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName)) {
+            //todo: eventually this should just be a reaction to formState changing
+            this.handleDonationDonorChange(event.detail[DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName])
+        }
         this.updateFormState(event.detail);
-        console.log('in renderer, formState after handling ffChange Evt' +
-            '', JSON.parse(JSON.stringify(this._formState)));
     }
 
     initializeState() {
@@ -1835,16 +1771,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.sections.forEach(section => {
                 if (section.elements) {
                     section.elements.forEach(element => {
-                        this.setDefaultValueInFormStateFor(element);
+                        this.setDefaultValueInFormStateForElement(element);
                     });
                 }
             });
         }
-        console.log('*** ' + 'state initialized' + ' ***');
-        console.log('JSON.parse(JSON.stringify(this.formState)): ', JSON.parse(JSON.stringify(this._formState)));
     }
 
-    setDefaultValueInFormStateFor(element) {
+    setDefaultValueInFormStateForElement(element) {
         const fieldMappingWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
         const value = element.hasOwnProperty('defaultValue') ? element.defaultValue : null;
         this.updateFormState(
@@ -1853,4 +1787,28 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         );
     }
+
+    setDefaultValueInFormStateForSourceField(sourceFieldApiName) {
+        this.sections.forEach(section => {
+            section.elements.filter(element => element.fieldApiName === sourceFieldApiName)
+                .forEach(el => this.setDefaultValueInFormStateForElement(el));
+        });
+    }
+
+    setDefaultValueInFormStateForFieldMappings(fieldMappingDevNames) {
+        this.sections.forEach(section => {
+            section.elements.filter(element =>
+                element.dataImportFieldMappingDevNames
+                    .some(devName => fieldMappingDevNames.includes(devName))
+            )
+                .forEach(el => this.setDefaultValueInFormStateForElement(el));
+        });
+    }
+
+    resetFormStateToDefaultFieldValuesFor(objectMappingDeveloperName) {
+        const fieldMappings = GeFormService.getFieldMappingsForObjectMappingDevName(objectMappingDeveloperName);
+        this.setDefaultValueInFormStateForFieldMappings(
+            fieldMappings.map(({DeveloperName}) => DeveloperName));
+    }
+
 }
