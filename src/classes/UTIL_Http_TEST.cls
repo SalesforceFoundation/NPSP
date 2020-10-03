@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2020
 * @group Utilities
-* @description Contains tests for the common HttpRequest and HttpResponse methods 
+* @description Contains tests for the common HttpRequest and HttpResponse methods
 */
 @IsTest(IsParallel=true)
 public with sharing class UTIL_Http_TEST {
@@ -83,7 +83,7 @@ public with sharing class UTIL_Http_TEST {
         System.assertEquals(UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT, response.statusCode,
             'The status code should be set to timed out status code');
         System.assertEquals(UTIL_Http.STATUS_TIMED_OUT, response.status,
-            'The status should be set to timed out status');   
+            'The status should be set to timed out status');
 
         UTIL_Http.ErrorResponseBody body = (UTIL_Http.ErrorResponseBody) JSON.deserialize(
             response.body, UTIL_Http.ErrorResponseBody.class
@@ -123,7 +123,7 @@ public with sharing class UTIL_Http_TEST {
     @isTest
     private static void shouldNotReturnErrorsWhenResponseIsSuccess() {
         String body = '{"value" : "success"}';
-        
+
         Test.startTest();
         mockSuccessCalloutResponse(body);
 
@@ -251,7 +251,7 @@ public with sharing class UTIL_Http_TEST {
      */
     public static void mockNotFoundCalloutResponse() {
         String responseBody = '{"errors":[{'
-            + '"message":"' + MESSAGE_NOT_FOUND 
+            + '"message":"' + MESSAGE_NOT_FOUND
             + '","localizedPaymentsMessage":"' + MESSAGE_NOT_FOUND
             + '"}]}"';
 
@@ -264,8 +264,8 @@ public with sharing class UTIL_Http_TEST {
      */
     public static void mockDataConflictCalloutResponse() {
         String responseBody = '{"errors":[{'
-            + '"message":"' + MESSAGE_DATA_CONFLICT 
-            + '","localizedPaymentsMessage":"' + MESSAGE_DATA_CONFLICT 
+            + '"message":"' + MESSAGE_DATA_CONFLICT
+            + '","localizedPaymentsMessage":"' + MESSAGE_DATA_CONFLICT
             + '","detailedMessage":"' + MESSAGE_DATA_CONFLICT
             + '"}]}"';
 
@@ -284,5 +284,5 @@ public with sharing class UTIL_Http_TEST {
 
         Test.setMock(HttpCalloutMock.class, callout);
     }
-    
+
 }

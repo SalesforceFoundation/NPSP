@@ -372,7 +372,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
     /***
     * @description Verifies that a new opportunity is linked to an existing RD
-    * when the CommitmentId matches and the opportunity is not referencing any RD 
+    * when the CommitmentId matches and the opportunity is not referencing any RD
     */
     @isTest
     private static void shouldLinkOppToRDMatchingCommitmentIdOnOppInsert() {
@@ -392,14 +392,14 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
             'The Recurring Donation field on Opp should be linked to the matching RD');
     }
 
     /***
     * @description Verifies that a new opportunity is not linked to an existing RD
-    * when the CommitmentId does not matches and the opportunity is not referencing any RD 
+    * when the CommitmentId does not matches and the opportunity is not referencing any RD
     */
     @isTest
     private static void shouldNotLinkOppToRDWhenCommitmentIdDoesNotMatch() {
@@ -419,7 +419,7 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(null, opp.npe03__Recurring_Donation__c,
             'The Opp should not link to any RD if the Commitment Id field does not match');
     }
@@ -450,7 +450,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
     /***
     * @description Verifies that a new opportunity is not linked to an existing RD
-    * when the CommitmentId matches and the opportunity is already referencing an RD 
+    * when the CommitmentId matches and the opportunity is already referencing an RD
     */
     @isTest
     private static void shouldNotLinkAlreadyAssignedOppToRDMatchingCommitmentIdOnOppInsert() {
@@ -501,13 +501,13 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         opp = oppGateway.getRecord(opp.Id);
-        
+
         System.assertEquals(rd.Id, opp.npe03__Recurring_Donation__c,
             'The Opportunity should not link to any RD through CommitmentId on update');
     }
 
     /**
-    * @description Verifies RD Closed Reason will be switched to 
+    * @description Verifies RD Closed Reason will be switched to
     * the user provided Closed Reason value
     * when the Commitment in Elevate is cancelled.
     */
@@ -519,7 +519,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
         insert rd;
-    
+
         Test.startTest();
         UTIL_Http_TEST.mockSuccessCalloutResponse(buildCommitmentCanceledResponseBody());
 
@@ -538,7 +538,7 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /**
-    * @description Verifies RD Close Reason will not be updated back 
+    * @description Verifies RD Close Reason will not be updated back
     * to the user provided Closed Reason value
     * when Elevate callout results in an error response.
     */
@@ -566,12 +566,12 @@ public class RD2_ElevateIntegrationService_TEST {
         String expectedMessage = UTIL_Http_TEST.BAD_REQUEST_MESSAGE;
         System.assertEquals(expectedMessage, rd.ClosedReason__c,
             'RD Closed Reason be set to the error response message');
-        
+
         assertCancelCommitmentError(expectedMessage, rd.Id);
     }
 
     /**
-    * @description Verifies RD Closed Reason will be switched to 
+    * @description Verifies RD Closed Reason will be switched to
     * the user provided Closed Reason value
     * when the Commitment in Elevate cannot be found.
     */
@@ -583,7 +583,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
         insert rd;
-    
+
         Test.startTest();
         UTIL_Http_TEST.mockNotFoundCalloutResponse();
 
@@ -602,7 +602,7 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /**
-    * @description Verifies RD Closed Reason will be switched to 
+    * @description Verifies RD Closed Reason will be switched to
     * the user provided Closed Reason value
     * when the Commitment in Elevate is already cancelled.
     */
@@ -614,7 +614,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder().build();
         insert rd;
-    
+
         Test.startTest();
         UTIL_Http_TEST.mockDataConflictCalloutResponse();
 
@@ -752,7 +752,7 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /****
-    * @description Builds a cancel commitment response body 
+    * @description Builds a cancel commitment response body
     * returned when the commitment is successfully cancelled
     * @return String
     */
@@ -772,7 +772,7 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /****
-    * @description Verifies an error is created with 
+    * @description Verifies an error is created with
     * the specified error message and referencing expected record Id
     * @param message Expected error message
     * @param recordId Expected Recurring Donation Id
@@ -783,7 +783,7 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /****
-    * @description Verifies an error is created with 
+    * @description Verifies an error is created with
     * the specified error message and referencing expected record Id
     * @param message Expected error message
     * @param recordId Expected Recurring Donation Id
@@ -800,7 +800,7 @@ public class RD2_ElevateIntegrationService_TEST {
 
         System.assertEquals(RD_SOBJECT_TYPE, error.Object_Type__c, 'The SObject type should match');
         System.assertEquals(recordId, error.Related_Record_ID__c, 'The record Id should match');
-        System.assert(error.Record_URL__c.contains(recordId), 
+        System.assert(error.Record_URL__c.contains(recordId),
             'The record URL (' + error.Record_URL__c + ') should contain record Id: ' + recordId);
     }
 

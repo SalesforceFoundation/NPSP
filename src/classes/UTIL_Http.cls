@@ -49,7 +49,7 @@ public without sharing class UTIL_Http {
     public static final String STATUS_NOT_FOUND = 'Not Found';
     public static final String STATUS_TIMED_OUT = 'Request Timeout';
     public static final String STATUS_CONFLICT = 'Conflict';
-    
+
     public static final String TIMED_OUT_MESSAGE = 'timed out';
 
     public enum Method {
@@ -62,7 +62,7 @@ public without sharing class UTIL_Http {
     public class RequestService {
 
         /***
-        * @description Sends an HttpRequest 
+        * @description Sends an HttpRequest
         * @param request HttpRequest
         * @return Response HttpResponse wrapper
         */
@@ -77,7 +77,7 @@ public without sharing class UTIL_Http {
 
             } catch (Exception ex) {
                 response = buildErrorResponse(ex);
-            } 
+            }
 
             return response;
         }
@@ -185,7 +185,7 @@ public without sharing class UTIL_Http {
             try {
                 ErrorResponseBody responseBody = (ErrorResponseBody) JSON.deserialize(
                     body, ErrorResponseBody.class
-                );                
+                );
                 messages = responseBody.getMessages();
 
             } catch (Exception e) { }

@@ -158,14 +158,14 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
     /***
     * @description Match Opportunities originated in Elevate that are not referencing any Recurring Donation
-    * with an Recurring Donation having the same Commitment Id value 
+    * with an Recurring Donation having the same Commitment Id value
     * @param opps Opportunities
     * @return void
     */
     public void matchOppsToRecurringDonations(List<Opportunity> opps) {
         Map<String, List<Opportunity>> oppsByCommitmentId = new Map<String, List<Opportunity>>();
 
-        //extract Opps originated in Elevate that are not referencing a Recurring Donation 
+        //extract Opps originated in Elevate that are not referencing a Recurring Donation
         for (Opportunity opp : opps) {
             if (opp.npe03__Recurring_Donation__c != null || String.isBlank(opp.CommitmentId__c)) {
                 continue;
@@ -186,7 +186,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             SELECT CommitmentId__c
             FROM npe03__Recurring_Donation__c
             WHERE CommitmentId__c IN :oppsByCommitmentId.keySet()]) {
-            
+
             for (Opportunity opp : oppsByCommitmentId.get(rd.CommitmentId__c)) {
                 opp.npe03__Recurring_Donation__c = rd.Id;
             }
@@ -205,7 +205,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
     /**
     * @description Handles cancelation of commitments in Elevate.
-    * If the commitment cannot be closed, the RD closed reason 
+    * If the commitment cannot be closed, the RD closed reason
     * is set based on the Elevate error response.
     */
     public without sharing class CancelCommitmentService {
@@ -233,7 +233,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             Logger logger = new Logger();
             List<UTIL_Http.Response> responses = new List<UTIL_Http.Response>();
 
-            for (npe03__Recurring_Donation__c rd : closedRDs) {                
+            for (npe03__Recurring_Donation__c rd : closedRDs) {
                 responses.add(sendRequest(rd.CommitmentId__c));
             }
 
@@ -241,7 +241,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
                 setClosedReason(closedRDs[i], responses[i], logger);
             }
 
-            List<Database.SaveResult> dmlResults = Database.update(closedRDs, false);                        
+            List<Database.SaveResult> dmlResults = Database.update(closedRDs, false);
             logger.addErrors(dmlResults, closedRDs);
 
             logger.processErrors();
@@ -285,7 +285,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
         * so the value is restored in database when:
         * - the commitment is sucessfully cancelled,
         * - the commitment cannot be found in Elevate,
-        * - the request results in data conflict which is usually 
+        * - the request results in data conflict which is usually
         *   returned when the commitment is already cancelled.
         *
         * @param rd Recurring Donation
@@ -321,7 +321,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
         }
 
         /**
-        * @description Checks if the commitment has not been found in Elevate 
+        * @description Checks if the commitment has not been found in Elevate
         * based on the provided commitment Id
         * @param response Elevate API response
         * @return Boolean
