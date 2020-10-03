@@ -138,7 +138,7 @@ public with sharing class RD2_EntryFormController {
      * @return True if the User has Read access to all required fields in the UI
      */
     @AuraEnabled(cacheable=true)
-    public static Boolean checkRequiredFieldPermissions() {
+    public static Boolean hasRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
             'npe03__Amount__c',
             'npe03__Contact__c',
@@ -149,17 +149,17 @@ public with sharing class RD2_EntryFormController {
             UTIL_Namespace.StrTokenNSPrefix('StartDate__c')
         };
 
-        Boolean isMissingRequiredPermissions = true;
+        Boolean hasPermissions = true;
 
         for (String fld : requiredFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
             if (!dfr.isAccessible()) {
-                isMissingRequiredPermissions = false;
+                hasPermissions = false;
                 break;
             }
         }
 
-        return isMissingRequiredPermissions;
+        return hasPermissions;
     }
 
     /**
@@ -281,7 +281,7 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
-    * @description Creates Elevate Commitment and 
+    * @description Creates Elevate Commitment and
     * updates the Recurring Donation with returned Commitment data
     * @param recordId Recurring Donation Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
@@ -290,18 +290,18 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static String createCommitment(Id recordId, String jsonRequestBody) {
         UTIL_Http.Response response;
-        
+
         try {
             response = sendCommitmentRequest(jsonRequestBody);
 
             if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
-                // If the commitment is created, then update RD fields: 
+                // If the commitment is created, then update RD fields:
                 // Commitment Id, credit card expiry date and last 4.
 
-                // Ensure DML error (if any) on the RD update is returned to the LWC 
+                // Ensure DML error (if any) on the RD update is returned to the LWC
                 // as a response or an AuraHandled exception (either will work).
-            }        
-        
+            }
+
         } catch (Exception ex) {
             response = requestService.buildErrorResponse(ex);
 

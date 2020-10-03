@@ -44,7 +44,7 @@ private with sharing class RD2_EntryFormController_TEST {
     @TestSetup
     private static void setUp() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        
+
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
@@ -84,7 +84,7 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies whether the org is the Elevate customer 
+    * @description Verifies whether the org is the Elevate customer
     * in order to display the Elevate credit card widget if so.
     */
     @isTest
@@ -103,7 +103,7 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies whether the org is the Elevate customer 
+    * @description Verifies whether the org is the Elevate customer
     * in order to display the Elevate credit card widget if so.
     */
     @isTest
@@ -175,9 +175,9 @@ private with sharing class RD2_EntryFormController_TEST {
      * @description Validate that the System Admin User reports that they have the required field permissions
      */
     @IsTest
-    private static void shouldValidateUserHasPermissions() {
-        Boolean hasPerms = RD2_EntryFormController.checkRequiredFieldPermissions();
-        System.assert(hasPerms, 'Should determine that the Admin User has all permissions');
+    private static void shouldReturnTrueWhenUserHasPermissions() {
+        Boolean hasPerms = RD2_EntryFormController.hasRequiredFieldPermissions();
+        System.assertEquals(true, hasPerms, 'The Admin User shoud have permissions');
     }
 
     /**
@@ -185,7 +185,9 @@ private with sharing class RD2_EntryFormController_TEST {
      * are missing the required field permissions
      */
     @IsTest
-    private static void shouldValidateUserMissingPermissions() {
+    private static void shouldReturnFalseWhenUserIsMissingPermissions() {
+        User stdUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
+
         Id stdProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.PROFILE_STANDARD_USER LIMIT 1].Id;
 
         FieldPermissions fldPerm = [
@@ -198,15 +200,16 @@ private with sharing class RD2_EntryFormController_TEST {
         fldPerm.PermissionsEdit = false;
         update fldPerm;
 
-        User roUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
-        System.runAs(roUser) {
-            Boolean hasPerms = RD2_EntryFormController.checkRequiredFieldPermissions();
-            System.assert(!hasPerms, 'Should determine that the Standard User is missing permissions');
+        Test.startTest();
+        System.runAs(stdUser) {
+            Boolean hasPerms = RD2_EntryFormController.hasRequiredFieldPermissions();
+            System.assertEquals(false, hasPerms, 'The Standard User should be missing permissions');
         }
+        Test.stopTest();
     }
 
     /***
-    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields 
+    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields
     */
     @isTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
@@ -225,10 +228,10 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     /***
-    * @description Verifies Commitment Request Body is built as expected 
+    * @description Verifies Commitment Request Body is built as expected
     */
     @isTest
-    private static void shouldReturnCommitmentRequestBody() {        
+    private static void shouldReturnCommitmentRequestBody() {
         Id recordId = rdGateway.getRecords()[0].Id;
         final String paymentMethodToken = 'token-abcd-efgh-ijkl-mnop-qrst';
 
@@ -240,14 +243,14 @@ private with sharing class RD2_EntryFormController_TEST {
         );
 
         System.assertNotEquals(null, requestBody, 'The Commitment request body should be converted successfully');
-        System.assertEquals(paymentMethodToken, requestBody.paymentMethodToken, 'The payment token should match');        
+        System.assertEquals(paymentMethodToken, requestBody.paymentMethodToken, 'The payment token should match');
     }
 
     /***
     * @description Verifies Commitment response is created upon successful creation
     */
     @isTest
-    private static void shouldReturnResponseWhenCommitmentIsCreated() {     
+    private static void shouldReturnResponseWhenCommitmentIsCreated() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Id recordId = rdGateway.getRecords()[0].Id;
@@ -267,8 +270,8 @@ private with sharing class RD2_EntryFormController_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, response, 'The Commitment response should be returned');
-        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 
-            'The response status code should match: ' + response);        
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode,
+            'The response status code should match: ' + response);
     }
 
 }

@@ -42,7 +42,7 @@ import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMes
 import unknownError from '@salesforce/label/c.commonUnknownError';
 
 import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import checkRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.checkRequiredFieldPermissions';
+import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
 
@@ -105,7 +105,7 @@ export default class rd2EntryForm extends LightningElement {
     @track loadingText = this.customLabels.loadingMessage;
     @track hasCustomFields = false;
     isRecordReady = false;
-    isSettingReady = false;
+    @track isSettingReady = false;
 
     @track isElevateWidgetEnabled = false;
     isElevateCustomer = false;
@@ -154,13 +154,13 @@ export default class rd2EntryForm extends LightningElement {
         /*
         * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
         */
-        checkRequiredFieldPermissions()
+        hasRequiredFieldPermissions()
             .then(response => {
                 if (response === false) {
-                    this.error = {
+                    this.handleError({
                         header: this.customLabels.flsErrorHeader,
                         detail: this.customLabels.flsErrorDetail
-                    };
+                    });
                 }
             });
 
@@ -352,7 +352,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-     * @description Returns true if the currency code on the Recurring Donatation 
+     * @description Returns true if the currency code on the Recurring Donatation
      * is supported by the Elevate credit card widget
      */
     isCurrencySupported() {
@@ -414,8 +414,9 @@ export default class rd2EntryForm extends LightningElement {
                 this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
+
             } catch (error) {
-                this.handleTokenizeCardError(error);
+                this.setSaveButtonDisabled(false);
                 return;
             }
         }
@@ -423,6 +424,7 @@ export default class rd2EntryForm extends LightningElement {
         try {
             this.loadingText = this.customLabels.savingRDMessage;
             this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
+
         } catch (error) {
             this.handleSaveError(error);
         }
@@ -480,36 +482,31 @@ export default class rd2EntryForm extends LightningElement {
      * Keep Save button enabled so user can correct a value and save again.
      */
     handleSaveError(error) {
-        this.handleError(error, false);
+        this.error = constructErrorMessage(error);
+        this.setSaveButtonDisabled(false);
     }
 
     /***
      * @description Handle error and disable the Save button
      */
     handleError(error) {
-        this.handleError(error, true);
+        this.error = (error && error.detail)
+            ? error
+            : constructErrorMessage(error);
+
+        this.setSaveButtonDisabled(true);
     }
 
     /***
     * @description Handle component display when an error occurs
-    * @param error: Error Event
-    * @param disableSaveButton: Indicates if the Save button should be disabled
+    * @param isDisabled: Indicates if the Save button should be disabled
     */
-    handleError(error, disableSaveButton) {
-        this.error = constructErrorMessage(error);
+    setSaveButtonDisabled(isDisabled) {
+        const disableBtn = !!(isDisabled && isDisabled === true);
 
-        this.handlePageOnError(disableSaveButton);
-    }
-
-    /***
-    * @description Handle component display when an error occurs
-    * @param disableSaveButton: Indicates if the Save button should be disabled
-    */
-    handlePageOnError(disableSaveButton) {
-        const disableBtn = !!(disableSaveButton && disableSaveButton === true);
         this.isLoading = disableBtn;
-
         this.saveButton.disabled = disableBtn;
+
         this.template.querySelector(".slds-modal__header").scrollIntoView();
     }
 
@@ -520,18 +517,6 @@ export default class rd2EntryForm extends LightningElement {
     handleChildComponentError(event) {
         let error = event.detail && event.detail.value ? event.detail.value : event.detail;
         this.handleError(error);
-    }
-
-    /**
-    * Handle component display when an error on the tokenize credit card event
-    */
-    handleTokenizeCardError(event) {
-        //Do not display an error from the tokenize card since
-        //it will be displayed in the credit card widget,
-        //but stop loading and enable the Save button
-
-        const disableSaveButton = false;
-        this.handlePageOnError(disableSaveButton);
     }
 
     /***
@@ -612,7 +597,7 @@ export default class rd2EntryForm extends LightningElement {
         if (response.body) {
             // Errors returned in the response body can contain a single quote, for example:
             // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
-            // However, the JSON parser does not work with a single quote, 
+            // However, the JSON parser does not work with a single quote,
             // so need to replace it with the double quote but after
             // replacing \" with an empty string, otherwise the message content
             // will be misformatted.
@@ -642,7 +627,7 @@ export default class rd2EntryForm extends LightningElement {
 
         // For some reason the key in the body object for 'Message'
         // in the response we receive from Elevate is capitalized.
-        // Also checking for lowercase M in message in case they fix it.        
+        // Also checking for lowercase M in message in case they fix it.
         return response.body.Message
             || response.body.message
             || response.errorMessage
@@ -678,7 +663,7 @@ export default class rd2EntryForm extends LightningElement {
     showToastCommitmentError(errors) {
         const title = this.customLabels.elevateWidgetLabel;
 
-        // The space is required before the param {0}, 
+        // The space is required before the param {0},
         // otherwise the errors are duplicated when the message is formatted.
         // Moreover, the '\n {0}' cannot be part of the commitment failed message
         // since the new line is not replaced with a return.
