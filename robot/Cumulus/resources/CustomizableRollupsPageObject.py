@@ -81,7 +81,6 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self._add_filter(*args)
             self.selenium.click_button("Save")
             self.selenium.wait_until_element_is_not_visible(success_toast)
-            self.selenium.reload_page()
 
     @capture_screenshot_on_error
     def _add_filter(self, *args):
@@ -92,7 +91,6 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
             self.salesforce._jsclick(add_filter_btn)
             self.npsp.populate_modal_form(**arg)
-            self.selenium.wait_until_element_is_visible(modal_save_btn)
             element = self.selenium.driver.find_element_by_xpath(modal_save_btn)
             self.selenium.driver.execute_script('arguments[0].click()', element)
 

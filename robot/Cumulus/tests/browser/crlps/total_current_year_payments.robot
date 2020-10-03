@@ -13,7 +13,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Custom Fields and data
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 Setup Custom Fields and data
@@ -62,7 +62,7 @@ Total Current Year Payments on Prior Year Pledges
 
     Create New Filter Setting
     ...                                                   @{filterPools}  # Contains a list of filter metadata
-    ...                                                   &{dict}         # Contains the name of the fitler and the description to be added
+    ...                                                   &{dict}         # Contains the name of the filter and the description to be added
 
     Click Link With Text                                  Customizable Rollups
     Create New Rollup Setting
