@@ -3,7 +3,6 @@ from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
-import time
 
 
 
@@ -91,8 +90,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             add_filter_btn = npsp_lex_locators['button-with-text'].format("Add")
             self.salesforce._jsclick(add_filter_btn)
             self.npsp.populate_modal_form(**arg)
-            element = self.selenium.driver.find_element_by_xpath(modal_save_btn)
-            self.selenium.driver.execute_script('arguments[0].click()', element)
+            self.salesforce._jsclick(modal_save_btn)
 
     @capture_screenshot_on_error
     def create_new_rollup_setting(self, **kwargs):
@@ -104,6 +102,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         select_locator = npsp_lex_locators["crlps"]["select_locator"].format(
             "Target Object"
         )
+        toast_hide = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_success slds-hide')
         toast_visible = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_info ')
         if self._is_setting_present(kwargs["Target Object"], kwargs["Target Field"]):
             return
@@ -114,8 +113,8 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_page_contains_element(select_locator)
             self.populate_crlp_form(**kwargs)
             self.selenium.click_button("Save")
-            time.sleep(2)
             self.selenium.wait_until_page_contains_element(toast_visible)
+            self.selenium.reload_page()
 
     @capture_screenshot_on_error
     def clone_rollup(self, rollup_name, **kwargs):
