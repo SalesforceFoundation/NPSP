@@ -127,6 +127,8 @@ public inherited sharing class RD2_ApiService {
             try {
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     currencyCode = (String) rd.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+                } else {
+                    currencyCode = Userinfo.getDefaultCurrency();
                 }
             } catch (Exception ex) {
                 // ignore any errors if for some reason we can't retrieve the currency code
