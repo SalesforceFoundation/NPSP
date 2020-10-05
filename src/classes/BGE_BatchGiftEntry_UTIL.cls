@@ -103,13 +103,13 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             Map<String, BDI_FieldMapping> fieldMappingByDevName =
                     mappingService.fieldMappingByDevName;
 
-            FORM_Template t = (FORM_Template) JSON.deserialize(
+            GE_Template.Template template = (GE_Template.Template) JSON.deserialize(
                     batch.Form_Template__r.Template_JSON__c,
-                    FORM_Template.class
+                    GE_Template.Template.class
             );
 
-            for (FORM_Section formSection : t.layout.sections) {
-                for (FORM_Element formElement : formSection.elements) {
+            for (GE_Template.Section formSection : template.layout.sections) {
+                for (GE_Template.Element formElement : formSection.elements) {
                     if (formElement.dataImportFieldMappingDevNames == null) {
                         continue;
                     }
@@ -131,8 +131,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                                 fieldMapping.Source_Field_API_Name :
                                 isObjectMappedLookup ?
                                         fieldMappingName : null;
-                        // Add the source fields used in the Template
-                        if (!fieldApiNames.contains(sourceFieldName.toLowerCase())) {
+                        SObjectField field = DataImport__c.SObjectType.getDescribe()
+                                .fields.getMap().get(sourceFieldName);
+
+                        // Add the source fields used in the Template but only if the source field name is valid
+                        if (!fieldApiNames.contains(sourceFieldName.toLowerCase()) && field != null) {
                             fieldApiNames.add(sourceFieldName.toLowerCase());
                         }
 
@@ -141,9 +144,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                         if ((fieldMapping != null &&
                                 fieldMapping.Source_Field_Data_Type == 'REFERENCE')
                                 || isObjectMappedLookup) {
-
-                            SObjectField field = DataImport__c.SObjectType.getDescribe()
-                                    .fields.getMap().get(sourceFieldName);
 
                             if (field != null) {
                                 String relatedObjNameField =

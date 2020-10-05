@@ -1,5 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 import { getSubsetObject, isUndefined, isNotEmpty } from 'c/utilCommon';
+import GeFormElementHelper from './geFormElementHelper.js';
 
 const COLLAPSED_DISPLAY_MODE = 'collapsed';
 
@@ -242,6 +243,13 @@ export default class GeFormSection extends LightningElement {
         return this.hasCreditCardWidget;
     }
 
+    get renderableElements() {
+        if (isUndefined(this.section)) {
+            return [];
+        }
+        return this.section.elements.filter(element => new GeFormElementHelper(element).isRenderable());
+    }
+
     @api
     getAllFieldsByFieldAPIName() {
         const fields = this.template.querySelectorAll('c-ge-form-field');
@@ -254,8 +262,6 @@ export default class GeFormSection extends LightningElement {
         return fieldData;
     }
 
-
-
     @api
     setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
         this.template.querySelectorAll('c-ge-form-field')
@@ -263,7 +269,7 @@ export default class GeFormSection extends LightningElement {
                 // Currently only picklists need their selected record's RecordType Id,
                 // since they use it to update their available options
                 if (field.isPicklist) {
-                    if (field.objectMappingDevName === objectMappingDevName) {
+                    if (field.targetObjectMappingDevName === objectMappingDevName) {
                         field.recordTypeId = recordTypeId;
                     }
                 }
