@@ -897,7 +897,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.resetLocalState();
         } else {
             this.resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName);
-            this.resetFormStateToInitialFieldValuesFor(objectMappingDeveloperName);
+            this.setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName);
         }
         this.widgetData = {};
     }
@@ -1435,7 +1435,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.updateFormState(dataImport);
-            this.updateFormStateWithRelatedRecord(data);
+            this.updateFormStateForRecordIdWithRelatedRecord(data.id, data);
             this.load(dataImport, false);
 
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
@@ -1733,10 +1733,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._formState = formState;
     }
 
-    updateFormStateWithRelatedRecord(data) {
-        const lookupField = this.lookupFieldApiNameBySelectedRecordId[this.selectedRecordId];
-        const relatedRecordFieldName = relatedRecordFieldNameFor(lookupField);
-        this.updateFormState({[relatedRecordFieldName]: data});
+    updateFormStateForRecordIdWithRelatedRecord(recordId, record) {
+        const relatedRecordFieldName =
+            relatedRecordFieldNameFor(this.lookupFieldApiNameFor(recordId));
+        this.updateFormState({[relatedRecordFieldName]: record});
+    }
+
+    lookupFieldApiNameFor(recordId) {
+        return this.lookupFieldApiNameBySelectedRecordId[recordId];
     }
 
     updateFormState(fields) {
@@ -1806,24 +1810,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         );
     }
 
-    setDefaultValueInFormStateForSourceField(sourceFieldApiName) {
-        this.sections.forEach(section => {
-            section.elements.filter(element => element.fieldApiName === sourceFieldApiName)
-                .forEach(el => this.setInitialValueInFormStateForElement(el));
-        });
-    }
-
     setInitialValueInFormStateForFieldMappings(fieldMappingDevNames) {
-        this.sections.forEach(section => {
-            section.elements.filter(element =>
-                element.dataImportFieldMappingDevNames
-                    .some(devName => fieldMappingDevNames.includes(devName))
-            )
-                .forEach(el => this.setInitialValueInFormStateForElement(el));
-        });
+        this.elementsFor(fieldMappingDevNames)
+            .forEach(el => this.setInitialValueInFormStateForElement(el));
+
     }
 
-    resetFormStateToInitialFieldValuesFor(objectMappingDeveloperName) {
+    elementsFor(fieldMappingDevNames) {
+        this.sections.map(s => s.elements)
+            .flat()
+            .filter(element =>
+                element.dataImportFieldMappingDevNames
+                    .some(fieldMappingDevName =>
+                        fieldMappingDevNames
+                            .includes(fieldMappingDevName))
+            );
+    }
+
+    setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName) {
         this.setInitialValueInFormStateForFieldMappings(
             this.fieldMappingsFor(objectMappingDeveloperName).map(({DeveloperName}) => DeveloperName));
     }

@@ -500,7 +500,8 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    //todo: eventually, defaults should just be set in formState
+    //todo: eventually, defaults should just be set in formState by renderer and read from
+    // formState by geFormField
     @api
     reset(setDefaults = true) {
         if (setDefaults) {
