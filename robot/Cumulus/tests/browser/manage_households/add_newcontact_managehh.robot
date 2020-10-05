@@ -33,8 +33,8 @@ Add New Contact to Existing Household
     ...                                 object_id=${contact}[AccountId]
 
     Click Actions Link                  Manage Household
-    Go To Page                          Custom                            ManageHousehold
-
+    Go To Page                          Custom                             ManageHousehold
+    Current Page Should Be              Custom                             ManageHousehold
     Add contact                         New                               ${first_name} ${last_name}
     Current Page Should Be              Details                           Account
     Wait Until Page Contains            Account Owner

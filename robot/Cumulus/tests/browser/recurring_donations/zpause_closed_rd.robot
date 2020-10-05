@@ -10,11 +10,14 @@ Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 
 Setup Test Data
+        [Documentation]         Create a contact and recurring donation record of type open using API
+        ...                     Associate the recurring donation to the contact
+
         ${NS} =             Get NPSP Namespace Prefix
         Set Suite Variable  ${NS}
 
@@ -37,41 +40,30 @@ Setup Test Data
 
 Edit An Enhanced Recurring donation record of type open
     [Documentation]               After creating an open recurring donation using API, The test ensures that the record
-     ...                          can be edited from the ui. A status of closed and the reason for closure can be specified
-     ...                          Verifies the opportunity status reflects the right status after closing
+     ...                          is closed by applying the reason for closure as financial difficulty.
+     ...                          A pause action is then performed on the closed recurring donation to verify
+     ...                          The warning message that user cannot pause a closed recurring donation is displayed.
 
 
-    [tags]                                 unstable               W-040346            feature:RD2
+    [tags]                                  unstable               W-040346           feature:RD2
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
 
     Click Object Button                     New
     Wait For Modal                          New                                       Recurring Donation
-    # Reload page is a temporary fix till the developers fix the ui-modal
     Reload Page
-
-    Go To Page                             Details
-    ...                                    npe03__Recurring_Donation__c
-    ...                                    object_id=${data}[contact_rd][Id]
+    Go To Page                              Details
+    ...                                     npe03__Recurring_Donation__c
+    ...                                     object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
-    Current Page Should be                 Details    npe03__Recurring_Donation__c
+    Current Page Should be                  Details                                  npe03__Recurring_Donation__c
+
+    # Editing the recurring donation to set the status closed with reason financial difficulty
     Edit Recurring Donation Status
-    ...                                    Status=Closed
-    ...                                    Status Reason=Commitment Completed
+    ...                                     Status=Closed
+    ...                                     Status Reason=Financial Difficulty
 
-    ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
-    Reload Page
-    Current Page Should be                 Details    npe03__Recurring_Donation__c
-    # Verify that "no active schedules are present" messages appear
-    Verify Schedule Warning Messages Present
-
-    #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
-    Validate Related Record Count           Opportunities                                                    1
-    @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
-    Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
-
-    #validate the stage on opportunity is Closed Lost
-    Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
-    Wait Until Loading Is Complete
-    Current Page Should Be                  Details                        Opportunity
-    Navigate To And Validate Field Value    Stage                          contains                        Closed Lost
+    Current Page Should be                  Details                                  npe03__Recurring_Donation__c
+    #Pause the recurring donation and validate the warning message displayed
+    Pause_Recurring Donation
+    Validate Warning Text                   You can't Pause a Closed Recurring Donation
