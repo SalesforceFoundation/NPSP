@@ -519,7 +519,7 @@ export default class geListView extends LightningElement {
                     minute: "2-digit",
                     hour12: "true",
                     timeZone: timezone,
-                }
+                };
                 break;
             case 'date-local':
                 columnEntry.typeAttributes = {
