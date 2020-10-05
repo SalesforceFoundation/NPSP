@@ -301,7 +301,9 @@ npsp_lex_locators={
         'installment_date' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr[{}]/th//span/div/lightning-formatted-date-time",
         'formatted_number':"//lightning-formatted-text[text() = '{}']/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-number",
         'formatted_date':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-date-time",
-        'formatted_text':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text"
+        'formatted_text':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text",
+        'pause_date_checkbox':"//th//span/div/lightning-formatted-date-time[text()='{}']/preceding::lightning-primitive-cell-checkbox",
+        'warning_message':"//lightning-formatted-rich-text/span"
         },
 
 }
