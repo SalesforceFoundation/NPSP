@@ -34,7 +34,6 @@ Setup Variables
 *** Test Cases ***
 
 Create Data Import Via API
-    [tags]  unstable
     &{data_import} =  API Create DataImport
     ...        ${ns}Account1_Name__c=${acc1}
     ...        ${ns}Account2_Name__c=${acc2}
@@ -50,6 +49,9 @@ Create Data Import Via API
     ...        ${org_ns}Custom_add_date__c=${date}
     ...        ${org_ns}custom_cont_num__c=9876543210
     Set Global Variable     &{data_import}       &{data_import}
+    # Navigating to the NPSP Settings page as a workaround for the DML error.
+    # will remove below line once this W-8119513 in GUS is fixed
+    Go To Page        Custom        NPSP_Settings
     Go To Page        Listing       DataImport__c
     Change View To    To Be Imported
     Page Should Contain Link    ${data_import}[Name]
@@ -60,7 +62,6 @@ Create Data Import Via API
     Click Button With Value   Close
 
 Verify Custom Fields on Account Contact and Address Objects
-    [tags]  unstable
     &{data_import_new} =     Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
     Verify Expected Values    nonns    Account    ${data_import_new}[${ns}Account1Imported__c]
     ...    Name=${acc1}
