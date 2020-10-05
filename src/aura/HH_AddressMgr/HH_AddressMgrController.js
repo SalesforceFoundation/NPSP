@@ -38,9 +38,10 @@
      */
     cancelChangeAddress : function(component, event, helper ) {
         if (event.type === 'click'
-            || (event.type === 'keydown' && (event.code === 'Enter' || event.code === 'Space')))
-        {
+            || (event.type === 'keydown' && (event.code === 'Enter' || event.code === 'Space'))
+        ) {
             component.set('v.showChangeAddressPopup', false);
+
         } else if (event.type === 'keydown' && event.shiftKey === true && event.code === 'Tab') {
             document.getElementById('modalEndFocus').focus();
         }
@@ -53,8 +54,8 @@
      */
     saveChangeAddress : function(component, event, helper) {
         if (event.type === 'click'
-        || (event.type === 'keydown' && (event.code === 'Enter' || event.code === 'Space')))
-        {
+            || (event.type === 'keydown' && (event.code === 'Enter' || event.code === 'Space'))
+        ) {
             helper.setDefaultAddress(component);
             component.set('v.showChangeAddressPopup', false);
             component.set('v.addrNew', {});
@@ -68,20 +69,11 @@
     /*******************************************************************************************************
      * @description tracks which existing address was last selected in the popup
      */
-    // onPressAddrTile : function(component, event /* , helper */) {
-    //     let addressIndex = event.getSource().get('v.value');
-    //     component.set('v.iAddrSelected', addressIndex);
-    // },
-
-    /*******************************************************************************************************
-     * @description tracks which existing address was last selected in the popup
-     */
     onPressAddrTile : function(component, event /* , helper */) {
-
         if (event.type === 'click'
-        || (event.type === 'keyup' && (event.code === 'Enter' || event.code === 'Space')))
-        {
-            var iAddr = Number(event.currentTarget.getAttribute('data-iAddr'));
+            || (event.type === 'keyup' && (event.code === 'Enter' || event.code === 'Space'))
+        ) {
+            let iAddr = Number(event.currentTarget.getAttribute('data-iAddr'));
             component.set('v.iAddrSelected', iAddr);
 
         }
