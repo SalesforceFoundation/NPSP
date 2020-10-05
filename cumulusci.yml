@@ -1,10 +1,10 @@
 minimum_cumulusci_version: 2.5.0
 project:
-    name: Cumulus
+    name: Food-Bank
     package:
-        name: Cumulus
+        name: Food-Bank
         name_managed: Nonprofit Success Pack
-        namespace: npsp
+        namespace: custom_settings
         api_version: 48.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
