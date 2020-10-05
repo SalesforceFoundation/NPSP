@@ -225,7 +225,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
 
         /**
         * @description Sends cancel commitment reqeusts for closed Recurring Donations.
-        * Sets RD closed reason an an error.
+        * Sets RD closed reason back to user specified reason and insert any error.
         * @param closedRDs Closed RDs with the user specified closed reason
         * @return void
         */
