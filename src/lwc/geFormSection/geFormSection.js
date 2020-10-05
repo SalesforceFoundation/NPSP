@@ -137,10 +137,6 @@ export default class GeFormSection extends LightningElement {
                         data,
                         [fieldCmp.sourceFieldAPIName]));
             }
-
-            if (data.recordTypeId || data.recordTypeId === null) {
-                fieldCmp.recordTypeId = data.recordTypeId;
-            }
         });
 
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
@@ -262,18 +258,18 @@ export default class GeFormSection extends LightningElement {
         return fieldData;
     }
 
+    handleFormFieldChange(event) {
+        this.dispatchEvent(new CustomEvent('formfieldchange', {detail: event.detail}));
+    }
+
+    _formState;
     @api
-    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
-        this.template.querySelectorAll('c-ge-form-field')
-            .forEach(field => {
-                // Currently only picklists need their selected record's RecordType Id,
-                // since they use it to update their available options
-                if (field.isPicklist) {
-                    if (field.targetObjectMappingDevName === objectMappingDevName) {
-                        field.recordTypeId = recordTypeId;
-                    }
-                }
-            });
+    set formState(formState) {
+        this._formState = formState;
+    }
+
+    get formState() {
+        return this._formState;
     }
 
 }

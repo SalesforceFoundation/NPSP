@@ -61,7 +61,7 @@
     </template>
     <template if:true={isPicklist}>
         <c-ge-form-field-picklist data-id='inputComponent'
-            value={value}
+            value={valueFromFormState}
             required={required}
             field-name={targetFieldApiName}
             object-name={objectApiName}
