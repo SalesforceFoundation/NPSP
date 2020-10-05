@@ -9,7 +9,7 @@ Suite Setup     Run keywords
 ...             Open Test Browser
 ...             API Check And Enable Gift Entry
 ...             Setup Test Data
-#Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
 ${AMOUNT}         100
