@@ -120,6 +120,7 @@ private class RD2_ApiService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Callable_API callable = new Callable_API();
+        Exception actualException;
         try {
             String response = (String) callable.call(API_QUERY_SCHEDULES,
                 new Map<String, Object>{
@@ -128,11 +129,12 @@ private class RD2_ApiService_TEST {
                     }
                 }
             );
-            System.assert(false, 'An exception should have been thrown for an missing parameter');
-        } catch (Exception ex) {
-            System.assert(ex.getMessage().contains(CallableApiParameters.PARAM_RECORD_IDS),
-                'The exception should reference the missing parameter by name');
+        } catch (Exception e) {
+            actualException = e;
         }
+        System.assertNotEquals(null, actualException, 'An exception should have been thrown for a missing parameter');
+        System.assert(actualException.getMessage().contains(CallableApiParameters.PARAM_RECORD_IDS),
+            'The exception should reference the missing parameter by name');
     }
 
     /**
@@ -143,6 +145,7 @@ private class RD2_ApiService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Callable_API callable = new Callable_API();
+        Exception actualException;
         try {
             String response = (String) callable.call(API_QUERY_SCHEDULES,
                 new Map<String, Object>{
@@ -150,11 +153,12 @@ private class RD2_ApiService_TEST {
                         UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType)
                 }
             );
-            System.assert(false, 'An exception should have been thrown for an invalid parameter');
-        } catch (Exception ex) {
-            System.assert(ex.getMessage().contains(CallableApiParameters.PARAM_RECORD_IDS),
-                'The exception should reference the missing parameter by name');
+        } catch (Exception e) {
+            actualException = e;
         }
+        System.assertNotEquals(null, actualException, 'An exception should have been thrown for a missing parameter');
+        System.assert(actualException.getMessage().contains(CallableApiParameters.PARAM_RECORD_IDS),
+            'The exception should reference the missing parameter by name');
     }
 
     /**

@@ -255,8 +255,8 @@ private class CallableApiParameters_TEST {
             'Set<Id>' => new Set<Id>{ UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID }
         };
 
-        CallableApiParameters service = new CallableApiParameters(params);
-        service.throwExceptionIfMissingParameter = true;
+        CallableApiParameters service = new CallableApiParameters(params)
+            .withRequiredParamCheck();
 
         for (String dataType : params.keySet()) {
             String dummyParamName = 'TESTING';

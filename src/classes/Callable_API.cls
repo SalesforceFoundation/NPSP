@@ -99,8 +99,9 @@ global with sharing class Callable_API implements System.Callable {
                 return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
 
             } when 'rd2.queryschedules' {
-                paramService.throwExceptionIfMissingParameter = true;
-                Set<Id> rdIds = paramService.getSetId(CallableApiParameters.PARAM_RECORD_IDS);
+                Set<Id> rdIds = paramService
+                    .withRequiredParamCheck()
+                    .getSetId(CallableApiParameters.PARAM_RECORD_IDS);
                 RD2_ApiService rd2ApiSvc = new RD2_ApiService();
                 return rd2ApiSvc.querySchedules(rdIds);
 

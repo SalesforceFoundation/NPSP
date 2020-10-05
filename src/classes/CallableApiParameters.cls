@@ -65,7 +65,25 @@ public class CallableApiParameters {
      * @description Allow the getDataType methods to thrown an exception if the parameter is missing
      * entirely. Disabled by default.
      */
-    public Boolean throwExceptionIfMissingParameter = false;
+    private Boolean isParamRequired = false;
+
+    /**
+     * @description Configure all future calls to retrieve a typed-parameter to require the parameter
+     * @return this
+     */
+    public CallableApiParameters withRequiredParamCheck() {
+        this.isParamRequired = true;
+        return this;
+    }
+
+    /**
+     * @description Configure all future calls to retrieve a typed-parameter to not require the parameter
+     * @return this
+     */
+    public CallableApiParameters withoutRequiredParamCheck() {
+        this.isParamRequired = false;
+        return this;
+    }
 
     /**
      * @description Retrieve the specified Parameter as a String value
@@ -270,7 +288,7 @@ public class CallableApiParameters {
      * @param paramName The parameter name to check for
      */
     private void validateRequiredParameter(String paramType, String paramName) {
-        if (throwExceptionIfMissingParameter && !params.containsKey(paramName)) {
+        if (isParamRequired && !params.containsKey(paramName)) {
             throwParameterException(paramType, paramName);
         }
     }
