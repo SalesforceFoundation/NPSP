@@ -897,7 +897,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.resetLocalState();
         } else {
             this.resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName);
-            this.resetFormStateToDefaultFieldValuesFor(objectMappingDeveloperName);
+            this.resetFormStateToInitialFieldValuesFor(objectMappingDeveloperName);
         }
         this.widgetData = {};
     }
@@ -1791,19 +1791,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.sections.forEach(section => {
                 if (section.elements) {
                     section.elements.forEach(element => {
-                        this.setDefaultValueInFormStateForElement(element);
+                        this.setInitialValueInFormStateForElement(element);
                     });
                 }
             });
         }
     }
 
-    setDefaultValueInFormStateForElement(element) {
-        const fieldMappingWrapper = GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
-        const value = element.hasOwnProperty('defaultValue') ? element.defaultValue : null;
+    setInitialValueInFormStateForElement(element) {
         this.updateFormState(
             {
-                [fieldMappingWrapper.Source_Field_API_Name]: {value}
+                [this.getSourceFieldApiNameFor(element)]: {value: this.getValueFrom(element)}
             }
         );
     }
@@ -1811,24 +1809,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     setDefaultValueInFormStateForSourceField(sourceFieldApiName) {
         this.sections.forEach(section => {
             section.elements.filter(element => element.fieldApiName === sourceFieldApiName)
-                .forEach(el => this.setDefaultValueInFormStateForElement(el));
+                .forEach(el => this.setInitialValueInFormStateForElement(el));
         });
     }
 
-    setDefaultValueInFormStateForFieldMappings(fieldMappingDevNames) {
+    setInitialValueInFormStateForFieldMappings(fieldMappingDevNames) {
         this.sections.forEach(section => {
             section.elements.filter(element =>
                 element.dataImportFieldMappingDevNames
                     .some(devName => fieldMappingDevNames.includes(devName))
             )
-                .forEach(el => this.setDefaultValueInFormStateForElement(el));
+                .forEach(el => this.setInitialValueInFormStateForElement(el));
         });
     }
 
-    resetFormStateToDefaultFieldValuesFor(objectMappingDeveloperName) {
-        const fieldMappings = GeFormService.getFieldMappingsForObjectMappingDevName(objectMappingDeveloperName);
-        this.setDefaultValueInFormStateForFieldMappings(
-            fieldMappings.map(({DeveloperName}) => DeveloperName));
+    resetFormStateToInitialFieldValuesFor(objectMappingDeveloperName) {
+        this.setInitialValueInFormStateForFieldMappings(
+            this.fieldMappingsFor(objectMappingDeveloperName).map(({DeveloperName}) => DeveloperName));
+    }
+
+    fieldMappingsFor(objectMappingDeveloperName) {
+        return GeFormService.getFieldMappingsForObjectMappingDevName(objectMappingDeveloperName);
+    }
+
+    getSourceFieldApiNameFor(element) {
+        return this.fieldMappingWrapperFor(element) &&
+            this.fieldMappingWrapperFor(element).Source_Field_API_Name;
+    }
+
+    fieldMappingWrapperFor(element) {
+        return element.dataImportFieldMappingDevNames &&
+            GeFormService.getFieldMappingWrapper(element.dataImportFieldMappingDevNames[0]);
+    }
+
+    getValueFrom(element) {
+        return element &&
+        element.recordValue !== undefined ? element.recordValue :
+            element.defaultValue;
     }
 
 }
