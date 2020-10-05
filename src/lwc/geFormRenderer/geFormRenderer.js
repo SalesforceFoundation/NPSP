@@ -824,6 +824,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     load(dataImport, applySelectedDonationFieldValues = true) {
+        this.updateFormState(this.getFieldsObjectFor(dataImport));
         if (dataImport.Id) {
             // Set this.dataImport when the record Id is present so
             // the form knows it is in update mode
@@ -859,6 +860,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         });
 
         this.handleNameOnCardFieldChange();
+    }
+
+    getFieldsObjectFor(dataImport) {
+        let fields = {};
+        for (const [key, value] of Object.entries(dataImport)) {
+            fields[key] = {value: value};
+        }
+        return fields;
     }
 
     setStoredDonationDonorProperties(dataImport) {
