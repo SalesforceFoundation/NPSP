@@ -52,7 +52,6 @@ public virtual with sharing class BDI_ObjectMapping {
     @AuraEnabled public String dynamicSourceField;
     @AuraEnabled public BDI_FieldMapping[] Field_Mappings;
 
-
     /*******************************************************************************************************
     * @description No parameter constructor to enable use as virtual class.
     */
