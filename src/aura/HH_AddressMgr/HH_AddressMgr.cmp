@@ -43,12 +43,16 @@
     
     <!-- CHANGE ADDRESS POPUP -->
     <aura:if isTrue="{!v.showChangeAddressPopup}">
-        <div id="changeAddressPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+        <div id="changeAddressPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog" aria-labelledby="searchPopupLabel">
             <div class="slds-modal__container">
                 
                 <div class="slds-modal__header">
-                    <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" variant="bare-inverse"
-                        size="large" onclick="{!c.cancelChangeAddress}" alternativeText="{!$Label.c.bdiBtnClose}" />
+                    
+                    <div onclick="{!c.cancelChangeAddress}" tabindex="0" onkeydown="{!c.cancelChangeAddress}" id="closeButton">
+                        <lightning:icon iconName="utility:close" class="slds-modal__close" variant="bare-inverse"
+                        alternativeText="{!$Label.c.bdiBtnClose}" tabindex="0"/>
+                    </div>
+
                     <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.ChangeAddress}</h2>
                 </div>
                 <div class="slds-modal__content slds-p-around_medium">
@@ -139,17 +143,19 @@
                 
                 <div class="slds-modal__footer">
                     <div class="slds-x-small-buttons_horizontal">
-                        <lightning:button
+                        <lightning:button class="slds-button slds-button_neutral" 
                                    aura:id="btnCancelChangeAddress"
-                                   title="{!$Label.c.stgBtnCancel}" 
-                                   label="{!$Label.c.stgBtnCancel}" 
+                                   title="{!$Label.c.stgBtnCancel}"
+                                   label="{!$Label.c.stgBtnCancel}"
                                    onclick="{!c.cancelChangeAddress}" />
-                        <lightning:button
-                                    variant="brand"
+                        <span onkeydown="{!c.saveChangeAddress}">  
+                        <lightning:button class="slds-button slds-button_brand slds-m-left_small"
                                    aura:id="btnSaveChangeAddress"
-                                   title="{!$Label.npo02.SetAddress}" 
-                                   label="{!$Label.npo02.SetAddress}" 
+                                   title="{!$Label.npo02.SetAddress}"
+                                   label="{!$Label.npo02.SetAddress}"
                                    onclick="{!c.saveChangeAddress}" />
+                        </span>
+                        <span id="modalEndFocus" tabindex="0"></span>
                     </div>
                 </div>
             </div> <!-- /slds-modal__container -->

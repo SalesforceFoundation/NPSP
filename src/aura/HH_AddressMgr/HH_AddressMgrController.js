@@ -36,17 +36,33 @@
     /*******************************************************************************************************
      * @description close the Change Address popup, making no changes.
      */
-    cancelChangeAddress : function(component /* , event, helper */) {
-        component.set('v.showChangeAddressPopup', false);
+    cancelChangeAddress : function(component, event, helper ) {
+        if (event.type === 'click'
+            || (event.type === 'keydown' && (event.code === 'Enter' || event.code === 'Space')))
+        {
+            component.set('v.showChangeAddressPopup', false);
+        } else if (event.type === 'keydown' && event.shiftKey === true && event.code === 'Tab') {
+            document.getElementById('modalEndFocus').focus();
+        }
     },
+
+
 
     /*******************************************************************************************************
      * @description Save the new or existing address as the default, and close the Change Address popup
      */
     saveChangeAddress : function(component, event, helper) {
-        helper.setDefaultAddress(component);
-        component.set('v.showChangeAddressPopup', false);
-        component.set('v.addrNew', {});
+        if (event.type === 'click'
+        || (event.type === 'keydown' && (event.code === 'Enter' || event.code === 'Space')))
+        {
+            helper.setDefaultAddress(component);
+            component.set('v.showChangeAddressPopup', false);
+            component.set('v.addrNew', {});
+
+        } else if (event.type === 'keydown' && event.shiftKey === false && event.code === 'Tab') {
+            document.getElementById('closeButton').focus();
+        }
+        
     },
 
     /*******************************************************************************************************
