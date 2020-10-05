@@ -68,9 +68,24 @@
     /*******************************************************************************************************
      * @description tracks which existing address was last selected in the popup
      */
+    // onPressAddrTile : function(component, event /* , helper */) {
+    //     let addressIndex = event.getSource().get('v.value');
+    //     component.set('v.iAddrSelected', addressIndex);
+    // },
+
+    /*******************************************************************************************************
+     * @description tracks which existing address was last selected in the popup
+     */
     onPressAddrTile : function(component, event /* , helper */) {
-        let addressIndex = event.getSource().get('v.value');
-        component.set('v.iAddrSelected', addressIndex);
+
+        if (event.type === 'click'
+        || (event.type === 'keyup' && (event.code === 'Enter' || event.code === 'Space')))
+        {
+            var iAddr = Number(event.currentTarget.getAttribute('data-iAddr'));
+            component.set('v.iAddrSelected', iAddr);
+
+        }
+        
     },
 
     /*******************************************************************************************************

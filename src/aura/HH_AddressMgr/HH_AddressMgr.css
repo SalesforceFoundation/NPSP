@@ -1,4 +1,4 @@
-.THIS .selected-address {
+.THIS li.selected {
     background-color: token(colorBackgroundRowSelected);
 }
 
