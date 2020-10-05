@@ -527,7 +527,7 @@ export default class geListView extends LightningElement {
                     month: "numeric",
                     day: "numeric",
                     timeZone: timezone,
-                }
+                };
                 break;
             case URL :
                 columnEntry.fieldName = fieldApiName + '_' + URL;
