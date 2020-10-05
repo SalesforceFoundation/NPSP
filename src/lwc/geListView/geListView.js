@@ -536,7 +536,7 @@ export default class geListView extends LightningElement {
                         fieldName: fieldApiName
                     },
                     target: isNotEmpty(this.target) ? this.target : _SELF
-                }
+                };
                 break;
             default:
         }
