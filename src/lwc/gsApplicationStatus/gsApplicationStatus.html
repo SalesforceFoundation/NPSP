@@ -1,27 +1,30 @@
-<template>
-   <div class="container slds-is-relative">
-        <div class="spinner" if:true={isLoading}>
-            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+<template >
+    <template if:false={isActiveInstance}>
+        <div class="container slds-is-relative">
+            <div class="spinner" if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </div>
+            <div class="image-container"><img class="image" src={img}/></div>
+            <div if:false={isApplicationSubmitted} class="info pending">
+                <p>{labels.gsNoApplicationSubmitted} | <a>{labels.gsLearnMore}</a></p>
+                <p class="daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
+                <a class="slds-button slds-button_brand" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">
+                    {labels.gsApplyForFreeLicenses}
+                </a>    
+            </div>
+            <div if:true={isApplicationSubmitted} class="info submitted">
+                <p>{labels.gsApplicationStatus}<span>{labels.gsSubmitted}</span></p>
+                <p class='daysLeft'>{diffInDays} {labels.gsDaysRemainingInFreeTrial}</span></p>
+                <button onclick={onCheckStatusClick}
+                    class="slds-button slds-button_outline-brand">
+                    {labels.gsCheckStatus}
+                </button>
+            </div>
         </div>
-        <div class="image-container"><img class="image" src={img}/></div>
-        <div if:false={isApplicationSubmitted} class="info pending">
-            <p>{labels.gsNoApplicationSubmitted} | <a>{labels.gsLearnMore}</a></p>
-            <p class="daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p>
-            <a class="slds-button slds-button_brand" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">
-                {labels.gsApplyForFreeLicenses}
-            </a>    
-        </div>
-        <div if:true={isApplicationSubmitted} class="info submitted">
-            <p>{labels.gsApplicationStatus}<span>{labels.gsSubmitted}</span></p>
-            <p class='daysLeft'>{diffInDays} {labels.gsDaysRemainingInFreeTrial} | <span>{labels.gsDaysAdded}</span></p>
-            <button onclick={onCheckStatusClick}
-                class="slds-button slds-button_outline-brand">
-                {labels.gsCheckStatus}
-            </button>
-        </div>
-    </div>
-
-    <c-gs-modal header={labels.gsApplicationStatusModalHeader}  button-label={labels.gsClose}>
-        <p>{labels.gsFollowUpApplicationStatus}</p>
-    </c-gs-modal>
+    
+        <c-gs-modal header={labels.gsApplicationStatusModalHeader}  button-label={labels.gsClose}>
+            <p>{labels.gsFollowUpApplicationStatus}</p>
+        </c-gs-modal>
+    </template>
+   
 </template>

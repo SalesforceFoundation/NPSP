@@ -19,7 +19,7 @@ export default class GsApplicationStatus extends LightningElement {
     @track isApplicationSubmitted = false;
     @track isLoading = false;
     @track img = "";
-
+    @track isActiveInstance = false;
     applyForFreeLicensesImg = Resources + '/img/gift_illustration.svg';
     checkForStatusImg = Resources + '/img/gift_illustration_2.svg';
 
@@ -36,15 +36,19 @@ export default class GsApplicationStatus extends LightningElement {
         gsClose,
         gsFollowUpApplicationStatus
     }
-    
+    /**
+     * Initialized the component with the data retrieved from Salesforce
+     */
     connectedCallback() {
         this.showSpinner();
 
         getApplicationStatus()
         .then(result => {
-            this.diffInDays = this.calculateDiffDays(result);
+            debugger;
+            this.diffInDays = this.calculateTrialRemainingDays(result);
             this.isApplicationSubmitted = this.checkApplicationSubmitted(result);
-            this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg
+            this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg; 
+            this.isActiveInstance = result.trialExpirationDate == null;
             this.hideSpinner();
         })
         .catch(error => {
@@ -53,24 +57,48 @@ export default class GsApplicationStatus extends LightningElement {
         });
     }
 
+    /**
+     * Shows the spinner in the component
+     */
     showSpinner() {
         this.isLoading = true;
     }
 
+    /**
+     * Hides the spinner in the component
+     */
     hideSpinner() {
         this.isLoading = false;
     }
-    calculateDiffDays(result) {
-        const date = new Date(result.trialExpirationDate)
-        const oneDay = 24 * 60 * 60 * 1000
-        const today = new Date();
-        return Math.ceil(Math.abs(date - today)/oneDay);
+
+    /**
+     * 
+     * @param {Object} result - Retrieved result object from Salesforce, in order to this to work it has to have a 'trialExpirationDate' field.
+     * @returns remaining days between today and expiration day or -1.
+     */
+    calculateTrialRemainingDays(result) {
+        if (result.trialExpirationDate) {
+            const date = new Date(result.trialExpirationDate)
+            const oneDay = 24 * 60 * 60 * 1000
+            const today = new Date();
+            return Math.ceil(Math.abs(date - today)/oneDay);
+        }
+        return -1;
     }
 
+    /**
+     * Check if application has been submitted, using data from Salesforce org.
+     * @param {Object} result the data retrieved from salesforce
+     * @returns True if data has an applicationDate field, false otherwise.
+     */
     checkApplicationSubmitted(result) {
         return result.applicationDate != null;
     }
 
+    /**
+     * Event handler for clicking in the CheckStatus button displayed when a application is submitted.
+     * In this iteration is showing a pop up with an email address to ask it
+     */
     onCheckStatusClick() {
         this.template.querySelector("c-gs-modal").openModal();
     }

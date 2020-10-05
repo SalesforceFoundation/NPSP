@@ -6,15 +6,18 @@ export default class GsModal extends LightningElement {
     @api header;
     @api buttonLabel
 
-    
+    /**
+     * Opens a salesforce like modal
+     */
     @api
     openModal() {    
-        // to open modal window set 'bShowModal' tarck value as true
         this.bShowModal = true;
     }
  
+    /**
+     * Closes the modal
+     */
     closeModal() {    
-        // to close modal window set 'bShowModal' tarck value as false
         this.bShowModal = false;
     }
 }
