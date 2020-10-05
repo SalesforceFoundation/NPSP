@@ -62,12 +62,12 @@ export default class geListView extends LightningElement {
     @api showStandardFooter;
     @api description;
     @api limit = DEFAULT_LIMIT;
-    @api incrementBy = DEFAULT_INCREMENT_BY;
     @api actions;
     @api sortedBy;
     @api sortedDirection;
     @api filteredBy;
-    @api target;
+    target;
+    incrementBy = DEFAULT_INCREMENT_BY;
 
     @track objectInfo;
     @track selectedColumnHeaders;
@@ -81,19 +81,6 @@ export default class geListView extends LightningElement {
 
     columnHeadersByFieldApiName;
     hasAdditionalRows = false;
-    // Array of callback functions required by children that extend this component
-    callbacks = [];
-    // Flag to set when this component has been extended and is running from a child component
-    isExtended = false;
-
-    constructor(objectApiName) {
-        super();
-
-        if (isNotEmpty(objectApiName)) {
-            this.isExtended = true;
-            this.objectApiName = objectApiName;
-        }
-    }
 
     @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
     wiredUserRecord;
@@ -233,16 +220,7 @@ export default class geListView extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectInfo = response.data;
-            if (this.isExtended) {
-                // execute child component callbacks
-                this.callbacks.forEach(callback => {
-                    if (typeof callback === 'function') {
-                        this.executeCallbackAsync(callback);
-                    }
-                });
-            } else {
-                this.init();
-            }
+            this.init();
         }
 
         if (response.error) {
@@ -253,10 +231,6 @@ export default class geListView extends LightningElement {
                 [this.objectApiName])
             );
         }
-    }
-
-    async executeCallbackAsync(callback) {
-        callback.call();
     }
 
     init = async () => {
@@ -431,47 +405,48 @@ export default class geListView extends LightningElement {
 
         for (let fieldApiName of fieldApiNames) {
             const fieldDescribe = this.objectInfo.fields[fieldApiName];
-            let columnEntry = {
-                fieldApiName: fieldDescribe.apiName,
-                label: fieldDescribe.label,
-                sortable: fieldDescribe.sortable,
-                isNameField: fieldDescribe.nameField,
-                referenceTo: fieldDescribe.reference ? fieldDescribe.referenceToInfos[0] : null
-            };
-
-            let referenceField = this.getComputedReferenceFieldApiName(fieldDescribe);
-
-            if (isNotEmpty(referenceField)) {
-                columnEntry.fieldApiName = referenceField;
-            }
-
+            let columnEntry = this.buildBaseColumnEntry(fieldDescribe);
             // // Special case for relationship references e.g. 'CreatedBy.Name'
             // // so we can display the Name property of the reference in the table.
             if (columnEntry.fieldApiName.includes(`.${NAME}`)) {
                fieldApiName = columnEntry.fieldApiName.split('.')[0];
             }
-
-            // Need to convert types derived from schema to types useable by lightning-datable
-            const types = {
-                'double': 'number',
-                'datetime': 'date',
-                'date': 'date-local',
-                'reference': URL,
-                'string': columnEntry.isNameField ? URL : 'string'
-            };
-
             columnEntry.fieldName = fieldApiName;
-
+            // Need to convert types derived from schema to types useable by lightning-datable
+            const types = this.buildListViewTypes(columnEntry);
             const convertedType = types[fieldDescribe.dataType.toLowerCase()];
 
-            columnEntry.type = convertedType ? convertedType : fieldDescribe.dataType.toLowerCase();
-
+            columnEntry.type = convertedType ?
+                convertedType : fieldDescribe.dataType.toLowerCase();
             columnEntry = this.handleTypesAttribute(columnEntry, fieldApiName);
 
             _columns.push(columnEntry)
         }
 
         return _columns;
+    }
+
+    buildBaseColumnEntry (fieldDescribe) {
+        let referenceField = this.getComputedReferenceFieldApiName(fieldDescribe);
+        return {
+            fieldApiName: isNotEmpty(referenceField) ?
+                referenceField : fieldDescribe.apiName,
+            label: fieldDescribe.label,
+            sortable: fieldDescribe.sortable,
+            isNameField: fieldDescribe.nameField,
+            referenceTo: fieldDescribe.reference ?
+                fieldDescribe.referenceToInfos[0] : null
+        };
+    }
+
+    buildListViewTypes (columnEntry) {
+        return {
+            'double': 'number',
+            'datetime': 'date',
+            'date': 'date-local',
+            'reference': URL,
+            'string': columnEntry.isNameField ? URL : 'string'
+        };
     }
 
 
@@ -534,36 +509,36 @@ export default class geListView extends LightningElement {
             this.wiredUserRecord.data.fields.TimeZoneSidKey.value :
             undefined;
 
-        if (columnEntry.type === 'date') {
-            columnEntry.typeAttributes = {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: "true",
-                timeZone: timezone,
-            }
-        }
-
-        if (columnEntry.type === 'date-local') {
-            columnEntry.typeAttributes = {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-                timeZone: timezone,
-            }
-        }
-
-        // Turn fields in the 'Name' column into URLs
-        if (columnEntry.type === URL) {
-            columnEntry.fieldName = fieldApiName + '_' + URL;
-            columnEntry.typeAttributes = {
-                label: {
-                    fieldName: fieldApiName
-                },
-                target: isNotEmpty(this.target) ? this.target : _SELF
-            }
+        switch (columnEntry.type) {
+            case 'date':
+                columnEntry.typeAttributes = {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: "true",
+                    timeZone: timezone,
+                }
+                break;
+            case 'date-local':
+                columnEntry.typeAttributes = {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    timeZone: timezone,
+                }
+                break;
+            case URL :
+                columnEntry.fieldName = fieldApiName + '_' + URL;
+                columnEntry.typeAttributes = {
+                    label: {
+                        fieldName: fieldApiName
+                    },
+                    target: isNotEmpty(this.target) ? this.target : _SELF
+                }
+                break;
+            default:
         }
         return columnEntry;
     }
