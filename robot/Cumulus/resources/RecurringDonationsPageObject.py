@@ -58,7 +58,6 @@ class RDListingPage(BaseNPSPPage, ListingPage):
             else:
                 self.select_value_from_rd2_modal_dropdown(key, value)
 
-
 @pageobject("Details", "npe03__Recurring_Donation__c")
 class RDDetailPage(BaseNPSPPage, DetailPage):
     object_name = "npe03__Recurring_Donation__c"
@@ -93,7 +92,6 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             self.selenium.click_link(button_name)
         else:
             self.selenium.click_button(button_name)
-            
             
     def go_to_recurring_donation_related_opportunities_page(self,rd_id):
 
@@ -149,6 +147,24 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     self.selenium.click_element(selection_value)
                 else:
                     self.builtin.log(f"Element {key} not present")
+    
+    @capture_screenshot_on_error
+    def pause_recurring_donation(self, **kwargs):
+        """Finds the pause button on the recurring donations details
+        view page, clicks the button and waits for the modal to appear"""
+        locator = npsp_lex_locators["bge"]["button"].format("Pause")
+        pause_button = self.selenium.get_webelement(locator)
+        self.selenium.wait_until_element_is_visible(pause_button)
+        self.selenium.click_element(locator)
+        self.salesforce.wait_until_modal_is_open()
+
+    @capture_screenshot_on_error
+    def validate_warning_text(self,txt):
+        """Find the element containing warning message on the pause modal and
+        asserts the text displayed matches with the expected text"""
+        locator = npsp_lex_locators["erd"]["warning_message"]
+        self.selenium.wait_until_element_is_visible(locator)
+        self.selenium.element_text_should_be(locator, txt)
 
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):
