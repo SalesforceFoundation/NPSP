@@ -1,0 +1,56 @@
+<template>
+    <article class="slds-setup-assistant__step">
+        <div class="slds-summary-detail">
+            <button class="slds-button slds-button_icon slds-m-right_x-small slds-m-top_x-small"
+                onclick={onClickOpenOrClose}
+                title={group.title}>
+                <lightning-icon  
+                    if:false={displaySteps}
+                    icon-name="utility:chevronright"
+                    size="x-small"
+                    title={group.title}>
+                </lightning-icon>
+                <lightning-icon 
+                    if:true={displaySteps}
+                    icon-name="utility:chevrondown"
+                    size="x-small"
+                    title={group.title}>
+                </lightning-icon>
+            </button>
+            <div class="slds-container_fluid">
+                <div class="slds-summary-detail__title">
+                    <div class="slds-setup-assistant__step-summary">
+                        <div class="slds-media">
+                            <c-gs-checklist-icon label={group.id}>
+                            </c-gs-checklist-icon>
+                            <div class="slds-media__body slds-m-top_x-small">
+                                <div class="slds-media">
+                                    <div class="slds-setup-assistant__step-summary-content slds-media__body">
+                                        <h3 class="slds-setup-assistant__step-summary-title slds-text-heading_small">
+                                            <button onclick={onClickOpenOrClose} 
+                                                class="slds-button slds-button_reset">
+                                                {group.title}
+                                            </button>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class={infoClass}>
+                            <div if:true={displaySteps} class="border">
+                                <div class="gap"></div>
+                            </div>
+                            <div class="container">
+                                <p>{group.desc}</p>
+                                <div if:true={displaySteps} class="steps">
+                                    <!--Mock to add in another spring more info-->
+                                    <p style="margin:3rem;height: 10rem;">Items</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</template>

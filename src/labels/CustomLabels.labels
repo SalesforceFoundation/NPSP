@@ -12691,4 +12691,60 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
     </labels>
+    <labels>
+        <fullName>gsAdminSetupTitle</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title in Getting Started</shortDescription>
+        <value>ADMIN SETUP CHECKLIST</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistExploreNonprofitTitle</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist Explore Nonprofit in Getting Started</shortDescription>
+        <value>Explore the Nonprofit Success Pack (NPSP)</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistExploreNonprofitDesc</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Explore Nonprofit in Getting Started</shortDescription>
+        <value>Get comfortable with these concepts and key features so you can customize the, to meet the needs of your organization.</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistMakeYourDesc</fullName>
+        <categories>Adoption, Group, Description</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist Make Your in Getting Started</shortDescription>
+        <value>Customize Salesforce with information that\'s unique to your organization to make it your own.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistMakeYourTitle</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist Make Your in Getting Started</shortDescription>
+        <value>Make it Your Own</value>
+    </labels>
+       <labels>
+        <fullName>gsChecklistUserOnboardDesc</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist User Onboard in Getting Started</shortDescription>
+        <value>Add your users to Salesforce and plan your rollout</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistUserOnboardTitle</fullName>
+        <categories>Getting Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist User Onboard in Getting Started</shortDescription>
+        <value>Bring Your User Onboard</value>
+    </labels>
 </CustomLabels>

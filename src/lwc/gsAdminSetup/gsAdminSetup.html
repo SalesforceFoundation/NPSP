@@ -1,0 +1,15 @@
+<template>
+    <div class="slds-card container">
+        <p class="slds-card__header-title">{title}</p>
+        <section class="slds-card">
+            <ol class="slds-setup-assistant">
+                <template iterator:checklist={checklists}>
+                    <li class="slds-setup-assistant__item" key={checklist.value.id}>
+                    <c-gs-checklist group={checklist.value}>
+                    </c-gs-checklist>
+                    </li>
+                </template>
+            </ol>
+        </section>
+    </div>
+</template>

@@ -2385,6 +2385,13 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsAdminSetupTitle</members>
+        <members>gsChecklistExploreNonprofitDesc</members>
+        <members>gsChecklistExploreNonprofitTitle</members>
+        <members>gsChecklistMakeYourDesc</members>
+        <members>gsChecklistMakeYourTitle</members>
+        <members>gsChecklistUserOnboardDesc</members>
+        <members>gsChecklistUserOnboardTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3785,6 +3792,9 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsAdminSetup</members>
+        <members>gsChecklist</members>
+        <members>gsChecklistIcon</members>
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>

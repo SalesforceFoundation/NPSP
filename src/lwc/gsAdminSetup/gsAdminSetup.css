@@ -1,0 +1,12 @@
+.slds-card.container {
+    padding: 1rem;
+    padding-left: 2rem;
+}
+
+.slds-card.container > .slds-card__header-title {
+    margin: 1rem;
+}
+
+.slds-setup-assistant__item {
+    padding-bottom: 0 ;
+}

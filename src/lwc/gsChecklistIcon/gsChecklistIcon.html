@@ -1,0 +1,20 @@
+<template >
+    <div class="slds-media__figure">
+        <div class="slds-progress-ring slds-progress-ring_large">
+            <div class="slds-progress-ring__progress"
+                role="progressbar" aria-valuemin="0"
+                aria-valuemax="100" aria-valuenow="100">
+                <svg viewBox="-1 -1 2 2">
+                    <path class="slds-progress-ring__path" d="M 1 0 A 1 1 0 0 0 1.00 -0.00 L 0 0"></path>
+                </svg>
+            </div>
+            <div class="slds-progress-ring__content">
+                <span class="slds-icon_container slds-icon-utility-check">
+                    <span class="slds-progress-ring__content">
+                        {label}
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
