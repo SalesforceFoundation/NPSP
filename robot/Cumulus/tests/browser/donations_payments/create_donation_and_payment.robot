@@ -53,6 +53,8 @@ Create Donation from a Contact
     scroll button into view and click using js                  Create Payments
     Wait until page contains             ${opp_name}
     Go To Page                           Listing                                       Opportunity
+    Wait Until Loading Is Complete
+    Current Page Should Be               Listing                                       Opportunity
     Wait Until Keyword Succeeds          1 minute
     ...                                  5 seconds
     ...                                  Ensure Opportunity Details Are Loaded        ${data}[contact_opportunity][Id]        ${data}[contact_opportunity][Name]
