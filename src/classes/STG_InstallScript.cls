@@ -454,6 +454,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Payment_Card_Expiration_Year',
                     'Payment_Card_Last_4',
                     'Payment_Card_Network',
+                    'Payment_Donor_Cover_Amount',
                     'Payment_Elevate_Created_Date',
                     'Payment_Elevate_Created_UTC_Timestamp',
                     'Payment_Elevate_ID',
