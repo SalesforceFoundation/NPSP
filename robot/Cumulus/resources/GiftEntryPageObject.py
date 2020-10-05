@@ -273,7 +273,12 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         """verifies that the field contains given default value
         where key=field name and value=default value"""
         for key,value in kwargs.items():
-            field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+            locator=npsp_lex_locators["gift_entry"]["id"].format(key)
+            type=self.selenium.get_element_attribute(locator,"data-qa-locator")
+            if 'textarea' in type :
+                field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
+            else:
+                field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             self.selenium.wait_until_page_contains_element(field)
             time.sleep(.5)
             element=self.selenium.get_webelement(field)
@@ -352,7 +357,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             for field,value in kwargs.items():
                 locator=npsp_lex_locators["gift_entry"]["table"].format(name,field,value)
             self.selenium.wait_until_page_contains_element(locator,error=f'{field} does not contain {value} in {name} table')
-    
+
     def perform_action_on_datatable_row(self,name,action):
         """Select the specific gift entry data row based on the name parameter and
         selects the action from the dropdown menu.
