@@ -33,7 +33,7 @@
             </lightning-input-field>
         </lightning-record-edit-form>
     </template>
-    <template if:true={isLookupRecordType}>
+    <template if:true={isRecordTypePicklist}>
         <c-ge-form-field-picklist data-id='inputComponent'
                                   value={value}
                                   required={required}

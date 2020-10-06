@@ -63,7 +63,7 @@ export default class GeFormField extends LightningElement {
         const evt = new CustomEvent('valuechange', {detail, bubbles: true});
         this.dispatchEvent(evt);
 
-        if (this.isLookup || this.isLookupRecordType) {
+        if (this.isLookup || this.isRecordTypePicklist) {
             const objMappingDevName =
                 GeFormService.importedRecordFieldNames.includes(this.targetFieldApiName) ?
                     GeFormService.getObjectMappingWrapperByImportedFieldName(this.targetFieldApiName)
@@ -309,7 +309,7 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    get isLookupRecordType() {
+    get isRecordTypePicklist() {
         return this.fieldType === LOOKUP_TYPE && this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
@@ -448,7 +448,7 @@ export default class GeFormField extends LightningElement {
             } else {
                 this.value = value.value || value;
 
-                if (this.isLookupRecordType || this.isLookup) {
+                if (this.isRecordTypePicklist || this.isLookup) {
                     if (value && !value.displayName) {
                         // If the RecordTypeId field for a target record is being
                         // loaded with only the Id (like when a Lookup field is
@@ -492,7 +492,7 @@ export default class GeFormField extends LightningElement {
         lookup.reset();
         if (this.isLookup) {
             lookup.value = value;
-        } else if (this.isLookupRecordType) {
+        } else if (this.isRecordTypePicklist) {
 
             let displayValue;
             const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
@@ -523,10 +523,10 @@ export default class GeFormField extends LightningElement {
         }
 
         // reset lookups and recordtype fields
-        if (this.isLookupRecordType || this.isLookup) {
+        if (this.isRecordTypePicklist || this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if (this.isLookupRecordType) {
+            if (this.isRecordTypePicklist) {
                 // Using setTimeout here ensures that this recordTypeId
                 // will be set on sibling fields after they are reset by queueing the event.
                 setTimeout(() => {
