@@ -160,26 +160,31 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
 
     @capture_screenshot_on_error
     def populate_pause_modal(self,**kwargs):
-      for key, value in kwargs.items():
-          if key in ("Paused Reason"):
+        """ Populate the values in the pause recurring donation modal
+		based on the key value pair options in the kwargs passed as parameter
+		| Populate Pause Modal
+        | ...	                        Paused Reason=Card Expired
+        | ...	                        Date=${date}     """
+        for key, value in kwargs.items():
+           if key in ("Paused Reason"):
               locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
               selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
               if self.npsp.check_if_element_exists(locator):
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.wait_until_element_is_visible(locator)
-                self.selenium.scroll_element_into_view(locator)
-                self.salesforce._jsclick(locator)
-                self.selenium.wait_until_element_is_visible(selection_value)
-                self.selenium.click_element(selection_value)
+                  self.selenium.set_focus_to_element(locator)
+                  self.selenium.wait_until_element_is_visible(locator)
+                  self.selenium.scroll_element_into_view(locator)
+                  self.salesforce._jsclick(locator)
+                  self.selenium.wait_until_element_is_visible(selection_value)
+                  self.selenium.click_element(selection_value)
               else:
-                self.builtin.log(f"Element {key} not present")
-          else:
-            checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(value)
-            self.selenium.click_element(checkbox)
-      btnlocator = npsp_lex_locators["button-with-text"].format("Save")
-      self.selenium.scroll_element_into_view(btnlocator)
-      self.selenium.click_element(btnlocator)
-      self.salesforce.wait_until_modal_is_closed()
+                  self.builtin.log(f"Element {key} not present")
+           else:
+              checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(value)
+              self.selenium.click_element(checkbox)
+        btnlocator = npsp_lex_locators["button-with-text"].format("Save")
+        self.selenium.scroll_element_into_view(btnlocator)
+        self.selenium.click_element(btnlocator)
+        self.salesforce.wait_until_modal_is_closed()
       
     @capture_screenshot_on_error
     def validate_warning_text(self,txt):
