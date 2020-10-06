@@ -535,7 +535,7 @@ const stripNamespace = (apiName , namespacePrefix) => {
  * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_record.htm
  * @param fieldApiName The ApiName of the relationship field for
  * which the related record field name is desired.
- * https://developer.salesforVce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_field_value.htm#ui_api_responses_field_value
+ * https://developer.salesforce.com/docs/atlas.en-us.uiapi.meta/uiapi/ui_api_responses_field_value.htm#ui_api_responses_field_value
  */
 const relatedRecordFieldNameFor = (customFieldApiName) => {
     return replaceLastInstanceOfWith(customFieldApiName, '__c', '__r');
