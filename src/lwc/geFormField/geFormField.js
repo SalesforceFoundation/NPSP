@@ -452,9 +452,7 @@ export default class GeFormField extends LightningElement {
         if (data.hasOwnProperty(this.sourceFieldAPIName)) {
             value = data[this.sourceFieldAPIName];
             if (value === null || value.value === null) {
-                //todo: I think in both of these cases we want the value to actually be set to
-                // null.  Need to check in w team about this
-                this.reset(false);
+                this.reset();
             } else {
                 this.value = value.value || value;
 
