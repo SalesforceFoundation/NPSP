@@ -865,7 +865,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     getFieldsObjectFor(dataImport) {
         let fields = {};
         for (const [key, value] of Object.entries(dataImport)) {
-            fields[key] = {value: value};
+            // This builds value objects with value properties if the object
+            // holds primitives (for example, when loaded from the gifts table).
+            if (!value.hasOwnProperty('value')) {
+                fields[key] = {value: value};
+            }
         }
         return fields;
     }
