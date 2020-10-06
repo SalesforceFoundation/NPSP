@@ -1,5 +1,5 @@
 import { LightningElement, track, wire } from 'lwc';
-import Resources from '@salesforce/resourceUrl/gsResources'
+import Resources from '@salesforce/resourceUrl/CumulusStaticResources'
 import getApplicationStatus from '@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
 import gsNoApplicationSubmitted from '@salesforce/label/c.gsNoApplicationSubmitted'
 import gsLearnMore from '@salesforce/label/c.gsLearnMore'
@@ -20,8 +20,8 @@ export default class GsApplicationStatus extends LightningElement {
     @track isLoading = false;
     @track img = "";
     @track isActiveInstance = false;
-    applyForFreeLicensesImg = Resources + '/img/gift_illustration.svg';
-    checkForStatusImg = Resources + '/img/gift_illustration_2.svg';
+    applyForFreeLicensesImg = Resources + '/gsResources/gift_illustration.svg';
+    checkForStatusImg = Resources + '/gsResources/gift_illustration_2.svg';
 
     labels = {
         gsNoApplicationSubmitted,
