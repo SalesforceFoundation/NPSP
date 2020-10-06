@@ -1878,8 +1878,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     getValueFrom(element) {
-        return element &&
-        element.recordValue !== undefined ? element.recordValue :
+        return element && element.recordValue !== undefined ?
+            element.recordValue :
             element.defaultValue;
     }
 
