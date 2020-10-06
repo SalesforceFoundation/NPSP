@@ -55,6 +55,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains("Object Groups", timeout=60)
         self.selenium.wait_until_page_contains(obj, timeout=30, error=f"{obj} did not load in 30 seconds")
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(obj)
+        self.selenium.wait_until_element_is_enabled(locator)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
         self.selenium.wait_until_page_contains("View Field Mappings", timeout=60)

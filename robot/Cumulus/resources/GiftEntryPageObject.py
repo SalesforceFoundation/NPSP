@@ -137,7 +137,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         status=element.get_attribute("aria-expanded")
         if status=="false":
             time.sleep(2)
-        field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
+        field_checkbox=npsp_lex_locators["gift_entry"]["object_field_checkbox"].format(object_group,field)
         check=self.selenium.get_webelement(field_checkbox)
         if action.lower()=='select':
             if not check.is_selected():
