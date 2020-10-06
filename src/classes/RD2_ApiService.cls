@@ -55,17 +55,19 @@ public inherited sharing class RD2_ApiService {
         String soql = getRecurringDonationQuery();
         for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
 
-            List<RD2_ApiService.Schedule> schedules = new List<RD2_ApiService.Schedule>();
-            Boolean isCurrentlyPaused = pauseHandlerService.hasActivePause(
+            Boolean isRdCurrentlyPaused = pauseHandlerService.hasActivePause(
                 rd.RecurringDonationSchedules__r, RD2_ScheduleService.currentDate
             );
-            for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
-                RD2_ApiService.Schedule sched = new RD2_ApiService.Schedule(schedule, rd);
-                // If the RD is in a pause status, and the schedule record is active, but not paused, then mark it as inactive
-                if (isCurrentlyPaused && sched.isActive && !sched.isPause) {
-                    sched.isActive = false;
+
+            List<RD2_ApiService.Schedule> schedules = new List<RD2_ApiService.Schedule>();
+            for (RecurringDonationSchedule__c s : rd.RecurringDonationSchedules__r) {
+                RD2_ApiService.Schedule schedule = new RD2_ApiService.Schedule(s, rd);
+                if (isRdCurrentlyPaused && schedule.isActiveAndNotPaused()) {
+                    // If the RD is in a pause status, and the schedule record is active & current,
+                    // but not paused, then mark it as not current
+                    schedule.isCurrent = false;
                 }
-                schedules.add(sched);
+                schedules.add(schedule);
             }
 
             schedulesByRdId.put(rd.Id, schedules);
@@ -86,7 +88,6 @@ public inherited sharing class RD2_ApiService {
             queryFields.add('CurrencyIsoCode');
         }
 
-        RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService();
         queryFields.add(getScheduleSubQuery());
 
         String soql = new UTIL_Query()
@@ -108,7 +109,10 @@ public inherited sharing class RD2_ApiService {
         Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
         fields.add('CreatedDate');
 
-        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
+        return '(SELECT ' + String.join(new List<String>(fields), ', ') +
+            ' FROM RecurringDonationSchedules__r' +
+            ' ORDER By StartDate__c' +
+            ')';
     }
 
     /***
@@ -135,7 +139,8 @@ public inherited sharing class RD2_ApiService {
 
         public Schedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
             isActive = rdSchedule.Active__c;
-            isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
+            isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate
+                && (rdSchedule.EndDate__c == null || rdSchedule.EndDate__c >= RD2_ScheduleService.currentDate);
             isPause = rdSchedule.IsPause__c;
             campaignId = rdSchedule.Campaign__c;
             dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
@@ -160,6 +165,13 @@ public inherited sharing class RD2_ApiService {
                 // ignore any errors if for some reason we can't retrieve the currency code
                 // because usage in the ActiveSchedule inner class is only for api use
             }
+        }
+
+        /**
+         * @return True if the schedule record is an active non-pause schedule record
+         */
+        public Boolean isActiveAndNotPaused() {
+            return isActive && !isPause;
         }
     }
 

@@ -60,7 +60,9 @@ private class RD2_ApiService_TEST {
 
         Test.startTest();
         insert rd;
+        // Update the period to be 1st&15th starting in two months
         rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
+        rd.StartDate__c = Date.today().addMonths(2).toStartOfMonth();
         update rd;
 
         System.assertEquals(3,scheduleGateway.getRecords(rd).size(), 'There should be three schedule records returned');
@@ -72,12 +74,17 @@ private class RD2_ApiService_TEST {
         System.assertEquals(3,schedulesByRd.get(rd.Id).size(), 'There should be three schedule records on the rd returned');
 
         Integer activeCount = 0;
+        Integer currentCount = 0;
         for (Schedule s : schedulesByRd.get(rd.Id)) {
             if (s.isActive) {
                 activeCount++;
             }
+            if (s.isCurrent) {
+                currentCount++;
+            }
         }
-        System.assertEquals(2, activeCount, 'There should be two active schedules returned');
+        System.assertEquals(1, currentCount, 'There should be one current schedules returned');
+        System.assertEquals(3, activeCount, 'There should be two active schedules returned');
     }
 
     /**
@@ -183,20 +190,20 @@ private class RD2_ApiService_TEST {
         System.assertEquals(2,schedulesByRd.get(rd.Id).size(), 'There should be two schedule records on the rd returned');
 
         Integer inactiveCount = 0;
-        Integer activePausedCount = 0;
-        Integer activeUnpausedCount = 0;
+        Integer activeCurrentPausedCount = 0;
+        Integer activeNotCurrentCount = 0;
         for (Schedule s : schedulesByRd.get(rd.Id)) {
-            if (s.isActive && s.isPause) {
-                activePausedCount++;
-            } else if (s.isActive) {
-                activeUnpausedCount++;
+            if (s.isActive && s.isPause && s.isCurrent) {
+                activeCurrentPausedCount++;
+            } else if (s.isActive && !s.isCurrent) {
+                activeNotCurrentCount++;
             } else if (!s.isActive) {
                 inactiveCount++;
             }
         }
-        System.assertEquals(1, activePausedCount, 'There should be one paused schedules returned');
-        System.assertEquals(1, inactiveCount, 'There should be one in-active schedules returned');
-        System.assertEquals(0, activeUnpausedCount, 'There should be zero active unpaused schedules returned');
+        System.assertEquals(1, activeCurrentPausedCount, 'There should be one current paused schedules returned');
+        System.assertEquals(0, inactiveCount, 'There should be zero in-active schedules returned');
+        System.assertEquals(1, activeNotCurrentCount, 'There should be one active, but not current, unpaused schedules returned');
     }
 
 
