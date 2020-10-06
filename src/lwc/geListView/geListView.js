@@ -1,16 +1,20 @@
-import {api, LightningElement, track, wire} from 'lwc';
-import {getObjectInfo} from 'lightning/uiObjectInfoApi';
-import {getRecord} from 'lightning/uiRecordApi';
-import {dispatch, generateId, handleError} from 'c/utilTemplateBuilder';
+import { api, LightningElement, track, wire } from 'lwc';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getRecord } from 'lightning/uiRecordApi';
+import {
+    dispatch,
+    handleError,
+    generateId
+} from 'c/utilTemplateBuilder';
 import {
     deepClone,
     format,
     getNamespace,
     hasNestedProperty,
     isNotEmpty,
-    showToast,
+    showToast
 } from 'c/utilCommon';
-import {fireEvent} from 'c/pubsubNoPageRef';
+import { fireEvent } from 'c/pubsubNoPageRef';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
