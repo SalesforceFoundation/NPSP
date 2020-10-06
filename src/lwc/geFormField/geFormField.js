@@ -68,6 +68,10 @@ export default class GeFormField extends LightningElement {
 
     handleValueChangeSync = (event) => {
         const value = this.getValueFromChangeEvent(event);
+        if (!this.isPicklist) {
+            // As of W-8017324 picklists get their value from formState
+            this.value = value;
+        }
         this.fireFormFieldChangeEvent(value);
 
         if (this.isLookup || this.isLookupRecordType) {
