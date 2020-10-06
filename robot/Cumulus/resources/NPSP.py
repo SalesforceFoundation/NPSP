@@ -907,6 +907,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def verify_row_count(self,value):
         """verifies if actual row count matches with expected value"""
         locator=npsp_lex_locators['bge']['count']
+        self.selenium.wait_until_page_contains_element(locator)
         actual_value=self.selenium.get_webelements(locator)
         count=len(actual_value)
         assert int(value) == count, "Expected rows to be {} but found {}".format(
@@ -1130,9 +1131,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 		"""
         xpath = npsp_lex_locators["placeholder"].format(fieldname)
         field = self.selenium.get_webelement(xpath)
-        self.selenium.clear_element_text(field)
+        self.salesforce._clear(field)
         field.send_keys(value)
         time.sleep(3)
+        field.send_keys(Keys.ENTER)
         field.send_keys(Keys.ENTER)
         self.salesforce.wait_until_modal_is_open()
 
@@ -1552,4 +1554,20 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             if oid_match is not None:
                 return oid_match.group(2)
         raise AssertionError(f"Could not parse record id from url: {url}")
+
+    def query_object_and_return_id(self,object_name,**kwargs):
+        """Queries the given object table by using key,value pair passed and returns ids of matched records"""
+        list=self.salesforce.salesforce_query(object_name,**kwargs)
+        ids=[sub['Id'] for sub in list]
+        print(f"ID's saved are: {ids}")
+        return ids
+
+    def query_and_store_records_to_delete(self,object_name,**kwargs):
+        """Queries the given object table by using key,value pair passed and
+        stores the ids of matched records in order to delete as part of suite teardown"""
+        records=self.query_object_and_return_id(object_name,**kwargs)
+        if records:
+            for i in records:
+                self.salesforce.store_session_record(object_name,i)
+
 

@@ -3247,6 +3247,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>unallocated</value>
     </labels>
     <labels>
+        <fullName>bdeRetirementBlockerHeader</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header about Batch Data Entry being unsupported</shortDescription>
+        <value>Batch Data Entry Not Supported</value>
+    </labels>
+    <labels>
+        <fullName>bdeRetirementBlockerMessage</fullName>
+        <categories>Batch Data Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Batch Data Entry not being supported &amp; recommendations</shortDescription>
+        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can't process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+    </labels>
+    <labels>
         <fullName>bdeRetirementWarningBody</fullName>
         <categories>Batch Data Entry</categories>
         <language>en_US</language>
@@ -5996,7 +6012,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields sidebar text block</shortDescription>
-        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+        <value>Choose fields to include in your form. Before adding fields, click the section in the main Configure Form Fields screen where you want the fields to go. In this Form Fields &amp; Field Bundles sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsDescLeftCol</fullName>
@@ -6039,7 +6055,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields main section text block</shortDescription>
-        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering sections or fields.</value>
+        <value>Select a section, then select a field in the Form Fields &amp; Field Bundles sidebar to add it to this section in the main Configure Form Fields screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the Gift Entry form by creating sections and reordering sections or fields.</value>
     </labels>
     <labels>
         <fullName>geBodyGiftEntryHelp</fullName>
@@ -6356,6 +6372,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for batch gift table column that links to the Account or Contact.</shortDescription>
         <value>Donor Name</value>
+    </labels>
+    <labels>
+        <fullName>geFieldsNotFoundMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
+        <value>This form contains fields that can't be found. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldsNotFound</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fields Not Found</shortDescription>
+        <value>Fields Not Found</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldNotFound</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field not found</shortDescription>
+        <value>Field not found</value>
     </labels>
     <labels>
         <fullName>geEnableGiftEntrySuccess</fullName>
