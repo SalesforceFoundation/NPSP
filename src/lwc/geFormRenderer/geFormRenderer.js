@@ -862,13 +862,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.handleNameOnCardFieldChange();
     }
 
+    /**
+     * @description Builds value objects with value properties if the object
+     * holds primitives (for example, when loaded from the gifts table). Otherwise
+     * if the values are already value objects, returns the same keys and values in a new
+     * object. This is necessary because the load() method is called when loading from the
+     * gifts table with an object that has primitive values, and is also used internally
+     * and called with value objects.
+     * @param dataImport An object with key-value pairs representing a dataImport record.
+     * @returns {{}}
+     */
     getFieldsObjectFor(dataImport) {
         let fields = {};
         for (const [key, value] of Object.entries(dataImport)) {
-            // This builds value objects with value properties if the object
-            // holds primitives (for example, when loaded from the gifts table).
             if (!value.hasOwnProperty('value')) {
                 fields[key] = {value: value};
+            } else {
+                fields[key] = value;
             }
         }
         return fields;
@@ -1450,8 +1460,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             handleError(error);
         } else if (data) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
-            // this.load will update form state
-            // this.updateFormState(dataImport);
             this.updateFormStateForRecordIdWithRelatedRecord(data.id, data);
             this.load(dataImport, false);
 
