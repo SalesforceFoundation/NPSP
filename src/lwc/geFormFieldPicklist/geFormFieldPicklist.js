@@ -32,7 +32,7 @@ export default class GeFormFieldPicklist extends LightningElement {
         if (this.isValueInOptions(this._value, this.picklistValues)) {
             return this._value;
         }
-        if (this.isValueInOptions(this.CUSTOM_LABELS.commonLabelNone, this.picklistValues )) {
+        if (!this._value && this.isValueInOptions(this.CUSTOM_LABELS.commonLabelNone, this.picklistValues )) {
             return this._value = this.CUSTOM_LABELS.commonLabelNone;
         }
         return '';
