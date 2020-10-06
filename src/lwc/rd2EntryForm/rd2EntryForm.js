@@ -15,6 +15,7 @@ import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03_
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
+import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -43,6 +44,7 @@ import unknownError from '@salesforce/label/c.commonUnknownError';
 
 import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
+import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
 
@@ -108,8 +110,8 @@ export default class rd2EntryForm extends LightningElement {
     @track isSettingReady = false;
 
     @track isElevateWidgetEnabled = false;
-    isElevateCustomer = false;
     hasUserDisabledElevateWidget = false;
+    isElevateCustomer = false;
     paymentMethodToken;
     cardholderName;
 
@@ -271,8 +273,8 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Retrieves the contact data whenever a contact is changed
-     * The data is not refreshed when the contact Id is null.
+     * @description Retrieves the contact data whenever a contact is changed.
+     * Data is not refreshed when the contact Id is null.
      */
     @wire(getRecord, { recordId: '$contactId', fields: MAILING_COUNTRY_FIELD })
     wiredGetRecord({ error, data }) {
@@ -335,20 +337,38 @@ export default class rd2EntryForm extends LightningElement {
             && this.isCurrencySupported()
             && this.isCountrySupported();
 
-        if (this.isElevateWidgetEnabled === true) {
-            // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
-            // when the component first registers, and ideally if the Contact or Org is changed.
+        this.populateCardHolderName();
+    }
 
-            // const creditCardForm = this.creditCardComponent;
-            // creditCardForm.setCardholderName('Test Name');
+    /***
+    * @description Returns true if the Elevate widget is enabled and
+    * user did not click on the link to hide it
+    */
+    isElevateWidgetDisplayed() {
+        return this.isElevateWidgetEnabled === true
+            && this.hasUserDisabledElevateWidget !== true;
+    }
 
-            // const contactId = event.detail.fields.npe03__Contact__c.value;
-            // const accountId = event.detail.fields.npe03__Organization__c.value;
-            // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
-            //     .then(response => {
-            //         this.cardholderName = response;
-            //     });
+    /***
+    * @description Prepopulates the card holder name field on the Elevate credit card widget
+    */
+    populateCardHolderName() {
+        if (!this.isElevateWidgetDisplayed()) {
+            return;
         }
+
+        // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
+        // when the component first registers, and ideally if the Contact or Org is changed.
+
+        // const creditCardForm = this.creditCardComponent;
+        // creditCardForm.setCardholderName('Test Name');
+
+        // const contactId = event.detail.fields.npe03__Contact__c.value;
+        // const accountId = event.detail.fields.npe03__Organization__c.value;
+        // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
+        //     .then(response => {
+        //         this.cardholderName = response;
+        //     });
     }
 
     /***
@@ -409,11 +429,16 @@ export default class rd2EntryForm extends LightningElement {
     * and submits them for the record insert or update.
     */
     processSubmit = async (allFields) => {
-        if (this.isElevateWidgetEnabled) {
+        if (this.isElevateWidgetDisplayed()) {
             try {
                 this.loadingText = this.customLabels.validatingCardMessage;
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
+
+                if (!this.isEdit) {
+                    const tempId = await getTempCommitmentId();
+                    allFields[FIELD_COMMITMENT_ID.fieldApiName] = tempId;
+                }
 
             } catch (error) {
                 this.setSaveButtonDisabled(false);
@@ -533,7 +558,7 @@ export default class rd2EntryForm extends LightningElement {
         this.recordName = event.detail.fields.Name.value;
         const recordId = event.detail.id;
 
-        if (this.isElevateWidgetEnabled && this.paymentMethodToken) {
+        if (this.isElevateWidgetDisplayed()) {
             this.handleElevateCommitment(recordId);
 
         } else {
@@ -557,7 +582,7 @@ export default class rd2EntryForm extends LightningElement {
             paymentMethodToken: this.paymentMethodToken
         })
             .then(jsonRequestBody => {
-                createCommitment({ record: recordId, jsonRequestBody: jsonRequestBody })
+                createCommitment({ recordId: recordId, jsonRequestBody: jsonRequestBody })
                     .then(jsonResponse => {
                         this.processCommitmentResponse(jsonResponse);
                     })
