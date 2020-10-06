@@ -2386,12 +2386,12 @@
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>gsAdminSetupTitle</members>
-        <members>gsChecklistExploreNonprofitDesc</members>
-        <members>gsChecklistExploreNonprofitTitle</members>
-        <members>gsChecklistMakeYourDesc</members>
-        <members>gsChecklistMakeYourTitle</members>
-        <members>gsChecklistUserOnboardDesc</members>
-        <members>gsChecklistUserOnboardTitle</members>
+        <members>gsChecklistExploreNPSPDesc</members>
+        <members>gsChecklistExploreNPSPTitle</members>
+        <members>gsChecklistMakeItYourDesc</members>
+        <members>gsChecklistMakeItYourTitle</members>
+        <members>gsChecklistOnboardUsersDesc</members>
+        <members>gsChecklistOnboardUsersTitle</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>

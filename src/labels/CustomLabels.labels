@@ -12700,7 +12700,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>ADMIN SETUP CHECKLIST</value>
     </labels>
     <labels>
-        <fullName>gsChecklistExploreNonprofitTitle</fullName>
+        <fullName>gsChecklistExploreNPSPTitle</fullName>
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -12708,23 +12708,23 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Explore the Nonprofit Success Pack (NPSP)</value>
     </labels>
     <labels>
-        <fullName>gsChecklistExploreNonprofitDesc</fullName>
+        <fullName>gsChecklistExploreNPSPDesc</fullName>
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist Explore Nonprofit in Getting Started</shortDescription>
-        <value>Get comfortable with these concepts and key features so you can customize the, to meet the needs of your organization.</value>
+        <value>Get comfortable with these concepts and key features so you can customize them to meet the needs of your organization.</value>
     </labels>
      <labels>
-        <fullName>gsChecklistMakeYourDesc</fullName>
+        <fullName>gsChecklistMakeItYourDesc</fullName>
         <categories>Adoption, Group, Description</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist Make Your in Getting Started</shortDescription>
-        <value>Customize Salesforce with information that\'s unique to your organization to make it your own.</value>
+        <value>Customize Salesforce with information that&apos;s unique to your organization to make it your own.</value>
     </labels>
     <labels>
-        <fullName>gsChecklistMakeYourTitle</fullName>
+        <fullName>gsChecklistMakeItYourTitle</fullName>
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -12732,7 +12732,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Make it Your Own</value>
     </labels>
        <labels>
-        <fullName>gsChecklistUserOnboardDesc</fullName>
+        <fullName>gsChecklistOnboardUsersDesc</fullName>
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -12740,7 +12740,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Add your users to Salesforce and plan your rollout</value>
     </labels>
     <labels>
-        <fullName>gsChecklistUserOnboardTitle</fullName>
+        <fullName>gsChecklistOnboardUsersTitle</fullName>
         <categories>Getting Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>

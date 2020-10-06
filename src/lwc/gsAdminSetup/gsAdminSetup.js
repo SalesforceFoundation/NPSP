@@ -2,16 +2,16 @@ import { LightningElement, track } from 'lwc';
 
 import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle'
 
-import exploreNonProfit from './exploreNonprofit';
-import makeYou from './makeYou';
-import userOnBoard from './userOnBoard';
+import exploreNPSP from './exploreNPSP';
+import makeItYours from './makeItYours';
+import onboardUsers from './onboardUsers';
 
 export default class gsAdminSetup extends LightningElement {
 
     @track checklists = [
-        { id: 1, ...exploreNonProfit },
-        { id: 2, ...makeYou },
-        { id: 3, ...userOnBoard },
+        { id: 1, ...exploreNPSP },
+        { id: 2, ...makeItYours },
+        { id: 3, ...onboardUsers },
     ];
 
     /**
