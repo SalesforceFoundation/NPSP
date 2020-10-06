@@ -41,7 +41,7 @@
              data-typeahead="true">
             <div class="slds-form-element">
                 <aura:if isTrue="{!!empty(v.label)}">
-                    <label class="slds-form-element__label">{!v.label}</label>
+                    <label class="slds-form-element__label slds-float_left">{!v.label}</label>
                 </aura:if>
                 <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right" onfocusin="{!c.handleFocusInput}" tabindex="0">
                     <lightning:icon iconName="utility:search" 
