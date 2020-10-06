@@ -1442,7 +1442,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             handleError(error);
         } else if (data) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
-            this.updateFormState(dataImport);
+            // this.load will update form state
+            // this.updateFormState(dataImport);
             this.updateFormStateForRecordIdWithRelatedRecord(data.id, data);
             this.load(dataImport, false);
 
@@ -1793,6 +1794,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         //handleChangeDonationDonor logic moved here from geFormField
         if (event.detail.hasOwnProperty(DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName)) {
             //todo: eventually this should just be a reaction to formState changing
+            // donation donor change needs _contact1Imported to be set correctly, confirm done
             this.handleDonationDonorChange(event.detail[DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName])
         }
         this.updateFormState(event.detail);
