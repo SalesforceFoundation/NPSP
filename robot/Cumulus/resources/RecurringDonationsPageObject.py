@@ -163,8 +163,8 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """ Populate the values in the pause recurring donation modal
 		based on the key value pair options in the kwargs passed as parameter
 		| Populate Pause Modal
-        | ...	                        Paused Reason=Card Expired
-        | ...	                        Date=${date}     """
+        | ...	                  Paused Reason=Card Expired
+        | ...	                  Date=${date}     """
         for key, value in kwargs.items():
            if key in ("Paused Reason"):
               locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
@@ -264,7 +264,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         
         # This is to format the date by removing the trailing 0 which is being the common format across
         # 01/06/2020 -> 1/6/2020
-        if format == None:
+        if format == True:
             tokens = installment_date.split('/')
             dd = tokens[0].lstrip('0')
             mm = tokens[1].lstrip('0')
