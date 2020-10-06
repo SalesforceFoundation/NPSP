@@ -84,7 +84,7 @@ private class RD2_ApiService_TEST {
             }
         }
         System.assertEquals(1, currentCount, 'There should be one current schedules returned');
-        System.assertEquals(3, activeCount, 'There should be two active schedules returned');
+        System.assertEquals(3, activeCount, 'There should be three active schedules returned');
     }
 
     /**
