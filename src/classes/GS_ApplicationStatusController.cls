@@ -33,7 +33,9 @@
  */
 public with sharing class GS_ApplicationStatusController {
     private static final String APPLICATION_DATE = 'P10_Application_Date';
-    
+    private static final String SANDBOX_PARAMETER = 'Sandbox';
+    private static final String APPLICATION_PARAMETER = 'Application';
+    private static final String TRIAL_EXPIRATION_PARAMETER = 'TrialExpiration';
     /**
      * @description Aura enabled method for retrieving Organization Expiration date, if its running on a sandbox instance and the application date.
      * The Expiration Date and The is sandbox is queried from Organization Object. The application date is gotten from the P10_Application_Date FeatureParameter.
@@ -67,7 +69,7 @@ public with sharing class GS_ApplicationStatusController {
      * @return                          return true if org is a sandbox or scratch or the value in the field "Sandbox" of the Testing_Configuration custom setting.
      */
     private Boolean isSandbox(Boolean overrideValuesForTesting, Map<String,Object> testingConfiguration, Organization org) {
-        return overrideValuesForTesting ? (Boolean) testingConfiguration.get('Sandbox') 
+        return overrideValuesForTesting ? (Boolean) testingConfiguration.get(SANDBOX_PARAMETER) 
                                                     : org.IsSandbox;
     }
     /**
@@ -80,7 +82,7 @@ public with sharing class GS_ApplicationStatusController {
     private Date getApplicationDate(Map<String, Object> testingConfiguration) {
         
         if (isScratchOrg() && testingConfiguration != null) { 
-            return testingConfiguration.get('Application') == null ? null: Date.parse(testingConfiguration.get('Application').toString());
+            return testingConfiguration.get(APPLICATION_PARAMETER) == null ? null: Date.parse(testingConfiguration.get(APPLICATION_PARAMETER).toString());
         }
 
         try {
@@ -102,8 +104,8 @@ public with sharing class GS_ApplicationStatusController {
     private DateTime getExpirationDate(Boolean overrideValuesForTesting,Map<String,Object> testingConfiguration, Organization org) {
         
         if (overrideValuesForTesting) {
-            return  (testingConfiguration.get('TrialExpiration') == null ? null : 
-                    DateTime.parse(testingConfiguration.get('TrialExpiration').toString()));
+            return  (testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER) == null ? null : 
+                    DateTime.parse(testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER).toString()));
         } else {
             return org.TrialExpirationDate;
         }
