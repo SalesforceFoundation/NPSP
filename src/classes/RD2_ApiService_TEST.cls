@@ -65,17 +65,7 @@ private class RD2_ApiService_TEST {
 
         System.assertEquals(3,scheduleGateway.getRecords(rd).size(), 'There should be three schedule records returned');
 
-        Callable_API callable = new Callable_API();
-        String response = (String)callable.call(API_QUERY_SCHEDULES,
-            new Map<String, Object> {
-                'RecordIds' => new Set<Id>{
-                    rd.Id
-                }
-            }
-        );
-
-        Map<Id, List<Schedule>> schedulesByRd =
-            (Map<Id, List<Schedule>>)JSON.deserialize(response, Map<Id, List<Schedule>>.class);
+        Map<Id, List<Schedule>> schedulesByRd = retrieveSchedulesUsingApi(rd.Id);
         Test.stopTest();
 
         System.assertEquals(1,schedulesByRd.size(), 'There should be one recurring donation records returned');
@@ -97,17 +87,7 @@ private class RD2_ApiService_TEST {
     static void shouldReturnEmptySerializedSchedulesWithInvalidRdId() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Callable_API callable = new Callable_API();
-        String response = (String)callable.call(API_QUERY_SCHEDULES,
-            new Map<String, Object> {
-                'RecordIds' => new Set<Id>{
-                    UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType)
-                }
-            }
-        );
-
-        Map<Id, List<Schedule>> schedulesByRd =
-            (Map<Id, List<Schedule>>)JSON.deserialize(response, Map<Id, List<Schedule>>.class);
+        Map<Id, List<Schedule>> schedulesByRd = retrieveSchedulesUsingApi(UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType));
 
         System.assertEquals(0,schedulesByRd.size(), 'There should be no recurring donation records returned');
     }
@@ -173,21 +153,73 @@ private class RD2_ApiService_TEST {
         Test.startTest();
         insert rd;
 
-        Callable_API callable = new Callable_API();
-        String response = (String)callable.call(API_QUERY_SCHEDULES,
-            new Map<String, Object> {
-                'RecordIds' => new Set<Id>{ rd.Id } } );
-
-        Map<Id, List<Schedule>> schedulesByRd =
-            (Map<Id, List<Schedule>>)JSON.deserialize(response, Map<Id, List<Schedule>>.class);
+        Map<Id, List<Schedule>> schedulesByRd = retrieveSchedulesUsingApi(rd.Id);
         Test.stopTest();
 
-        System.assertEquals(0,schedulesByRd.size(), 'There should be nothing returned when RD2 is not enabled\n' + response);
+        System.assertEquals(0,schedulesByRd.size(), 'There should be nothing returned when RD2 is not enabled');
+    }
+
+    /**
+     * @description Validate a Paused RD returns the expected api response with active/paused/inactive schedules
+     */
+    @IsTest
+    private static void shouldReturnValidResponseWithActivePausedRd() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getEnhancedRecurringDonationBuilder()
+            .build();
+
+        Test.startTest();
+        insert rd;
+
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, Date.today(), Date.today().addMonths(2));
+
+        System.assertEquals(2,scheduleGateway.getRecords(rd).size(), 'There should be two schedule records returned');
+
+        Map<Id, List<Schedule>> schedulesByRd = retrieveSchedulesUsingApi(rd.Id);
+        Test.stopTest();
+
+        System.assertEquals(1,schedulesByRd.size(), 'There should be one recurring donation records returned');
+        System.assertEquals(2,schedulesByRd.get(rd.Id).size(), 'There should be two schedule records on the rd returned');
+
+        Integer inactiveCount = 0;
+        Integer activePausedCount = 0;
+        Integer activeUnpausedCount = 0;
+        for (Schedule s : schedulesByRd.get(rd.Id)) {
+            if (s.isActive && s.isPause) {
+                activePausedCount++;
+            } else if (s.isActive) {
+                activeUnpausedCount++;
+            } else if (!s.isActive) {
+                inactiveCount++;
+            }
+        }
+        System.assertEquals(1, activePausedCount, 'There should be one paused schedules returned');
+        System.assertEquals(1, inactiveCount, 'There should be one in-active schedules returned');
+        System.assertEquals(0, activeUnpausedCount, 'There should be zero active unpaused schedules returned');
     }
 
 
     //// Helpers
     //////////////////////////
+
+
+    /**
+     * @param rdId Recurring Donation Id
+     * @return Deserialized api response
+     */
+    private static Map<Id, List<Schedule>> retrieveSchedulesUsingApi(Id rdId) {
+        Callable_API callable = new Callable_API();
+        String response = (String) callable.call(API_QUERY_SCHEDULES,
+            new Map<String, Object>{
+                'RecordIds' => new Set<Id>{
+                    rdId
+                }
+            }
+        );
+
+        return (Map<Id, List<Schedule>>) JSON.deserialize(response, Map<Id, List<Schedule>>.class);
+    }
 
     /****
     * @description Returns Enhanced Recurring Donation with default values
