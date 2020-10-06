@@ -1823,15 +1823,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     elementsFor(fieldMappingDevNames) {
-        this.sections
+        const foundInFieldMappingDevNames =
+            (fieldMappingDevName) => fieldMappingDevNames
+                .includes(fieldMappingDevName);
+
+        return this.sections
             .map(s => s.elements)
             .flat()
             .filter(element =>
                 element.dataImportFieldMappingDevNames
-                    .some(fieldMappingDevName =>
-                        fieldMappingDevNames
-                            .includes(fieldMappingDevName))
-            );
+                    .some(foundInFieldMappingDevNames));
     }
 
     setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName) {
