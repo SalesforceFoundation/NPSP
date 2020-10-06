@@ -1,33 +1,36 @@
-import { LightningElement, api, track, wire } from 'lwc';
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { getRecord } from 'lightning/uiRecordApi';
+import {api, LightningElement, track, wire} from 'lwc';
+import {getObjectInfo} from 'lightning/uiObjectInfoApi';
+import {getRecord} from 'lightning/uiRecordApi';
+import {dispatch, generateId, handleError} from 'c/utilTemplateBuilder';
 import {
-    dispatch,
-    handleError,
-    generateId
-} from 'c/utilTemplateBuilder';
-import {
-    format,
     deepClone,
-    isNotEmpty,
-    hasNestedProperty,
+    format,
     getNamespace,
-    showToast
+    hasNestedProperty,
+    isNotEmpty,
+    showToast,
 } from 'c/utilCommon';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import {fireEvent} from 'c/pubsubNoPageRef';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import upsertCustomColumnHeaders from '@salesforce/apex/GE_GiftEntryController.upsertCustomColumnHeaders';
-import retrieveCustomColumnHeaders from '@salesforce/apex/GE_GiftEntryController.retrieveCustomColumnHeaders';
-import retrieveRecords from '@salesforce/apex/GE_GiftEntryController.retrieveRecords';
+import upsertCustomColumnHeaders
+    from '@salesforce/apex/GE_GiftEntryController.upsertCustomColumnHeaders';
+import retrieveCustomColumnHeaders
+    from '@salesforce/apex/GE_GiftEntryController.retrieveCustomColumnHeaders';
+import retrieveRecords
+    from '@salesforce/apex/GE_GiftEntryController.retrieveRecords';
 import userId from '@salesforce/user/Id';
-import USER_TIMEZONE_SID_KEY_FIELD from '@salesforce/schema/User.TimeZoneSidKey';
+import USER_TIMEZONE_SID_KEY_FIELD
+    from '@salesforce/schema/User.TimeZoneSidKey';
 import COLUMN_ID_INFO from '@salesforce/schema/Custom_Column_Header__c.Id';
 import COLUMN_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Name';
-import COLUMN_FIELD_API_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Field_Api_Name__c';
-import COLUMN_INDEX_INFO from '@salesforce/schema/Custom_Column_Header__c.Index__c';
-import COLUMN_LIST_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.List_Name__c';
+import COLUMN_FIELD_API_NAME_INFO
+    from '@salesforce/schema/Custom_Column_Header__c.Field_Api_Name__c';
+import COLUMN_INDEX_INFO
+    from '@salesforce/schema/Custom_Column_Header__c.Index__c';
+import COLUMN_LIST_NAME_INFO
+    from '@salesforce/schema/Custom_Column_Header__c.List_Name__c';
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
@@ -44,6 +47,11 @@ const EXCLUDED_COLUMN_HEADERS = [
     'CloneSourceId',
     'SystemModstamp'
 ];
+const NUMERIC = 'numeric';
+const TWO_DIGIT = '2-digit';
+const DATE = 'date';
+const DATE_LOCAL = 'date-local';
+const NUMBER = 'number';
 
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
@@ -418,7 +426,7 @@ export default class geListView extends LightningElement {
 
             columnEntry.type = convertedType ?
                 convertedType : fieldDescribe.dataType.toLowerCase();
-            columnEntry = this.handleTypesAttribute(columnEntry, fieldApiName);
+            columnEntry = this.buildTypesAttribute(columnEntry, fieldApiName);
 
             _columns.push(columnEntry)
         }
@@ -441,9 +449,9 @@ export default class geListView extends LightningElement {
 
     buildListViewTypes (columnEntry) {
         return {
-            'double': 'number',
-            'datetime': 'date',
-            'date': 'date-local',
+            'double': NUMBER,
+            'datetime': DATE,
+            'date': DATE_LOCAL,
             'reference': URL,
             'string': columnEntry.isNameField ? URL : 'string'
         };
@@ -501,46 +509,52 @@ export default class geListView extends LightningElement {
     * @param {object} columnEntry: A column header entry for lightning-datatable.
     * @param {string} fieldApiName: Field Api Name of an sObject.
     */
-    handleTypesAttribute(columnEntry, fieldApiName) {
-        const hasUserTimezoneData = this.wiredUserRecord.data &&
-            this.wiredUserRecord.data.fields &&
-            this.wiredUserRecord.data.fields.TimeZoneSidKey.value;
-        let timezone = hasUserTimezoneData ?
-            this.wiredUserRecord.data.fields.TimeZoneSidKey.value :
-            undefined;
+    buildTypesAttribute(columnEntry, fieldApiName) {
+        if (columnEntry.type === URL) {
+            columnEntry.fieldName = fieldApiName + '_' + URL;
+        }
+        columnEntry.typeAttributes = this.getColumnTypeAttributes(
+            columnEntry.type, fieldApiName);
+        return columnEntry;
+    }
 
-        switch (columnEntry.type) {
-            case 'date':
-                columnEntry.typeAttributes = {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                    hour12: "true",
-                    timeZone: timezone,
+    getColumnTypeAttributes (columnType, fieldApiName)  {
+        switch (columnType) {
+            case DATE:
+                return  {
+                    year: NUMERIC,
+                    month: NUMERIC,
+                    day: NUMERIC,
+                    hour: NUMERIC,
+                    minute: TWO_DIGIT,
+                    hour12: true,
+                    timeZone: this.getUserTimeZone(),
                 }
-                break;
-            case 'date-local':
-                columnEntry.typeAttributes = {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    timeZone: timezone,
+            case DATE_LOCAL:
+                return  {
+                    year: NUMERIC,
+                    month: NUMERIC,
+                    day: NUMERIC,
+                    timeZone: this.getUserTimeZone(),
                 }
-                break;
             case URL :
-                columnEntry.fieldName = fieldApiName + '_' + URL;
-                columnEntry.typeAttributes = {
+               return  {
                     label: {
                         fieldName: fieldApiName
                     },
                     target: isNotEmpty(this.target) ? this.target : _SELF
                 }
-                break;
             default:
         }
-        return columnEntry;
+    }
+
+    getUserTimeZone () {
+        const hasUserTimezoneData = this.wiredUserRecord.data &&
+            this.wiredUserRecord.data.fields &&
+            this.wiredUserRecord.data.fields.TimeZoneSidKey.value;
+        return hasUserTimezoneData ?
+            this.wiredUserRecord.data.fields.TimeZoneSidKey.value :
+            undefined;
     }
 
     /*******************************************************************************
