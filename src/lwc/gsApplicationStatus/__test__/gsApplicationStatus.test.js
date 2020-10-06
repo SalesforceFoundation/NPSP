@@ -46,7 +46,7 @@ describe('c-application-status', () => {
             const daysLeft = element.shadowRoot.querySelector(".daysLeft");
             expect(daysLeft.innerHTML).toContain('15');
             const img = element.shadowRoot.querySelector('img').getAttribute('src');
-            expect(img).toBe('CumulusStaticResources/gsResourcesa/gift_illustration.svg');
+            expect(img).toBe('CumulusStaticResources/gsResources/gift_illustration.svg');
 
         })
         
