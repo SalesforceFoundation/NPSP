@@ -69,5 +69,5 @@ Edit An Enhanced Recurring donation record of type open
 
     # Verify Paused text appears next to the date specified
     Verify Pause Text Next To Installment Date	  ${date}
-    # Verify the calculations for current and nexe year payments
+    # Verify the calculations for current and next year payments
     Validate Current And Next Year values         100

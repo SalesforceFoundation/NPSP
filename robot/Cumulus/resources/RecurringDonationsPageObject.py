@@ -246,7 +246,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     label, "contains", value, section
                 )
 
-    def get_next_payment_date_number(self, paynum, format=None):
+    def get_next_payment_date_number(self, paynum, format=True):
         """Returns the next payment date from the list of payment schedules taking in the payment number as input
            The date if formatted to ignore the preceding zeros. But if format is set to false, the date is returned
            as is without any formatting
