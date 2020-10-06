@@ -701,7 +701,7 @@ export default class GeFormField extends LightningElement {
 
     get parentObjectRecordTypeId() {
         return this.parentObjectFromFormState &&
-            this.parentObjectFromFormState .recordTypeId;
+            this.parentObjectFromFormState.recordTypeId;
     }
 
     get parentObjectFromFormState() {
