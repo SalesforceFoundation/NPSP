@@ -536,7 +536,7 @@ API Create Lead
     ...
     ...                 | field_api_name=value   | Ex: MobilePhone=1234567098    |
     [Arguments]         &{fields}
-    &{lead_id} =        Salesforce Insert  Lead
+    ${lead_id} =        Salesforce Insert  Lead
     ...                 &{fields}
     &{lead} =           Salesforce Get  Lead  ${lead_id}
     [return]            &{lead}

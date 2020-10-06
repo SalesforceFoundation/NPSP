@@ -224,7 +224,7 @@ npsp_lex_locators={
         'gift-amount':'//div[./label[text()="{}"]]',
         'modal-link':'//tbody/tr/td/a[text()="{}"]',
         'datepicker_open':"//div[contains(@class,'slds-is-open')][./label[contains(text(),'{}')]]",
-        
+
     },
     'bge-lists':{
         'list1':"//div[./label[text()='{}']]/div//select",
@@ -259,6 +259,7 @@ npsp_lex_locators={
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']",
         'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
+        'field_dd_option':'//div[contains(@class,"slds-input-has-icon")][./input[@name="{}"]]/following-sibling::div//span[@title="{}"]'
         },
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',

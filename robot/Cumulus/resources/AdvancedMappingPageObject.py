@@ -119,26 +119,30 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
 
     @capture_screenshot_on_error
     def create_new_object_group(self,obj_grp_name,**kwargs):
-        """Click on Create New Object Group button on the page
+        """If page doesn't contain the given object group then
+        Clicks on Create New Object Group button and creates with given values
         obj_group value is the Object Group to create"""
         self.selenium.wait_until_page_contains("Object Groups", timeout=60)
         btns=npsp_lex_locators['button-with-text'].format("Create New Object Group")
-        self.selenium.scroll_element_into_view(btns)
-        self.selenium.click_button(btns)
-        mdl_open=npsp_lex_locators['adv_mappings']["modal_open"]
-        self.selenium.wait_until_page_contains_element(mdl_open, timeout=15,
-                            error="Create Object Group Modal did not open in 15 seconds")
-        name_fld=npsp_lex_locators['adv_mappings']['field_mapping'].format("masterLabel")
-        self.selenium.input_text(name_fld,obj_grp_name)
-        for key,value in kwargs(items):
-            field_name=npsp_lex_locators['adv_mappings']['field_mapping'].format("key")
-            self.selenium.click_element(field_name)
-            dd=npsp_lex_locators['adv_mappings']['combobox']
-            self.selenium.wait_until_page_contains_element(dd, error=f"{key} field dropdown did not open")
-            obj_name_span=npsp_lex_locators['span'].format(value)
-            element = self.selenium.driver.find_element_by_xpath(obj_name_span)
-            self.selenium.driver.execute_script('arguments[0].click()', element)
-        self.selenium.click_button("Save")
-        self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15,
-                                                               error="Create Object Group Modal did not close in 15 seconds")
-        self.selenium.wait_until_page_contains("Success", timeout=180)
+        self.selenium.wait_until_element_is_enabled(btns)
+        locator=npsp_lex_locators['adv_mappings']['field-label'].format(obj_grp_name)
+        if not self.npsp.check_if_element_exists(locator):
+            self.selenium.click_button(btns)
+            mdl_open=npsp_lex_locators['adv_mappings']["modal_open"]
+            self.selenium.wait_until_page_contains_element(mdl_open, timeout=15,
+                                error="Create Object Group Modal did not open in 15 seconds")
+            name_fld=npsp_lex_locators['adv_mappings']['field_mapping'].format("masterLabel")
+            self.selenium.input_text(name_fld,obj_grp_name)
+            for key,value in kwargs.items():
+                field_name=npsp_lex_locators['adv_mappings']['field_mapping'].format(key)
+                self.selenium.scroll_element_into_view(field_name)
+                self.selenium.click_element(field_name)
+                dd=npsp_lex_locators['adv_mappings']['combobox']
+                self.selenium.wait_until_page_contains_element(dd, error=f"{key} field dropdown did not open")
+                field_option=npsp_lex_locators['adv_mappings']['field_dd_option'].format(key,value)
+                element = self.selenium.driver.find_element_by_xpath(field_option)
+                self.selenium.driver.execute_script('arguments[0].click()', element)
+            self.selenium.click_button("Save")
+            self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15,
+                                                                error="Create Object Group Modal did not close in 15 seconds")
+            self.selenium.wait_until_page_contains("Success", timeout=180)
