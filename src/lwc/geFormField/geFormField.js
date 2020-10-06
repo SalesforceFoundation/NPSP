@@ -40,7 +40,7 @@ const DATETIME = 'datetime-local';
 const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
-    @track value;
+    @track _value;
     @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
@@ -53,12 +53,21 @@ export default class GeFormField extends LightningElement {
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
+    get value() {
+        // As of W-8017324 picklists get their value from formState
+        if (this.isPicklist) {
+            return this.valueFromFormState;
+        } else {
+            return this._value;
+        }
+    }
+
+    set value(val) {
+        this._value = val;
+    }
+
     handleValueChangeSync = (event) => {
         const value = this.getValueFromChangeEvent(event);
-        // As of W-8017324 picklists get their value from formState
-        if (!this.isPicklist) {
-            this.value = value;
-        }
         this.fireFormFieldChangeEvent(value);
 
         if (this.isLookup || this.isLookupRecordType) {
@@ -235,7 +244,7 @@ export default class GeFormField extends LightningElement {
         } else if (this.isPicklist){
             // If the displayed value of the picklist is '--None--' treat the value as blank.
             fieldAndValue[this.formElementName] =
-                (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.valueFromFormState;
+                (this.value === this.CUSTOM_LABELS.commonLabelNone) ? '' : this.value;
         } else {
             fieldAndValue[this.formElementName] = this.value;
         }
