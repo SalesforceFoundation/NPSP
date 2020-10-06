@@ -56,14 +56,14 @@ public with sharing class RD2_EntryFormController {
     };
 
     /**
-    * @description Sends requests and constructs the response
+    * @description Handles commitment request creation, response parsing and RD Commitment Id update
     */
-    private static UTIL_Http.RequestService requestService {
+    private static CommitmentService commitmentService {
         get {
-            if (requestService == null) {
-                requestService = new UTIL_Http.RequestService();
+            if (commitmentService == null) {
+                commitmentService = new CommitmentService();
             }
-            return requestService;
+            return commitmentService;
         }
         set;
     }
@@ -95,6 +95,15 @@ public with sharing class RD2_EntryFormController {
             'customFieldSets' => getCustomFieldSectionFields(),
             'isElevateCustomer' => isElevateCustomer
         };
+    }
+
+    /**
+    * @description Get a GUID to store as a temp Commitment Id
+    * @return String
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getTempCommitmentId() {
+        return RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + UTIL_String.getGUID();
     }
 
     /**
@@ -269,9 +278,7 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static String getCommitmentRequestBody(Id recordId, String paymentMethodToken) {
         try {
-            PS_CommitmentRequest request = new PS_CommitmentRequest();
-            PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(recordId, paymentMethodToken);
-            return JSON.serialize(requestBody);
+            return JSON.serialize(commitmentService.getRequestBody(recordId, paymentMethodToken));
 
         } catch (Exception ex) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
@@ -281,47 +288,126 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
-    * @description Creates Elevate Commitment and 
+    * @description Creates Elevate Commitment and
     * updates the Recurring Donation with returned Commitment data
     * @param recordId Recurring Donation Id
-    * @param jsonRequestBody JSON containing parameters for the purchase call request body
-    * @return String: JSON containing the response with success or error status and message
+    * @param jsonRequestBody JSON containing parameters for the commitment call request body
+    * @return String: JSON containing the response with commitment data on success or error message on error
     */
     @AuraEnabled
     public static String createCommitment(Id recordId, String jsonRequestBody) {
+        if (recordId == null) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.RD2_ErrorRDIdIsMissingForCommitment);
+        }
+
         UTIL_Http.Response response;
-        
+
         try {
-            response = sendCommitmentRequest(jsonRequestBody);
+            response = commitmentService.sendRequest(recordId, jsonRequestBody);
 
             if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
-                // If the commitment is created, then update RD fields: 
-                // Commitment Id, credit card expiry date and last 4.
+                commitmentService.updateRecurringDonation(recordId, response);
+            }
 
-                // Ensure DML error (if any) on the RD update is returned to the LWC 
-                // as a response or an AuraHandled exception (either will work).
-            }        
-        
-        } catch (Exception ex) {
-            response = requestService.buildErrorResponse(ex);
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
 
         } finally {
-            // If the response contains an error, regardless if the commitment is created, or
-            // the RD update failed, create an error log
+            if (response != null && response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
+                //create an error log for the RD and the failed response error message
+            }
         }
 
         return JSON.serialize(response);
     }
 
-    /***
-    * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
-    * @param jsonRequestBody JSON containing parameters for the purchase call request body
-    * @return String: JSON containing the response with success/error status and message
-    */
-    public static UTIL_Http.Response sendCommitmentRequest(String jsonRequestBody) {
-        HttpRequest request = new PS_CommitmentRequest()
-            .buildCreateRequest(jsonRequestBody);
 
-        return requestService.sendRequest(request);
+    /**
+    * @description Handles sending commitment request and saving its values on the RD
+    */
+    public without sharing class CommitmentService {
+
+        /**
+        * @description Sends requests and constructs the response
+        */
+        private UTIL_Http.RequestService requestService {
+            get {
+                if (requestService == null) {
+                    requestService = new UTIL_Http.RequestService();
+                }
+                return requestService;
+            }
+            set;
+        }
+
+        /***
+        * @description Builds an Elevate Commitment request body
+        * @param recordId Recurring Donation Id
+        * @param paymentMethodToken Payment Method Token
+        * @return PS_CommitmentRequest.RequestBody
+        */
+        public PS_CommitmentRequest.RequestBody getRequestBody(Id recordId, String paymentMethodToken) {
+            PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+            return request.getRequestBody(recordId, paymentMethodToken);
+        }
+
+        /***
+        * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
+        * @param jsonRequestBody JSON containing parameters for the commitment call request body
+        * @return UTIL_Http.Response
+        */
+        public UTIL_Http.Response sendRequest(Id recordId, String jsonRequestBody) {
+            UTIL_Http.Response response;
+
+            try {
+                HttpRequest request = new PS_CommitmentRequest()
+                    .buildCreateRequest(jsonRequestBody);
+
+                response = requestService.sendRequest(request);
+
+            } catch (Exception ex) {
+                response = requestService.buildErrorResponse(ex);
+            }
+
+            return response;
+        }
+
+
+        /***
+        * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
+        * @param recordId Recurring Donation Id
+        * @param response Response from Elevate on the commitment create request
+        * @return void
+        */
+        public void updateRecurringDonation(Id recordId, UTIL_Http.Response response) {
+            if (response == null
+                || response.statusCode != UTIL_Http.STATUS_CODE_CREATED
+            ) {
+                return;
+            }
+
+            try {
+                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+
+                if (commitment.hasId()) {
+                    npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                        Id = recordId,
+                        CommitmentId__c = commitment.id,
+                        CardLast4__c = commitment.getCardLast4(),
+                        CardExpirationMonth__c = commitment.getCardExpirationMonth(),
+                        CardExpirationYear__c = commitment.getCardExpirationYear()
+                    );
+
+                    UTIL_DMLService.updateRecordBatchAndLogErrors(
+                        new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
+                    );
+                }
+
+            } catch (Exception e) {
+                throw e;
+            }
+        }
     }
+
 }

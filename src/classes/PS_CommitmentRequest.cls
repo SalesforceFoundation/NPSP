@@ -35,13 +35,61 @@
 */
 public inherited sharing class PS_CommitmentRequest {
 
+    /***
+     * @description Commitment type
+     */
     public enum CommitmentType {
         SUSTAINER
     }
 
+    /***
+     * @description Commitment payment method. Currently only credit card is supported.
+     */
     public enum PaymentMethod {
         CARD
     }
+
+    /***
+     * @description Commitment Status
+     * Commitments start in the NEW state, then transition to ACTIVE after the first payment.
+     * The Status cannot be an enum since NEW is a reserved keyword.
+     */
+    public static String STATUS_NEW = 'NEW';
+    public static String STATUS_ACTIVE = 'ACTIVE';
+    public static String STATUS_INACTIVE = 'INACTIVE';
+    public static String STATUS_FAILING = 'FAILING';
+
+    /***
+     * @description Commitment Status Reason
+     */
+    public enum CommitmentStatusReason {
+        COMMITMENT_CREATED,
+        PAID_AS_AGREED,
+        PARTIALLY_PAID,
+        PAYMENT_ERROR,
+        PAYMENT_DECLINE,
+        DONOR_CANCELED,
+        MULTIPLE_FAILURES,
+        NEVER_PAID
+    }
+
+    /***
+     * @description Commitment schedule frequency
+     */
+    public enum Frequency {
+        DAY, WEEK, MONTH, YEAR
+    }
+
+    /***
+     * @description Translates the Installment Period into the Elevate API frequency value
+     */
+    private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
+        RD2_Constants.INSTALLMENT_PERIOD_YEARLY => Frequency.YEAR.name(),
+        RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => Frequency.MONTH.name(),
+        RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => Frequency.WEEK.name(),
+        RD2_Constants.INSTALLMENT_PERIOD_DAILY => Frequency.DAY.name(),
+        RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH => Frequency.MONTH.name()
+    };
 
     /***
      * @description Translates the currency amount into the lowest denominator; e.g. dollars into cents
@@ -56,15 +104,9 @@ public inherited sharing class PS_CommitmentRequest {
     private static Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
 
     /***
-     * @description Translates the Installment Period into the Elevate API frequency value
+     * @description Contains max length for a first/last name passed to the Elevate commitment request
      */
-    private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
-        RD2_Constants.INSTALLMENT_PERIOD_YEARLY => 'YEAR',
-        RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => 'MONTH',
-        RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => 'WEEK',
-        RD2_Constants.INSTALLMENT_PERIOD_DAILY => 'DAY',
-        RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH => 'MONTH'
-    };
+    private static Integer MAX_NAME_LENGTH = 60;
 
     /***
      * @description Payment Services configuration
@@ -217,6 +259,25 @@ public inherited sharing class PS_CommitmentRequest {
         return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
     }
 
+    /**
+     * @description Parses the response and returns the commitment data contained in the response body
+     * @param response Create commitment request response
+     * @return ResponseBody
+     */
+    public ResponseBody getCommitment(UTIL_Http.Response response) {
+        ResponseBody commitment = new ResponseBody();
+
+        if (response != null 
+            && response.statusCode == UTIL_Http.STATUS_CODE_CREATED
+            && String.isNotBlank(response.body)
+        ) {
+            commitment = (ResponseBody) JSON.deserialize(response.body, ResponseBody.class);
+        }
+
+        return commitment;
+    }
+
+
 
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
@@ -295,8 +356,8 @@ public inherited sharing class PS_CommitmentRequest {
                 return this;
             }
 
-            this.firstName = contact.FirstName;
-            this.lastName = contact.LastName;
+            this.firstName = trimNameField(contact.FirstName);
+            this.lastName = trimNameField(contact.LastName);
 
             return this;
         }
@@ -311,10 +372,19 @@ public inherited sharing class PS_CommitmentRequest {
                 return this;
             }
 
-            this.firstName = organization.Name;
-            this.lastName = organization.Name;
+            this.firstName = trimNameField(organization.Name);
+            this.lastName = trimNameField(organization.Name);
 
             return this;
+        }
+
+        /**
+         * @description Return max number of character allowed for the first/last name in Elevate
+         * @param name First or Last Name
+         * @return String
+         */
+        private String trimNameField(String name) {
+            return String.isBlank(name) ? name : name.abbreviate(MAX_NAME_LENGTH);
         }
 
         /**
@@ -374,5 +444,81 @@ public inherited sharing class PS_CommitmentRequest {
             DateTime donationDatetime = Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
             return donationDatetime.format('yyyy-MM-dd');
         }
+    }
+
+    /**
+     * @description Contains Elevate recurring commitment data in the response body
+     */
+    public class ResponseBody {
+        public String id;
+        public String status;
+        public String statusReason;
+        public CardData cardData;
+
+        /** 
+         * @description Returns true if the commitment data has the id specified
+         * @return Boolean
+         */
+        public Boolean hasId() {
+            return String.isNotBlank(id);
+        }
+
+        /** 
+         * @description Returns true if the commitment has new or active status
+         * @return Boolean
+         */
+        public Boolean isActive() {
+            return status == STATUS_NEW || status == STATUS_ACTIVE;
+        }
+
+        /** 
+         * @description Returns true if the commitment has just been created
+         * @return Boolean
+         */
+        public Boolean isCreated() {
+            return isActive() 
+                && statusReason == CommitmentStatusReason.COMMITMENT_CREATED.name(); 
+        }
+
+        /** 
+         * @description Returns true if the commitment credit card data has been returned
+         * @return Boolean
+         */
+        public Boolean hasCardData() {
+            return cardData != null;
+        }
+
+        /** 
+         * @description Returns credit card last 4 digits
+         * @return String
+         */
+        public String getCardLast4() {
+            return hasCardData() ? cardData.last4 : null;
+        }
+
+        /** 
+         * @description Returns credit card expiration month
+         * @return String
+         */
+        public String getCardExpirationMonth() {
+            return hasCardData() ? cardData.expirationMonth : null;
+        }
+
+        /** 
+         * @description Returns credit card expiration year
+         * @return String
+         */
+        public String getCardExpirationYear() {
+            return hasCardData() ? cardData.expirationYear : null;
+        }
+    }
+
+    /**
+     * @description Contains credit card data on the commitment
+     */
+    public class CardData {
+        public String last4;
+        public String expirationMonth;
+        public String expirationYear;
     }
 }
