@@ -50,12 +50,22 @@ public inherited sharing class RD2_ApiService {
             return JSON.serialize(schedulesByRdId);
         }
 
+        RD2_ScheduleService.PauseScheduleHandler pauseHandlerService = new RD2_ScheduleService.PauseScheduleHandler();
+
         String soql = getRecurringDonationQuery();
         for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
 
             List<RD2_ApiService.Schedule> schedules = new List<RD2_ApiService.Schedule>();
+            Boolean isCurrentlyPaused = pauseHandlerService.hasActivePause(
+                rd.RecurringDonationSchedules__r, RD2_ScheduleService.currentDate
+            );
             for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
-                schedules.add(new RD2_ApiService.Schedule(schedule, rd));
+                RD2_ApiService.Schedule sched = new RD2_ApiService.Schedule(schedule, rd);
+                // If the RD is in a pause status, and the schedule record is active, but not paused, then mark it as inactive
+                if (isCurrentlyPaused && sched.isActive && !sched.isPause) {
+                    sched.isActive = false;
+                }
+                schedules.add(sched);
             }
 
             schedulesByRdId.put(rd.Id, schedules);
@@ -77,7 +87,7 @@ public inherited sharing class RD2_ApiService {
         }
 
         RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService();
-        queryFields.add(oppEvalService.getScheduleSubQuery());
+        queryFields.add(getScheduleSubQuery());
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -86,6 +96,19 @@ public inherited sharing class RD2_ApiService {
             .build();
 
         return soql;
+    }
+
+    /**
+     * @description Returns query on Recurring Donation Schedule
+     * Return all schedules for the RD Schedule visualization.
+     * The Schedule Service will filter them out if not applicable within the time period.
+     * @return String RD Schedule subquery used in the Recurring Donation SOQL
+     */
+    public String getScheduleSubQuery() {
+        Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
+        fields.add('CreatedDate');
+
+        return '(SELECT ' + String.join(new List<String>(fields), ', ') + ' FROM RecurringDonationSchedules__r)';
     }
 
     /***
@@ -108,6 +131,7 @@ public inherited sharing class RD2_ApiService {
         public Date startDate { get; set; }
         public String statusReason { get; set; }
         public String currencyCode { get; set; }
+        public Datetime createdDate { get ;set; }
 
         public Schedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
             isActive = rdSchedule.Active__c;
@@ -124,6 +148,8 @@ public inherited sharing class RD2_ApiService {
             scheduleId = rdSchedule.Id;
             startDate = rdSchedule.StartDate__c;
             statusReason = rdSchedule.StatusReason__c;
+            createdDate = rdSchedule.CreatedDate;
+
             try {
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     currencyCode = (String) rd.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);

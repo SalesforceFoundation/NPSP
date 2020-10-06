@@ -247,5 +247,6 @@ private class RD2_ApiService_TEST {
         public Date startDate;
         public String statusReason;
         public String currencyCode;
+        public Datetime createdDate;
     }
 }
