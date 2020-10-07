@@ -28,12 +28,12 @@ Generate Data
     [Arguments]    ${count}
     ${count} =  Convert To Integer	${count}
 
-    Run Task Class   cumulusci.tasks.bulkdata.generate_and_load_data.GenerateAndLoadData
+    Run Task   generate_and_load_from_yaml
     ...                 num_records=${count}
+    ...                 num_records_tablename=DataImport__c
     ...                 batch_size=${500000}
 #    ...                 database_url=sqlite:////tmp/temp_db.db  # turn this on to look at the DB for debugging
-    ...                 mapping=datasets/bdi_benchmark/mapping.yml
-    ...                 data_generation_task=${data_generation_task}
+    ...                 generator_yaml=datasets/bdi_benchmark/BDI.recipe.yml
 
 Setup BDI
     [Arguments]     ${field_mapping_method}
@@ -137,4 +137,4 @@ BGE/BDI Import - CO - 1000000 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 
     [Setup]     Setup For Test    1000000    Data Import Field Mapping
     [Teardown]     Validate Data      1000000
     [Tags]    ultra-long     advanced-mapping
-    Batch Data Import   250
+    Batch Data Import   250]
