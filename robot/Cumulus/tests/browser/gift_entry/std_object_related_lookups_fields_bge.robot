@@ -64,7 +64,7 @@ Verify Fields Related to Lookups Populate on Batch Gift Entry Form
 	[Documentation]                               To be filled in
 	...                                           at a later date.
 	[tags]                                        unstable      feature:GE        W-043224
-	Create object and field mappings in Advanced Mapping
+	# Create object and field mappings in Advanced Mapping
 	Click Configure Advanced Mapping
 	Create New Object Group                       Lead
 	...                                           objectName=Lead (Lead)
@@ -118,18 +118,17 @@ Verify Fields Related to Lookups Populate on Batch Gift Entry Form
 	Click Gift Entry Button              		  Next
 	Click Button             					  npsp:gift_entry.id:Remove selected option Data Import: Lead Lookup
 	Click Gift Entry Button              		  Wizard Save
+	Wait Until Modal Is Closed
     Current Page Should Be               		  Form                   Gift Entry		title=Gift Entry Form
-	# sleep										  3
-	# Verify Field Default Value
-	# ...											  Lead Lookup=None
-    # ...                              	 		  Lead: Company=None
-    # ...                              	 		  Lead: Last Name=None
+	Page Should Not Contain						  ${DEFAULT_LEAD}[Name]
+	Page Should Not Contain						  ${DEFAULT_LEAD}[Company]
+	Page Should Not Contain						  ${DEFAULT_LEAD}[LastName]
 	#create a new gift with first lead and verify related fields autopopulate and save to table correctly
 	Fill Gift Entry Form
     ...                                  		  Data Import: Donation Donor=Contact1
     ...                                  		  Data Import: Contact1 Imported=${CONTACT}[Name]
-	...                                  		  Donation Amount=5
-    ...                                  	      Donation Date=Today
+	...                                  		  Opportunity: Amount=5
+    ...                                  	      Opportunity: Close Date=Today
 	...											  Lead Lookup=${FIRST_LEAD}[Name]
 	Verify Field Default Value
     ...                              	 		  Lead: Company=${FIRST_LEAD}[Company]
@@ -143,8 +142,8 @@ Verify Fields Related to Lookups Populate on Batch Gift Entry Form
 	Fill Gift Entry Form
     ...                                  		  Data Import: Donation Donor=Account1
     ...                                  		  Data Import: Account1 Imported=${ACCOUNT}[Name]
-	...                                  		  Donation Amount=10
-    ...                                  	      Donation Date=Today
+	...                                  		  Opportunity: Amount=10
+    ...                                  	      Opportunity: Close Date=Today
 	...											  Lead Lookup=${SECOND_LEAD}[Name]
 	Verify Field Default Value
     ...                              	 		  Lead: Company=${SECOND_LEAD}[Company]
@@ -154,12 +153,9 @@ Verify Fields Related to Lookups Populate on Batch Gift Entry Form
     ...											  Data Import: Lead Lookup=${SECOND_LEAD}[Name]
     ...                              	 		  Lead: Company=${SECOND_LEAD}[Company]
     ...                              	 		  Lead: Last Name=${SECOND_LEAD}[LastName]
+	#open first gift from the gifts table and verify first lead info is loaded in the form
 	Perform Action On Datatable Row   			  ${CONTACT}[Name]          Open
 	Verify Field Default Value
 	...											  Lead Lookup=${FIRST_LEAD}[Name]
     ...                              	 		  Lead: Company=${FIRST_LEAD}[Company]
     ...                              	 		  Lead: Last Name=${FIRST_LEAD}[LastName]
-    Fill Gift Entry Form						  Lead Lookup=${SECOND_LEAD}[Name]
-	Verify Field Default Value
-    ...                              	 		  Lead: Company=${SECOND_LEAD}[Company]
-    ...                              	 		  Lead: Last Name=${SECOND_LEAD}[LastName]

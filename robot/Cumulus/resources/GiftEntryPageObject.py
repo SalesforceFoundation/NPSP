@@ -305,6 +305,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.wait_until_page_contains_element(option)
                 self.selenium.click_element(option)
             elif 'combobox' in type :
+                self.selenium.wait_until_page_contains_element(field_locator)
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["flexipage-popup"]
                 self.selenium.wait_until_page_contains_element(popup)
