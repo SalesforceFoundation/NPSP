@@ -1749,6 +1749,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return `button ${this.saveActionLabel}`;
     }
 
+    /*******************************************************************************
+     * @description Object used to hold current values for all fields on the form.
+     * Made up of key-value pairs where value is an object
+     * with value and displayValue (optional) properties.
+     */
     @track
     _formState = {}
 
@@ -1770,6 +1775,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return this.lookupFieldApiNameBySelectedRecordId[recordId];
     }
 
+    /*******************************************************************************
+     * @description Updates the formState object that holds the current value
+     * of all fields on the form.
+     * @param fields An object with key-value pairs where value is an object
+     * with value and displayValue (optional) properties.
+     */
     updateFormState(fields) {
         Object.assign(this.formState, fields);
 
@@ -1810,15 +1821,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleFormFieldChange(event) {
-        //handleChangeDonationDonor logic moved here from geFormField
         if (event.detail.hasOwnProperty(DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName)) {
-            //todo: eventually this should just be a reaction to formState changing
-            // donation donor change needs _contact1Imported to be set correctly, confirm done
             this.handleDonationDonorChange(event.detail[DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName])
         }
         this.updateFormState(event.detail);
     }
 
+    /*******************************************************************************
+     * @description Analyzes the sections property to get initial values and set them
+     * in the formState property.
+     */
     initializeState() {
         if (this.sections) {
             this.sections
