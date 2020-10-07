@@ -55,7 +55,7 @@ public inherited sharing class RD2_ApiService {
         String soql = getRecurringDonationQuery();
         for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
 
-            Boolean isRdCurrentlyPaused = pauseHandlerService.hasActivePause(
+            Boolean isRdCurrentlyPaused = pauseHandlerService.isCurrentlyPaused(
                 rd.RecurringDonationSchedules__r, RD2_ScheduleService.currentDate
             );
 

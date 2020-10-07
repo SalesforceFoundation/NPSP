@@ -167,7 +167,8 @@ private class RD2_ApiService_TEST {
     }
 
     /**
-     * @description Validate a Paused RD returns the expected api response with active/paused/inactive schedules
+     * @description Validate a Paused RD returns the expected api response with active/paused/inactive
+     * schedules when the pause is current as of today
      */
     @IsTest
     private static void shouldReturnValidResponseWithActivePausedRd() {
@@ -204,6 +205,48 @@ private class RD2_ApiService_TEST {
         System.assertEquals(1, activeCurrentPausedCount, 'There should be one current paused schedules returned');
         System.assertEquals(0, inactiveCount, 'There should be zero in-active schedules returned');
         System.assertEquals(1, activeNotCurrentCount, 'There should be one active, but not current, unpaused schedules returned');
+    }
+
+
+    /**
+     * @description Validate a Paused RD returns the expected api response with
+     * active/paused/inactive schedules when the pause is in the future
+     */
+    @IsTest
+    private static void shouldReturnValidResponseWithFuturePausedRd() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getEnhancedRecurringDonationBuilder()
+            .build();
+
+        Test.startTest();
+        insert rd;
+
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, Date.today().addMonths(1), Date.today().addMonths(2));
+
+        System.assertEquals(2,scheduleGateway.getRecords(rd).size(), 'There should be two schedule records returned');
+
+        Map<Id, List<Schedule>> schedulesByRd = retrieveSchedulesUsingApi(rd.Id);
+        Test.stopTest();
+
+        System.assertEquals(1,schedulesByRd.size(), 'There should be one recurring donation records returned');
+        System.assertEquals(2,schedulesByRd.get(rd.Id).size(), 'There should be two schedule records on the rd returned');
+
+        Integer isActiveNotCurrentPaused = 0;
+        Integer isActiveCurrentPausedCount = 0;
+        Integer isActiveCurrentNotPaused = 0;
+        for (Schedule s : schedulesByRd.get(rd.Id)) {
+            if (s.isActive && s.isPause && s.isCurrent) {
+                isActiveCurrentPausedCount++;
+            } else if (s.isActive && s.isCurrent && !s.isPause) {
+                isActiveCurrentNotPaused++;
+            } else if (s.isActive && s.isPause) {
+                isActiveNotCurrentPaused++;
+            }
+        }
+        System.assertEquals(0, isActiveCurrentPausedCount, 'There should be no current paused schedules returned');
+        System.assertEquals(1, isActiveNotCurrentPaused, 'There should be one active not current paused schedules returned');
+        System.assertEquals(1, isActiveCurrentNotPaused, 'There should be one active and current unpaused schedules returned');
     }
 
 
