@@ -2,6 +2,7 @@ import { LightningElement, api, wire } from 'lwc';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import GeLabelService from 'c/geLabelService';
 import * as CONSTANTS from './constants';
+import OPPORTUNITY from '@salesforce/schema/Opportunity';
 
 export default class GeFormFieldPicklist extends LightningElement {
     // ================================================================================
@@ -32,14 +33,19 @@ export default class GeFormFieldPicklist extends LightningElement {
         if (this.isValueInOptions(this._value, this.picklistValues)) {
             return this._value;
         }
-        if (!this._value && this.isValueInOptions(this.CUSTOM_LABELS.commonLabelNone, this.picklistValues )) {
+        if (!this._value && this.isValueInOptions(this.CUSTOM_LABELS.commonLabelNone, this.picklistValues)) {
             return this._value = this.CUSTOM_LABELS.commonLabelNone;
         }
         return '';
     }
 
     set value(val) {
-        this._value = val;
+        if (this.isOpportunity && this.isRecordTypeIdLookup) {
+            const picklistOption = this.findPicklistOptionWithLabel(val);
+            this._value = picklistOption && picklistOption.value ? picklistOption.value : val;
+        } else {
+            this._value = val;
+        }
     }
 
     @api
@@ -83,8 +89,24 @@ export default class GeFormFieldPicklist extends LightningElement {
         }
     }
 
+    get isOpportunity() {
+        return this.objectName === OPPORTUNITY.objectApiName;
+    }
+
+    get isRecordTypeIdLookup() {
+        return this.fieldName === CONSTANTS.RECORD_TYPE_ID;
+    }
+
+    /**
+     * Accessor method returns the full object and field api name.
+     *
+     * Returns null if the current field is a RecordTypeId so that we
+     * don't invoke the wired `wiredPicklistValues` function. Instead
+     * we retrieve record types objects from `_objectDescribeInfo`
+     * and build the picklist options array from there.
+     */
     get fullFieldApiName() {
-        if (this.fieldName === CONSTANTS.RECORD_TYPE_ID) return null;
+        if (this.isRecordTypeIdLookup) return null;
         return `${this.objectName}.${this.fieldName}`;
     }
 
@@ -160,6 +182,10 @@ export default class GeFormFieldPicklist extends LightningElement {
         });
 
         return recordTypeIdPicklistOptions;
+    }
+
+    findPicklistOptionWithLabel(label) {
+        return this.picklistValues.find(option => option.label === label);
     }
 
     createPicklistOption = (label, value, attributes = null, validFor = []) => ({

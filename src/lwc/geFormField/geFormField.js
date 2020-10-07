@@ -309,6 +309,9 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    /**
+     * Special handling for RecordTypeId because we render these fields as picklists instead of lookups.
+     */
     get isRecordTypePicklist() {
         return this.fieldType === LOOKUP_TYPE && this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
