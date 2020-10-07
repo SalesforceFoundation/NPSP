@@ -294,7 +294,6 @@ export default class rd2EntryForm extends LightningElement {
     */
     handlePaymentChange(event) {
         //reset the widget and the form related to the payment method
-        this.clearError();
         this.hasUserDisabledElevateWidget = false;
         this.evaluateElevateWidget(event.detail.value);
     }
