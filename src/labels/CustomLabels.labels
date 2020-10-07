@@ -12733,122 +12733,122 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </labels>
      <labels>
         <fullName>gsResourcesTitle</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>The page title in the Getting Started Resources section</shortDescription>
+        <shortDescription>The page title in the Get Started Resources section</shortDescription>
         <value>Resources</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemNonprofitCloudLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Nonprofit Cloud label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Nonprofit Cloud label in Get Started Resources section</shortDescription>
         <value>Nonprofit Cloud Basics</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemNonprofitCloudLinkLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Nonprofit Cloud link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Nonprofit Cloud link label in Get Started Resources section</shortDescription>
         <value>Get to Know Nonprofit Cloud</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemFundraisingLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Fundraising label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Fundraising label in Get Started Resources section</shortDescription>
         <value>Fundraising Learning Path</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemFundraisingLinkLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Fundraising link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Fundraising link label in Get Started Resources section</shortDescription>
         <value>Start Fundraising</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Program Management label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Program Management label in Get Started Resources section</shortDescription>
         <value>Program Management Learning Path</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemProgramManagementLinkLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Program Management link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Program Management link label in Get Started Resources section</shortDescription>
         <value>Get Started</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Marketing Engagement label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Marketing Engagement label in Get Started Resources section</shortDescription>
         <value>Marketing/Engagement Learning Path</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemMarketingEngagementLinkLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Marketing Engagement link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Marketing Engagement link label in Get Started Resources section</shortDescription>
         <value>Get Started</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemWebinarsLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Webinars label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Webinars label in Get Started Resources section</shortDescription>
         <value>Free Webinars</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemWebinarsLinkLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Webinars link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Webinars link label in Get Started Resources section</shortDescription>
         <value>Join Webinars</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Hub label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Hub label in Get Started Resources section</shortDescription>
         <value>Power of Us Hub</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLinkLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Hub link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Hub link label in Get Started Resources section</shortDescription>
         <value>Learn from Other Nonprofits</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemPartnersLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Partners label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Partners label in Get Started Resources section</shortDescription>
         <value>Implementation Partners</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemPartnersLinkLabel</fullName>
-        <categories>Getting Started Page</categories>
+        <categories>Get Started Page</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resource Partners link label in Getting Started Resources section</shortDescription>
+        <shortDescription>Resource Partners link label in Get Started Resources section</shortDescription>
         <value>Find a Partner</value>
     </labels>
 </CustomLabels>
