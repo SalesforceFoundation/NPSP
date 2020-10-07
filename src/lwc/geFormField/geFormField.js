@@ -72,6 +72,7 @@ export default class GeFormField extends LightningElement {
             // As of W-8017324 picklists get their value from formState
             this.value = value;
         }
+        this.fireValueChangeEvent();
         this.fireFormFieldChangeEvent(value);
 
         if (this.isLookup || this.isLookupRecordType) {
@@ -110,6 +111,16 @@ export default class GeFormField extends LightningElement {
             this.dispatchEvent(evt);
         }
     };
+
+    fireValueChangeEvent() {
+        const detail = {
+            element: this.element,
+            value: this.value,
+            targetFieldName: this.targetFieldName
+        };
+        const evt = new CustomEvent('valuechange', {detail, bubbles: true});
+        this.dispatchEvent(evt);
+    }
 
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
