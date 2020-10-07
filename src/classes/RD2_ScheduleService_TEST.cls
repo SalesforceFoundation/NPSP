@@ -2015,45 +2015,6 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
-    * @description Verifies that the schedule service confirms a currently active paused RD
-    */
-    @isTest
-    private static void shouldIndicateIfCurrentlyPaused() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
-
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
-        schedules.add(buildPauseSchedule(rd.Id, Date.today(), Date.today().addMonths(2)));
-
-        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
-        System.assertEquals(true, pauseHandler.isCurrentlyPaused(schedules, Date.today()),
-            'The PauseHandlerService should indicate that the RD is currently in a paused state');
-    }
-
-
-    /***
-    * @description Verifies that the schedule service confirms an RD has a future, but not current pause
-    */
-    @isTest
-    private static void shouldIndicateNotCurrentlyPaused() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
-
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
-        schedules.add(buildPauseSchedule(rd.Id, Date.today().addMonths(2), Date.today().addMonths(3)));
-
-        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
-        System.assertEquals(true, pauseHandler.hasActivePause(schedules, Date.today()),
-            'The PauseHandlerService should indicate that the RD has a pause in the future');
-        System.assertEquals(false, pauseHandler.isCurrentlyPaused(schedules, Date.today()),
-            'The PauseHandlerService should indicate that the RD is not currently in a paused state');
-    }
-
-    /***
     * @description Verifies existing pause is not deactivated when save of the new pause fails
     */
     @isTest

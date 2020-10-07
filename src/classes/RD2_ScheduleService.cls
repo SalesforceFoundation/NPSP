@@ -1007,22 +1007,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         /***
-        * @description Indicates if the Recurring Donation is currently in a pause state
-        * @param schedules Recurring Donation Schedules
-        * @param referenceDate As of today to compare the Schedule Start and End Dates against
-        * @return Boolean
-        */
-        public Boolean isCurrentlyPaused(List<RecurringDonationSchedule__c> schedules, Date referenceDate) {
-            for (RecurringDonationSchedule__c schedule : schedules) {
-                if (isPause(schedule) && isCurrentlyActive(schedule, referenceDate)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /***
         * @description Simple check on the schedule to check if the "Is Pause" field is checked
         * @param schedule Recurring Donation Schedule
         * @return Boolean

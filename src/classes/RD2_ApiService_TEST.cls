@@ -191,20 +191,20 @@ private class RD2_ApiService_TEST {
         System.assertEquals(2,schedulesByRd.get(rd.Id).size(), 'There should be two schedule records on the rd returned');
 
         Integer inactiveCount = 0;
-        Integer activeCurrentPausedCount = 0;
-        Integer activeNotCurrentCount = 0;
+        Integer activePausedCount = 0;
+        Integer activeNotPausedCount = 0;
         for (Schedule s : schedulesByRd.get(rd.Id)) {
-            if (s.isActive && s.isPause && s.isCurrent) {
-                activeCurrentPausedCount++;
-            } else if (s.isActive && !s.isCurrent) {
-                activeNotCurrentCount++;
+            if (s.isActive && s.isPause) {
+                activePausedCount++;
+            } else if (s.isActive && !s.isPause) {
+                activeNotPausedCount++;
             } else if (!s.isActive) {
                 inactiveCount++;
             }
         }
-        System.assertEquals(1, activeCurrentPausedCount, 'There should be one current paused schedules returned');
+        System.assertEquals(1, activePausedCount, 'There should be one active paused schedules returned');
+        System.assertEquals(1, activeNotPausedCount, 'There should be one active not paused schedules returned');
         System.assertEquals(0, inactiveCount, 'There should be zero in-active schedules returned');
-        System.assertEquals(1, activeNotCurrentCount, 'There should be one active, but not current, unpaused schedules returned');
     }
 
 

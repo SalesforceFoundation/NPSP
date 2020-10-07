@@ -50,24 +50,12 @@ public inherited sharing class RD2_ApiService {
             return JSON.serialize(schedulesByRdId);
         }
 
-        RD2_ScheduleService.PauseScheduleHandler pauseHandlerService = new RD2_ScheduleService.PauseScheduleHandler();
-
         String soql = getRecurringDonationQuery();
         for (npe03__Recurring_Donation__c rd : Database.query(soql)) {
 
-            Boolean isRdCurrentlyPaused = pauseHandlerService.isCurrentlyPaused(
-                rd.RecurringDonationSchedules__r, RD2_ScheduleService.currentDate
-            );
-
             List<RD2_ApiService.Schedule> schedules = new List<RD2_ApiService.Schedule>();
             for (RecurringDonationSchedule__c s : rd.RecurringDonationSchedules__r) {
-                RD2_ApiService.Schedule schedule = new RD2_ApiService.Schedule(s, rd);
-                if (isRdCurrentlyPaused && schedule.isActiveAndNotPaused()) {
-                    // If the RD is in a pause status, and the schedule record is active & current,
-                    // but not paused, then mark it as not current
-                    schedule.isCurrent = false;
-                }
-                schedules.add(schedule);
+                schedules.add(new RD2_ApiService.Schedule(s, rd));
             }
 
             schedulesByRdId.put(rd.Id, schedules);
@@ -168,13 +156,6 @@ public inherited sharing class RD2_ApiService {
                 // ignore any errors if for some reason we can't retrieve the currency code
                 // because usage in the ActiveSchedule inner class is only for api use
             }
-        }
-
-        /**
-         * @return True if the schedule record is an active non-pause schedule record
-         */
-        public Boolean isActiveAndNotPaused() {
-            return isActive && !isPause;
         }
     }
 
