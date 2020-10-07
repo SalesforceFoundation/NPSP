@@ -159,12 +159,46 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         self.salesforce.wait_until_modal_is_open()
 
     @capture_screenshot_on_error
+    def populate_pause_modal(self,**kwargs):
+        """ Populate the values in the pause recurring donation modal
+		based on the key value pair options in the kwargs passed as parameter
+		| Populate Pause Modal
+        | ...	                  Paused Reason=Card Expired
+        | ...	                  Date=${date}     """
+        for key, value in kwargs.items():
+           if key in ("Paused Reason"):
+              locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
+              selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+              if self.npsp.check_if_element_exists(locator):
+                  self.selenium.set_focus_to_element(locator)
+                  self.selenium.wait_until_element_is_visible(locator)
+                  self.selenium.scroll_element_into_view(locator)
+                  self.salesforce._jsclick(locator)
+                  self.selenium.wait_until_element_is_visible(selection_value)
+                  self.selenium.click_element(selection_value)
+              else:
+                  self.builtin.log(f"Element {key} not present")
+           else:
+              checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(value)
+              self.selenium.click_element(checkbox)
+        btnlocator = npsp_lex_locators["button-with-text"].format("Save")
+        self.selenium.scroll_element_into_view(btnlocator)
+        self.selenium.click_element(btnlocator)
+        self.salesforce.wait_until_modal_is_closed()
+      
+    @capture_screenshot_on_error
     def validate_warning_text(self,txt):
         """Find the element containing warning message on the pause modal and
         asserts the text displayed matches with the expected text"""
         locator = npsp_lex_locators["erd"]["warning_message"]
         self.selenium.wait_until_element_is_visible(locator)
         self.selenium.element_text_should_be(locator, txt)
+
+    def verify_pause_text_next_to_installment_date(self,date):
+        """Looks for the date element with the paused text next to it """
+        locator = npsp_lex_locators["erd"]["date_with_paused_txt"].format(date)
+        self.selenium.wait_until_element_is_visible(locator)
+        self.selenium.element_text_should_be(locator, date)
 
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):
@@ -217,20 +251,29 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                     label, "contains", value, section
                 )
 
-    def get_next_payment_date_number(self, paynum):
+    def get_next_payment_date_number(self, paynum, format=True):
         """Returns the next payment date from the list of payment schedules taking in the payment number as input
+           The date if formatted to ignore the preceding zeros. But if format is set to false, the date is returned
+           as is without any formatting
            |Example
            |  Get Next Payment Date Number   2   #gets the 2nd installment payment date form the list of payment dates
+           |  Get Ney Payment Date Number    1    False    # gets the 1st installment payment date without any formatting
         """
         datefield = npsp_lex_locators["erd"]["installment_date"].format(int(paynum))
         installment_date = self.selenium.get_webelement(datefield).text
         
         # This is to format the date by removing the trailing 0 which is being the common format across
         # 01/06/2020 -> 1/6/2020
-        tokens = installment_date.split('/')
-        dd = tokens[0].lstrip('0')
-        mm = tokens[1].lstrip('0')
-        newString = f"{dd}/{mm}/{tokens[2]}"
+        if format == True:
+            tokens = installment_date.split('/')
+            dd = tokens[0].lstrip('0')
+            mm = tokens[1].lstrip('0')
+            newString = f"{dd}/{mm}/{tokens[2]}"
+        else:
+            tokens = installment_date.split('/')
+            dd = tokens[0]
+            mm = tokens[1]
+            newString = f"{dd}/{mm}/{tokens[2]}"
         return newString
 
     @capture_screenshot_on_error
