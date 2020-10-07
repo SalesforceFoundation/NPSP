@@ -161,16 +161,14 @@
             </div>
         </div>
         <footer class="slds-modal__footer slds-clearfix">
-            <template if:true={isSettingReady}>
-                <div class="slds-float_right">
-                    <lightning-button label={customLabels.cancelButtonLabel} title={customLabels.cancelButtonLabel}
-                        variant="neutral" class="slds-m-right_small" onclick={handleCancel} disabled={isLoading}>
-                    </lightning-button>
-                    <lightning-button label={customLabels.saveButtonLabel} title={customLabels.saveButtonLabel}
-                        variant="brand" onclick={handleSubmit} data-id="submitButton">
-                    </lightning-button>
-                </div>
-            </template>
+            <div class="slds-float_right">
+                <lightning-button label={customLabels.cancelButtonLabel} title={customLabels.cancelButtonLabel}
+                    variant="neutral" class="slds-m-right_small" onclick={handleCancel} disabled={isLoading}>
+                </lightning-button>
+                <lightning-button label={customLabels.saveButtonLabel} title={customLabels.saveButtonLabel}
+                    variant="brand" onclick={handleSubmit} data-id="submitButton" disabled={isSaveButtonDisabled}>
+                </lightning-button>
+            </div>
         </footer>
 
     </lightning-record-edit-form>

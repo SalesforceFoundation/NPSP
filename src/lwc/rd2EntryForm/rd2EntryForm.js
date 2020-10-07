@@ -108,6 +108,7 @@ export default class rd2EntryForm extends LightningElement {
     @track hasCustomFields = false;
     isRecordReady = false;
     @track isSettingReady = false;
+    @track isSaveButtonDisabled = true;
 
     @track isElevateWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
@@ -141,6 +142,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.isSettingReady = true;
+                this.isSaveButtonDisabled = false;
                 this.rdSettings = response;
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
@@ -409,7 +411,7 @@ export default class rd2EntryForm extends LightningElement {
         this.clearError();
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
-        this.saveButton.disabled = true;
+        this.isSaveButtonDisabled = true;
 
         const allFields = this.getAllSectionsInputValues();
 
@@ -418,7 +420,7 @@ export default class rd2EntryForm extends LightningElement {
 
         } else {
             this.isLoading = false;
-            this.saveButton.disabled = false;
+            this.isSaveButtonDisabled = false;
         }
     }
 
@@ -529,7 +531,7 @@ export default class rd2EntryForm extends LightningElement {
         const disableBtn = !!(isDisabled && isDisabled === true);
 
         this.isLoading = disableBtn;
-        this.saveButton.disabled = disableBtn;
+        this.isSaveButtonDisabled = disableBtn;
 
         this.template.querySelector(".slds-modal__header").scrollIntoView();
     }
