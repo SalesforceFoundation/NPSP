@@ -3,6 +3,7 @@
         <div class="slds-summary-detail">
             <button class="slds-button slds-button_icon slds-m-right_x-small slds-m-top_x-small"
                 onclick={onClickOpenOrClose}
+                tabindex="-1"
                 title={group.title}>
                 <lightning-icon  
                     if:false={displaySteps}
@@ -27,7 +28,9 @@
                                 <div class="slds-media">
                                     <div class="slds-setup-assistant__step-summary-content slds-media__body">
                                         <h3 class="slds-setup-assistant__step-summary-title slds-text-heading_small">
-                                            <button onclick={onClickOpenOrClose} 
+                                            <button onclick={onClickOpenOrClose}
+                                                tabindex="0"
+                                                title={group.title}
                                                 class="slds-button slds-button_reset">
                                                 {group.title}
                                             </button>
