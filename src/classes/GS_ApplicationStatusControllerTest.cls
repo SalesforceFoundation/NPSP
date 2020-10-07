@@ -34,7 +34,7 @@
 @IsTest
 public with sharing class GS_ApplicationStatusControllerTest {
     /**
-     * Test returning data when trial Org and no application submitted
+     * @description Test returning data when trial Org and no application submitted
      */
     @IsTest 
     public static void testGetApplicationStatusTrialOrgNonApplicated() {
@@ -48,7 +48,7 @@ public with sharing class GS_ApplicationStatusControllerTest {
         System.assert(status.applicationDate == null, 'application date should be null');
     }
     /**
-     * Test returning data when trial Org and application submitted
+     * @description Test returning data when trial Org and application submitted
      */
     @IsTest 
     public static void testGetApplicationStatusTrialOrgApplicated() {

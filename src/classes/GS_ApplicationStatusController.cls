@@ -78,7 +78,7 @@ public with sharing class GS_ApplicationStatusController {
      * On prod this is populated using the FeatureParameter "P10_Application_Date"
      * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the custom setting Testing_Configuration__c
      * @param testingConfiguration Map<String, Object> Map of string, object with the testing configuration for overriden the returning values.
-     * @return   return Application date gotten of the P10_Application_Date FeatureParameter OR the 
+     * @return   return Application date gotten of the P10_Application_Date FeatureParameter OR the testing configuration object.
      */
     private Date getApplicationDate(Map<String, Object> testingConfiguration) {
         

@@ -1,33 +1,8 @@
-
-p {
-    font-size: 15px;
-}
-c-gs-modal p {
-    text-align: center;
-    margin-top: 42px;
-    margin-bottom: 42px;
-    margin-left: 16px;
-    margin-right: 16px;
-}
-.slds-button {
-    padding:10px;
-    font-size: 15px;
-}
-
-li {
-    margin-bottom:18px;
-}
-
 img {
     margin-bottom: 24px;
     object-fit:fill;
 }
 
-span {
-    color: darkgreen;
-    font-size: larger;
-    font-weight: bold;
-}
 .slds-button_outline-brand {
     border-color: purple;
     color: purple;
@@ -35,4 +10,5 @@ span {
 
 .slds-button_brand {
     background-color: purple;
+    border-color: purple;
 }

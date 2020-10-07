@@ -7355,7 +7355,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Apply for licencses button label for the application status component</shortDescription>
-        <value>Apply for Your Salesforce Licenses</value>
+        <value>Apply for Salesforce Licenses</value>
     </labels>
     <labels>
         <fullName>gsCheckStatus</fullName>
@@ -7395,7 +7395,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Follow up Application Status label for the application status component</shortDescription>
-        <value>To follow up on your application status, please email us at: something@salesforce.com</value>
+        <value>To follow up on your application status, please email us at: powerofus@salesforce.com</value>
     </labels>
     <labels>
         <fullName>gsLearnMore</fullName>
