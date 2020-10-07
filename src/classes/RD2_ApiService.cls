@@ -108,6 +108,7 @@ public inherited sharing class RD2_ApiService {
     public String getScheduleSubQuery() {
         Set<String> fields = new RD2_ScheduleService.ScheduleQueryHandler().getFields();
         fields.add('CreatedDate');
+        fields.add('LastModifiedDate');
 
         return '(SELECT ' + String.join(new List<String>(fields), ', ') +
             ' FROM RecurringDonationSchedules__r' +
@@ -136,11 +137,12 @@ public inherited sharing class RD2_ApiService {
         public String statusReason { get; set; }
         public String currencyCode { get; set; }
         public Datetime createdDate { get ;set; }
+        public Datetime lastModifiedDate { get ;set; }
 
         public Schedule(RecurringDonationSchedule__c rdSchedule, npe03__Recurring_Donation__c rd) {
             isActive = rdSchedule.Active__c;
             isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate
-                && (rdSchedule.EndDate__c == null || rdSchedule.EndDate__c >= RD2_ScheduleService.currentDate);
+                && (rdSchedule.EndDate__c == null || RD2_ScheduleService.currentDate <= rdSchedule.EndDate__c);
             isPause = rdSchedule.IsPause__c;
             campaignId = rdSchedule.Campaign__c;
             dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
@@ -154,6 +156,7 @@ public inherited sharing class RD2_ApiService {
             startDate = rdSchedule.StartDate__c;
             statusReason = rdSchedule.StatusReason__c;
             createdDate = rdSchedule.CreatedDate;
+            lastModifiedDate = rdSchedule.LastModifiedDate;
 
             try {
                 if (UserInfo.isMultiCurrencyOrganization()) {
