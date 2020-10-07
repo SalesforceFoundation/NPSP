@@ -44,7 +44,6 @@ export default class GsApplicationStatus extends LightningElement {
 
         getApplicationStatus()
         .then(result => {
-            debugger;
             this.diffInDays = this.calculateTrialRemainingDays(result);
             this.isApplicationSubmitted = this.checkApplicationSubmitted(result);
             this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg; 

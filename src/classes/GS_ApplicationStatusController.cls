@@ -36,6 +36,7 @@ public with sharing class GS_ApplicationStatusController {
     private static final String SANDBOX_PARAMETER = 'Sandbox';
     private static final String APPLICATION_PARAMETER = 'Application';
     private static final String TRIAL_EXPIRATION_PARAMETER = 'TrialExpiration';
+    private static final Date DEFAULT_NON_APPLICATED_DATE = Date.parse('01/01/1970');
     /**
      * @description Aura enabled method for retrieving Organization Expiration date, if its running on a sandbox instance and the application date.
      * The Expiration Date and The is sandbox is queried from Organization Object. The application date is gotten from the P10_Application_Date FeatureParameter.
@@ -49,7 +50,7 @@ public with sharing class GS_ApplicationStatusController {
         GS_ApplicationStatusController controller = new GS_ApplicationStatusController();
         Map<String, Object> testingConfiguration = controller.getTestingConfiguration();
         
-        Boolean overrideValuesForTesting = controller.isScratchOrg() && testingConfiguration != null;
+        Boolean overrideValuesForTesting = UTIL_Namespace.isScratchOrg() && testingConfiguration != null;
         
         Organization org = controller.getOrgInformation();
         
@@ -81,14 +82,15 @@ public with sharing class GS_ApplicationStatusController {
      */
     private Date getApplicationDate(Map<String, Object> testingConfiguration) {
         
-        if (isScratchOrg() && testingConfiguration != null) { 
+        if (UTIL_Namespace.isScratchOrg() && testingConfiguration != null) { 
             return testingConfiguration.get(APPLICATION_PARAMETER) == null ? null: Date.parse(testingConfiguration.get(APPLICATION_PARAMETER).toString());
         }
 
         try {
-            return System.FeatureManagement.checkPackageDateValue(APPLICATION_DATE);
+            Date featureParameterDate = System.FeatureManagement.checkPackageDateValue(APPLICATION_DATE);
+            return featureParameterDate == null || DEFAULT_NON_APPLICATED_DATE == featureParameterDate ? null : featureParameterDate;
         } catch (System.NoDataFoundException ex) {
-            return Date.Today();
+            return null;
         }
     }
 
@@ -128,15 +130,6 @@ public with sharing class GS_ApplicationStatusController {
             return parsedConfiguration;
         }
         return null;
-    }
-
-    /**
-     * Returns if it's running on a Scratch org.
-     * @return true if code runs on a Scratch org, false otherwise
-     */
-    private Boolean isScratchOrg() {
-        Organization org = getOrgInformation();
-        return org.IsSandbox && org.TrialExpirationDate != null;
     }
 
     /** 
