@@ -447,20 +447,6 @@ export default class GeFormField extends LightningElement {
                 this.reset();
             } else {
                 this.value = value.value || value;
-
-                if (this.isRecordTypePicklist || this.isLookup) {
-                    if (value && !value.displayName) {
-                        // If the RecordTypeId field for a target record is being
-                        // loaded with only the Id (like when a Lookup field is
-                        // selected/populated on the form), get the RecordType Name
-                        // and pass it with the Id to loadLookup
-                        data[this.sourceFieldAPIName] = {
-                            value: value,
-                            displayValue: this.getRecordTypeNameById(value)
-                        };
-                    }
-                    this.loadLookUp(data, this.value);
-                }
             }
 
             if (this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
@@ -479,38 +465,6 @@ export default class GeFormField extends LightningElement {
         } else {
             // Property isn't defined.  Don't do anything.
             return false;
-        }
-    }
-
-    /**
-     * Loads a value into a look-up field
-     * @param data An sObject potentially containing a value to load.
-     * @param value A form field value
-     */
-    loadLookUp(data, value) {
-        const lookup = this.template.querySelector('[data-id="inputComponent"]');
-        lookup.reset();
-        if (this.isLookup) {
-            lookup.value = value;
-        } else if (this.isRecordTypePicklist) {
-
-            let displayValue;
-            const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
-
-            if (data[relationshipFieldName] &&
-                data[relationshipFieldName]['Name']) {
-                displayValue = data[relationshipFieldName].Name;
-
-            } else if (data[this.sourceFieldAPIName] &&
-                data[this.sourceFieldAPIName]['displayValue']) {
-                displayValue = data[this.sourceFieldAPIName].displayValue;
-
-            } else if (data.displayValue) {
-                displayValue = data.displayValue;
-
-            }
-
-            lookup.setSelected({value, displayValue});
         }
     }
 
