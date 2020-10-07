@@ -39,31 +39,35 @@ Setup Test Data
 *** Test Cases ***
 
 Edit An Enhanced Recurring donation record of type open
-    [Documentation]               After creating an open recurring donation using API, The test ensures that the record
-     ...                          is closed by applying the reason for closure as financial difficulty.
-     ...                          A pause action is then performed on the closed recurring donation to verify
-     ...                          The warning message that user cannot pause a closed recurring donation is displayed.
+    [Documentation]               After creating an open recurring donation using API, The test ensures that the user
+     ...                          is able to invoke the pause modal by clicking on the pause button.
+     ...                          User can fill the paused reason and check the date to pause
+     ...                          Validates the Pasued text next to the paused installment date and current and next
+     ...                          Year values
 
 
-    [tags]                                  unstable               W-8116628            feature:RD2
+    [tags]                                        unstable               W-8116680          feature:RD2
 
-    Go To Page                              Listing                                   npe03__Recurring_Donation__c
+    Go To Page                                    Listing                                   npe03__Recurring_Donation__c
 
-    Click Object Button                     New
-    Wait For Modal                          New                                       Recurring Donation
+    Click Object Button                           New
+    Wait For Modal                                New                                       Recurring Donation
     Reload Page
-    Go To Page                              Details
-    ...                                     npe03__Recurring_Donation__c
-    ...                                     object_id=${data}[contact_rd][Id]
+    Go To Page                                    Details
+    ...                                           npe03__Recurring_Donation__c
+    ...                                           object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
-    Current Page Should be                  Details                                  npe03__Recurring_Donation__c
+    Current Page Should be                        Details                                  npe03__Recurring_Donation__c
 
-    # Editing the recurring donation to set the status closed with reason financial difficulty
-    Edit Recurring Donation Status
-    ...                                     Status=Closed
-    ...                                     Status Reason=Financial Difficulty
+    #Get the next payment installment date and pause the recurring donation for the next payment date
+    ${date}                                       Get Next Payment Date Number        1     False
+    Pause Recurring Donation
+    # Verify user is able to enter the paused reason and check the date and hit submit button
+    Populate Pause Modal
+    ...	                                          Paused Reason=Card Expired
+    ...	                                          Date=${date}
 
-    Current Page Should be                  Details                                  npe03__Recurring_Donation__c
-    #Pause the recurring donation and validate the warning message displayed
-    Pause_Recurring Donation
-    Validate Warning Text                   You can't Pause a Closed Recurring Donation
+    # Verify Paused text appears next to the date specified
+    Verify Pause Text Next To Installment Date	  ${date}
+    # Verify the calculations for current and next year payments
+    Validate Current And Next Year values         100
