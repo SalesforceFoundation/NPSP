@@ -12753,7 +12753,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist Explore Nonprofit in Get Started</shortDescription>
-        <value>Get comfortable with these concepts and key features so you can customize them to meet the needs of your organization.</value>
+        <value>Get comfortable with key concepts and features.</value>
     </labels>
      <labels>
         <fullName>gsChecklistMakeItYourDesc</fullName>
@@ -12761,7 +12761,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist Make Your in Get Started</shortDescription>
-        <value>Customize Salesforce with information that&apos;s unique to your organization to make it your own.</value>
+        <value>Customize Salesforce with information that&apos;s unique to your organization.</value>
     </labels>
     <labels>
         <fullName>gsChecklistMakeItYourTitle</fullName>
@@ -12777,7 +12777,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description of checklist User Onboard in Get Started</shortDescription>
-        <value>Add your users to Salesforce and plan your rollout</value>
+        <value>Add your users to Salesforce and plan your rollout.</value>
     </labels>
     <labels>
         <fullName>gsChecklistOnboardUsersTitle</fullName>
@@ -12785,6 +12785,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of checklist User Onboard in Get Started</shortDescription>
-        <value>Bring Your User Onboard</value>
+        <value>Onboard Your Users</value>
     </labels>
 </CustomLabels>
