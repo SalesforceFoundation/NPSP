@@ -43,7 +43,7 @@ import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMes
 import unknownError from '@salesforce/label/c.commonUnknownError';
 
 import getSetting from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import checkRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.checkRequiredFieldPermissions';
+import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import getTempCommitmentId from '@salesforce/apex/RD2_EntryFormController.getTempCommitmentId';
 import getCommitmentRequestBody from '@salesforce/apex/RD2_EntryFormController.getCommitmentRequestBody';
 import createCommitment from '@salesforce/apex/RD2_EntryFormController.createCommitment';
@@ -107,7 +107,8 @@ export default class rd2EntryForm extends LightningElement {
     @track loadingText = this.customLabels.loadingMessage;
     @track hasCustomFields = false;
     isRecordReady = false;
-    isSettingReady = false;
+    @track isSettingReady = false;
+    @track isSaveButtonDisabled = true;
 
     @track isElevateWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
@@ -141,6 +142,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.isSettingReady = true;
+                this.isSaveButtonDisabled = false;
                 this.rdSettings = response;
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
@@ -156,13 +158,13 @@ export default class rd2EntryForm extends LightningElement {
         /*
         * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
         */
-        checkRequiredFieldPermissions()
+        hasRequiredFieldPermissions()
             .then(response => {
                 if (response === false) {
-                    this.error = {
+                    this.handleError({
                         header: this.customLabels.flsErrorHeader,
                         detail: this.customLabels.flsErrorDetail
-                    };
+                    });
                 }
             });
 
@@ -294,7 +296,6 @@ export default class rd2EntryForm extends LightningElement {
     */
     handlePaymentChange(event) {
         //reset the widget and the form related to the payment method
-        this.clearError();
         this.hasUserDisabledElevateWidget = false;
         this.evaluateElevateWidget(event.detail.value);
     }
@@ -410,7 +411,7 @@ export default class rd2EntryForm extends LightningElement {
         this.clearError();
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
-        this.saveButton.disabled = true;
+        this.isSaveButtonDisabled = true;
 
         const allFields = this.getAllSectionsInputValues();
 
@@ -419,7 +420,7 @@ export default class rd2EntryForm extends LightningElement {
 
         } else {
             this.isLoading = false;
-            this.saveButton.disabled = false;
+            this.isSaveButtonDisabled = false;
         }
     }
 
@@ -441,7 +442,7 @@ export default class rd2EntryForm extends LightningElement {
                 }
 
             } catch (error) {
-                this.handleTokenizeCardError(error);
+                this.setSaveButtonDisabled(false);
                 return;
             }
         }
@@ -507,36 +508,31 @@ export default class rd2EntryForm extends LightningElement {
      * Keep Save button enabled so user can correct a value and save again.
      */
     handleSaveError(error) {
-        this.handleError(error, false);
+        this.error = constructErrorMessage(error);
+        this.setSaveButtonDisabled(false);
     }
 
     /***
      * @description Handle error and disable the Save button
      */
     handleError(error) {
-        this.handleError(error, true);
+        this.error = (error && error.detail)
+            ? error
+            : constructErrorMessage(error);
+
+        this.setSaveButtonDisabled(true);
     }
 
     /***
     * @description Handle component display when an error occurs
-    * @param error: Error Event
-    * @param disableSaveButton: Indicates if the Save button should be disabled
+    * @param isDisabled: Indicates if the Save button should be disabled
     */
-    handleError(error, disableSaveButton) {
-        this.error = constructErrorMessage(error);
+    setSaveButtonDisabled(isDisabled) {
+        const disableBtn = !!(isDisabled && isDisabled === true);
 
-        this.handlePageOnError(disableSaveButton);
-    }
-
-    /***
-    * @description Handle component display when an error occurs
-    * @param disableSaveButton: Indicates if the Save button should be disabled
-    */
-    handlePageOnError(disableSaveButton) {
-        const disableBtn = !!(disableSaveButton && disableSaveButton === true);
         this.isLoading = disableBtn;
+        this.isSaveButtonDisabled = disableBtn;
 
-        this.saveButton.disabled = disableBtn;
         this.template.querySelector(".slds-modal__header").scrollIntoView();
     }
 
@@ -547,18 +543,6 @@ export default class rd2EntryForm extends LightningElement {
     handleChildComponentError(event) {
         let error = event.detail && event.detail.value ? event.detail.value : event.detail;
         this.handleError(error);
-    }
-
-    /**
-    * Handle component display when an error on the tokenize credit card event
-    */
-    handleTokenizeCardError(event) {
-        //Do not display an error from the tokenize card since
-        //it will be displayed in the credit card widget,
-        //but stop loading and enable the Save button
-
-        const disableSaveButton = false;
-        this.handlePageOnError(disableSaveButton);
     }
 
     /***

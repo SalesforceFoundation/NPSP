@@ -90,7 +90,7 @@
                                         <label for="currencyField"
                                             class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
                                         <lightning-input-field id="currencyField" data-id="currencyField"
-                                            field-name={fields.currency.apiName} variant="label-hidden" 
+                                            field-name={fields.currency.apiName} variant="label-hidden"
                                             required onchange={handleCurrencyChange}>
                                         </lightning-input-field>
                                     </div>
@@ -163,10 +163,10 @@
         <footer class="slds-modal__footer slds-clearfix">
             <div class="slds-float_right">
                 <lightning-button label={customLabels.cancelButtonLabel} title={customLabels.cancelButtonLabel}
-                    variant="neutral" class="slds-m-right_small" onclick={handleCancel}>
+                    variant="neutral" class="slds-m-right_small" onclick={handleCancel} disabled={isLoading}>
                 </lightning-button>
                 <lightning-button label={customLabels.saveButtonLabel} title={customLabels.saveButtonLabel}
-                    variant="brand" onclick={handleSubmit} data-id="submitButton">
+                    variant="brand" onclick={handleSubmit} data-id="submitButton" disabled={isSaveButtonDisabled}>
                 </lightning-button>
             </div>
         </footer>

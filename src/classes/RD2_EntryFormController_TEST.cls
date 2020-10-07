@@ -184,9 +184,9 @@ private with sharing class RD2_EntryFormController_TEST {
      * @description Validate that the System Admin User reports that they have the required field permissions
      */
     @IsTest
-    private static void shouldValidateUserHasPermissions() {
-        Boolean hasPerms = RD2_EntryFormController.checkRequiredFieldPermissions();
-        System.assert(hasPerms, 'Should determine that the Admin User has all permissions');
+    private static void shouldReturnTrueWhenUserHasPermissions() {
+        Boolean hasPerms = RD2_EntryFormController.hasRequiredFieldPermissions();
+        System.assertEquals(true, hasPerms, 'The Admin User should have permissions');
     }
 
     /**
@@ -194,7 +194,9 @@ private with sharing class RD2_EntryFormController_TEST {
      * are missing the required field permissions
      */
     @IsTest
-    private static void shouldValidateUserMissingPermissions() {
+    private static void shouldReturnFalseWhenUserIsMissingPermissions() {
+        User stdUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
+
         Id stdProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.PROFILE_STANDARD_USER LIMIT 1].Id;
 
         FieldPermissions fldPerm = [
@@ -207,11 +209,12 @@ private with sharing class RD2_EntryFormController_TEST {
         fldPerm.PermissionsEdit = false;
         update fldPerm;
 
-        User roUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
-        System.runAs(roUser) {
-            Boolean hasPerms = RD2_EntryFormController.checkRequiredFieldPermissions();
-            System.assert(!hasPerms, 'Should determine that the Standard User is missing permissions');
+        Test.startTest();
+        System.runAs(stdUser) {
+            Boolean hasPerms = RD2_EntryFormController.hasRequiredFieldPermissions();
+            System.assertEquals(false, hasPerms, 'The Standard User should be missing permissions');
         }
+        Test.stopTest();
     }
 
     /***
@@ -392,7 +395,6 @@ private with sharing class RD2_EntryFormController_TEST {
             + '","expirationYear":"' + CARD_EXPIRATION_YEAR
             + '"}}';
     }
-
     /****
     * @description Simulates an error response from the commitment creation callout
     * @return String

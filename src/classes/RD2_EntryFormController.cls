@@ -147,7 +147,7 @@ public with sharing class RD2_EntryFormController {
      * @return True if the User has Read access to all required fields in the UI
      */
     @AuraEnabled(cacheable=true)
-    public static Boolean checkRequiredFieldPermissions() {
+    public static Boolean hasRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
             'npe03__Amount__c',
             'npe03__Contact__c',
@@ -158,17 +158,17 @@ public with sharing class RD2_EntryFormController {
             UTIL_Namespace.StrTokenNSPrefix('StartDate__c')
         };
 
-        Boolean isMissingRequiredPermissions = true;
+        Boolean hasPermissions = true;
 
         for (String fld : requiredFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
             if (!dfr.isAccessible()) {
-                isMissingRequiredPermissions = false;
+                hasPermissions = false;
                 break;
             }
         }
 
-        return isMissingRequiredPermissions;
+        return hasPermissions;
     }
 
     /**
