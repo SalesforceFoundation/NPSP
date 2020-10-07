@@ -193,6 +193,11 @@ public with sharing class RD2_ValidationService {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
+            if (elevateService.isElevateRecordReactivated(rd, oldRd)) {
+                rd.addError(System.Label.RD2_ElevateRDClosedStatusCannotBeChanged);
+                continue;
+            }
+
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 rd.addError(System.Label.RD2_ElevatePermissionRequired);
                 continue;
