@@ -10,9 +10,13 @@ Resource        cumulusci/robotframework/Salesforce.robot
 
 *** Keywords ***
 
+Disable Duplicate Matching
+    [Documentation]  Disable Salesforce duplicate matching
+    Run Task        set_duplicate_rule_status
+        ...     active=${False}
+
 Insert 200 Contacts
     [Documentation]  Create 200 Contacts in CONTACTS suite variable
-    
     Set Suite Variable      ${COUNTER}   ${COUNTER + 1}
     Log to Console             ${COUNTER}
     ${random}=     Generate Random String     16
@@ -33,6 +37,7 @@ Insert 200 Contacts
 *** Test Cases ***
 
 Insert Contact Perf Test
+    [Setup]     Disable Duplicate Matching
     [Tags]    long     insertions
     FOR    ${index}    IN RANGE     150
         Insert 200 Contacts
