@@ -38,6 +38,11 @@ public inherited sharing class RD2_ElevateIntegrationService {
     public static final String LOG_TYPE_COMMITMENT_CANCEL = 'payment.commitment.cancel';
 
     /***
+     * @description Max length of a string to be stored in a picklist field
+     */
+    private static final Integer MAX_PICKLIST_FIELD_LEN = 255;
+
+    /***
      * @description CurrencyIsoCode field name
      */
     private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
@@ -323,7 +328,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             String messages = response.getErrorMessages();
             logger.addError(rd.Id, messages, LOG_TYPE_COMMITMENT_CANCEL);
 
-            rd.ClosedReason__c = messages;
+            rd.ClosedReason__c = messages.abbreviate(MAX_PICKLIST_FIELD_LEN);
         }
 
         /**
