@@ -1076,10 +1076,7 @@ flows:
             1:
                 flow: qa_org
             3:
-                task: test_performance
-                options:
-                    include: medium
-                    vars: persistent_org:False
+                task: test_insert_performance
 
     test_performance_LDV:
         description: 'Runs BDI performance tests against a pre-existing org'
