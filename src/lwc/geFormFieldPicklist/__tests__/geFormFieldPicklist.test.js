@@ -14,7 +14,7 @@ describe('c-ge-form-field-picklist', () => {
 
     afterEach(clearDOM);
 
-    it('should return 2 picklist options', () => {
+    it('should return 3 picklist options', () => {
         const element = createElement('c-ge-form-field-picklist', { is: GeFormFieldPicklist });
         getPicklistValuesWireAdapter.emit(mockGetPicklistValues);
         document.body.appendChild(element);
@@ -29,7 +29,7 @@ describe('c-ge-form-field-picklist', () => {
         });
     });
 
-    it('should return 3 picklist options for record type id fields', () => {
+    it('should return 2 picklist options for record type id fields', () => {
         const element = createElement('c-ge-form-field-picklist', { is: GeFormFieldPicklist });
         element.objectName = 'ObjectName__c';
         element.fieldName = 'RecordTypeId';
