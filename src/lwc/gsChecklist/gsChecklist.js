@@ -1,6 +1,11 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class gsChecklist extends LightningElement {
+    
+    /**
+    * Group of step in a checklist
+    * @type      Checklist
+    */
     @api group;
     @track open = false;
 
@@ -32,7 +37,6 @@ export default class gsChecklist extends LightningElement {
     * @see         Action
     */
     onClickOpenOrClose(event) {
-        console.log('onClickOpenOrClose')
         this.open = !this.open;
     }
 }
