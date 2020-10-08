@@ -37,18 +37,34 @@ public with sharing class GS_ApplicationStatusController {
     private static final String APPLICATION_PARAMETER = 'Application';
     private static final String TRIAL_EXPIRATION_PARAMETER = 'TrialExpiration';
     private static final Date DEFAULT_NON_APPLICATED_DATE = Date.parse('01/01/1970');
+    private static final String STATIC_RESOURCE_NAME = 'gsApplicationConfiguration';
+    
+    @TestVisible
+    private static Map<String, Object> testingConfiguration {
+        get {
+            if (testingConfiguration != null) {
+                return testingConfiguration;
+            } else {
+                testingConfiguration = new GS_ApplicationStatusController().getTestingConfiguration();
+                return testingConfiguration;
+            }
+        }
+        set {
+            testingConfiguration = value;
+        }
+    }
     /**
      * @description Aura enabled method for retrieving Organization Expiration date, if its running on a sandbox instance and the application date.
      * The Expiration Date and The is sandbox is queried from Organization Object. The application date is gotten from the P10_Application_Date FeatureParameter.
      * As this is using some Values that cannot be written and are dependable from the org and application status which we dont control,
-     * for a better testeability, all the returning values can be overriden using the Testing_Configuration__c custom_setting.
+     * for a better testeability, all the returning values can be overriden using creating a new StaticResource called 'gsApplicationConfiguration'
+     * which contains a json file. For more information please refer to GS_ApplicationStatusController.getTestingConfiguration documentation.
      * @return ApplicationStatus: Object with the status of the application for licenses of the org.
      */
      @AuraEnabled
     public static ApplicationStatus getApplicationStatus() { 
         
         GS_ApplicationStatusController controller = new GS_ApplicationStatusController();
-        Map<String, Object> testingConfiguration = controller.getTestingConfiguration();
         
         Boolean overrideValuesForTesting = UTIL_Namespace.isScratchOrg() && testingConfiguration != null;
         
@@ -67,7 +83,7 @@ public with sharing class GS_ApplicationStatusController {
      * @param  overrideValuesForTesting true if using custom setting is required for overriding Org information
      * @param  testingConfiguration     testingConfiguration Map<String, Object> with the parameters of the org
      * @param  org                      org Organization object(for this method it is required to query the IsSandbox field or it is going to fail)
-     * @return                          return true if org is a sandbox or scratch or the value in the field "Sandbox" of the Testing_Configuration custom setting.
+     * @return                          return true if org is a sandbox or scratch or the value in the field "Sandbox" of the Static Resource gsApplicationConfiguration.
      */
     private Boolean isSandbox(Boolean overrideValuesForTesting, Map<String,Object> testingConfiguration, Organization org) {
         return overrideValuesForTesting ? (Boolean) testingConfiguration.get(SANDBOX_PARAMETER) 
@@ -76,7 +92,7 @@ public with sharing class GS_ApplicationStatusController {
     /**
      * @description Retrieves the application date.
      * On prod this is populated using the FeatureParameter "P10_Application_Date"
-     * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the custom setting Testing_Configuration__c
+     * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the Static Resource gsApplicationConfiguration
      * @param testingConfiguration Map<String, Object> Map of string, object with the testing configuration for overriden the returning values.
      * @return   return Application date gotten of the P10_Application_Date FeatureParameter OR the testing configuration object.
      */
@@ -97,14 +113,13 @@ public with sharing class GS_ApplicationStatusController {
     /**
      * @description Retrieves the Trial expiration date.
      * On prod this is populated quering the Organization object.
-     * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the custom setting Testing_Configuration__c
-     * @param  overrideValuesForTesting Boolean true if usage of Testing_Configuration__c custom setting is desired
+     * For QA purpose this values can be overriden if this is running on a Scratch org and there is static resource called gsApplicationConfiguration
+     * @param  overrideValuesForTesting Boolean true if usage of Static Resource gsApplicationConfiguration is desired
      * @param  testingConfiguration     Map<String, Object> parsed TestingConfiguration object
      * @param  org                      Organization the Organization object, the query should have included the TrialExpiration field 
      * @return                          DateTime with the expirationDate.
      */
     private DateTime getExpirationDate(Boolean overrideValuesForTesting,Map<String,Object> testingConfiguration, Organization org) {
-        
         if (overrideValuesForTesting) {
             return  (testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER) == null ? null : 
                     DateTime.parse(testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER).toString()));
@@ -115,19 +130,20 @@ public with sharing class GS_ApplicationStatusController {
     }
 
     /**
-     * @description Returns the parsed Testing_Configuration.
-     * @return   Map<String, Object> Parsed Testing_Configuration Custom_Setting. it is a json format.
+     * @description Returns a Map<String,Object> retrieved from a Static Resource called 'gsApplicationConfiguration'
+     * @return   Map<String, Object> testing configuration after parsing the Static Resource Json
      * Examples: 
      * {"Sandbox":false} simulates an Active org.
      * {"Sandbox":false,"TrialExpiration":"10/15/2020, 00:01 am”} simulates a trial org which is not applied for licenses.
      * {"Sandbox":false,"TrialExpiration":"10/15/2020","Application":"10/02/2020"} Simulates a trial org which has applied for licenses.
      */
     private Map<String, Object> getTestingConfiguration() {
-        Testing_Configuration__c[] tc = [SELECT Configuration__c 
-                                         FROM   Testing_Configuration__c];
-        if (!tc.IsEmpty()) {
-            Map<String, Object> parsedConfiguration = (Map<String, Object>) JSON.deserializeUntyped(tc[0].Configuration__c);
-            return parsedConfiguration;
+        List<StaticResource> staticResources = [SELECT Body
+                                                FROM StaticResource
+                                                WHERE Name = :STATIC_RESOURCE_NAME
+                                               ];
+        if (!staticResources.isEmpty()) {
+            return (Map<String, Object>) JSON.deserializeUntyped(staticResources[0].Body.toString());
         }
         return null;
     }

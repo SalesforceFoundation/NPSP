@@ -38,9 +38,11 @@ public with sharing class GS_ApplicationStatusControllerTest {
      */
     @IsTest 
     public static void testGetApplicationStatusTrialOrgNonApplicated() {
-        Testing_Configuration__c tc = new Testing_Configuration__c(Configuration__c = '{"Sandbox":false,"TrialExpiration":"10/15/2020, 00:01 AM"}');
-        insert tc; 
+        Map<String, Object> testingConfiguration = new Map<String, Object> { 'Sandbox' => false, 
+                                                                             'TrialExpiration' => '10/15/2020, 00:01 AM'};
 
+        GS_ApplicationStatusController.testingConfiguration = testingConfiguration;
+        
         GS_ApplicationStatusController.ApplicationStatus status = GS_ApplicationStatusController.getApplicationStatus();
         System.assert(status != null, 'Status should not be null');
         System.assert(!status.isSandbox, 'Status should not be sandbox');
@@ -52,9 +54,14 @@ public with sharing class GS_ApplicationStatusControllerTest {
      */
     @IsTest 
     public static void testGetApplicationStatusTrialOrgApplicated() {
-        Testing_Configuration__c tc = new Testing_Configuration__c(Configuration__c = '{"Sandbox":false,"TrialExpiration":"10/15/2020, 00:01 AM", "Application":"10/02/2020"}');
-        insert tc; 
+       
 
+        Map<String, Object> testingConfiguration = new Map<String, Object> { 'Sandbox' => false, 
+                                                                             'TrialExpiration' => '10/15/2020, 00:01 AM',
+                                                                             'Application' => '10/02/2020'};
+        
+        GS_ApplicationStatusController.testingConfiguration = testingConfiguration;
+        
         GS_ApplicationStatusController.ApplicationStatus status = GS_ApplicationStatusController.getApplicationStatus();
         System.assert(status != null, 'Status should not be null');
         System.assert(!status.isSandbox, 'Status should not be sandbox');
