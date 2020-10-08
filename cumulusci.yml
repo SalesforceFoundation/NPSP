@@ -214,7 +214,7 @@ tasks:
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
-            suites: robot/Cumulus/perftests/
+            suites: robot/Cumulus/perftests/Insert_Tests.robot
             options:
                 outputdir: robot/Cumulus/results
 
