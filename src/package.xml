@@ -70,12 +70,17 @@
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>ALLO_UnitTestHelper_TEST</members>
+        <members>AN_AutoNumberService</members>
+        <members>AN_AutoNumberService_TEST</members>
+        <members>AN_AutoNumber_TDTM</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
         <members>BDI_AdditionalObjectService</members>
         <members>BDI_AdditionalObjectService_TEST</members>
+        <members>BDI_BatchNumberSettingsController</members>
+        <members>BDI_BatchNumberSettingsController_TEST</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
@@ -927,6 +932,13 @@
         <members>Allocations_Settings__c.Payment_Allocations_Enabled__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
+        <members>AutoNumber__c.Description__c</members>
+        <members>AutoNumber__c.Display_Format__c</members>
+        <members>AutoNumber__c.Field_API_Name__c</members>
+        <members>AutoNumber__c.IsActive__c</members>
+        <members>AutoNumber__c.Max_Used_Number__c</members>
+        <members>AutoNumber__c.Object_API_Name__c</members>
+        <members>AutoNumber__c.Starting_Number__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
         <members>Batch_Data_Entry_Settings__c.Viewed_Retirement_Alert__c</members>
@@ -986,6 +998,7 @@
         <members>DataImportBatch__c.Batch_Defaults__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
+        <members>DataImportBatch__c.Batch_Number__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
         <members>DataImportBatch__c.Batch_Status__c</members>
         <members>DataImportBatch__c.Batch_Table_Columns__c</members>
@@ -1257,6 +1270,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>
+        <members>Opportunity.Batch_Number__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
         <members>Opportunity.CommitmentId__c</members>
@@ -1399,6 +1413,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__OppPayment__c.Authorized_Date__c</members>
         <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Batch_Number__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Month__c</members>
         <members>npe01__OppPayment__c.Card_Expiration_Year__c</members>
         <members>npe01__OppPayment__c.Card_Last_4__c</members>
@@ -1869,6 +1884,18 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>autoNumberErrorDuplicate</members>
+        <members>autoNumberErrorInvalidDisplayFormat</members>
+        <members>batchNumberSettingsConfigureHeader</members>
+        <members>batchNumberSettingsDescActivation</members>
+        <members>batchNumberSettingsDescDisplayFormat</members>
+        <members>batchNumberSettingsDescription</members>
+        <members>batchNumberSettingsDescriptionCreate</members>
+        <members>batchNumberSettingsError</members>
+        <members>batchNumberSettingsHeader</members>
+        <members>batchNumberSettingsHeaderDisplayFormat</members>
+        <members>batchNumberSettingsHeaderFormats</members>
+        <members>batchNumberSettingsActivate</members>
         <members>bdeRetirementBlockerHeader</members>
         <members>bdeRetirementBlockerMessage</members>
         <members>bdeRetirementWarningBody</members>
@@ -2093,6 +2120,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonActivate</members>
         <members>commonAdminPermissionErrorMessage</members>
         <members>commonAdminPermissionErrorTitle</members>
         <members>commonAmount</members>
@@ -2109,6 +2137,7 @@
         <members>commonConcurrentBatchError</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
+        <members>commonDeactivate</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
@@ -3161,6 +3190,7 @@
         <members>Address__c</members>
         <members>Allocation__c</members>
         <members>Allocations_Settings__c</members>
+        <members>AutoNumber__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
         <members>Custom_Column_Header__c</members>
@@ -3256,6 +3286,13 @@
         <members>Allocations_Settings__c-iw</members>
         <members>Allocations_Settings__c-ja</members>
         <members>Allocations_Settings__c-nl_NL</members>
+        <members>AutoNumber__c-de</members>
+        <members>AutoNumber__c-en_US</members>
+        <members>AutoNumber__c-es</members>
+        <members>AutoNumber__c-fr</members>
+        <members>AutoNumber__c-iw</members>
+        <members>AutoNumber__c-ja</members>
+        <members>AutoNumber__c-nl_NL</members>
         <members>Batch_Data_Entry_Settings__c-de</members>
         <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
@@ -3692,6 +3729,7 @@
         <members>Account_Soft_Credit__c-Account Soft Credit Layout</members>
         <members>Address__c-Address Layout</members>
         <members>Allocation__c-Allocation Layout</members>
+        <members>AutoNumber__c-AutoNumber Layout</members>
         <members>Batch__c-Batch Layout</members>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
@@ -3734,6 +3772,7 @@
     </types>
     <types>
         <members>batchProgress</members>
+        <members>bdiBatchNumberSettings</members>
         <members>bdeRetirementAlert</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
