@@ -1207,7 +1207,12 @@ flows:
                 ## Delete all scheduled NPSP jobs ... just in case.
                 options:
                     managed: true
-            17:
+            16:
+                task: set_duplicate_rule_status
+                options:
+                    api_names: Account.Standard_Account_Duplicate_Rule, Contact.Standard_Contact_Duplicate_Rule
+                    active: false
+            19:
                 task: hack_cci_sf_sep_2020
             20:
                 task: generate_and_load_from_yaml_hack

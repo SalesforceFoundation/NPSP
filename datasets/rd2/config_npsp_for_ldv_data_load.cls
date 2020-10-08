@@ -23,7 +23,11 @@ public static void before_data_load() {
     %%%NAMESPACE%%%Household_Naming_Settings__c namingSettings = %%%NAMESPACE%%%Household_Naming_Settings__c.getOrgDefaults();
 
     if (rdSettings.%%%NAMESPACE%%%IsRecurringDonations2Enabled__c == false) {
-        throw new InitException('Enhanced Recurring Donations must be enabled to continue. Execute the "enable_rd2" first.');
+        String taskName = 'enable_rd2';
+        if ('%%%NAMESPACE%%%' != '') {
+            taskName += '_managed';
+        }
+        throw new InitException('Enhanced Recurring Donations must be enabled to continue. Execute the "' + taskName + '" first.');
     }
 
     // Block the first installment from being created to avoid lock errors during the bulk insert
