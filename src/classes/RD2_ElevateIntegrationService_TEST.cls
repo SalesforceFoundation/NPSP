@@ -637,8 +637,8 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(closedReason, rd.ClosedReason__c,
-            'RD Closed Reason should be swapped back to the user provided value');
+        System.assertEquals(UTIL_Http_TEST.MESSAGE_NOT_FOUND, rd.ClosedReason__c,
+            'RD Closed Reason should contain the error response message');
 
         assertCancelCommitmentError(UTIL_Http_TEST.MESSAGE_NOT_FOUND, rd.Id);
     }
@@ -668,8 +668,8 @@ public class RD2_ElevateIntegrationService_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(closedReason, rd.ClosedReason__c,
-            'RD Closed Reason should be swapped back to the user provided value');
+        System.assertEquals(UTIL_Http_TEST.MESSAGE_DATA_CONFLICT, rd.ClosedReason__c,
+            'RD Closed Reason should contain the error response message');
 
         assertCancelCommitmentError(UTIL_Http_TEST.MESSAGE_DATA_CONFLICT, rd.Id);
     }

@@ -323,12 +323,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
             String messages = response.getErrorMessages();
             logger.addError(rd.Id, messages, LOG_TYPE_COMMITMENT_CANCEL);
 
-            if (isNotFound(response)
-                || isDataConflict(response)
-            ) {
-                return;
-            }
-
             rd.ClosedReason__c = messages;
         }
 
