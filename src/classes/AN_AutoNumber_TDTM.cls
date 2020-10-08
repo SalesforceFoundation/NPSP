@@ -1,5 +1,5 @@
-<!--
-    Copyright (c) 2019, Salesforce.org
+/*
+    Copyright (c) 2020 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,18 +26,23 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-	@author Salesforce.org
-	@date 2019
-	@group Recurring Donations
-	@description Harness app for NPSP Settings Lightning Components.
--->
-<aura:application access="GLOBAL" extends="ltng:outApp">
-    <aura:dependency resource="c:RD2_EnablementDelegate" />
-    <aura:dependency resource="c:RD2_EnablementDelegateSimple" />
-    <aura:dependency resource="c:rd2StatusMappingSettings" />
-    <aura:dependency resource="c:utilIllustration" />
-    <aura:dependency resource="c:bdeRetirementAlert" />
-    <aura:dependency resource="c:bdiBatchNumberSettings" />
-</aura:application>
+*/
+/**
+* @author Salesforce.org
+* @date 2020
+* @description Trigger Handler for SObjects that have active AutoNumbers.
+*/
+public class AN_AutoNumber_TDTM extends TDTM_Runnable {
+
+    public override DmlWrapper run(
+            List<SObject> newList, List<SObject> oldList,
+            TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
+    ) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            AN_AutoNumberService autoNumberService = new AN_AutoNumberService(newList);
+            autoNumberService.apply();
+        }
+        return null;
+    }
+
+}
