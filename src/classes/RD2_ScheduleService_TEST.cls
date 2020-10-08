@@ -91,7 +91,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
 
-        System.assertEquals(2, schedules.size(), 'Two schedules should exist for Installment Period 1st and 15th');        
+        System.assertEquals(2, schedules.size(), 'Two schedules should exist for Installment Period 1st and 15th');
         for (RecurringDonationSchedule__c schedule : schedules) {
             System.assertEquals(rd.npe03__Amount__c, schedule.InstallmentAmount__c, 'Installment Amount should match RD Amount');
             System.assertEquals(PAYMENT_ACH_EFT, schedule.PaymentMethod__c, 'Payment Method should match RD Payment Method');
@@ -785,7 +785,7 @@ public with sharing class RD2_ScheduleService_TEST {
         ).values()[0];
 
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of Installments should match');
-        System.assertEquals(nextDonationDate, installments[numberOfInstallments - 1].nextDonationDate, 
+        System.assertEquals(nextDonationDate, installments[numberOfInstallments - 1].nextDonationDate,
             'Final installment date should match RD Next Donation Date');
     }
 
@@ -872,7 +872,7 @@ public with sharing class RD2_ScheduleService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();        
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
 
         Test.startTest();
         insert rd;
@@ -912,7 +912,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         Integer expectedNumber = 12;
         System.assertEquals(expectedNumber, installments.size(), 'There should be 12 installments.');
-        System.assertEquals(nextDonationDate, installments[expectedNumber - 1].nextDonationDate, 
+        System.assertEquals(nextDonationDate, installments[expectedNumber - 1].nextDonationDate,
             'Final installment date should be 10/1/2020.');
     }
 
@@ -976,7 +976,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         Integer expectedNumber = 10;
         System.assertEquals(expectedNumber, installments.size(), 'There should be 10 installments.');
-        System.assertEquals(nextDonationDate, installments[expectedNumber - 1].nextDonationDate, 
+        System.assertEquals(nextDonationDate, installments[expectedNumber - 1].nextDonationDate,
             'Final installment date should be 10/1/2020.');
     }
 
@@ -1073,7 +1073,7 @@ public with sharing class RD2_ScheduleService_TEST {
         ).values()[0];
 
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of Installments should match');
-        System.assertEquals(nextDonationDate, installments[numberOfInstallments - 1].nextDonationDate, 
+        System.assertEquals(nextDonationDate, installments[numberOfInstallments - 1].nextDonationDate,
             'Final installment date should be 4/15/2020.');
     }
 
@@ -1231,7 +1231,7 @@ public with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
         Date nextDonationDate = service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules);
-        System.assertEquals(startDate, nextDonationDate, 
+        System.assertEquals(startDate, nextDonationDate,
             'The Next Donation Date should be the first installment Opp Close Date');
     }
 
@@ -1281,7 +1281,7 @@ public with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
         Date nextDonationDate = service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules);
-        System.assertEquals(scheduleEndDate, nextDonationDate, 
+        System.assertEquals(scheduleEndDate, nextDonationDate,
             'The Next Donation Date should be the same as the schedule end date');
     }
 
@@ -1342,7 +1342,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be set');
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules), 
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules),
             'The Next Donation Date should be the next installment Next Donation Date');
     }
 
@@ -1397,13 +1397,13 @@ public with sharing class RD2_ScheduleService_TEST {
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, opps, rdSchedules);
         service.evaluateScheduleEndDate(new RD2_RecurringDonation(rd), rdSchedules);
 
-        System.assertEquals(scheduleEndDate, opps[plannedInstallments - 1].CloseDate, 
+        System.assertEquals(scheduleEndDate, opps[plannedInstallments - 1].CloseDate,
             'The last planned Opp Close Date should match');
-        System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 
+        System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c,
             'The End Date should be the last planned Opp Close Date');
 
         Date nextDonationDate = service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules);
-        System.assertEquals(null, nextDonationDate, 
+        System.assertEquals(null, nextDonationDate,
             'The Next Donation Date should be empty when number of planned installments has been reached');
     }
 
@@ -1442,11 +1442,11 @@ public with sharing class RD2_ScheduleService_TEST {
                 .withCloseDate(startDate.addMonths(month))
                 .build()
             );
-        }       
+        }
         opps.add(builder
             .withClosedLostStage()//the last Opp is Closed Lost
             .withCloseDate(today.addDays(1))
-            .build()    
+            .build()
         );
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
@@ -1461,12 +1461,12 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(nextDonationDate, rd.RecurringDonationSchedules__r[0].EndDate__c,
             'The schedule end date should be set to the next installment after the current Opp is Closed Lost');
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules), 
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules),
             'The Next Donation Date should be the next installment Next Donation Date');
     }
 
     /***
-    * @description Verifies correct schedule end date is determined 
+    * @description Verifies correct schedule end date is determined
     * when future open Opps exist for the fixed-length RD
     */
     @IsTest
@@ -1500,13 +1500,13 @@ public with sharing class RD2_ScheduleService_TEST {
                 .withCloseDate(startDate.addMonths(month))
                 .build()
             );
-        } 
-        for (Integer i = 0; i < paidInstallments; i++) { 
+        }
+        for (Integer i = 0; i < paidInstallments; i++) {
             opps[i].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
         }
         //Set the next one after it to Closed Lost
         opps[3].StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
-        
+
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
         List<RecurringDonationSchedule__c> rdSchedules = service.buildNewSchedules(rd);
@@ -1517,7 +1517,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertEquals(Date.newInstance(2020, plannedInstallments + 1, 1), rd.RecurringDonationSchedules__r[0].EndDate__c,
             'The schedule end date should be moved one month forward since one Opp is Closed Lost');
-        System.assertEquals(opps[4].CloseDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules), 
+        System.assertEquals(opps[4].CloseDate, service.getNextDonationDate(new RD2_RecurringDonation(rd), rdSchedules),
             'The Next Donation Date should be the first open Opp installment');
     }
 
@@ -1742,7 +1742,7 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
-    * @description Verifies pause schedules are excluded from updated schedules 
+    * @description Verifies pause schedules are excluded from updated schedules
     * when Recurring Donation is not closed.
     */
     @isTest
@@ -1768,12 +1768,12 @@ public with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(1, changes.objectsToInsert.size(), 'One Schedule should be set for insert');
         System.assertNotEquals(true, changes.objectsToUpdate[0].get('IsPause__c'), 'Pause Schedule should not be updated');
         System.assertNotEquals(true, changes.objectsToInsert[0].get('IsPause__c'), 'Pause Schedule should not be inserted');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY, changes.objectsToInsert[0].get('InstallmentPeriod__c'), 
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY, changes.objectsToInsert[0].get('InstallmentPeriod__c'),
             'New schedule Installment Period should match');
     }
 
     /***
-    * @description Verifies pause schedules are included in updated schedules 
+    * @description Verifies pause schedules are included in updated schedules
     * when Recurring Donation is just closed.
     */
     @isTest
@@ -1805,7 +1805,7 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
-    * @description Verifies pause schedules are excluded in updated schedules 
+    * @description Verifies pause schedules are excluded in updated schedules
     * when Recurring Donation is just closed and the pause schedule has already ended.
     */
     @isTest
@@ -1832,7 +1832,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         System.assertNotEquals(true, changes.objectsToUpdate[0].get('IsPause__c'), 'Pause Schedule should not be updated');
     }
-    
+
     /***
     * @description Verifies installments are set as skipped when within active pause date range
     */
@@ -1857,12 +1857,12 @@ public with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
 
         for (Integer i = 0, pauseCounter = 4; i < pauseCounter; i++) {
-            System.assertEquals(true, installments[i].isSkipped, 
+            System.assertEquals(true, installments[i].isSkipped,
                 'Installment should be skipped when within the pause: ' + i + ' -> ' + installments[i]);
         }
-        
+
         for (Integer i = 4; i < NUM_INSTALLMENTS; i++) {
-            System.assertEquals(false, installments[i].isSkipped, 
+            System.assertEquals(false, installments[i].isSkipped,
                 'Installment should not be skipped after the pause: ' + i + ' -> ' + installments[i]);
         }
     }
@@ -1892,7 +1892,7 @@ public with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
 
         for (RD2_ScheduleService.Installment installment : installments) {
-            System.assertEquals(false, installment.isSkipped, 
+            System.assertEquals(false, installment.isSkipped,
                 'Installment should not be skipped when within the inactive pause: ' + installment);
         }
     }
@@ -1944,7 +1944,7 @@ public with sharing class RD2_ScheduleService_TEST {
             actualException = e;
         }
 
-        System.assertEquals(null, actualException, 
+        System.assertEquals(null, actualException,
             'No error should be generated when cancelling a Pause and none exists');
     }
 
@@ -2040,13 +2040,13 @@ public with sharing class RD2_ScheduleService_TEST {
             actualException = e;
         }
 
-        System.assertNotEquals(null, actualException, 
+        System.assertNotEquals(null, actualException,
             'An error should be generated due to invalid new Pause Schedule');
 
         RecurringDonationSchedule__c actualPause = pauseHandler.getPauseSchedule(rd.Id);
 
         System.assertEquals(existingPause.Id, actualPause.Id, 'Existing Pause should be returned');
-        System.assertEquals(true, pauseHandler.isActivePause(actualPause, RD2_ScheduleService.currentDate), 
+        System.assertEquals(true, pauseHandler.isActivePause(actualPause, RD2_ScheduleService.currentDate),
             'Existing Pause should be active');
     }
 
@@ -2231,7 +2231,7 @@ public with sharing class RD2_ScheduleService_TEST {
         insert pause;
         return pause;
     }
-    
+
     /**
      * @description Builds a pause schedule
      * @param startDate Start Date of the pause schedule
