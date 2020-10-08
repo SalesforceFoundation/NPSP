@@ -379,7 +379,7 @@ public without sharing class RD2_ScheduleService {
     public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
         return
             !pauseHandler.isPause(schedule)
-            && isWithinDateRange(schedule, referenceDate)
+            && isScheduled(schedule, referenceDate)
             && isValidInstallmentFrequency(schedule);
     }
 
@@ -389,7 +389,7 @@ public without sharing class RD2_ScheduleService {
     * @param referenceDate Reference Date
     * @return Boolean
     */
-    private Boolean isWithinDateRange(RecurringDonationSchedule__c schedule, Date referenceDate) {
+    private Boolean isScheduled(RecurringDonationSchedule__c schedule, Date referenceDate) {
         return schedule.EndDate__c == null
             || (referenceDate <= schedule.EndDate__c && schedule.StartDate__c <= schedule.EndDate__c);
     }
@@ -797,7 +797,7 @@ public without sharing class RD2_ScheduleService {
     */
     private void addScheduleIfActive(RecurringDonationSchedule__c schedule, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
 
-        if (isWithinDateRange(schedule, currentDate)) {
+        if (isScheduled(schedule, currentDate)) {
 
             if (!newSchedulesByRdId.containsKey(schedule.RecurringDonation__c)) {
                 newSchedulesByRdId.put(schedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
@@ -990,7 +990,8 @@ public without sharing class RD2_ScheduleService {
     public class PauseScheduleHandler {
 
         /***
-        * @description Indicates if the Recurring Donation is an active pause schedule
+        * @description Indicates if the Recurring Donation has an active pause schedule
+        * at some point in the future (not necessarily in a current pause state).
         * @param schedules Recurring Donation Schedules
         * @param referenceDate As of today to compare the Schedule Start and End Dates against
         * @return Boolean
@@ -1025,18 +1026,29 @@ public without sharing class RD2_ScheduleService {
                 return false;
             }
 
-            return isWithinDateRange(schedule, referenceDate);
+            return isScheduled(schedule, referenceDate);
         }
 
         /***
-        * @description Indicates if the schedule is active starting from the reference date
+        * @description Indicates if the schedule record is either currently active or will be active in the future
         * @param schedule Recurring Donation schedule
         * @param referenceDate Reference Date
         * @return Boolean
         */
-        private Boolean isWithinDateRange(RecurringDonationSchedule__c schedule, Date referenceDate) {
-            return schedule.EndDate__c == null
-                || (referenceDate <= schedule.EndDate__c && schedule.StartDate__c <= schedule.EndDate__c);
+        private Boolean isScheduled(RecurringDonationSchedule__c schedule, Date referenceDate) {
+            return schedule.EndDate__c == null ||
+                (referenceDate <= schedule.EndDate__c && schedule.StartDate__c <= schedule.EndDate__c);
+        }
+
+        /***
+        * @description Indicates if the schedule will be active on the date specified.
+        * @param schedule Recurring Donation schedule
+        * @param referenceDate Reference Date
+        * @return Boolean
+        */
+        private Boolean isCurrentlyActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
+            return schedule.StartDate__c <= referenceDate &&
+                (schedule.EndDate__c == null || referenceDate <= schedule.EndDate__c);
         }
 
         /***
@@ -1150,6 +1162,7 @@ public without sharing class RD2_ScheduleService {
         */
         public Set<String> getFields() {
             return new Set<String> {
+                'Active__c',
                 'Campaign__c',
                 'Campaign__r.Name',
                 'StartDate__c',
