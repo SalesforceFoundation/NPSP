@@ -62,6 +62,203 @@ public with sharing class BDI_Donations_TEST {
         insert listOppT;
     }
 
+    /*********************************************************************************************************
+    * @description verifies that an opportunity target object record should be populated with a batch number if the
+     * data import record is not being processed in a dry run and the data import batch has a batch number
+     * populated
+    */
+    @isTest
+    static void opportunityShouldHaveBatchNumber() {
+        Opportunity opp = new Opportunity(
+            Name = 'Test opp',
+            StageName = 'Closed',
+            CloseDate = System.today()
+        );
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+            DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                                FROM DataImport__c
+                                                LIMIT 1];
+            Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(opp, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(true, shouldSetBatchNumber, 'The opportunity should be allowed to have a batch number set' +
+            ' on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that an opportunity that contains an Id should not be allowed to have a batch
+    * number set on it. To simulate an opportunity update, the opportunity is inserted so that an Id is present.
+    */
+    @isTest
+    static void opportunityShouldNotHaveBatchNumber_Updated() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+        DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                            FROM DataImport__c
+                                            LIMIT 1];
+        Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(opp, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldSetBatchNumber, 'The opportunity should NOT be allowed to have a batch ' +
+            'number set on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that a payment that is paid should not be allowed to have a batch
+    * number set on it. To simulate an payment update, the payment is inserted so that an Id is present.
+    */
+    @isTest
+    static void paymentShouldHaveBatchNumber_paid() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Paid__c = true
+        );
+        insert payment;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+        DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                            FROM DataImport__c
+                                            LIMIT 1];
+        Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(payment, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(true, shouldSetBatchNumber, 'The payment should NOT be allowed to have a batch ' +
+                'number set on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that an payment that is unpaid should not be allowed to have a batch
+    * number set on it.
+    */
+    @isTest
+    static void paymentShouldNotHaveBatchNumber_unpaid() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.Id,
+            npe01__Paid__c = false
+        );
+        insert payment;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        batch[0].Batch_Number__c = 'UT-12345';
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+            DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                                FROM DataImport__c
+                                                LIMIT 1];
+            Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(payment, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldSetBatchNumber, 'The payment should NOT be allowed to have a batch ' +
+            'number set on it.');
+    }
+
+    /*********************************************************************************************************
+    * @description verifies that a target object should not have the batch number populated if the batch number
+    * is blank on the DI record
+    */
+    @isTest
+    static void paymentShouldNotHaveBatchNumber_NoBatchNumber() {
+        Opportunity opp = new Opportunity(
+                Name = 'Test opp',
+                StageName = 'Closed',
+                CloseDate = System.today()
+        );
+        insert opp;
+
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Paid__c = true
+        );
+        insert payment;
+
+        List<DataImportBatch__c> batch = UTIL_UnitTestData_TEST.createGiftBatches(1, 2, 1);
+        insert batch;
+
+        DataImport__c dataImport = BDI_DataImport_TEST.newDI('John','Doe', 200);
+        dataImport.NPSP_Data_Import_Batch__c = batch[0].Id;
+        insert dataImport;
+
+        BDI_MappingServiceHelpText fieldMapper = BDI_MappingServiceHelpText.getInstance();
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
+
+        Test.startTest();
+            DataImport__c insertedDataImport = [SELECT NPSP_Data_Import_Batch__r.Batch_Number__c
+                                                FROM DataImport__c
+                                                LIMIT 1];
+        Boolean shouldSetBatchNumber = donationImportHandler.shouldSetDonationBatchNumber(payment, insertedDataImport);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldSetBatchNumber, 'The payment should NOT be allowed to have a batch ' +
+                'number set on it.');
+    }
+
    /*********************************************************************************************************
     * @description  operation
     *       map to checkbox field and manually match to exiting opp

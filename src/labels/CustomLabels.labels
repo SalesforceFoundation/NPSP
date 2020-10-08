@@ -5009,6 +5009,136 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>batchNumberSettingsDescActivation</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of how to use the batch number format table</shortDescription>
+        <value>Activate or deactivate batch number formats. One batch number format can be active at time.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderFormats</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for table of batch number formats</shortDescription>
+        <value>Batch Number Formats</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsActivate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to save and activate the new batch number format</shortDescription>
+        <value>Save &amp; Activate</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation of Display Format options</shortDescription>
+        <value>Display Format allows you to control the appearance of your auto-numbered
+            field. It must be unique and include the number of digits as well as a prefix, if
+            desired. Your format can be up to 30 characters.&lt;/br&gt;&lt;/br&gt;
+            Examples&lt;/br&gt;
+            &lt;ul&gt;
+            &lt;li&gt;
+            A sequence formatted as {0} with a starting number of 9 displays as 9, 10, 11,
+            etc.
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as {00000} with a starting number of 9 displays as 00009,
+            00010, 00011, etc.&#10;
+            &lt;/li&gt;
+            &lt;li&gt;
+            A sequence formatted as ABC-{0000} with a starting number of 9 displays as
+            ABC-0009, ABC-0010, ABC-0011, etc.
+            &lt;/li&gt;
+            &lt;/ul&gt;
+        </value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsError</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for auto-number format setting</shortDescription>
+        <value>Cannot save auto-number format. Please review the errors and try again.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeaderDisplayFormat</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for explanation of Display Format options</shortDescription>
+        <value>Learn more about display formats.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescriptionCreate</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description for creating a batch number format</shortDescription>
+        <value>Create a custom batch number format and choose a starting number. You must activate the new batch number format. Only one batch number format can be active at a time. </value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorInvalidDisplayFormat</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when auto-number Display Format is invalid</shortDescription>
+        <value>Invalid Display Format.</value>
+    </labels>
+    <labels>
+        <fullName>autoNumberErrorDuplicate</fullName>
+        <categories>AutoNumber</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for duplicate auto-number format</shortDescription>
+        <value>This Display Format is already in use.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsConfigureHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number configuration</shortDescription>
+        <value>Configure Batch Number</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsDescription</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of the batch number settings</shortDescription>
+        <value>Batch numbers are unique identifiers used in Gift Entry and NPSP Data Importer. The auto-numbered value appears in the Batch Number fields on Opportunities and Payments.</value>
+    </labels>
+    <labels>
+        <fullName>batchNumberSettingsHeader</fullName>
+        <categories>Batch Number Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for batch number settings in NPSP Settings</shortDescription>
+        <value>Batch Number Settings</value>
+    </labels>
+    <labels>
+        <fullName>commonActivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Activate</shortDescription>
+        <value>Activate</value>
+    </labels>
+    <labels>
+        <fullName>commonDeactivate</fullName>
+        <categories>Auto Number</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Deactivate</shortDescription>
+        <value>Deactivate</value>
+    </labels>
+    <labels>
         <fullName>commonAmount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
