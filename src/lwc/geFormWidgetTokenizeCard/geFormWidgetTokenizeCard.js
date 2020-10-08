@@ -1,9 +1,9 @@
-import {api, LightningElement, track} from 'lwc';
+import { api, LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import getOrgDomainInfo from '@salesforce/apex/GE_GiftEntryController.getOrgDomainInfo';
+import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
 import getPaymentTransactionStatusValues
     from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
-import {format, getNamespace, isFunction} from 'c/utilCommon';
+import { format, getNamespace, isFunction } from 'c/utilCommon';
 import {
     fireEvent,
     registerListener,
@@ -72,7 +72,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.toggleWidget(true);
         this.hasUserDisabledWidget = true;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isWidgetDisabled : this.hasUserDisabledWidget
+            isWidgetDisabled: this.hasUserDisabledWidget
         });
     }
 
@@ -84,7 +84,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.toggleWidget(false);
         this.hasUserDisabledWidget = false;
         this.dispatchApplicationEvent('doNotChargeState', {
-            isWidgetDisabled : this.hasUserDisabledWidget
+            isWidgetDisabled: this.hasUserDisabledWidget
         });
     }
 
@@ -122,7 +122,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             url = url.replace('--c', `--${currentNamespace}`);
             alternateUrl = alternateUrl.replace('--c', `--${currentNamespace}`);
         }
-        return [{value: url}, {value: alternateUrl}];
+        return [{ value: url }, { value: alternateUrl }];
     }
 
     /*******************************************************************************
@@ -259,7 +259,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.cardHolderName = cardHolderName;
     }
 
-    dispatchApplicationEvent (eventName, payload) {
+    dispatchApplicationEvent(eventName, payload) {
         fireEvent(null, eventName, payload);
     }
 }

@@ -56,7 +56,7 @@ public with sharing class PS_TestPaymentService {
 
             // build the url for tokenize
             String tokenizeEndpoint = paymentServices.getEndpointRoot() + 
-                        paymentServices.getEndpoint(GE_PaymentServices.ElevateEndpoints.TOKENIZE);
+                        paymentServices.getEndpoint(PS_Request.ElevateEndpoints.TOKENIZE);
 
             // tokenize the card
             HttpResponse tokenHttpResponse = makeTokenizeCall(tokenizeEndpoint);
@@ -65,7 +65,7 @@ public with sharing class PS_TestPaymentService {
             // purchase
             String requestBodyParameters = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + token + '"}';
             paymentServices.setPurchaseCallBody(requestBodyParameters);
-            GE_PaymentServices.ResponseWrapper purchaseResponse = paymentServices.createTransaction();
+            UTIL_Http.Response purchaseResponse = paymentServices.createTransaction();
             checkPurchaseStatus(purchaseResponse);
             
             System.debug('Payment Service Flow successful.');
@@ -129,9 +129,9 @@ public with sharing class PS_TestPaymentService {
 
     /**
      * @description: check the purchase status
-     * @param GE_PaymentServices.ResponseWrapper response
+     * @param UTIL_Http.Response response
      */ 
-    private static void checkPurchaseStatus(GE_PaymentServices.ResponseWrapper response) {
+    private static void checkPurchaseStatus(UTIL_Http.Response response) {
         // check the request status
         System.assertEquals(201, response.statusCode, 'Purchase failed. ' + response.status);
 

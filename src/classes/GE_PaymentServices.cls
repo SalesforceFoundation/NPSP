@@ -41,8 +41,6 @@ public with sharing class GE_PaymentServices {
 
     @TestVisible Map<String, String> config;
 
-    public enum ElevateEndpoints { TOKENIZE, PURCHASE }
-
     public enum ElevateTransactionStatus {
         PENDING,
         AUTHORIZED,
@@ -52,18 +50,6 @@ public with sharing class GE_PaymentServices {
         NONRETRYABLEERROR,
         RETRYABLEERROR,
         REFUNDISSUED
-    }
-
-    public String getEndpoint(ElevateEndpoints endpoint) {
-        if (endpoint === ElevateEndpoints.TOKENIZE) {
-            return '/v1/payments/public/tokens';
-        }
-
-        if (endpoint === ElevateEndpoints.PURCHASE) {
-            return '/v1/payments/verified/purchase';
-        }
-
-        return null;
     }
 
     public GE_PaymentServices() {
@@ -94,28 +80,29 @@ public with sharing class GE_PaymentServices {
     * @description Method sends a OneTimePurchaseRequest to Elevate. Check out the Payments swagger in the
     * SFDO Payments repo for additional information.
     */
-    public ResponseWrapper createTransaction() {
-        // Create http request...
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(getEndpointRoot() + getEndpoint(ElevateEndpoints.PURCHASE));
-        request.setMethod('POST');
-        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt());
-        request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
-        if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
-            request.setHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS, 
-            config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
-        }
+    public UTIL_Http.Response createTransaction() {
+        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
 
-        // Set the body as a JSON object...
-        String purchaseCallBodyString = purchaseCallBody.getAsJson();
-        request.setBody(purchaseCallBodyString);
+        HttpRequest request = buildPurchaseRequest(purchaseCallBody.getAsJson());
+        
+        UTIL_Http.Response response = requestService.sendRequest(request);
 
-        HttpResponse response = http.send(request);
-        ResponseWrapper responseWrapper = new ResponseWrapper(response);
+        return response;
+    }
 
-        return responseWrapper;
+
+    /***
+    * @description Creates an HttpRequest for a new one-time payment (purchase) creation
+    * @param jsonRequestBody JSON containing parameters for the purchase call request body
+    * @return HttpRequest
+    */
+    public HttpRequest buildPurchaseRequest(String jsonRequestBody) {
+        return new PS_Request.Builder()
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_Request.ElevateEndpoint.PURCHASE)
+            .withRecommendedTimeout()
+            .withBody(jsonRequestBody)
+            .build();
     }
 
     public String getEndpointRoot() {
@@ -241,33 +228,6 @@ public with sharing class GE_PaymentServices {
             }
 
             return (PurchaseCallBody) JSON.deserialize(JSON.serialize(selfAsUntyped), PurchaseCallBody.class);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Inner class needed to return contents of the HttpResponse. HttpResponse can't be directly
-    * serialized using JSON.serialize().
-    */
-    public with sharing class ResponseWrapper {
-        public Integer statusCode;
-        public String status;
-        public String body;
-        public String error;
-        public Map<String, Object> headers = new Map<String, Object>{};
-
-        public ResponseWrapper() {}
-
-        public ResponseWrapper(HttpResponse response) {
-            this.statusCode = response.getStatusCode();
-            this.status = response.getStatus();
-            this.body = response.getBody();
-
-            String[] headerKeys = response.getHeaderKeys();
-            if (headerKeys != null) {
-                for (String headerKey : headerKeys) {
-                    this.headers.put(headerKey, response.getHeader(headerKey));
-                }
-            }
         }
     }
 

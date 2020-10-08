@@ -42,13 +42,6 @@ public with sharing class GE_GiftEntryController {
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
 
-    @AuraEnabled(cacheable=true)
-    public static OrgDomainInfo getOrgDomainInfo() {
-        String url = System.Url.getOrgDomainUrl().getHost();
-        String[] urlParts = url.split('\\.');
-        String podName = [SELECT InstanceName FROM Organization].InstanceName.toLowerCase();
-        return new OrgDomainInfo (urlParts[0], podName);
-    }
 
     /*******************************************************************************************************
     * @description Creates and posts an elevate purchase request
@@ -63,7 +56,7 @@ public with sharing class GE_GiftEntryController {
         try {
             GE_PaymentServices paymentServices = new GE_PaymentServices();
             paymentServices.setPurchaseCallBody(requestBodyParameters);
-            GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
+            UTIL_Http.Response response = paymentServices.createTransaction();
 
             return JSON.serialize(response);
         } catch (Exception ex) {
@@ -88,7 +81,7 @@ public with sharing class GE_GiftEntryController {
     * @return String: http response wrapper
     */
     private static String getPurchaseCallTimeoutResponse(Exception ex, String dataImportRecordId) {
-        GE_PaymentServices.ResponseWrapper response = new GE_PaymentServices.ResponseWrapper();
+        UTIL_Http.Response response = new UTIL_Http.Response();
         response.statusCode = TIMEOUT_STATUS_CODE;
         response.status = ex.getMessage();
         response.body = JSON.serialize(new Map<String, String>{ 'message' => PURCHASE_CALL_TIMEOUT_MESSAGE });
@@ -268,15 +261,6 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
-    public class OrgDomainInfo {
-        @AuraEnabled public String orgDomain;
-        @AuraEnabled public String podName;
-
-        public OrgDomainInfo (String orgDomain, String podName) {
-            this.orgDomain = orgDomain;
-            this.podName = podName;
-        }
-    }
 
     /*******************************************************************************************************
     * @description Retrieves all open Opportunities, and Opportunities with unpaid Payments, for the

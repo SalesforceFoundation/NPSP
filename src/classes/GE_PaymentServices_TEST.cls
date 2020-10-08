@@ -59,7 +59,7 @@ public class GE_PaymentServices_TEST {
         Test.startTest();
         GE_PaymentServices paymentServices = new GE_PaymentServices();
         paymentServices.setPurchaseCallBody(GOOD_PURCHASE_CALL_BODY);
-        GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
+        UTIL_Http.Response response = paymentServices.createTransaction();
         Test.stopTest();
 
         String actualValue = response.body;
@@ -102,7 +102,7 @@ public class GE_PaymentServices_TEST {
         Test.startTest();
         GE_PaymentServices paymentServices = new GE_PaymentServices();
         paymentServices.setPurchaseCallBody(BAD_PURCHASE_CALL_BODY);
-        GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
+        UTIL_Http.Response response = paymentServices.createTransaction();
         Test.stopTest();
 
         String actualValue = response.body;
