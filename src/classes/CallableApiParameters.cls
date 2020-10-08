@@ -49,6 +49,7 @@ public class CallableApiParameters {
     public static final String PARAM_PROCESSING_BOUNDARY = 'ProcessingBoundary';
     public static final String PARAM_DISABLE_ALLOCATION_TRIGGERS = 'DisableAllocationTriggers';
     public static final String PARAM_SCHEDULE_JOBS = 'ScheduleJobs';
+    public static final String PARAM_RECORD_IDS = 'RecordIds';
 
     private Map<String, Object> params;
 
@@ -61,11 +62,36 @@ public class CallableApiParameters {
     }
 
     /**
+     * @description Allow the getDataType methods to thrown an exception if the parameter is missing
+     * entirely. Disabled by default.
+     */
+    private Boolean isParamRequired = false;
+
+    /**
+     * @description Configure all future calls to retrieve a typed-parameter to require the parameter
+     * @return this
+     */
+    public CallableApiParameters withRequiredParamCheck() {
+        this.isParamRequired = true;
+        return this;
+    }
+
+    /**
+     * @description Configure all future calls to retrieve a typed-parameter to not require the parameter
+     * @return this
+     */
+    public CallableApiParameters withoutRequiredParamCheck() {
+        this.isParamRequired = false;
+        return this;
+    }
+
+    /**
      * @description Retrieve the specified Parameter as a String value
      * @param paramName Map key for the params collection
      * @return String representation of that parameter
      */
     public String getString(String paramName) {
+        validateRequiredParameter('String', paramName);
         try {
             return (String) params.get(paramName);
         } catch (Exception ex) {
@@ -79,6 +105,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public Boolean getBoolean(String paramName) {
+        validateRequiredParameter('Boolean', paramName);
         try {
             return (Boolean)params.get(paramName);
         } catch (Exception ex) {
@@ -93,6 +120,7 @@ public class CallableApiParameters {
      * @param defaultValue Default if null
      */
     public Boolean getBoolean(String paramName, Boolean defaultValue) {
+        validateRequiredParameter('Boolean', paramName);
         try {
             if (params.get(paramName) != null) {
                 return (Boolean) params.get(paramName);
@@ -109,6 +137,7 @@ public class CallableApiParameters {
      * @param defaultValue Default if null
      */
     public Datetime getDatetime(String paramName) {
+        validateRequiredParameter('Datetime', paramName);
         try {
             if (params.get(paramName) != null) {
                 return (Datetime) params.get(paramName);
@@ -138,6 +167,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public List<String> getListString(String paramName) {
+        validateRequiredParameter('List<String>', paramName);
         try {
             return (List<String>)params.get(paramName);
         } catch (Exception ex) {
@@ -151,6 +181,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public Set<String> getSetString(String paramName) {
+        validateRequiredParameter('Set<String>', paramName);
         try {
             return (Set<String>)params.get(paramName);
         } catch (Exception ex) {
@@ -164,6 +195,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public Set<Id> getSetId(String paramName) {
+        validateRequiredParameter('Set<Id>', paramName);
         try {
             return (Set<Id>)params.get(paramName);
         } catch (Exception ex) {
@@ -177,6 +209,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public Map<Id, String> getStringsById(String paramName) {
+        validateRequiredParameter('Map<Id, String>', paramName);
         try {
             return (Map<Id, String>)params.get(paramName);
         } catch (Exception ex) {
@@ -190,6 +223,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public List<SObject> getSObjects(String paramName) {
+        validateRequiredParameter('List<SObject>', paramName);
         try {
             return (List<SObject>)params.get(paramName);
         } catch (Exception ex) {
@@ -203,6 +237,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public List<Object> getObjects(String paramName) {
+        validateRequiredParameter('List<Object>', paramName);
         try {
             return (List<Object>)params.get(paramName);
         } catch (Exception ex) {
@@ -217,6 +252,7 @@ public class CallableApiParameters {
      * @param paramName Map key for the params collection
      */
     public List<CRLP_Rollup> getRollupDefinitions(String paramName) {
+        validateRequiredParameter('List<CRLP_Rollup', paramName);
         try {
             String rollupDefsJson = getString(paramName);
             return (List<CRLP_Rollup>)JSON.deserialize(rollupDefsJson, List<CRLP_Rollup>.class);
@@ -234,12 +270,27 @@ public class CallableApiParameters {
      * @return Map<Id, Map<SObjectType, List<SObject>>>
      */
     public Map<Id, Map<SObjectType, List<SObject>>> getRollupDataMap(String paramName) {
+        String paramType = 'Map<Id, Map<SObjectType, List<SObject>>>';
+        validateRequiredParameter(paramType, paramName);
         try {
             return (Map<Id, Map<SObjectType, List<SObject>>>)params.get(paramName);
         } catch (Exception ex) {
-            throwParameterException('Map<Id, Map<SObjectType, List<SObject>>>', paramName);
+            throwParameterException(paramType, paramName);
         }
         return null;
+    }
+
+    /**
+     * @description Throw an exception if the specific parameter is missing. Does not validate
+     * data type. That is handled by the specific 'get' methods. This only validates that the parameter
+     * is present. This check is disabled by default, but can be enabled when required.
+     * @param paramType The Parameter Data Type
+     * @param paramName The parameter name to check for
+     */
+    private void validateRequiredParameter(String paramType, String paramName) {
+        if (isParamRequired && !params.containsKey(paramName)) {
+            throwParameterException(paramType, paramName);
+        }
     }
 
     /**
