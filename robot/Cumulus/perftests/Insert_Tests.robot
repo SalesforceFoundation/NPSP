@@ -36,10 +36,10 @@ Insert 200 Contacts
 
 *** Test Cases ***
 
-Insert Contact Perf Test
+Insert Contact Perf Test 10000
     [Setup]     Disable Duplicate Matching
     [Tags]    long     insertions
-    FOR    ${index}    IN RANGE     150
+    FOR    ${index}    IN RANGE     50
         Insert 200 Contacts
         Log To Console   Inserted batch ${index}
     END
