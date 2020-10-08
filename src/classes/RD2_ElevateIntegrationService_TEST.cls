@@ -114,6 +114,48 @@ public class RD2_ElevateIntegrationService_TEST {
     }
 
     /***
+    * @description Verifies user is prevented from updating the Status of an Elevate RD when
+    * the state of the RD is Closed
+    */
+    @isTest
+    private static void shouldPreventElevateRDStatusUpdateWhenStatusClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+
+        npe03__Recurring_Donation__c oldRd = getElevateRecurringDonationBaseBuilder()
+            .withStatus(RD2_Constants.STATUS_CLOSED)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+
+        RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
+
+        System.assertEquals(true, service.isElevateRecordReactivated(rd, oldRd),
+            'Elevate RD Status update should not be permitted when Status is Closed');
+    }
+
+    /***
+    * @description Verifies user is permitted to update the Status of a non-Elevate RD when
+    * the state of the RD is Closed
+    */
+    @isTest
+    private static void shouldAllowNonElevateRDUpdateWhenStateClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        enableElevateUserPermissions();
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBaseBuilder()
+            .withStatus(RD2_Constants.STATUS_CLOSED)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+
+        RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
+
+        System.assertEquals(false, service.isElevateRecordReactivated(rd, oldRd),
+            'RD Status update should be permitted when Status is Closed for Non Elevate RD');
+    }
+
+    /***
     * @description Verifies user can update an RD originated in Elevate when
     * integration is enabled and user does not have permissions assigned
     * but the changed RD field is unrestricted (unlocked) field
