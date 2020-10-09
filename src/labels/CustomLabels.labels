@@ -12917,4 +12917,20 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Title of checklist User Onboard in Get Started</shortDescription>
         <value>Onboard Your Users</value>
     </labels>
+    <labels>
+        <fullName>gsChecklistArrowRightAlterText</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Arrow Icon alter text to collapse state</shortDescription>
+        <value>Click to collapse contents</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistArrowDownAlterText</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Arrow Icon alter text to expand state</shortDescription>
+        <value>Click to expand contents</value>
+    </labels>
 </CustomLabels>

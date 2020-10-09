@@ -18,7 +18,12 @@ c-gs-checklist-icon {
     position: relative;
 }
 
+.slds-media.info .border {
+    display: none;
+}
+
 .slds-media.info.open .border {
+    display:  inline;
     position: absolute;
     height: 100%;
     width: 2px;
@@ -34,7 +39,12 @@ c-gs-checklist-icon {
     height: 3rem;
 }
 
-.slds-media.info >  .step {
+.slds-media.info  .steps {
+    display: none;
     margin-top: .5rem;
     margin-bottom: .5rem;
+}
+
+.slds-media.info.open  .steps {
+    display: inline;
 }

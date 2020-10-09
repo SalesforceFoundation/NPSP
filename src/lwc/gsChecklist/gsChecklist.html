@@ -2,18 +2,14 @@
     <article class="slds-setup-assistant__step">
         <div class="slds-summary-detail">
             <button class="slds-button slds-button_icon slds-m-right_x-small slds-m-top_x-small"
+                id={arrowId}
                 onclick={onClickOpenOrClose}
-                tabindex="-1"
+                aria-controls={expandedId}
+                aria-expanded={open}
                 title={group.title}>
                 <lightning-icon  
-                    if:false={displaySteps}
-                    icon-name="utility:chevronright"
-                    size="x-small"
-                    title={group.title}>
-                </lightning-icon>
-                <lightning-icon 
-                    if:true={displaySteps}
-                    icon-name="utility:chevrondown"
+                    alternative-text=""
+                    icon-name={arrowIcon}
                     size="x-small"
                     title={group.title}>
                 </lightning-icon>
@@ -40,12 +36,12 @@
                             </div>
                         </div>
                         <div class={infoClass}>
-                            <div if:true={displaySteps} class="border">
+                            <div class="border">
                                 <div class="gap"></div>
                             </div>
                             <div class="container">
                                 <p>{group.desc}</p>
-                                <div if:true={displaySteps} class="steps">
+                                <div aria-hidden={notOpen} id={expandedId} class="slds-section steps">
                                     <!--Mock to add in another spring more info-->
                                     <p style="margin:3rem;height: 10rem;">Items</p>
                                 </div>
