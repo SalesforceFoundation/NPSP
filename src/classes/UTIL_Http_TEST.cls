@@ -227,7 +227,20 @@ public with sharing class UTIL_Http_TEST {
      * @return void
      */
     public static void mockSuccessCalloutResponse(String responseBody) {
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+        CalloutMock callout = new CalloutMock()
+            .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
+    /****
+    * @description Simulates a successful record created callout response
+    * @return String
+    */
+    public static void mockRecordCreatedCalloutResponse(String responseBody) {
+        CalloutMock callout = new CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_CREATED)
+            .withStatus(UTIL_Http.STATUS_OK)
             .withBody(responseBody);
 
         Test.setMock(HttpCalloutMock.class, callout);
@@ -277,7 +290,7 @@ public with sharing class UTIL_Http_TEST {
      * @return void
      */
     public static void mockErrorCalloutResponse(Integer statusCode, String status, String responseBody) {
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+        CalloutMock callout = new CalloutMock()
             .withStatusCode(statusCode)
             .withStatus(status)
             .withBody(responseBody);

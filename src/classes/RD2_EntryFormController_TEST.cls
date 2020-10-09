@@ -375,12 +375,7 @@ private with sharing class RD2_EntryFormController_TEST {
     * @return String
     */
     private static void mockRecordCreatedCalloutResponse() {
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_CREATED)
-            .withStatus(UTIL_Http.STATUS_OK)
-            .withBody(mockSuccessResponseBody());
-
-        Test.setMock(HttpCalloutMock.class, callout);
+        UTIL_Http_TEST.mockRecordCreatedCalloutResponse(mockSuccessResponseBody());
     }
 
     /****

@@ -47,7 +47,7 @@ public with sharing class GE_PaymentServices {
         RETRYABLEERROR,
         REFUNDISSUED
     }
-    
+
     /***
      * @description Payment Services configuration
      */
@@ -146,7 +146,7 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
-     * @description Method sends a purchase requet to Elevate. 
+     * @description Method sends a purchase requet to Elevate.
      * Check out the Payments swagger in the SFDO Payments repo for additional information.
      * @param requestBody Purchase call request body
      * @return UTIL_Http.Response
@@ -155,7 +155,7 @@ public with sharing class GE_PaymentServices {
         UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
 
         HttpRequest request = buildPurchaseRequest(requestBody.getAsJson());
-        
+
         UTIL_Http.Response response = requestService.sendRequest(request);
 
         return response;

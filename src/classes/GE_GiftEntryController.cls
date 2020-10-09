@@ -37,11 +37,22 @@
 */
 public with sharing class GE_GiftEntryController {
 
-    public static final Integer TIMEOUT_STATUS_CODE = 408;
-    public static final String TIMED_OUT = 'timed out';
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
 
+
+    /*******************************************************************************************************
+    * @description Indicates if the org is connected to Elevate
+    * @return Boolean
+    */
+    @AuraEnabled
+    public static Boolean isElevateCustomer() {
+        try {
+            return GE_PaymentServices.isElevateCustomer;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
 
     /*******************************************************************************************************
     * @description Creates and posts an elevate purchase request
@@ -53,63 +64,74 @@ public with sharing class GE_GiftEntryController {
     */
     @AuraEnabled
     public static String sendPurchaseRequest(String requestBodyParameters, String dataImportRecordId) {
+        UTIL_Http.Response response = processPurchaseRequest(requestBodyParameters, dataImportRecordId);
+
+        return JSON.serialize(response);
+    }
+
+    /***
+    * @description Sends the purchase request to Elevate and logs an error on a timeout error.
+    * This method is used in tests instead of the sendPurchaseRequest() in order to skip JSON.deserialize(response)
+    * due to it erroring out because the response header contains the Object data type.
+    * @param requestBodyParameters: JSON containing parameters for the purchase call request body
+    * @param dataImportRecordId: Record ID of the related Data Import
+    * @return UTIL_Http.Response
+    */
+    @TestVisible
+    private static UTIL_Http.Response processPurchaseRequest(String requestBodyParameters, String dataImportRecordId) {
+        UTIL_Http.Response response = new UTIL_Http.Response();
+
         try {
             GE_PaymentServices paymentServices = new GE_PaymentServices();
-            UTIL_Http.Response response = paymentServices.createTransaction(requestBodyParameters);
+            response = paymentServices.createTransaction(requestBodyParameters);
 
-            return JSON.serialize(response);
-            
         } catch (Exception ex) {
-            Boolean isCalloutException = ex instanceof System.CalloutException;
-            Boolean hasTimedOut = isCalloutException && ex.getMessage().contains(TIMED_OUT);
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            throw buildDmlException(JSONExceptionData);
 
-            if (hasTimedOut) {
-                return getPurchaseCallTimeoutResponse(ex, dataImportRecordId);
-            } else {
-                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-                throw returnDmlException(JSONExceptionData);
-            }
+        } finally {
+            processPurchaseTimeoutResponse(response, dataImportRecordId);
         }
+
+        return response;
     }
 
     /*******************************************************************************************************
-    * @description Creates an http request wrapper for a timeout
-    *
-    * @param ex: A timeout System.CalloutException
+    * @description Updates the timeout response so it can be read by the GE forms
+    * @param response: timeout response
     * @param dataImportRecordId: Record ID of the related Data Import to include in our error logs
-    *
-    * @return String: http response wrapper
+    * @return void
     */
-    private static String getPurchaseCallTimeoutResponse(Exception ex, String dataImportRecordId) {
-        UTIL_Http.Response response = new UTIL_Http.Response();
-        response.statusCode = TIMEOUT_STATUS_CODE;
-        response.status = ex.getMessage();
+    private static void processPurchaseTimeoutResponse(UTIL_Http.Response response, String dataImportRecordId) {
+        if (response.statusCode != UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT) {
+            return;
+        }
+
+        response.status = response.getErrorMessages();
         response.body = JSON.serialize(new Map<String, String>{ 'message' => PURCHASE_CALL_TIMEOUT_MESSAGE });
 
-        // Log NPSP Error record
+        logTimeoutError(dataImportRecordId);
+    }
+
+    /*******************************************************************************************************
+    * @description Logs an error when the purchase request timed out
+    * @param dataImportRecordId: Record ID of the related Data Import to include in our error logs
+    * @return void
+    */
+    private static void logTimeoutError(String dataImportRecordId) {
         String objectAndRecordId = String.format(
             System.Label.stgErrorInvalidNameFormat,
             new String[] {
                 Schema.SObjectType.DataImport__c.getLabel(),
                 dataImportRecordId
-            });
-        ex.setMessage(PURCHASE_CALL_TIMEOUT_MESSAGE + ' ' + objectAndRecordId);
-        ERR_Handler.processError(ex, ERR_Handler_API.Context.GE);
+            }
+        );
 
-        return JSON.serialize(response);
-    }
-
-    /*******************************************************************************************************
-    * @description Creates an AuraHandledException with the specified error message
-    *
-    * @param errorMsg contents of the exception error messagae
-    *
-    * @return AuraHandledException
-    */
-    public static AuraHandledException returnAuraException(String errorMsg) {
-        AuraHandledException ex = new AuraHandledException(errorMsg);
+        String errorMsg = PURCHASE_CALL_TIMEOUT_MESSAGE + ' ' + objectAndRecordId;
+        BDIException ex = new BDIException(errorMsg);
         ex.setMessage(errorMsg);
-        return ex;
+
+        ERR_Handler.processError(ex, ERR_Handler_API.Context.GE);
     }
 
     /*******************************************************************************************************
@@ -119,7 +141,7 @@ public with sharing class GE_GiftEntryController {
     *
     * @return DmlException
     */
-    public static DmlException returnDmlException(String errorMsg) {
+    public static DmlException buildDmlException(String errorMsg) {
         DmlException ex = new DmlException(errorMsg);
         ex.setMessage(errorMsg);
         return ex;
@@ -145,7 +167,7 @@ public with sharing class GE_GiftEntryController {
             // create custom lwc exception and throw it
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
 
-            throw returnDmlException(JSONExceptionData);
+            throw buildDmlException(JSONExceptionData);
         }
     }
 
@@ -175,11 +197,10 @@ public with sharing class GE_GiftEntryController {
     * @description Set DataImport Settings that are important to Gift Entry matching
     * @return Data_Import_Settings__c diSettings object used to process gifts
     */
-    private static Data_Import_Settings__c getGiftEntrySettingsWithUpdateGiftFlag(Boolean
-            updateGift) {
+    private static Data_Import_Settings__c getGiftEntrySettingsWithUpdateGiftFlag(Boolean updateGift) {
         Data_Import_Settings__c diSettings = Data_Import_Settings__c.getOrgDefaults();
         // If we are updating an existing gift, set the matching logic accordingly
-        diSettings.Donation_Matching_Behavior__c = 
+        diSettings.Donation_Matching_Behavior__c =
             updateGift ? BDI_DataImport_API.ExactMatchOrCreate : BDI_DataImport_API.DoNotMatch;
         return diSettings;
     }
@@ -200,7 +221,7 @@ public with sharing class GE_GiftEntryController {
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
-            throw returnDmlException(JSONExceptionData);
+            throw buildDmlException(JSONExceptionData);
         }
     }
 
@@ -223,9 +244,9 @@ public with sharing class GE_GiftEntryController {
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
-            throw returnDmlException(JSONExceptionData);
+            throw buildDmlException(JSONExceptionData);
         }
-    } 
+    }
 
     /*******************************************************************************************************
     * @description Return the imported Opportunity (Donation) from a DataImport process
@@ -248,19 +269,9 @@ public with sharing class GE_GiftEntryController {
 
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
-            throw returnAuraException(JSONExceptionData);
+            throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
         }
     }
-
-    @AuraEnabled
-    public static Boolean isElevateCustomer() {
-        try {
-            return GE_PaymentServices.isElevateCustomer;
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-
 
     /*******************************************************************************************************
     * @description Retrieves all open Opportunities, and Opportunities with unpaid Payments, for the
@@ -335,7 +346,7 @@ public with sharing class GE_GiftEntryController {
 
             return JSON.serialize(opportunityWrappers);
         } catch (Exception ex){
-            returnAuraException(ex.getMessage());
+            UTIL_AuraEnabledCommon.buildAuraException(ex.getMessage());
         }
 
         return null;
@@ -513,7 +524,7 @@ public with sharing class GE_GiftEntryController {
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
-            throw returnAuraException(JSONExceptionData);
+            throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
         }
 
         // Create a map of sobject type to sobject list for processing
@@ -948,7 +959,7 @@ public with sharing class GE_GiftEntryController {
             Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
             columnHeader.Field_Api_Name__c = field;
             columnHeader.Index__c = index;
-            columnHeader.Name = generateId();
+            columnHeader.Name = UTIL_String.getGUID();
             columnHeader.List_Name__c = listName;
             columnHeaders.add(columnHeader);
         }
@@ -997,19 +1008,6 @@ public with sharing class GE_GiftEntryController {
             this.columnHeaders = columnHeaders;
             this.permissionErrorData = permissionErrorData;
         }
-    }
-
-    /*******************************************************************************************************
-    * @description @description Creates a 'unique' id made to look like a UUID..
-    *
-    * @return {String} guid: Generated UUID.
-    */
-    private static String generateId() {
-        Blob key = Crypto.generateAesKey(128);
-        String hexString = EncodingUtil.convertToHex(key);
-        String generateUniqueId = hexString.substring(0,8)+ '-' + hexString.substring(8,12) +
-                '-' + hexString.substring(12,16) + '-' + hexString.substring(16,20) + '-' + hexString.substring(20);
-        return generateUniqueId;
     }
 
     /**
