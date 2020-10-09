@@ -1,11 +1,11 @@
 <aura:component >
     <!-- public attributes -->
     <!-- note we kept our addresses typed as Object, to avoid namespace prefixing issues when we used Address__c -->
-    <aura:attribute name="listAddr" type="Object[]" access="public" />
+    <aura:attribute name="listAddr" type="Object[]" access="public"/>
     <aura:attribute name="addrDefault" type="Object" access="public" />
 
     <!-- private attributes -->
-    <aura:attribute name="addrNew" type="Object" access="private" />
+    <aura:attribute name="addrNew" type="Object" access="private"/>
     <aura:attribute name="showChangeAddressPopup" type="Boolean" access="private" />
     <aura:attribute name="iAddrSelected" type="Integer" default="0" access="private" />
     <aura:attribute name="isExistingAddrSectionOpen" type="Boolean" default="true" access="private" />
@@ -43,59 +43,75 @@
     
     <!-- CHANGE ADDRESS POPUP -->
     <aura:if isTrue="{!v.showChangeAddressPopup}">
-        <div id="changeAddressPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+        <div id="changeAddressPopup" class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog" aria-labelledby="searchPopupLabel">
             <div class="slds-modal__container">
                 
                 <div class="slds-modal__header">
-                    <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" variant="bare-inverse"
-                        size="large" onclick="{!c.cancelChangeAddress}" alternativeText="{!$Label.c.bdiBtnClose}" />
-                    <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.ChangeAddress}</h2>
-                </div>
-                
-                <div class="slds-modal__content slds-p-around_medium">
                     
-                    <!-- Existing Address section -->  
-                    <div class="{!v.isExistingAddrSectionOpen ? 'slds-section slds-is-open' : 'slds-section'}">
-                        <div class="slds-section-title_divider slds-p-around_x-small">
-                            <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
-                                <lightning:icon iconName="utility:switch"
-                                    class="slds-section__title-action-icon slds-button__icon_left" size="x-small"/>
-                                {!$Label.npo02.SelectExistingAddress}
-                            </h4>
-                        </div>
-                        <div class="{!v.isExistingAddrSectionOpen ? 'slds-section__content slds-is-expanded' : 'slds-section__content slds-is-collapsed'}">
-                            <ul class="slds-list_vertical slds-has-dividers_around-space slds-has-list-interactions" >
-                                <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" >
-                                    <li class="{!iAddr == v.iAddrSelected ? 'slds-item selected' : 'slds-item' }" 
-                                        data-iAddr="{!iAddr}" onclick="{!c.onPressAddrTile}" >   
-                                        <div class="slds-tile slds-tile_board">
-                                            <div class="slds-tile__detail" >
-                                                <!-- address -->
-                                                <div class="slds-text-body_small" id="existingAdd">
-                                                    <ui:outputText value="{!addr.MailingStreet__c + 
-                                                        (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}" /><br/>
-                                                    <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
-                                                    <ui:outputText value="{!addr.MailingCountry__c}" />
-                                                </div>
-                                            </div> 
-                                        </div>
-                                    </li>
-                                </aura:iteration>
-                            </ul>
-                        </div>
+                    <div onclick="{!c.cancelChangeAddress}" tabindex="0" onkeydown="{!c.cancelChangeAddress}" id="closeButton">
+                        <lightning:icon iconName="utility:close" class="slds-modal__close" variant="bare-inverse"
+                        alternativeText="{!$Label.c.bdiBtnClose}" tabindex="0"/>
                     </div>
 
-                    <!-- New Address Section -->
-                    <div class="{!v.isExistingAddrSectionOpen ? 'slds-section' : 'slds-section slds-is-open'}">
-                        <div class="slds-section-title_divider slds-p-around_x-small">
-                            <h4 class="slds-section__title-action" onclick="{!c.toggleAddrSection}">
-                                <lightning:icon iconName="utility:switch"
-                                    class="slds-section__title-action-icon slds-button__icon_left" size="x-small"/>
-                                {!$Label.npo02.EnterNewAddress}
-                            </h4>
-                        </div>
-                        <div class="{!v.isExistingAddrSectionOpen ? 'slds-section__content slds-is-collapsed' : 'slds-section__content slds-is-expanded'}">
-                            <div class="slds-form_stacked">
+                    <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.ChangeAddress}</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+
+                    <ul class="slds-accordion" role="listbox">
+                        <li class="slds-accordion__list-item">
+                        <section class="slds-accordion__section slds-is-open">
+                            <div class="slds-accordion__summary">
+                                <h2 class="slds-accordion__summary-heading">
+                                    <lightning:button aura:id="sectionButton" 
+                                        variant="base"
+                                        class="slds-accordion__summary-action slds-section__title slds-text-title_caps slds-text-heading_large"
+                                        label="{!$Label.npo02.SelectExistingAddress}" 
+                                        title="{!$Label.npo02.SelectExistingAddress}"
+                                        onclick="{!c.toggleSection}"
+                                        iconName="utility:chevrondown"
+                                        ariaExpanded="true"/>
+                                </h2>
+                            </div>
+                            <div aura:id="accordionSection">
+                                <ul class="slds-list_vertical slds-has-dividers_around-space slds-has-list-interactions">
+                                    <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" >
+                                        <li class="{!iAddr == v.iAddrSelected ? 'slds-item selected' : 'slds-item' }" 
+                                        data-iAddr="{!iAddr}" onclick="{!c.onPressAddrTile}" onkeyup="{!c.onPressAddrTile}"
+                                        tabindex="0" role="checkbox" aria-checked="{!iAddr == v.iAddrSelected ? 'true' : 'false'}">   
+                                            <div class="slds-tile slds-tile_board">
+                                                <div class="slds-tile__detail" >
+                                                    <!-- address -->
+                                                    <div class="slds-text-body_small" id="existingAdd">
+                                                        <ui:outputText value="{!addr.MailingStreet__c + 
+                                                            (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}" /><br/>
+                                                        <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
+                                                        <ui:outputText value="{!addr.MailingCountry__c}" />
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </section>
+                        </li>
+                        <li class="slds-accordion__list-item">
+                        <section class="slds-accordion__section">
+                            <div class="slds-accordion__summary">
+                            <h2 class="slds-accordion__summary-heading">
+                                <h2 class="slds-accordion__summary-heading">
+                                    <lightning:button aura:id="sectionButton"
+                                        variant="base"
+                                        class="slds-accordion__summary-action slds-section__title slds-text-title_caps slds-text-heading_large"
+                                        label="{!$Label.npo02.EnterNewAddress}"
+                                        title="{!$Label.npo02.EnterNewAddress}"
+                                        onclick="{!c.toggleSection}"
+                                        iconName="utility:chevronright"
+                                        ariaExpanded="false" />
+                                </h2>
+                            </h2>
+                            </div>
+                            <div class="slds-hide slds-form_stacked" aura:id="accordionSection">
                                 <div class="slds-form-element">
                                     <ui:inputTextArea value="{!v.addrNew.MailingStreet__c}" aura:id="txtStreet" class="slds-input slds-form-element__control" 
                                         label="{!$Label.c.lblStreet}" labelClass="slds-form-element__label" />
@@ -117,23 +133,28 @@
                                         label="{!$Label.c.lblCountry}" labelClass="slds-form-element__label" />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
+
+                        </section>
+                        </li>
+                    </ul>
+
                 </div> <!-- /slds-modal__content -->
                 
                 <div class="slds-modal__footer">
                     <div class="slds-x-small-buttons_horizontal">
-                        <ui:button class="slds-button slds-button_neutral" 
+                        <lightning:button class="slds-button slds-button_neutral" 
                                    aura:id="btnCancelChangeAddress"
-                                   buttonTitle="{!$Label.c.stgBtnCancel}" 
-                                   label="{!$Label.c.stgBtnCancel}" 
-                                   press="{!c.cancelChangeAddress}" />
-                        <ui:button class="slds-button slds-button_brand" 
+                                   title="{!$Label.c.stgBtnCancel}"
+                                   label="{!$Label.c.stgBtnCancel}"
+                                   onclick="{!c.cancelChangeAddress}" />
+                        <span onkeydown="{!c.saveChangeAddress}">  
+                        <lightning:button class="slds-button slds-button_brand slds-m-left_small"
                                    aura:id="btnSaveChangeAddress"
-                                   buttonTitle="{!$Label.npo02.SetAddress}" 
-                                   label="{!$Label.npo02.SetAddress}" 
-                                   press="{!c.saveChangeAddress}" />
+                                   title="{!$Label.npo02.SetAddress}"
+                                   label="{!$Label.npo02.SetAddress}"
+                                   onclick="{!c.saveChangeAddress}" />
+                        </span>
+                        <span id="modalEndFocus" tabindex="0"></span>
                     </div>
                 </div>
             </div> <!-- /slds-modal__container -->
