@@ -35,7 +35,7 @@
 */
 @IsTest(IsParallel=true)
 private with sharing class PS_Request_TEST {
-    private static final String COMMITMENT_ID = 'abcd-efgh-ijkl-mnop-qrst';
+    private static final String COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
 
     /**
     * @description Verifies one-time Payments Purchase HttpRequest 
