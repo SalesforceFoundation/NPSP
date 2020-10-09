@@ -55,10 +55,10 @@ public with sharing class GE_GiftEntryController {
     public static String sendPurchaseRequest(String requestBodyParameters, String dataImportRecordId) {
         try {
             GE_PaymentServices paymentServices = new GE_PaymentServices();
-            paymentServices.setPurchaseCallBody(requestBodyParameters);
-            UTIL_Http.Response response = paymentServices.createTransaction();
+            UTIL_Http.Response response = paymentServices.createTransaction(requestBodyParameters);
 
             return JSON.serialize(response);
+            
         } catch (Exception ex) {
             Boolean isCalloutException = ex instanceof System.CalloutException;
             Boolean hasTimedOut = isCalloutException && ex.getMessage().contains(TIMED_OUT);

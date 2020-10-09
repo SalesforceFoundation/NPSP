@@ -58,8 +58,7 @@ public class GE_PaymentServices_TEST {
 
         Test.startTest();
         GE_PaymentServices paymentServices = new GE_PaymentServices();
-        paymentServices.setPurchaseCallBody(GOOD_PURCHASE_CALL_BODY);
-        UTIL_Http.Response response = paymentServices.createTransaction();
+        UTIL_Http.Response response = paymentServices.createTransaction(GOOD_PURCHASE_CALL_BODY);
         Test.stopTest();
 
         String actualValue = response.body;
@@ -72,16 +71,15 @@ public class GE_PaymentServices_TEST {
         Set<String> paymentStatusValues = new Set<String>();
 
         Map<String, Object> paymentStatusEnumByName =
-                ( Map<String, Object> ) JSON.deserializeUntyped(
-                    GE_PaymentServices.getPaymentTransactionStatusValues()
-                );
+            ( Map<String, Object> ) JSON.deserializeUntyped(
+                GE_PaymentServices.getPaymentTransactionStatusValues()
+            );
 
         for (String enumName : paymentStatusEnumByName.keySet()) {
-
             paymentStatusValues.add(enumName);
         }
 
-        for(GE_PaymentServices.ElevateTransactionStatus value :
+        for (GE_PaymentServices.ElevateTransactionStatus value :
                 GE_PaymentServices.ElevateTransactionStatus.values()) {
                     System.assert(paymentStatusValues.contains(value.name()), 'Every payment transaction status value' +
                         'should be included in the enum returned by the method.');
@@ -101,8 +99,7 @@ public class GE_PaymentServices_TEST {
 
         Test.startTest();
         GE_PaymentServices paymentServices = new GE_PaymentServices();
-        paymentServices.setPurchaseCallBody(BAD_PURCHASE_CALL_BODY);
-        UTIL_Http.Response response = paymentServices.createTransaction();
+        UTIL_Http.Response response = paymentServices.createTransaction(BAD_PURCHASE_CALL_BODY);
         Test.stopTest();
 
         String actualValue = response.body;
@@ -110,6 +107,33 @@ public class GE_PaymentServices_TEST {
         System.assertEquals(403, response.statusCode);
         System.assertEquals(actualValue, expectedValue);
     }
+
+    @IsTest
+    private static void shouldRequireConfigurationKeysToBeAnElevateCustomer() {
+        List<Payment_Services_Configuration__c> requiredConfigs = new
+                List<Payment_Services_Configuration__c>();
+
+        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
+            requiredConfigs.add(new Payment_Services_Configuration__c(
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
+                Value__c = String.valueOf(i)
+            ));
+        }
+        insert requiredConfigs;
+
+        System.assertEquals(true, GE_PaymentServices.isElevateCustomer,
+            'The org should be considered an Elevate customer when '
+            + 'all required configuration keys are present.');
+    }
+
+    @IsTest
+    private static void shouldNotBeAnElevateCustomer() {
+        System.assertEquals(false, GE_PaymentServices.isElevateCustomer,
+            'The org should not be considered an Elevate customer without '
+            + 'all required configuration keys present.');
+    }
+
 
     public class MockHttpResponseGenerator implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
@@ -127,34 +151,6 @@ public class GE_PaymentServices_TEST {
 
             return res;
         }
-    }
-
-
-    @IsTest
-    private static void shouldRequireConfigurationKeysToBeAnElevateCustomer() {
-        List<Payment_Services_Configuration__c> requiredConfigs = new
-                List<Payment_Services_Configuration__c>();
-
-        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
-            requiredConfigs.add(new Payment_Services_Configuration__c(
-                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-                    Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-                    Value__c = String.valueOf(i)
-            ));
-        }
-        insert requiredConfigs;
-
-        System.assertEquals(true, GE_PaymentServices.isElevateCustomer,
-                'The org should be considered an Elevate customer when ' +
-                        'all required configuration keys are present.');
-
-    }
-
-    @IsTest
-    private static void shouldNotBeAnElevateCustomer() {
-        System.assertEquals(false, GE_PaymentServices.isElevateCustomer,
-                'The org should not be considered an Elevate customer without ' +
-                        'all required configuration keys present.');
     }
 
 }

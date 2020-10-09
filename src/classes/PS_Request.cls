@@ -62,6 +62,23 @@ public inherited sharing class PS_Request {
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
+    /***
+    * @description Returns payments service endpoint URL
+    * @param endpoint Elevate Endpoint enum 
+    * @return String
+    */
+    public String getEndpoint(ElevateEndpoint endpoint) {
+        return new Builder().getEndpoint(endpoint, null);
+    }
+
+    /***
+    * @description Returns payments service endpoint URL
+    * @param commitmentId Elevate recurring commitment Id
+    * @return String
+    */
+    public String getCancelCommitmentEndpoint(String commitmentId) {
+        return new Builder().getEndpoint(ElevateEndpoint.COMMITMENT_CANCEL, commitmentId);
+    }
 
     /***
     * @description Builds an HttpRequest
@@ -193,10 +210,10 @@ public inherited sharing class PS_Request {
         * @param commitmentId Recurring Donation Commitment Id (required for cancel commitment endpoint only)
         * @return String Full endpoint
         */
-        private String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
+        public String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
             String value;
             if (endpoint == ElevateEndpoint.TOKENIZE) {
-                value = '/v1/payments/public/tokens';
+                value = '/v1/payments/verified/tokens';
 
             } else if (endpoint == ElevateEndpoint.PURCHASE) {
                 value = '/v1/payments/verified/purchase';
