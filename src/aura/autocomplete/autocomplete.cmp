@@ -41,9 +41,9 @@
              data-typeahead="true">
             <div class="slds-form-element">
                 <aura:if isTrue="{!!empty(v.label)}">
-                    <label class="slds-form-element__label">{!v.label}</label>
+                    <span class="slds-form-element__label slds-float_left" id="inputLabel" >{!v.label}</span>
                 </aura:if>
-                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right" onfocusin="{!c.handleFocusInput}" tabindex="0">
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right" onfocusin="{!c.handleFocusInput}" aria-labelledby="inputLabel">
                     <lightning:icon iconName="utility:search" 
                         class="slds-input__icon slds-icon-text-default" size="x-small"/>
                     <ui:inputText aura:id="input"
