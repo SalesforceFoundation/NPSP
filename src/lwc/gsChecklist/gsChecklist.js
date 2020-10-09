@@ -1,4 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
+import gsChecklistArrowRightAlterText from '@salesforce/label/c.gsChecklistArrowRightAlterText';
+import gsChecklistArrowDownAlterText from '@salesforce/label/c.gsChecklistArrowDownAlterText';
 
 export default class gsChecklist extends LightningElement {
     
@@ -38,5 +40,25 @@ export default class gsChecklist extends LightningElement {
     */
     onClickOpenOrClose(event) {
         this.open = !this.open;
+    }
+    
+    get expandedId() {
+        return `section-${this.group ? this.group.id : '0'}`;
+    }
+
+    get notOpen() {
+        return !this.open;
+    }
+
+    get arrowAlterText() {
+        return this.open ? gsChecklistArrowDown :  gsChecklistArrowRight;
+    }
+
+    get arrowIcon() {
+        return this.open ? 'utility:chevrondown' :  'utility:chevronright';
+    }
+
+    get arrowId() {
+        return `arrow-${this.group ? this.group.id : '0'}`;
     }
 }

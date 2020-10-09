@@ -1,6 +1,6 @@
 import { LightningElement, track } from 'lwc';
 
-import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle'
+import gsAdminSetupTitle from '@salesforce/label/c.gsAdminSetupTitle';
 
 import data from './data';
 
