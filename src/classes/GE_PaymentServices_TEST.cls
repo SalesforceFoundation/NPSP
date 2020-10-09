@@ -38,16 +38,16 @@
 @isTest
 public class GE_PaymentServices_TEST {
 
+    public static final String SUCCESS_RESPONSE_BODY = '{"id":"TEST_ID","status":"CAPTURED","merchantId":"TEST_MERCHANT_ID","merchantName":"Test Merchant","gatewayId":"TEST_GATEWAY_ID","gatewayTransactionId":"TEST_TRANSACTION_ID","currencyCode":"USD","amount":2500,"lastName":"Doe","firstName":"John","email":"john.doe@example.com","metadata":{"campaignCode":"test-campaign-code"},"type":"PAYMENT","paymentType":"CARD","cardData":{"last4":"1111","brand":"visa","expirationYear":"9999","expirationMonth":"12","firstName":"john","lastName":"doe","fingerprint":"TEST_FINGERPRINT"},"authorizedAt":"2020-03-10T20:17:24.897054Z"}';
+    public static final String FAILED_RESPONSE_MESSAGE = 'Unprocessable Entity';
+    public static final String FAILED_RESPONSE_BODY = '{"errors":[{"message":"' + FAILED_RESPONSE_MESSAGE + '"}]}';
+
     private static final String GOOD_TOKEN = 'good-token';
     private static final String BAD_TOKEN = 'bad-token';
     private static final String BASE_PURCHASE_CALL_BODY = '{"amount":2500,"email":"test@test.test","firstName":"Test First Name","lastName":"Test Last Name","metadata":{},';
 
     public static final String GOOD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + GOOD_TOKEN + '"}';
-    public static final String BAD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + BAD_TOKEN + '"}';
-
-    public static final String SUCCESS_RESPONSE_BODY = '{"id":"TEST_ID","status":"CAPTURED","merchantId":"TEST_MERCHANT_ID","merchantName":"Test Merchant","gatewayId":"TEST_GATEWAY_ID","gatewayTransactionId":"TEST_TRANSACTION_ID","currencyCode":"USD","amount":2500,"lastName":"Doe","firstName":"John","email":"john.doe@example.com","metadata":{"campaignCode":"test-campaign-code"},"type":"PAYMENT","paymentType":"CARD","cardData":{"last4":"1111","brand":"visa","expirationYear":"9999","expirationMonth":"12","firstName":"john","lastName":"doe","fingerprint":"TEST_FINGERPRINT"},"authorizedAt":"2020-03-10T20:17:24.897054Z"}';
-    public static final String FAILED_RESPONSE_MESSAGE = 'Unprocessable Entity';
-    public static final String FAILED_RESPONSE_BODY = '{"errors":[{"message":"' + FAILED_RESPONSE_MESSAGE + '"}]}"';
+    public static final String BAD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + BAD_TOKEN + '"}';  
 
 
     @isTest static void shouldReturnSuccessfulResponse() {

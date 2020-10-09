@@ -120,7 +120,6 @@ public with sharing class GE_PaymentServices {
      * @param jsonRequestBody: JSON containing parameters for the purchase call request body
      * @return PurchaseCallBody
      */
-    @TestVisible
     private PurchaseCallBody getPurchaseCallBody(String jsonRequestBody) {
         Map<String, Object> requestBodyParameters =
             (Map<String, Object>) JSON.deserializeUntyped(jsonRequestBody);
@@ -166,7 +165,6 @@ public with sharing class GE_PaymentServices {
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
     */
-    @TestVisible
     private HttpRequest buildPurchaseRequest(String jsonRequestBody) {
         return new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.POST)

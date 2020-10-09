@@ -253,7 +253,7 @@ public with sharing class UTIL_Http_TEST {
     public static void mockBadRequestCalloutResponse() {
         String responseBody = '{"errors":[{'
             + '"message":"' + BAD_REQUEST_MESSAGE + '"'
-            + '}]}"';
+            + '}]}';
 
         mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_BAD_REQUEST, System.Label.commonUnknownError, responseBody);
     }
@@ -266,7 +266,7 @@ public with sharing class UTIL_Http_TEST {
         String responseBody = '{"errors":[{'
             + '"message":"' + MESSAGE_NOT_FOUND
             + '","localizedPaymentsMessage":"' + MESSAGE_NOT_FOUND
-            + '"}]}"';
+            + '"}]}';
 
         mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_NOT_FOUND, UTIL_Http.STATUS_NOT_FOUND, responseBody);
     }
@@ -280,7 +280,7 @@ public with sharing class UTIL_Http_TEST {
             + '"message":"' + MESSAGE_DATA_CONFLICT
             + '","localizedPaymentsMessage":"' + MESSAGE_DATA_CONFLICT
             + '","detailedMessage":"' + MESSAGE_DATA_CONFLICT
-            + '"}]}"';
+            + '"}]}';
 
         mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_CONFLICT, UTIL_Http.STATUS_CONFLICT, responseBody);
     }

@@ -141,7 +141,7 @@ public with sharing class GE_GiftEntryController {
     *
     * @return DmlException
     */
-    public static DmlException buildDmlException(String errorMsg) {
+    private static DmlException buildDmlException(String errorMsg) {
         DmlException ex = new DmlException(errorMsg);
         ex.setMessage(errorMsg);
         return ex;
