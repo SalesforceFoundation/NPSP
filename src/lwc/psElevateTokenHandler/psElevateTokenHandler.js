@@ -118,11 +118,12 @@ class psElevateTokenHandler {
     * This request response is found and handled in the registerPostMessageListener().
     * @param visualforceOrigin Visualforce origin
     * @param iframe The payment services iframe displayed within the credit card widget LWC
-    * @param nameOnCard The cardholder name value
+    * @param cardholderName The cardholder name
     * @param handleError An error handler function
+    * @param resolveToken Function (if any) called when a token is generated
     * @return Promise A token promise
     */
-    requestToken(visualforceOrigin, iframe, nameOnCard, handleError) {
+    requestToken(visualforceOrigin, iframe, cardholderName, handleError, resolveToken) {
         if (isNull(iframe)) {
             return;
         }
@@ -141,7 +142,11 @@ class psElevateTokenHandler {
                     reject(handleError(message));
 
                 } else if (message.token) {
-                    resolve(message.token);
+                    if (resolveToken) {
+                        resolve(resolveToken(message.token));
+                    } else {
+                        resolve(message.token);
+                    }
                 }
             };
 
@@ -150,7 +155,7 @@ class psElevateTokenHandler {
         iframe.contentWindow.postMessage(
             {
                 action: TOKENIZE_EVENT_ACTION,
-                nameOnCard: nameOnCard
+                nameOnCard: cardholderName
             },
             visualforceOrigin
         );
