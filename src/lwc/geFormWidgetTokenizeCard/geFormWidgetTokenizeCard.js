@@ -245,10 +245,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     /**
-     * @description Returns the cardholder name
+     * @description Returns the cardholder name.
      * If the Donor Type = Account, the first and last name are empty.
-     * If the Donor Type = Account, the first and last name contain 
-     * the Contact first name (if any) and the last name.
+     * If the Donor Type = Contact, the Contact first name (if specified) 
+     * and the last name are provided to the Payments Services card tokenization iframe.
      */
     getCardholderName() {
         let name;

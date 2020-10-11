@@ -131,7 +131,10 @@ class psElevateTokenHandler {
         const tokenPromise = new Promise((resolve, reject) => {
 
             const timer = setTimeout(() =>
-                reject(this.handleTimeout(handleError)),
+                reject(handleError({
+                    error: this.labels.tokenRequestTimedOut,
+                    isObject: false
+                })),
                 TOKENIZE_TIMEOUT_MS
             );
 
@@ -161,19 +164,6 @@ class psElevateTokenHandler {
         );
 
         return tokenPromise;
-    }
-
-    /**
-     * Handles a timeout error display when the tokenization
-     * request does not result in a response
-     */
-    handleTimeout(handleError) {
-        const message = {
-            error: this.labels.tokenRequestTimedOut,
-            isObject: false
-        };
-
-        handleError(message);
     }
 }
 
