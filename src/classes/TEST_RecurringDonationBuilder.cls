@@ -220,7 +220,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Date Established
+    * @description Sets Date Established to default value
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withDateEstablished() {
@@ -234,6 +234,24 @@ public without sharing class TEST_RecurringDonationBuilder {
     */
     public TEST_RecurringDonationBuilder withDateEstablished(Date dt) {
         valuesByFieldName.put('npe03__Date_Established__c', dt);
+        return this;
+    }
+
+    /***
+    * @description Sets CreatedDate to default value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCreatedDate() {
+        return withCreatedDate(DEFAULT_ESTABLISHED_DATE);
+    }
+
+    /***
+    * @description Sets Created Date
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCreatedDate(Date dt) {
+        valuesByFieldName.put('CreatedDate', Datetime.newInstance(dt, Time.newInstance(0,0,0,0)));
         return this;
     }
 
@@ -566,10 +584,15 @@ public without sharing class TEST_RecurringDonationBuilder {
     */
     public npe03__Recurring_Donation__c build() {
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
+        String createdOn = getCreatedDateAndRemoveKey();
 
         for (String fieldName : valuesByFieldName.keySet()) {
             rd.put(fieldName, valuesByFieldName.get(fieldName));
         }
+
+        rd = createdOn == null
+            ? rd
+            : handleCreatedDate(rd, createdOn);
 
         if (calculateNextDonationDate) {
             new RD2_RecurringDonation(rd)
@@ -577,6 +600,32 @@ public without sharing class TEST_RecurringDonationBuilder {
         }
 
         return rd;
+    }
+
+    /***
+    * @description Retrieves the value of CreatedDate from valuesByFieldName and removes the key
+    * @return String
+    */
+    private String getCreatedDateAndRemoveKey() {
+        String createdOn;
+        if (valuesByFieldName.containsKey('CreatedDate')) {
+            createdOn = ((Datetime) valuesByFieldName.get('CreatedDate')).format('yyyy-MM-dd\'T\'HH:mm:ss.SSS+0000');
+            valuesByFieldName.remove('CreatedDate');
+        }
+        return createdOn;
+    }
+
+    /***
+    * @description Inserts Created Date into Recurring Donation record
+    * @param rd npe03__Recurring_Donation__c
+    * @param createdOn String representing Datetime
+    * @return npe03__Recurring_Donation__c
+    */
+    private npe03__Recurring_Donation__c handleCreatedDate(npe03__Recurring_Donation__c rd, String createdOn) {
+        String rdRecord = JSON.serialize(rd);
+        rdRecord = rdRecord.left(rdRecord.length() - 1);
+        rdRecord += ',"CreatedDate":"' + createdOn + '"}';
+        return (npe03__Recurring_Donation__c) JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
     }
 
     /***

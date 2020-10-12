@@ -216,19 +216,24 @@ public class RD2_DataMigrationMapper {
      */
     private void setStartDate(npe03__Recurring_Donation__c rd) {
 
-        if (allRelatedOpps == null || allRelatedOpps.isEmpty()) {
+        if (rd.npe03__Date_Established__c != null) {
             rd.StartDate__c = rd.npe03__Date_Established__c;
+            return;
+        }
 
-        } else {
+        if (allRelatedOpps != null && !allRelatedOpps.isEmpty()) {
             Date startDate;
             for (Opportunity opp : allRelatedOpps) {
                 if (startDate == null || startDate > opp.CloseDate) {
                     startDate = opp.CloseDate;
                 }
             }
-
             rd.StartDate__c = startDate;
+
+        } else {
+            rd.StartDate__c = rd.CreatedDate.dateGmt();
         }
+
     }
 
     /**
