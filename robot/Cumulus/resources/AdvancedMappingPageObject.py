@@ -1,3 +1,4 @@
+import time
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from cumulusci.robotframework.utils import capture_screenshot_on_error
@@ -126,6 +127,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains("Object Groups", timeout=60)
         btns=npsp_lex_locators['button-with-text'].format("Create New Object Group")
         self.selenium.wait_until_element_is_enabled(btns)
+        time.sleep(2)
         locator=npsp_lex_locators['adv_mappings']['field-label'].format(obj_grp_name)
         if not self.npsp.check_if_element_exists(locator):
             self.selenium.click_button(btns)
