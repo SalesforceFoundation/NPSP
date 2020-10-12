@@ -13,7 +13,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Custom Fields and data
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
 Setup Custom Fields and data
@@ -33,7 +33,7 @@ Setup Custom Fields and data
     # This data is used to create the Filter contains Filter details and Filtering criteria metadata
     ${dict}=         Create Dictionary     Name=Old Payments    Description=Includes payments where the Opportunity Close Date year is older than the year of the Payment.
     ${dict1}=        Create Dictionary     Object=Payment       Field=Paid   Operator=Equals   Value=True
-    ${dict2}=        Create Dictionary     Object=Payment       Field=Is Opportunity From Prior Year     Operator=Equals   Value=True
+    ${dict2}=        Create Dictionary     Object=Payment    Field=Is Opportunity From Prior Year     Operator=Equals   Value=True
     ${filterPools}=                                       Create List           ${dict1}       ${dict2}
 
     # List of expected Rollup values
@@ -62,7 +62,7 @@ Total Current Year Payments on Prior Year Pledges
 
     Create New Filter Setting
     ...                                                   @{filterPools}  # Contains a list of filter metadata
-    ...                                                   &{dict}         # Contains the name of the filter and the description to be added
+    ...                                                   &{dict}         # Contains the name of the fitler and the description to be added
 
     Click Link With Text                                  Customizable Rollups
     Create New Rollup Setting
@@ -80,13 +80,7 @@ Total Current Year Payments on Prior Year Pledges
 
     # Create an opportunity for prior year that has 6 payments associated with a contact .
     # Ensure that Two of the payments were done the current year and one is paid last year.
-    # Create an opportunity for last year sep 9th and create six associated payments in a way
-    # Two payments fall in the current year
-
-    ${now}                   Evaluate            '01/09/{dt.year}'.format(dt=datetime.datetime.now())    modules=datetime
-    ${converted}             Convert Date        ${now}    result_format=%Y-%m-%d    date_format=%d/%m/%Y
-    ${last_year_date} =      Add Time To Date    ${converted}  -365 days
-    ${opp_date}              Convert Date        ${last_year_date}    result_format=%Y-%m-%d    date_format=%Y-%m-%d %H:%M:%S.%f
+    ${opp_date} =            Get Current Date    result_format=%Y-%m-%d    increment=-365 days
     ${payment_fields} =      Create Dictionary   Amount=833.34   NumPayments=6   Scheduledate=${opp_date}      Interval=1   CompletedPayments=3
     ${opportunity_fields} =  Create Dictionary   Type=Donation
     ...                                          Name=Auto Payment test $1000 Donation
@@ -98,8 +92,8 @@ Total Current Year Payments on Prior Year Pledges
     ...                                          object_id=${data}[contact_opportunity][Id]
 
     # Navigate to the Account page and verify that the new rollupfield is appearing and is showing the right calculated amount
-    Go To Page                                   Details          Account                              object_id=${data}[contact][AccountId]
+    Go To Page                                  Details          Account                                               object_id=${data}[contact][AccountId]
     Wait Until Loading Is Complete
-    Select Tab                                   Details
-    Validate Rollup Field Contains               This Year Payments on Past Year Pledges               @{accepted_values}
+    Select Tab                                  Details
+    Validate Rollup Field Contains              This Year Payments on Past Year Pledges               @{accepted_values}
 

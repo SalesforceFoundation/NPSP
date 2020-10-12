@@ -81,6 +81,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.click_button("Save")
             self.selenium.wait_until_element_is_not_visible(success_toast)
 
+
     @capture_screenshot_on_error
     def _add_filter(self, *args):
         """This is a helper method that gets the filter criteria and adds into the filter modal
@@ -114,7 +115,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             self.populate_crlp_form(**kwargs)
             self.selenium.click_button("Save")
             self.selenium.wait_until_page_contains_element(toast_visible)
-            self.selenium.reload_page()
+            self.selenium.wait_until_page_contains_element(toast_hide)
 
     @capture_screenshot_on_error
     def clone_rollup(self, rollup_name, **kwargs):
