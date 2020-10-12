@@ -63,7 +63,7 @@ public class GE_PaymentServices_TEST {
 
         String actualValue = response.body;
         String expectedValue = SUCCESS_RESPONSE_BODY;
-        System.assertEquals(201, response.statusCode);
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode);
         System.assertEquals(actualValue, expectedValue);
     }
 
@@ -101,7 +101,7 @@ public class GE_PaymentServices_TEST {
 
         String actualValue = response.body;
         String expectedValue = FAILED_RESPONSE_BODY;
-        System.assertEquals(403, response.statusCode);
+        System.assertEquals(UTIL_Http.STATUS_CODE_FORBIDDEN, response.statusCode);
         System.assertEquals(actualValue, expectedValue);
     }
 
@@ -144,7 +144,7 @@ public class GE_PaymentServices_TEST {
 
             } else if (req.getBody().contains(BAD_TOKEN)) {
                 res.setBody(FAILED_RESPONSE_BODY);
-                res.setStatusCode(UTIL_Http.STATUS_CODE_UNAUTHORIZED);
+                res.setStatusCode(UTIL_Http.STATUS_CODE_FORBIDDEN);
             }
 
             return res;
