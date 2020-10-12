@@ -292,6 +292,9 @@ npsp_lex_locators={
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'table':'//*[@data-qa-locator="datatable {}"]//tbody//lightning-primitive-cell-factory[@data-label="{}"][.//*[text()="{}"]]',
         'lookup-option':'//li/lightning-base-combobox-item[.//*[@title="{}"]]',
+        'datatable_options_icon':"//th/lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-actions//button[@aria-expanded='false']/lightning-primitive-icon",
+        'datatable_field_by_name':"//lightning-primitive-cell-factory/span/div//a[contains(text(),'{}')]/following::lightning-primitive-cell-factory[@data-label='{}'][.//*[text()='{}']]",
+        'datatable-menu-item':"//lightning-menu-item/a/span[text()='{}']"
         },
     # Enhanced Recurring Donation (erd) related element locators
     'erd':{
@@ -305,7 +308,10 @@ npsp_lex_locators={
         'installment_date' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr[{}]/th//span/div/lightning-formatted-date-time",
         'formatted_number':"//lightning-formatted-text[text() = '{}']/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-number",
         'formatted_date':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-date-time",
-        'formatted_text':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text"
+        'formatted_text':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text",
+        'pause_date_checkbox':"//th//span/div/lightning-formatted-date-time[text()='{}']/preceding::lightning-primitive-cell-checkbox",
+        'date_with_paused_txt':"//td//lightning-base-formatted-text[text()='Paused']/preceding::th//lightning-formatted-date-time[text()='{}']",
+        'warning_message':"//lightning-formatted-rich-text/span"
         },
 
 }
