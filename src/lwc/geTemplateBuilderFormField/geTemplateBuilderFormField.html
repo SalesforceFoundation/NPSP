@@ -2,13 +2,13 @@
     <article class={cssClassCard}>
         <div class="slds-card__body slds-card__body_inner">
             <div class="slds-grid slds-grid_vertical-align-end">
-
                 <template if:false={isWidget}>
                     <div class="slds-size_5-of-12 slds-p-right_small">
                         <lightning-input class="slds-truncate"
                                          data-name="customLabel"
                                          field-level-help={labelHelpText}
                                          label={field.label}
+                                         data-id="formField"
                                          onblur={handleOnBlurCustomLabel}
                                          onclick={stopPropagation}
                                          type="text"
@@ -17,71 +17,68 @@
                         </lightning-input>
                     </div>
                 </template>
-
-                <div class="slds-size_5-of-12 slds-p-right_small">
-                    <c-util-input type={field.dataType}
-                                  form-field-type={field.elementType}
-                                  field-api-name={fieldApiName}
-                                  object-api-name={targetObjectApiName}
-                                  label={field.customLabel}
-                                  default-value={field.defaultValue}
-                                  value={field.value}
-                                  variant="label-hidden"
-                                  onchangevalue={handleOnChange}
-                                  widget-name={name}
-                                  data-qa-locator={qaLocatorInputDefaultValue}>
-                    </c-util-input>
-                </div>
-
+                <template if:true={shouldRender}>
+                    <div class="slds-size_5-of-12 slds-p-right_small">
+                        <c-util-input type={field.dataType}
+                                      form-field-type={field.elementType}
+                                      field-api-name={fieldApiName}
+                                      object-api-name={targetObjectApiName}
+                                      label={field.customLabel}
+                                      default-value={field.defaultValue}
+                                      value={field.value}
+                                      variant="label-hidden"
+                                      onchangevalue={handleOnChange}
+                                      widget-name={name}
+                                      data-qa-locator={qaLocatorInputDefaultValue}>
+                        </c-util-input>
+                    </div>
                 <template if:true={isWidget}>
                     <div class="slds-size_5-of-12 slds-p-right_small"></div>
                 </template>
-
-                <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
-                    <template if:false={isWidget}>
-                        <lightning-input aria-label={labelGeAssistiveRequireField}
-                                         aria-describedby="requiredCheckboxDescription"
-                                         checked={isRequired}
-                                         data-name="required"
-                                         disabled={field.isRequiredFieldDisabled}
-                                         onchange={handleOnChangeRequiredField}
-                                         onclick={stopPropagation}
-                                         type="checkbox"
-                                         variant="label-hidden"
-                                         data-qa-locator={qaLocatorCheckboxRequired}>
-                        </lightning-input>
-                        <span class="slds-assistive-text" id="requiredCheckboxDescription">{labelGeAssistiveRequiredCheckboxDescription}</span>
-                    </template>
-                </div>
-
-                <div class={cssClassActionsContainer}>
-                    <div class="slds-float_right">
-                        <lightning-button-icon class="slds-m-right_xxx-small "
-                                               icon-name="utility:delete"
-                                               alternative-text={labelGeAssistiveFormFieldRemove}
-                                               size="x-small"
-                                               onclick={handleDeleteFormElement}
-                                               disabled={isDisabled}
-                                               data-qa-locator={qaLocatorButtonDelete}>
-                        </lightning-button-icon>
-                        <lightning-button-icon class="slds-m-right_xxx-small "
-                                               icon-name="utility:chevronup"
-                                               alternative-text={labelGeAssistiveFormFieldUp}
-                                               size="x-small"
-                                               onclick={handleFormElementUp}
-                                               disabled={isFirst}
-                                               data-qa-locator={qaLocatorButtonUp}>
-                        </lightning-button-icon>
-                        <lightning-button-icon icon-name="utility:chevrondown"
-                                               alternative-text={labelGeAssistiveFormFieldDown}
-                                               size="x-small"
-                                               onclick={handleFormElementDown}
-                                               disabled={isLast}
-                                               data-qa-locator={qaLocatorButtonDown}>
-                        </lightning-button-icon>
+                    <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
+                        <template if:false={isWidget}>
+                            <lightning-input aria-label={labelGeAssistiveRequireField}
+                                             aria-describedby="requiredCheckboxDescription"
+                                             checked={isRequired}
+                                             data-name="required"
+                                             disabled={field.isRequiredFieldDisabled}
+                                             onchange={handleOnChangeRequiredField}
+                                             onclick={stopPropagation}
+                                             type="checkbox"
+                                             variant="label-hidden"
+                                             data-qa-locator={qaLocatorCheckboxRequired}>
+                            </lightning-input>
+                            <span class="slds-assistive-text" id="requiredCheckboxDescription">{labelGeAssistiveRequiredCheckboxDescription}</span>
+                        </template>
                     </div>
-                </div>
-
+                    <div class={cssClassActionsContainer}>
+                        <div class="slds-float_right">
+                            <lightning-button-icon class="slds-m-right_xxx-small "
+                                                   icon-name="utility:delete"
+                                                   alternative-text={labelGeAssistiveFormFieldRemove}
+                                                   size="x-small"
+                                                   onclick={handleDeleteFormElement}
+                                                   disabled={isDisabled}
+                                                   data-qa-locator={qaLocatorButtonDelete}>
+                            </lightning-button-icon>
+                            <lightning-button-icon class="slds-m-right_xxx-small "
+                                                   icon-name="utility:chevronup"
+                                                   alternative-text={labelGeAssistiveFormFieldUp}
+                                                   size="x-small"
+                                                   onclick={handleFormElementUp}
+                                                   disabled={isFirst}
+                                                   data-qa-locator={qaLocatorButtonUp}>
+                            </lightning-button-icon>
+                            <lightning-button-icon icon-name="utility:chevrondown"
+                                                   alternative-text={labelGeAssistiveFormFieldDown}
+                                                   size="x-small"
+                                                   onclick={handleFormElementDown}
+                                                   disabled={isLast}
+                                                   data-qa-locator={qaLocatorButtonDown}>
+                            </lightning-button-icon>
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
     </article>

@@ -1138,6 +1138,34 @@ pre {
                 <td class="kwdoc"><p>Populates modal form with the field-value pairs supported keys are any input, textarea, lookup, checkbox, date and dropdown fields</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Query And Store Records To Delete">
+                <td class="kwname">
+                  Query And Store Records To Delete
+                </td>
+                <td class="kwargs">
+                  
+                  <i>object_name</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Queries the given object table by using key,value pair passed and stores the ids of matched records in order to delete as part of suite teardown</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Query Object And Return Id">
+                <td class="kwname">
+                  Query Object And Return Id
+                </td>
+                <td class="kwargs">
+                  
+                  <i>object_name</i>, 
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Queries the given object table by using key,value pair passed and returns ids of matched records</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Random String">
                 <td class="kwname">
                   Random String
@@ -1214,6 +1242,20 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Scrolls the button element into view and clicksthe button using JS</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Search Field And Wait For Modal">
+                <td class="kwname">
+                  Search Field And Wait For Modal
+                </td>
+                <td class="kwargs">
+                  
+                  <i>fieldname</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Searches the field with the placeholder given by 'fieldname' for the given 'value' and wait for the modal to appear.</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Search Field By Value">
@@ -1979,6 +2021,16 @@ pre {
           <table class="kwtable" title='Table of keywords'>
             <tbody>
               <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="NPSP.robot.Add instance to suite metadata">
+                <td class="kwname">
+                  Add instance to suite metadata
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the org instance number in the metadata on the log</p></td>
+              </tr>
               
               <tr class="kwrow" id="NPSP.robot.API Check And Enable Gift Entry">
                 <td class="kwname">
@@ -4049,6 +4101,20 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
 <p>The current page object is also returned as an object</p></td>
               </tr>
               
+              <tr class="kwrow" id="GiftEntryPageObject.py.Perform Action On Datatable Row">
+                <td class="kwname">
+                  Perform Action On Datatable Row
+                </td>
+                <td class="kwargs">
+                  
+                  <i>name</i>, 
+                  
+                  <i>action</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Select the specific gift entry data row based on the name parameter and selects the action from the dropdown menu. Eg: |Perform Action On Datatable Row  | ${contact2}[Name]     |     Delete</p></td>
+              </tr>
+              
               <tr class="kwrow" id="GiftEntryPageObject.py.Verify Error For Field">
                 <td class="kwname">
                   Verify Error For Field
@@ -4103,12 +4169,14 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>table</i>, 
+                  <i>name</i>, 
+                  
+                  <i>byname=None</i>, 
                   
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"><p>Verifies that table has given field name with value. Arguments are: table=table name, fieldname=fieldvalue Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  |</p></td>
+                <td class="kwdoc"><p>Verifies that table has given field name with value. Arguments are: name which could be table name or a specific contact name, byname to search by contact name, fieldname=fieldvalue if the validation is to ensure the value exists in the table Eg: |Verify Table Field Values  |  Batch Gifts  |  Opportunity Amount=$150.00  | If the validation is to ensure the value specified exists for a specific contact in the table Eg: |Verify Table Field Values  |  John Doe  | True | Opportunity Amount=$150.00  |</p></td>
               </tr>
               
             </tbody>
@@ -5431,12 +5499,15 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwargs">
                   
-                  <i>paynum</i>
+                  <i>paynum</i>, 
+                  
+                  <i>format=None</i>
                   
                 </td>
-                <td class="kwdoc"><p>Returns the next payment date from the list of payment schedules taking in the payment number as input |Example</p>
+                <td class="kwdoc"><p>Returns the next payment date from the list of payment schedules taking in the payment number as input The date if formatted to ignore the preceding zeros. But if format is set to false, the date is returned as is without any formatting |Example</p>
 <pre>
  Get Next Payment Date Number   2   #gets the 2nd installment payment date form the list of payment dates
+ Get Ney Payment Date Number    1    False    # gets the 1st installment payment date without any formatting
 </pre></td>
               </tr>
               
@@ -5461,6 +5532,30 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 </td>
                 <td class="kwdoc"><p>Logs the name of the current page object</p>
 <p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Pause Recurring Donation">
+                <td class="kwname">
+                  Pause Recurring Donation
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Finds the pause button on the recurring donations details view page, clicks the button and waits for the modal to appear</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Populate Pause Modal">
+                <td class="kwname">
+                  Populate Pause Modal
+                </td>
+                <td class="kwargs">
+                  
+                  <i>**kwargs</i>
+                  
+                </td>
+                <td class="kwdoc"></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Refresh Opportunities">
@@ -5513,6 +5608,30 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                 </td>
                 <td class="kwdoc"><p>Takes in the parameter (number of payments) and the donation start date verifies that the payment schedules created on UI reflect the total number verifies that the next payment dates are reflected correctly for all the schedules</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Warning Text">
+                <td class="kwname">
+                  Validate Warning Text
+                </td>
+                <td class="kwargs">
+                  
+                  <i>txt</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Find the element containing warning message on the pause modal and asserts the text displayed matches with the expected text</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Verify Pause Text Next To Installment Date">
+                <td class="kwname">
+                  Verify Pause Text Next To Installment Date
+                </td>
+                <td class="kwargs">
+                  
+                  <i>date</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Looks for the date element with the paused text next to it</p></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Verify Schedule Warning Messages Present">
@@ -5776,7 +5895,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Wednesday August 26, 06:13 PM - cumulusci v3.17.1
+      Generated on Monday October 05, 09:11 PM - cumulusci v3.17.1
     </div>
   </body>
 </html>

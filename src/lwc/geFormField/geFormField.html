@@ -6,7 +6,7 @@
             formatter={formatter}
             step={granularity}
             required={required}
-            onchange={handleValueChange} 
+            onchange={handleValueChange}
             label={fieldLabel}
             disabled={disabled}
             data-qa-locator={qaLocatorInput}>
@@ -32,7 +32,7 @@
     </template>
     <template if:true={isLookupRecordType}>
         <c-ge-form-field-lookup data-id='inputComponent'
-                                field-api-name={fieldApiName}
+                                field-api-name={targetFieldApiName}
                                 object-api-name={objectApiName}
                                 onchange={handleValueChange}
                                 default-value={element.defaultValue}
@@ -63,7 +63,7 @@
         <c-ge-form-field-picklist data-id='inputComponent'
             value={value}
             required={required}
-            field-name={fieldApiName}
+            field-name={targetFieldApiName}
             object-name={objectApiName}
             onchange={handleValueChange}
             label={fieldLabel}

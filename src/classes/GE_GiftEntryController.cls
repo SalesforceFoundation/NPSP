@@ -222,8 +222,7 @@ public with sharing class GE_GiftEntryController {
     private static void processDataImport(DataImport__c dataImport, Boolean isDryRun, Boolean updateGift) {
         try {
 
-            Data_Import_Settings__c diSettings = getGiftEntrySettingsWithUpdateGiftFlag
-                    (updateGift);
+            Data_Import_Settings__c diSettings = getGiftEntrySettingsWithUpdateGiftFlag(updateGift);
 
             List<DataImport__c> listDI = new List<DataImport__c>{dataImport};
 
@@ -497,7 +496,7 @@ public with sharing class GE_GiftEntryController {
                         // Update the element's required to make sure we are respecting the source/target/template builder's required
                         // with the most up to date information.
                         element.required = element.required ||
-                                (fieldMapping.Source_Field_Required &&
+                                (fieldMapping.Source_Field_Required == true &&
                                         fieldMapping.Source_Field_Data_Type != BOOLEAN_DATA_TYPE);
                     }
                 }

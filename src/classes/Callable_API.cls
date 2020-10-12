@@ -94,9 +94,16 @@ global with sharing class Callable_API implements System.Callable {
                 // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
                 // parameter service depending on which action was invoked
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
-                
+
             } when 'rd2.executedatamigration' {
                 return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
+
+            } when 'rd2.queryschedules' {
+                Set<Id> rdIds = paramService
+                    .withRequiredParamCheck()
+                    .getSetId(CallableApiParameters.PARAM_RECORD_IDS);
+                RD2_ApiService rd2ApiSvc = new RD2_ApiService();
+                return rd2ApiSvc.querySchedules(rdIds);
 
             } when 'settings.enableenhancedrecurringdonations' {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);

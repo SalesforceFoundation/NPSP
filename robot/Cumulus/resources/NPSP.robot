@@ -523,3 +523,8 @@ API Check And Enable Gift Entry
     &{ge} =            Get From List  ${records}  0
     Run Keyword if     '${am}[${ns}Field_Mapping_Method__c]'!='Data Import Field Mapping' or '${ge}[${ns}Enable_Gift_Entry__c]'!='True'
     ...                Enable Gift Entry
+
+Add instance to suite metadata
+    [Documentation]    Logs the org instance number in the metadata on the log
+    &{org_info} =  Get Org Info
+    Set suite metadata  Org Instance:  ${org_info['instance_name']}  top=True
