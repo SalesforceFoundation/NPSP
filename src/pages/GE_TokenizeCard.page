@@ -18,7 +18,7 @@
         let domain = arr[0].replace('--npsp', '');
         domain = domain.replace('--c', '');
         const lightningOrigin = `https://${domain}.lightning.force.com`;
-        let nameOnCard = 'Not Provided';
+        let nameOnCard = 'Not provided';
 
         const sfdo = new sfdoPaymentsJsSdk();
         sfdo.mount({
@@ -74,7 +74,7 @@
                 if (event.data.nameOnCard) {
                     nameOnCard = event.data.nameOnCard;
                 } else {
-                    nameOnCard = 'Not Provided';//default
+                    nameOnCard = 'Not provided';//default
                 }
 
                 handleTokenCreation();
