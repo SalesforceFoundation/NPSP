@@ -20,7 +20,7 @@ export default class GsApplicationStatus extends LightningElement {
     @track isLoading = false;
     @track img = "";
     @track isActiveInstance = false;
-    applyForFreeLicensesImg = Resources + '/gsResources/gift_illustration.svg';
+    applyForFreeLicensesImg = Resources + '/gsResources/Accept_Tasks_Apply_Card.png';
     checkForStatusImg = Resources + '/gsResources/gift_illustration_2.svg';
 
     labels = {
