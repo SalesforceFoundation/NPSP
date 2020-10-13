@@ -48,7 +48,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains("Success", timeout=180)
         name=src_fld.split(' (')
         locator=npsp_lex_locators['adv_mappings']['field-label'].format(name[0])
-        self.selenium.wait_until_page_contains_element(locator,timeout=60,error=f'Timed out waiting to confirm {name[0]} was created')
+        self.selenium.wait_until_page_contains_element(locator,timeout=90,error=f'Timed out waiting to confirm {name[0]} was created')
 
     @capture_screenshot_on_error
     def view_field_mappings_of_the_object(self,obj):

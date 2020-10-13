@@ -61,8 +61,12 @@ Setup Test Data
 
 *** Test Cases ***
 Verify Fields Related to Lookups Populate on Batch Gift Entry Form
-	[Documentation]                               To be filled in
-	...                                           at a later date.
+	[Documentation]          After creating required fields and data via API, create a object group and field mappings for Lead fields.
+	...						 create template with lead fields, set batch level default for leadlookup while creating the batch using template
+	...						 and verify that other related fields automatically load on the gift entry form. Remove default from batch and verify
+	...						 leads fields are not autopopulated. Create a gift using new lead in lookup and verify correct related values load
+	...						 automatically and on save batch table has correct lead values. create another gift with different lead and verify
+	...						 lead values load and save correctly. Open previous gift from table and verify correct lead info loads on form
 	[tags]                                        unstable      feature:GE        W-043224
 	# Create object and field mappings in Advanced Mapping
 	Click Configure Advanced Mapping
@@ -77,7 +81,7 @@ Verify Fields Related to Lookups Populate on Batch Gift Entry Form
 	Create Mapping If Doesnt Exist                Lead Company (Lead_Company__c)  	  	Company (Company)
 	Create Mapping If Doesnt Exist                Lead Last Name (Lead_Last_Name__c)    Last Name (LastName)
 	Reload Page
-	#Create a template with newly mapped lead lookup, company and lastname fields
+	#Create a template with newly mapped lead lookup, company and lastname fields and add fields to batch table
 	Go To Page                                    Landing                GE_Gift_Entry
 	Click Link                                    Templates
 	Click Gift Entry Button                       Create Template
