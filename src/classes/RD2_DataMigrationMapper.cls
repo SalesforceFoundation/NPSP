@@ -209,8 +209,9 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Sets Recurring Donation Start Date field as the earliest Opp Close Date.
-     * If the Recurring Donation has no Opportunity, the Start Date is Date Established.
+     * @description Sets Recurring Donation Start Date field as Date Established.
+     * If Date Established is null, earliest related Opportunity Close Date is used.
+     * If both of those options result in null Start Date, Created Date is used.
      * @param rd Recurring Donation in the legacy format
      * @return void
      */
@@ -229,11 +230,11 @@ public class RD2_DataMigrationMapper {
                 }
             }
             rd.StartDate__c = startDate;
-
-        } else {
-            rd.StartDate__c = rd.CreatedDate.dateGmt();
         }
 
+        if (rd.StartDate__c == null && rd.CreatedDate != null) {
+            rd.StartDate__c = rd.CreatedDate.dateGmt();
+        }
     }
 
     /**
