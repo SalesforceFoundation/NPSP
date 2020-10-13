@@ -334,7 +334,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     get isPicklist() {
-        return this.fieldType === PICKLIST_TYPE;
+        return this.fieldType === PICKLIST_TYPE || this.isRecordTypePicklist;
     }
 
     get isTextArea() {

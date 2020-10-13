@@ -33,16 +33,6 @@
             </lightning-input-field>
         </lightning-record-edit-form>
     </template>
-    <template if:true={isRecordTypePicklist}>
-        <lightning-combobox data-id='inputComponent'
-                            value={value}
-                            onchange={handleValueChange}
-                            label={fieldLabel}
-                            options={picklistValues}
-                            data-qa-locator={qaLocatorPicklist}
-                            required={required}>
-        </lightning-combobox>
-    </template>
     <template if:true={isRichText}>
         <label class="slds-form-element__label">
             <abbr class="slds-required"
