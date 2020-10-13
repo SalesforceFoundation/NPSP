@@ -1602,22 +1602,6 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
-        <fullName>RD2_ElevatePermissionRequired</fullName>
-        <categories>Recurring-Donations, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
-        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_ElevateNotSupported</fullName>
-        <categories>Recurring-Donations, Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error when the functionality is not supported for Elevate Recurring Donation.</shortDescription>
-        <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
-    </labels>
-    <labels>
         <fullName>RD2_ElevateDisableButtonLabel</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>
@@ -1640,6 +1624,38 @@
         <protected>true</protected>
         <shortDescription>Link text to toggle and enable commitment creation in Elevate</shortDescription>
         <value>Alternatively, use Elevate now.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateNotSupported</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the functionality is not supported for Elevate Recurring Donation.</shortDescription>
+        <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevatePendingStatus</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Reason to indicates Elevate Service is in progress.</shortDescription>
+        <value>Pending Elevate Process</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevatePermissionRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
+        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
+        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -2006,6 +2022,14 @@
         <protected>true</protected>
         <shortDescription>Fixed Length Recurring Donation End Date must be valid</shortDescription>
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EndDateElevateCannotBeInFuture</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate connected Recurring Donation End Date must be valid.</shortDescription>
+        <value>End Date can&apos;t be in the future for Elevate connected Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>

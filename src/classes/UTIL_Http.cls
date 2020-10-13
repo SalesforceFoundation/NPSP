@@ -37,11 +37,19 @@ public without sharing class UTIL_Http {
     public static final Integer STATUS_CODE_OK = 200;
     public static final Integer STATUS_CODE_CREATED = 201;
     public static final Integer STATUS_CODE_BAD_REQUEST = 400;
+    public static final Integer STATUS_CODE_INSUFICIENT_PERMISSION = 403;
+    public static final Integer STATUS_CODE_NOT_FOUND = 404;
     public static final Integer STATUS_CODE_REQUEST_TIMEOUT = 408;
+    public static final Integer STATUS_CODE_CONFLICT = 409;
+    public static final Integer STATUS_CODE_INTERNAL_SERVER_ERROR = 500;
+    public static final Integer STATUS_CODE_SERVICE_UNAVAILABLE = 503;
+    public static final Integer STATUS_CODE_GATEWAY_TIMEOUT = 504;
 
     public static final String STATUS_OK = 'OK';
+    public static final String STATUS_NOT_FOUND = 'Not Found';
     public static final String STATUS_TIMED_OUT = 'Request Timeout';
-    
+    public static final String STATUS_CONFLICT = 'Conflict';
+
     public static final String TIMED_OUT_MESSAGE = 'timed out';
 
     public enum Method {
@@ -54,21 +62,23 @@ public without sharing class UTIL_Http {
     public class RequestService {
 
         /***
-        * @description Sends an HttpRequest 
-        * Returned response can be a success or an error response
+        * @description Sends an HttpRequest
         * @param request HttpRequest
         * @return Response HttpResponse wrapper
         */
         public Response sendRequest(HttpRequest request) {
-            UTIL_Http.Response response = new UTIL_Http.Response();
+            Response response;
 
             try {
                 HttpResponse requestResponse = new Http().send(request);
+
+                // Returned response can be a success or an error response
                 response = new Response(requestResponse);
 
             } catch (Exception ex) {
                 response = buildErrorResponse(ex);
-            } 
+            }
+
             return response;
         }
 
@@ -157,6 +167,31 @@ public without sharing class UTIL_Http {
             this.status = response.getStatus();
             this.body = response.getBody();
         }
+
+        /**
+        * @description Extracts error message(s) from the error response
+        * @param response API response
+        * @return String
+        */
+        public String getErrorMessages() {
+            if (String.isBlank(body)
+                || statusCode == STATUS_CODE_OK
+                || statusCode == STATUS_CODE_CREATED
+            ) {
+                return '';
+            }
+
+            String messages;
+            try {
+                ErrorResponseBody responseBody = (ErrorResponseBody) JSON.deserialize(
+                    body, ErrorResponseBody.class
+                );
+                messages = responseBody.getMessages();
+
+            } catch (Exception e) { }
+
+            return String.isBlank(messages) ? status : messages;
+        }
     }
 
     /***
@@ -190,6 +225,20 @@ public without sharing class UTIL_Http {
         */
         public String getAsJson() {
             return JSON.serialize(this);
+        }
+
+        /***
+        * @description Returns error messages separated by a space
+        * @return String
+        */
+        public String getMessages() {
+            String messages = '';
+
+            for (Error err : errors) {
+                messages += err.message + ' ';
+            }
+
+            return messages.trim();
         }
     }
 

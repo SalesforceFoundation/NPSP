@@ -31,10 +31,13 @@
 * @author Salesforce.org
 * @date 2020
 * @group Utilities
-* @description Contains tests for the common HttpRequest and HttpResponse methods 
+* @description Contains tests for the common HttpRequest and HttpResponse methods
 */
 @IsTest(IsParallel=true)
 public with sharing class UTIL_Http_TEST {
+    public static final String BAD_REQUEST_MESSAGE = 'Unauthorized endpoint, please check Setup->Security->Remote site settings.';
+    public static final String MESSAGE_DATA_CONFLICT = 'Conflict';
+    public static final String MESSAGE_NOT_FOUND = '404 /external/objects';
 
     /**
     * @description Verifies response is correctly formatted based on HttpResponse
@@ -47,13 +50,9 @@ public with sharing class UTIL_Http_TEST {
         request.setMethod('POST');
 
         String body = '{"value" : "success"}';
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_OK)
-            .withStatus(UTIL_Http.STATUS_OK)
-            .withBody(body);
 
         Test.startTest();
-        Test.setMock(HttpCalloutMock.class, callout);
+        mockSuccessCalloutResponse(body);
 
         UTIL_Http.RequestService service = new UTIL_Http.RequestService();
         UTIL_Http.Response response = service.sendRequest(request);
@@ -84,7 +83,7 @@ public with sharing class UTIL_Http_TEST {
         System.assertEquals(UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT, response.statusCode,
             'The status code should be set to timed out status code');
         System.assertEquals(UTIL_Http.STATUS_TIMED_OUT, response.status,
-            'The status should be set to timed out status');   
+            'The status should be set to timed out status');
 
         UTIL_Http.ErrorResponseBody body = (UTIL_Http.ErrorResponseBody) JSON.deserialize(
             response.body, UTIL_Http.ErrorResponseBody.class
@@ -118,6 +117,40 @@ public with sharing class UTIL_Http_TEST {
         System.assertEquals(errorMessage, body.errors[0].message, 'The error message should match');
     }
 
+    /**
+    * @description Verifies the error messages are empty when response is success
+    */
+    @isTest
+    private static void shouldNotReturnErrorsWhenResponseIsSuccess() {
+        String body = '{"value" : "success"}';
+
+        Test.startTest();
+        mockSuccessCalloutResponse(body);
+
+        UTIL_Http.RequestService service = new UTIL_Http.RequestService();
+        UTIL_Http.Response response = service.sendRequest(new HttpRequest());
+        Test.stopTest();
+
+        System.assertEquals('', response.getErrorMessages(),
+            'The response should not return any error message');
+    }
+
+    /**
+    * @description Verifies the error messages are returned from the error response
+    */
+    @isTest
+    private static void shouldReturnErrorsWhenResponseIsBadRequest() {
+        Test.startTest();
+        mockBadRequestCalloutResponse();
+
+        UTIL_Http.RequestService service = new UTIL_Http.RequestService();
+        UTIL_Http.Response response = service.sendRequest(new HttpRequest());
+        Test.stopTest();
+
+        System.assertEquals(BAD_REQUEST_MESSAGE, response.getErrorMessages(),
+            'The response should return expected error message');
+    }
+
 
     /**
     * @description Callout Mock
@@ -134,6 +167,7 @@ public with sharing class UTIL_Http_TEST {
             //set defaults
             statusCode = UTIL_Http.STATUS_CODE_OK;
             status = UTIL_Http.STATUS_OK;
+            body = '{"status":"ACTIVE"}';
         }
 
         /**
@@ -184,5 +218,71 @@ public with sharing class UTIL_Http_TEST {
             return response;
         }
     }
-    
+
+    // Helpers
+    /////////////////
+
+    /**
+     * @description Simulates a success callout response
+     * @return void
+     */
+    public static void mockSuccessCalloutResponse(String responseBody) {
+        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+            .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
+    /**
+     * @description Stubs a "bad request" callout response
+     * @return void
+     */
+    public static void mockBadRequestCalloutResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"' + BAD_REQUEST_MESSAGE + '"'
+            + '}]}"';
+
+        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_BAD_REQUEST, System.Label.commonUnknownError, responseBody);
+    }
+
+    /**
+     * @description Stubs a "not found" callout response
+     * @return void
+     */
+    public static void mockNotFoundCalloutResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"' + MESSAGE_NOT_FOUND
+            + '","localizedPaymentsMessage":"' + MESSAGE_NOT_FOUND
+            + '"}]}"';
+
+        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_NOT_FOUND, UTIL_Http.STATUS_NOT_FOUND, responseBody);
+    }
+
+    /**
+     * @description Stubs a "not found" callout response
+     * @return void
+     */
+    public static void mockDataConflictCalloutResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"' + MESSAGE_DATA_CONFLICT
+            + '","localizedPaymentsMessage":"' + MESSAGE_DATA_CONFLICT
+            + '","detailedMessage":"' + MESSAGE_DATA_CONFLICT
+            + '"}]}"';
+
+        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_CONFLICT, UTIL_Http.STATUS_CONFLICT, responseBody);
+    }
+
+    /**
+     * @description Simulates an error callout response
+     * @return void
+     */
+    public static void mockErrorCalloutResponse(Integer statusCode, String status, String responseBody) {
+        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+            .withStatusCode(statusCode)
+            .withStatus(status)
+            .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
 }

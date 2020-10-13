@@ -38,7 +38,7 @@ private with sharing class PS_Request_TEST {
     private static final String COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
 
     /**
-    * @description Verifies one-time Payments Purchase HttpRequest
+    * @description Verifies one-time Payments Purchase HttpRequest 
     */
     @isTest
     private static void shouldCreateHttpRequestWhenPaymentsPurchaseEndpoint() {
@@ -60,7 +60,7 @@ private with sharing class PS_Request_TEST {
     }
 
     /**
-    * @description Verifies Commitment creation HttpRequest
+    * @description Verifies Commitment creation HttpRequest 
     */
     @isTest
     private static void shouldCreateHttpRequestWhenCreateCommitmentEndpoint() {
@@ -82,7 +82,7 @@ private with sharing class PS_Request_TEST {
     }
 
     /**
-    * @description Verifies Cancel Commitment HttpRequest
+    * @description Verifies Cancel Commitment HttpRequest 
     */
     @isTest
     private static void shouldCreateHttpRequestWhenCancelCommitmentEndpoint() {
@@ -100,8 +100,8 @@ private with sharing class PS_Request_TEST {
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
             + '/v1/payments/verified/commitments/'
             + COMMITMENT_ID
-            + '/cancel';
-
+            + '/cancel';        
+        
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.POST, jsonRequestBody);
     }
 
@@ -127,13 +127,13 @@ private with sharing class PS_Request_TEST {
             }
 
             String jwtPayload = new PS_Request.JWTPayload(sfdoId, endpoint).getAsString();
-            System.assert(jwtPayload.contains(roles),
+            System.assert(jwtPayload.contains(roles), 
                 'JSON Web Token for ' + endpoint.name() + ' should contain expected roles: ' + jwtPayload);
         }
     }
 
     /**
-    * @description Verifies generate JSON Web Token
+    * @description Verifies generate JSON Web Token 
     */
     @isTest
     private static void shouldGenerateJSONWebToken() {
@@ -150,7 +150,7 @@ private with sharing class PS_Request_TEST {
             PS_Request.JWT_ROLES_PARAM => PS_Request.ROLE_PAYMENT_PURCHASE
         };
 
-        JSONParser parser = JSON.createParser(jwtPayload.getAsString());
+        JSONParser parser = JSON.createParser(jwtPayload.getAsString());        
         while (parser.nextToken() != null) {
             if (parser.getCurrentToken() == JSONToken.FIELD_NAME) {
                 String param = parser.getText();
@@ -161,7 +161,7 @@ private with sharing class PS_Request_TEST {
                 String expectedValue = valueByParam.get(param);
                 System.assertEquals(expectedValue, value, 'JSON Web Token param (' + param + ') value should match');
             }
-        }
+        } 
     }
 
 
@@ -181,21 +181,21 @@ private with sharing class PS_Request_TEST {
         System.assertEquals(method.name(), request.getMethod(), 'The HttpRequest method should match');
 
         System.assertEquals(
-            UserInfo.getUserName(),
+            UserInfo.getUserName(), 
             request.getHeader(PS_IntegrationServiceConfig.SFDO_USERNAME),
             'User name should be specified in the request header'
         );
         System.assertEquals(
-            PS_IntegrationServiceConfig_TEST.testMerchantId,
+            PS_IntegrationServiceConfig_TEST.testMerchantId, 
             request.getHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS),
             'Merchant Id should be specified in the request header'
         );
         System.assertNotEquals(
-            null,
-            request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN),
+            null, 
+            request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN), 
             'JSON Web Token should be specified in the request header'
         );
-
+        
         System.assertEquals(jsonRequestBody, request.getBody(), 'Request body should match');
     }
 
