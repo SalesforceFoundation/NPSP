@@ -6,8 +6,8 @@
 .container {
     padding: 1.5rem;
     background-color: white;
-    border: solid 1px #b5b5b5;
-    box-shadow: 0px 6px 3px 0px #b5b5b5;
+    border: solid 1px #DDDBDA;
+    box-shadow: 0 3px 3px 0 rgba(0,0,0, 0.1);
 }
 
 .container .resource-list .resource-item {
@@ -24,4 +24,8 @@
 .container .resource-list .resource-item a {
     text-align: right;
     font-weight: bold;
+}
+
+.container .link > a {
+    color: #0070D2;
 }
