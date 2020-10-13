@@ -34,17 +34,14 @@
         </lightning-record-edit-form>
     </template>
     <template if:true={isRecordTypePicklist}>
-        <c-ge-form-field-picklist data-id='inputComponent'
-                                  value={value}
-                                  required={required}
-                                  field-name={targetFieldApiName}
-                                  object-name={objectApiName}
-                                  onchange={handleValueChange}
-                                  label={fieldLabel}
-                                  object-describe-info={objectDescribeInfo}
-                                  record-type-id={recordTypeId}
-                                  qa-locator-base={qaLocatorBase}>
-        </c-ge-form-field-picklist>
+        <lightning-combobox data-id='inputComponent'
+                            value={value}
+                            onchange={handleValueChange}
+                            label={fieldLabel}
+                            options={picklistValues}
+                            data-qa-locator={qaLocatorPicklist}
+                            required={required}>
+        </lightning-combobox>
     </template>
     <template if:true={isRichText}>
         <label class="slds-form-element__label">
@@ -66,17 +63,14 @@
         </lightning-input-rich-text>
     </template>
     <template if:true={isPicklist}>
-        <c-ge-form-field-picklist data-id='inputComponent'
-                                  value={value}
-                                  required={required}
-                                  field-name={targetFieldApiName}
-                                  object-name={objectApiName}
-                                  onchange={handleValueChange}
-                                  label={fieldLabel}
-                                  object-describe-info={objectDescribeInfo}
-                                  record-type-id={recordTypeId}
-                                  qa-locator-base={qaLocatorBase}>
-        </c-ge-form-field-picklist>
+        <lightning-combobox data-id='inputComponent'
+                            value={value}
+                            onchange={handleValueChange}
+                            label={fieldLabel}
+                            options={picklistValues}
+                            data-qa-locator={qaLocatorPicklist}
+                            required={required}>
+        </lightning-combobox>
     </template>
     <template if:true={isTextArea}>
         <lightning-textarea data-id='inputComponent'
