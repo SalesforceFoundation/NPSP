@@ -1695,7 +1695,9 @@
         <members>RD2_ElevateDisabledMessage</members>
         <members>RD2_ElevateEnableButtonLabel</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementDryRunBatchTitle</members>
@@ -1738,6 +1740,7 @@
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_EnablementSimpleIntro</members>
+        <members>RD2_EndDateElevateCannotBeInFuture</members>
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>

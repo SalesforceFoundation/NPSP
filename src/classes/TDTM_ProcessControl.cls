@@ -57,6 +57,7 @@ public class TDTM_ProcessControl {
     * - OPP_CampaignMember: Control recursion specifically for the OPP_CampaignMember_TDTM class
     * Recurring Donations Triggers:
     * - RD
+    * - PS_doNotSendToElevate: Prevent Elevate RDs coming from Elevate to circular back to Elevate
     * Relationships Triggers:
     * - REL
     */
@@ -64,6 +65,7 @@ public class TDTM_ProcessControl {
         ADDR_hasRunTrigger,
         ADDR_hasRunContactOnBefore,
         ADDR_hasRunValidation,
+        CascadeDeletes,
         AFFL_doNotRunForContacts,
         AFFL_hasRunForAffiliations,
         AFFL_hasRunForAccounts,
@@ -71,9 +73,9 @@ public class TDTM_ProcessControl {
         HH,
         HH_isRunningBeforeInsert,
         OPP_CampaignMember,
+        PS_doNotSendToElevate,
         RD,
-        REL,
-        CascadeDeletes
+        REL
     }
 
     /*******************************************************************************************************

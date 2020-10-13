@@ -10,7 +10,7 @@
         var iAddrSelected;
 
         // figure out if changing default address or creating a new one
-        if (component.get('v.isExistingAddrSectionOpen')) {
+        if (component.get('v.isExistingAddrSectionOpen') === true) {
             iAddrSelected = component.get('v.iAddrSelected');
             addr = listAddr[iAddrSelected];
         } else {
@@ -35,5 +35,30 @@
         event.setParams({ "addrDefault" : addr });
         event.fire();
     },
+
+    /**
+    * @description Control the state of the two sections.
+    */
+    toggleSections : function(component) {
+        let buttons = component.find('sectionButton');
+        for (let cmp in buttons) {
+            let currentIcon = buttons[cmp].get("v.iconName");
+
+            if (currentIcon === 'utility:chevronright') {
+                buttons[cmp].set('v.iconName','utility:chevrondown');
+            } else {
+                buttons[cmp].set('v.iconName','utility:chevronright');
+            }
+
+            ariaExpaned = buttons[cmp].get('v.ariaExpanded');
+            buttons[cmp].set('v.ariaExpanded', (ariaExpaned == 'true') ? 'false' : 'true');
+        }
+
+        let sections = component.find('accordionSection');
+        for(let cmp in sections) {
+            $A.util.toggleClass(sections[cmp], 'slds-show');  
+            $A.util.toggleClass(sections[cmp], 'slds-hide');  
+        }
+      },
         
 })
