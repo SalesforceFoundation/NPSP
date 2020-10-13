@@ -11,6 +11,6 @@ export default class gsVideoHeader extends LightningElement {
     * @see         URL
     */
     get imgSrc() {
-        return gsAssets + '/Getting_started_header.svg';
+        return gsAssets + '/Getting_started_header.png';
     }
 }
