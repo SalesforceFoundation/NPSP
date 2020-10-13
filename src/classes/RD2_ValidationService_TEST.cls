@@ -1015,6 +1015,40 @@ private with sharing class RD2_ValidationService_TEST {
         );
     }
 
+    /**
+    * @description Verifies that Elevate RD fail to close when End Date is in the future 
+    */
+    @isTest
+    private static void shouldFailElevateRDUpdateWhenEndDateIsInTheFuture() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withRecurringTypeOpen()
+            .withCommitmentId('commitmentId')
+            .build();
+        insert rd;
+
+        String errMessage = '';
+        try {
+            Test.startTest();
+            rd.EndDate__c = today.addDays(1);
+            rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            update rd;
+            Test.stopTest();
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(
+            errMessage.contains(System.Label.RD2_EndDateElevateCannotBeInFuture),
+            'Elevate RD update should fail when Rd End Date is in the future: ' + errMessage
+        );
+    }
+
     // Helper Methods
     /////////////////////
 
