@@ -742,6 +742,7 @@ private class RD2_DataMigration_TEST {
                 rdBuilder
                     .withNextPaymentDate(Date.newInstance(2019, 10, i))
                     .withDateEstablished(null)
+                    .withCreatedDate(DATE_ESTABLISHED)
                     .withDayOfMonth(null)
                     .build()
                 ).convertToEnhancedRD()

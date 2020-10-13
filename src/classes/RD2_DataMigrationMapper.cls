@@ -232,7 +232,7 @@ public class RD2_DataMigrationMapper {
             rd.StartDate__c = startDate;
         }
 
-        if (rd.StartDate__c == null && rd.CreatedDate != null) {
+        if (rd.StartDate__c == null) {
             rd.StartDate__c = rd.CreatedDate.dateGmt();
         }
     }
