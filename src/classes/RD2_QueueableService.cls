@@ -176,4 +176,32 @@ public class RD2_QueueableService {
                 .matchRecurringDonationsToOpps(rdIdByCommitmentId);
         }
     }
+
+    /**
+     * @description Queueable service to make callouts to Elevate payment services and cancel commitments 
+     */
+    public class CancelCommitmentService implements Queueable, Database.AllowsCallouts {
+        List<npe03__Recurring_Donation__c> closedRDs;
+
+        /**
+        * @description Constructor
+        * @param closedRDs Closed Recurring Donations containing Commitment Id
+        */
+        public CancelCommitmentService(List<npe03__Recurring_Donation__c> closedRDs) {
+            this.closedRDs = closedRDs;
+        }
+
+        /**
+         * @description Cancel Commitments in Elevate payment services
+         * @param context queuableContext
+         */
+        public void execute(QueueableContext context) {
+            if (closedRDs == null || closedRDs.isEmpty()) {
+                return;
+            }
+
+            new RD2_ElevateIntegrationService()
+                .cancelCommitments(closedRDs);
+        }
+    }
 }
