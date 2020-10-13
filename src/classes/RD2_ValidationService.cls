@@ -193,6 +193,11 @@ public with sharing class RD2_ValidationService {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
+            if (elevateService.isElevateRecordReactivated(rd, oldRd)) {
+                rd.addError(System.Label.RD2_ElevateRDClosedStatusCannotBeChanged);
+                continue;
+            }
+
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 rd.addError(System.Label.RD2_ElevatePermissionRequired);
                 continue;
@@ -343,11 +348,18 @@ public with sharing class RD2_ValidationService {
 
         RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
+        if (rdRecord.isElevateRecord()
+            && rdRecord.isClosed()
+            && rd.EndDate__c > currentDate
+        ) {
+            rd.addError(System.Label.RD2_EndDateElevateCannotBeInFuture);
+        }
+
         if (rdRecord.isFixedLength()
             && rdRecord.isClosed()
             && rd.EndDate__c > currentDate
         ) {
-            rd.AddError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
+            rd.addError(System.Label.RD2_EndDateMustBeValidForFixedLength); 
         }
 
         Date mostRecentCloseWonDate = closeWonDateByRdId.get(rd.Id);
