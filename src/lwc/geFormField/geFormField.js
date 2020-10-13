@@ -75,7 +75,7 @@ export default class GeFormField extends LightningElement {
         this.fireValueChangeEvent();
         this.fireFormFieldChangeEvent(value);
 
-        if (this.isLookup || this.isLookupRecordType) {
+        if (this.isLookup || this.isRecordTypePicklist) {
             const objMappingDevName =
                 GeFormService.importedRecordFieldNames.includes(this.targetFieldApiName) ?
                     GeFormService.objectMappingWrapperFor(this.targetFieldApiName)
@@ -89,7 +89,9 @@ export default class GeFormField extends LightningElement {
                 sourceFieldApiName: this.sourceFieldAPIName
             };
             const selectRecordEvent = new CustomEvent('lookuprecordselect', { detail: lookupDetail });
-            this.dispatchEvent(selectRecordEvent);
+            if (this.targetFieldApiName !== 'RecordTypeId') {
+                this.dispatchEvent(selectRecordEvent);
+            }
         }
 
         if (this.isPicklist) {
@@ -332,7 +334,10 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    get isLookupRecordType() {
+    /**
+     * Special handling for RecordTypeId because we render these fields as picklists instead of lookups.
+     */
+    get isRecordTypePicklist() {
         return this.fieldType === LOOKUP_TYPE && this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
@@ -470,20 +475,6 @@ export default class GeFormField extends LightningElement {
                 this.reset();
             } else {
                 this.value = value.value || value;
-
-                if (this.isLookupRecordType || this.isLookup) {
-                    if (value && !value.displayName) {
-                        // If the RecordTypeId field for a target record is being
-                        // loaded with only the Id (like when a Lookup field is
-                        // selected/populated on the form), get the RecordType Name
-                        // and pass it with the Id to loadLookup
-                        data[this.sourceFieldAPIName] = {
-                            value: value,
-                            displayValue: this.getRecordTypeNameById(value)
-                        };
-                    }
-                    this.loadLookUp(data, this.value);
-                }
             }
 
             if (this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
@@ -505,38 +496,6 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    /**
-     * Loads a value into a look-up field
-     * @param data An sObject potentially containing a value to load.
-     * @param value A form field value
-     */
-    loadLookUp(data, value) {
-        const lookup = this.template.querySelector('[data-id="inputComponent"]');
-        lookup.reset();
-        if (this.isLookup) {
-            lookup.value = value;
-        } else if (this.isLookupRecordType) {
-
-            let displayValue;
-            const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
-
-            if (data[relationshipFieldName] &&
-                data[relationshipFieldName]['Name']) {
-                displayValue = data[relationshipFieldName].Name;
-
-            } else if (data[this.sourceFieldAPIName] &&
-                data[this.sourceFieldAPIName]['displayValue']) {
-                displayValue = data[this.sourceFieldAPIName].displayValue;
-
-            } else if (data.displayValue) {
-                displayValue = data.displayValue;
-
-            }
-
-            lookup.setSelected({value, displayValue});
-        }
-    }
-
     @api
     reset(setDefaults = true) {
         if (setDefaults) {
@@ -546,10 +505,10 @@ export default class GeFormField extends LightningElement {
         }
 
         // reset lookups and recordtype fields
-        if (this.isLookupRecordType || this.isLookup) {
+        if (this.isRecordTypePicklist || this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if (this.isLookupRecordType) {
+            if (this.isRecordTypePicklist) {
                 // Using setTimeout here ensures that this recordTypeId
                 // will be set on sibling fields after they are reset by queueing the event.
                 setTimeout(() => {
@@ -565,6 +524,10 @@ export default class GeFormField extends LightningElement {
     }
 
     fireLookupRecordSelectEvent() {
+        if (this.targetFieldApiName === 'RecordTypeId') {
+            console.log('*** ' + 'not firing lookup rcrd select for target rtid' + ' ***');
+            return;
+        }
         this.dispatchEvent(new CustomEvent(
             'lookuprecordselect',
             {
@@ -656,72 +619,73 @@ export default class GeFormField extends LightningElement {
 
     get valueFromFormState() {
         return this.formState[this.sourceFieldAPIName] &&
-            this.formState[this.sourceFieldAPIName].value;
+            this.formState[this.sourceFieldAPIName];
     }
 
     fireFormFieldChangeEvent(value) {
         const formFieldChangeEvent = new CustomEvent('formfieldchange', {
             detail:
                 {
-                    [this.sourceFieldAPIName]: {value}
+                    value: value,
+                    label: this.isRecordTypePicklist ? this.recordTypeNameFor(value) : value,
+                    fieldMappingDevName: this.fieldMappingDevName()
                 }
         });
         this.dispatchEvent(formFieldChangeEvent);
     }
 
+    recordTypeNameFor(recordTypeId) {
+        return this.objectDescribeInfo &&
+            Object.values(this.objectDescribeInfo.recordTypeInfos)
+                .find(rtInfo => rtInfo.recordTypeId === recordTypeId)
+                .name;
+    }
+
+    fieldMappingDevName() {
+        return this.element.dataImportFieldMappingDevNames[0];
+    }
+
     get recordTypeId() {
-        if (this.isSiblingRecordTypeIdInFormState) {
-            return this.siblingRecordTypeId;
-        } else if (this.isParentObjectRecordTypeIdInFormState) {
-            return this.parentObjectRecordTypeId;
-        } else {
+        const siblingRecordTypeId =
+            this.siblingRecordTypeField() === DONATION_RECORD_TYPE_NAME.fieldApiName ?
+                this.recordTypeIdFor(this.siblingRecordTypeValue()) :
+                this.siblingRecordTypeValue();
+
+        return siblingRecordTypeId || this.parentRecordRecordTypeId() || null;
+    }
+
+    recordTypeIdFor(recordTypeName) {
+        if (recordTypeName === null) {
             return null;
         }
+        
+        const rtInfo = this.objectDescribeInfo &&
+            Object.values(this.objectDescribeInfo.recordTypeInfos)
+                .find(rtInfo => rtInfo.name === recordTypeName);
+
+        return rtInfo && rtInfo.recordTypeId;
     }
 
-    isParentObjectRecordTypeIdInFormState() {
-        return this.parentObjectRecordTypeId !== undefined;
+    siblingRecordTypeValue() {
+        return this.formState[this.siblingRecordTypeField()];
     }
 
-    isSiblingRecordTypeIdInFormState() {
-        return this.siblingRecordTypeId !== undefined;
+    siblingRecordTypeField() {
+        return this.element && this.element.siblingRecordTypeField;
     }
 
-    get siblingRecordTypeId() {
-        return this.formState[this.sourceFieldForSiblingRecordTypeId] &&
-            this.formState[this.sourceFieldForSiblingRecordTypeId].value;
+    parentRecordRecordTypeId() {
+        return this.parentRecord() &&
+            this.parentRecord().recordTypeId;
     }
 
-    get sourceFieldForSiblingRecordTypeId() {
-        return this.siblingRecordTypeIdFieldMapping &&
-            this.siblingRecordTypeIdFieldMapping.Source_Field_API_Name;
+    parentRecord() {
+        return this.formState[relatedRecordFieldNameFor(this.parentRecordField())];
     }
 
-    get siblingRecordTypeIdFieldMapping() {
-        return this.fieldMappingsForImportedRecord &&
-            this.fieldMappingsForImportedRecord
-                .find(fieldMapping =>
-                    fieldMapping.Target_Field_API_Name === 'RecordTypeId'
-                );
-    }
-
-    get fieldMappingsForImportedRecord() {
-        return GeFormService
-            .fieldMappingsForImportedRecordFieldName(this.importedRecordFieldName);
-    }
-
-    get parentObjectRecordTypeId() {
-        return this.parentObjectFromFormState &&
-            this.parentObjectFromFormState.recordTypeId;
-    }
-
-    get parentObjectFromFormState() {
-        return this.formState[relatedRecordFieldNameFor(this.importedRecordFieldName)];
-    }
-
-    get importedRecordFieldName() {
-        return this.objectMapping &&
-            this.objectMapping.Imported_Record_Field_Name;
+    parentRecordField() {
+        return this.element &&
+            this.element.parentRecordField;
     }
 
 }
