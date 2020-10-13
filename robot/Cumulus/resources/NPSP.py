@@ -1569,13 +1569,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_element(locator)
         time.sleep(1)
         self.selenium.wait_until_page_contains(title)
-        if self.latest_api_version == 50.0:
-            link_locator=npsp_lex_locators['custom_objects']['option'].format(title)
-        else:
-            link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
-        time.sleep(1)
-        self.salesforce._jsclick(link_locator)
-        self.salesforce._jsclick(link_locator)
+        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
+        self.selenium.click_link(link_locator)
 
     def get_url_formatted_object_name(self,name):
         """Returns a map with BaseURl and the namespace formatted object name"""

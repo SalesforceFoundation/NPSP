@@ -19,7 +19,7 @@ Suite Teardown  Run keywords
 Allocations Behavior when $0 with Default Allocations Enabled
     [Documentation]             Enable payment allocation and make sure default allocations are enabled
     ...                         Create a $0 opportunity.Default GAU allocation should still be created for opportunity.
-    [tags]                      unstabe     W-035595    feature:Payment Allocations
+    [tags]                      unstable     W-035595    feature:Payment Allocations
     Enable Default Allocations
     Setupdata                   contact1            ${contact1_fields}     ${opportunity1_fields}
     Go To Page                  Detail

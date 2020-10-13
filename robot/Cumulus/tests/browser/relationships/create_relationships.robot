@@ -48,7 +48,7 @@ Create Relationships for contacts
     ...                                 Parent
 
     Click More Actions Button
-    Click Link                          Relationships_Viewer
+    Click Link                          link=Relationships Viewer
     Wait Until Loading Is Complete
     #sleep for 5 seconds to allow image to load before trying to capture screenshot
     Sleep                               5

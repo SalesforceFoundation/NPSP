@@ -43,7 +43,15 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
          Supported options are (New/Existing)
         """
         self.npsp.choose_frame("Manage Household")
-        self.npsp.search_field_by_value("Find a Contact or add a new Contact to the Household", value)
+        if self,npsp.latest_api_version == 50.0:
+            xpath = npsp_lex_locators['manage_hh_page']['lookup'].format("Find a Contact or add a new Contact to the Household")
+            field = self.selenium.get_webelement(xpath)
+            self.selenium.clear_element_text(field)
+            field.send_keys(value)
+            time.sleep(3)
+            field.send_keys(Keys.ENTER)
+        else:
+            self.npsp.search_field_by_value("Find a Contact or add a new Contact to the Household", value)
         lookup_ele=npsp_lex_locators['household_lookup_dropdown_menu']
         self.selenium.wait_until_element_is_visible(lookup_ele)
 
