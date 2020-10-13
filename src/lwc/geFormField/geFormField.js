@@ -1,12 +1,13 @@
 import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify, isUndefined, relatedRecordFieldNameFor} from 'c/utilCommon';
+import {isNotEmpty, debouncify, isUndefined, deepClone} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import {getObjectInfo} from "lightning/uiObjectInfoApi";
-import { fireEvent } from 'c/pubsubNoPageRef';
+import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
+import {fireEvent} from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
-import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import DONATION_RECORD_TYPE_NAME
+    from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import CONTACT1_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import ACCOUNT_ID from '@salesforce/schema/Opportunity.AccountId';
@@ -41,7 +42,6 @@ const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
     @track _value;
-    @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
     @track _disabled = false;
@@ -49,6 +49,7 @@ export default class GeFormField extends LightningElement {
     @api targetFieldName;
     _defaultValue = null;
     _recordTypeId;
+    _picklistValues
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -66,6 +67,13 @@ export default class GeFormField extends LightningElement {
         this._value = val;
     }
 
+    PICKLIST_OPTION_NONE = Object.freeze({
+        attributes: null,
+        label: this.CUSTOM_LABELS.commonLabelNone,
+        validFor: [],
+        value: this.CUSTOM_LABELS.commonLabelNone
+    });
+
     handleValueChangeSync = (event) => {
         const value = this.getValueFromChangeEvent(event);
         if (!this.isPicklist) {
@@ -75,7 +83,7 @@ export default class GeFormField extends LightningElement {
         this.fireValueChangeEvent();
         this.fireFormFieldChangeEvent(value);
 
-        if (this.isLookup || this.isRecordTypePicklist) {
+        if (this.isLookup) {
             const objMappingDevName =
                 GeFormService.importedRecordFieldNames.includes(this.targetFieldApiName) ?
                     GeFormService.objectMappingWrapperFor(this.targetFieldApiName)
@@ -89,9 +97,7 @@ export default class GeFormField extends LightningElement {
                 sourceFieldApiName: this.sourceFieldAPIName
             };
             const selectRecordEvent = new CustomEvent('lookuprecordselect', { detail: lookupDetail });
-            if (this.targetFieldApiName !== 'RecordTypeId') {
-                this.dispatchEvent(selectRecordEvent);
-            }
+            this.dispatchEvent(selectRecordEvent);
         }
 
         if (this.isPicklist) {
@@ -348,7 +354,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     get isPicklist() {
-        return this.fieldType === PICKLIST_TYPE;
+        return this.fieldType === PICKLIST_TYPE || this.isRecordTypePicklist;
     }
 
     get isTextArea() {
@@ -518,7 +524,6 @@ export default class GeFormField extends LightningElement {
         }
 
         if (this.isPicklist) {
-            this.template.querySelector('c-ge-form-field-picklist').reset();
             this.handlePicklistChange();
         }
     }
@@ -687,5 +692,79 @@ export default class GeFormField extends LightningElement {
         return this.element &&
             this.element.parentRecordField;
     }
+
+    // ================================================================================
+    // Logic formerly in geFormFieldPicklist
+    // ================================================================================
+    get picklistValues() {
+        if (this.targetFieldApiName === 'RecordTypeId') {
+            return this.getPicklistOptionsForRecordTypeIds();
+        }
+        return this._picklistValues;
+    }
+
+    set picklistValues(values) {
+        this._picklistValues = values;
+    }
+
+    get qaLocatorPicklist() {
+        return `combobox ${this.qaLocatorBase}`;
+    }
+
+    /**
+     * Accessor method returns the full object and field api name.
+     *
+     * Returns null if the current field is a RecordTypeId so that we
+     * don't invoke the wired `wiredPicklistValues` function. Instead
+     * we retrieve record types objects from `_objectDescribeInfo`
+     * and build the picklist options array from there.
+     */
+    get fullFieldApiNameForStandardPicklists() {
+        if (this.isRecordTypeIdLookup || !this.isPicklist) return undefined;
+        return `${this.objectApiName}.${this.targetFieldApiName}`;
+    }
+
+    get isRecordTypeIdLookup() {
+        return this.targetFieldApiName === 'RecordTypeId';
+    }
+
+    get accessibleRecordTypes() {
+        if (!this.objectDescribeInfo) return [];
+        const allRecordTypes = Object.values(this.objectDescribeInfo.recordTypeInfos);
+        return allRecordTypes.filter(recordType => recordType.available && !recordType.master);
+    }
+
+    @wire(getPicklistValues, {
+        fieldApiName: '$fullFieldApiNameForStandardPicklists',
+        recordTypeId: '$recordTypeId'
+    })
+    wiredPicklistValues({error, data}) {
+        if (data) {
+            this.picklistValues = [this.PICKLIST_OPTION_NONE, ...data.values];
+        }
+        if (error) {
+            console.error(error);
+        }
+    }
+
+    getPicklistOptionsForRecordTypeIds() {
+        if (!this.accessibleRecordTypes || this.accessibleRecordTypes.length <= 0) {
+            return [this.PICKLIST_OPTION_NONE];
+        }
+
+        let recordTypeIdPicklistOptions = this.accessibleRecordTypes.map(recordType => {
+            return this.createPicklistOption(recordType.name, recordType.recordTypeId);
+        });
+        recordTypeIdPicklistOptions = [this.PICKLIST_OPTION_NONE, ...recordTypeIdPicklistOptions];
+
+        return recordTypeIdPicklistOptions;
+    }
+
+    createPicklistOption = (label, value, attributes = null, validFor = []) => ({
+        attributes: attributes,
+        label: label,
+        validFor: validFor,
+        value: value
+    });
 
 }
