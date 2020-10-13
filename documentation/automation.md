@@ -152,10 +152,11 @@ Cumulus's unpackaged configuration is used as follows:
 
 | Name                          | Type | Description                                                                         |
 | ----------------------------- | ---- | ----------------------------------------------------------------------------------- |
-| `test_data_delete` | Task | Delete all records in all NPSP related objects including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors |
+| `test_data_delete` | Task | Delete all records NPSP related data including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors |
 | `test_data_delete_managed` | Task | Version for Managed Orgs  |
 | `purge_npsp_errors` | Task | Deletes all records in the Error__c object  |
 | `purge_npsp_errors_managed` | Task | Deletes all records in the npsp__Error__c object  |
+| `ldv_data_delete_managed` | Flow | Hard Deletes all records NPSP related data including Opportunity, Account, Contact, RecurringDonation, Level, Engagement Plan, Data Import and Errors. Disables Triggers and other logic first to opimize performance and prevent errors. Use this when deleting large amounts of data in an org. |
 
 ### Dev Org Data Set
 
@@ -186,6 +187,23 @@ The SQLite data set is not included in the repo due to its size. It is present i
 | Deploy Task      | Capture Task | Delete Task        |
 | ---------------- | ------------ | ------------------ |
 | `test_data_100k` |              | `test_data_delete` |
+
+For managed orgs, the mapping must be manually set to `datasets/mapping-managed.yml`.
+
+### LDV Flexible Data Set
+
+This uses Snowfakery to generate a data set up to millions of records. The default is 1000 Contacts and related Opportunities, Recurring Donations, etc.
+
+95% of all Contacts created will have a single Recurring Donation. Each RD will have one historical Opportunity. Contacts may also have Relationship and Affiliations. A load of 1000 Contacts will create 950 RD records, approximately 4000 Opportunities/Payments/Allocations, and other related records.  
+
+Special Notes:
+- Requires Enhanced Recurring Donations be enabled first. Use the `enable_rd2_managed` flow to do this.
+- This flow is currently built for Managed package orgs only, but an upcoming change to CCI should allow this to work in either managed or unmanaged.
+- Future RD Installment Opportunities are not created automatically during the data load. This can be done separately by executing the RD batch job through NPSP Settings.
+
+| Deploy Flow    | Options | Delete Task        |
+| -------------- | ------------ | ------------------ |
+| `ldv_test_data_managed` | `-o generate_and_load_from_yaml__num_records {NumberOfContacts}` | `ldv_test_data_managed` |
 
 For managed orgs, the mapping must be manually set to `datasets/mapping-managed.yml`.
 

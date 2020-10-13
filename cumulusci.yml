@@ -1179,7 +1179,7 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
-    test_data_rd2_managed:
+    ldv_test_data_managed:
         description: Creates 1000 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records.
         group: NPSP
         steps:
