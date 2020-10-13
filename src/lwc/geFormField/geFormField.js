@@ -1,8 +1,9 @@
-import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify, isUndefined} from 'c/utilCommon';
+import { LightningElement, api, track, wire } from 'lwc';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { isNotEmpty, debouncify, isUndefined, deepClone } from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import {getObjectInfo} from "lightning/uiObjectInfoApi";
+import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
@@ -41,7 +42,6 @@ const CHECKBOX = 'checkbox';
 
 export default class GeFormField extends LightningElement {
     @track value;
-    @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
     @track _disabled = false;
@@ -49,9 +49,17 @@ export default class GeFormField extends LightningElement {
     @api targetFieldName;
     _defaultValue = null;
     _recordTypeId;
+    _picklistValues
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
+    PICKLIST_OPTION_NONE = Object.freeze({
+        attributes: null,
+        label: this.CUSTOM_LABELS.commonLabelNone,
+        validFor: [],
+        value: this.CUSTOM_LABELS.commonLabelNone
+    });
 
     handleValueChangeSync = (event) => {
         this.value = this.getValueFromChangeEvent(event);
@@ -63,7 +71,7 @@ export default class GeFormField extends LightningElement {
         const evt = new CustomEvent('valuechange', {detail, bubbles: true});
         this.dispatchEvent(evt);
 
-        if (this.isLookup || this.isLookupRecordType) {
+        if (this.isLookup || this.isRecordTypePicklist) {
             const objMappingDevName =
                 GeFormService.importedRecordFieldNames.includes(this.targetFieldApiName) ?
                     GeFormService.getObjectMappingWrapperByImportedFieldName(this.targetFieldApiName)
@@ -117,6 +125,9 @@ export default class GeFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectDescribeInfo = response.data;
+            if (!this.recordTypeId) {
+                this.recordTypeId = this.objectDescribeInfo.defaultRecordTypeId;
+            }
         }
     }
 
@@ -309,7 +320,10 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    get isLookupRecordType() {
+    /**
+     * Special handling for RecordTypeId because we render these fields as picklists instead of lookups.
+     */
+    get isRecordTypePicklist() {
         return this.fieldType === LOOKUP_TYPE && this.targetFieldApiName === RECORD_TYPE_FIELD.fieldApiName;
     }
 
@@ -447,20 +461,6 @@ export default class GeFormField extends LightningElement {
                 this.reset();
             } else {
                 this.value = value.value || value;
-
-                if (this.isLookupRecordType || this.isLookup) {
-                    if (value && !value.displayName) {
-                        // If the RecordTypeId field for a target record is being
-                        // loaded with only the Id (like when a Lookup field is
-                        // selected/populated on the form), get the RecordType Name
-                        // and pass it with the Id to loadLookup
-                        data[this.sourceFieldAPIName] = {
-                            value: value,
-                            displayValue: this.getRecordTypeNameById(value)
-                        };
-                    }
-                    this.loadLookUp(data, this.value);
-                }
             }
 
             if (this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
@@ -482,38 +482,6 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    /**
-     * Loads a value into a look-up field
-     * @param data An sObject potentially containing a value to load.
-     * @param value A form field value
-     */
-    loadLookUp(data, value) {
-        const lookup = this.template.querySelector('[data-id="inputComponent"]');
-        lookup.reset();
-        if (this.isLookup) {
-            lookup.value = value;
-        } else if (this.isLookupRecordType) {
-
-            let displayValue;
-            const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
-
-            if (data[relationshipFieldName] &&
-                data[relationshipFieldName]['Name']) {
-                displayValue = data[relationshipFieldName].Name;
-
-            } else if (data[this.sourceFieldAPIName] &&
-                data[this.sourceFieldAPIName]['displayValue']) {
-                displayValue = data[this.sourceFieldAPIName].displayValue;
-
-            } else if (data.displayValue) {
-                displayValue = data.displayValue;
-
-            }
-
-            lookup.setSelected({value, displayValue});
-        }
-    }
-
     @api
     reset(setDefaults = true) {
         if (setDefaults) {
@@ -522,21 +490,23 @@ export default class GeFormField extends LightningElement {
             this.value = null;
         }
 
-        // reset lookups and recordtype fields
-        if (this.isLookupRecordType || this.isLookup) {
+        // reset lookups
+        if (this.isRecordTypePicklist) {
+            this.recordTypeId = this.objectDescribeInfo.defaultRecordTypeId;
+            // Using setTimeout here ensures that this recordTypeId
+            // will be set on sibling fields after they are reset by queueing the event.
+            setTimeout(() => {
+                this.fireLookupRecordSelectEvent();
+            }, 0);
+        }
+
+        if (this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if (this.isLookupRecordType) {
-                // Using setTimeout here ensures that this recordTypeId
-                // will be set on sibling fields after they are reset by queueing the event.
-                setTimeout(() => {
-                    this.fireLookupRecordSelectEvent();
-                }, 0);
-            }
         }
 
         if (this.isPicklist) {
-            this.template.querySelector('c-ge-form-field-picklist').reset();
+            //this.template.querySelector('c-ge-form-field-picklist').reset();
             this.handlePicklistChange();
         }
     }
@@ -544,19 +514,19 @@ export default class GeFormField extends LightningElement {
     @api
     set recordTypeId(id) {
         this._recordTypeId = id;
-        this.setRecordTypeIdOnChildComponents();
+        //this.setRecordTypeIdOnChildComponents();
     }
 
     get recordTypeId() {
         return this._recordTypeId;
     }
 
-    setRecordTypeIdOnChildComponents() {
-        if (this.isPicklist) {
-            this.template.querySelector('c-ge-form-field-picklist')
-                .recordTypeId = this.recordTypeId;
-        }
-    }
+    // setRecordTypeIdOnChildComponents() {
+    //     if (this.isPicklist) {
+    //         this.template.querySelector('c-ge-form-field-picklist')
+    //             .recordTypeId = this.recordTypeId;
+    //     }
+    // }
 
     fireLookupRecordSelectEvent() {
         this.dispatchEvent(new CustomEvent(
@@ -635,5 +605,80 @@ export default class GeFormField extends LightningElement {
     get qaLocatorTextArea() {
         return `textarea ${this.qaLocatorBase}`;
     }
+
+
+    // ================================================================================
+    // Logic formerly in geFormFieldPicklist
+    // ================================================================================
+    get picklistValues() {
+        if (this.targetFieldApiName === 'RecordTypeId') {
+            return this.getPicklistOptionsForRecordTypeIds();
+        }
+        return this._picklistValues;
+    }
+
+    set picklistValues(values) {
+        this._picklistValues = values;
+    }
+
+    get qaLocatorPicklist() {
+        return `combobox ${this.qaLocatorBase}`;
+    }
+
+    /**
+     * Accessor method returns the full object and field api name.
+     *
+     * Returns null if the current field is a RecordTypeId so that we
+     * don't invoke the wired `wiredPicklistValues` function. Instead
+     * we retrieve record types objects from `_objectDescribeInfo`
+     * and build the picklist options array from there.
+     */
+    get fullFieldApiNameForStandardPicklists() {
+        if (this.isRecordTypeIdLookup || !this.isPicklist) return undefined;
+        return `${this.objectApiName}.${this.targetFieldApiName}`;
+    }
+
+    get isRecordTypeIdLookup() {
+        return this.targetFieldApiName === 'RecordTypeId';
+    }
+
+    get accessibleRecordTypes() {
+        if (!this.objectDescribeInfo) return [];
+        const allRecordTypes = Object.values(this.objectDescribeInfo.recordTypeInfos);
+        return allRecordTypes.filter(recordType => recordType.available && !recordType.master);
+    }
+
+    @wire(getPicklistValues, {
+        fieldApiName: '$fullFieldApiNameForStandardPicklists',
+        recordTypeId: '$recordTypeId'
+    })
+    wiredPicklistValues({ error, data }) {
+        if (data) {
+            this.picklistValues = [this.PICKLIST_OPTION_NONE, ...data.values];
+        }
+        if (error) {
+            console.error(error);
+        }
+    }
+
+    getPicklistOptionsForRecordTypeIds() {
+        if (!this.accessibleRecordTypes || this.accessibleRecordTypes.length <= 0) {
+            return [this.PICKLIST_OPTION_NONE];
+        }
+
+        let recordTypeIdPicklistOptions = this.accessibleRecordTypes.map(recordType => {
+            return this.createPicklistOption(recordType.name, recordType.recordTypeId);
+        });
+        recordTypeIdPicklistOptions = [this.PICKLIST_OPTION_NONE, ...recordTypeIdPicklistOptions];
+
+        return recordTypeIdPicklistOptions;
+    }
+
+    createPicklistOption = (label, value, attributes = null, validFor = []) => ({
+        attributes: attributes,
+        label: label,
+        validFor: validFor,
+        value: value
+    });
 
 }
