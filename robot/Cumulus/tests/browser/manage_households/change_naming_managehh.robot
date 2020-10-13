@@ -44,7 +44,7 @@ Change Name Display Settings on Manage Household Page
     Add contact                             Existing                                                            ${contact2}[FirstName] ${contact2}[LastName]
     Current Page Should Be                  Details                                                             Account
     Wait Until Loading Is Complete
-    Click Button                            Manage Household
+    Click Actions Link                      Manage Household
     Current Page Should Be                  Custom                                                              ManageHousehold
 
     # Choose the display option as Informal Greeting for contact#1
