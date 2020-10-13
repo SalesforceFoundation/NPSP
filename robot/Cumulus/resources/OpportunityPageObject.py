@@ -24,8 +24,8 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         self.npsp.navigate_to_and_validate_field_value("Opportunity Name", "contains", value)
 
     def navigate_to_matching_gifts_page(self):
-        time.sleep(2)
-        self.npsp.click_show_more_actions_button('Find Matched Gifts')
+        self.npsp.click_more_actions_button()
+        self.selenium.click_link('Find Matched Gifts')
         self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):

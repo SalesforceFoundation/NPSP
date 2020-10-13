@@ -1529,11 +1529,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_more_actions_button(self):
         """clicks on the more actions dropdown button in the actions container on record page"""
-        if self.latest_api_version == 50.0:
-            locator=npsp_lex_locators['more_actions_link']
-            self.builtin.log(locator)
-        else:
-            locator=npsp_lex_locators['link'].format("more actions","more actions")
+        locator=npsp_lex_locators['link'].format("more actions","more actions")
         self.salesforce._jsclick(locator)
 
 
@@ -1552,7 +1548,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_actions_link(self,title):
         """Clicks on the link in the actions container on top right corner of the page using Javascript"""
-        locator=npsp_lex_locators["lightning-button"].format(title)
+        locator=npsp_lex_locators["link-title"].format(title)
         self.salesforce._jsclick(locator)
 
     def click_more_activity_button(self):

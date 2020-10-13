@@ -40,7 +40,7 @@ Find Matching Gifts
     ...                                    Opportunity
     ...                                    object_id=${data}[contact1_opportunity][Id]
     Current Page Should Be                 Details                           Opportunity
-    Click Button                           Edit
+    Click Link                             link=Edit
     Populate Lookup Field                  Matching Gift Account             ${data}[org][Name]
     Select Value From Dropdown             Matching Gift Status              Potential
     Click Modal Button                     Save
