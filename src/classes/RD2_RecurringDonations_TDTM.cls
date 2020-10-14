@@ -124,6 +124,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
+        cancelCommitments(rds, oldRds, triggerAction);
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
     }
@@ -337,6 +339,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
                 if (
                     newRd.isOpenEnded()
+                    && !newRd.isElevateRecord()
                     && newRd.isClosed()
                     && rds[i].EndDate__c != null
                     && rds[i].EndDate__c > currentDate
@@ -538,4 +541,49 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
     }
 
+    /**
+    * @description Cancel Commitments in Elevate for closed Recurring Donations containing a Commitment Id. 
+    *   If the Elevate RD is closed and Elevate Service is enabled,
+    *   the RD status will be set to pending process and an async job will be kick off 
+    *   to cancel the mathced commitment in Elevate.
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void cancelCommitments(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction ) {
+        if (triggerAction != TDTM_Runnable.Action.BeforeUpdate
+            || TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.PS_doNotSendToElevate)
+            || !RD2_ElevateIntegrationService.isIntegrationEnabled()) {
+            return;
+        }
+
+        List<npe03__Recurring_Donation__c> commitmentRDs = new List<npe03__Recurring_Donation__c>();
+
+        for (Integer i = 0; i < rds.size(); i++) {
+            npe03__Recurring_Donation__c closedRd = rds[i];
+            RD2_RecurringDonation rd = new RD2_RecurringDonation(closedRd);
+            RD2_RecurringDonation oldRd = new RD2_RecurringDonation(oldRds[i]);
+
+            if (rd.isElevateRecord() && rd.isClosed() && !oldRd.isClosed()) {
+                //send the RD details including the user provided Closed Reason to the commitment service
+                commitmentRDs.add(new npe03__Recurring_Donation__c(
+                    Id = closedRd.Id,
+                    ClosedReason__c = closedRd.ClosedReason__c,
+                    CommitmentId__c = closedRd.CommitmentId__c
+                ));
+
+                // update the closed RD reason to Elevate pending status
+                closedRd.ClosedReason__c = System.Label.RD2_ElevatePendingStatus;
+
+                if (commitmentRDs.size() >= Limits.getLimitCallouts()) {
+                    System.enqueueJob(new RD2_QueueableService.CancelCommitmentService(commitmentRDs));
+                    commitmentRDs.clear();
+                }
+            }
+        }
+
+        if (!commitmentRDs.isEmpty()) {
+            System.enqueueJob(new RD2_QueueableService.CancelCommitmentService(commitmentRDs));
+        }
+    }
 }
