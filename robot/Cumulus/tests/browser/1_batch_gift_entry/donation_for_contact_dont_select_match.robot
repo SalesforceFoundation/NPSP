@@ -37,9 +37,8 @@ Dont select match for contact new donation with grid changes
     Select Value From BGE DD    Donor Type    Contact
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
-        ...                              Search Field And Wait For Modal    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
+        ...                              Search Field And Perform Action    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
 
-    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Page Should Contain Link    Review Donations
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
