@@ -17,11 +17,9 @@ Suite Teardown  Delete Records and Close Browser
 # Setup a contact with parameters specified
 Setup Test Data
     Setupdata           account      None    None    ${account_fields}
-    ${date} =           Get Current Date      result_format=%-m/%-d/%Y
+    ${now}              Evaluate            '01/10/{dt.year}'.format(dt=datetime.datetime.now())    modules=datetime
+    ${date}             Convert Date        ${now}    result_format=%-m/%-d/%Y   date_format=%d/%m/%Y
     Set Suite Variable  ${date}
-    ${currdate}=        Get Current Date  result_format=datetime
-    ${currentvalue} =   Evaluate  ${12-${currdate.month}}*100
-    Set Suite Variable  ${currentvalue}
     ${ns} =             Get NPSP Namespace Prefix
     Set Suite Variable  ${ns}
 
@@ -29,7 +27,7 @@ Setup Test Data
 &{account_fields}  Type=Organization
 
 ${frequency}  1
-${day_of_month}  2
+${day_of_month}  1
 ${amount}  100
 ${method}  Credit Card
 
@@ -76,7 +74,7 @@ Create Open Recurring Donation With Monthly Installment
      ...                                    Payment Method=${method}
      ...                                    Effective Date=${date}
      ...                                    Installment Period=Monthly
-     ...                                    Day of Month=2
+     ...                                    Day of Month=${day_of_month}
     # Validate upcoming installments
     Validate_Upcoming_Schedules             12                 ${date}                ${day_of_month}
 
@@ -84,11 +82,6 @@ Create Open Recurring Donation With Monthly Installment
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${rd_id}
     Reload Page
-
-    # validate recurring donation statistics current and next year value
-    Validate Field Values Under Section     Statistics
-    ...                                     Current Year Value=$${currentvalue}.00
-    ...                                     Next Year Value=$1,200.00
 
     @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
     Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
