@@ -85,19 +85,19 @@ public with sharing class GE_GiftEntryController {
             GE_PaymentServices paymentServices = new GE_PaymentServices();
             response = paymentServices.createTransaction(requestBodyParameters);
 
+            processPurchaseTimeoutResponse(response, dataImportRecordId);
+
         } catch (Exception ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
             throw buildDmlException(JSONExceptionData);
-
-        } finally {
-            processPurchaseTimeoutResponse(response, dataImportRecordId);
-        }
+        } 
 
         return response;
     }
 
     /*******************************************************************************************************
-    * @description Updates the timeout response so it can be read by the GE forms
+    * @description Updates the timeout response so it can be read by the GE forms.
+    * The method returns without further action when status code is not equal to the timeout status code (408).
     * @param response: timeout response
     * @param dataImportRecordId: Record ID of the related Data Import to include in our error logs
     * @return void
@@ -346,10 +346,8 @@ public with sharing class GE_GiftEntryController {
 
             return JSON.serialize(opportunityWrappers);
         } catch (Exception ex){
-            UTIL_AuraEnabledCommon.buildAuraException(ex.getMessage());
+            throw UTIL_AuraEnabledCommon.buildAuraException(ex.getMessage());
         }
-
-        return null;
     }
 
     /**

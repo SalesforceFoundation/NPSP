@@ -177,7 +177,7 @@ private with sharing class GE_GiftEntryController_TEST {
         String batchName = 'fooBatch';
         // test data
         Id batchId = createDataImportBatch( batchName );
-        DataImport__c di = newDI( firstName, lastName, batchId );
+        DataImport__c di = createDataImport( firstName, lastName, batchId );
 
         Test.startTest();
         GE_GiftEntryController.saveAndDryRunDataImport(batchId,di);
@@ -600,7 +600,7 @@ private with sharing class GE_GiftEntryController_TEST {
     * @param lastname the lastname to specify for Contact1
     * @return DataImport__c the new Data Import record
     */
-    public static DataImport__c newDI(String firstname, String lastname, Id batchId) {
+    public static DataImport__c createDataImport(String firstname, String lastname, Id batchId) {
         return new DataImport__c(
                 Contact1_Firstname__c = firstname,
                 Contact1_Lastname__c = lastname,
