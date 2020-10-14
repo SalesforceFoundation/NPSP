@@ -1618,6 +1618,22 @@
         <value>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevatePendingStatus</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Reason to indicates Elevate Service is in progress.</shortDescription>
+        <value>Pending Elevate Process</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
+        <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1982,6 +1998,14 @@
         <protected>true</protected>
         <shortDescription>Fixed Length Recurring Donation End Date must be valid</shortDescription>
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EndDateElevateCannotBeInFuture</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate connected Recurring Donation End Date must be valid.</shortDescription>
+        <value>End Date can&apos;t be in the future for Elevate connected Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormCustomFieldsSectionHeader</fullName>
