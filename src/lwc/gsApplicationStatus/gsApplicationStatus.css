@@ -1,0 +1,14 @@
+img {
+    margin-bottom: 24px;
+    object-fit:fill;
+}
+
+.slds-button_outline-brand {
+    border-color: purple;
+    color: purple;
+}
+
+.slds-button_brand {
+    background-color: purple;
+    border-color: purple;
+}

@@ -296,6 +296,8 @@
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
+        <members>GS_ApplicationStatusController</members>
+        <members>GS_ApplicationStatusControllerTest</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -1347,6 +1349,7 @@
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
         <members>Schedulable__c.Last_Time_Run__c</members>
+        <members>Testing_Configuration__c.Configuration__c</members>
         <members>Trigger_Handler__c.Active__c</members>
         <members>Trigger_Handler__c.Asynchronous__c</members>
         <members>Trigger_Handler__c.Class__c</members>
@@ -2415,6 +2418,17 @@
         <members>geWarningGauAllocFieldUpdatesDisabled</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
+        <members>gsApplicationStatus</members>
+        <members>gsApplicationStatusModalHeader</members>
+        <members>gsApplyForFreeLicenses</members>
+        <members>gsCheckStatus</members>
+        <members>gsClose</members>
+        <members>gsDaysAdded</members>
+        <members>gsDaysRemainingInFreeTrial</members>
+        <members>gsFollowUpApplicationStatus</members>
+        <members>gsLearnMore</members>
+        <members>gsNoApplicationSubmitted</members>
+        <members>gsSubmitted</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -3228,6 +3242,7 @@
         <members>RecurringDonationSchedule__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
+        <members>Testing_Configuration__c</members>
         <members>Trigger_Handler__c</members>
         <members>Data_Import_Field_Mapping_Set__mdt</members>
         <members>Data_Import_Field_Mapping__mdt</members>
@@ -3693,6 +3708,10 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>P10_Application_Date</members>
+        <name>FeatureParameterDate</name>
+    </types>
+    <types>
         <members>DataCount_ONETIME_Use</members>
         <members>Data_CountBDIRowsLast30Days</members>
         <members>Data_CountBGERowsLast30Days</members>
@@ -3827,6 +3846,8 @@
         <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
+        <members>gsApplicationStatus</members>
+        <members>gsModal</members>
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
@@ -3938,6 +3959,7 @@
     <types>
         <members>CumulusStaticResources</members>
         <members>DefaultGiftEntryTemplate</members>
+        <members>gsResources</members>
         <name>StaticResource</name>
     </types>
     <types>
