@@ -24,10 +24,17 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
     def open_main_menu(self,title): 
         """Waits for the menu item to load and clicks to expand menu""" 
         self.selenium.wait_until_page_contains(title, 
-                                               error=f"{title} link was not found on the page")  
-        self.npsp.click_link_with_text(title)
-        locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
-        self.selenium.wait_until_page_contains_element(locator, 
+                                               error=f"{title} link was not found on the page")
+        # There are two elements that have donations and this hack is needed to avoid the
+        # confusion of which element to pick
+        if title == "Donations":
+            locator=npsp_lex_locators['npsp_settings']['donations_link'].format(title)
+            self.selenium.wait_until_element_is_visible(locator)
+            self.salesforce._jsclick(locator)
+        else:
+            self.npsp.click_link_with_text(title)
+            locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
+            self.selenium.wait_until_page_contains_element(locator,
                                                error=f"click on {title} link was not successful even after 30 seconds")
         self.selenium.capture_page_screenshot()                                        
         
