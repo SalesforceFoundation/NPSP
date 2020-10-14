@@ -26,9 +26,8 @@ Match Based on Number of Days from Donation Date Functionality
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
-        ...                              Search Field And Wait For Modal    Search Accounts    ${account}[Name]
+        ...                              Search Field And Perform Action    Search Accounts    ${account}[Name]
 
-    Click Link    ${account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    ${opp}[Name]
     ${pay_no}    Get BGE Card Header    ${opp}[Name]
