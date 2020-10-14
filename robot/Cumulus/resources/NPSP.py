@@ -6,6 +6,8 @@ import string
 import re
 from datetime import datetime
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+
 
 
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -1113,7 +1115,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)
 
-
+    @capture_screenshot_on_error
     def search_field_by_value(self, fieldname, value):
          """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
          """
@@ -1124,20 +1126,24 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
          time.sleep(3)
          field.send_keys(Keys.ENTER)
 
-
-    def search_field_and_wait_for_modal(self, fieldname, value):
+    @capture_screenshot_on_error
+    def search_field_and_perform_action(self, fieldname, value, type=None):
         """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
-        and wait for the modal to appear.
+        and clicks on the option containing the value from the dropdown if the value is found
+        if the type is specified as "New' then enter key is pressed for the modal to appear.
 		"""
         xpath = npsp_lex_locators["placeholder"].format(fieldname)
+        lookup_option = npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
         field = self.selenium.get_webelement(xpath)
         self.salesforce._clear(field)
         field.send_keys(value)
         time.sleep(3)
-        field.send_keys(Keys.ENTER)
-        field.send_keys(Keys.ENTER)
-        self.salesforce.wait_until_modal_is_open()
-
+        if type == 'New':
+           field.send_keys(Keys.ENTER)
+           self.salesforce.wait_until_modal_is_open()
+        else:
+           self.selenium.wait_until_element_is_visible(lookup_option)
+           self.selenium.click_element(lookup_option)
 
     def save_current_record_id_for_deletion(self,object_name):
         """Gets the current page record id and stores it for specified object
@@ -1291,11 +1297,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
                 while i <= int(payment_data['NumPayments']):
                     payment_schedule_data = {}
-                    numdays = numdays*2
                     # Based on the number of payments parameter numpayments, populate the number of payments and associate it to the opportunity
 					# While populating the number of payments if a desired scheduled payment date is provided use it if not use the current date
                     if 'Scheduledate' in payment_data:
-                        scheduled_date = (datetime.strptime(payment_data['Scheduledate'] , '%Y-%m-%d').date() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                        # Referring the payment date and scheduled date to be the same value
+                        scheduled_date = payment_data['Scheduledate']
+                        payment_date = payment_data['Scheduledate']
+                        #Altering shceduled date to increemnt by every month
+                        scheduled_date = (datetime.strptime(scheduled_date , '%Y-%m-%d').date() + relativedelta(months=i)).strftime('%Y-%m-%d')
                     else:
                         scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
                     payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date,'npe01__Payment_Amount__c' : payment_data['Amount'] } )
@@ -1303,10 +1312,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
 					# Out of the total number of payments being generated if user paid the payements for n number of payments specified in the field completedPyaments
 					# Mark the payments as paid and populate the payment date
+                    
                     if 'CompletedPayments' in payment_data:
                         if i<= int(payment_data['CompletedPayments']):
                             payment_update_data = {}
-                            payment_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                            #Altering Payment date to increment by every month for the set number of installments
+                            payment_date =  (datetime.strptime(payment_date , '%Y-%m-%d').date() + relativedelta(months=i*2)).strftime('%Y-%m-%d')
                             payment_update_data.update( {'npe01__Payment_Date__c' : payment_date ,'npe01__Paid__c': "true"} )
                             payment_id = self.salesforce.salesforce_update("npe01__OppPayment__c",payment_id , **payment_update_data)
 
@@ -1404,6 +1415,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         scroll_loc=npsp_lex_locators["span_button"].format(field)
         # To make sure the field we want to edit has rendered
         # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.wait_until_element_is_visible(scroll_loc)
         self.selenium.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
