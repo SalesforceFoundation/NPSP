@@ -85,7 +85,9 @@ public with sharing class GE_GiftEntryController {
             GE_PaymentServices paymentServices = new GE_PaymentServices();
             response = paymentServices.createTransaction(requestBodyParameters);
 
-            processPurchaseTimeoutResponse(response, dataImportRecordId);
+            if (response.statusCode == UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT) {
+                processPurchaseTimeoutResponse(response, dataImportRecordId);
+            }            
 
         } catch (Exception ex) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
@@ -97,15 +99,13 @@ public with sharing class GE_GiftEntryController {
 
     /*******************************************************************************************************
     * @description Updates the timeout response so it can be read by the GE forms.
-    * The method returns without further action when status code is not equal to the timeout status code (408).
+    * The status code stays the same (408), however the status is changed to contain the error message
+    * and the response body is changed to contain a generic GE request timed out message.
     * @param response: timeout response
     * @param dataImportRecordId: Record ID of the related Data Import to include in our error logs
     * @return void
     */
-    private static void processPurchaseTimeoutResponse(UTIL_Http.Response response, String dataImportRecordId) {
-        if (response.statusCode != UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT) {
-            return;
-        }
+    private static void processPurchaseTimeoutResponse(UTIL_Http.Response response, String dataImportRecordId) {   
 
         response.status = response.getErrorMessages();
         response.body = JSON.serialize(new Map<String, String>{ 'message' => PURCHASE_CALL_TIMEOUT_MESSAGE });
