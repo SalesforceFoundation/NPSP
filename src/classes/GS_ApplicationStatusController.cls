@@ -39,6 +39,12 @@ public with sharing class GS_ApplicationStatusController {
     private static final Date DEFAULT_NON_APPLICATED_DATE = Date.parse('01/01/1970');
     private static final String STATIC_RESOURCE_NAME = 'gsApplicationConfiguration';
     
+    private Boolean overrideValuesForTesting;
+
+    /**
+     * @description Property to get the testing configuration from Static Resource.
+     * @return Map<String,Object> with the parsed test configuration loaded from the Static Resource.
+     */
     @TestVisible
     private static Map<String, Object> testingConfiguration {
         get {
@@ -53,6 +59,32 @@ public with sharing class GS_ApplicationStatusController {
             testingConfiguration = value;
         }
     }
+
+    /**
+     * @description Read-only property with the Org queried with the fields: IsSandbox and TrialExpirationDate.
+     * @return Organization object with fields IsSandbox and TrialExpirationDate.
+     */ 
+    private Organization org { 
+        get {
+            org = getOrgInformation();
+            return org;
+        }
+        private set;
+    }
+
+    
+    /**
+     * @description Aura enabled method for knowing if Organization is Active
+     * @return true if Organization is Active(no TrialExpirationDate presented), false otherwise
+     */
+     @AuraEnabled
+     public static Boolean isActiveOrg(){
+        GS_ApplicationStatusController controller = new GS_ApplicationStatusController();
+        
+        controller.overrideValuesForTesting = controller.shouldOverrideValuesWithTestData();
+        return !controller.isSandbox() && controller.getExpirationDate() == null;
+    }
+
     /**
      * @description Aura enabled method for retrieving Organization Expiration date, if its running on a sandbox instance and the application date.
      * The Expiration Date and The is sandbox is queried from Organization Object. The application date is gotten from the P10_Application_Date FeatureParameter.
@@ -66,37 +98,55 @@ public with sharing class GS_ApplicationStatusController {
         
         GS_ApplicationStatusController controller = new GS_ApplicationStatusController();
         
-        Boolean overrideValuesForTesting = UTIL_Namespace.isScratchOrg() && testingConfiguration != null;
-        
-        Organization org = controller.getOrgInformation();
+        controller.overrideValuesForTesting = controller.shouldOverrideValuesWithTestData();
         
         ApplicationStatus status = new ApplicationStatus();
-        status.isSandbox = controller.isSandbox(overrideValuesForTesting, testingConfiguration, org);
-        status.trialExpirationDate = controller.getExpirationDate(overrideValuesForTesting, testingConfiguration, org);
-        Date applicationDate = controller.getApplicationDate(testingConfiguration);
+        status.isSandbox = controller.isSandbox();
+        status.trialExpirationDate = controller.getExpirationDate();
+        Date applicationDate = controller.getApplicationDate();
         status.applicationDate = applicationDate;
         return status;
     }
 
     /**
-     * @description Return if the org is a Sandbox(Sandbox or Scratch).
-     * @param  overrideValuesForTesting true if using custom setting is required for overriding Org information
-     * @param  testingConfiguration     testingConfiguration Map<String, Object> with the parameters of the org
-     * @param  org                      org Organization object(for this method it is required to query the IsSandbox field or it is going to fail)
-     * @return                          return true if org is a sandbox or scratch or the value in the field "Sandbox" of the Static Resource gsApplicationConfiguration.
+     * @description For better testeability, we allow to override some values if the Org is a scratch org and there is an static resource called gsApplicationConfiguration.
+     * @return   true if org is sandbox and there is a static resource gsApplicationConfiguration which could be parsed into Map<String, Object>
      */
-    private Boolean isSandbox(Boolean overrideValuesForTesting, Map<String,Object> testingConfiguration, Organization org) {
+    private Boolean shouldOverrideValuesWithTestData() { 
+         return UTIL_Namespace.isScratchOrg() && testingConfiguration != null;
+    }
+
+    /**
+     * @description Return if the org is a Sandbox(Sandbox or Scratch).
+     * @return return true if org is a sandbox or scratch or the value in the field "Sandbox" of the Static Resource gsApplicationConfiguration.
+     */
+    private Boolean isSandbox() {
         return overrideValuesForTesting ? (Boolean) testingConfiguration.get(SANDBOX_PARAMETER) 
                                                     : org.IsSandbox;
     }
+
+    /**
+     * @description Retrieves the Trial expiration date.
+     * On prod this is populated quering the Organization object.
+     * For QA purpose this values can be overriden if this is running on a Scratch org and there is static resource called gsApplicationConfiguration
+     * @return   DateTime with the expirationDate.
+     */
+    private DateTime getExpirationDate() {
+        if (overrideValuesForTesting) {
+            return  (testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER) == null ? null : 
+                    DateTime.parse(testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER).toString()));
+        } else {
+            return org.TrialExpirationDate;
+        }
+    }
+    
     /**
      * @description Retrieves the application date.
      * On prod this is populated using the FeatureParameter "P10_Application_Date"
      * For QA purpose this values can be overriden if this is running on a Scratch org and there is a value in the Static Resource gsApplicationConfiguration
-     * @param testingConfiguration Map<String, Object> Map of string, object with the testing configuration for overriden the returning values.
      * @return   return Application date gotten of the P10_Application_Date FeatureParameter OR the testing configuration object.
      */
-    private Date getApplicationDate(Map<String, Object> testingConfiguration) {
+    private Date getApplicationDate() {
         
         if (UTIL_Namespace.isScratchOrg() && testingConfiguration != null) { 
             return testingConfiguration.get(APPLICATION_PARAMETER) == null ? null: Date.parse(testingConfiguration.get(APPLICATION_PARAMETER).toString());
@@ -108,25 +158,6 @@ public with sharing class GS_ApplicationStatusController {
         } catch (System.NoDataFoundException ex) {
             return null;
         }
-    }
-
-    /**
-     * @description Retrieves the Trial expiration date.
-     * On prod this is populated quering the Organization object.
-     * For QA purpose this values can be overriden if this is running on a Scratch org and there is static resource called gsApplicationConfiguration
-     * @param  overrideValuesForTesting Boolean true if usage of Static Resource gsApplicationConfiguration is desired
-     * @param  testingConfiguration     Map<String, Object> parsed TestingConfiguration object
-     * @param  org                      Organization the Organization object, the query should have included the TrialExpiration field 
-     * @return                          DateTime with the expirationDate.
-     */
-    private DateTime getExpirationDate(Boolean overrideValuesForTesting,Map<String,Object> testingConfiguration, Organization org) {
-        if (overrideValuesForTesting) {
-            return  (testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER) == null ? null : 
-                    DateTime.parse(testingConfiguration.get(TRIAL_EXPIRATION_PARAMETER).toString()));
-        } else {
-            return org.TrialExpirationDate;
-        }
-        
     }
 
     /**
@@ -150,7 +181,7 @@ public with sharing class GS_ApplicationStatusController {
 
     /** 
      * @description Queries the Organization object to get the TrialExpirationDate and the IsSandbox field
-     * @returns Organization with TrialExpirationDate and IsSandbox queried.
+     * @return Organization with TrialExpirationDate and IsSandbox queried.
      */
     private Organization getOrgInformation() {
         return [SELECT TrialExpirationDate,
