@@ -155,7 +155,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
 
-        return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.getCardholderName(), this.handleError, this.resolveToken);
+        //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
+        //even though when it is accessible by the Gift Entyr form for Donor Type = Contact.
+        const nameOnCard = null;
+
+        return tokenHandler.requestToken(this.visualforceOrigin, iframe, nameOnCard, this.handleError, this.resolveToken);
     }
 
     /**
@@ -242,26 +246,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @api
     setNameOnCard(cardHolderName) {
         this.cardHolderName = cardHolderName;
-    }
-
-    /**
-     * @description Returns the cardholder name.
-     * If the Donor Type = Account, the first and last name are empty.
-     * If the Donor Type = Contact, the Contact first name (if specified) 
-     * and the last name are provided to the Payments Services card tokenization iframe.
-     */
-    getCardholderName() {
-        let name;
-        try {
-            if (this.cardHolderName) {
-                const firstName = isNull(this.cardHolderName.firstName) ? '' : this.cardHolderName.firstName;
-                const lastName = isNull(this.cardHolderName.lastName) ? '' : this.cardHolderName.lastName;
-                name = firstName + ' ' + lastName;
-                name = name.trim();
-            }
-        } catch (error) { }
-
-        return name;
     }
 
     dispatchApplicationEvent(eventName, payload) {

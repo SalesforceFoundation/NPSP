@@ -137,7 +137,7 @@ public with sharing class GE_GiftEntryController {
     /*******************************************************************************************************
     * @description Creates an DmlException with the specified error message
     *
-    * @param errorMsg contents of the exception error messagae
+    * @param errorMsg contents of the exception error message
     *
     * @return DmlException
     */
