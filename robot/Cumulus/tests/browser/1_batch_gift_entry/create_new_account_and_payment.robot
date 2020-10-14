@@ -34,7 +34,7 @@ Create a new account and enter payment information
     ${acc_name} =  Generate Random String
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
-        ...                              Search Field And Wait For Modal    Search Accounts    ${acc_name}
+        ...                              Search Field And Perform Action    Search Accounts    ${acc_name}    New
 
     Click Element    title:Search Accounts...
     Wait For Locator    record.edit_button    New Account
