@@ -182,6 +182,7 @@ npsp_lex_locators={
         },
     'npsp_settings':{
         'main_menu':'//div[@class="slds-tree__branch slds-tree__item"][.//a[text()="{}"]]',
+        'donations_link':'//div/a[contains(text(),"{}") and not(contains(text(),"Recurring Donations"))]',
         'panel_sub_link':'//ul/li[contains(@class,"slds-is-selected")]/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
         'side_panel':'//div[@id="{}"]//child::button[contains(@class,"chevronright")]',
