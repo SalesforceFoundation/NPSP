@@ -34,6 +34,7 @@ class psElevateTokenHandler {
     });
 
     _visualforceOriginUrls;
+    _visualforceOrigin;
 
 
     /***
@@ -92,15 +93,14 @@ class psElevateTokenHandler {
         let self = this;
 
         window.onmessage = async function (event) {
-            console.log('*****onmessage self._visualforceOriginUrls: ' + JSON.stringify(self._visualforceOriginUrls));
+
             if (self._visualforceOriginUrls) {
-                component.visualforceOrigin = self._visualforceOriginUrls.find(
+                self._visualforceOrigin = self._visualforceOriginUrls.find(
                     origin => event.origin === origin.value
                 ).value;
             }
 
-            console.log('*****onmessage component.visualforceOrigin: ' + JSON.stringify(component.visualforceOrigin));
-            if (component.visualforceOrigin) {
+            if (self._visualforceOrigin) {
                 const message = JSON.parse(event.data);
                 component.handleMessage(message);
             }
@@ -122,14 +122,13 @@ class psElevateTokenHandler {
     /***
     * @description Method sends a message to the visualforce page iframe requesting a token.
     * This request response is found and handled in the registerPostMessageListener().
-    * @param visualforceOrigin Visualforce origin
     * @param iframe The payment services iframe displayed within the credit card widget LWC
     * @param cardholderName The cardholder name
     * @param handleError An error handler function
     * @param resolveToken Function (if any) called when a token is generated
     * @return Promise A token promise
     */
-    requestToken(visualforceOrigin, iframe, cardholderName, handleError, resolveToken) {
+    requestToken(iframe, cardholderName, handleError, resolveToken) {
         if (isNull(iframe)) {
             return;
         }
@@ -166,7 +165,7 @@ class psElevateTokenHandler {
                 action: TOKENIZE_EVENT_ACTION,
                 nameOnCard: cardholderName
             },
-            visualforceOrigin
+            this._visualforceOrigin
         );
 
         return tokenPromise;

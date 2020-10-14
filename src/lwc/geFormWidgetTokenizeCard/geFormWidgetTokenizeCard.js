@@ -28,7 +28,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @api cardHolderName;
 
     @track domain;
-    @track visualforceOrigin;
 
     @track isLoading = true;
     @track alert = {};
@@ -158,7 +157,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
         const nameOnCard = null;
 
-        return tokenHandler.requestToken(this.visualforceOrigin, iframe, nameOnCard, this.handleError, this.resolveToken);
+        return tokenHandler.requestToken(iframe, nameOnCard, this.handleError, this.resolveToken);
     }
 
     /**
