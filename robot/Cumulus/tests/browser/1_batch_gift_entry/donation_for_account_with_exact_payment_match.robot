@@ -41,9 +41,8 @@ Enter a donation for an account with exact payment match
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
-        ...                              Search Field And Wait For Modal    Search Accounts    ${account}[Name]
+        ...                              Search Field And Perform Action    Search Accounts    ${account}[Name]
 
-    Click Link    ${account}[Name]
     Click Link With Text    Review Donations
     ${pay_no}    Get BGE Card Header    ${opportunity}[Name]
     Log To Console    ${pay_no}
