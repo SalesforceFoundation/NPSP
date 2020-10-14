@@ -1803,14 +1803,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     updateFormStateForDonationRecordType(fields) {
         const opportunityRecordTypeValue = fields[DONATION_RECORD_TYPE_NAME.fieldApiName];
 
-        const isId = opportunityRecordTypeValue.startsWith('012');
-        const val = isId ?
-            opportunityRecordTypeValue :
-            this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
+        if (opportunityRecordTypeValue) {
+            const isId = opportunityRecordTypeValue.startsWith('012');
+            const val = isId ?
+                opportunityRecordTypeValue :
+                this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
 
-        this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] =
-            this.opportunityRecordTypeNameFor(val);
-        this.setDonationRecordTypeIdInFormState(val);
+            this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.opportunityRecordTypeNameFor(val);
+            this.setDonationRecordTypeIdInFormState(val);
+        }
     }
 
     opportunityRecordTypeNameFor(id) {
