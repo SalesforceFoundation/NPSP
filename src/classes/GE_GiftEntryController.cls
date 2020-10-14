@@ -45,7 +45,7 @@ public with sharing class GE_GiftEntryController {
     * @description Indicates if the org is connected to Elevate
     * @return Boolean
     */
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static Boolean isElevateCustomer() {
         try {
             return GE_PaymentServices.isElevateCustomer;
