@@ -1133,7 +1133,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if the type is specified as "New' then enter key is pressed for the modal to appear.
 		"""
         xpath = npsp_lex_locators["placeholder"].format(fieldname)
-        lookup_option = npsp_lex_locators["bge"]["lookup_option"].format(value)
+        lookup_option = npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
         field = self.selenium.get_webelement(xpath)
         self.salesforce._clear(field)
         field.send_keys(value)

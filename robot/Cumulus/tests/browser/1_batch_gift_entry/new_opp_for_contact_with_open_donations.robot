@@ -6,9 +6,9 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
-#Suite Teardown  Run Keywords
-#...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
-#...   AND       Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Run Keywords
+...             Query And Store Records To Delete    ${ns}DataImport__c   ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]
+...   AND       Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
