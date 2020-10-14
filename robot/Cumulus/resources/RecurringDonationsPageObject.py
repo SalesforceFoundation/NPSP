@@ -5,7 +5,9 @@ from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from datetime import datetime
+from logging import exception
 from dateutil.relativedelta import relativedelta
+import time
 
 
 @pageobject("Listing", "npe03__Recurring_Donation__c")
@@ -203,6 +205,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):
         """Verify that the schedule warning messages are present when there are no schedules"""
+        time.sleep(2)
         message_locator = npsp_lex_locators["erd"]["text_message"]
         list_ele = self.selenium.get_webelements(message_locator)
         p_count = len(list_ele)
@@ -319,20 +322,31 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         count = len(installments)
         print(f"Number of installments created is {count}")
         assert count == int(num_payments), "Expected installments to be {} but found {}".format(num_payments, count)
+        date_object = datetime.strptime(startdate, "%m/%d/%Y").date()
+        # Create a list to store expected dates and actual dates from the ui. Compare the dates and throw exception
+        expected_dates = []
+        actual_dates = []
         if count == int(num_payments):
             i = 1
-            while i < count:
+            j = 1
+            while i <= count:
                 datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
                 installment_date = self.selenium.get_webelement(datefield)
-                date_object = datetime.strptime(startdate, "%m/%d/%Y").date()
-                expected_date = (date_object + relativedelta(months=+i)).replace(
-                    day=int(dayofmonth)
-                )
                 actual_date = self.selenium.get_webelement(installment_date).text
                 formatted_actual = datetime.strptime(actual_date, "%m/%d/%Y").date()
-                assert (
-                    formatted_actual == expected_date
-                ), "Expected date to be {} but found {}".format(
-                    expected_date, formatted_actual
-                )
+                actual_dates.append(formatted_actual)
                 i = i + 1
+            while j <= count+1:
+                expected_date = date_object
+                expected_dates.append(expected_date)
+                date_object = (expected_date + relativedelta(months=+1))
+                j = j + 1
+
+            check =  any(item in expected_dates for item in actual_dates)
+            assert (
+                check == True
+            ), "expected_dates {} doesn't match the actual_dates {}".format(
+               expected_date, formatted_actual
+            )
+        else:
+            raise Exception("Number of payment installments do not match.")
