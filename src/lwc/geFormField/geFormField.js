@@ -56,11 +56,7 @@ export default class GeFormField extends LightningElement {
 
     get value() {
         // As of W-8017324 picklists get their value from formState
-        if (this.isPicklist) {
-            return this.valueFromFormState;
-        } else {
-            return this._value;
-        }
+        return this.isPicklist ? this.valueFromFormState : this._value;
     }
 
     set value(val) {
@@ -148,6 +144,7 @@ export default class GeFormField extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectDescribeInfo = response.data;
+            this._recordTypeId = this.recordTypeId();
         }
     }
 
@@ -511,7 +508,7 @@ export default class GeFormField extends LightningElement {
         }
 
         // reset lookups and recordtype fields
-        if (this.isRecordTypePicklist || this.isLookup) {
+        if (this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
             if (this.isRecordTypePicklist) {
@@ -614,17 +611,24 @@ export default class GeFormField extends LightningElement {
     _formState;
 
     @api
-    set formState(formState) {
-        this._formState = formState;
-    }
-
     get formState() {
         return this._formState;
     }
 
+    set formState(formState) {
+        this._formState = formState;
+        this._recordTypeId = this.recordTypeId();
+    }
+
     get valueFromFormState() {
-        return this.formState[this.sourceFieldAPIName] &&
-            this.formState[this.sourceFieldAPIName];
+        const value = this.formState[this.sourceFieldAPIName];
+        const isDonationRecordTypeName = () => {
+            return this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName;
+        }
+
+        return isDonationRecordTypeName() ?
+            this.recordTypeIdFor(value) :
+            value;
     }
 
     fireFormFieldChangeEvent(value) {
@@ -650,13 +654,19 @@ export default class GeFormField extends LightningElement {
         return this.element.dataImportFieldMappingDevNames[0];
     }
 
-    get recordTypeId() {
+    recordTypeId() {
         const siblingRecordTypeId =
             this.siblingRecordTypeField() === DONATION_RECORD_TYPE_NAME.fieldApiName ?
                 this.recordTypeIdFor(this.siblingRecordTypeValue()) :
                 this.siblingRecordTypeValue();
 
-        return siblingRecordTypeId || this.parentRecordRecordTypeId() || null;
+        return siblingRecordTypeId ||
+            this.parentRecordRecordTypeId() ||
+            this.defaultRecordTypeId();
+    }
+
+    defaultRecordTypeId() {
+        return this.objectDescribeInfo && this.objectDescribeInfo.defaultRecordTypeId;
     }
 
     recordTypeIdFor(recordTypeName) {
@@ -736,7 +746,7 @@ export default class GeFormField extends LightningElement {
 
     @wire(getPicklistValues, {
         fieldApiName: '$fullFieldApiNameForStandardPicklists',
-        recordTypeId: '$recordTypeId'
+        recordTypeId: '$_recordTypeId'
     })
     wiredPicklistValues({error, data}) {
         if (data) {
@@ -752,10 +762,9 @@ export default class GeFormField extends LightningElement {
             return [this.PICKLIST_OPTION_NONE];
         }
 
-        let recordTypeIdPicklistOptions = this.accessibleRecordTypes.map(recordType => {
+        const recordTypeIdPicklistOptions = this.accessibleRecordTypes.map(recordType => {
             return this.createPicklistOption(recordType.name, recordType.recordTypeId);
         });
-        recordTypeIdPicklistOptions = [this.PICKLIST_OPTION_NONE, ...recordTypeIdPicklistOptions];
 
         return recordTypeIdPicklistOptions;
     }

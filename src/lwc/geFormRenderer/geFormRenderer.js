@@ -1789,15 +1789,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         Object.assign(this.formState, fields);
 
         if (fields.hasOwnProperty(DONATION_RECORD_TYPE_NAME.fieldApiName)) {
-            const opportunityRecordTypeName =
-                fields[DONATION_RECORD_TYPE_NAME.fieldApiName];
-            this.setDonationRecordTypeIdInFormState(
-                opportunityRecordTypeName ?
-                    this.opportunityRecordTypeIdFor(
-                        fields[DONATION_RECORD_TYPE_NAME.fieldApiName]
-                    )
-                    : null
-            );
+            this.updateFormStateForDonationRecordType(fields);
         }
 
         if (this.hasImportedRecordFieldsBeingSetToNull(fields)) {
@@ -1806,6 +1798,27 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // Re-assign to prompt reactivity
         this.formState = JSON.parse(JSON.stringify(this.formState));
+    }
+
+    updateFormStateForDonationRecordType(fields) {
+        const opportunityRecordTypeValue = fields[DONATION_RECORD_TYPE_NAME.fieldApiName];
+
+        const isId = opportunityRecordTypeValue.startsWith('012');
+        const val = isId ?
+            opportunityRecordTypeValue :
+            this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
+
+        this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] =
+            this.opportunityRecordTypeNameFor(val);
+        this.setDonationRecordTypeIdInFormState(val);
+    }
+
+    opportunityRecordTypeNameFor(id) {
+        const found = this.opportunityRecordTypeInfos &&
+            this.opportunityRecordTypeInfos
+                .find(recordTypeInfo => recordTypeInfo.recordTypeId === id);
+
+        return found && found.name;
     }
 
     hasImportedRecordFieldsBeingSetToNull(fields) {
@@ -1927,9 +1940,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     opportunityRecordTypeIdFor(opportunityRecordTypeName) {
-        return Object.values(this.opportunityRecordTypeInfos)
+        const recordTypeInfo = Object.values(this.opportunityRecordTypeInfos)
             .find(recordTypeInfo =>
-                recordTypeInfo.name === opportunityRecordTypeName).recordTypeId;
+                recordTypeInfo.name === opportunityRecordTypeName);
+        
+        if (!recordTypeInfo) return null;
+        return recordTypeInfo.recordTypeId;
     }
 
     get opportunityRecordTypeInfos() {
