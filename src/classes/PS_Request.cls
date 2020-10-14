@@ -64,6 +64,11 @@ public inherited sharing class PS_Request {
     public static String JWT_SFDO_ID_PARAM = 'sfdo.id';
     public static String JWT_PRODUCT_PARAM = 'sfdo.product';
     public static String JWT_ROLES_PARAM = 'sfdo.roles';
+    
+    public static String ElevateEndpointTokenize = '/v1/payments/verified/tokens';
+    public static String ElevateEndpointPurchase = '/v1/payments/verified/purchase';
+    public static String ElevateEndpointCommitment = '/v1/payments/verified/commitments';
+    public static String ElevateEndpointCommitmentCancel = '/v1/payments/verified/commitments/{0}/cancel';
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
@@ -218,16 +223,19 @@ public inherited sharing class PS_Request {
         public String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
             String value;
             if (endpoint == ElevateEndpoint.TOKENIZE) {
-                value = '/v1/payments/verified/tokens';
+                value = ElevateEndpointTokenize;
 
             } else if (endpoint == ElevateEndpoint.PURCHASE) {
-                value = '/v1/payments/verified/purchase';
+                value = ElevateEndpointPurchase;
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
-                value = '/v1/payments/verified/commitments';
+                value = ElevateEndpointCommitment;
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
-                value = '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
+                value = String.format(
+                    ElevateEndpointCommitmentCancel,
+                    new String[]{ commitmentId }
+                );
             }
 
             return String.isBlank(value)
