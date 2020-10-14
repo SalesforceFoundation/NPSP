@@ -5,7 +5,6 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/AdvancedMappingPageObject.py
-...             robot/Cumulus/resources/ObjectMangerPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -14,34 +13,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Test Data
-	[Documentation]			Creates fields on Lead and NPSP Data Import objects
-	...						creates a lead via API and sets template name and NS
-	Create Customfield In Object Manager
-	...                   Object=Lead
-	...                   Field_Type=Lookup
-	...                   Related_To=Account
-	...                   Field_Name=Account Lookup
-
-	Create Customfield In Object Manager
-	...                   Object=NPSP Data Import
-	...                   Field_Type=Text
-	...                   Field_Name=Lead Imported Status
-
-	Create Customfield In Object Manager
-	...                   Object=NPSP Data Import
-	...                   Field_Type=Text
-	...                   Field_Name=Lead Company
-
-	Create Customfield In Object Manager
-	...                   Object=NPSP Data Import
-	...                   Field_Type=Text
-	...                   Field_Name=Lead Last Name
-
-	Create Customfield In Object Manager
-	...                   Object=NPSP Data Import
-	...                   Field_Type=Lookup
-	...                   Related_To=Lead
-	...                   Field_Name=Lead Lookup
+	[Documentation]		  Creates leads, contact and account via API and sets template name and NS
 	&{CONTACT} =          API Create Contact    FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     Set suite variable    &{CONTACT}
 	&{ACCOUNT} =          API Create Organization Account    Name=${faker.company()}
@@ -61,7 +33,7 @@ Setup Test Data
 
 *** Test Cases ***
 Verify Fields Related to Lookups Populate on Batch Gift Entry Form
-	[Documentation]          After creating required fields and data via API, create a object group and field mappings for Lead fields.
+	[Documentation]          After creating required data via API, create a object group and field mappings for Lead fields.
 	...						 create template with lead fields, set batch level default for leadlookup while creating the batch using template
 	...						 and verify that other related fields automatically load on the gift entry form. Remove default from batch and verify
 	...						 leads fields are not autopopulated. Create a gift using new lead in lookup and verify correct related values load
