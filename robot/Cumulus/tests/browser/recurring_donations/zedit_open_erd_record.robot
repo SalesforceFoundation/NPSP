@@ -61,6 +61,7 @@ Edit An Enhanced Recurring donation record of type open
 
     ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
     Reload Page
+    Wait Until Loading Is Complete
     Current Page Should be                 Details    npe03__Recurring_Donation__c
     # Verify that "no active schedules are present" messages appear
     Verify Schedule Warning Messages Present
