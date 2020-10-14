@@ -29,7 +29,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     @track domain;
     @track visualforceOrigin;
-    visualforceOriginUrls;
 
     @track isLoading = true;
     @track alert = {};
@@ -53,7 +52,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 this.handleError(error);
             });
 
-        this.visualforceOriginUrls = tokenHandler.getVisualforceOriginURLs(domainInfo);
+        tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
     /***

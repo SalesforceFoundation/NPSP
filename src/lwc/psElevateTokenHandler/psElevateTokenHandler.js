@@ -33,6 +33,8 @@ class psElevateTokenHandler {
         tokenRequestTimedOut
     });
 
+    _visualforceOriginUrls;
+
 
     /***
     * @description Returns credit card tokenization Visualforce page URL
@@ -49,7 +51,7 @@ class psElevateTokenHandler {
     * @description Builds the Visualforce origin url that we need in order to
     * make sure we're only listening for messages from the correct source.
     */
-    getVisualforceOriginURLs(domainInfo) {
+    setVisualforceOriginURLs(domainInfo) {
         if (isNull(domainInfo)) {
             return;
         }
@@ -64,7 +66,7 @@ class psElevateTokenHandler {
             alternateUrl = alternateUrl.replace('--c', `--${namespace}`);
         }
 
-        return [{ value: url }, { value: alternateUrl }];
+        this._visualforceOriginUrls = [{ value: url }, { value: alternateUrl }];
     }
 
     /***
@@ -87,13 +89,17 @@ class psElevateTokenHandler {
     * Rejects any messages from an unknown origin.
     */
     registerPostMessageListener(component) {
+        let self = this;
+
         window.onmessage = async function (event) {
-            if (component.visualforceOriginUrls) {
-                component.visualforceOrigin = component.visualforceOriginUrls.find(
+            console.log('*****onmessage self._visualforceOriginUrls: ' + JSON.stringify(self._visualforceOriginUrls));
+            if (self._visualforceOriginUrls) {
+                component.visualforceOrigin = self._visualforceOriginUrls.find(
                     origin => event.origin === origin.value
                 ).value;
             }
 
+            console.log('*****onmessage component.visualforceOrigin: ' + JSON.stringify(component.visualforceOrigin));
             if (component.visualforceOrigin) {
                 const message = JSON.parse(event.data);
                 component.handleMessage(message);
