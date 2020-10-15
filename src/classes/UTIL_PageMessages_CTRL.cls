@@ -132,6 +132,17 @@ public class UTIL_PageMessages_CTRL {
                 return '';
             }
         }
+
+        /**
+         * @description A helper method for use in Visualforce pages that
+         * combines the text elements needed for fully contextual information.
+         * Needed for accessibility information associated with a Close button.
+         *
+         * @return String
+         */
+        public String getCloseButtonA11yInfo() {
+            return this.getSeverityLabel() + ' ' + this.summary + ' ' + System.Label.bdiBtnClose;
+        }
     }
 
     /**
