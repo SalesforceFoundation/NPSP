@@ -1751,8 +1751,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     /*******************************************************************************
      * @description Object used to hold current values for all fields on the form.
-     * Made up of key-value pairs where value is an object
-     * with value and displayValue (optional) properties.
      */
     @track
     _formState = {}
