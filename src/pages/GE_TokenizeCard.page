@@ -24,6 +24,7 @@
             id: 'payments',
             clientId: '{!productId}',
             gatewayId: '{!gatewayIds}',
+            merchantId: '{!merchantIds}',
             designSystem: 'Lightning',
             styles: '' +
                 '.logo {' +
@@ -76,9 +77,14 @@
         * @description Creates a token and posts the response to geFormWidgetTokenizeCard
         */
         function handleTokenCreation() {
+            let auth = {
+                jwt: '{!jwtForToken}',
+                userName: '{!$User.Username}'
+            }
             sfdo
                 .createToken({
-                    nameOnCard: 'test name'
+                    nameOnCard: 'test name',
+                    auth: auth
                 })
                 .then(function response(resp) {
                     // Send token to lwc

@@ -154,6 +154,10 @@ public with sharing class GE_PaymentServices {
         return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
     }
 
+    public String getMerchantIds() {
+        return config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS);
+    }
+
     /*******************************************************************************************************
     * @description Inner class to assist in constructing the Payload portion of a JSON Web Token.
     */
