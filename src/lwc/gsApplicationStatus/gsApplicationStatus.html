@@ -1,6 +1,6 @@
 <template >
     <template if:false={isActiveInstance}>
-        <article class="slds-card slds-is-relative">
+        <lightning-card>
             <div class="spinner" if:true={isLoading}>
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </div>
@@ -9,24 +9,25 @@
                     <img class="image" src={img}/>
                 </div>
                 <div if:false={isApplicationSubmitted} class="slds-col slds-align_absolute-center slds-size_full">
-                    <ul class="slds-text-align_center slds-size_full slds-p-around_small">
-                        <li><p class="slds-text-heading_small slds-m-bottom_medium">{labels.gsNoApplicationSubmitted} | <a>{labels.gsLearnMore}</a></p></li>
-                        <li><p class="slds-text-heading_small slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p></li>
-                        <li><a class="slds-button slds-button_brand slds-size_full slds-text-heading_small slds-p-around_medium" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">{labels.gsApplyForFreeLicenses}</a></li>
-                    </ul>
+                    <div class="slds-text-align_center slds-size_full slds-p-around_small">
+                        <div><p class="slds-text-heading_small slds-m-bottom_medium">{labels.gsNoApplicationSubmitted} | <a tabindex="0">{labels.gsLearnMore}</a></p></div>
+                        <div><p class="slds-text-heading_small slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p></div>
+                        <div><a tabindex="0" class="slds-button slds-button_brand slds-size_full slds-text-heading_small slds-p-around_medium" href="https://powerofus.force.com/PowerOfUsApply" target="_blank">{labels.gsApplyForFreeLicenses}</a></div>
+                    </div>
                 </div>
                 <div if:true={isApplicationSubmitted} class="slds-col slds-align_absolute-center slds-size_full">
-                    <ul class="slds-text-align_center slds-size_full slds-p-around_small">
-                        <li><p class="slds-text-heading_small slds-m-bottom_medium">{labels.gsApplicationStatus}<span class="slds-text-color_success">{labels.gsSubmitted}</span></p></li>
-                        <li><p class="slds-text-heading_small slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p></li>
-                        <li><button onclick={onCheckStatusClick}
+                    <div class="slds-text-align_center slds-size_full slds-p-around_small">
+                        <div><p class="slds-text-heading_small slds-m-bottom_medium">{labels.gsApplicationStatus}<span class="slds-text-color_success">{labels.gsSubmitted}</span></p></div>
+                        <div><p class="slds-text-heading_small slds-m-bottom_medium daysLeft">{diffInDays} {labels.gsDaysRemainingInFreeTrial}</p></div>
+                        <div><button onclick={onCheckStatusClick}
                             class="slds-button slds-button_outline-brand slds-size_full slds-text-heading_small slds-p-around_medium">
                             {labels.gsCheckStatus}
-                        </button></li>
-                    </ul>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </article>
+        </lightning-card>
     
         <c-gs-modal header={labels.gsApplicationStatusModalHeader}  button-label={labels.gsClose}>
             <p>{labels.gsFollowUpApplicationStatus}</p>
