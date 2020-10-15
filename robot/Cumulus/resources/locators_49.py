@@ -225,7 +225,7 @@ npsp_lex_locators={
         'gift-amount':'//div[./label[text()="{}"]]',
         'modal-link':'//tbody/tr/td/a[text()="{}"]',
         'datepicker_open':"//div[contains(@class,'slds-is-open')][./label[contains(text(),'{}')]]",
-        
+
     },
     'bge-lists':{
         'list1':"//div[./label[text()='{}']]/div//select",
@@ -260,6 +260,7 @@ npsp_lex_locators={
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']",
         'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',
+        'field_dd_option':'//div[contains(@class,"slds-input-has-icon")][./input[@name="{}"]]/following-sibling::div//span[@title="{}"]'
         },
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
@@ -280,7 +281,8 @@ npsp_lex_locators={
         'field_span':'//*[contains(@data-qa-locator,"{}")]//child::span[text()="{}"]',
         'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
-        'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
+        # 'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
+        'object_field_checkbox':'//*[@data-object-mapping-label="{}" and contains(@data-qa-locator,"{}")]//child::input',
         'field_alert':"//*[contains(@data-qa-locator,'{}')]/div[@role='alert' and text()='{}']",
         'count':'//lightning-layout[.//span[text()="{}"]]//child::lightning-layout-item//strong[text()="{}"]',
         'duellist':'//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
