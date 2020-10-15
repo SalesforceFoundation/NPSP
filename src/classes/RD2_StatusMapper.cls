@@ -35,7 +35,15 @@ public with sharing class RD2_StatusMapper {
     public static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
         RD2_Constants.STATUS_ACTIVE,
         RD2_Constants.STATUS_LAPSED,
-        RD2_Constants.STATUS_CLOSED
+        RD2_Constants.STATUS_CLOSED,
+        RD2_Constants.STATUS_PAUSE
+    };
+
+    public static final Map<String, String> READ_ONLY_STATUS_TO_STATE = new Map<String, String> {
+        RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
+        RD2_Constants.STATUS_LAPSED => RD2_Constants.STATUS_LAPSED,
+        RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED,
+        RD2_Constants.STATUS_PAUSE => RD2_Constants.STATUS_ACTIVE
     };
 
     /**
@@ -186,8 +194,8 @@ public with sharing class RD2_StatusMapper {
             this.status = status;
             this.label = label;
 
-            if (READ_ONLY_STATUS_VALUES.contains(status)) {
-                this.state = status;
+            if (READ_ONLY_STATUS_TO_STATE.containsKey(status)) {
+                this.state = READ_ONLY_STATUS_TO_STATE.get(status);
                 this.isReadOnly = true;
             }
         }
