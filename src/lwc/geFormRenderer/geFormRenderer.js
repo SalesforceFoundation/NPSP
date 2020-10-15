@@ -1222,7 +1222,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     objectMappingDeveloperNameFor(fieldApiName) {
-        return this.getObjectMapping(fieldApiName).DeveloperName;
+        const objectMapping = this.getObjectMapping(fieldApiName);
+        return objectMapping && objectMapping.DeveloperName;
     }
 
     setReviewDonationsDonorProperties(recordId) {
