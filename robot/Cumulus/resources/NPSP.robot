@@ -525,6 +525,18 @@ API Check And Enable Gift Entry
     ...                Enable Gift Entry
 
 Add instance to suite metadata
-    [Documentation]    Logs the org instance number in the metadata on the log
-    &{org_info} =  Get Org Info
+    [Documentation]     Logs the org instance number in the metadata on the log
+    &{org_info} =       Get Org Info
     Set suite metadata  Org Instance:  ${org_info['instance_name']}  top=True
+
+API Create Lead
+    [Documentation]     creates a lead record using given field api name and value pairs and
+    ...                 returns the lead dictionary when called.
+    ...                 Syntax for passing parameters:
+    ...
+    ...                 | field_api_name=value   | Ex: MobilePhone=1234567098    |
+    [Arguments]         &{fields}
+    ${lead_id} =        Salesforce Insert  Lead
+    ...                 &{fields}
+    &{lead} =           Salesforce Get  Lead  ${lead_id}
+    [return]            &{lead}

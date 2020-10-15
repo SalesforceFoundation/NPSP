@@ -35,10 +35,8 @@ Select a payment for a contact make grid changes and process it
     Current Page Should Be      Details      DataImportBatch__c
     Wait Until Keyword Succeeds          1 minute
            ...                           5 seconds
-           ...                           Search Field And Wait For Modal    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
+           ...                           Search Field And Perform Action    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
 
-
-    Click Link    ${contact}[FirstName] ${contact}[LastName]
     Click Link With Text    Review Donations
     ${pay_no}    Get BGE Card Header    ${opportunity}[Name]
     Log To Console    ${pay_no}

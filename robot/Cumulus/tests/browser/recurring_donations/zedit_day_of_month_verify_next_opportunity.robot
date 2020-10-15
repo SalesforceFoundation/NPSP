@@ -6,6 +6,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
+Library         Collections
 Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
@@ -77,7 +78,8 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
     Validate Related Record Count      Opportunities                                    1
     @{opportunities} =                 API Query Opportunity For Recurring Donation     ${data}[contact_rd][Id]
-    Edit Opportunity Stage             ${opportunities}[0][Id]                          Closed Won
+
+    Edit Opportunity Stage             ${opportunities}[0][Id]                               Closed Won
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
