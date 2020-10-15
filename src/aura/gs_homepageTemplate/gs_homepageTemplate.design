@@ -1,6 +1,0 @@
-<design:component label="Getting Started Template">
-    <flexipage:template >
-      <flexipage:region name="main" defaultWidth="Medium" />
-      <flexipage:region name="right" defaultWidth="Medium" />
-  </flexipage:template>
-</design:component>
