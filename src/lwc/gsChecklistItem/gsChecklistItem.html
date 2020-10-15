@@ -1,0 +1,32 @@
+<template>
+    <div class="step-card">
+        <div class="card-image">
+            <img if:true={hasLink} src={imgSrc}/>
+        </div>
+        <div class="card-content">
+            <p class="content-time">{item.time}</p>
+            <h1 class="content-title">{item.title}</h1>
+            <div  class="content-text">
+                {item.description}
+            </div>
+            <div class="content-footer">
+                <a if:true={hasLink} href={item.link.href} target="_blank">
+                    {item.link.label}
+                </a>
+                <div if:false={hasLink}></div>
+                <div class="contet-footer-buttons">
+                    <button if:true={hasSecondaryBtn} 
+                        onclick={onClickSecondaryBtn}
+                        class="slds-button slds-button_outline-brand">
+                        {item.secondaryBtn.label}
+                    </button>
+                    <button if:true={hasPrincipalBtn}
+                        onclick={onClickPrincipalBtn}
+                        class="slds-button slds-button_brand">
+                        {item.principalBtn.label}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

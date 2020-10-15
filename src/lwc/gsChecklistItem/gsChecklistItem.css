@@ -1,0 +1,78 @@
+.step-card {
+    position: relative;
+    height: 185px;
+    border: 1px solid lightgray;
+    width: 100%;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    box-shadow: 0 3px 2px 0 #b5b5b5;
+    display: flex;
+
+}
+
+.step-card > .card-image {
+    width: 185px;
+}
+
+.step-card > .card-image img {
+    height: 100%;
+    width: 100%;
+}
+
+.step-card > .card-content {
+    position: relative;
+    border-left: 1px solid lightgray;
+    padding-left: 1rem;
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.step-card > .card-content .content-time {
+    position: absolute;
+    right: 0;
+    height: 14px;
+    width: 266.91px;
+    color: #706E6B;
+    font-family: "Salesforce Sans";
+    font-size: 12.98px;
+    letter-spacing: 0;
+    line-height: 19.97px;
+    text-align: right;
+}
+
+.step-card > .card-content .content-title {
+    color: #3E3E3C;
+    font-family: "Salesforce Sans";
+    font-size: 12.98px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 19.97px;
+    padding-bottom: 1rem;
+}
+
+.step-card > .card-content .content-text {
+    color: #3E3E3C;
+    font-family: "Salesforce Sans";
+    font-size: 12.98px;
+    letter-spacing: 0;
+    line-height: 19.97px;
+    padding-right: 3rem;
+ }
+
+ .step-card > .card-content .content-footer a {
+    color: #2E79DC;
+    font-family: "Salesforce Sans";
+    font-size: 12.98px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 19.97px;
+ }
+ 
+ .step-card > .card-content .content-footer {
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+ }

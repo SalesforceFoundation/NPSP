@@ -12957,4 +12957,36 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Arrow Icon alter text to expand state</shortDescription>
         <value>Click to expand contents</value>
     </labels>
+    <labels>
+        <fullName>gsChecklistItemSetupContactTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Setup Contact and Household</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemSetupContactDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Setup Contact in Get Started</shortDescription>
+        <value>People are the most important resource for a nonprofit, so understanding the Contact Object is especially important. Learn how to add relevant constituent data (e.g. a name, address, or employer) into your Salesforce instance.</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemSetupContactPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Create Household</value>
+    </labels>
+     <labels>
+        <fullName>gsChecklistItemSetupContactSecBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Setup Contact in Get Started</shortDescription>
+        <value>Explore Contacts</value>
+    </labels>
 </CustomLabels>
