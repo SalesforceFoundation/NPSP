@@ -7,8 +7,8 @@ const COLLAPSED_DISPLAY_MODE = 'collapsed';
 export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
+    @api formState;
     @track hasCreditCardWidget = false;
-
 
     renderedCallback() {
         this.registerCreditCardWidget();
@@ -22,7 +22,6 @@ export default class GeFormSection extends LightningElement {
     get altTextLabel() {
         return 'Toggle ' + this.section.label;
     }
-
 
     get isCollapsed() {
         return this.section.defaultDisplayMode === COLLAPSED_DISPLAY_MODE;
@@ -260,16 +259,6 @@ export default class GeFormSection extends LightningElement {
 
     handleFormFieldChange(event) {
         this.dispatchEvent(new CustomEvent('formfieldchange', {detail: event.detail}));
-    }
-
-    _formState;
-    @api
-    set formState(formState) {
-        this._formState = formState;
-    }
-
-    get formState() {
-        return this._formState;
     }
 
 }
