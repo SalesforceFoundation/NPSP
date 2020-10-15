@@ -3,30 +3,14 @@
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
-                <name>enableInlineEdit</name>
+                <name>decorate</name>
                 <value>true</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
-                <name>entityName</name>
-                <value>Account</value>
+                <name>richTextValue</name>
+                <value>&lt;p&gt;PlaceHolder&lt;/p&gt;</value>
             </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>filterName</name>
-                <value>Household_Accounts</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>hideActionBar</name>
-                <value>false</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>hideSearchBar</name>
-                <value>false</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>pageSize</name>
-                <value>3</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:filterListCard</componentName>
+            <componentName>flexipage:richText</componentName>
         </componentInstances>
         <name>main</name>
         <type>Region</type>
@@ -42,7 +26,7 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>richTextValue</name>
-                <value>&lt;p&gt;HOLA MUNDO!!!!&lt;/p&gt;</value>
+                <value>&lt;p&gt;PlaceHolder&lt;/p&gt;</value>
             </componentInstanceProperties>
             <componentName>flexipage:richText</componentName>
         </componentInstances>
