@@ -660,7 +660,8 @@ export default class GeFormField extends LightningElement {
 
         return siblingRecordTypeId ||
             this.parentRecordRecordTypeId() ||
-            this.defaultRecordTypeId();
+            this.defaultRecordTypeId() ||
+            null;
     }
 
     defaultRecordTypeId() {
@@ -680,7 +681,7 @@ export default class GeFormField extends LightningElement {
     }
 
     siblingRecordTypeValue() {
-        return this.formState[this.siblingRecordTypeField()];
+        return this.formState && this.formState[this.siblingRecordTypeField()];
     }
 
     siblingRecordTypeField() {
@@ -693,7 +694,7 @@ export default class GeFormField extends LightningElement {
     }
 
     parentRecord() {
-        return this.formState[relatedRecordFieldNameFor(this.parentRecordField())];
+        return this.formState && this.formState[relatedRecordFieldNameFor(this.parentRecordField())];
     }
 
     parentRecordField() {
