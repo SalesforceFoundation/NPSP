@@ -51,7 +51,7 @@ describe('c-ge-form-field', () => {
 
         expect(element.isPicklist).toBeTruthy();
 
-        const pl = element.shadowRoot.querySelector('c-ge-form-field-picklist');
+        const pl = element.shadowRoot.querySelector('lightning-combobox');
 
         const newPicklistValue = 'newPicklistValue';
         return Promise.resolve().then(() => {
