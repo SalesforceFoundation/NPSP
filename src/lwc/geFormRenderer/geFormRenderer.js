@@ -1199,34 +1199,30 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const recordId = event.detail.value; // Reset the field if null
         const fieldApiName = event.detail.fieldApiName;
 
-        if (!fieldApiName ||
-            fieldApiName !== 'RecordTypeId') {
-            if (!GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
-                return false;
-            }
+        if (!GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
+            return false;
         }
 
-        if (fieldApiName === 'RecordTypeId') {
-            console.log('*** ' + 'not handling lkp rcrd select for rtid' + ' ***');
-            return;
-            // set value in state so picklists can respond
-            this.updateFormState({
-                [event.detail.sourceFieldApiName]: event.detail.value
-            });
-        } else if (event.detail.hasOwnProperty('value') && recordId !== null) {
+        if (event.detail.hasOwnProperty('value') && recordId !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {
             // Reset all fields related to this lookup field's object mapping
-            this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
+            this.reset(this.objectMappingDeveloperNameFor(fieldApiName));
         }
-        const account1Imported = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
-        const contact1Imported = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
-        if (fieldApiName === account1Imported) {
+        this.handleDonorLookupFieldsChange(fieldApiName, recordId);
+    }
+
+    handleDonorLookupFieldsChange(fieldApiName, recordId) {
+        if (fieldApiName === DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName) {
             this.handleDonorAccountChange(recordId);
-        } else if (fieldApiName === contact1Imported) {
+        } else if (fieldApiName === DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName) {
             this.handleDonorContactChange(recordId);
         }
+    }
+
+    objectMappingDeveloperNameFor(fieldApiName) {
+        return this.getObjectMapping(fieldApiName).DeveloperName;
     }
 
     setReviewDonationsDonorProperties(recordId) {

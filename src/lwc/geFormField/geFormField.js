@@ -80,20 +80,7 @@ export default class GeFormField extends LightningElement {
         this.fireFormFieldChangeEvent(value);
 
         if (this.isLookup) {
-            const objMappingDevName =
-                GeFormService.importedRecordFieldNames.includes(this.targetFieldApiName) ?
-                    GeFormService.objectMappingWrapperFor(this.targetFieldApiName)
-                        .DeveloperName :
-                    this.targetObjectMappingDevName;
-            const lookupDetail = {
-                ...event.detail,
-                fieldApiName: this.element.fieldApiName,
-                value: this.value,
-                objectMappingDevName: objMappingDevName,
-                sourceFieldApiName: this.sourceFieldAPIName
-            };
-            const selectRecordEvent = new CustomEvent('lookuprecordselect', { detail: lookupDetail });
-            this.dispatchEvent(selectRecordEvent);
+            this.fireLookupRecordSelectedEvent(event);
         }
 
         if (this.isPicklist) {
@@ -115,6 +102,17 @@ export default class GeFormField extends LightningElement {
             this.dispatchEvent(evt);
         }
     };
+
+    fireLookupRecordSelectedEvent(event) {
+        const lookupDetail = {
+            fieldApiName: this.element.fieldApiName,
+            value: this.value
+        };
+        const selectRecordEvent = new CustomEvent('lookuprecordselect', {
+            detail: lookupDetail
+        });
+        this.dispatchEvent(selectRecordEvent);
+    }
 
     fireValueChangeEvent() {
         const detail = {
