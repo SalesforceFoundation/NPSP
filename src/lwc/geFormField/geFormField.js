@@ -662,8 +662,7 @@ export default class GeFormField extends LightningElement {
 
         return siblingRecordTypeId ||
             this.parentRecordRecordTypeId() ||
-            this.defaultRecordTypeId() ||
-            null;
+            this.defaultRecordTypeId();
     }
 
     defaultRecordTypeId() {
