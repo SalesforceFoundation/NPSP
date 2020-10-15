@@ -56,7 +56,7 @@ public with sharing class GE_PaymentServices {
 
     public String getEndpoint(ElevateEndpoints endpoint) {
         if (endpoint === ElevateEndpoints.TOKENIZE) {
-            return '/v1/payments/public/tokens';
+            return '/v1/payments/verified/tokens';
         }
 
         if (endpoint === ElevateEndpoints.PURCHASE) {
@@ -101,7 +101,7 @@ public with sharing class GE_PaymentServices {
         request.setEndpoint(getEndpointRoot() + getEndpoint(ElevateEndpoints.PURCHASE));
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt());
+        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwtForPurchase());
         request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
         if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
             request.setHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS, 
@@ -122,13 +122,23 @@ public with sharing class GE_PaymentServices {
         return config.get(PS_IntegrationServiceConfig.BASE_URL);
     }
 
-    public String getJwt() {
-        JWTPayload jwtPayload = new JWTPayload(config.get(PS_IntegrationServiceConfig.PRODUCTID));
+    public String getJwtForPurchase() {
+        JWTPayload jwtPayload = new JWTPayload(config.get(PS_IntegrationServiceConfig.PRODUCTID),
+                PS_IntegrationServiceConfig.PURCHASE_ROLE);
         String jwt = UTIL_Jwt.getSignedJWTFromString(
                 jwtPayload.getAsString(),
                 config.get(PS_IntegrationServiceConfig.API_KEY)
         );
+        return jwt;
+    }
 
+    public String getJwtForToken() {
+        JWTPayload jwtPayload = new JWTPayload(config.get(PS_IntegrationServiceConfig.PRODUCTID),
+                PS_IntegrationServiceConfig.TOKEN_ROLE);
+        String jwt = UTIL_Jwt.getSignedJWTFromString(
+                jwtPayload.getAsString(),
+                config.get(PS_IntegrationServiceConfig.API_KEY)
+        );
         return jwt;
     }
 
@@ -149,9 +159,11 @@ public with sharing class GE_PaymentServices {
     */
     public with sharing class JWTPayload {
         String sfdoId;
+        String role;
 
-        public JWTPayload(String sfdoId) {
+        public JWTPayload(String sfdoId, String role) {
             this.sfdoId = sfdoId;
+            this.role = role;
         }
 
         private Long getEpochTimestamp(DateTime dt) {
@@ -174,7 +186,7 @@ public with sharing class GE_PaymentServices {
                 generator.writeStringField('sfdo.id', sfdoId);
             }
             generator.writeStringField('sfdo.product', 'CRM'); // Product
-            generator.writeStringField('sfdo.roles', 'Payments.Purchase');
+            generator.writeStringField('sfdo.roles', role);
 
             return generator.getAsString();
         }
