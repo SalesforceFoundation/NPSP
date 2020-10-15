@@ -137,7 +137,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         status=element.get_attribute("aria-expanded")
         if status=="false":
             time.sleep(2)
-        field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
+        field_checkbox=npsp_lex_locators["gift_entry"]["object_field_checkbox"].format(object_group,field)
         check=self.selenium.get_webelement(field_checkbox)
         if action.lower()=='select':
             if not check.is_selected():
@@ -280,7 +280,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
             else:
                 field=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
             self.selenium.wait_until_page_contains_element(field)
-            time.sleep(.5)
+            time.sleep(1)
             element=self.selenium.get_webelement(field)
             default_value=element.get_attribute("value")
             assert value == default_value, f"Expected {key} default value to be {value} but found {default_value}"
@@ -297,6 +297,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(locator,value)
                 value_locator=npsp_lex_locators["gift_entry"]["id"].format("Select "+value)
                 self.selenium.wait_until_page_contains_element(value_locator)
+                self.selenium.scroll_element_into_view(value_locator)
                 self.selenium.click_element(value_locator)
             elif type.startswith("autocomplete"):
                 self.salesforce._populate_field(field_locator,value)
@@ -304,6 +305,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.wait_until_page_contains_element(option)
                 self.selenium.click_element(option)
             elif 'combobox' in type :
+                self.selenium.wait_until_page_contains_element(field_locator)
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["flexipage-popup"]
                 self.selenium.wait_until_page_contains_element(popup)
