@@ -27,9 +27,10 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         if self.npsp.latest_api_version == 50.0:
             locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
             self.selenium.wait_until_element_is_visible(locator)
-            self.selenium.click_element(locator)
+            self.salesforce._jsclick(locator)
         else:
             self.npsp.click_more_actions_button()
+        time.sleep(1)
         self.selenium.click_link('Find Matched Gifts')
         self.npsp.choose_frame("vfFrameId")
 
