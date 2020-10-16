@@ -509,13 +509,6 @@ export default class GeFormField extends LightningElement {
         if (this.isLookup) {
             const lookup = this.template.querySelector('[data-id="inputComponent"]');
             lookup.reset(setDefaults);
-            if (this.isRecordTypePicklist) {
-                // Using setTimeout here ensures that this recordTypeId
-                // will be set on sibling fields after they are reset by queueing the event.
-                setTimeout(() => {
-                    this.fireLookupRecordSelectEvent();
-                }, 0);
-            }
         }
 
         if (this.isPicklist) {
@@ -524,10 +517,6 @@ export default class GeFormField extends LightningElement {
     }
 
     fireLookupRecordSelectEvent() {
-        if (this.targetFieldApiName === 'RecordTypeId') {
-            console.log('*** ' + 'not firing lookup rcrd select for target rtid' + ' ***');
-            return;
-        }
         this.dispatchEvent(new CustomEvent(
             'lookuprecordselect',
             {
