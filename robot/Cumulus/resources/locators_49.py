@@ -307,7 +307,7 @@ npsp_lex_locators={
         'formatted_text':"//lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text",
         'pause_date_checkbox':"//h2[contains(text(),'Pause')]/following::th//span/div/lightning-formatted-date-time[text()='{}']/ancestor::tr/td/descendant::label/span[contains(@class,'checkbox')]",
         'date_with_paused_txt':"//td//lightning-base-formatted-text[text()='Paused']/preceding::th//lightning-formatted-date-time[text()='{}']",
-        'warning_message':"//lightning-formatted-rich-text/span[contains(text() ,'{}')]"
+        'warning_message':'//lightning-formatted-rich-text/span[contains(text() ,"{}")]'
         },
 
 }
