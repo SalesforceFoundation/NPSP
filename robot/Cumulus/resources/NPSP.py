@@ -158,6 +158,19 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         assert b_found, "{} related list with button {} not found.".format(heading, button_title)
 
+    def wait_and_click_button(self, click_locator):
+        """ Clicks on the button with locator 'click_locator'
+			if it doesn't exist, repeat the click (loops for 3 times)
+		"""
+        for i in range(3):
+            self.builtin.log("Iteration: " + str(i))
+            try:
+                self.selenium.click_button(click_locator)
+                return
+            except Exception:
+                time.sleep(2)
+        raise Exception(f"Click on element failed. Locator: {click_locator}")
+
     @capture_screenshot_on_error
     def click_related_list_dd_button(self, heading, dd_title, button_title):
         """ To Click on a related list dropdown button.
