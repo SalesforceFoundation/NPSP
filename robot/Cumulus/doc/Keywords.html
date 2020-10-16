@@ -5501,7 +5501,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   
                   <i>paynum</i>, 
                   
-                  <i>format=None</i>
+                  <i>format=True</i>
                   
                 </td>
                 <td class="kwdoc"><p>Returns the next payment date from the list of payment schedules taking in the payment number as input The date if formatted to ignore the preceding zeros. But if format is set to false, the date is returned as is without any formatting |Example</p>
@@ -5555,7 +5555,12 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                   <i>**kwargs</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Populate the values in the pause recurring donation modal based on the key value pair options in the kwargs passed as parameter</p>
+<pre>
+Populate Pause Modal
+...                     Paused Reason=Card Expired
+...                     Date=${date}
+</pre></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Refresh Opportunities">
@@ -5594,6 +5599,18 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Based on the section name , navigates to the sections and validates the key. value pair values passed in kwargs. If the section is current schedule, waits for the Current schedule section card on the side bar Validates the display fields in the card match with the values passed in the key value pair</p></td>
               </tr>
               
+              <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Message Text">
+                <td class="kwname">
+                  Validate Message Text
+                </td>
+                <td class="kwargs">
+                  
+                  <i>txt</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Find the element containing warning message on the pause modal and asserts the text displayed matches with the expected text</p></td>
+              </tr>
+              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Upcoming Schedules">
                 <td class="kwname">
                   Validate Upcoming Schedules
@@ -5610,28 +5627,16 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
                 <td class="kwdoc"><p>Takes in the parameter (number of payments) and the donation start date verifies that the payment schedules created on UI reflect the total number verifies that the next payment dates are reflected correctly for all the schedules</p></td>
               </tr>
               
-              <tr class="kwrow" id="RecurringDonationsPageObject.py.Validate Warning Text">
-                <td class="kwname">
-                  Validate Warning Text
-                </td>
-                <td class="kwargs">
-                  
-                  <i>txt</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Find the element containing warning message on the pause modal and asserts the text displayed matches with the expected text</p></td>
-              </tr>
-              
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Verify Pause Text Next To Installment Date">
                 <td class="kwname">
                   Verify Pause Text Next To Installment Date
                 </td>
                 <td class="kwargs">
                   
-                  <i>date</i>
+                  <i>*dates</i>
                   
                 </td>
-                <td class="kwdoc"><p>Looks for the date element with the paused text next to it</p></td>
+                <td class="kwdoc"><p>Accepts a list of dates and validates the presence of date element with the paused text next to it</p></td>
               </tr>
               
               <tr class="kwrow" id="RecurringDonationsPageObject.py.Verify Schedule Warning Messages Present">
@@ -5895,7 +5900,7 @@ field_api_name=value | any field u want to populate with value on npe5__Affiliat
       
     </div>
     <div class="footer">
-      Generated on Monday October 05, 09:11 PM - cumulusci v3.17.1
+      Generated on Friday October 16, 09:54 AM - cumulusci v3.21.0
     </div>
   </body>
 </html>
