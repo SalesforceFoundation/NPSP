@@ -143,6 +143,7 @@ npsp_lex_locators={
         'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
         'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
         'button':'//*[text()="{}"]',
+        'more_actions_btn': "//lightning-button-menu/button",
         'add_contact_option':'//li/span[text()="{}"]',
         'lookup':'//div[./span[text()="{}"]]//input',
     },
@@ -192,6 +193,7 @@ npsp_lex_locators={
     'npsp_settings':{
         'main_menu':'//div[@class="slds-tree__branch slds-tree__item"][.//a[text()="{}"]]',
         'donations_link':'//div/a[contains(text(),"{}") and not(contains(text(),"Recurring Donations"))]',
+        'main_menu_link':'//div/a[contains(text(),"{}")]',
         'panel_sub_link':'//ul/li[contains(@class,"slds-is-selected")]/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
         'side_panel':'//div[@id="{}"]//child::button[contains(@class,"chevronright")]',

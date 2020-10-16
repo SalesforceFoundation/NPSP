@@ -977,6 +977,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
         time.sleep(1)
+     
+    def click_link_with_spantext(self,text):
+        locator = npsp_lex_locators['custom_objects']['option'].format(text)
+        self.selenium.wait_until_page_contains_element(locator)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.click_element(element)
+        time.sleep(1)
+        
 
     def verify_expected_batch_values(self, batch_id,**kwargs):
         """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""
@@ -1544,6 +1552,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['link'].format("more actions","more actions")
         self.salesforce._jsclick(locator)
 
+    def click_more_actions_lightning_button(self):
+        """clicks on the more actions dropdown button in the actions container on record page"""
+        locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
+        self.selenium.wait_until_element_is_visible(locator)
+        self.salesforce._jsclick(locator)
+        time.sleep(2)
 
     @capture_screenshot_on_error
     def click_related_table_item_link(self, heading, title):

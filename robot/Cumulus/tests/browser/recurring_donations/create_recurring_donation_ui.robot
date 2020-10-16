@@ -29,8 +29,8 @@ Create Open Recurring Donation With Monthly Installment
     ...                                  object_id=${data}[contact][Id]
     Wait Until Loading Is Complete
     Current Page Should Be               Details                      Contact
-    Click More Actions Button
-    Click Link                           link=New Open Recurring Donation
+    Click More Actions Lightning Button
+    Click Link With Spantext                 New Open Recurring Donation
 
     Wait Until Modal Is Open
     Populate Modal Form
