@@ -171,12 +171,17 @@ public inherited sharing class RD2_RecurringDonation {
     * @param currentDate Used to determined current date
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseStatus(Date currentDate) {
+    public RD2_RecurringDonation reviseStatus(Date currentDate, RD2_ScheduleService scheduleService) {
+        if (!isActive()) {
+            return this;
+        }
+
         if (isFixedLength()) {
             reviseStatusForFixedLength();
 
         } else if (isOpenEnded()) {
             reviseStatusForOpenEnded(currentDate);
+            reviseStatusForPaused(currentDate, scheduleService);
         }
         return this;
     }
@@ -186,9 +191,8 @@ public inherited sharing class RD2_RecurringDonation {
     * based on the Number of Planned Installments as compared to the Number of Paid Installments.
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseStatusForFixedLength() {
-        if (isActive()
-            && isFixedLength()
+    private RD2_RecurringDonation reviseStatusForFixedLength() {
+        if (isFixedLength()
             && isFixedLengthComplete()
         ) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
@@ -204,19 +208,55 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     *@description Revises and modifies the Recurring Donation if it is Open Ended and it past the RD End Date
+    * @param currentDate Used to determined current date
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseStatusForOpenEnded(Date currentDate) {
-        if (isActive()
-            && isOpenEnded()
-            && rd.EndDate__c != null
-            && rd.EndDate__c < currentDate
+    private RD2_RecurringDonation reviseStatusForOpenEnded(Date currentDate) {
+        if (!isOpenEnded()) {
+            return this;
+        }
+
+        if (rd.EndDate__c != null && rd.EndDate__c < currentDate
         ) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
-
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
+
         }
+
         return this;
+    }
+
+    /**
+    * @description Revises and modifies for paused and unpaused Recurring Donation
+    * @param currentDate Used to determined current date
+    * @param scheduleService RD Schedule Service
+    */
+    private void reviseStatusForPaused(Date currentDate, RD2_ScheduleService scheduleService) {
+        if (getState() == RD2_Constants.STATUS_CLOSED || rd.RecurringDonationSchedules__r == null) {
+            return;
+        }
+   
+        if (!scheduleService.pauseHandler.hasActivePause(rd.RecurringDonationSchedules__r, currentDate)) {
+            if (rd.Status__c == RD2_Constants.STATUS_PAUSE) {
+                rd.Status__c = RD2_Constants.STATUS_ACTIVE;
+                rd.ClosedReason__c = '';
+                changedFields.add(npe03__Recurring_Donation__c.Status__c);
+                changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
+            }
+            return;
+        }
+
+        RecurringDonationSchedule__c nextPauseSchedule = scheduleService.getNextActivePauseSchedule(rd.RecurringDonationSchedules__r);
+
+        List<RD2_ScheduleService.Installment> installments =
+            scheduleService.getVisualizedInstallments(currentDate, nextPauseSchedule.StartDate__c.addDays(-1), rd.RecurringDonationSchedules__r);
+
+        if (installments.isEmpty()) {
+            rd.Status__c = RD2_Constants.STATUS_PAUSE;
+            rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
+            changedFields.add(npe03__Recurring_Donation__c.Status__c);
+            changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
+        }
     }
 
     /**

@@ -922,6 +922,42 @@ public without sharing class RD2_ScheduleService {
         return endDate;
     }
 
+    /**
+    * @description get the last installment before the RD pause start
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return Installment
+    */
+    public Installment getLastInstallmentBeforePause(List<RecurringDonationSchedule__c> rdSchedules) {
+        if (!pauseHandler.hasActivePause(rdSchedules, currentDate)) {
+            return null;
+        }
+        RecurringDonationSchedule__c nexActivePauseSchedule = getNextActivePauseSchedule(rdSchedules);
+
+        List<Installment> installments =  
+            getVisualizedInstallments(currentDate, nexActivePauseSchedule.StartDate__c.addDays(-1), rdSchedules);
+
+        return (!installments.isEmpty()) ? installments[installments.size()-1] : null;
+    }
+
+    /**
+    * @description get the next pause schedule
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return RecurringDonationSchedule__c
+    */
+    public RecurringDonationSchedule__c getNextActivePauseSchedule(List<RecurringDonationSchedule__c> rdSchedules) {
+        RecurringDonationSchedule__c nexActivePauseSchedule;
+
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (pauseHandler.isActivePause(schedule, currentDate)
+                && ( nexActivePauseSchedule == null || schedule.StartDate__c <= nexActivePauseSchedule.StartDate__c)
+            ) {
+                nexActivePauseSchedule = schedule;
+            }
+        }
+
+        return nexActivePauseSchedule;
+    }
+
     /***
     * @description Wrapper class for Recurring Donation Installment data
     */
@@ -1046,7 +1082,7 @@ public without sharing class RD2_ScheduleService {
         * @param referenceDate Reference Date
         * @return Boolean
         */
-        private Boolean isCurrentlyActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        public Boolean isCurrentlyActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
             return schedule.StartDate__c <= referenceDate &&
                 (schedule.EndDate__c == null || referenceDate <= schedule.EndDate__c);
         }
