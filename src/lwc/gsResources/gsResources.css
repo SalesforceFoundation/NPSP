@@ -5,9 +5,9 @@
 
 .container {
     padding: 1.5rem;
-    background-color: white;
+    background-color: #ffffff;
     border: solid 1px #DDDBDA;
-    box-shadow: 0 3px 3px 0 rgba(0,0,0, 0.1);
+    box-shadow: 1px -5px 3px -3px #b0adab7a;
 }
 
 .container .resource-list .resource-item {
@@ -28,4 +28,11 @@
 
 .container .link > a {
     color: #0070D2;
+    font-size: 16pt;
+    font-weight: 400;
+}
+
+.container .label > span {
+    font-size: 16pt;
+    font-weight: 400;
 }
