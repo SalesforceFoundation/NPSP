@@ -138,6 +138,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     _contact1LastName;
     _contact1FirstName;
 
+    /*******************************************************************************
+     * @description Object used to hold current values for all fields on the form.
+     */
+    @track
+    _formState = {}
+
     /** Determines when we show payment related text above the cancel and save buttons */
     get showPaymentSaveNotice() {
         return this._hasCreditCardWidget && this._isCreditCardWidgetInDoNotChargeState === false;
@@ -1756,12 +1762,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get qaLocatorSaveButton() {
         return `button ${this.saveActionLabel}`;
     }
-
-    /*******************************************************************************
-     * @description Object used to hold current values for all fields on the form.
-     */
-    @track
-    _formState = {}
 
     get formState() {
         return this._formState;
