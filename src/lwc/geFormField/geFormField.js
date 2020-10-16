@@ -750,10 +750,25 @@ export default class GeFormField extends LightningElement {
     wiredPicklistValues({error, data}) {
         if (data) {
             this.picklistValues = [this.PICKLIST_OPTION_NONE, ...data.values];
+
+            const isCurrentValueValid =
+                this.value &&
+                this.isValueInOptions(this.value, this.picklistValues);
+
+            if (!isCurrentValueValid) {
+                this.fireFormFieldChangeEvent(this.PICKLIST_OPTION_NONE.value);
+            }
         }
         if (error) {
             console.error(error);
         }
+    }
+
+    isValueInOptions(value, options) {
+        if (!options || options.length === 0) return false;
+        return options.some(option => {
+            return option.value === value;
+        });
     }
 
     getPicklistOptionsForRecordTypeIds() {
