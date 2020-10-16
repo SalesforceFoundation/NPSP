@@ -5,6 +5,7 @@ from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from datetime import datetime
+import time
 from dateutil.relativedelta import relativedelta
 
 
@@ -178,27 +179,64 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                   self.selenium.click_element(selection_value)
               else:
                   self.builtin.log(f"Element {key} not present")
-           else:
-              checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(value)
-              self.selenium.click_element(checkbox)
+           elif key in ("Date"):
+               for v in value:
+                  checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(v)
+                  time.sleep(1)
+                  self.selenium.click_element(checkbox)
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
         self.salesforce.wait_until_modal_is_closed()
-      
+
+
     @capture_screenshot_on_error
-    def validate_warning_text(self,txt):
+    def populate_pause_modal(self,**kwargs):
+        """ Populate the values in the pause recurring donation modal
+		based on the key value pair options in the kwargs passed as parameter
+		| Populate Pause Modal
+        | ...	                  Paused Reason=Card Expired
+        | ...	                  Date=${date}     """
+        for key, value in kwargs.items():
+            if key in ("Paused Reason"):
+                locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
+                selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
+                if self.npsp.check_if_element_exists(locator):
+                    self.selenium.set_focus_to_element(locator)
+                    self.selenium.wait_until_element_is_visible(locator)
+                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce._jsclick(locator)
+                    self.selenium.wait_until_element_is_visible(selection_value)
+                    self.selenium.click_element(selection_value)
+                else:
+                    self.builtin.log(f"Element {key} not present")
+                    
+            if key in ("Date"):
+                for date in value:
+                    checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(date)
+                    time.sleep(1)
+                    self.selenium.click_element(checkbox)
+            if "Validate" in key:
+                self.validate_message_text(value)
+        btnlocator = npsp_lex_locators["button-with-text"].format("Save")
+        self.selenium.scroll_element_into_view(btnlocator)
+        self.selenium.click_element(btnlocator)
+        self.salesforce.wait_until_modal_is_closed()
+    
+    @capture_screenshot_on_error
+    def validate_message_text(self,txt):
         """Find the element containing warning message on the pause modal and
         asserts the text displayed matches with the expected text"""
-        locator = npsp_lex_locators["erd"]["warning_message"]
+        locator = npsp_lex_locators["erd"]["warning_message"].format(txt)
         self.selenium.wait_until_element_is_visible(locator)
-        self.selenium.element_text_should_be(locator, txt)
 
-    def verify_pause_text_next_to_installment_date(self,date):
-        """Looks for the date element with the paused text next to it """
-        locator = npsp_lex_locators["erd"]["date_with_paused_txt"].format(date)
-        self.selenium.wait_until_element_is_visible(locator)
-        self.selenium.element_text_should_be(locator, date)
+    @capture_screenshot_on_error
+    def verify_pause_text_next_to_installment_date(self, *dates):
+        """Accepts a list of dates and validates the presence of date element with the paused text next to it """
+        for date in dates:
+            locator = npsp_lex_locators["erd"]["date_with_paused_txt"].format(date)
+            self.selenium.wait_until_element_is_visible(locator)
+            self.selenium.element_text_should_be(locator, date)
 
     @capture_screenshot_on_error
     def verify_schedule_warning_messages_present(self):

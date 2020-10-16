@@ -66,4 +66,4 @@ Edit An Enhanced Recurring donation record of type open
     Current Page Should be                  Details                                  npe03__Recurring_Donation__c
     #Pause the recurring donation and validate the warning message displayed
     Pause_Recurring Donation
-    Validate Warning Text                   You can't Pause a Closed Recurring Donation
+    Validate Message Text                   You can't Pause a Closed Recurring Donation
