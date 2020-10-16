@@ -49,7 +49,7 @@ export default class GeFormField extends LightningElement {
     @api targetFieldName;
     _defaultValue = null;
     _recordTypeId;
-    _picklistValues
+    _picklistValues;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
