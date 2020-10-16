@@ -260,7 +260,7 @@ private with sharing class RD2_EntryFormController_TEST {
         Id recordId = rdGateway.getRecords()[0].Id;
 
         Test.startTest();
-        mockSuccessCalloutResponse();
+        mockRecordCreatedCalloutResponse();
 
         RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
 
@@ -294,7 +294,7 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        mockSuccessCalloutResponse();
+        mockRecordCreatedCalloutResponse();
 
         String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);
         Test.stopTest();
@@ -331,7 +331,7 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        mockErrorCalloutResponse();
+        UTIL_Http_TEST.mockBadRequestCalloutResponse();
 
         String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);
         Test.stopTest();
@@ -365,6 +365,7 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(System.Label.RD2_ErrorRDIdIsMissingForCommitment, actualException.getMessage(),
             'The exception should be match');
     }
+    
 
     // Helpers
     ////////////////
@@ -373,13 +374,8 @@ private with sharing class RD2_EntryFormController_TEST {
     * @description Simulates a successful commitment creation callout
     * @return String
     */
-    private static void mockSuccessCalloutResponse() {
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_CREATED)
-            .withStatus(UTIL_Http.STATUS_OK)
-            .withBody(mockSuccessResponseBody());
-
-        Test.setMock(HttpCalloutMock.class, callout);
+    private static void mockRecordCreatedCalloutResponse() {
+        UTIL_Http_TEST.mockRecordCreatedCalloutResponse(mockSuccessResponseBody());
     }
 
     /****
@@ -394,24 +390,6 @@ private with sharing class RD2_EntryFormController_TEST {
             + '","expirationMonth":"' + CARD_EXPIRATION_MONTH
             + '","expirationYear":"' + CARD_EXPIRATION_YEAR
             + '"}}';
-    }
-    /****
-    * @description Simulates an error response from the commitment creation callout
-    * @return String
-    */
-    private static void mockErrorCalloutResponse() {
-        String responseBody = '{"errors":[{'
-            + '"message":"schedules[0].firstOccurrenceOnTimestamp: Exactly one of firstOccurrenceOnTimestamp and firstOccurrenceOn must not be null",'
-            + '"localizedPaymentsMessage":"Bad Request",'
-            + '"detailedMessage":"schedules[0].firstOccurrenceOnTimestamp: Exactly one of firstOccurrenceOnTimestamp and firstOccurrenceOn must not be null"'
-            + '}]}"';
-
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
-            .withStatusCode(UTIL_Http.STATUS_CODE_BAD_REQUEST)
-            .withStatus(System.Label.commonUnknownError)
-            .withBody(responseBody);
-
-        Test.setMock(HttpCalloutMock.class, callout);
     }
 
     /****

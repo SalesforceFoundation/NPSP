@@ -1004,10 +1004,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @param event The paymentError event object
      */
     handleAsyncWidgetError(event) {
-        let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
+        let errorMessage = this.CUSTOM_LABELS.commonUnknownError;
+        let errorResponse;
+
+        if (event.error && event.error.message) {
+            errorMessage = event.error.message[0];
+
+            if (event.error.message.length > 1) {
+                errorResponse = event.error.message[1];
+            }
+        }
 
         let errorObjects = [];
-        if (event.error.isObject) {
+        if (event.error && event.error.isObject) {
             // Represents the error response returned from payment services
             let errorObject = JSON.parse(errorResponse);
             errorObject.forEach((message, index) => {
@@ -1029,7 +1038,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         this.pageLevelErrorMessageList = [{
             index: 0,
-            errorMessage: event.error.message[0],
+            errorMessage: errorMessage,
             multilineMessages: errorObjects
         }];
         this.showSpinner = false;

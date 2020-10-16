@@ -33,6 +33,9 @@ class psElevateTokenHandler {
         tokenRequestTimedOut
     });
 
+    _visualforceOriginUrls;
+    _visualforceOrigin;
+
 
     /***
     * @description Returns credit card tokenization Visualforce page URL
@@ -49,7 +52,7 @@ class psElevateTokenHandler {
     * @description Builds the Visualforce origin url that we need in order to
     * make sure we're only listening for messages from the correct source.
     */
-    getVisualforceOriginURLs(domainInfo) {
+    setVisualforceOriginURLs(domainInfo) {
         if (isNull(domainInfo)) {
             return;
         }
@@ -64,7 +67,7 @@ class psElevateTokenHandler {
             alternateUrl = alternateUrl.replace('--c', `--${namespace}`);
         }
 
-        return [{ value: url }, { value: alternateUrl }];
+        this._visualforceOriginUrls = [{ value: url }, { value: alternateUrl }];
     }
 
     /***
@@ -87,14 +90,17 @@ class psElevateTokenHandler {
     * Rejects any messages from an unknown origin.
     */
     registerPostMessageListener(component) {
+        let self = this;
+
         window.onmessage = async function (event) {
-            if (component.visualforceOriginUrls) {
-                component.visualforceOrigin = component.visualforceOriginUrls.find(
+
+            if (self._visualforceOriginUrls) {
+                self._visualforceOrigin = self._visualforceOriginUrls.find(
                     origin => event.origin === origin.value
                 ).value;
             }
 
-            if (component.visualforceOrigin) {
+            if (self._visualforceOrigin) {
                 const message = JSON.parse(event.data);
                 component.handleMessage(message);
             }
@@ -116,13 +122,13 @@ class psElevateTokenHandler {
     /***
     * @description Method sends a message to the visualforce page iframe requesting a token.
     * This request response is found and handled in the registerPostMessageListener().
-    * @param visualforceOrigin Visualforce origin
     * @param iframe The payment services iframe displayed within the credit card widget LWC
-    * @param nameOnCard The cardholder name value
+    * @param cardholderName The cardholder name
     * @param handleError An error handler function
+    * @param resolveToken Function (if any) called when a token is generated
     * @return Promise A token promise
     */
-    requestToken(visualforceOrigin, iframe, nameOnCard, handleError) {
+    requestToken(iframe, cardholderName, handleError, resolveToken) {
         if (isNull(iframe)) {
             return;
         }
@@ -130,7 +136,10 @@ class psElevateTokenHandler {
         const tokenPromise = new Promise((resolve, reject) => {
 
             const timer = setTimeout(() =>
-                reject(this.handleTimeout(handleError)),
+                reject(handleError({
+                    error: this.labels.tokenRequestTimedOut,
+                    isObject: false
+                })),
                 TOKENIZE_TIMEOUT_MS
             );
 
@@ -141,7 +150,11 @@ class psElevateTokenHandler {
                     reject(handleError(message));
 
                 } else if (message.token) {
-                    resolve(message.token);
+                    if (resolveToken) {
+                        resolve(resolveToken(message.token));
+                    } else {
+                        resolve(message.token);
+                    }
                 }
             };
 
@@ -150,25 +163,12 @@ class psElevateTokenHandler {
         iframe.contentWindow.postMessage(
             {
                 action: TOKENIZE_EVENT_ACTION,
-                nameOnCard: nameOnCard
+                nameOnCard: cardholderName
             },
-            visualforceOrigin
+            this._visualforceOrigin
         );
 
         return tokenPromise;
-    }
-
-    /**
-     * Handles a timeout error display when the tokenization
-     * request does not result in a response
-     */
-    handleTimeout(handleError) {
-        const message = {
-            error: this.labels.tokenRequestTimedOut,
-            isObject: false
-        };
-
-        handleError(message);
     }
 }
 

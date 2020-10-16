@@ -1,4 +1,4 @@
-import {api, track, LightningElement } from 'lwc';
+import { api, track, LightningElement } from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
 
 import tokenHandler from 'c/psElevateTokenHandler';
@@ -31,9 +31,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         cardholderNameLabel
     };
 
-    @track visualforceOrigin;
-    @track visualforceOriginUrls;
-
     @track isLoading = true;
     @track isDisabled = false;
     @track alert = {};
@@ -48,7 +45,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                 this.handleError(error);
             });
 
-        this.visualforceOriginUrls = tokenHandler.getVisualforceOriginURLs(domainInfo);
+        tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
     /***
@@ -82,8 +79,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * @description Method sends a message to the visualforce page iframe requesting a token.
     */
     requestToken() {
+        this.clearError();
+
         const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-        return tokenHandler.requestToken(this.visualforceOrigin, iframe, this.getCardholderName(), this.handleError);
+
+        return tokenHandler.requestToken(iframe, this.getCardholderName(), this.handleError);
     }
 
     /***

@@ -64,9 +64,31 @@ public inherited sharing class PS_Request {
     public static String JWT_SFDO_ID_PARAM = 'sfdo.id';
     public static String JWT_PRODUCT_PARAM = 'sfdo.product';
     public static String JWT_ROLES_PARAM = 'sfdo.roles';
+    
+    public static String ENDPOINT_TOKENIZE = '/v1/payments/verified/tokens';
+    public static String ENDPOINT_PURCHASE = '/v1/payments/verified/purchase';
+    public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
+    public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
 
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
 
+    /***
+    * @description Returns payments service endpoint URL
+    * @param endpoint Elevate Endpoint enum 
+    * @return String
+    */
+    public String getEndpoint(ElevateEndpoint endpoint) {
+        return new Builder().getEndpoint(endpoint, null);
+    }
+
+    /***
+    * @description Returns payments service endpoint URL
+    * @param commitmentId Elevate recurring commitment Id
+    * @return String
+    */
+    public String getCancelCommitmentEndpoint(String commitmentId) {
+        return new Builder().getEndpoint(ElevateEndpoint.COMMITMENT_CANCEL, commitmentId);
+    }
 
     /***
     * @description Builds an HttpRequest
@@ -198,19 +220,22 @@ public inherited sharing class PS_Request {
         * @param commitmentId Recurring Donation Commitment Id (required for cancel commitment endpoint only)
         * @return String Full endpoint
         */
-        private String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
+        public String getEndpoint(ElevateEndpoint endpoint, String commitmentId) {
             String value;
             if (endpoint == ElevateEndpoint.TOKENIZE) {
-                value = '/v1/payments/public/tokens';
+                value = ENDPOINT_TOKENIZE;
 
             } else if (endpoint == ElevateEndpoint.PURCHASE) {
-                value = '/v1/payments/verified/purchase';
+                value = ENDPOINT_PURCHASE;
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
-                value = '/v1/payments/verified/commitments';
+                value = ENDPOINT_COMMITMENT;
 
             } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
-                value = '/v1/payments/verified/commitments/' + commitmentId + '/cancel';
+                value = String.format(
+                    ENDPOINT_COMMITMENT_CANCEL,
+                    new String[]{ commitmentId }
+                );
             }
 
             return String.isBlank(value)

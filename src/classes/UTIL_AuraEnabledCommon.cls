@@ -66,9 +66,18 @@ public without sharing class UTIL_AuraEnabledCommon {
     * @return void
     */
     public static void throwAuraHandledException(String errMessage) {
-        AuraHandledException e = new AuraHandledException(errMessage);
-        e.setMessage(errMessage);
-        throw e;
+        throw buildAuraException(errMessage);
+    }
+
+    /***
+    * @description Creates an AuraHandledException with the specified error message
+    * @param errMessage contents of the exception error message
+    * @return AuraHandledException
+    */
+    public static AuraHandledException buildAuraException(String errMessage) {
+        AuraHandledException ex = new AuraHandledException(errMessage);
+        ex.setMessage(errMessage);
+        return ex;
     }
 
 
