@@ -1467,13 +1467,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.updateFormStateForRecordIdWithRelatedRecord(data.id, data);
             this.load(dataImport, false);
 
-            if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
-                data.id === this.selectedDonation.Id) {
-                const oppId = this.parentOpportunityId(data);
-                this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
+            const needsParentOpportunityLoaded =
+                this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
+                data.id === this.selectedDonation.Id;
+
+            if (needsParentOpportunityLoaded) {
+                this.loadParentOpportunityForSelectedPayment(this.parentOpportunityIdFor(data));
             }
         }
         this.loadNextSelectedRecordFromQueue();
+    }
+
+    loadParentOpportunityForSelectedPayment(oppId) {
+        this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
     }
 
     loadNextSelectedRecordFromQueue() {
@@ -1487,7 +1493,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    parentOpportunityId(oppPaymentRecord) {
+    parentOpportunityIdFor(oppPaymentRecord) {
         return getFieldValue(oppPaymentRecord, PARENT_OPPORTUNITY_FIELD);
     }
 
@@ -1507,26 +1513,27 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         //reverse map to create an object with relevant source field api names to values
         let dataImport = {};
 
+        let objectMappingDevNames = this.getObjectMappingDevNamesForSelectedRecord(record);
+
+        objectMappingDevNames.forEach(objectMappingName => {
+            //relevant field mappings
+            this.fieldMappingsFor(objectMappingName).forEach(fieldMapping => {
+                const valueObject = record.fields[fieldMapping.Target_Field_API_Name];
+                dataImport[fieldMapping.Source_Field_API_Name] = valueObject.value;
+            });
+        });
+
+        return dataImport;
+    }
+
+    getObjectMappingDevNamesForSelectedRecord(record) {
         let objectMappingDevNames = [];
-        for (let [key, value] of Object.entries(
-            this.selectedRecordIdByObjectMappingDevName)) {
+        for (let [key, value] of Object.entries(this.selectedRecordIdByObjectMappingDevName)) {
             if (value === record.id) {
                 objectMappingDevNames.push(key);
             }
         }
-
-        for (const objectMappingName of objectMappingDevNames) {
-            //relevant field mappings
-            for (const fieldMapping of Object.values(GeFormService.fieldMappings)
-                .filter(({Target_Object_Mapping_Dev_Name}) =>
-                    Target_Object_Mapping_Dev_Name === objectMappingName)) {
-
-                const value = record.fields[fieldMapping.Target_Field_API_Name];
-                dataImport[fieldMapping.Source_Field_API_Name] = value;
-            }
-        }
-
-        return dataImport;
+        return objectMappingDevNames;
     }
 
     storeSelectedRecordIdByObjectMappingName(objectMappingName, recordId) {
