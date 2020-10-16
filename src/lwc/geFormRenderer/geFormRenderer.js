@@ -919,7 +919,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     reset(objectMappingDeveloperName = null) {
         if (objectMappingDeveloperName === null) {
             this.resetFieldsApplyDefaults();
-            this.resetLocalState();
+            this.resetFormState();
         } else {
             this.resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName);
             this.setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName);
@@ -927,7 +927,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.widgetData = {};
     }
 
-    resetLocalState() {
+    resetFormState() {
         this.dataImport = null;
         this.setReviewDonationsDonorProperties(null);
         this.resetStoredDonationDonorProperties();
