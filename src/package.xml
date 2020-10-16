@@ -297,6 +297,7 @@
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
         <members>GS_AdminSetup</members>
+        <members>GS_AdminSetup_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>

@@ -34,6 +34,7 @@ public with sharing class GS_AdminSetup {
 
     private static ChecklistItem wrapChecklistItem(GS_Admin_Checklist_Item__mdt item) {
         ChecklistItem ci = new ChecklistItem();
+        ci.Id = item.Id;
         ci.title = item.Title_Label__c;
         ci.description = item.Description_Label__c;
         ci.image = item.Image__c;
@@ -65,6 +66,8 @@ public with sharing class GS_AdminSetup {
     }
 
     public class ChecklistItem {
+        @AuraEnabled
+        public Id id;
         @AuraEnabled
         public String title;
         @AuraEnabled
