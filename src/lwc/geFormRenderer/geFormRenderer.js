@@ -241,7 +241,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         this.sections = this.appendRecordTypeLocationInfoToPicklistElements(this.sections);
-        this.initializeState();
+        this.initializeFormState();
     }
 
     appendRecordTypeLocationInfoToPicklistElements(sections) {
@@ -304,7 +304,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleCancel() {
         this.reset();
-        this.initializeState();
+        this.initializeFormState();
 
         // if not in batch mode, go back to point of origin
         if (isEmpty(this.batchId)) {
@@ -931,7 +931,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.dataImport = null;
         this.setReviewDonationsDonorProperties(null);
         this.resetStoredDonationDonorProperties();
-        this.initializeState();
+        this.initializeFormState();
     }
 
     resetFieldsApplyDefaults() {
@@ -1875,7 +1875,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @description Analyzes the sections property to get initial values and set them
      * in the formState property.
      */
-    initializeState() {
+    initializeFormState() {
         if (this.sections) {
             this.sections
                 .forEach(section => {
