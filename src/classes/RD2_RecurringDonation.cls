@@ -251,7 +251,8 @@ public inherited sharing class RD2_RecurringDonation {
         List<RD2_ScheduleService.Installment> installments =
             scheduleService.getVisualizedInstallments(currentDate, nextPauseSchedule.StartDate__c.addDays(-1), rd.RecurringDonationSchedules__r);
 
-        if (installments.isEmpty()) {
+        if (installments.isEmpty()
+            && rd.Status__c != RD2_Constants.STATUS_PAUSE) {
             rd.Status__c = RD2_Constants.STATUS_PAUSE;
             rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
