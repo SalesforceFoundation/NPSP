@@ -179,13 +179,6 @@ export default class GeFormSection extends LightningElement {
         this.dispatchEvent(selectEvent);
     }
 
-    handleChangeDonationDonor(event) {
-        const changeDonationDonorEvent = new CustomEvent(
-            'changedonationdonor',
-            { detail: event.detail });
-        this.dispatchEvent(changeDonationDonorEvent);
-    }
-
     /**
      * @description Inspects all fields and widgets in the section and
      *              returns a list of DataImport__c field api names used as

@@ -1546,10 +1546,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
     }
 
-    handleChangeDonationDonor(event) {
-        this.handleDonationDonorChange(event.detail.value);
-    }
-
     get donorId() {
         switch (this._donationDonor) {
             case DONATION_DONOR_TYPE_ENUM.ACCOUNT1:

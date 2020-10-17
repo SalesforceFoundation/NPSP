@@ -83,10 +83,6 @@ export default class GeFormField extends LightningElement {
             this.fireLookupRecordSelectedEvent(event);
         }
 
-        if (this.isPicklist) {
-            this.handlePicklistChange();
-        }
-
         if (this.isRichText) {
             this.checkRichTextValidity();
         }
@@ -126,15 +122,6 @@ export default class GeFormField extends LightningElement {
 
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
-    handlePicklistChange() {
-        if (this.targetFieldApiName === DONATION_DONOR_FIELD.fieldApiName) {
-            const changeDonationDonorEvent = new CustomEvent(
-                'changedonationdonor',
-                {detail: {value: this.value}});
-            this.dispatchEvent(changeDonationDonorEvent);
-        }
-    }
-
     /**
      * Retrieve object metadata. Used to configure how fields are displayed on the form.
      */
@@ -159,7 +146,6 @@ export default class GeFormField extends LightningElement {
             // and no record value.
             this._defaultValue = defaultValue;
             this.value = defaultValue;
-            this.handlePicklistChange();
         }
     }
 
