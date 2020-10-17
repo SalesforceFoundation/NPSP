@@ -265,12 +265,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     appendRecordTypeLocationInfoToElement(element) {
-        const fieldMappingDevName = element.dataImportFieldMappingDevNames[0];
+        const fieldMappingDevName =
+            element.dataImportFieldMappingDevNames &&
+            element.dataImportFieldMappingDevNames[0];
 
-        element.siblingRecordTypeField =
-            this.siblingRecordTypeFieldFor(fieldMappingDevName);
-        element.parentRecordField =
-            this.parentRecordFieldFor(fieldMappingDevName);
+        if (fieldMappingDevName) {
+            element.siblingRecordTypeField =
+                this.siblingRecordTypeFieldFor(fieldMappingDevName);
+            element.parentRecordField =
+                this.parentRecordFieldFor(fieldMappingDevName);
+        }
     }
 
     setPermissionsError(errorObject) {
