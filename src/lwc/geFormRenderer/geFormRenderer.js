@@ -1188,7 +1188,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // 3. Return the list of fields from those mappings
 
         const objectMapping =
-            GeFormService.getObjectMappingWrapper(objectMappingDeveloperName);
+            GeFormService.getObjectMapping(objectMappingDeveloperName);
 
         const relevantFieldMappings =
             Object.values(GeFormService.fieldMappings)
@@ -1990,9 +1990,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     parentRecordFieldFor(fieldMappingDevName) {
-        return GeFormService
-            .objectMappings[this.objectMappingDevNameFor(fieldMappingDevName)]
-            .Imported_Record_Field_Name;
+        const objMapping =
+            GeFormService.getObjectMapping(
+                this.objectMappingDevNameFor(fieldMappingDevName));
+
+        return objMapping && objMapping.Imported_Record_Field_Name;
     }
 
 }

@@ -302,7 +302,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get objectMapping() {
-        return GeFormService.getObjectMappingWrapper(this.targetObjectMappingDevName);
+        return GeFormService.getObjectMapping(this.targetObjectMappingDevName);
     }
 
     get fieldType() {

@@ -109,12 +109,12 @@ class GeFormService {
     }
 
     /**
-     * Get a object info object by dev name from the render wrapper object
-     * @param objectDevName
+     * Get a object info object by dev name
+     * @param objectMappingDevName
      * @returns {BDI_ObjectMapping}
      */
-    getObjectMappingWrapper(objectDevName) {
-        return this.objectMappings[objectDevName];
+    getObjectMapping(objectMappingDevName) {
+        return this.objectMappings[objectMappingDevName];
     }
 
     /**
