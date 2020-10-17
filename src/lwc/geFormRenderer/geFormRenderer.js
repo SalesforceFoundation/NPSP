@@ -1853,18 +1853,25 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleFormFieldChange(event) {
-        const value = event.detail.value;
-        const label = event.detail.label;
-        const sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName);
+        const value = event.detail.value,
+            label = event.detail.label,
+            sourceField = this.sourceFieldFor(event.detail.fieldMappingDevName),
+            isDonationRecordTypeName =
+                sourceField === DONATION_RECORD_TYPE_NAME.fieldApiName,
+            isDonationDonor =
+                sourceField === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName;
 
-        let valueForFormState = value;
-        if (sourceField === DONATION_RECORD_TYPE_NAME.fieldApiName) {
-            valueForFormState = label;
+        if (isDonationRecordTypeName) {
             this.setDonationRecordTypeIdInFormState(value);
-        } else if (sourceField === DATA_IMPORT_DONATION_DONOR_FIELD.fieldApiName) {
+        }
+
+        if (isDonationDonor) {
             this.handleDonationDonorChange(value)
         }
-        this.updateFormState({[sourceField]: valueForFormState});
+
+        this.updateFormState({
+            [sourceField]: isDonationRecordTypeName ? label : value
+        });
     }
 
     sourceFieldFor(fieldMappingDevName) {
