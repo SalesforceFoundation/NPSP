@@ -1986,11 +1986,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     objectMappingDevNameFor(fieldMappingDevName) {
-        return this.fieldMappingFor(fieldMappingDevName).Target_Object_Mapping_Dev_Name;
-    }
-
-    fieldMappingFor(fieldMappingDevName) {
-        return GeFormService.getFieldMappingWrapper(fieldMappingDevName);
+        const fieldMapping = GeFormService.getFieldMappingWrapper(fieldMappingDevName);
+        return fieldMapping && fieldMapping.Target_Object_Mapping_Dev_Name;
     }
 
     parentRecordFieldFor(fieldMappingDevName) {
