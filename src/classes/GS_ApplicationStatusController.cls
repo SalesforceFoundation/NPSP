@@ -186,8 +186,7 @@ public with sharing class GS_ApplicationStatusController {
     private Organization getOrgInformation() {
         return [SELECT TrialExpirationDate,
                        IsSandbox
-                FROM   Organization
-                WITH_SECURITY_ENFORCED];
+                FROM   Organization];
     }
 
     /**
