@@ -108,4 +108,12 @@ private class UTIL_String_TEST {
         System.assertEquals(null, UTIL_String.getInternalUrlPath(invalidUrl));
     }
 
+    /**
+    * @description Verifies a new GUID is generated
+    */
+    @isTest private static void shouldReturnAGUID() {
+        String guid = UTIL_String.getGUID();
+        System.assert(String.isNotBlank(guid), 'A GUID should be generated'); 
+    }
+
 }

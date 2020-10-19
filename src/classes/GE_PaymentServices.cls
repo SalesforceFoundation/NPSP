@@ -32,16 +32,10 @@
 * @date 2020
 * @group HGE
 * @group-content
-* @description Class holds payment services related methods.
+* @description Class holds payment services purchase request related methods.
 */
 public with sharing class GE_PaymentServices {
     @TestVisible class PaymentServicesException extends Exception {}
-
-    PurchaseCallBody purchaseCallBody;
-
-    @TestVisible Map<String, String> config;
-
-    public enum ElevateEndpoints { TOKENIZE, PURCHASE }
 
     public enum ElevateTransactionStatus {
         PENDING,
@@ -54,22 +48,62 @@ public with sharing class GE_PaymentServices {
         REFUNDISSUED
     }
 
-    public String getEndpoint(ElevateEndpoints endpoint) {
-        if (endpoint === ElevateEndpoints.TOKENIZE) {
-            return '/v1/payments/public/tokens';
+    /***
+     * @description Payment Services configuration
+     */
+    @TestVisible
+    private PS_IntegrationServiceConfig.Service configService {
+        get {
+            if (configService == null) {
+                configService = new PS_IntegrationServiceConfig.Service();
+            }
+            return configService;
         }
-
-        if (endpoint === ElevateEndpoints.PURCHASE) {
-            return '/v1/payments/verified/purchase';
-        }
-
-        return null;
+        set;
     }
 
-    public GE_PaymentServices() {
-        config = new PS_IntegrationServiceConfig.Configuration().keyValueMap;
+    /**
+     * @description Checks whether an org is a customer of Elevate Payment Services.
+     *              After onboarding within Elevate, these configuration key-value
+     *              pairs should exist in the org.  If this required set of keys is not
+     *              in the org, NPSP cannot load the Elevate SDK or successfully make
+     *              callouts to Elevate services.
+     */
+    public static Boolean isElevateCustomer {
+        get {
+            PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+            return ps.isIntegrationEnabled();
+        }
     }
 
+    /**
+     * @description Returns Elevate SDK URL to payments services tokenize card iframe
+     * @return String
+     */
+    public String getElevateSDKURL() {
+        return configService.getElevateSDKURL();
+    }
+
+    /**
+     * @description Returns Elevate Product Id to payments services tokenize card iframe
+     * @return String
+     */
+    public String getProductId() {
+        return configService.getProductId();
+    }
+
+    /**
+     * @description Returns Elevate Gateway Ids to payments services tokenize card iframe
+     * @return String
+     */
+    public String getGatewayIds() {
+        return configService.getGatewayIds();
+    }
+
+    /**
+     * @description Returns Payments Services transaction status values
+     * @return String JSON of the transaction status values by name
+     */
     @AuraEnabled(cacheable=true)
     public static String getPaymentTransactionStatusValues() {
         Map<String, String> paymentStatusNameByEnum = new Map<String, String>();
@@ -77,111 +111,71 @@ public with sharing class GE_PaymentServices {
         for (ElevateTransactionStatus status : ElevateTransactionStatus.values()) {
             paymentStatusNameByEnum.put(status.name(), status.name());
         }
+
         return JSON.serialize(paymentStatusNameByEnum);
     }
 
-    public void setPurchaseCallBody(String jsonString) {
+    /**
+     * @description Returns purchase request body
+     * @param jsonRequestBody: JSON containing parameters for the purchase call request body
+     * @return PurchaseCallBody
+     */
+    private PurchaseCallBody getPurchaseCallBody(String jsonRequestBody) {
         Map<String, Object> requestBodyParameters =
-                (Map<String, Object>) JSON.deserializeUntyped(jsonString);
-        this.purchaseCallBody = new PurchaseCallBody(
-                UserInfo.getDefaultCurrency(),
-                config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS),
-                config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS)
+            (Map<String, Object>) JSON.deserializeUntyped(jsonRequestBody);
+
+        PurchaseCallBody requestBody = new PurchaseCallBody(
+            UserInfo.getDefaultCurrency(),
+            configService.getMerchantIds(),
+            configService.getGatewayIds()
         ).applyAll(requestBodyParameters);
+
+        return requestBody;
     }
 
-    /*******************************************************************************************************
-    * @description Method sends a OneTimePurchaseRequest to Elevate. Check out the Payments swagger in the
-    * SFDO Payments repo for additional information.
+    /**
+     * @description Returns purchase request body
+     * @param jsonRequestBody JSON containing some purchase call request body parameters set by the LWC
+     * @return UTIL_Http.Response
+     */
+    public UTIL_Http.Response createTransaction(String jsonRequestBody) {
+        PurchaseCallBody requestBody = getPurchaseCallBody(jsonRequestBody);
+
+        return createTransaction(requestBody);
+    }
+
+    /**
+     * @description Method sends a purchase requet to Elevate.
+     * Check out the Payments swagger in the SFDO Payments repo for additional information.
+     * @param requestBody Purchase call request body
+     * @return UTIL_Http.Response
     */
-    public ResponseWrapper createTransaction() {
-        // Create http request...
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(getEndpointRoot() + getEndpoint(ElevateEndpoints.PURCHASE));
-        request.setMethod('POST');
-        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt());
-        request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
-        if (config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS) != null) {
-            request.setHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS, 
-            config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
-        }
+    public UTIL_Http.Response createTransaction(PurchaseCallBody requestBody) {
+        UTIL_Http.RequestService requestService = new UTIL_Http.RequestService();
 
-        // Set the body as a JSON object...
-        String purchaseCallBodyString = purchaseCallBody.getAsJson();
-        request.setBody(purchaseCallBodyString);
+        HttpRequest request = buildPurchaseRequest(requestBody.getAsJson());
 
-        HttpResponse response = http.send(request);
-        ResponseWrapper responseWrapper = new ResponseWrapper(response);
+        UTIL_Http.Response response = requestService.sendRequest(request);
 
-        return responseWrapper;
+        return response;
     }
 
-    public String getEndpointRoot() {
-        return config.get(PS_IntegrationServiceConfig.BASE_URL);
-    }
-
-    public String getJwt() {
-        JWTPayload jwtPayload = new JWTPayload(config.get(PS_IntegrationServiceConfig.PRODUCTID));
-        String jwt = UTIL_Jwt.getSignedJWTFromString(
-                jwtPayload.getAsString(),
-                config.get(PS_IntegrationServiceConfig.API_KEY)
-        );
-
-        return jwt;
-    }
-
-    public String getElevateSDKURL() {
-        return config.get(PS_IntegrationServiceConfig.ELEVATE_SDK);
-    }
-
-    public String getProductId() {
-        return config.get(PS_IntegrationServiceConfig.PRODUCTID);
-    }
-
-    public String getGatewayIds() {
-        return config.get(PS_IntegrationServiceConfig.SFDO_GATEWAYIDS);
-    }
-
-    /*******************************************************************************************************
-    * @description Inner class to assist in constructing the Payload portion of a JSON Web Token.
+    /***
+    * @description Creates an HttpRequest for a new one-time payment (purchase) creation
+    * @param jsonRequestBody JSON containing parameters for the purchase call request body
+    * @return HttpRequest
     */
-    public with sharing class JWTPayload {
-        String sfdoId;
-
-        public JWTPayload(String sfdoId) {
-            this.sfdoId = sfdoId;
-        }
-
-        private Long getEpochTimestamp(DateTime dt) {
-            return dt.getTime() / 1000; // convert milliseconds to seconds as needed by iat
-        }
-
-        private Long getExpirationDate(Integer daysFromNow) {
-            DateTime expirationDate = DateTime.now().addDays(daysFromNow);
-            return getEpochTimestamp(expirationDate);
-        }
-
-        private String getAsString() {
-            JSONGenerator generator = JSON.createGenerator(false);
-
-            generator.writeStartObject();
-            generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
-            generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
-            generator.writeStringField('sub', UserInfo.getUserName()); // Subject
-            if (sfdoId != null) {
-                generator.writeStringField('sfdo.id', sfdoId);
-            }
-            generator.writeStringField('sfdo.product', 'CRM'); // Product
-            generator.writeStringField('sfdo.roles', 'Payments.Purchase');
-
-            return generator.getAsString();
-        }
+    private HttpRequest buildPurchaseRequest(String jsonRequestBody) {
+        return new PS_Request.Builder()
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_Request.ElevateEndpoint.PURCHASE)
+            .withBody(jsonRequestBody)
+            .build();
     }
 
 
-    /*******************************************************************************************************
+
+    /***
     * @description Inner class of PurchaseCallBody to assist in constructing the metadata property.
     * This could/should probably just be a map.
     */
@@ -189,7 +183,7 @@ public with sharing class GE_PaymentServices {
         public String campaignCode;
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Inner class to assist in constructing the Purchase http request body.
     */
     public with sharing class PurchaseCallBody {
@@ -241,47 +235,6 @@ public with sharing class GE_PaymentServices {
             }
 
             return (PurchaseCallBody) JSON.deserialize(JSON.serialize(selfAsUntyped), PurchaseCallBody.class);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Inner class needed to return contents of the HttpResponse. HttpResponse can't be directly
-    * serialized using JSON.serialize().
-    */
-    public with sharing class ResponseWrapper {
-        public Integer statusCode;
-        public String status;
-        public String body;
-        public String error;
-        public Map<String, Object> headers = new Map<String, Object>{};
-
-        public ResponseWrapper() {}
-
-        public ResponseWrapper(HttpResponse response) {
-            this.statusCode = response.getStatusCode();
-            this.status = response.getStatus();
-            this.body = response.getBody();
-
-            String[] headerKeys = response.getHeaderKeys();
-            if (headerKeys != null) {
-                for (String headerKey : headerKeys) {
-                    this.headers.put(headerKey, response.getHeader(headerKey));
-                }
-            }
-        }
-    }
-
-    /**
-     * @description Checks whether an org is a customer of Elevate Payment Services.
-     *              After onboarding within Elevate, these configuration key-value
-     *              pairs should exist in the org.  If this required set of keys is not
-     *              in the org, NPSP cannot load the Elevate SDK or successfully make
-     *              callouts to Elevate services.
-    */
-    public static Boolean isElevateCustomer {
-        get {
-            PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-            return ps.isIntegrationEnabled();
         }
     }
 
