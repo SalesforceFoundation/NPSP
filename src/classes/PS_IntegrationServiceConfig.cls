@@ -51,8 +51,6 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String SFDO_USERNAME = 'sfdo.username';
     public static final String ELEVATE_SDK = 'elevateSDK';
     public static final String PRODUCTID = 'productId';
-    public static final String PURCHASE_ROLE = 'Payments.Purchase';
-    public static final String TOKEN_ROLE = 'Payments.Tokens';
 
     @TestVisible 
     private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
