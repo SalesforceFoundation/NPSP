@@ -250,9 +250,9 @@ const shadowQuerySelector = (element, selector) => {
     return getShadowRoot(element).querySelector(selector);
 }
 
-const getSubComponentCombobox = picklistElement => {
+const getSubComponentCombobox = geFormFieldElement => {
     return shadowQuerySelector(
-        picklistElement,
+        geFormFieldElement,
         'lightning-combobox'
     );
 };
