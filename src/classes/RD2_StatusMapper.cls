@@ -33,7 +33,7 @@
 */
 public with sharing class RD2_StatusMapper {
     /**
-    * @description Pre-define Status to State mapping
+    * @description Pre-defined Status to State mapping
     */
     public static final Map<String, String> READ_ONLY_STATUS_TO_STATE = new Map<String, String> {
         RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,

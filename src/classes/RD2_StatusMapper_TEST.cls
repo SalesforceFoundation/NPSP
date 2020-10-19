@@ -163,7 +163,7 @@ public with sharing class RD2_StatusMapper_TEST {
 
         for (String status : READ_ONLY_STATUS_VALUES) {
             System.assertEquals(RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.get(status), mapper.getState(status),
-                'State should mapped to predefine state for required read-only value'
+                'State should mapped to pre-defined state for required read-only value'
             );
         }
     }
