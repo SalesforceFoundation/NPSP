@@ -29,7 +29,7 @@ jest.mock('c/geFormService', () => {
         getNumberFormatterByDescribeType: jest.fn(() => {
             return null;
         }),
-        getObjectMapping: jest.fn(() => {
+        getObjectMappingWrapper: jest.fn(() => {
             return require('./data/objectMapping.json');
         }),
         importedRecordFieldNames: jest.fn(() => {
