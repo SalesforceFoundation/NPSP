@@ -352,9 +352,9 @@
                     <label>Closed</label>
                 </value>
                 <value>
-                    <fullName>Pause</fullName>
+                    <fullName>Paused</fullName>
                     <default>false</default>
-                    <label>Pause</label>
+                    <label>Paused</label>
                 </value>
             </valueSetDefinition>
         </valueSet>

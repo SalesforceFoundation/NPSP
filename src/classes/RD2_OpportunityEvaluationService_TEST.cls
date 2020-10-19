@@ -1920,7 +1920,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        System.assertEquals(RD2_Constants.STATUS_PAUSE, rd.Status__c,
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, rd.Status__c,
             'Rd status should be paused when the next installment is paused');
         System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
             'The pause reason shuold be updated according to the user selection');
@@ -1941,7 +1941,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withDayOfMonth('1')
-            .withStatusPause()
+            .withStatusPaused()
             .build();
 
         insert rd;
@@ -1957,7 +1957,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        System.assertEquals(RD2_Constants.STATUS_PAUSE, rd.Status__c,
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, rd.Status__c,
             'Rd status should be paused when the next installment is paused');
         System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
             'The pause reason shuold be updated according to the user selection');
@@ -1978,7 +1978,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withDayOfMonth('1')
-            .withStatusPause()
+            .withStatusPaused()
             .build();
 
         insert rd;
@@ -2015,7 +2015,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withDayOfMonth('1')
-            .withStatusPause()
+            .withStatusPaused()
             .build();
 
         insert rd;

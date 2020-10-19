@@ -453,8 +453,8 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @description Sets Recurring Donation Status to Pause
     * @return TEST_RecurringDonationBuilder Builder instance
     */
-    public TEST_RecurringDonationBuilder withStatusPause() {
-        return withStatus(RD2_Constants.STATUS_PAUSE);
+    public TEST_RecurringDonationBuilder withStatusPaused() {
+        return withStatus(RD2_Constants.STATUS_PAUSED);
     }
 
     /***

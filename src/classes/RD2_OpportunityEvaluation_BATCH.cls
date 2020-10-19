@@ -224,7 +224,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         if (!UTIL_Describe.isValidPicklistOption(
             'npe03__Recurring_Donation__c',
             String.valueOf(npe03__Recurring_Donation__c.Status__c),
-            RD2_Constants.STATUS_PAUSE)
+            RD2_Constants.STATUS_PAUSED)
         ) {
             Error__c errorRecord = new Error__c(
                 Context_Type__c = ERR_Handler_API.Context.RD.name(),

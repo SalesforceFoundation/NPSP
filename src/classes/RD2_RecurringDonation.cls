@@ -238,7 +238,7 @@ public inherited sharing class RD2_RecurringDonation {
         }
    
         if (!scheduleService.pauseHandler.hasActivePause(rd.RecurringDonationSchedules__r, currentDate)) {
-            if (rd.Status__c == RD2_Constants.STATUS_PAUSE) {
+            if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
                 rd.ClosedReason__c = '';
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
@@ -250,7 +250,7 @@ public inherited sharing class RD2_RecurringDonation {
         Boolean isPauseStatusValid = UTIL_Describe.isValidPicklistOption(
             'npe03__Recurring_Donation__c',
             String.valueOf(npe03__Recurring_Donation__c.Status__c),
-            RD2_Constants.STATUS_PAUSE);
+            RD2_Constants.STATUS_PAUSED);
         
         if (!isPauseStatusValid) {
             return;
@@ -264,9 +264,9 @@ public inherited sharing class RD2_RecurringDonation {
                 rd.RecurringDonationSchedules__r);
 
         if (installments.isEmpty()
-            && rd.Status__c != RD2_Constants.STATUS_PAUSE
+            && rd.Status__c != RD2_Constants.STATUS_PAUSED
         ) {
-            rd.Status__c = RD2_Constants.STATUS_PAUSE;
+            rd.Status__c = RD2_Constants.STATUS_PAUSED;
             rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
             changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
