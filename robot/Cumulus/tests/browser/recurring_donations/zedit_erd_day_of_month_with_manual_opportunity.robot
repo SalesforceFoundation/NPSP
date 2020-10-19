@@ -41,6 +41,7 @@ Validate Opportunity Details
        ...                     opportunity and validate stage and Close date fields
        [Arguments]                       ${opportunityid}          ${stage}        ${date}
        Go To Page                              Details                        Opportunity                   object_id=${opportunityid}
+       Current Page Should Be                  Details                        Opportunity
        Navigate To And Validate Field Value    Stage                          contains                      ${stage}
        Navigate To And Validate Field Value    Close Date                     contains                      ${date}
 
@@ -49,6 +50,7 @@ Edit Opportunity Stage
        ...                     opportunity and update the opportunity stage detail
        [Arguments]                       ${opportunityid}          ${stage}
        Go To Page                              Details                        Opportunity                     object_id=${opportunityid}
+       Current Page Should Be                  Details                        Opportunity
        Wait Until Loading Is Complete
        Current Page Should be                  Details                        Opportunity
        Click Link                              link=Edit
@@ -94,6 +96,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
     Wait Until Loading Is Complete
+    Current Page Should Be             Details                        npe03__Recurring_Donation__c
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
     Validate Related Record Count      Opportunities                                    1
     Create An Opportunity Related to Recurring Donation                    ${data}[contact_rd][Id]            Pledged
