@@ -38,13 +38,13 @@ Change Name Display Settings on Manage Household Page
     Go To Page                              Details
     ...                                     Account
     ...                                     object_id=${contact1}[AccountId]
-    Click Actions Link                      Manage Household
+    Click Button                            Manage Household
     Go To Page                              Custom                                                              ManageHousehold
     Current Page Should Be                  Custom                                                              ManageHousehold
     Add contact                             Existing                                                            ${contact2}[FirstName] ${contact2}[LastName]
     Current Page Should Be                  Details                                                             Account
     Wait Until Loading Is Complete
-    Click Link                              link=Manage Household
+    Click Button                            Manage Household
     Current Page Should Be                  Custom                                                              ManageHousehold
 
     # Choose the display option as Informal Greeting for contact#1
