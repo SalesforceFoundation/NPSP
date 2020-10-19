@@ -1,4 +1,14 @@
 <aura:component implements="lightning:actionOverride,force:hasRecordId">
+
+    <aura:html tag="style">
+        /**
+        * Display showToastMessage content on multiple lines
+        */
+        .toastMessage.forceActionsText {
+            white-space : pre-line !important;
+        }
+    </aura:html>
+
     <aura:dependency resource="c:rd2EntryForm" />
     <aura:dependency resource="c:rd2EntryFormScheduleSection" />
     <aura:dependency resource="c:rd2EntryFormDonorSection" />

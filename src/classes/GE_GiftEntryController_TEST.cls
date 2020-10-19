@@ -37,34 +37,97 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
-    /*********************************************************************************************************
-    * @description Sets up a new NPSP_Data_Import_Batch__c Record
-    * @return Id of the new NPSP_Data_Import_Batch__c
-    */
-    private static Id createDataImportBatch( String batchName ) {
-        DataImportBatch__c dataImportBatch = new DataImportBatch__c();
-        dataImportBatch.Name = batchName;
 
-        insert dataImportBatch;
-        return (Id)dataImportBatch.Id;
+    /***
+     * @description Verifies the purchase request response contains status code created
+     * when one-time payment has been created in Elevate
+     */
+    @isTest
+    private static void shouldReturnRecordCreatedResponseWhenPurchaseRequestSucceeds() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        String requestBodyParameters = GE_PaymentServices_TEST.GOOD_PURCHASE_CALL_BODY;
+        String dataImportRecordId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+
+        Test.startTest();
+        UTIL_Http_TEST.mockRecordCreatedCalloutResponse(GE_PaymentServices_TEST.SUCCESS_RESPONSE_BODY);
+
+        UTIL_Http.Response response = GE_GiftEntryController.processPurchaseRequest(requestBodyParameters, dataImportRecordId);
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 'Response status should match: ' + response);
     }
 
-    /*******************************************************************************************************
-    * @description creates a new di record for tests
-    * @param firstname the firstname to specify for Contact1
-    * @param lastname the lastname to specify for Contact1
-    * @return DataImport__c the new Data Import record
-    */
-    public static DataImport__c newDI(String firstname, String lastname, Id batchId) {
-        return new DataImport__c(
-                Contact1_Firstname__c = firstname,
-                Contact1_Lastname__c = lastname,
-                Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
-                NPSP_Data_Import_Batch__c = batchId
+    /***
+     * @description Verifies the purchase request response throws an excpetion
+     * when building a purchase request body fails with an unexpected error
+     */
+    @isTest
+    private static void shouldThrowExceptionWhenPurchaseRequestGetsUnexpectedError() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        String invalidBodyParameters = '{"amount":2500,"email"';
+        String dataImportRecordId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+
+        Exception actualException;
+        try {
+            Test.startTest();
+            GE_GiftEntryController.processPurchaseRequest(invalidBodyParameters, dataImportRecordId);
+            Test.stopTest();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 'An exception should be returned due an invalid request body');
+    }
+
+    /***
+     * @description Verifies the purchase request response contains timed out status code and message
+     * when the purchase requests times out
+     */
+    @isTest
+    private static void shouldLogErrorWhenPurchaseRequestTimesOut() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        final String requestTimeoutMessage = System.Label.geErrorRequestTimedout;
+        String requestBodyParameters = GE_PaymentServices_TEST.GOOD_PURCHASE_CALL_BODY;
+        String dataImportRecordId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+
+        Test.startTest();
+        UTIL_Http_TEST.mockErrorCalloutResponse(
+            UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT,
+            UTIL_Http.STATUS_TIMED_OUT,
+            GE_PaymentServices_TEST.FAILED_RESPONSE_BODY
         );
+
+        UTIL_Http.Response response = GE_GiftEntryController.processPurchaseRequest(requestBodyParameters, dataImportRecordId);
+        Test.stopTest();
+
+        System.assertEquals(UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT, response.statusCode,
+            'Response status code should match: ' + response);
+
+        System.assertEquals(GE_PaymentServices_TEST.FAILED_RESPONSE_MESSAGE, response.status,
+            'Response status should contain the timeout exception or timout error response message: ' + response);
+
+        System.assertEquals(true, response.body.contains(requestTimeoutMessage),
+            'Response message should contain a generic purchase request timed out message: ' + response);
+
+        List<Error__c> errors = new TEST_SObjectGateway.ErrorGateway().getRecords();
+        System.assertEquals(1, errors.size(), 'One error should be created on timeout response: ' + errors);
+
+        final String recordDetailMessage = String.format(
+            System.Label.stgErrorInvalidNameFormat,
+            new String[] {
+                Schema.SObjectType.DataImport__c.getLabel(),
+                dataImportRecordId
+            }
+        );
+        System.assertEquals(requestTimeoutMessage + ' ' + recordDetailMessage, errors[0].Full_Message__c,
+            'Error log message should contain data import record detail');
     }
 
-    /*******************************************************************************************************
+    /***
      * @description Confirm that the Data Import upsert method inserts and updates correctly.
      */
     @isTest
@@ -79,7 +142,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals('TEST_TOKEN', updatedDataImportRecord.Payment_Authorization_Token__c);
     }
 
-    /*******************************************************************************************************
+    /***
      * @description Confirm that the Data Import processes correctly and returns an Opportunity id.
      */
     @isTest
@@ -99,7 +162,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assert(opportunityId != null);
     }
 
-    /*******************************************************************************************************
+    /***
      * @description Saves the data import record, dry runs the record, and returns updated
      * totals with the new row.
      */
@@ -114,7 +177,7 @@ private with sharing class GE_GiftEntryController_TEST {
         String batchName = 'fooBatch';
         // test data
         Id batchId = createDataImportBatch( batchName );
-        DataImport__c di = newDI( firstName, lastName, batchId );
+        DataImport__c di = createDataImport( firstName, lastName, batchId );
 
         Test.startTest();
         GE_GiftEntryController.saveAndDryRunDataImport(batchId,di);
@@ -125,13 +188,13 @@ private with sharing class GE_GiftEntryController_TEST {
 
     }
 
-    /*******************************************************************************************************
+    /***
      * @description Confirm that a default RenderWrapper is correctly returned
      */
     @isTest
     private static void createAndReturnDefaultFormTemplate() {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
-        Form_Template__c defaultTemplate = returnFormTemplate();
+        Form_Template__c defaultTemplate = buildFormTemplate();
 
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
 
@@ -154,14 +217,7 @@ private with sharing class GE_GiftEntryController_TEST {
 
     }
 
-    private static Form_Template__c returnFormTemplate(){
-        return new Form_Template__c(
-                Name = 'Test',
-                Format_Version__c = '1.0'
-        );
-    }
-
-    /*******************************************************************************************************
+    /***
      * @description Tests that widget data can be properly coverted to the BDI_DynamicSourceGroup format required
      * by BDI for N number of objects processing.
      */
@@ -224,7 +280,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(25,dynSource2.sourceObj.get('GAU_Allocation_1_Percent__c'));
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Confirming that method returns the correct number of records
     */
     @IsTest
@@ -240,7 +296,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(2, GE_GiftEntryController.getAllFormTemplates().size());
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Confirming that method deletes Form Template records with given ids.
     */
     @IsTest
@@ -262,7 +318,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(0, formTemplates.size());
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Confirming that the lifecycle of storing and retrieving the template does not corrupt
     * the data.
     */
@@ -287,7 +343,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(templateJSON, templateResultJSON);
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
     @IsTest
@@ -305,7 +361,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(1, selectedHeaders.columnHeaders.size());
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
     @IsTest
@@ -339,7 +395,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals('Name', columnHeaderToCheck.Field_Api_Name__c);
     }
 
-    /*******************************************************************************************************
+    /****
     * @description Confirm that we're able to build a query string and retrieve a list of records.
     */
     @IsTest
@@ -362,7 +418,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(3, objects.size());
     }
 
-    /*******************************************************************************************************
+    /****
     * @description Confirm that form template name uniqueness is enforced.
     */
     @IsTest
@@ -420,7 +476,7 @@ private with sharing class GE_GiftEntryController_TEST {
                 'The template should not have a permission error type if the user has all required CRUD and FLS permissions.');
     }
 
-    /**************************************************************************************************
+    /***
     * @description Confirms that a form template used by any Data Import Batch cannot be deleted.
     */
     @IsTest
@@ -461,7 +517,7 @@ private with sharing class GE_GiftEntryController_TEST {
 
     }
 
-    /**************************************************************************************************
+    /***
     * @description Confirms that a form template used as default on Gift Entry settings cannot be deleted.
     */
     @IsTest
@@ -509,6 +565,48 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assert( String.isNotBlank(failure.getMessage()), 'Aura Exception found' );
         System.assertEquals( 1, formTemplates.size(), 'Template was not deleted' );
 
+    }
+
+
+    // Helpers
+    /////////////////
+
+    /***
+    * @description Builds a test form template
+    * @return Form_Template__c
+    */
+    private static Form_Template__c buildFormTemplate() {
+        return new Form_Template__c(
+            Name = 'Test',
+            Format_Version__c = '1.0'
+        );
+    }
+
+    /***
+    * @description Sets up a new NPSP_Data_Import_Batch__c Record
+    * @return Id of the new NPSP_Data_Import_Batch__c
+    */
+    private static Id createDataImportBatch( String batchName ) {
+        DataImportBatch__c dataImportBatch = new DataImportBatch__c();
+        dataImportBatch.Name = batchName;
+
+        insert dataImportBatch;
+        return (Id)dataImportBatch.Id;
+    }
+
+    /***
+    * @description creates a new di record for tests
+    * @param firstname the firstname to specify for Contact1
+    * @param lastname the lastname to specify for Contact1
+    * @return DataImport__c the new Data Import record
+    */
+    public static DataImport__c createDataImport(String firstname, String lastname, Id batchId) {
+        return new DataImport__c(
+                Contact1_Firstname__c = firstname,
+                Contact1_Lastname__c = lastname,
+                Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
+                NPSP_Data_Import_Batch__c = batchId
+        );
     }
 
     //Utility method for creating a sample template.
@@ -568,7 +666,7 @@ private with sharing class GE_GiftEntryController_TEST {
         return new Custom_Column_Header__c[] { columnHeader, columnHeader2, columnHeader3 };
     }
 
-    /**********************************************************************************************
+    /***
      * @description Utility method that creates an NPSP Data Import Batch
      *
      * @param name
