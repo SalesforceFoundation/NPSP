@@ -50,6 +50,7 @@ Edit Opportunity Stage
        [Arguments]                       ${opportunityid}          ${stage}
        Go To Page                              Details                        Opportunity                     object_id=${opportunityid}
        Wait Until Loading Is Complete
+       Current Page Should be                  Details                        Opportunity
        Click Link                              link=Edit
        Wait until Modal Is Open
        Select Value From Dropdown              Stage                          ${stage}
@@ -107,7 +108,10 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
+
     Wait Until Loading Is Complete
+    Reload Page
+    Current Page Should Be             Details                                        npe03__Recurring_Donation__c
     ${next_payment_date}               get next payment date number                    1
 
     #Validate that the number of opportunities now show as 2 .
@@ -115,4 +119,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
     @{opportunity} =                   API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
     #Verify the details on the respective opportunities
     Validate Opportunity Details       ${opportunity}[0][Id]        Pledged                          ${next_payment_date}
+    Go To Page                         Details
+    ...                                npe03__Recurring_Donation__c
+    ...                                object_id=${data}[contact_rd][Id]
     Validate Opportunity Details       ${opportunity}[1][Id]        Pledged                          ${CURRENT_DATE}
