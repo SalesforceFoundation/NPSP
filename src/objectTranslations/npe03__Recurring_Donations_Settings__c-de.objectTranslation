@@ -21,8 +21,8 @@
         <name>InstallmentOppAutoCreateOption__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous. --></help>
-        <label><!-- Installment Opportunity Async Behavior --></label>
+        <help>Gibt an, wie NPSP die erste Raten-Opportunity für wiederkehrende Spenden erstellt. Das Standardverhalten ist synchron.</help>
+        <label>Raten-Opportunities: asynch. Verhalten</label>
         <name>InstallmentOppFirstCreateMode__c</name>
     </fields>
     <fields>

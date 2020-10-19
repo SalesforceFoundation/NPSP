@@ -35,6 +35,11 @@
         <name>Card_Network__c</name>
     </fields>
     <fields>
+        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
+        <label><!-- Donor Cover Amount --></label>
+        <name>Donor_Cover_Amount__c</name>
+    </fields>
+    <fields>
         <help>Uniquement pour les remboursements. Affiche l’ID de la transaction de paiement d’origine d’Elevate.</help>
         <label>ID de paiement d’origine d’Elevate</label>
         <name>Elevate_Original_Payment_ID__c</name>
