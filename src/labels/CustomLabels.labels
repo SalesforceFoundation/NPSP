@@ -1602,12 +1602,28 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
-        <fullName>RD2_ElevatePermissionRequired</fullName>
-        <categories>Recurring-Donations, Error</categories>
+        <fullName>RD2_ElevateDisableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
-        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+        <shortDescription>Label indicating user can hide the credit card and not use Elevate</shortDescription>
+        <value>Do Not Use Elevate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateDisabledMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation will not be committed to Elevate</shortDescription>
+        <value>You are not using Elevate for this Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateEnableButtonLabel</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text to toggle and enable commitment creation in Elevate</shortDescription>
+        <value>Alternatively, use Elevate now.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
@@ -1624,6 +1640,14 @@
         <protected>true</protected>
         <shortDescription>Status Reason to indicates Elevate Service is in progress.</shortDescription>
         <value>Pending Elevate Process</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevatePermissionRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
+        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
@@ -2072,6 +2096,14 @@
         <value>You don&apos;t have the required Recurring Donations field permissions. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
+        <value>Other Information</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormPeriodAdvanced</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2128,6 +2160,38 @@
         <value>Years</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormSaveCommitmentMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Elevate Commitment is being created</shortDescription>
+        <value>Creating Elevate recurring payment...This may take a few minutes.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCommitmentFailedMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed as prefix to errors returned from Elevate API</shortDescription>
+        <value>However, an Elevate recurring payment could not be created due to the following errors:</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
+        <value>Validating credit card...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EntryFormSaveRecurringDonationMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when Recurring Donation record is being saved</shortDescription>
+        <value>Saving Recurring Donation...</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormScheduleEveryLabel</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2152,14 +2216,6 @@
         <value>Recurring Donation &quot;{0}&quot; was saved.</value>
     </labels>
     <labels>
-        <fullName>RD2_EntryFormOtherSectionHeader</fullName>
-        <categories>Recurring-Donations, Entry-Form</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Recurring Donation Entry Form Other Information section header</shortDescription>
-        <value>Other Information</value>
-    </labels>
-    <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2174,6 +2230,14 @@
         <protected>true</protected>
         <shortDescription>The RD2 Batch job can only be executed when Enhanced RD is enabled</shortDescription>
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ErrorRDIdIsMissingForCommitment</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation Id must be specified</shortDescription>
+        <value>There was an error creating the Recurring Donation record. No Recurring payment request was sent to Elevate. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
@@ -5219,6 +5283,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batches</value>
     </labels>
     <labels>
+        <fullName>commonCardholderName</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the cardholder name during credit card entry</shortDescription>
+        <value>Cardholder Name</value>
+    </labels>
+    <labels>
         <fullName>commonCVV</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5257,6 +5329,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Error when a batch job is executed while the same batch job is already running.</shortDescription>
         <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
+    </labels>
+    <labels>
+        <fullName>commonContactSystemAdminMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message indicating user should contact the system administrator for help</shortDescription>
+        <value>Contact your system administrator for help.</value>
     </labels>
     <labels>
         <fullName>commonCreditNumber</fullName>
@@ -5553,6 +5633,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Unknown Error</shortDescription>
         <value>Unknown Error</value>
+    </labels>
+    <labels>
+        <fullName>commonWaitMessage</fullName>
+        <categories>Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text displayed to indicate process might take long time</shortDescription>
+        <value>Please wait...</value>
     </labels>
     <labels>
         <fullName>commonWarning</fullName>
@@ -7219,7 +7307,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure messge if invalid configuration params was provided for onboarding</shortDescription>
+        <shortDescription>Failure message if invalid configuration params was provided for onboarding</shortDescription>
         <value>Invalid configuration parameters were provided</value>
     </labels>
     <labels>
