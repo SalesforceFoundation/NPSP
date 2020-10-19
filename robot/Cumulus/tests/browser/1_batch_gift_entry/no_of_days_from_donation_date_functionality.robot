@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 ...             robot/Cumulus/resources/PaymentPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Library         DateTime
 Suite Setup     Run keywords
 ...             Open Test Browser
@@ -18,11 +19,9 @@ Match Based on Number of Days from Donation Date Functionality
     [Documentation]    The number of days from donation date field on the BGE wizard allows matching to be made by providing
     ...                a margin of error on the Donation Date field for a record. If the gift created is within range of that date,
     ...                gift is matched to the existing donation
-    [tags]  stable
-    Go To Page                        Listing                      Batch_Gift_Entry
-    # Click Link  &{batch}[Name]
-    Click Link With Text    ${batch}[Name]
-    Wait For Locator    bge.title    Batch Gift Entry
+    [tags]             stable
+    Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
@@ -47,13 +46,13 @@ Match Based on Number of Days from Donation Date Functionality
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     # Verify that the gift matched to existing opportunity and updated it to closed won status with gift date and payment is paid
-    Go To Record Home    ${opp}[Id]
+    Go To Page      Details     Opportunity     object_id=${opp}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
     Navigate To And Validate Field Value    Close Date    contains    ${date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     Select Tab    Related
     Load Related List    GAU Allocations
-    Click Link With Text    ${pay_no}
+    Click Span Button    ${pay_no}
     Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
