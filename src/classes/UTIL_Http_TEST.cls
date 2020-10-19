@@ -227,7 +227,20 @@ public with sharing class UTIL_Http_TEST {
      * @return void
      */
     public static void mockSuccessCalloutResponse(String responseBody) {
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+        CalloutMock callout = new CalloutMock()
+            .withBody(responseBody);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
+    /****
+    * @description Simulates a successful record created callout response
+    * @return String
+    */
+    public static void mockRecordCreatedCalloutResponse(String responseBody) {
+        CalloutMock callout = new CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_CREATED)
+            .withStatus(UTIL_Http.STATUS_OK)
             .withBody(responseBody);
 
         Test.setMock(HttpCalloutMock.class, callout);
@@ -240,7 +253,7 @@ public with sharing class UTIL_Http_TEST {
     public static void mockBadRequestCalloutResponse() {
         String responseBody = '{"errors":[{'
             + '"message":"' + BAD_REQUEST_MESSAGE + '"'
-            + '}]}"';
+            + '}]}';
 
         mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_BAD_REQUEST, System.Label.commonUnknownError, responseBody);
     }
@@ -253,7 +266,7 @@ public with sharing class UTIL_Http_TEST {
         String responseBody = '{"errors":[{'
             + '"message":"' + MESSAGE_NOT_FOUND
             + '","localizedPaymentsMessage":"' + MESSAGE_NOT_FOUND
-            + '"}]}"';
+            + '"}]}';
 
         mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_NOT_FOUND, UTIL_Http.STATUS_NOT_FOUND, responseBody);
     }
@@ -267,7 +280,7 @@ public with sharing class UTIL_Http_TEST {
             + '"message":"' + MESSAGE_DATA_CONFLICT
             + '","localizedPaymentsMessage":"' + MESSAGE_DATA_CONFLICT
             + '","detailedMessage":"' + MESSAGE_DATA_CONFLICT
-            + '"}]}"';
+            + '"}]}';
 
         mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_CONFLICT, UTIL_Http.STATUS_CONFLICT, responseBody);
     }
@@ -277,7 +290,7 @@ public with sharing class UTIL_Http_TEST {
      * @return void
      */
     public static void mockErrorCalloutResponse(Integer statusCode, String status, String responseBody) {
-        UTIL_Http_TEST.CalloutMock callout = new UTIL_Http_TEST.CalloutMock()
+        CalloutMock callout = new CalloutMock()
             .withStatusCode(statusCode)
             .withStatus(status)
             .withBody(responseBody);
