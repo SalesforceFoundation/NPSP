@@ -14,4 +14,8 @@
         <label>商談の命名</label>
         <name>Opportunity_Naming__c</name>
     </fields>
+    <fields>
+        <label>参照された廃止に関する警告</label>
+        <name>Viewed_Retirement_Alert__c</name>
+    </fields>
 </CustomObjectTranslation>

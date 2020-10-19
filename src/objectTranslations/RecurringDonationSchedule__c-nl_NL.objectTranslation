@@ -194,6 +194,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Stel dit in als in de planningsrecords een datumbereik staat voor de onderbreking van de terugkerende donatie</help>
+        <label>Is onderbroken</label>
+        <name>IsPause__c</name>
+    </fields>
+    <fields>
         <help>De vorm van betaling voor deze terugkerende donatie. NPSP kopieert de geselecteerde waarde automatisch naar elke gerelateerde record Betaling.</help>
         <label>Betalingswijze</label>
         <name>PaymentMethod__c</name>
@@ -220,6 +225,11 @@
         <help>De ingangsdatum voor deze planningsrecord.</help>
         <label>Ingangsdatum</label>
         <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <help>Bevat aanvullende gegevens van de planning. Bijvoorbeeld de reden voor onderbreking van een planning.</help>
+        <label>Statusreden</label>
+        <name>StatusReason__c</name>
     </fields>
     <gender>Feminine</gender>
     <layouts>
