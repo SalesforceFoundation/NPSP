@@ -47,8 +47,7 @@ Create Relationships for contacts
     ...                                 ${contact2}[FirstName] ${contact2}[LastName]
     ...                                 Parent
 
-    Click More Actions Button
-    Click Link                          link=Relationships Viewer
+    Open Relationships Viewer
     Wait Until Loading Is Complete
     #sleep for 5 seconds to allow image to load before trying to capture screenshot
     Sleep                               5

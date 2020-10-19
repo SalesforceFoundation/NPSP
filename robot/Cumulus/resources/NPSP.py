@@ -57,14 +57,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # Turn off info logging of all http requests
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
         self._init_locators()
-        # patch salesforce locators for winter 21
-        # if int(self.latest_api_version) == 50:
-        #     from cumulusci.robotframework import Salesforce
-        #     Salesforce.lex_locators["record"]["related"]["card"] = (
-        #         "//*[@data-component-id='force_relatedListContainer']//article[.//span[@title='{}']]"
-        #     )
-        #     Salesforce.lex_locators["record"]["related"]["button"]=("//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//a[@title='{}']")
-        #     Salesforce.lex_locators["record"]["related"]["popup_trigger"]=("//article[.//span[@title='{}'][//a[text()='{}']]]//div[contains(@class,'slds-truncate')]//button[./span[text()='Show Actions']]")
         locator_manager.register_locators("npsp",npsp_lex_locators)
 
     def _init_locators(self):
@@ -990,14 +982,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
         time.sleep(1)
-     
+
     def click_link_with_spantext(self,text):
         locator = npsp_lex_locators['custom_objects']['option'].format(text)
         self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.click_element(element)
         time.sleep(1)
-        
+
 
     def verify_expected_batch_values(self, batch_id,**kwargs):
         """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""
@@ -1377,7 +1369,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
 					# Out of the total number of payments being generated if user paid the payements for n number of payments specified in the field completedPyaments
 					# Mark the payments as paid and populate the payment date
-                    
+
                     if 'CompletedPayments' in payment_data:
                         if i<= int(payment_data['CompletedPayments']):
                             payment_update_data = {}
