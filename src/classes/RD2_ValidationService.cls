@@ -199,6 +199,7 @@ public with sharing class RD2_ValidationService {
             }
 
             validateActiveRecurringDonation(rd);
+            validatePauseRecurringDonationStatus(rd);
             validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
             validateRecurringDonationEndDate(rd);
@@ -249,6 +250,24 @@ public with sharing class RD2_ValidationService {
         validateDayOfMonth(rd);
 
         validateFixedLength(rd);
+    }
+
+    /***
+    * @description Validate Pause Status is an active status
+    * @param rd Recurring Donation record to validate
+    */
+    private void validatePauseRecurringDonationStatus(npe03__Recurring_Donation__c rd) {
+        if (rd.Status__c != RD2_Constants.STATUS_PAUSE) {
+            return;
+        }
+
+        if (!UTIL_Describe.isValidPicklistOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.Status__c),
+                RD2_Constants.STATUS_PAUSE)
+        ) {
+            rd.addError(System.Label.RD2_PauseStatusMustExist);
+        }
     }
 
     /***
