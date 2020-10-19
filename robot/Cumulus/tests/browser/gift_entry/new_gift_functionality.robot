@@ -38,7 +38,7 @@ Create Gift For Contact Using New Gift Button
     [tags]                               unstable      feature:GE                    W-039584
     Go To Page                           Details              Contact       object_id=${CONTACT}[Id]
     Current Page Should Be               Details              Contact
-    Click Special Object Button          New Gift
+    Click Button                         New Gift
     Current Page Should Be               Form                          Gift Entry
     Verify Field Default Value
     ...                                  Existing Donor Contact=${CONTACT}[Name]
@@ -69,7 +69,7 @@ Create Gift For Account Using New Gift Button
     [tags]                               unstable      feature:GE                    W-039584
     Go To Page                           Details              Account       object_id=${ACCOUNT}[Id]
     Current Page Should Be               Details              Account
-    Click Special Object Button          New Gift
+    Click Button                         New Gift
     Current Page Should Be               Form                          Gift Entry
     Verify Field Default Value
     ...                                  Existing Donor Organization=${ACCOUNT}[Name]
