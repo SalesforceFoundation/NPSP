@@ -169,6 +169,7 @@ public inherited sharing class RD2_RecurringDonation {
     /**
     * @description Revises and modifies the Recurring Donation status
     * @param currentDate Used to determined current date
+    * @param scheduleService RD Schedule Service
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseStatus(Date currentDate, RD2_ScheduleService scheduleService) {
@@ -212,11 +213,9 @@ public inherited sharing class RD2_RecurringDonation {
     * @return RD2_RecurringDonation This record instance
     */
     private RD2_RecurringDonation reviseStatusForOpenEnded(Date currentDate) {
-        if (!isOpenEnded()) {
-            return this;
-        }
-
-        if (rd.EndDate__c != null && rd.EndDate__c < currentDate
+        if (isOpenEnded()
+            && rd.EndDate__c != null
+            && rd.EndDate__c < currentDate
         ) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
@@ -248,11 +247,14 @@ public inherited sharing class RD2_RecurringDonation {
 
         RecurringDonationSchedule__c nextPauseSchedule = scheduleService.getNextActivePauseSchedule(rd.RecurringDonationSchedules__r);
 
-        List<RD2_ScheduleService.Installment> installments =
-            scheduleService.getVisualizedInstallments(currentDate, nextPauseSchedule.StartDate__c.addDays(-1), rd.RecurringDonationSchedules__r);
+        List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
+                currentDate,
+                nextPauseSchedule.StartDate__c.addDays(-1),
+                rd.RecurringDonationSchedules__r);
 
         if (installments.isEmpty()
-            && rd.Status__c != RD2_Constants.STATUS_PAUSE) {
+            && rd.Status__c != RD2_Constants.STATUS_PAUSE
+        ) {
             rd.Status__c = RD2_Constants.STATUS_PAUSE;
             rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);

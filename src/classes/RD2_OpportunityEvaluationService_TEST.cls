@@ -1892,8 +1892,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-    * @description Verifies that when the RD's next installment is skipped(paused),
-    * the RD status will be updated to Pause when the nightly batch job run
+    * @description Verifies that when RD's next installment is skipped(paused),
+    * the RD status will be updated to Pause when the nightly batch job runs
     */
     @isTest
     private static void shouldUpdateRDToPauseStatusWhenNextInstallmentIsPaused() {
@@ -1921,14 +1921,14 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(RD2_Constants.STATUS_PAUSE, rd.Status__c,
-            'Rd should be paused when the next installment is paused');
+            'Rd status should be paused when the next installment is paused');
         System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
             'The pause reason shuold be updated according to the user selection');
     }
 
     /**
-    * @description Verifies that when the RD in the middle of pause period
-    * the RD status should stay as Pause when nightly batch job run
+    * @description Verifies that when the RD is in the middle of pause period
+    * the RD status should stay as Pause when the nightly batch job runs
     */
     @isTest
     private static void shouldStayInPauseWhenRDIsInPausedPeriod() {
@@ -1958,14 +1958,14 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(RD2_Constants.STATUS_PAUSE, rd.Status__c,
-            'Rd should be paused when the next installment is paused');
+            'Rd status should be paused when the next installment is paused');
         System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
             'The pause reason shuold be updated according to the user selection');
     }
 
     /**
-    * @description Verifies that when the RD pause period is passed,
-    * the RD status should be updated to Active when nightly batch job run
+    * @description Verifies that when RD pause period is over,
+    * RD status should be updated to Active when the nightly batch job runs
     */
     @isTest
     private static void shouldUpdateRDToActiveWhenPausedPeriodIsOver() {
@@ -1995,13 +1995,13 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
-            'Rd should be update to Active when the next pause is over');
+            'Rd status should be updated to Active when the next pause is over');
         System.assertEquals(null, rd.ClosedReason__c,
             'The pause reason shuold be clear out when pause is over');
     }
 
         /**
-    * @description Verifies that when the RD is entering the pasued,
+    * @description Verifies that when RD is entering the pasued,
     * the next installment will be created with close date after the pause
     */
     @isTest

@@ -923,23 +923,6 @@ public without sharing class RD2_ScheduleService {
     }
 
     /**
-    * @description get the last installment before the RD pause start
-    * @param rdSchedules Schedules on the Recurring Donation record
-    * @return Installment
-    */
-    public Installment getLastInstallmentBeforePause(List<RecurringDonationSchedule__c> rdSchedules) {
-        if (!pauseHandler.hasActivePause(rdSchedules, currentDate)) {
-            return null;
-        }
-        RecurringDonationSchedule__c nexActivePauseSchedule = getNextActivePauseSchedule(rdSchedules);
-
-        List<Installment> installments =  
-            getVisualizedInstallments(currentDate, nexActivePauseSchedule.StartDate__c.addDays(-1), rdSchedules);
-
-        return (!installments.isEmpty()) ? installments[installments.size()-1] : null;
-    }
-
-    /**
     * @description get the next pause schedule
     * @param rdSchedules Schedules on the Recurring Donation record
     * @return RecurringDonationSchedule__c
@@ -1082,7 +1065,7 @@ public without sharing class RD2_ScheduleService {
         * @param referenceDate Reference Date
         * @return Boolean
         */
-        public Boolean isCurrentlyActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        private Boolean isCurrentlyActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
             return schedule.StartDate__c <= referenceDate &&
                 (schedule.EndDate__c == null || referenceDate <= schedule.EndDate__c);
         }
