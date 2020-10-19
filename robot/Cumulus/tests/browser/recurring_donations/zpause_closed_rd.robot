@@ -18,11 +18,11 @@ Setup Test Data
         [Documentation]         Create a contact and recurring donation record of type open using API
         ...                     Associate the recurring donation to the contact
 
-        ${NS} =             Get NPSP Namespace Prefix
-        Set Suite Variable  ${NS}
+        ${NS} =                         Get NPSP Namespace Prefix
+        Set Suite Variable              ${NS}
 
         #Create a Recurring Donation
-        &{contact1_fields}=   Create Dictionary                     Email=rd2tester@example.com
+        &{contact1_fields}=             Create Dictionary           Email=rd2tester@example.com
         &{recurringdonation_fields} =	Create Dictionary           Name=ERD Open Recurring Donation
         ...                                                         npe03__Installment_Period__c=Yearly
         ...                                                         npe03__Amount__c=100
@@ -33,7 +33,7 @@ Setup Test Data
         ...                                                         ${NS}InstallmentFrequency__c=1
         ...                                                         ${NS}PaymentMethod__c=Check
 
-        Setupdata   contact         ${contact1_fields}             recurringdonation_data=${recurringdonation_fields}
+        Setupdata   contact            ${contact1_fields}           recurringdonation_data=${recurringdonation_fields}
 
 
 *** Test Cases ***

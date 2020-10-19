@@ -185,6 +185,9 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                   checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(v)
                   time.sleep(1)
                   self.selenium.click_element(checkbox)
+           else:
+               raise Exception("Key not supported expected keys <Paused Reason> or <Date>")
+           
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
