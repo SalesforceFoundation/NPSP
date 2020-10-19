@@ -542,8 +542,7 @@
         <name>CRLP_CreateRollupFiscalYearHelpText</name>
     </customLabels>
     <customLabels>
-        <label>対象オブジェクトを選択して使用可能な項目を決定し、この情報を積み上げ集計する対象項目を選択します。この積み上げ集計の内容を確認できるように、詳細な説明を入力してください。
-        </label>
+        <label>対象オブジェクトを選択して使用可能な項目を決定し、この情報を積み上げ集計する対象項目を選択します。この積み上げ集計の内容を確認できるように、詳細な説明を入力してください。</label>
         <name>CRLP_CreateRollupIntroHelpText</name>
     </customLabels>
     <customLabels>
@@ -639,9 +638,7 @@
         <name>CRLP_RecalculatingRollups</name>
     </customLabels>
     <customLabels>
-        <label>
-            カスタマイズ可能な積み上げ集計をリセットしてよろしいですか? これにより、作成された新しいカスタマイズ可能な積み上げ集計、絞り込みルール、絞り込みグループが削除されて、すべての NPSP の積み上げ集計はそれらのデフォルト動作にリセットされます。
-        </label>
+        <label>カスタマイズ可能な積み上げ集計をリセットしてよろしいですか? これにより、作成された新しいカスタマイズ可能な積み上げ集計、絞り込みルール、絞り込みグループが削除されて、すべての NPSP の積み上げ集計はそれらのデフォルト動作にリセットされます。</label>
         <name>CRLP_ResetRollupsWarning</name>
     </customLabels>
     <customLabels>
@@ -855,6 +852,10 @@
     <customLabels>
         <label>&lt;b&gt;警告: 拡張継続支援が有効になっています。カスタマイズ可能な積み上げ集計を無効にすると、継続支援への積み上げ集計が機能しなくなります。&lt;/b&gt;</label>
         <name>RD2_DisableCustomizableRollupWarning</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate 支払サービスから生成された継続支援については、この機能は現時点ではサポートされていません。</label>
+        <name>RD2_ElevateNotSupported</name>
     </customLabels>
     <customLabels>
         <label>Elevate 支払サービスからの継続支援を Elevate 支払サービスインテグレーションユーザ以外のユーザが NPSP で変更することはできません。</label>
@@ -1143,6 +1144,10 @@
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
+        <label>一時停止</label>
+        <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
         <label>[予定回数] は、[支払回数] よりも少なくすることはできません。</label>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
     </customLabels>
@@ -1163,8 +1168,16 @@
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
+        <label>この継続支援は一時停止されているため、次の項目は更新できません: {0}。この項目を更新するには、一時停止を無効化する必要があります。</label>
+        <name>RD2_PauseCannotExistOnScheduleChange</name>
+    </customLabels>
+    <customLabels>
         <label>クローズした継続支援を一時停止することはできません。</label>
         <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} の一時停止が無効化されました。</label>
+        <name>RD2_PauseDeactivationSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>以下のリストから割賦を選択してください。最大 12 個の連続する割賦を一時停止できます。</label>
@@ -1177,6 +1190,26 @@
     <customLabels>
         <label>{0} を一時停止</label>
         <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>継続支援の一時停止に必要な権限がありません。詳細は、システム管理者にお問い合わせください。</label>
+        <name>RD2_PausePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} の一時停止が保存されました。</label>
+        <name>RD2_PauseSaveSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} 件の割賦が選択されました。</label>
+        <name>RD2_PauseSelectedInstallmentTextPlural</name>
+    </customLabels>
+    <customLabels>
+        <label>1 件の割賦が選択されました。</label>
+        <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>一時停止の理由</label>
+        <name>RD2_PausedReasonLabel</name>
     </customLabels>
     <customLabels>
         <label>終了日のスケジュール</label>
@@ -1663,6 +1696,22 @@
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
+        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <name>bdeRetirementBlockerHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <name>bdeRetirementBlockerMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>2020 年 10 月 1 日にバッチデータエントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。スムーズに移行できるように、10 月 1 日に先立って支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、Power of Us Hub の &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <name>bdeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>バッチデータエントリの廃止</label>
+        <name>bdeRetirementWarningHeader</name>
+    </customLabels>
+    <customLabels>
         <label>[一意の取引先カスタム ID] 設定項目の {0} には、API 参照名が {1} および {2} の NPSP データインポートオブジェクトのマッチング項目が必要です。</label>
         <name>bdiAccountCustomIdError</name>
     </customLabels>
@@ -2123,6 +2172,18 @@
         <name>bdiOMUIErrorNoValidThroughThisField</name>
     </customLabels>
     <customLabels>
+        <label>項目の対応付けを確認</label>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>以下の項目の対応付けに問題があります。</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP データインポートと対象項目がまだ存在することを確認してから、項目の対応付けを編集または削除してください。</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
+    </customLabels>
+    <customLabels>
         <label>このオブジェクトグループの名前。一般的な命名規則は [オブジェクト名] グループです。</label>
         <name>bdiOMUIGroupNameHelp</name>
     </customLabels>
@@ -2312,8 +2373,7 @@
         <name>bgeBatchOverviewWizard</name>
     </customLabels>
     <customLabels>
-        <label>NPSP バッチレコードの BDI_IPostProcess インターフェースを実装する Apex クラスの API 参照名。
-        </label>
+        <label>NPSP バッチレコードの BDI_IPostProcess インターフェースを実装する Apex クラスの API 参照名。</label>
         <name>bgeBatchPostProcessClassHelp</name>
     </customLabels>
     <customLabels>
@@ -2593,7 +2653,7 @@
         <name>commonClone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <label>{0} Apex クラスですでに実行中のジョブがあります。もう一度実行するには、このジョブを完了する必要があります。</label>
         <name>commonConcurrentBatchError</name>
     </customLabels>
     <customLabels>
@@ -2629,12 +2689,24 @@
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
+        <label><!-- Field not found --></label>
+        <name>commonFieldNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fields Not Found --></label>
+        <name>commonFieldsNotFound</name>
+    </customLabels>
+    <customLabels>
         <label>一般会計単位の割り当て</label>
         <name>commonGauAllocations</name>
     </customLabels>
     <customLabels>
         <label>一般会計単位</label>
         <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>権限不足</label>
+        <name>commonInsufficientPermissions</name>
     </customLabels>
     <customLabels>
         <label>キーには値が含まれ、Base64 形式が使用されている必要があります。</label>
@@ -2667,6 +2739,10 @@
     <customLabels>
         <label>表示する項目がありません。</label>
         <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>OK</label>
+        <name>commonOkay</name>
     </customLabels>
     <customLabels>
         <label>Open</label>
@@ -2703,6 +2779,10 @@
     <customLabels>
         <label>保存して閉じる</label>
         <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>オプションを選択してください</label>
+        <name>commonSelectOptionPlaceholder</name>
     </customLabels>
     <customLabels>
         <label>テンプレート</label>
@@ -2905,6 +2985,14 @@
         <name>geAssistiveBatchHeaderRemoveField</name>
     </customLabels>
     <customLabels>
+        <label>{0} は省略可能とマークされています。</label>
+        <name>geAssistiveDescriptionFieldOptional</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} は必須とマークされています。</label>
+        <name>geAssistiveDescriptionFieldRequired</name>
+    </customLabels>
+    <customLabels>
         <label>{0} 項目を下に移動します。</label>
         <name>geAssistiveFieldDown</name>
     </customLabels>
@@ -2935,6 +3023,10 @@
     <customLabels>
         <label>選択したオプションを削除</label>
         <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} が必要です。</label>
+        <name>geAssistiveRequireField</name>
     </customLabels>
     <customLabels>
         <label>{0} セクションを下に移動します。</label>
@@ -3001,15 +3093,13 @@
         <name>geBodyBatchTableColumnsPart1</name>
     </customLabels>
     <customLabels>
-        <label>
-        次の項目を含めることをお勧めします。
+        <label>次の項目を含めることをお勧めします。
         &lt;/br&gt;
         &lt;ul&gt;
             &lt;li&gt; 支援者の名前 — 支援を提供する団体取引先または取引先責任者へのリンク &lt;/li&gt;
             &lt;li&gt; 名前(支援) — 支援の商談または支払へのリンク。 &lt;/li&gt;
             &lt;li&gt; 状況および失敗の情報 — 一括処理に関する情報。 &lt;/li&gt;
-        &lt;/ul&gt;
-        </label>
+        &lt;/ul&gt;</label>
         <name>geBodyBatchTableColumnsPart2</name>
     </customLabels>
     <customLabels>
@@ -3025,7 +3115,7 @@
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>フォームに含める項目を選択します。項目を追加する前に、項目を移動するメイン画面のセクションをクリックします。サイドバーで、項目を追加するにはチェックボックスをオンにし、フォームから項目を削除するにはオフにします。使用するオブジェクトまたは項目がリストされていない場合、高度な対応付けを使用して項目を設定していることを確認します。</label>
+        <label>フォームに含める項目を選択します。項目を追加する前に、項目の移動先となるメイン画面の [フォーム項目を設定] セクションをクリックします。この [フォーム項目 &amp; 項目バンドル] サイドバーで、項目を追加するにはチェックボックスをオンにし、フォームから項目を削除するにはオフにします。使用するオブジェクトまたは項目がリストされていない場合、高度な対応付けを使用して項目を設定していることを確認します。</label>
         <name>geBodyFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3046,7 +3136,7 @@
         <name>geBodyFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
-        <label>セクションをクリックし、サイドバーで項目を選択してメイン画面のセクションに追加します。各項目で、項目表示ラベルを編集したり、必須としてマークしたり、デフォルト値を割り当てたり、セクションから削除したりできます。セクションの作成やセクションまたは項目の並び替えを行って支援エントリフォームのレイアウトを調整します。</label>
+        <label>セクションをクリックし、[フォーム項目 &amp; 項目バンドル] サイドバーで項目を選択してメイン画面の [フォーム項目 &amp; 項目バンドル] セクションに追加します。各項目で、項目表示ラベルの編集や、必須としてマーク、デフォルト値の割り当て、セクションからの削除を行うことができます。セクションを作成するか、セクションまたは項目を並び替えて、支援エントリフォームのレイアウトを調整してください。</label>
         <name>geBodyFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
@@ -3310,6 +3400,10 @@
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
+        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <name>geFieldsNotFoundMessage</name>
+    </customLabels>
+    <customLabels>
         <label>高度なフォーム項目</label>
         <name>geHeaderAdvancedFormFields</name>
     </customLabels>
@@ -3516,7 +3610,7 @@
     <customLabels>
         <label>支払の処理中に問題が発生しました。エラーを確認して、もう一度お試しください。または、
             カード支払を処理せずに、[カードに課金しない] を選択して支援を入力してください。{0} エラー:
-            /0x0A/ {1} </label>
+            /0x0A/ {1}</label>
         <name>gePaymentProcessError</name>
     </customLabels>
     <customLabels>
@@ -3924,8 +4018,8 @@
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>選択した場合、状態チェックでは、NPSP 設定に問題がないかどうかのみが確認されます。</label>	
-        <name>healthLabelDisableRecordBatchDescription</name>	
+        <label>選択した場合、状態チェックでは、NPSP 設定に問題がないかどうかのみが確認されます。組織に大量のレコードがあり、状態チェックがなかなか完了しない場合は、このオプションを選択してください。</label>
+        <name>healthLabelDisableRecordBatchDescription</name>
     </customLabels>
     <customLabels>
         <label>エラー通知受信者は有効です。</label>
@@ -5042,8 +5136,7 @@
             ● 絞り込みにより、手軽に特定のレコードやデータを除外する&lt;br/&gt;
             ● 2 年以上前のデータを積み上げ集計する&lt;br/&gt;
             &lt;br/&gt;
-            [NPSP 設定] | [商談] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にすれば、使用できます!
-        </label>
+            [NPSP 設定] | [商談] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にすれば、使用できます!</label>
         <name>stgCRLPInfoOnUDRBody</name>
     </customLabels>
     <customLabels>
@@ -5179,7 +5272,7 @@
         <label>&lt;b&gt;このメッセージは、このページから移動すると表示されなくなります。修正する必要のあるヘルプテキストの対応付けを追跡できるように、このページのスクリーンショットを撮るか、以下のテーブルの情報をコピーしてください。&lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            既存のヘルプテキストの対応付けの一部は無効であったため変換できませんでした。&lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;ヘルプテキストの対応付けの一般的な問題についての詳細を確認してください&lt;/a&gt;。高度な対応付けを無効にし、無効なヘルプテキストの対応付けを修正してから高度な対応付けを再度有効にすることをお勧めします。または、次の画面で高度な対応付けを設定するときにこれらの対応付けを追加することもできますが、高度な対応付けを無効にすると、これらの追加の対応付けは元の無効なヘルプテキストに戻ります。</label>
+            既存のヘルプテキストの対応付けの一部は無効であったため変換できませんでした。&lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;ヘルプテキストの対応付けの一般的な問題についての詳細を確認してください&lt;/a&gt;。高度な対応付けを無効にし、無効なヘルプテキストの対応付けを修正してから高度な対応付けを再度有効にすることをお勧めします。または、次の画面で高度な対応付けを設定するときにこれらの対応付けを追加することもできますが、高度な対応付けを無効にすると、これらの追加の対応付けは元の無効なヘルプテキストに戻ります。</label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
@@ -5322,23 +5415,17 @@
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label>
-            カスタマイズ可能な積み上げ集計のドキュメントの詳細は&lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;こちら&lt;/a&gt;。
-        </label>
+        <label>カスタマイズ可能な積み上げ集計のドキュメントの詳細は&lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;こちら&lt;/a&gt;。</label>
         <name>stgHelpCustomizableRollupsEnable1</name>
     </customLabels>
     <customLabels>
-        <label>
-            初めてカスタマイズ可能な積み上げ集計を有効にすると、既存の積み上げ集計と 87 個の事前定義済み NPSP 積み上げ集計が、カスタマイズ可能な積み上げ集計に自動的に変換されます。詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;こちらのドキュメント&lt;/a&gt;を参照してください。
+        <label>初めてカスタマイズ可能な積み上げ集計を有効にすると、既存の積み上げ集計と 87 個の事前定義済み NPSP 積み上げ集計が、カスタマイズ可能な積み上げ集計に自動的に変換されます。詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;こちらのドキュメント&lt;/a&gt;を参照してください。
             &lt;br/&gt;&lt;br/&gt;
-            無効にして従来の積み上げ集計に戻すこともできますが、新しい積み上げ集計や、カスタマイズ可能な積み上げ集計で実行した積み上げ集計および検索条件の変更は、従来の積み上げ集計設定に適用されません。
-        </label>
+            無効にして従来の積み上げ集計に戻すこともできますが、新しい積み上げ集計や、カスタマイズ可能な積み上げ集計で実行した積み上げ集計および検索条件の変更は、従来の積み上げ集計設定に適用されません。</label>
         <name>stgHelpCustomizableRollupsEnable2</name>
     </customLabels>
     <customLabels>
-        <label>
-            カスタマイズ可能な積み上げ集計の使用時に作成した新しい積み上げ集計、絞り込みグループ、絞り込みルールを削除し、すべての NPSP の従来の積み上げ集計をデフォルト動作にリセットします。
-        </label>
+        <label>カスタマイズ可能な積み上げ集計の使用時に作成した新しい積み上げ集計、絞り込みグループ、絞り込みルールを削除し、すべての NPSP の従来の積み上げ集計をデフォルト動作にリセットします。</label>
         <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
