@@ -851,6 +851,10 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Diese Funktionalität wird aktuell für wiederkehrende Spenden, die von Elevate-Zahlungsservices erstellt wurden, nicht unterstützt.</label>
+        <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
         <label>Wiederkehrende Spenden von Elevate-Zahlungsservices können in NPSP nicht geändert werden., außer durch den Benutzer der Elevate-Zahlungsserviceintegration.</label>
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
@@ -927,7 +931,7 @@
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <label>Wiederkehrende Spenden können nicht erstellt oder aktualisiert werden, da Sie die Aktivierung von Erweiterte wiederkehrende Spenden nicht abgeschlossen haben. Wechseln Sie zu &quot;NPSP-Einstellungen&quot; | &quot;Wiederkehrende Spenden&quot; | &quot;Upgrade auf Erweiterte wiederkehrende Spenden&quot;, und führen Sie alle Schritte zur Aktivierung aus.</label>
         <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
@@ -1137,6 +1141,10 @@
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
+        <label>Aufschub</label>
+        <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
         <label>Die Anzahl der geplanten Raten kann nicht kleiner als die Anzahl der gezahlten Raten sein.</label>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
     </customLabels>
@@ -1157,8 +1165,16 @@
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
+        <label>Sie können das folgende Feld/die folgenden Felder nicht aktualisieren, da für diese wiederkehrende Spende Aufschub vereinbart wurde: {0}. Wenn Sie die Felder aktualisieren möchten, müssen Sie den Aufschub deaktivieren.</label>
+        <name>RD2_PauseCannotExistOnScheduleChange</name>
+    </customLabels>
+    <customLabels>
         <label>Sie können eine geschlossene wiederkehrende Spende nicht aufschieben</label>
         <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Aufschub für {0} wurde entfernt.</label>
+        <name>RD2_PauseDeactivationSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>Wählen Sie die Raten in der Liste unten aus. Sie können Raten bis zu 12 aufeinander folgende Raten lang aufschieben.</label>
@@ -1171,6 +1187,26 @@
     <customLabels>
         <label>{0} aufschieben</label>
         <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie verfügen nicht über die erforderlichen Berechtigungen, um einen Aufschub für eine wiederkehrende Spende zu aktivieren. Bitten Sie Ihren Systemadministrator um Hilfe.</label>
+        <name>RD2_PausePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Aufschub für {0} wurde gespeichert.</label>
+        <name>RD2_PauseSaveSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie haben {0} Raten ausgewählt.</label>
+        <name>RD2_PauseSelectedInstallmentTextPlural</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie haben 1 Rate ausgewählt.</label>
+        <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>Grund für Aufschub</label>
+        <name>RD2_PausedReasonLabel</name>
     </customLabels>
     <customLabels>
         <label>Enddatum des Zeitplans</label>
@@ -1663,6 +1699,22 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
+        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <name>bdeRetirementBlockerHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <name>bdeRetirementBlockerMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie die Schenkungseingabe vor dem 1. Oktober. Weitere Informationen zur Schenkungseingabe finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt; auf dem Power of Us-Hub.</label>
+        <name>bdeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Einstellung der Batch-Dateneingabe</label>
+        <name>bdeRetirementWarningHeader</name>
+    </customLabels>
+    <customLabels>
         <label>Das Feld {0} für die Einstellung der benutzerdefinierten eindeutigen Kennung des Accounts muss mit Feldern im NPSP-Datenimportobjekt übereinstimmen, deren API-Namen {1} und {2} lauten.</label>
         <name>bdiAccountCustomIdError</name>
     </customLabels>
@@ -1803,7 +1855,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
-        <label>Wenn der Spendenabgleich aktiviert ist, müssen Sie mindestens ein Feld in der Spendenabgleichsregel auswählen.</label>
+        <label>Wenn Spendenverdopplung aktiviert ist, müssen Sie mindestens ein Feld in der Spendenverdopplungsregel auswählen.</label>
         <name>bdiDonationMatchingRuleEmpty</name>
     </customLabels>
     <customLabels>
@@ -2033,7 +2085,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiInvalidBatchId</name>
     </customLabels>
     <customLabels>
-        <label>{0} ist ein ungültiges Spendenabgleichsverhalten.</label>
+        <label>{0} ist ein ungültiges Spendenverdopplungsverhalten.</label>
         <name>bdiInvalidDonationMatchingBehavior</name>
     </customLabels>
     <customLabels>
@@ -2121,6 +2173,18 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Fehler: Es gibt keine gültigen Felder auf der Grundlage Ihrer Auswahl in &quot;Objektname&quot;, &quot;Ist über-/untergeordnet&quot; und &quot;Of This Mapping Group&quot; (Mitglied dieser Zuordnungsgruppe)</label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
+    </customLabels>
+    <customLabels>
+        <label>Feldzuordnungen überprüfen</label>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Es besteht ein Problem mit den unten aufgeführten Feldzuordnungen.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+    </customLabels>
+    <customLabels>
+        <label>Vergewissern Sie sich, dass die NPSP-Datenimport- und Zielfelder noch vorhanden sind, und bearbeiten oder löschen Sie die Feldzuordnung.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
     </customLabels>
     <customLabels>
         <label>Der Name dieser Objektgruppe. Eine gängige Benennungskonvention ist [Objektname] Gruppe.</label>
@@ -2228,7 +2292,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiSettingsSectionContactMatching</name>
     </customLabels>
     <customLabels>
-        <label>Spendenabgleich</label>
+        <label>Spendenverdopplung</label>
         <name>bdiSettingsSectionDonationMatching</name>
     </customLabels>
     <customLabels>
@@ -2280,7 +2344,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeBatchDonationMatchingBehaviorHelp</name>
     </customLabels>
     <customLabels>
-        <label>Der Entwicklername einer Apex-Klasse, der die BDI_IMatching-Oberfläche für Spenden implementiert. Keine Eingaben machen und NPSP den Abgleich vornehmen lassen.</label>
+        <label>Der Entwicklername einer Apex-Klasse, die die BDI_IMatching-Schnittstelle für Spenden implementiert. Ohne Angabe nimmt NPSP die Verdopplung vor.</label>
         <name>bgeBatchDonationMatchingClassHelp</name>
     </customLabels>
     <customLabels>
@@ -2364,7 +2428,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeEditBatchFieldSelectionWarning</name>
     </customLabels>
     <customLabels>
-        <label>WARNUNG: In diesem Batch wurden Datensätze gespeichert. Änderungen, die Sie vornehmen, haben keine Auswirkung auf vorhandene Datensätze. Wir werden nur versuchen, vorhandene Datensätze mithilfe aktualisierter Spendenabgleichs-Regeleinstellungen abzugleichen, wenn diese Datensätze bearbeitet werden.</label>
+        <label>WARNUNG: In diesem Batch wurden Datensätze gespeichert. Änderungen, die Sie vornehmen, haben keine Auswirkung auf vorhandene Datensätze. Wir werden nur versuchen, vorhandene Datensätze mithilfe aktualisierter Spendenverdopplungs-Regeleinstellungen abzugleichen, wenn diese Datensätze bearbeitet werden.</label>
         <name>bgeEditBatchOptionsWarning</name>
     </customLabels>
     <customLabels>
@@ -2592,7 +2656,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonClone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <label>In der Apex-Klasse {0} wird bereits ein Auftrag ausgeführt. Der Auftrag muss abgeschlossen werden, bevor er erneut ausgeführt werden kann.</label>
         <name>commonConcurrentBatchError</name>
     </customLabels>
     <customLabels>
@@ -2628,12 +2692,24 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
+        <label><!-- Field not found --></label>
+        <name>commonFieldNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fields Not Found --></label>
+        <name>commonFieldsNotFound</name>
+    </customLabels>
+    <customLabels>
         <label>Zuweisungen zum Verwendungszweck</label>
         <name>commonGauAllocations</name>
     </customLabels>
     <customLabels>
         <label>Allgemeine Account-Einheit</label>
         <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>Unzureichende Berechtigungen</label>
+        <name>commonInsufficientPermissions</name>
     </customLabels>
     <customLabels>
         <label>Der Schlüssel muss einen Wert enthalten und das base64-Format verwenden.</label>
@@ -2666,6 +2742,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Keine anzuzeigenden Elemente.</label>
         <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Okay</label>
+        <name>commonOkay</name>
     </customLabels>
     <customLabels>
         <label>Offen</label>
@@ -2702,6 +2782,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Speichern und schließen</label>
         <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>Option auswählen</label>
+        <name>commonSelectOptionPlaceholder</name>
     </customLabels>
     <customLabels>
         <label>Vorlage</label>
@@ -2904,6 +2988,14 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geAssistiveBatchHeaderRemoveField</name>
     </customLabels>
     <customLabels>
+        <label>{0} ist als optional markiert.</label>
+        <name>geAssistiveDescriptionFieldOptional</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} ist als erforderlich markiert.</label>
+        <name>geAssistiveDescriptionFieldRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Das Feld &quot;{0}&quot; nach unten verschieben.</label>
         <name>geAssistiveFieldDown</name>
     </customLabels>
@@ -2934,6 +3026,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Ausgewählte Option entfernen</label>
         <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} vorschreiben.</label>
+        <name>geAssistiveRequireField</name>
     </customLabels>
     <customLabels>
         <label>Den Abschnitt &quot;{0}&quot; nach unten verschieben.</label>
@@ -3024,7 +3120,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>Wählen Sie Felder aus, die Sie in Ihr Formular aufnehmen möchten. Klicken Sie vor dem Hinzufügen von Feldern auf den Abschnitt auf dem Hauptbildschirm, dem Sie die Felder hinzufügen möchten. Aktivieren Sie auf der Seitenleiste das Kontrollkästchen, um ein Feld hinzuzufügen, und deaktivieren Sie es, um das Feld zu entfernen. Wenn das Objekt oder Feld, das Sie verwenden möchten, nicht aufgeführt ist, vergewissern Sie sich, dass Sie das Feld mit &quot;Erweiterte Zuordnung&quot; eingerichtet haben.</label>
+        <label>Wählen Sie Felder aus, die Sie in Ihr Formular aufnehmen möchten. Klicken Sie vor dem Hinzufügen von Feldern auf den Abschnitt auf dem Hauptbildschirm &quot;Formularfelder konfigurieren&quot;, dem Sie die Felder hinzufügen möchten. Aktivieren Sie auf der Seitenleiste &quot;Formularfelder und Feldpakete&quot; das Kontrollkästchen, um ein Feld hinzuzufügen, und deaktivieren Sie es, um das Feld zu entfernen. Wenn das Objekt oder Feld, das Sie verwenden möchten, nicht aufgeführt ist, vergewissern Sie sich, dass Sie das Feld mit &quot;Erweiterte Zuordnung&quot; eingerichtet haben.</label>
         <name>geBodyFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3045,7 +3141,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBodyFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
-        <label>Klicken Sie auf einen Abschnitt, und wählen Sie dann ein Feld in der Seitenleiste aus, um es dem Abschnitt auf dem Hauptbildschirm hinzuzufügen. Für jedes Feld können Sie die Feldbezeichnung bearbeiten, es als erforderlich kennzeichnen, einen Standardwert zuweisen oder es aus dem Abschnitt entfernen. Passen Sie das Layout des Schenkungseintragsformulars an, indem Sie Abschnitte erstellen oder Abschnitte oder Felder neu anordnen.</label>
+        <label>Wählen Sie einen Abschnitt und dann ein Feld in der Seitenleiste &quot;Formularfelder und Feldpakete&quot; aus, um es diesem Abschnitt auf dem Hauptbildschirm &quot;Formularfelder konfigurieren&quot; hinzuzufügen. Für jedes Feld können Sie die Feldbezeichnung bearbeiten, es als erforderlich kennzeichnen, einen Standardwert zuweisen oder es aus dem Abschnitt entfernen. Passen Sie das Layout des Schenkungseintragsformulars an, indem Sie Abschnitte erstellen oder Abschnitte oder Felder neu anordnen.</label>
         <name>geBodyFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
@@ -3309,6 +3405,10 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
+        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <name>geFieldsNotFoundMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Erweiterte Formularfelder</label>
         <name>geHeaderAdvancedFormFields</name>
     </customLabels>
@@ -3531,7 +3631,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>geSearchPlaceholder</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to select batch table columns --></label>
+        <label>Spalten der Batchtabelle auswählen</label>
         <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3923,7 +4023,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>Wenn sie aktiviert ist, prüft die Statusprüfung lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme.</label>
+        <label>Wenn dies aktiviert ist, prüfen die Statusüberprüfungen lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme. Aktivieren Sie diese Option, wenn Ihre Organisation große Datensatzmengen verarbeitet und Probleme beim Abschluss der Statusüberprüfungen auftreten.</label>
         <name>healthLabelDisableRecordBatchDescription</name>
     </customLabels>
     <customLabels>
@@ -4543,7 +4643,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>mtchCloseDateStart</name>
     </customLabels>
     <customLabels>
-        <label>Übereinstimmende Schenkungen suchen</label>
+        <label>Verdoppelte Spenden suchen</label>
         <name>mtchFindMatchedGiftsSectionHeader</name>
     </customLabels>
     <customLabels>
@@ -4567,7 +4667,7 @@ Wenn Sie es vorziehen, können Sie &quot;Schenkungseingabe&quot; deaktivieren un
         <name>mtchSelectCbxTitle</name>
     </customLabels>
     <customLabels>
-        <label>Übereinstimmende Schenkungen gesamt</label>
+        <label>Verdoppelte Spende gesamt</label>
         <name>mtchTotalMatchingGift</name>
     </customLabels>
     <customLabels>
@@ -5178,7 +5278,7 @@ Indem Sie &quot;NPSP-Standardaufträge n. automat. planen&quot; auswählen, teil
         <label>&lt;b&gt;Diese Nachricht wird nicht mehr angezeigt, wenn Sie diese Seite verlassen! Erstellen Sie einen Screenshot dieser Seite, oder kopieren Sie die Informationen in der Tabelle unten, um die Hilfetext-Zuordnungen nachzuverfolgen, die Sie korrigieren müssen. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Wir konnten einige Ihrer bestehenden Hilfetext-Zuordnungen nicht konvertieren, da sie ungültig sind. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Weitere Informationen zu allgemeinen Problemen bei der Hilfetext-Zuordnung&lt;/a&gt;. Wir empfehlen, die Erweiterte Zuordnung zu deaktivieren, die ungültigen Hilfetext-Zuordnungen zu korrigieren und die Erweiterte Zuordnung anschließend wieder zu aktivieren. Alternativ können Sie diese Zuordnungen hinzufügen, wenn Sie die Erweiterte Zuordnung auf der nächsten Seite konfigurieren, diese zusätzlichen Zuordnungen werden aber auf den ursprünglichen ungültigen Hilfetext zurückgesetzt, wenn Sie die Erweiterte Zuordnung deaktivieren.</label>
+            Wir konnten einige Ihrer bestehenden Hilfetext-Zuordnungen nicht konvertieren, da sie ungültig sind. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Weitere Informationen zu allgemeinen Problemen bei der Hilfetext-Zuordnung&lt;/a&gt;. Wir empfehlen, die Erweiterte Zuordnung zu deaktivieren, die ungültigen Hilfetext-Zuordnungen zu korrigieren und die Erweiterte Zuordnung anschließend wieder zu aktivieren. Alternativ können Sie diese Zuordnungen hinzufügen, wenn Sie die Erweiterte Zuordnung auf der nächsten Seite konfigurieren, diese zusätzlichen Zuordnungen werden aber auf den ursprünglichen ungültigen Hilfetext zurückgesetzt, wenn Sie die Erweiterte Zuordnung deaktivieren.</label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
@@ -5487,7 +5587,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
         <name>stgHelpNoUDR</name>
     </customLabels>
     <customLabels>
-        <label>Zwischen Soft Credits, Kontaktrollen und übereinstimmende Schenkungen bestehen wichtige Beziehungen. Wenn Sie mit diesen Konzepten und der Art und Weise, in der sie interagieren, nicht vertraut sind, lesen Sie die&lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;, bevor Sie diese Einstellungen ändern.</label>
+        <label>Zwischen Soft Credits, Kontaktrollen und Spendenverdopplung bestehen wichtige Beziehungen. Wenn Sie mit diesen Konzepten und der Art und Weise, in der sie interagieren, nicht vertraut sind, lesen Sie die&lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;, bevor Sie diese Einstellungen ändern.</label>
         <name>stgHelpOCR</name>
     </customLabels>
     <customLabels>
