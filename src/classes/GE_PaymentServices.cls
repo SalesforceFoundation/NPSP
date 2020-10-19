@@ -101,7 +101,7 @@ public with sharing class GE_PaymentServices {
     }
 
     public String getMerchantIds() {
-        return config.get(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS);
+        return configService.getMerchantIds();
     }
 
     /**
