@@ -194,6 +194,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Establezca cuándo el registro de programación representa el intervalo de fechas en pausa de Donación recurrente</help>
+        <label>Es Pausa</label>
+        <name>IsPause__c</name>
+    </fields>
+    <fields>
         <help>La forma de pago para esta Donación recurrente. NPSP copia automáticamente el valor seleccionado con cada registro de Pago relacionado.</help>
         <label>Método de pago</label>
         <name>PaymentMethod__c</name>
@@ -220,6 +225,11 @@
         <help>La fecha efectiva para este registro de programación.</help>
         <label>Fecha efectiva</label>
         <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <help>Contiene detalles adicionales para la programación. Por ejemplo, un motivo de la pausa para una programación en pausa.</help>
+        <label>Motivo de estado</label>
+        <name>StatusReason__c</name>
     </fields>
     <gender>Feminine</gender>
     <layouts>

@@ -190,6 +190,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>スケジュールレコードが継続支援の一時停止の日付範囲を示す場合に設定します</help>
+        <label>一時停止</label>
+        <name>IsPause__c</name>
+    </fields>
+    <fields>
         <help>この継続支援の支払のフォーム。NPSP は選択した値を関連する各支払レコードに自動的にコピーします。</help>
         <label>支払方法</label>
         <name>PaymentMethod__c</name>
@@ -216,6 +221,11 @@
         <help>このスケジュールレコードの発効日。</help>
         <label>発効日</label>
         <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <help>一時停止されたスケジュールの一時停止の理由など、スケジュールに関する追加の詳細が含まれます。</help>
+        <label>状況の理由</label>
+        <name>StatusReason__c</name>
     </fields>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
