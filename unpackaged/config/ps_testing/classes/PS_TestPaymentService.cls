@@ -36,13 +36,28 @@
 */
 public with sharing class PS_TestPaymentService {
 
-    private static final String BASE_PURCHASE_CALL_BODY = '{"amount":25,"email":"test@test.test","firstName":"John","lastName":"Doe","metadata":{},';
-    private static final String TOKEN_FIELD_NAME = 'token';
-    private static final String STATUS_FIELD_NAME = 'status';
+    private static final String BASE_PURCHASE_CALL_BODY = '{"amount":2500,"email":"test@test.test","firstName":"John","lastName":"Doe","metadata":{},';
     private static final String STATUS_FIELD_SUCCESS = 'CAPTURED';
+    
+    private static PS_IntegrationServiceConfig.Service configService {
+        get {
+            if (configService == null) {
+                configService = new PS_IntegrationServiceConfig.Service();
+            }
+            return configService;
+        }
+        set;
+    }
 
-    // TODO: use Org id 
-    private static final String PRODUCT_ID = '00D6g0000000000EAA';
+    private static UTIL_Http.RequestService requestService {
+        get {
+            if (requestService == null) {
+                requestService = new UTIL_Http.RequestService();
+            }
+            return requestService;
+        }
+        set;
+    }
 
     /**
      * @description method for testing the end to end payment processing
@@ -52,21 +67,16 @@ public with sharing class PS_TestPaymentService {
         Boolean success = true;
 
         try {
-            GE_PaymentServices paymentServices = new GE_PaymentServices();
-
-            // build the url for tokenize
-            String tokenizeEndpoint = paymentServices.getEndpointRoot() + 
-                        paymentServices.getEndpoint(GE_PaymentServices.ElevateEndpoints.TOKENIZE);
-
             // tokenize the card
-            HttpResponse tokenHttpResponse = makeTokenizeCall(tokenizeEndpoint);
-            String token = getToken(tokenHttpResponse);
+            UTIL_Http.Response tokenResponse = makeTokenizeCall();
+            String token = getToken(tokenResponse);
 
             // purchase
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
             String requestBodyParameters = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + token + '"}';
-            paymentServices.setPurchaseCallBody(requestBodyParameters);
-            GE_PaymentServices.ResponseWrapper purchaseResponse = paymentServices.createTransaction();
-            checkPurchaseStatus(purchaseResponse);
+            UTIL_Http.Response response = paymentServices.createTransaction(requestBodyParameters);
+
+            checkPurchaseStatus(response);
             
             System.debug('Payment Service Flow successful.');
         } catch(Exception ex) {
@@ -79,26 +89,24 @@ public with sharing class PS_TestPaymentService {
 
     /**
      * @description: submit the tokenize request
-     * @return HttpResponse: the response from the tokenize request
-     * @param String: the endpoint for tokenize
+     * @return UTIL_Http.Response: the response from the tokenize request
      */ 
-    private static HttpResponse makeTokenizeCall(String endpoint) {
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(endpoint);
-        request.setMethod('POST');
-        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader('productid', PRODUCT_ID);
-
-        // set the request body
-        request.setBody('{"cardNumber": "4111111111111111",' +
+    private static UTIL_Http.Response makeTokenizeCall() {
+        String jsonRequestBody = '{"cardNumber": "4111111111111111",' +
             '"nameOnCard": "John Doe",' +
             '"expMonth": "' + String.valueOf(Date.today().month()) + '",' +
             '"expYear": "' + String.valueOf(Date.today().year() + 1) + '",' +
             '"cvc": "123",' +
-            '"gatewayType": "CONFIGURED"' + '}');
-
-        HttpResponse response = http.send(request);
+            '"gatewayId": "' + configService.getGatewayIds() + '",' +
+            '"gatewayType": "CONFIGURED"' + '}';
+        
+        HttpRequest request = new PS_Request.Builder()
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_Request.ElevateEndpoint.TOKENIZE)
+            .withBody(jsonRequestBody)
+            .build();
+        
+        UTIL_Http.Response response = requestService.sendRequest(request);
         return response;
     }
 
@@ -107,46 +115,45 @@ public with sharing class PS_TestPaymentService {
      * @return String: the token
      * @param HttpResponse: the response
      */ 
-    private static String getToken(HttpResponse response) {
-        if (response.getStatusCode() != 201) {
-            // failed
-            String status = JSON.serialize(response.getStatus());
-            System.assert(false, 'Failed to tokenize card. ' + status);
-        } else {
-            // success
-            JSONParser parser = JSON.createParser(response.getBody());
-            while (parser.nextToken() != null) {
-                if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && (parser.getText() == TOKEN_FIELD_NAME)) {
-                    // read the token
-                    parser.nextToken();
-                    String token = parser.getText();
-                    return token;
-                }
-            } 
-        }
-        return '';
+    private static String getToken(UTIL_Http.Response response) {
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 
+            'The tokenize card callout failed: ' + response.getErrorMessages());
+
+        TokenResponseBody tokenData = (TokenResponseBody) JSON.deserialize(response.body, TokenResponseBody.class);  
+            
+        return tokenData.token;
     }
 
     /**
      * @description: check the purchase status
-     * @param GE_PaymentServices.ResponseWrapper response
+     * @param UTIL_Http.Response response
      */ 
-    private static void checkPurchaseStatus(GE_PaymentServices.ResponseWrapper response) {
-        // check the request status
-        System.assertEquals(201, response.statusCode, 'Purchase failed. ' + response.status);
+    private static void checkPurchaseStatus(UTIL_Http.Response response) {
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 
+            'The purchase callout failed: ' + response.getErrorMessages());
+        
+        PurchaseResponseBody purchaseData = (PurchaseResponseBody) JSON.deserialize(response.body, PurchaseResponseBody.class);  
 
-        // check the body
-        String body = response.body;
-        JSONParser parser = JSON.createParser(response.body);
-        while (parser.nextToken() != null) {
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && (parser.getText() == STATUS_FIELD_NAME)) {
-                // read the status
-                parser.nextToken();
-                String status = parser.getText();
-                System.assertEquals(STATUS_FIELD_SUCCESS, status, 'Purchase failed. ' + status);
-                break;
-            }
-        } 
+        System.assertEquals(STATUS_FIELD_SUCCESS, purchaseData.status, 'The purchase status should match');
+    }
+    
+    /**
+     * @description Contains Elevate token data in the response body
+     */
+    public class TokenResponseBody {
+        public String addressPostalCodeCheck;
+        public String cvcCheck;
+        public String addressLine1Check;
+        public String token;
+    }
+
+    /**
+     * @description Contains Elevate one-time payment (purchase) data in the response body
+     */
+    public class PurchaseResponseBody {
+        public String status;
+        public String commitmentId;
+        public String type;
     }
     
 }
