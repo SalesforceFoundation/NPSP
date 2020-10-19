@@ -194,6 +194,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Définissez quand l&apos;enregistrement de la planification représente une plage de date d&apos;interruption du Don récurrent</help>
+        <label>Interrompu</label>
+        <name>IsPause__c</name>
+    </fields>
+    <fields>
         <help>Le mode de paiement pour ce don récurrent. NPSP copie automatiquement la valeur sélectionnée dans chaque enregistrement de Paiement.</help>
         <label>Mode de paiement</label>
         <name>PaymentMethod__c</name>
@@ -220,6 +225,11 @@
         <help>La date à laquelle l&apos;enregistrement de ce calendrier s&apos;applique.</help>
         <label>Date de début</label>
         <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <help>Contient des détails supplémentaires sur la planification, par exemple un motif d&apos;interruption pour une planification interrompue.</help>
+        <label>Motif du statut</label>
+        <name>StatusReason__c</name>
     </fields>
     <gender>Masculine</gender>
     <layouts>
