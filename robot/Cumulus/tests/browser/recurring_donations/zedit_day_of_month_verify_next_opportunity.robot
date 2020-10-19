@@ -6,6 +6,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
+Library         Collections
 Suite Setup     Run keywords
 ...             Enable RD2
 ...             Open Test Browser
@@ -41,6 +42,7 @@ Validate Opportunity Details
        ...                     opportunity and validate stage and Close date fields
        [Arguments]                       ${opportunityid}          ${stage}        ${date}
        Go To Page                              Details                        Opportunity                    object_id=${opportunityid}
+       Current Page Should be                  Details                        Opportunity
        Navigate To And Validate Field Value    Stage                          contains                      ${stage}
        Navigate To And Validate Field Value    Close Date                     contains                      ${date}
 
@@ -77,7 +79,8 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
     Validate Related Record Count      Opportunities                                    1
     @{opportunities} =                 API Query Opportunity For Recurring Donation     ${data}[contact_rd][Id]
-    Edit Opportunity Stage             ${opportunities}[0][Id]                          Closed Won
+
+    Edit Opportunity Stage             ${opportunities}[0][Id]                               Closed Won
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
@@ -87,12 +90,10 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
+    Reload Page
     Wait Until Loading Is Complete
-    ${next_payment_date}               get next payment date number                    1
 
     #Validate that the number of opportunities now show as 2 .
     Validate Related Record Count      Opportunities                                   2
-    @{opportunity} =                   API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
-    #Verify the details on the respective opportunities
-    Validate Opportunity Details       ${opportunity}[0][Id]        Closed Won                       ${CURRENT_DATE}
-    Validate Opportunity Details       ${opportunity}[1][Id]        Pledged                          ${next_payment_date}
+    #Verify the details on the closed opportunity is not changed
+    Validate Opportunity Details       ${opportunities}[0][Id]           Closed Won                       ${CURRENT_DATE}

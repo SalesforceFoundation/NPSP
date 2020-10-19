@@ -3837,6 +3837,7 @@
         <members>gsAdminSetup</members>
         <members>gsChecklist</members>
         <members>gsChecklistIcon</members>
+        <members>gsVideoHeader</members>
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
