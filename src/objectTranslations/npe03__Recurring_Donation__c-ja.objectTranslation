@@ -178,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>NPSP 設定の [割賦商談の自動作成] の設定に関わらず、新規継続支援に初回の割賦商談が作成されないようにします。</help>
+        <label>初回の割賦を無効化</label>
+        <name>DisableFirstInstallment__c</name>
+    </fields>
+    <fields>
         <help>この日付以降、NPSP はこの継続支援の割賦を作成しなくなり、[状況] を [クローズ] に更新します。</help>
         <label>終了日</label>
         <name>EndDate__c</name>
@@ -251,6 +256,10 @@
     <quickActions>
         <label>新規商談</label>
         <name>New_Opportunity</name>
+    </quickActions>
+    <quickActions>
+        <label>一時停止</label>
+        <name>Pause</name>
     </quickActions>
     <quickActions>
         <label>クイック更新</label>

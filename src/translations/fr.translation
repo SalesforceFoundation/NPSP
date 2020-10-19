@@ -852,6 +852,10 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Actuellement, cette fonctionnalité n&apos;est pas prise en charge pour des Dons récurrents générés à partir des Services de paiement Elevate.</label>
+        <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
         <label>Les Dons récurrents des Services de paiement Elevate ne peuvent pas être modifiés dans NPSP, sauf par l’utilisateur de l’intégration des Services de paiement Elevate.</label>
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
@@ -1138,6 +1142,10 @@
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
+        <label>Interrompu</label>
+        <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
         <label>Le Nombre de versements prévus ne peut pas être inférieur au Nombre de versements payés.</label>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
     </customLabels>
@@ -1158,8 +1166,16 @@
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
+        <label>Vous ne pouvez pas mettre à jour le ou les champs suivants, car ce Don récurrent est interrompu : {0}. Si vous souhaitez mettre ce ou ces champs à jour, vous devez désactiver l&apos;interruption.</label>
+        <name>RD2_PauseCannotExistOnScheduleChange</name>
+    </customLabels>
+    <customLabels>
         <label>Vous ne pouvez pas suspendre un Don récurrent clôturé</label>
         <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>L&apos;interruption {0} a été retirée.</label>
+        <name>RD2_PauseDeactivationSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>Sélectionnez les versements dans la liste ci-dessous. Vous pouvez suspendre jusqu’à 12 versements consécutifs.</label>
@@ -1172,6 +1188,26 @@
     <customLabels>
         <label>Suspendre {0}</label>
         <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous ne disposez pas des autorisations requises pour interrompre un Don récurrent. Contactez votre administrateur système pour obtenir de l’aide.</label>
+        <name>RD2_PausePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>L&apos;interruption {0} a été enregistrée.</label>
+        <name>RD2_PauseSaveSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez sélectionné {0} versements.</label>
+        <name>RD2_PauseSelectedInstallmentTextPlural</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez sélectionné 1 versement.</label>
+        <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>Motif de l&apos;interruption</label>
+        <name>RD2_PausedReasonLabel</name>
     </customLabels>
     <customLabels>
         <label>Date de fin du calendrier</label>
@@ -1226,9 +1262,9 @@
         <name>RD2_StatusMappingColumnStatusAPIName</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;Définitions de l’état&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : les dons sont réguliers. NPSP crée des Opportunités de versement selon le calendrier de Dons récurrents.&lt;/li&gt;
+        <label>&lt;b&gt;Définitions de l’état&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Actif : les dons sont réguliers. NPSP crée des Opportunités de versement tel que défini par le calendrier de Dons récurrents.&lt;/li&gt;
 &lt;li&gt;Échelonné : les dons ne sont pas reçus comme prévu, mais NPSP crée toujours des Opportunités de versement selon le calendrier de Dons récurrents.&lt;/li&gt;
-&lt;li&gt;Clôturé : les dons récurrents ont été arrêtés. NPSP ne crée pas d&apos;autre Opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Clôturé : les dons récurrents ont été arrêtés. NPSP ne crée aucune nouvelle Opportunité de versement.&lt;/li&gt;&lt;/ul&gt;</label>
         <name>RD2_StatusMappingDefinitions</name>
     </customLabels>
     <customLabels>
@@ -1662,6 +1698,22 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>non alloué</label>
         <name>alloUnallocated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <name>bdeRetirementBlockerHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <name>bdeRetirementBlockerMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>La Saisie de données par lots sera retirée 1er octobre 2020 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la Saisie de données par lots. Pour garantir une transition transparente, activez et utilisez la Saisie de dons avant le 1er octobre. Pour plus d&apos;informations sur la Saisie de dons, consultez la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentation NPSP&lt;/a&gt; sur la plate-forme Power of Us.</label>
+        <name>bdeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Retrait de la Saisie de données par lots</label>
+        <name>bdeRetirementWarningHeader</name>
     </customLabels>
     <customLabels>
         <label>Le champ de paramètre d’ID unique personnalisé de compte {0} doit avoir des champs correspondants dans l’objet d’importation de données NPSP dont les noms d’API sont {1} et {2}.</label>
@@ -2122,6 +2174,18 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>Erreur : Aucun champ valide n&apos;existe basé sur votre sélection dans « Nom de l&apos;objet », « Est enfant/parent » et « De ce groupe de mappages ».</label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifier les mappages de champs</label>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Un problème est survenu avec les mappages de champ répertoriés ci-dessous.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+    </customLabels>
+    <customLabels>
+        <label>Assurez-vous que l’importation de données NPSP et les champs cibles existent encore et modifiez ou supprimez le mappage de champs.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
     </customLabels>
     <customLabels>
         <label>Le nom de ce Groupe d&apos;objets. Une convention de nommage courante est Groupe [nom de l&apos;objet].</label>
@@ -2594,7 +2658,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>commonClone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <label>Une tâche est déjà en cours dans la classe Apex {0}. La tâche doit être terminée avant d&apos;être réexécutée.</label>
         <name>commonConcurrentBatchError</name>
     </customLabels>
     <customLabels>
@@ -2630,12 +2694,24 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
+        <label><!-- Field not found --></label>
+        <name>commonFieldNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fields Not Found --></label>
+        <name>commonFieldsNotFound</name>
+    </customLabels>
+    <customLabels>
         <label>Allocations UCG</label>
         <name>commonGauAllocations</name>
     </customLabels>
     <customLabels>
         <label>Unité comptable générale</label>
         <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>Autorisations insuffisantes</label>
+        <name>commonInsufficientPermissions</name>
     </customLabels>
     <customLabels>
         <label>La clé doit contenir une valeur et utiliser le format base64.</label>
@@ -2668,6 +2744,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>Aucun élément à afficher.</label>
         <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>OK</label>
+        <name>commonOkay</name>
     </customLabels>
     <customLabels>
         <label>Ouvert</label>
@@ -2704,6 +2784,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>Enregistrer &amp; Fermer</label>
         <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionner une option</label>
+        <name>commonSelectOptionPlaceholder</name>
     </customLabels>
     <customLabels>
         <label>Modèle</label>
@@ -2906,6 +2990,14 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>geAssistiveBatchHeaderRemoveField</name>
     </customLabels>
     <customLabels>
+        <label>{0} est marqué facultatif.</label>
+        <name>geAssistiveDescriptionFieldOptional</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} est marqué obligatoire.</label>
+        <name>geAssistiveDescriptionFieldRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Déplacez le champ {0} vers le bas.</label>
         <name>geAssistiveFieldDown</name>
     </customLabels>
@@ -2936,6 +3028,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <label>Retirez l&apos;option sélectionnée</label>
         <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>Nécessite {0}.</label>
+        <name>geAssistiveRequireField</name>
     </customLabels>
     <customLabels>
         <label>Déplacez la section {0} vers le bas.</label>
@@ -3026,7 +3122,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>Choisissez les champs à inclure dans votre formulaire. Avant d&apos;ajouter des champs, cliquez sur la section de l&apos;écran principal à laquelle les champs sont destinés. Dans le menu latéral, cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si l&apos;objet ou le champ que vous souhaitez utiliser n&apos;est pas répertorié, assurez-vous qu&apos;il est configuré dans Mappage avancé.</label>
+        <label>Choisissez les champs à inclure dans votre formulaire. Avant d&apos;ajouter des champs, cliquez sur la section de l&apos;écran principal Configurer les champs du formulaire à laquelle les champs sont destinés. Dans le menu latéral Champs de formulaire et paquets de champs, cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si l&apos;objet ou le champ que vous souhaitez utiliser n&apos;est pas répertorié, assurez-vous qu&apos;il est configuré dans Mappage avancé.</label>
         <name>geBodyFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3047,7 +3143,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>geBodyFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
-        <label>Cliquez sur une section, puis sélectionnez un champ dans le menu latéral pour l&apos;ajouter à la section dans l&apos;écran principal. Vous pouvez modifier l&apos;étiquette de chaque champ, le marquer comme obligatoire, lui attribuer une valeur par défaut ou le retirer de la section. Ajustez la présentation du formulaire de saisie de dons en créant des sections et en réorganisant les sections ou les champs.</label>
+        <label>Sélectionnez une section, puis sélectionnez un champ dans le menu latéral Champs de formulaire et paquets de champs pour l&apos;ajouter à cette section dans l&apos;écran principal Configurer les champs du formulaire. Vous pouvez modifier l&apos;étiquette de chaque champ, le marquer comme obligatoire, lui attribuer une valeur par défaut ou le retirer de la section. Ajustez la présentation du formulaire de Saisie de dons en créant des sections et en réorganisant les sections ou les champs.</label>
         <name>geBodyFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
@@ -3239,7 +3335,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geErrorExistingTemplateName</name>
     </customLabels>
     <customLabels>
-        <label>Vous ne pouvez pas modifier vos Colonnes du tableau du lot.</label>
+        <label>Vous ne pouvez pas modifier les colonnes du tableau du lot.</label>
         <name>geErrorFLSBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3311,6 +3407,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
+        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <name>geFieldsNotFoundMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Champs du formulaire avancé</label>
         <name>geHeaderAdvancedFormFields</name>
     </customLabels>
@@ -3355,7 +3455,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geHeaderFormFieldsDefaultSectionName</name>
     </customLabels>
     <customLabels>
-        <label>Champs du formulaire et paquets de champs</label>
+        <label>Champs de formulaire et paquets de champs</label>
         <name>geHeaderFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3533,7 +3633,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geSearchPlaceholder</name>
     </customLabels>
     <customLabels>
-        <label>Sélectionner des colonnes du tableau du lot</label>
+        <label>Sélectionner les colonnes du tableau du lot</label>
         <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3925,8 +4025,8 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>Si cette option est sélectionnée, le Contrôle d&apos;intégrité vérifie uniquement vos paramètres de configuration NPSP pour détecter les problèmes.</label>	
-        <name>healthLabelDisableRecordBatchDescription</name>	
+        <label>Si cette option est sélectionnée, le Contrôle d&apos;intégrité vérifie uniquement vos paramètres de configuration NPSP pour détecter les problèmes. Sélectionnez cette option si votre organisation contient un nombre important d&apos;enregistrements et si le Contrôle d&apos;intégrité rencontre des problèmes d&apos;exécution.</label>
+        <name>healthLabelDisableRecordBatchDescription</name>
     </customLabels>
     <customLabels>
         <label>Le destinataire de notification d’erreur est valide.</label>
@@ -5177,10 +5277,12 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
         <name>stgHelpAdvancedMapping3</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;Ce message ne sera pas affiché si vous quittez la page ! Prenez une capture d&apos;écran de cette page ou copiez les informations du tableau ci-dessous pour suivre les mappages Texte d&apos;aide que vous devez corriger. &lt;/b&gt;
+        <label>
+            &lt;b&gt;Ce message ne sera pas affiché si vous quittez la page ! Prenez une capture d&apos;écran de cette page ou copiez les informations du tableau ci-dessous pour suivre les mappages Texte d&apos;aide que vous devez corriger. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Nous n&apos;avons pas pu convertir certains mappages Texte d&apos;aide qui n&apos;étaient pas valides. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Informations supplémentaires sur les problèmes courants de mappages Texte d&apos;aide&lt;/a&gt;. Nous recommandons de désactiver le Mappage avancé, de corriger les mappages Texte d&apos;aide non valides, puis de réactiver le Mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le Mappage avancé à l&apos;écran suivant, mais si vous désactivez le Mappage avancé, le Texte d&apos;aide non valide d&apos;origine sera rétabli pour ces mappages supplémentaires.</label>
+            Nous n&apos;avons pas pu convertir certains mappages Texte d&apos;aide qui n&apos;étaient pas valides. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Informations supplémentaires sur les problèmes courants de mappages Texte d&apos;aide&lt;/a&gt;. Nous recommandons de désactiver le Mappage avancé, de corriger les mappages Texte d&apos;aide non valides, puis de réactiver le Mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le Mappage avancé à l&apos;écran suivant, mais si vous désactivez le Mappage avancé, le Texte d&apos;aide non valide d&apos;origine sera rétabli pour ces mappages supplémentaires.
+        </label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
