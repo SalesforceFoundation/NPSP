@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Run Keywords
@@ -29,10 +30,8 @@ Select an opportunity for an account make grid changes and process it
     &{account} =     API Create Organization Account
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   ${account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}
-    Go To Page                        Listing                      Batch_Gift_Entry
-    # Click Link  &{batch}[Name]
-    Click Link With Text    ${batch}[Name]
-    Wait For Locator    bge.title    Batch Gift Entry
+    Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
@@ -57,7 +56,7 @@ Select an opportunity for an account make grid changes and process it
     Wait For Batch To Process    BDI_DataImport_BATCH    Completed
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
-    Go To Record Home    ${opportunity}[Id]
+    Go To Page      Details     Opportunity     object_id=${opportunity}[Id]
     Navigate To And Validate Field Value    Amount    contains    $10.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}

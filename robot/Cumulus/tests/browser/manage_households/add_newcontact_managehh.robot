@@ -26,13 +26,13 @@ ${EMAIL1}       user1@automation.com
 
 *** Test Cases ***
 
-Add New Contact to Existing Household 
+Add New Contact to Existing Household
     [tags]                              unstable
     Go To Page                          Details
     ...                                 Account
     ...                                 object_id=${contact}[AccountId]
 
-    Click Actions Link                  Manage Household
+    Click Button                        Manage Household
     Go To Page                          Custom                             ManageHousehold
     Current Page Should Be              Custom                             ManageHousehold
     Add contact                         New                               ${first_name} ${last_name}
