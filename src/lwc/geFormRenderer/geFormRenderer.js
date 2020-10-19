@@ -1634,7 +1634,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
                     this._hasCreditCardWidget = true;
-                    section.setCardHolderName(this.fabricateCardHolderName(fieldList));
+                    section.setCardHolderName(this.fabricatedCardholderNames);
                 }
             });
         }
