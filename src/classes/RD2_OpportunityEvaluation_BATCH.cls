@@ -215,6 +215,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * If Pause Status does not exist in RD Status value, an error record will be generated.
     */
     private void validateRecurringDonationRequriement() {
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
         }
@@ -225,15 +227,19 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             RD2_Constants.STATUS_PAUSE)
         ) {
             Error__c errorRecord = new Error__c(
+                Context_Type__c = ERR_Handler_API.Context.RD.name(),
                 Datetime__c = System.now(),
                 Error_Type__c = System.Label.errErrorTypeOther,
+                Object_Type__c = String.valueOf(npe03__Recurring_Donation__c.SObjectType),
                 Full_Message__c = System.Label.RD2_PauseStatusMustExist
             );
 
-            ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+
             errorResult.errorRecords.add(errorRecord);
-            ERR_Handler.processErrorsOnly(errorResult, ERR_Handler_API.Context.RD.name());
         }
+
+        errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
+        ERR_Handler.processErrorsOnly(errorResult, ERR_Handler_API.Context.RD.name());
     }
 
     /**
