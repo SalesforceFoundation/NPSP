@@ -13,7 +13,7 @@ Suite Setup     Run keywords
 ...             Setup Test Data
 Suite Teardown  Run keywords
 ...             Disable Payment Allocations
-...             Delete Records and Close Browser
+...             Capture Screenshot and Delete Records and Close Browser
 
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
@@ -27,13 +27,13 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     ...                                    Open Opportunity and open payments from the related tab. Verify that total payment is assigned to Default GAU
     ...                                    Add a new Allocation to another GAU and verify that the Allocation is split between default and new GAUs.
     ...                                    Go to Opportunity and verify that same allocation is reflected under GAU allocations related list.
-    [tags]                                 W-039821               feature:Payment Allocations
+    [tags]                                 W-039821            feature:Payment Allocations
     Go To Page                             Details
     ...                                    Opportunity
     ...                                    object_id=${data}[contact1_opportunity][Id]
     Select Tab                             Related
     Load Related List                      GAU Allocations
-    Click Link With Text                   ${payment1}[Name]
+    Click Span Button                      ${payment1}[Name]
     Select Window
     Current Page Should Be                 Details                    npe01__OppPayment__c
     Select Tab                             Related
@@ -43,7 +43,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Wait For Modal                         New                        GAU Allocation
     Populate Lookup Field                  General Accounting Unit    ${gau}[Name]
     Populate Field                         Amount                     40
-    Click Modal Button                     Save
+    Click Button                           Save
     Wait Until Modal Is Closed
     Verify Payment Allocations
     ...    ${def_gau}[Name]=$60.00
