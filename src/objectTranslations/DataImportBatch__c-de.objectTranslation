@@ -112,7 +112,7 @@
     </fields>
     <fields>
         <help>Definiert, wie NPSP Spendenverdopplungen handhaben sollte.</help>
-        <label>Spendenabgleichsverhalten</label>
+        <label>Spendenverdopplungsverhalten</label>
         <name>Donation_Matching_Behavior__c</name>
         <picklistValues>
             <masterLabel>Best Match</masterLabel>
@@ -140,13 +140,13 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Der Entwicklername einer Apex-Klasse, der die BDI_IMatching-Oberfläche für Spenden implementiert. Keine Eingaben machen und NPSP den Abgleich vornehmen lassen.</help>
-        <label>Spendenabgleichs-Implementierungsklasse</label>
+        <help>Der Entwicklername einer Apex-Klasse, die die BDI_IMatching-Schnittstelle für Spenden implementiert. Ohne Angabe nimmt NPSP die Verdopplung vor.</help>
+        <label>Spendenverdoppl.-Implementierungsklasse</label>
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
         <help>Gibt an, nach welchen Feldern abgeglichen werden soll, wenn versucht wird, Spenden in Batch-Datensätzen gegen vorhandene Opportunities und Zahlungen abzugleichen.</help>
-        <label>Spendenabgleichsregel</label>
+        <label>Spendenverdopplungsregel</label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
@@ -217,7 +217,7 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>Spendenabgleich</label>
+            <label>Spendenverdopplung</label>
             <section>Donation Matching</section>
         </sections>
         <sections>
