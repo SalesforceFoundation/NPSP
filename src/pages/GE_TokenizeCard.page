@@ -90,7 +90,7 @@
         function handleTokenCreation() {
             // TODO Remove this line in W-8021204
             console.log('>>> Tokenize with Name On Card: "' + nameOnCard + '"');
-            let auth = {
+            const auth = {
                 jwt: '{!jwtForToken}',
                 userName: '{!$User.Username}'
             }
