@@ -32,13 +32,6 @@
 * @description Retrieves Recurring Donation status to status type mapping
 */
 public with sharing class RD2_StatusMapper {
-    public static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
-        RD2_Constants.STATUS_ACTIVE,
-        RD2_Constants.STATUS_LAPSED,
-        RD2_Constants.STATUS_CLOSED,
-        RD2_Constants.STATUS_PAUSE
-    };
-
     /**
     * @description Pre-define Status to State mapping
     */
