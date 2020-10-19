@@ -194,6 +194,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help><!-- Set when the schedule record represents Recurring Donation pause date range --></help>
+        <label><!-- Is Pause --></label>
+        <name>IsPause__c</name>
+    </fields>
+    <fields>
         <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
         <label><!-- Payment Method --></label>
         <name>PaymentMethod__c</name>
@@ -220,6 +225,11 @@
         <help><!-- The effective date for this schedule record. --></help>
         <label><!-- Effective Date --></label>
         <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contains additional details for the schedule. For example, a paused reason for a paused schedule. --></help>
+        <label><!-- Status Reason --></label>
+        <name>StatusReason__c</name>
     </fields>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
