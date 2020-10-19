@@ -18,6 +18,10 @@
         <label>Dénomination des opportunités</label>
         <name>Opportunity_Naming__c</name>
     </fields>
+    <fields>
+        <label>Alerte de retrait vue</label>
+        <name>Viewed_Retirement_Alert__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
     <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>
