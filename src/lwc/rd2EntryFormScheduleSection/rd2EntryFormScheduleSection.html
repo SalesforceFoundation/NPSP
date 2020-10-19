@@ -12,6 +12,7 @@
                                            flexibility="shrink" if:true={fields.recurringType}>
                         <lightning-input-field field-name={fields.recurringType.apiName}
                                                onchange={onHandleRecurringTypeChange}
+                                               data-id='{fields.recurringType.apiName}'>
                                                required>
                         </lightning-input-field>
                     </lightning-layout-item>
