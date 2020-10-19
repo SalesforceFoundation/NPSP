@@ -18,5 +18,9 @@
         <label>Benoeming Opportunity</label>
         <name>Opportunity_Naming__c</name>
     </fields>
+    <fields>
+        <label>Waarsch. buitengebruikstelling bekeken</label>
+        <name>Viewed_Retirement_Alert__c</name>
+    </fields>
     <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>

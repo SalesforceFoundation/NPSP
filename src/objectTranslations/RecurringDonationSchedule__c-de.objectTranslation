@@ -226,6 +226,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Festlegen, wenn der Zeitplan-Datensatz einen Aufschub-Datumsbereich für die wiederkehrende Spende darstellt</help>
+        <label>Stellt Aufschub dar</label>
+        <name>IsPause__c</name>
+    </fields>
+    <fields>
         <help>Die Zahlungsform für diese wiederkehrende Spende. NPSP kopiert den ausgewählten Wert automatisch in jeden ausgewählten Zahlungsdatensatz.</help>
         <label>Zahlungsmethode</label>
         <name>PaymentMethod__c</name>
@@ -252,6 +257,11 @@
         <help>Das Datum des Inkrafttretens für diesen Zeitplan-Datensatz.</help>
         <label>Inkrafttreten</label>
         <name>StartDate__c</name>
+    </fields>
+    <fields>
+        <help>Enthält weitere Details zum Zeitplan. Beispielsweise einen Grund für einen Aufschub.</help>
+        <label>Grund für Status</label>
+        <name>StatusReason__c</name>
     </fields>
     <gender>Masculine</gender>
     <layouts>
