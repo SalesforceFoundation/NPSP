@@ -21,8 +21,8 @@
         <name>InstallmentOppAutoCreateOption__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous. --></help>
-        <label><!-- Installment Opportunity Async Behavior --></label>
+        <help>NPSP が継続支援の割賦商談を作成する方法を指定します。デフォルトは [Synchronous (同期)] です。</help>
+        <label>割賦商談の非同期動作</label>
         <name>InstallmentOppFirstCreateMode__c</name>
     </fields>
     <fields>

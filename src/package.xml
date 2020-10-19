@@ -3841,6 +3841,7 @@
         <members>geTemplates</members>
         <members>geWidgetService</members>
         <members>gsResources</members>
+        <members>gsVideoHeader</members>
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>

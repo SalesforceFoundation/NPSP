@@ -18,5 +18,9 @@
         <label><!-- Opportunity Naming --></label>
         <name>Opportunity_Naming__c</name>
     </fields>
+    <fields>
+        <label><!-- Viewed Retirement Alert --></label>
+        <name>Viewed_Retirement_Alert__c</name>
+    </fields>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
