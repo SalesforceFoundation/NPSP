@@ -852,6 +852,10 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Esta función no se admite en estos momentos para Donaciones recurrentes generadas desde Servicios de pago de Elevate.</label>
+        <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
         <label>No se pueden modificar las Donaciones recurrentes procedentes de Servicios de pago de Elevate en NPSP excepto por el usuario de Integración de Servicios de pago de Elevate.</label>
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
@@ -1138,6 +1142,10 @@
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
+        <label>En pausa</label>
+        <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
         <label>Cantidad de cuotas planificadas no puede ser inferior a Cantidad de cuotas pagadas.</label>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
     </customLabels>
@@ -1158,8 +1166,16 @@
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
+        <label>No puede actualizar los campos siguientes debido a que esta Donación recurrente está en pausa: {0}. Si desea actualizar los campos, debe desactivar la pausa.</label>
+        <name>RD2_PauseCannotExistOnScheduleChange</name>
+    </customLabels>
+    <customLabels>
         <label>No puede poner en pausa una donación recurrente cerrada</label>
         <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Se retiró la pausa en {0}.</label>
+        <name>RD2_PauseDeactivationSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>Seleccione las cuotas de la lista que aparece a continuación. Puede poner en pausa un máximo de 12 cuotas consecutivas.</label>
@@ -1172,6 +1188,26 @@
     <customLabels>
         <label>Poner en pausa {0}</label>
         <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>No tiene los permisos necesarios para poner en pausa una Donación recurrente. Póngase en contacto con su administrador para obtener ayuda.</label>
+        <name>RD2_PausePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Se guardó la pausa en {0}.</label>
+        <name>RD2_PauseSaveSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Ha seleccionado {0} cuotas.</label>
+        <name>RD2_PauseSelectedInstallmentTextPlural</name>
+    </customLabels>
+    <customLabels>
+        <label>Ha seleccionado 1 cuota.</label>
+        <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>Motivo de la pausa</label>
+        <name>RD2_PausedReasonLabel</name>
     </customLabels>
     <customLabels>
         <label>Fecha de finalización de programación</label>
@@ -1664,6 +1700,22 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
+        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <name>bdeRetirementBlockerHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <name>bdeRetirementBlockerMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>El 1 de octubre de 2020, Entrada de datos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 1 de octubre. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt; en Power of Us Hub.</label>
+        <name>bdeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Retirada de Entrada de datos en lote</label>
+        <name>bdeRetirementWarningHeader</name>
+    </customLabels>
+    <customLabels>
         <label>El campo Id. exclusivo personalizado de la Cuenta {0} debe tener campos coincidentes en el objeto Importación de datos de NPSP cuyos nombres de API son {1} y {2}.</label>
         <name>bdiAccountCustomIdError</name>
     </customLabels>
@@ -1744,7 +1796,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>bdiContactMatchFnameLnameEmail</name>
     </customLabels>
     <customLabels>
-        <label>Nombre, apellidos y correo electrónico</label>
+        <label>Nombre, apellidos y teléfono</label>
         <name>bdiContactMatchFnameLnamePhone</name>
     </customLabels>
     <customLabels>
@@ -2122,6 +2174,18 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Error: No hay campos válidos basados en lo que seleccionó en &quot;Nombre de objeto&quot;, &quot;Es secundario/principal&quot; y &quot;De este grupo de asignaciones&quot;.</label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
+    </customLabels>
+    <customLabels>
+        <label>Comprobar asignaciones de campos</label>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Existe un problema con las asignaciones de campos enumeradas a continuación.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+    </customLabels>
+    <customLabels>
+        <label>Asegúrese de que los campos Importación de datos de NPSP y de destino aún existen y modifique o elimine la asignación de campo.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
     </customLabels>
     <customLabels>
         <label>El nombre de este grupo de objetos. Una convención de nomenclatura habitual es Grupo de [nombre de objeto].</label>
@@ -2591,7 +2655,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonClone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <label>Ya hay un trabajo ejecutándose en la clase de Apex {0}. El trabajo debe completarse antes de que pueda ejecutarse de nuevo.</label>
         <name>commonConcurrentBatchError</name>
     </customLabels>
     <customLabels>
@@ -2627,12 +2691,24 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
+        <label><!-- Field not found --></label>
+        <name>commonFieldNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fields Not Found --></label>
+        <name>commonFieldsNotFound</name>
+    </customLabels>
+    <customLabels>
         <label>Asignaciones de CCG</label>
         <name>commonGauAllocations</name>
     </customLabels>
     <customLabels>
         <label>Cuenta contable general</label>
         <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>Permisos insuficientes</label>
+        <name>commonInsufficientPermissions</name>
     </customLabels>
     <customLabels>
         <label>La clave debe contener un valor y utilizar el formato base64.</label>
@@ -2665,6 +2741,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>No hay elementos para mostrar.</label>
         <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>De acuerdo</label>
+        <name>commonOkay</name>
     </customLabels>
     <customLabels>
         <label>Abierto</label>
@@ -2701,6 +2781,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Guardar y cerrar</label>
         <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>Seleccionar una opción</label>
+        <name>commonSelectOptionPlaceholder</name>
     </customLabels>
     <customLabels>
         <label>Plantilla</label>
@@ -2903,6 +2987,14 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geAssistiveBatchHeaderRemoveField</name>
     </customLabels>
     <customLabels>
+        <label>{0} está marcado como opcional.</label>
+        <name>geAssistiveDescriptionFieldOptional</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} está marcado como requerido.</label>
+        <name>geAssistiveDescriptionFieldRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Mueva el campo {0} hacia abajo.</label>
         <name>geAssistiveFieldDown</name>
     </customLabels>
@@ -2933,6 +3025,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Eliminar opción seleccionada</label>
         <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>Requerir {0}.</label>
+        <name>geAssistiveRequireField</name>
     </customLabels>
     <customLabels>
         <label>Mueva la sección {0} hacia abajo.</label>
@@ -3023,7 +3119,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>Seleccione los campos para incluir en su formulario. Antes de agregar los campos, haga clic en la sección en la pantalla principal donde desea que vayan los campos. En la barra lateral, seleccione la casilla de verificación para agregar un campo, y anule la selección para retirar el campo del formulario. Si el objeto o el campo que desea utilizar no está en la lista, asegúrese de que configura el campo con Asignación avanzada.</label>
+        <label>Seleccione los campos para incluir en su formulario. Antes de agregar los campos, haga clic en la sección en la pantalla principal Configurar campos de formulario donde desea que vayan los campos. En la barra lateral Campos de formulario y paquetes de campos, seleccione la casilla de verificación para agregar un campo, y anule la selección para retirar el campo del formulario. Si el objeto o el campo que desea utilizar no está en la lista, asegúrese de que configura el campo con Asignación avanzada.</label>
         <name>geBodyFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3044,7 +3140,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geBodyFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
-        <label>Haga clic en una sección, luego seleccione un campo en la barra lateral para agregarlo a la sección de la pantalla principal. Para cada campo, puede modificar la etiqueta de campo, marcarlo como obligatorio, asignarle un valor predeterminado o retirarlo de la sección. Ajuste el formato del formulario de entrada de regalos creando secciones y reordenando secciones o campos.</label>
+        <label>Seleccione en una sección, luego seleccione un campo en la barra lateral Campos de formulario y paquetes de campos para agregarlo a esta sección de la pantalla principal Configurar campos de formulario. Para cada campo, puede modificar la etiqueta de campo, marcarlo como obligatorio, asignarle un valor predeterminado o retirarlo de la sección. Ajuste el formato del formulario Entrada de regalos creando secciones y reordenando secciones o campos.</label>
         <name>geBodyFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
@@ -3306,6 +3402,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Para obtener más información, consulte la documentación de solución de problemas de {0} en Power of Us Hub.</label>
         <name>geErrorUncertainCardChargePart4</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <name>geFieldsNotFoundMessage</name>
     </customLabels>
     <customLabels>
         <label>Campos de formulario avanzados</label>
@@ -3922,8 +4022,8 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>Si se selecciona, Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas.</label>	
-        <name>healthLabelDisableRecordBatchDescription</name>	
+        <label>Si se selecciona, Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas. Seleccione esta opción si su organización tiene un gran número de registros y Comprobación de estado está teniendo dificultades para completarse.</label>
+        <name>healthLabelDisableRecordBatchDescription</name>
     </customLabels>
     <customLabels>
         <label>Destinatario de notificaciones de errores válido.</label>
@@ -5177,7 +5277,7 @@ La selección de No programar automáticamente trabajos de NPSP predeterminados 
         <label>&lt;b&gt;¡Este mensaje no se mostrará si sale de esta página! Realice una captura de pantalla de esta página o copie la información de la tabla que aparece a continuación para seguir las asignaciones de Texto de ayuda que tiene que corregir. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            No pudimos convertir algunas de sus asignaciones de Texto de ayuda existentes porque no son válidas. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Lea más sobre los problemas habituales de asignación de Texto de ayuda&lt;/a&gt;. Recomendamos desactivar Asignación avanzada, corregir las asignaciones de Texto de ayuda no válidas y luego volver a activar Asignación avanzada. De forma alternativa, puede agregar estas asignaciones cuando configura Asignación avanzada en la pantalla siguiente, pero estas asignaciones adicionales volverán al Texto de ayuda no válido original si desactiva Asignación avanzada.</label>
+            No pudimos convertir algunas de sus asignaciones de Texto de ayuda existentes porque no son válidas. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Lea más sobre los problemas habituales de asignación de Texto de ayuda&lt;/a&gt;. Recomendamos desactivar Asignación avanzada, corregir las asignaciones de Texto de ayuda no válidas y luego volver a activar Asignación avanzada. De forma alternativa, puede agregar estas asignaciones cuando configura Asignación avanzada en la pantalla siguiente, pero estas asignaciones adicionales volverán al Texto de ayuda no válido original si desactiva Asignación avanzada.</label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>

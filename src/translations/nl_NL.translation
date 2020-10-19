@@ -851,6 +851,10 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label>Deze functionaliteit wordt momenteel niet ondersteund voor terugkerende donaties afkomstig uit de Elevate-betaalservices.</label>
+        <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
         <label>Terugkerende donaties uit de Elevate-betaalservices kunnen niet in NPSP worden gewijzigd. Dit kan alleen de integratiegebruiker van de Elevate-betaalservices.</label>
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
@@ -927,7 +931,7 @@
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- Enhanced Recurring Donations enablement incomplete --></label>
+        <label>U kunt geen terugkerende donaties maken of bijwerken omdat u Uitgebreide terugkerende donaties nog niet hebt ingeschakeld. Ga naar NPSP-instellingen | Terugkerende donaties | Upgrade naar Uitgebreide terugkerende donaties uitvoeren en voltooi alle stappen voor het inschakelen.</label>
         <name>RD2_EnablementIncomplete</name>
     </customLabels>
     <customLabels>
@@ -1137,6 +1141,10 @@
         <name>RD2_InstallmentPeriodMustBeValid</name>
     </customLabels>
     <customLabels>
+        <label>Onderbroken</label>
+        <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
         <label>Aantal geplande termijnen mag niet kleiner zijn dan het aantal Betaalde termijnen.</label>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
     </customLabels>
@@ -1157,8 +1165,16 @@
         <name>RD2_PageNotAvailableMessage</name>
     </customLabels>
     <customLabels>
+        <label>U kunt de volgende velden niet bijwerken omdat deze terugkerende donatie is onderbroken: {0}. Als u de velden wilt bijwerken, moet u de donatie weer activeren.</label>
+        <name>RD2_PauseCannotExistOnScheduleChange</name>
+    </customLabels>
+    <customLabels>
         <label>U kunt gesloten terugkerende donaties niet onderbreken</label>
         <name>RD2_PauseClosedRDErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Het onderbreken van {0} is opgeheven.</label>
+        <name>RD2_PauseDeactivationSuccessMessage</name>
     </customLabels>
     <customLabels>
         <label>Selecteer termijnen in de onderstaande lijst. U kunt tot 12 opeenvolgende termijnen onderbreken.</label>
@@ -1171,6 +1187,26 @@
     <customLabels>
         <label>{0} onderbreken</label>
         <name>RD2_PauseHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>U hebt niet de vereiste machtigingen om terugkerende donaties te onderbreken. Neem voor hulp contact op met de systeembeheerder.</label>
+        <name>RD2_PausePermissionRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Het onderbreken van {0} is opgeslagen.</label>
+        <name>RD2_PauseSaveSuccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>U hebt {0} termijnen geselecteerd.</label>
+        <name>RD2_PauseSelectedInstallmentTextPlural</name>
+    </customLabels>
+    <customLabels>
+        <label>U hebt 1 termijn geselecteerd.</label>
+        <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label>Reden voor onderbreking</label>
+        <name>RD2_PausedReasonLabel</name>
     </customLabels>
     <customLabels>
         <label>Einddatum planning</label>
@@ -1663,6 +1699,22 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
+        <label><!-- Header about Batch Data Entry being unsupported --></label>
+        <name>bdeRetirementBlockerHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation of Batch Data Entry not being supported &amp; recommendations --></label>
+        <name>bdeRetirementBlockerMessage</name>
+    </customLabels>
+    <customLabels>
+        <label>Op 1 oktober 2020 wordt Batchgegevensinvoer buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchgegevensinvoer. Als u voor een goede overgang wilt zorgen, schakelt u Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt; in de Power of Us Hub.</label>
+        <name>bdeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Batchgegevensinvoer wordt buiten gebruik gesteld</label>
+        <name>bdeRetirementWarningHeader</name>
+    </customLabels>
+    <customLabels>
         <label>Het instellingenveld {0} Aangepast Uniek ID voor Account moet overeenkomende velden hebben in het object NPSP-Gegevensimport waarvan de API Namen {1} en {2} zijn.</label>
         <name>bdiAccountCustomIdError</name>
     </customLabels>
@@ -2120,6 +2172,18 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>Fout: er zijn geen geldige velden gebaseerd op wat u hebt geselecteerd in &quot;Objectnaam&quot;, &quot;Is onderliggend/bovenliggend element&quot; en &quot;Van deze toewijzingsgroep&quot;</label>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
+    </customLabels>
+    <customLabels>
+        <label>Veldtoewijzingen controleren</label>
+        <name>bdiOMUIFieldMappingProblemHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een probleem met de onderstaande veldtoewijzingen.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart1</name>
+    </customLabels>
+    <customLabels>
+        <label>Controleer of het veld &apos;NPSP-Gegevensimport&apos; en de doelvelden nog bestaan en bewerk of verwijder de veldtoewijzing.</label>
+        <name>bdiOMUIFieldMappingProblemMessagePart2</name>
     </customLabels>
     <customLabels>
         <label>De naam van deze objectgroep. Een veel voorkomende naamgevingsconventie is [objectnaam]groep.</label>
@@ -2587,7 +2651,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>commonClone</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when a batch job is executed while the same batch job is already running. --></label>
+        <label>Er wordt al een taak uitgevoerd in de Apex-klasse {0}. De taak moet worden voltooid voordat deze opnieuw kan worden uitgevoerd.</label>
         <name>commonConcurrentBatchError</name>
     </customLabels>
     <customLabels>
@@ -2623,12 +2687,24 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>commonFieldLabel</name>
     </customLabels>
     <customLabels>
+        <label><!-- Field not found --></label>
+        <name>commonFieldNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Fields Not Found --></label>
+        <name>commonFieldsNotFound</name>
+    </customLabels>
+    <customLabels>
         <label>GAU-toewijzingen</label>
         <name>commonGauAllocations</name>
     </customLabels>
     <customLabels>
         <label>Algemene accountingeenheid (GAU)</label>
         <name>commonGeneralAccountUnit</name>
+    </customLabels>
+    <customLabels>
+        <label>Onvoldoende machtigingen</label>
+        <name>commonInsufficientPermissions</name>
     </customLabels>
     <customLabels>
         <label>De sleutel moet een waarde bevatten en de base64-indeling hebben.</label>
@@ -2661,6 +2737,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>Geen items om weer te geven.</label>
         <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label>Oké</label>
+        <name>commonOkay</name>
     </customLabels>
     <customLabels>
         <label>Open</label>
@@ -2697,6 +2777,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>Opslaan en sluiten</label>
         <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label>Selecteer een optie</label>
+        <name>commonSelectOptionPlaceholder</name>
     </customLabels>
     <customLabels>
         <label>Sjabloon</label>
@@ -2899,6 +2983,14 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>geAssistiveBatchHeaderRemoveField</name>
     </customLabels>
     <customLabels>
+        <label>{0} is gemarkeerd als Optioneel.</label>
+        <name>geAssistiveDescriptionFieldOptional</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} is gemarkeerd als Vereist.</label>
+        <name>geAssistiveDescriptionFieldRequired</name>
+    </customLabels>
+    <customLabels>
         <label>Verplaats het veld {0} omlaag.</label>
         <name>geAssistiveFieldDown</name>
     </customLabels>
@@ -2929,6 +3021,10 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <label>Geselecteerde optie verwijderen</label>
         <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label>Vereis {0}.</label>
+        <name>geAssistiveRequireField</name>
     </customLabels>
     <customLabels>
         <label>Verplaats de sectie {0} omlaag.</label>
@@ -3019,7 +3115,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>geBodyFormFieldsDescLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>Kies in uw formulier op te nemen velden. Klik vóór het toevoegen van velden op de sectie in het hoofdscherm waar u de velden wilt hebben. Vink in de zijbalk het selectievakje aan om een veld toe te voegen en hef de selectie ervan op om het veld te verwijderen uit het formulier. Als het te gebruiken object of veld niet wordt vermeld, zorgt u ervoor dat u het veld hetbt ingesteld met Geavanceerd toewijzen.</label>
+        <label>Kies in uw formulier op te nemen velden. Klik vóór het toevoegen van velden op de sectie in het hoofdscherm &apos;Formuliervelden configureren&apos; waar u de velden wilt hebben. Vink in de zijbalk &apos;Formuliervelden en veldbundels&apos; het selectievakje aan om een veld toe te voegen en hef de selectie ervan op om het veld te verwijderen uit het formulier. Als het te gebruiken object of veld niet wordt vermeld, zorgt u ervoor dat u het veld hebt ingesteld met Geavanceerd toewijzen.</label>
         <name>geBodyFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
@@ -3040,7 +3136,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>geBodyFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
-        <label>Klik op een sectie en selecteer vervolgens een veld in de zijbalk om het toe te voegen aan de sectie in het hoofdscherm. Voor elk veld kunt u het veldlabel bewerken, het als verplicht aanduiden, er een standaardwaarde aan toewijzen of het verwijderen uit de sectie. Pas de lay-out van het formulier voor Opgave van gift aan door secties te maken en secties of velden opnieuw te ordenen.</label>
+        <label>Klik op een sectie en selecteer vervolgens een veld in de zijbalk &apos;Formuliervelden en veldbundels&apos; om het toe te voegen aan de sectie in het hoofdscherm &apos;Formuliervelden configureren&apos;. Voor elk veld kunt u het veldlabel bewerken, het als verplicht aanduiden, er een standaardwaarde aan toewijzen of het verwijderen uit de sectie. Pas de lay-out van het formulier voor Opgave van gift aan door secties te maken en secties of velden opnieuw te ordenen.</label>
         <name>geBodyFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
@@ -3304,6 +3400,10 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geErrorUncertainCardChargePart4</name>
     </customLabels>
     <customLabels>
+        <label><!-- Message when field/Field Mapping not found and user might not have access to it. --></label>
+        <name>geFieldsNotFoundMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Geavanceerde formuliervelden</label>
         <name>geHeaderAdvancedFormFields</name>
     </customLabels>
@@ -3526,7 +3626,7 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>geSearchPlaceholder</name>
     </customLabels>
     <customLabels>
-        <label><!-- Link to select batch table columns --></label>
+        <label>Batchtabelkolommen selecteren</label>
         <name>geSelectBatchTableColumns</name>
     </customLabels>
     <customLabels>
@@ -3918,8 +4018,8 @@ Indien dit de voorkeur heeft, kunt u Opgave van gift uitschakelen en in plaats d
         <name>healthLabelDisableRecordBatch</name>
     </customLabels>
     <customLabels>
-        <label>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen.</label>	
-        <name>healthLabelDisableRecordBatchDescription</name>	
+        <label>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en &apos;Controle van de Toestand&apos; niet kan worden voltooid.</label>
+        <name>healthLabelDisableRecordBatchDescription</name>
     </customLabels>
     <customLabels>
         <label>De ontvanger van Foutmeldingen is geldig.</label>
@@ -5169,10 +5269,11 @@ Door Standaard NPSP-Taken Niet Automatisch Plannen te selecteren, laat u NPSP we
         <name>stgHelpAdvancedMapping3</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;Dit bericht wordt niet weergegeven als u deze pagina verlaat! Maak een screenshot van deze pagina of kopieer de gegevens in de onderstaande tabel om de toewijzingen voor Help-tekst bij te houden, die u nodig hebt. &lt;/b&gt;
+        <label>
+            &lt;b&gt;Dit bericht wordt niet weergegeven als u deze pagina verlaat. Maak een screenshot van deze pagina of kopieer de gegevens in de onderstaande tabel om de toewijzingen voor Help-tekst bij te houden die u nodig hebt. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We kunnen enkele van uw bestaande toewijzingen voor Help-tekst niet converteren, omdat ze ongeldig zijn. &lt;a href=&quot;https://powerofus.force.com//NPSP_Help_Text_Mapping&quot; target=&quot;_blank&quot;&gt;Meer informatie over veel voorkomende problemen met toewijzingen van Help-tekst&lt;/a&gt;. U wordt aangeraden om Geavanceerd toewijzen uit te schakelen, de ongeldige toewijzingen van Help-tekst te corrigeren en vervolgens Geavanceerd toewijzen opnieuw in te schakelen. Of anders kunt u deze toewijzingen toevoegen wanneer u Geavanceerd toewijzen configureert op het volgende scherm, maar deze extra toewijzingen zetten alles terug naar de oorspronkelijke ongeldig Help-tekst als u Geavanceerd toewijzen uitschakelt.</label>
+            We kunnen enkele van uw bestaande toewijzingen voor Help-tekst niet converteren, omdat ze ongeldig zijn. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Meer informatie over veel voorkomende problemen met toewijzingen van Help-tekst&lt;/a&gt;. U wordt aangeraden om Geavanceerd toewijzen uit te schakelen, de ongeldige toewijzingen van Help-tekst te corrigeren en vervolgens Geavanceerd toewijzen opnieuw in te schakelen. Of anders kunt u deze toewijzingen toevoegen wanneer u Geavanceerd toewijzen configureert op het volgende scherm, maar deze extra toewijzingen zetten alles terug naar de oorspronkelijke ongeldig Help-tekst als u Geavanceerd toewijzen uitschakelt.</label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
