@@ -44,7 +44,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     [tags]                                 unstable               W-042266            feature:RD2
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
-
+    Current Page Should Be                  Listing                                   npe03__Recurring_Donation__c
     Click Object Button                     New
     Wait For Modal                          New                                       Recurring Donation
     # Reload page is a temporary fix till the developers fix the ui-modal
@@ -59,7 +59,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     Edit Recurring Donation Status
         ...                                 Recurring Period=Monthly
         ...                                 Day of Month=1
-
+    Current Page Should be                  Details    npe03__Recurring_Donation__c
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
     Validate Related Record Count           Opportunities                                                    1
     @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${data}[contact_rd][Id]
@@ -67,5 +67,6 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
 
     #validate the stage on opportunity
     Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
+    Current Page Should be                  Details                        Opportunity
     Wait Until Loading Is Complete
     Navigate To And Validate Field Value    Stage                          contains                        Pledged

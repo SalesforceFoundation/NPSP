@@ -8,11 +8,11 @@ from NPSP import npsp_lex_locators
 @pageobject("Listing", "Contact")
 class ContactListingPage(BaseNPSPPage, ListingPage):
     object_name = "Contact"
-   
+
     def click_delete_account_button(self):
         """Clicks on Delete Account button inside the iframe"""
         self.selenium.wait_until_location_contains("/delete", message="Account delete page did not load in 30 seconds")
-        self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")    
+        self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")
 
 @pageobject("Details", "Contact")
 class ContactDetailPage(BaseNPSPPage, DetailPage):
@@ -25,11 +25,11 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail page did not load in 1 min")
         self.selenium.location_should_contain("/lightning/r/Contact/",message="Current page is not a Contact record detail view")
         self.selenium.wait_until_page_contains("Contact Details")
-        
+
     def update_field_value(self,field_name,old_value,new_value):
         """Delete the old value in specified field by clicking on delete icon and update with new value"""
         locator=npsp_lex_locators['delete_icon'].format(field_name,old_value)
-        self.selenium.get_webelement(locator).click() 
+        self.selenium.get_webelement(locator).click()
         self.salesforce.populate_lookup_field(field_name,new_value)
 
     def go_to_related_engagement_actionplans_page(self,customerid):
@@ -78,7 +78,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
 
     def verify_rollup_field_value(self,field_name,value,section=None):
-        """Verifies if the given rollup field contains given value 
+        """Verifies if the given rollup field contains given value
         if it doesn't, then recalculates rollup and performs refresh"""
         try :
             self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
@@ -98,3 +98,11 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
                 self.selenium.reload_page()
                 self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
 
+    def open_relationships_viewer(self):
+        """Clicks on the Relationships Viewer link on the contact page"""
+        locator=npsp_lex_locators['link-contains'].format("more actions")
+        self.selenium.wait_until_element_is_visible(locator)
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains("Relationships Viewer")
+        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format("Relationships_Viewer","Relationships_Viewer")
+        self.selenium.click_link(link_locator)

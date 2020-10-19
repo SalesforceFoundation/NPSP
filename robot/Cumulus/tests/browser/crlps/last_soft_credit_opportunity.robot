@@ -11,7 +11,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 ***Keywords***
 # creates test data a contact and an opportunity for the contact
