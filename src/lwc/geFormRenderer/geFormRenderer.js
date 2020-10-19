@@ -260,7 +260,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     appendRecordTypeLocationInfoToPicklistElements(sections) {
-        let updatedSections = JSON.parse(JSON.stringify(sections));
+        let updatedSections = deepClone(sections);
 
         updatedSections
             .forEach(section => {
@@ -1800,7 +1800,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         // Re-assign to prompt reactivity
-        this.formState = JSON.parse(JSON.stringify(this.formState));
+        this.formState = deepClone(this.formState);
     }
 
     updateFormStateForDonationRecordType(fields) {
