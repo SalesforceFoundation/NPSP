@@ -37,7 +37,6 @@
 public with sharing class RD2_EntryFormController {
 
     /**
-    * @param parentId The parentId to use when creating the new RD record (if New from Account or Contact)
     * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
     */
     @TestVisible
@@ -57,15 +56,35 @@ public with sharing class RD2_EntryFormController {
     };
 
     /**
+    * @description Handles commitment request creation, response parsing and RD Commitment Id update
+    */
+    private static CommitmentService commitmentService {
+        get {
+            if (commitmentService == null) {
+                commitmentService = new CommitmentService();
+            }
+            return commitmentService;
+        }
+        set;
+    }
+
+
+    /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static Map<String, Object> getRecurringSettings(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
             : parentId.getSobjectType().getDescribe().getName();
+
+        // Checks whether the Elevate credit card can be displayed
+        // on the form to enter a new Recurring Donation in NPSP and the related commitment in Elevate.
+        // The RD2 controller should be using isIntegrationEnabled() only when GA.
+        Boolean isElevateCustomer = RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && UTIL_FeatureEnablement.isPilotEnabled();
 
         return new Map<String, Object> {
             'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
@@ -73,8 +92,18 @@ public with sharing class RD2_EntryFormController {
             'parentSObjectType' => parentSObjectType,
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-            'customFieldSets' => getCustomFieldSectionFields()
+            'customFieldSets' => getCustomFieldSectionFields(),
+            'isElevateCustomer' => isElevateCustomer
         };
+    }
+
+    /**
+    * @description Get a GUID to store as a temp Commitment Id
+    * @return String
+    */
+    @AuraEnabled(cacheable=false)
+    public static String getTempCommitmentId() {
+        return RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + UTIL_String.getGUID();
     }
 
     /**
@@ -117,8 +146,8 @@ public with sharing class RD2_EntryFormController {
      * false, the custom UI will display a warning message at the top of the page.
      * @return True if the User has Read access to all required fields in the UI
      */
-    @AuraEnabled(Cacheable=True)
-    public static Boolean checkRequiredFieldPermissions() {
+    @AuraEnabled(cacheable=true)
+    public static Boolean hasRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
             'npe03__Amount__c',
             'npe03__Contact__c',
@@ -129,17 +158,17 @@ public with sharing class RD2_EntryFormController {
             UTIL_Namespace.StrTokenNSPrefix('StartDate__c')
         };
 
-        Boolean isMissingRequiredPermissions = true;
+        Boolean hasPermissions = true;
 
         for (String fld : requiredFields) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
             if (!dfr.isAccessible()) {
-                isMissingRequiredPermissions = false;
+                hasPermissions = false;
                 break;
             }
         }
 
-        return isMissingRequiredPermissions;
+        return hasPermissions;
     }
 
     /**
@@ -211,7 +240,7 @@ public with sharing class RD2_EntryFormController {
             if (excludedCustomFields.contains(field.getFieldPath())
                 || field.getFieldPath().startsWith('npsp__')
                 || field.getFieldPath().startsWith('npe03__')
-                ||!UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+                || !UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
             ) {
                 continue;
             }
@@ -232,11 +261,153 @@ public with sharing class RD2_EntryFormController {
         /***
         * @description Constructor for the CustomField class
         * @param apiName Api name of the field
-        * @param required Indicate if the field is required 
+        * @param required Indicate if the field is required
         */
         public CustomField(Schema.FieldSetMember field) {
             this.apiName = field.getFieldPath();
             this.required = field.getDbRequired() || field.getRequired();
         }
     }
+
+    /***
+    * @description Builds an Elevate Commitment request body
+    * @param recordId Recurring Donation Id
+    * @param paymentMethodToken Payment Method Token
+    * @return String: JSON containing the Commitment Request Body
+    */
+    @AuraEnabled
+    public static String getCommitmentRequestBody(Id recordId, String paymentMethodToken) {
+        try {
+            return JSON.serialize(commitmentService.getRequestBody(recordId, paymentMethodToken));
+
+        } catch (Exception ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+
+        return null;
+    }
+
+    /***
+    * @description Creates Elevate Commitment and
+    * updates the Recurring Donation with returned Commitment data
+    * @param recordId Recurring Donation Id
+    * @param jsonRequestBody JSON containing parameters for the commitment call request body
+    * @return String: JSON containing the response with commitment data on success or error message on error
+    */
+    @AuraEnabled
+    public static String createCommitment(Id recordId, String jsonRequestBody) {
+        if (recordId == null) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.RD2_ErrorRDIdIsMissingForCommitment);
+        }
+
+        UTIL_Http.Response response;
+
+        try {
+            response = commitmentService.sendRequest(recordId, jsonRequestBody);
+
+            if (response.statusCode == UTIL_Http.STATUS_CODE_CREATED) {
+                commitmentService.updateRecurringDonation(recordId, response);
+            }
+
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+
+        } finally {
+            if (response != null && response.statusCode != UTIL_Http.STATUS_CODE_CREATED) {
+                //create an error log for the RD and the failed response error message
+            }
+        }
+
+        return JSON.serialize(response);
+    }
+
+
+    /**
+    * @description Handles sending commitment request and saving its values on the RD
+    */
+    public without sharing class CommitmentService {
+
+        /**
+        * @description Sends requests and constructs the response
+        */
+        private UTIL_Http.RequestService requestService {
+            get {
+                if (requestService == null) {
+                    requestService = new UTIL_Http.RequestService();
+                }
+                return requestService;
+            }
+            set;
+        }
+
+        /***
+        * @description Builds an Elevate Commitment request body
+        * @param recordId Recurring Donation Id
+        * @param paymentMethodToken Payment Method Token
+        * @return PS_CommitmentRequest.RequestBody
+        */
+        public PS_CommitmentRequest.RequestBody getRequestBody(Id recordId, String paymentMethodToken) {
+            PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+            return request.getRequestBody(recordId, paymentMethodToken);
+        }
+
+        /***
+        * @description Sends an HttpRequest so that matching Recurring Commitment is created in Elevate
+        * @param jsonRequestBody JSON containing parameters for the commitment call request body
+        * @return UTIL_Http.Response
+        */
+        public UTIL_Http.Response sendRequest(Id recordId, String jsonRequestBody) {
+            UTIL_Http.Response response;
+
+            try {
+                HttpRequest request = new PS_CommitmentRequest()
+                    .buildCreateRequest(jsonRequestBody);
+
+                response = requestService.sendRequest(request);
+
+            } catch (Exception ex) {
+                response = requestService.buildErrorResponse(ex);
+            }
+
+            return response;
+        }
+
+
+        /***
+        * @description Saves commitment Id and the credit card data onto the Recurring Donation record.
+        * @param recordId Recurring Donation Id
+        * @param response Response from Elevate on the commitment create request
+        * @return void
+        */
+        public void updateRecurringDonation(Id recordId, UTIL_Http.Response response) {
+            if (response == null
+                || response.statusCode != UTIL_Http.STATUS_CODE_CREATED
+            ) {
+                return;
+            }
+
+            try {
+                PS_CommitmentRequest.ResponseBody commitment = new PS_CommitmentRequest().getCommitment(response);
+
+                if (commitment.hasId()) {
+                    npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                        Id = recordId,
+                        CommitmentId__c = commitment.id,
+                        CardLast4__c = commitment.getCardLast4(),
+                        CardExpirationMonth__c = commitment.getCardExpirationMonth(),
+                        CardExpirationYear__c = commitment.getCardExpirationYear()
+                    );
+
+                    UTIL_DMLService.updateRecordBatchAndLogErrors(
+                        new List<npe03__Recurring_Donation__c>{ rd }, ERR_Handler_API.Context.Elevate.name()
+                    );
+                }
+
+            } catch (Exception e) {
+                throw e;
+            }
+        }
+    }
+
 }
