@@ -54,8 +54,8 @@ Create and Close a Recurring Donation and Refresh Opportunities
     #Close Recurring Donation and Refresh Opportunities
     Go To Page                   Details                        npe03__Recurring_Donation__c          object_id=${data}[contact_rd][Id]
     Click Actions Button         Edit
-    Select Value From Dropdown   Open Ended Status              Closed
-    Click Modal Button           Save
+    Click Flexipage Dropdown     Open Ended Status              Closed
+    Click Button With Title      Save
     Wait Until Modal Is Closed
     Refresh Opportunities
 
