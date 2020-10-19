@@ -13021,4 +13021,36 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Button label of checklist item Stay Track in Get Started</shortDescription>
         <value>Create Activities</value>
     </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Create Donation in Get Started</shortDescription>
+        <value>Create a Donation</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Create Donation in Get Started</shortDescription>
+        <value>Keep track of donations, grants, or any other type of revenue so you can identify giving patterns and understand what drives giving at the constituent level. Start by learning how to enter donations into NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Create Donation in Get Started</shortDescription>
+        <value>Learn more in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemCreateDonationPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Create Donation in Get Started</shortDescription>
+        <value>Watch Video</value>
+    </labels>
 </CustomLabels>

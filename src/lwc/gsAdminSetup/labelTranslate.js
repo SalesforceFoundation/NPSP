@@ -12,6 +12,10 @@ import gsChecklistItemStayTrackTitle from '@salesforce/label/c.gsChecklistItemSt
 import gsChecklistItemStayTrackDesc from '@salesforce/label/c.gsChecklistItemStayTrackDesc';
 import gsChecklistItemStayTrackLinkLabel from '@salesforce/label/c.gsChecklistItemStayTrackLinkLabel';
 import gsChecklistItemStayTrackPriBtnLabel from '@salesforce/label/c.gsChecklistItemStayTrackPriBtnLabel';
+import gsChecklistItemCreateDonationTitle from '@salesforce/label/c.gsChecklistItemCreateDonationTitle';
+import gsChecklistItemCreateDonationDesc from '@salesforce/label/c.gsChecklistItemCreateDonationDesc';
+import gsChecklistItemCreateDonationLinkLabel from '@salesforce/label/c.gsChecklistItemCreateDonationLinkLabel';
+import gsChecklistItemCreateDonationPriBtnLabel from '@salesforce/label/c.gsChecklistItemCreateDonationPriBtnLabel'; 
 
 const mapValue = {
     gsChecklistExploreNPSPTitle,
@@ -28,6 +32,10 @@ const mapValue = {
     gsChecklistItemStayTrackDesc,
     gsChecklistItemStayTrackLinkLabel,
     gsChecklistItemStayTrackPriBtnLabel,
+    gsChecklistItemCreateDonationTitle,
+    gsChecklistItemCreateDonationDesc,
+    gsChecklistItemCreateDonationLinkLabel,
+    gsChecklistItemCreateDonationPriBtnLabel,
 }
 
 
