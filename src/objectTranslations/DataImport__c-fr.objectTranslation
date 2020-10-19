@@ -390,6 +390,11 @@
         <name>Donation_Type__c</name>
     </fields>
     <fields>
+        <help>Métadonnées personnalisées des pages Elevate Giving, triées sous forme de JSON.</help>
+        <label>Métadonnées personnalisées Elevate</label>
+        <name>Elevate_Custom_Metadata__c</name>
+    </fields>
+    <fields>
         <help>Description de ce qui a empêché l’importation de l’enregistrement d’importation de données.</help>
         <label>Information sur l’échec</label>
         <name>FailureInformation__c</name>
@@ -579,6 +584,11 @@
         <help>Fournit des détails sur les raisons pour lesquelles une transaction a été refusée.</help>
         <label>Motif de refus du paiement</label>
         <name>Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation. --></help>
+        <label><!-- Payment Donor Cover Amount --></label>
+        <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
         <help>La date et l’heure auxquelles la transaction a été créée.</help>

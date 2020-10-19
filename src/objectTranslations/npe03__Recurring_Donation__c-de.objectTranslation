@@ -178,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Verhindert die Erstellung der Opportunity für die erste Rate für eine neue wiederkehrende Spende, unabhängig von der Einstellung für die automatische Erstellung von Raten-Opportunitys in den NPSP-Einstellungen.</help>
+        <label>Erste Rate deaktivieren</label>
+        <name>DisableFirstInstallment__c</name>
+    </fields>
+    <fields>
         <help>Nach diesem Datum erstellt NPSP keine Raten für diese wiederkehrende Spende mehr und aktualisiert den Status auf Abgeschlossen.</help>
         <label>Enddatum</label>
         <name>EndDate__c</name>
@@ -251,6 +256,10 @@
     <quickActions>
         <label>Neue Opportunity</label>
         <name>New_Opportunity</name>
+    </quickActions>
+    <quickActions>
+        <label>Aufschub</label>
+        <name>Pause</name>
     </quickActions>
     <quickActions>
         <label>Schnelle Aktualisierung</label>
