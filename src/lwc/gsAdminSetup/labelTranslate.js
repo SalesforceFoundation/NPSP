@@ -8,7 +8,10 @@ import gsChecklistItemSetupContactTitle from '@salesforce/label/c.gsChecklistIte
 import gsChecklistItemSetupContactDesc from '@salesforce/label/c.gsChecklistItemSetupContactDesc';
 import gsChecklistItemSetupContactPriBtnLabel from '@salesforce/label/c.gsChecklistItemSetupContactPriBtnLabel';
 import gsChecklistItemSetupContactSecBtnLabel from '@salesforce/label/c.gsChecklistItemSetupContactSecBtnLabel';
-
+import gsChecklistItemStayTrackTitle from '@salesforce/label/c.gsChecklistItemStayTrackTitle';
+import gsChecklistItemStayTrackDesc from '@salesforce/label/c.gsChecklistItemStayTrackDesc';
+import gsChecklistItemStayTrackLinkLabel from '@salesforce/label/c.gsChecklistItemStayTrackLinkLabel';
+import gsChecklistItemStayTrackPriBtnLabel from '@salesforce/label/c.gsChecklistItemStayTrackPriBtnLabel';
 
 const mapValue = {
     gsChecklistExploreNPSPTitle,
@@ -21,6 +24,10 @@ const mapValue = {
     gsChecklistItemSetupContactDesc,
     gsChecklistItemSetupContactPriBtnLabel,
     gsChecklistItemSetupContactSecBtnLabel,
+    gsChecklistItemStayTrackTitle,
+    gsChecklistItemStayTrackDesc,
+    gsChecklistItemStayTrackLinkLabel,
+    gsChecklistItemStayTrackPriBtnLabel,
 }
 
 

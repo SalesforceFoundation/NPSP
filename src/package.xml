@@ -2442,6 +2442,10 @@
         <members>gsChecklistItemSetupContactPriBtnLabel</members>
         <members>gsChecklistItemSetupContactSecBtnLabel</members>
         <members>gsChecklistItemSetupContactTitle</members>
+        <members>gsChecklistItemStayTrackDesc</members>
+        <members>gsChecklistItemStayTrackLinkLabel</members>
+        <members>gsChecklistItemStayTrackPriBtnLabel</members>
+        <members>gsChecklistItemStayTrackTitle</members>
         <members>gsChecklistMakeItYourDesc</members>
         <members>gsChecklistMakeItYourTitle</members>
         <members>gsChecklistOnboardUsersDesc</members>
@@ -3223,6 +3227,7 @@
         <members>Data_Import_Object_Mapping.Payment</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GS_Admin_Checklist_Item.Setup_Contact</members>
+        <members>GS_Admin_Checklist_Item.Stay_Track</members>
         <members>GS_Admin_Checklist_Section.Bring_Users_Onboard</members>
         <members>GS_Admin_Checklist_Section.Explore_NPSP</members>
         <members>GS_Admin_Checklist_Section.Make_it_your_own</members>

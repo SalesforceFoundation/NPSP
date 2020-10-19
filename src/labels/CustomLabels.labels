@@ -12989,4 +12989,36 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Button label of checklist item Setup Contact in Get Started</shortDescription>
         <value>Explore Contacts</value>
     </labels>
+    <labels>
+        <fullName>gsChecklistItemStayTrackTitle</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of checklist item Stay Track in Get Started</shortDescription>
+        <value>Stay on Track with Activities</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemStayTrackDesc</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description of checklist item Stay Track in Get Started</shortDescription>
+        <value>"Activities“ refers to tasks, events, or any other interaction that’s tracked in the Activity Timeline. Understanding these will allow you to keep track of every interaction with your constituents. Learn how to leverage activities to log constituent interactions and assign tasks.</value>
+    </labels>
+        <labels>
+        <fullName>gsChecklistItemStayTrackLinkLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link Label of checklist item Stay Track in Get Started</shortDescription>
+        <value>Learn more about Activities in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>gsChecklistItemStayTrackPriBtnLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label of checklist item Stay Track in Get Started</shortDescription>
+        <value>Create Activities</value>
+    </labels>
 </CustomLabels>
