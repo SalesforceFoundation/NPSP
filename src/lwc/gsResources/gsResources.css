@@ -1,6 +1,7 @@
 .container > h1 {
-    font-weight: bold;
     margin-bottom: 1rem;
+    font-size: 16pt;
+    font-weight: bold;
 }
 
 .container {
@@ -12,7 +13,7 @@
 
 .container .resource-list .resource-item {
     padding: 1rem 0;
-    border-top: solid 1px #b5b5b5;
+    border-top: solid 1px  #DDDBDA;
     display: flex;
     justify-content: space-between;
 }
@@ -27,7 +28,7 @@
 }
 
 .container .link > a {
-    color: #0070D2;
+    color: #006DDC;
     font-size: 16pt;
     font-weight: 400;
 }
