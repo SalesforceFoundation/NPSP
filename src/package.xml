@@ -374,6 +374,8 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>PS_CommitmentRequest</members>
+        <members>PS_CommitmentRequest_TEST</members>
         <members>PS_IntegrationService</members>
         <members>PS_IntegrationServiceConfig</members>
         <members>PS_IntegrationServiceConfig_TEST</members>
@@ -563,6 +565,8 @@
         <members>UTIL_AbstractRollup_BATCH</members>
         <members>UTIL_Address</members>
         <members>UTIL_Address_TEST</members>
+        <members>UTIL_AuraEnabledCommon</members>
+        <members>UTIL_AuraEnabledCommon_TEST</members>
         <members>UTIL_BatchJobProgress_CTRL</members>
         <members>UTIL_BatchJobProgress_TEST</members>
         <members>UTIL_BatchJobService</members>
@@ -1438,6 +1442,9 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe01__OppPayment__c.Type__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.CardExpirationMonth__c</members>
+        <members>npe03__Recurring_Donation__c.CardExpirationYear__c</members>
+        <members>npe03__Recurring_Donation__c.CardLast4__c</members>
         <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
         <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
@@ -1684,6 +1691,9 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_ElevateDisableButtonLabel</members>
+        <members>RD2_ElevateDisabledMessage</members>
+        <members>RD2_ElevateEnableButtonLabel</members>
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
@@ -1749,11 +1759,16 @@
         <members>RD2_EntryFormPeriodPluralMonthly</members>
         <members>RD2_EntryFormPeriodPluralWeekly</members>
         <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormSaveCommitmentFailedMessage</members>
+        <members>RD2_EntryFormSaveCommitmentMessage</members>
+        <members>RD2_EntryFormSaveCreditCardValidationMessage</members>
+        <members>RD2_EntryFormSaveRecurringDonationMessage</members>
         <members>RD2_EntryFormScheduleEveryLabel</members>
         <members>RD2_EntryFormStatusSectionHeader</members>
         <members>RD2_EntryFormUpdateSuccessMessage</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
+        <members>RD2_ErrorRDIdIsMissingForCommitment</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
@@ -2142,8 +2157,10 @@
         <members>commonCVV</members>
         <members>commonCancel</members>
         <members>commonCardType</members>
+        <members>commonCardholderName</members>
         <members>commonClone</members>
         <members>commonConcurrentBatchError</members>
+        <members>commonContactSystemAdminMessage</members>
         <members>commonCreditNumber</members>
         <members>commonCriticalError</members>
         <members>commonDeactivate</members>
@@ -2183,6 +2200,7 @@
         <members>commonUpdate</members>
         <members>commonViewAll</members>
         <members>commonViewMore</members>
+        <members>commonWaitMessage</members>
         <members>commonWarning</members>
         <members>commonYes</members>
         <members>conFailedAccountCreate</members>
@@ -3827,7 +3845,9 @@
         <members>geWidgetService</members>
         <members>libsMoment</members>
         <members>progressRing</members>
+        <members>psElevateTokenHandler</members>
         <members>pubsubNoPageRef</members>
+        <members>rd2ElevateCreditCardForm</members>
         <members>rd2EntryForm</members>
         <members>rd2EntryFormCustomFieldsSection</members>
         <members>rd2EntryFormDonorSection</members>
