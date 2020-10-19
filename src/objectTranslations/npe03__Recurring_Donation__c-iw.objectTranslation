@@ -178,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help><!-- Prevents creation of the first installment Opportunity for a new Recurring Donation, regardless of the Installment Opportunity Auto-Creation setting in NPSP Settings. --></help>
+        <label><!-- Disable First Installment --></label>
+        <name>DisableFirstInstallment__c</name>
+    </fields>
+    <fields>
         <help><!-- After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed. --></help>
         <label><!-- End Date --></label>
         <name>EndDate__c</name>
@@ -251,6 +256,10 @@
     <quickActions>
         <label>הזדמנות חדשה</label>
         <name>New_Opportunity</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Pause --></label>
+        <name>Pause</name>
     </quickActions>
     <quickActions>
         <label>עדכון מהיר</label>

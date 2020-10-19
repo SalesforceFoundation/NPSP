@@ -178,6 +178,11 @@
         </picklistValues>
     </fields>
     <fields>
+        <help>Evita la creación de la primera oportunidad de cuota para una nueva Donación recurrente, independientemente del parámetro Creación automática Oportunidad de cuota en Configuración de NPSP.</help>
+        <label>Desactivar cuota inicial</label>
+        <name>DisableFirstInstallment__c</name>
+    </fields>
+    <fields>
         <help>Después de esta fecha, NPSP deja de crear cuotas para esta Donación recurrente y actualiza Estado a Cerrado.</help>
         <label>Fecha de finalización</label>
         <name>EndDate__c</name>
@@ -251,6 +256,10 @@
     <quickActions>
         <label>Nueva oportunidad</label>
         <name>New_Opportunity</name>
+    </quickActions>
+    <quickActions>
+        <label>Pausa</label>
+        <name>Pause</name>
     </quickActions>
     <quickActions>
         <label>Actualización rápida</label>
