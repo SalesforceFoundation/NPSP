@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 ...             robot/Cumulus/resources/PaymentPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Run Keywords
@@ -36,9 +37,8 @@ Opportunity is Autoclosed when Overpaid
     ...    Amount=100
     ...    CloseDate=${date}
     ...    Name=${contact}[LastName] Test Donation
-    Go To Page                        Listing                      Batch_Gift_Entry
-    Click Link With Text    ${batch}[Name]
-    Wait For Locator    bge.title    Batch Gift Entry
+    Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details      DataImportBatch__c
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
         ...                              Search Field And Perform Action    Search Contacts    ${contact}[FirstName] ${contact}[LastName]
@@ -67,7 +67,7 @@ Opportunity is Autoclosed when Overpaid
     ...    npe01__Payment_Amount__c=101.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
-    Go To Record Home    ${opportunity}[Id]
+    Go To Page      Details     Opportunity     object_id=${opportunity}[Id]
     Navigate To And Validate Field Value    Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
