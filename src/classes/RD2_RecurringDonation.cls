@@ -231,7 +231,15 @@ public inherited sharing class RD2_RecurringDonation {
     * @param scheduleService RD Schedule Service
     */
     private void reviseStatusForPaused(Date currentDate, RD2_ScheduleService scheduleService) {
-        if (getState() == RD2_Constants.STATUS_CLOSED || rd.RecurringDonationSchedules__r == null) {
+        Boolean isPauseStatusExist = UTIL_Describe.isValidPicklistOption(
+            'npe03__Recurring_Donation__c',
+            String.valueOf(npe03__Recurring_Donation__c.Status__c),
+            RD2_Constants.STATUS_PAUSE);
+
+        if (getState() == RD2_Constants.STATUS_CLOSED
+            || rd.RecurringDonationSchedules__r == null
+            || !isPauseStatusExist
+        ) {
             return;
         }
    

@@ -157,12 +157,9 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Start Method
     */
     public Database.QueryLocator start(Database.BatchableContext context) {
-        
-        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
-        }
+        validateRecurringDonationRequriement();
         String query = getRDBatchQuery();
-        
+
         if (isBatchInProgress) {
             new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
@@ -210,6 +207,33 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public void finish(Database.BatchableContext context) {
         new RD2_Settings()
             .saveLatestBatchResults(context.getJobId(), recordsProcessed, recordsFailed);
+    }
+
+    /**
+    * @description validate system requirements related to Recurring Donation Evaluation Batch
+    * If Enhanced RD is not enabled, the batch will be terminate.
+    * If Pause Status does not exist in RD Status value, an error record will be generated.
+    */
+    private void validateRecurringDonationRequriement() {
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
+        }
+
+        if (!UTIL_Describe.isValidPicklistOption(
+            'npe03__Recurring_Donation__c',
+            String.valueOf(npe03__Recurring_Donation__c.Status__c),
+            RD2_Constants.STATUS_PAUSE)
+        ) {
+            Error__c errorRecord = new Error__c(
+                Datetime__c = System.now(),
+                Error_Type__c = System.Label.errErrorTypeOther,
+                Full_Message__c = System.Label.RD2_PauseStatusMustExist
+            );
+
+            ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+            errorResult.errorRecords.add(errorRecord);
+            ERR_Handler.processErrorsOnly(errorResult, ERR_Handler_API.Context.RD.name());
+        }
     }
 
     /**
