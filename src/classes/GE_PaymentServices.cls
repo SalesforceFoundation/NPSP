@@ -105,6 +105,14 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
+     * @description Returns JSON Web Token to payments services tokenize card iframe
+     * @return String
+     */
+    public String getJwtForToken() {
+        return new PS_Request.Builder().getJWT(PS_Request.ElevateEndpoint.TOKENIZE);
+    }
+
+    /**
      * @description Returns Payments Services transaction status values
      * @return String JSON of the transaction status values by name
      */
