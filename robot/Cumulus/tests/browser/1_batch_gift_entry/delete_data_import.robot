@@ -23,9 +23,8 @@ Delete a Data Import
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]
     &{account} =     API Create Organization Account
     &{data_import} =  API Create DataImport    ${ns}NPSP_Data_Import_Batch__c=${batch}[Id]    ${ns}Account1Imported__c=${account}[Id]    ${ns}Donation_Donor__c=Account1
-    Go To Page                        Listing                      Batch_Gift_Entry
-    Click Link With Text    ${batch}[Name]
-    Wait For Locator    bge.title    Batch Gift Entry
+    Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details      DataImportBatch__c
     Wait For Locator    bge.locate_dropdown    1
     Sleep    3
     Select BGE Row     ${account}[Name]

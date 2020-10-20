@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 ...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/ContactPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Run Keywords
@@ -33,9 +34,8 @@ Create a new opportunity for a contact with open donations
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity1} =     API Create Opportunity   ${account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}
     &{opportunity2} =     API Create Opportunity   ${contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}
-    Go To Page                        Listing                      Batch_Gift_Entry
-    Click Link With Text    ${batch}[Name]
-    Wait For Locator    bge.title    Batch Gift Entry
+    Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
@@ -82,5 +82,5 @@ Create a new opportunity for a contact with open donations
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value  Close Date    contains  ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
-    Go To Record Home    ${contact}[Id]
+    Go To Page      Details        Contact        object_id=${contact}[Id]
     Validate Related Record Count        Opportunities      2
