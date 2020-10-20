@@ -8,8 +8,8 @@ Suite Teardown  Delete Records and Close Browser
 
 Create via API
     &{contact} =  API Create Contact
-    Go To Record Home  &{contact}[Id]
-    Page Should Contain  &{contact}[FirstName] &{contact}[LastName]
+    Go To Record Home  ${contact}[Id]
+    Page Should Contain  ${contact}[FirstName] ${contact}[LastName]
     Header Field Should Have Link  Account Name
 
 *** Keywords ***
