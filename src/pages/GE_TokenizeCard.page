@@ -88,8 +88,6 @@
         * @description Creates a token and posts the response to a credit card widget LWC
         */
         function handleTokenCreation() {
-            // TODO Remove this line in W-8021204
-            console.log('>>> Tokenize with Name On Card: "' + nameOnCard + '"');
             const auth = {
                 jwt: '{!jwtForToken}',
                 userName: '{!$User.Username}'
