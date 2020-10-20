@@ -935,9 +935,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    reset(objectMappingDeveloperName = null) {
+    reset(objectMappingDeveloperName = null, applyDefaults = true) {
         if (objectMappingDeveloperName === null) {
-            this.resetFieldsApplyDefaults();
+            this.resetFields(applyDefaults);
             this.resetFormState();
         } else {
             this.resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName);
@@ -953,10 +953,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.initializeFormState();
     }
 
-    resetFieldsApplyDefaults() {
+    resetFields(applyDefaults = true) {
         this.template.querySelectorAll('c-ge-form-section')
             .forEach(section => {
-                section.reset();
+                section.reset(null, applyDefaults);
             });
     }
 

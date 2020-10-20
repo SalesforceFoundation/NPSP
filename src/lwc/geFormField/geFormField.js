@@ -485,14 +485,14 @@ export default class GeFormField extends LightningElement {
     @api
     reset(setDefaults = true) {
         // As of W-8017324 picklists get their value from formState
-        if (!this.isPicklist) {
+        if (this.isPicklist) {
             return;
         }
 
+        this.value = null;
+
         if (setDefaults) {
             this.value = this._defaultValue;
-        } else {
-            this.value = null;
         }
     }
 
