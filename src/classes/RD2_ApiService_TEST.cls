@@ -34,7 +34,7 @@
 * @description Unit Tests specific to Enhanced Recurring Donation Api's
 *
 */
-@IsTest(IsParallel=true)
+@IsTest(IsParallel=false)
 private class RD2_ApiService_TEST {
 
     private static final String API_QUERY_SCHEDULES = 'rd2.queryschedules';

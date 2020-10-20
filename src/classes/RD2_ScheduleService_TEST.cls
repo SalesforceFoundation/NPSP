@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations Schedule Service unit tests
 *
 */
-@isTest(IsParallel=true)
+@isTest(IsParallel=false)
 public with sharing class RD2_ScheduleService_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway scheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();

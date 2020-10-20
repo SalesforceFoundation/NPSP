@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations Visualize Schedule Controller unit tests
 *
 */
-@IsTest(IsParallel=true)
+@IsTest(IsParallel=false)
 private with sharing class RD2_VisualizeScheduleController_TEST {
 
     private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 11, 1);
