@@ -119,14 +119,15 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         """
         locator = npsp_lex_locators["bge"]["button"].format("Edit")
         edit_button = self.selenium.get_webelement(locator)
-        self.selenium.wait_until_element_is_visible(edit_button)
+        self.selenium.wait_until_element_is_visible(edit_button,60)
         self.selenium.click_element(locator)
         self.salesforce.wait_until_modal_is_open()
         self.selenium.reload_page()
         self.selenium.reload_page()
         time.sleep(2)
-        self._populate_edit_status_values(**kwargs)
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
+        self.selenium.wait_until_element_is_visible(btnlocator,60)
+        self._populate_edit_status_values(**kwargs)
         self.selenium.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
         self.salesforce.wait_until_modal_is_closed()
@@ -189,7 +190,10 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                for v in value:
                   checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(v)
                   time.sleep(1)
-                  self.selenium.click_element(checkbox)
+                  if (checkbox.is_selected() == False):
+                    self.selenium.click_element(checkbox)
+                  else:
+                    self.builtin.log("This checkbox is already in the expected status", "WARN")
            else:
                raise Exception("Key not supported expected keys <Paused Reason> or <Date>")
            
