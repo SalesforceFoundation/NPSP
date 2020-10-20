@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>Link_Label__c</field>
-        <value xsi:type="xsd:string">Learn more on Trailhead</value>
+        <value xsi:type="xsd:string">gsChecklistItemSetupContactLinkLabel</value>
     </values>
     <values>
         <field>Link_href__c</field>

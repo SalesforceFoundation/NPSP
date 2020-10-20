@@ -6,6 +6,7 @@ import gsChecklistOnboardUsersTitle from '@salesforce/label/c.gsChecklistOnboard
 import gsChecklistOnboardUsersDesc from '@salesforce/label/c.gsChecklistOnboardUsersDesc';
 import gsChecklistItemSetupContactTitle from '@salesforce/label/c.gsChecklistItemSetupContactTitle';
 import gsChecklistItemSetupContactDesc from '@salesforce/label/c.gsChecklistItemSetupContactDesc';
+import gsChecklistItemSetupContactLinkLabel from '@salesforce/label/c.gsChecklistItemSetupContactLinkLabel';
 import gsChecklistItemSetupContactPriBtnLabel from '@salesforce/label/c.gsChecklistItemSetupContactPriBtnLabel';
 import gsChecklistItemSetupContactSecBtnLabel from '@salesforce/label/c.gsChecklistItemSetupContactSecBtnLabel';
 import gsChecklistItemStayTrackTitle from '@salesforce/label/c.gsChecklistItemStayTrackTitle';
@@ -26,6 +27,7 @@ const mapValue = {
     gsChecklistOnboardUsersDesc,
     gsChecklistItemSetupContactTitle,
     gsChecklistItemSetupContactDesc,
+    gsChecklistItemSetupContactLinkLabel,
     gsChecklistItemSetupContactPriBtnLabel,
     gsChecklistItemSetupContactSecBtnLabel,
     gsChecklistItemStayTrackTitle,
@@ -40,7 +42,7 @@ const mapValue = {
 
 
 /**
-*    
+*  @description This function translate the string using mapValue for that
 */
 export default function translate(label) {
     return mapValue[label] != undefined ? mapValue[label] : label;
