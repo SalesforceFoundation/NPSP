@@ -18,6 +18,9 @@
         let domain = arr[0].replace('--npsp', '');
         domain = domain.replace('--c', '');
         const lightningOrigin = `https://${domain}.lightning.force.com`;
+        
+        const DEFAULT_NAME_ON_CARD = '[Not Provided]';
+        let nameOnCard = DEFAULT_NAME_ON_CARD;
 
         const sfdo = new sfdoPaymentsJsSdk();
         sfdo.mount({
@@ -61,30 +64,45 @@
         }
 
         /*******************************************************************************
-        * @description Method listens for messages from geFormWidgetTokenizeCard
+        * @description Method listens for messages from a credit card widget LWC
+        * Event.data contains at least an "action" and optionally a "nameOnCard" value.
         */
         window.onmessage = function (event) {
             if (event && event.origin !== lightningOrigin) {
                 // Reject any messages from an unexpected origin
                 return;
+
             } else if (event.data && event.data.action === 'createToken') {
+                if (event.data.nameOnCard) {
+                    nameOnCard = event.data.nameOnCard;
+                } else {
+                    nameOnCard = DEFAULT_NAME_ON_CARD;
+                }
+
                 handleTokenCreation();
             }
         }
 
         /*******************************************************************************
-        * @description Creates a token and posts the response to geFormWidgetTokenizeCard
+        * @description Creates a token and posts the response to a credit card widget LWC
         */
         function handleTokenCreation() {
+// TODO Remove this line in W-8021204
+console.log('>>> Tokenize with Name On Card: "' + nameOnCard + '"');
             sfdo
                 .createToken({
-                    nameOnCard: 'test name'
+                    nameOnCard: nameOnCard
                 })
                 .then(function response(resp) {
-                    // Send token to lwc
-                    const token = resp.token;
-                    const successString = JSON.stringify({ token: token });
-                    postMessage(successString);
+                    if (resp.token) {
+                        // Send token to lwc
+                        const successString = JSON.stringify({ token: resp.token });
+                        postMessage(successString);
+
+                    } else if (resp.error) {
+                        // Response contains the error, send it to lwc
+                        postMessage(JSON.stringify(resp));
+                    }
                 })
                 .catch(function handleError(err) {
                     // Send error to lwc
@@ -94,9 +112,9 @@
         }
 
         /*******************************************************************************
-        * @description Posts messages to geFormWidgetTokenizeCard
+        * @description Posts messages to a credit card widget LWC
         *
-        * @param {string} message: String to pass to geFormWidgetTokenizeCard
+        * @param {string} message: String to pass to the LWC
         */
         function postMessage(message) {
             window.top.postMessage(message, lightningOrigin);

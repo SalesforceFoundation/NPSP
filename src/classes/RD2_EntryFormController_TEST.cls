@@ -37,11 +37,42 @@
 @isTest
 private with sharing class RD2_EntryFormController_TEST {
 
+    private static final Date START_DATE = Date.newInstance(2019, 3, 1);
+    private static final String COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+    private static final String TEMP_COMMITMENT_ID = RD2_ElevateIntegrationService.TEMP_COMMITMENT_ID_PREFIX + COMMITMENT_ID;
+    private static final String PAYMENT_METHOD_TOKEN = 'token-abcd-efgh-ijkl-mnop-qrst';
+    private static final String CARD_LAST_4 = '1234';
+    private static final String CARD_EXPIRATION_MONTH = '11';
+    private static final String CARD_EXPIRATION_YEAR = '2019';
+
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(c.Id)
+            .withAmount(25)
+            .withDefaultValues()
+            .withInstallmentPeriodWeekly()
+            .withDayOfMonth('1')
+            .withInstallmentFrequency(2)
+            .build();
+        insert rd;
+    }
+
     /***
     * @description Verifies that Entry Form Controller gathers the correct org setting
     */
     @isTest
-    private static void shouldReturnRDSettingForEntryForm() {
+    private static void shouldReturnSettings() {
         Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
@@ -54,10 +85,49 @@ private with sharing class RD2_EntryFormController_TEST {
             'Multi Currency Org should be detected in the configuration.');
         System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
             'Parent Sobject type should be correctly identified when value is not null');
+
         System.assertEquals(true, ((Map<String,Boolean>)orgSettingsByKey.get('InstallmentPeriodPermissions')).get('Createable'),
             'Installment_Period__c.IsCreatable should return true');
         System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
             'A list of Custom Fields should be returned');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @isTest
+    private static void shouldDisplayElevateWidgetWhenElevateEnabledAndPilotEnabledIsTrue() {
+        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
+        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(true);
+
+        Test.startTest();
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        Test.stopTest();
+
+        System.assertEquals(true, ((Boolean) orgSettingsByKey.get('isElevateCustomer')),
+            'The org should be Elevate customer');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @isTest
+    private static void shouldNotDisplayElevateWidgetWhenElevateEnabledAndPilotEnabledIsFalse() {
+        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
+        UTIL_FeatureEnablement_TEST.setPilotEnabledParameter(false);
+
+        Test.startTest();
+        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        Test.stopTest();
+
+        System.assertEquals(false, ((Boolean) orgSettingsByKey.get('isElevateCustomer')),
+            'The org should not be Elevate customer');
     }
 
     /***
@@ -96,18 +166,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static void shouldReturnContactDonorType() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(c.Id)
-            .withAmount(25)
-            .withDefaultValues()
-            .withInstallmentPeriodWeekly()
-            .withDayOfMonth('1')
-            .withInstallmentFrequency(2)
-            .build();
-        insert rd;
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
         Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
@@ -125,9 +184,9 @@ private with sharing class RD2_EntryFormController_TEST {
      * @description Validate that the System Admin User reports that they have the required field permissions
      */
     @IsTest
-    private static void shouldValidateUserHasPermissions() {
-        Boolean hasPerms = RD2_EntryFormController.checkRequiredFieldPermissions();
-        System.assert(hasPerms, 'Should determine that the Admin User has all permissions');
+    private static void shouldReturnTrueWhenUserHasPermissions() {
+        Boolean hasPerms = RD2_EntryFormController.hasRequiredFieldPermissions();
+        System.assertEquals(true, hasPerms, 'The Admin User should have permissions');
     }
 
     /**
@@ -135,25 +194,31 @@ private with sharing class RD2_EntryFormController_TEST {
      * are missing the required field permissions
      */
     @IsTest
-    private static void shouldValidateUserMissingPermissions() {
+    private static void shouldReturnFalseWhenUserIsMissingPermissions() {
+        User stdUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
+
         Id stdProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.PROFILE_STANDARD_USER LIMIT 1].Id;
 
-        FieldPermissions fldPerm = [SELECT Id, PermissionsRead, PermissionsEdit
-                                    FROM FieldPermissions
-                                    WHERE Parent.ProfileId = :stdProfileId
-                                    AND Field = 'npe03__Recurring_Donation__c.npe03__Installment_Period__c'];
+        FieldPermissions fldPerm = [
+            SELECT Id, PermissionsRead, PermissionsEdit
+            FROM FieldPermissions
+            WHERE Parent.ProfileId = :stdProfileId
+            AND Field = 'npe03__Recurring_Donation__c.npe03__Installment_Period__c'
+        ];
         fldPerm.PermissionsRead = false;
         fldPerm.PermissionsEdit = false;
         update fldPerm;
 
-        User roUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
-        System.runAs(roUser) {
-            Boolean hasPerms = RD2_EntryFormController.checkRequiredFieldPermissions();
-            System.assert(!hasPerms, 'Should determine that the Standard User is missing permissions');
+        Test.startTest();
+        System.runAs(stdUser) {
+            Boolean hasPerms = RD2_EntryFormController.hasRequiredFieldPermissions();
+            System.assertEquals(false, hasPerms, 'The Standard User should be missing permissions');
         }
+        Test.stopTest();
     }
+
     /***
-    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields 
+    * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields
     */
     @isTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
@@ -166,9 +231,177 @@ private with sharing class RD2_EntryFormController_TEST {
                 'Excluded fields should not be return:' + field.apiName);
             System.assert(!field.apiName.startsWith('npsp__'),
                 'NPSP package field should not be return:' + field.apiName);
-                System.assert(!field.apiName.startsWith('npe03__'),
+            System.assert(!field.apiName.startsWith('npe03__'),
                 'NPSP package field should not be return:' + field.apiName);
         }
+    }
+
+    /***
+    * @description Verifies Commitment Request Body is built as expected
+    */
+    @isTest
+    private static void shouldReturnCommitmentRequestBody() {
+        Id recordId = rdGateway.getRecords()[0].Id;
+
+        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+        PS_CommitmentRequest.RequestBody requestBody = service.getRequestBody(recordId, PAYMENT_METHOD_TOKEN);
+
+        System.assertNotEquals(null, requestBody, 'The Commitment request body should be converted successfully');
+        System.assertEquals(PAYMENT_METHOD_TOKEN, requestBody.paymentMethodToken, 'The payment token should match');
+    }
+
+    /***
+    * @description Verifies Commitment record created response is returned upon successful creation
+    */
+    @isTest
+    private static void shouldReturnResponseWhenCommitmentIsCreated() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Id recordId = rdGateway.getRecords()[0].Id;
+
+        Test.startTest();
+        mockRecordCreatedCalloutResponse();
+
+        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+
+        PS_CommitmentRequest.RequestBody requestBody = service.getRequestBody(recordId, PAYMENT_METHOD_TOKEN);
+        UTIL_Http.Response response = service.sendRequest(recordId, JSON.serialize(requestBody));
+        Test.stopTest();
+
+        System.assertNotEquals(null, response, 'The Commitment response should be returned');
+        System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode,
+            'The response status code should match: ' + response);
+    }
+
+    /***
+    * @description Verifies Recurring Donation fields are updated with the commitment data
+    * returned from Elevate on a successful commitment creation.
+    */
+    @isTest
+    private static void shouldUpdateRDCommitmentIdWhenCommitmentIsCreated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withDayOfMonth('1')
+            .withCommitmentId(TEMP_COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        Test.startTest();
+        mockRecordCreatedCalloutResponse();
+
+        String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(COMMITMENT_ID, rd.CommitmentId__c,
+            'The Commitment Id should be saved on the RD record: ' + jsonResponse);
+        System.assertEquals(CARD_LAST_4, rd.CardLast4__c,
+            'The card last 4 value should be saved on the RD record: ' + jsonResponse);
+        System.assertEquals(CARD_EXPIRATION_MONTH, rd.CardExpirationMonth__c,
+            'The card expiration month value should be saved on the RD record: ' + jsonResponse);
+        System.assertEquals(CARD_EXPIRATION_YEAR, rd.CardExpirationYear__c,
+            'The card expiration year value should be saved on the RD record: ' + jsonResponse);
+    }
+
+    /***
+    * @description Verifies Recurring Donation commitment fields are not updated
+    * when an error response is received from the Elevate API.
+    */
+    @isTest
+    private static void shouldNotUpdateRDCommitmentIdWhenElevateReturnsErrorResponse() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withDayOfMonth('1')
+            .withCommitmentId(TEMP_COMMITMENT_ID)
+            .build();
+        insert rd;
+
+        Test.startTest();
+        UTIL_Http_TEST.mockBadRequestCalloutResponse();
+
+        String jsonResponse = RD2_EntryFormController.createCommitment(rd.Id, PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(TEMP_COMMITMENT_ID, rd.CommitmentId__c,
+            'The temp Commitment Id should stay when commitment cannot be created: ' + jsonResponse);
+    }
+
+    /***
+    * @description Verifies an exception is generated when Recurring Donation Id 
+    * is not provided as a prerequisite for the commitment creation
+    */
+    @isTest
+    private static void shouldNotSentCommitmentRequestWhenRDIdIsNotProvided() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Exception actualException;
+        Test.startTest();
+        try {
+            Id recordId = null;
+            RD2_EntryFormController.createCommitment(recordId, PAYMENT_METHOD_TOKEN);
+        } catch (Exception e) {
+            actualException = e;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, actualException,
+            'An exception should be generated when Recurring Donation Id is not provided');
+        System.assertEquals(System.Label.RD2_ErrorRDIdIsMissingForCommitment, actualException.getMessage(),
+            'The exception should be match');
+    }
+    
+
+    // Helpers
+    ////////////////
+
+    /****
+    * @description Simulates a successful commitment creation callout
+    * @return String
+    */
+    private static void mockRecordCreatedCalloutResponse() {
+        UTIL_Http_TEST.mockRecordCreatedCalloutResponse(mockSuccessResponseBody());
+    }
+
+    /****
+    * @description Returns a mock response body that mimics response body returned from Elevate
+    * when a commitment is created
+    * @return String
+    */
+    private static String mockSuccessResponseBody() {
+        return '{"id":"' + COMMITMENT_ID
+            + '","status":"ACTIVE","statusReason":"COMMITMENT_CREATED"'
+            + ',"cardData":{"last4":"' + CARD_LAST_4
+            + '","expirationMonth":"' + CARD_EXPIRATION_MONTH
+            + '","expirationYear":"' + CARD_EXPIRATION_YEAR
+            + '"}}';
+    }
+
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, AccountId, Account.Name
+            FROM Contact
+            LIMIT 1
+        ];
     }
 
 }
