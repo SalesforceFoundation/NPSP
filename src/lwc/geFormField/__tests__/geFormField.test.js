@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import GeFormField from 'c/geFormField';
 import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { shadowQuerySelector } from 'c/utilsTest';
 
 // Import mock data
 const mockGetPicklistValues = require('./data/wiredPicklistValues.json');
@@ -86,16 +87,11 @@ describe('c-ge-form-field', () => {
 
         expect(element.isPicklist).toBeTruthy();
 
-        const pl = element.shadowRoot.querySelector('lightning-combobox');
-
-        const newPicklistValue = 'newPicklistValue';
-        const customEventDetail = { detail: { value: newPicklistValue } };
+        const picklist = element.shadowRoot.querySelector('lightning-combobox');
+        dispatchChangeEvent(picklist, 'newPicklistValue');
 
         return Promise.resolve().then(() => {
-            pl.dispatchEvent(new CustomEvent('change', customEventDetail));
-
             jest.runOnlyPendingTimers();
-
             expect(picklistChangeHandler).toBeCalled();
             expect(picklistChangeHandler.mock.calls[0][0].detail.value)
                 .toStrictEqual('newPicklistValue');
@@ -189,7 +185,8 @@ describe('c-ge-form-field', () => {
                 jest.runOnlyPendingTimers();
 
                 expect(picklistChangeHandler).toBeCalled();
-                expect(picklistChangeHandler.mock.calls[0][0].detail.value).toStrictEqual('Picklist_Option_1');
+                expect(picklistChangeHandler.mock.calls[0][0].detail.value)
+                    .toStrictEqual('Picklist_Option_1');
 
                 mockFormState(element, 'Picklist_Option_1');
             })
@@ -201,7 +198,8 @@ describe('c-ge-form-field', () => {
                 jest.runOnlyPendingTimers();
 
                 expect(picklistChangeHandler).toBeCalled();
-                expect(picklistChangeHandler.mock.calls[1][0].detail.value).toStrictEqual('Picklist_Option_2');
+                expect(picklistChangeHandler.mock.calls[1][0].detail.value)
+                    .toStrictEqual('Picklist_Option_2');
 
                 mockFormState(element, 'Picklist_Option_2');
             })
@@ -233,22 +231,6 @@ expect.extend({
         };
     }
 });
-
-const getShadowRoot = (element) => {
-    if (!element || !element.shadowRoot) {
-        const tagName =
-            element && element.tagName && element.tagName.toLowerCase();
-        throw new Error(
-            `Attempting to retrieve the shadow root of '${tagName || element}'
-            but no shadowRoot property found`
-        );
-    }
-    return element.shadowRoot;
-}
-
-const shadowQuerySelector = (element, selector) => {
-    return getShadowRoot(element).querySelector(selector);
-}
 
 const getSubComponentCombobox = geFormFieldElement => {
     return shadowQuerySelector(
