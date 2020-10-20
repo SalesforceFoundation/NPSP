@@ -39,7 +39,7 @@ Add Existing Contact to Existing Household through Manage Household Page
     ...                                  Account
     ...                                  object_id=${contact2}[AccountId]
 
-    Click Actions Link                   Manage Household
+    Click Button                         Manage Household
     Go To Page                           Custom                             ManageHousehold
     Current Page Should Be               Custom                             ManageHousehold
     Add contact                          Existing                           ${contact1}[FirstName] ${contact1}[LastName]
