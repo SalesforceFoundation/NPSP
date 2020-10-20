@@ -935,14 +935,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    reset(objectMappingDeveloperName = null) {
-        if (objectMappingDeveloperName === null) {
-            this.resetFieldsApplyDefaults();
-            this.resetFormState();
-        } else {
-            this.resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName);
-            this.setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName);
-        }
+    reset(applyDefaultValues = true) {
+        this.resetFields(applyDefaultValues);
+        this.resetFormState();
         this.widgetData = {};
     }
 
@@ -953,18 +948,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.initializeFormState();
     }
 
-    resetFieldsApplyDefaults() {
+    resetFields(applyDefaultValues) {
         this.template.querySelectorAll('c-ge-form-section')
             .forEach(section => {
-                section.reset();
+                section.reset(applyDefaultValues);
             });
     }
 
     resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
         this.template.querySelectorAll('c-ge-form-section')
             .forEach(section => {
-                section.reset(this.fieldMappingDevNamesFor(objectMappingDeveloperName));
+                section.resetFieldsForFieldMappingsApplyDefaults(
+                    this.fieldMappingDevNamesFor(objectMappingDeveloperName));
             });
+
+        this.setFormStateToInitialFieldValuesForObjMapping(objectMappingDeveloperName);
     }
 
     fieldMappingDevNamesFor(objectMappingDeveloperName) {
@@ -1243,7 +1241,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {
             // Reset all fields related to this lookup field's object mapping
-            this.reset(this.objectMappingDeveloperNameFor(fieldApiName));
+            this.resetFieldsForObjMappingApplyDefaults(
+                this.objectMappingDeveloperNameFor(fieldApiName));
         }
 
         this.handleDonorLookupFieldsChange(fieldApiName, recordId);
