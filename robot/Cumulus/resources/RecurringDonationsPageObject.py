@@ -70,6 +70,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         for i in range(3):
+            time.sleep(1)
             self.selenium.location_should_contain(
                 "/lightning/r/npe03__Recurring_Donation__c/",
                 message="Current page is not a Recurring Donations record view",

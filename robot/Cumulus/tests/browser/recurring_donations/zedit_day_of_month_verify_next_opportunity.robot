@@ -80,6 +80,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
     @{opportunities} =                 API Query Opportunity For Recurring Donation     ${data}[contact_rd][Id]
 
     Edit Opportunity Stage             ${opportunities}[0][Id]                               Closed Won
+    Run Recurring Donations Batch      RD2
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c
     ...                                object_id=${data}[contact_rd][Id]
