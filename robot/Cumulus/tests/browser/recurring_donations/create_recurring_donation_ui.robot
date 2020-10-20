@@ -27,17 +27,21 @@ Create Open Recurring Donation With Monthly Installment
     Go To Page                           Details
     ...                                  Contact
     ...                                  object_id=${data}[contact][Id]
-    Click More Actions Button
-    Click Link                           link=New Open Recurring Donation
-    Wait Until Modal Is Open		
+    Wait Until Loading Is Complete
+    Current Page Should Be               Details                      Contact
+    Click More Actions Lightning Button
+    Click Link With Spantext                 New Open Recurring Donation
+
+    Wait Until Modal Is Open
     Populate Modal Form
     ...                                  Recurring Donation Name= Robot Recurring Donation
     ...                                  Amount=100
     ...                                  Installment Period=Monthly
     Click Modal Button                   Save
-    Wait Until Modal Is Closed		
-    Reload Page		
+    Wait Until Modal Is Closed
+    Reload Page
     Select Tab                           Related
+    Current Page Should Be               Details                Contact
     Check Related List Values            Recurring Donations    Robot Recurring Donation
     Load Related List                    Opportunities
     Click ViewAll Related List           Opportunities
