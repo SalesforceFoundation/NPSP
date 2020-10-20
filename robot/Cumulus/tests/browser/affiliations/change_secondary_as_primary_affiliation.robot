@@ -9,25 +9,25 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 ***Keywords***
 Setup Test Data
-    &{account} =                      API Create Organization Account 
-    Set suite variable                &{account}  
-    &{contact} =                      API Create Contact                 Email=automation@example.com 
+    &{account} =                      API Create Organization Account
+    Set suite variable                &{account}
+    &{contact} =                      API Create Contact                 Email=automation@example.com
     Set suite variable                &{contact}
     Store Session Record              Account                            ${contact}[AccountId]
     API Create Secondary Affiliation  ${account}[Id]                     ${contact}[Id]
-    
+
 
 *** Test Cases ***
 
 Create Secondary Affiliation for Contact
-    [Documentation]                   Creates a contact, organization account and secondary affiliation via API 
-    ...                               Open contact and open affiliation record. Edit affiliation record to select Primary checkbox and save. 
+    [Documentation]                   Creates a contact, organization account and secondary affiliation via API
+    ...                               Open contact and open affiliation record. Edit affiliation record to select Primary checkbox and save.
     ...                               Verify that Affiliation now shows under Primary affiliation field.
-    [tags]                            W-037651                     feature:Affiliations     
+    [tags]                            W-037651                     feature:Affiliations
     Go To Page                        Details                      Contact                 object_id=${contact}[Id]
     Select Tab                        Related
     Click Related Table Item Link     Organization Affiliations    ${account}[Name]
