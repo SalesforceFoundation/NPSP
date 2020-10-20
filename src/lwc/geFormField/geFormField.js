@@ -5,7 +5,6 @@ import GeLabelService from 'c/geLabelService';
 import {getObjectInfo, getPicklistValues} from "lightning/uiObjectInfoApi";
 import {fireEvent} from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
-import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
@@ -99,7 +98,7 @@ export default class GeFormField extends LightningElement {
         }
     };
 
-    fireLookupRecordSelectedEvent(event) {
+    fireLookupRecordSelectedEvent() {
         const lookupDetail = {
             fieldApiName: this.element.fieldApiName,
             value: this.value
