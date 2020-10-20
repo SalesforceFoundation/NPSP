@@ -1354,7 +1354,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (this.selectedDonation.Id.startsWith(this.opportunityKeyPrefix)) {
                 // If the selected donation is an Opportunity, reset form fields that have
                 // field mappings parented by PaymentImported__c
-                this.reset(
+                this.resetFieldsForObjMappingApplyDefaults(
                     GeFormService.objectMappingWrapperFor(
                         DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
                     ).DeveloperName);
@@ -1379,13 +1379,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonationDataImportFieldValues, false);
 
         // Reset form fields that have field mappings parented by DonationImported__c
-        this.reset(
+        this.resetFieldsForObjMappingApplyDefaults(
             GeFormService.objectMappingWrapperFor(
                 DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
             ).DeveloperName);
 
         // Reset form fields that have field mappings parented by PaymentImported__c
-        this.reset(
+        this.resetFieldsForObjMappingApplyDefaults(
             GeFormService.objectMappingWrapperFor(
                 DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
             ).DeveloperName);
