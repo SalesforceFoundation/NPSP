@@ -1339,7 +1339,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         // Load the "imported" and "imported status" fields in case they are on the form
-        this.load(this.selectedDonationDataImportFieldValues);
+        this.load(this.flatten(this.selectedDonationDataImportFieldValues));
 
         if (this.selectedDonation.Id) {
             // Load the sibling field values (parented by the same object mapping)
@@ -2036,6 +2036,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     getFieldValueFromFormState(fieldApiName) {
         return this.formState[fieldApiName];
+    }
+
+    flatten(obj) {
+        let flatObj = {};
+        for(const [key, value] of Object.entries(obj)) {
+            if (value !== null && value !== undefined && value.hasOwnProperty('value')) {
+                flatObj[key] = value.value;
+            } else {
+                flatObj[key] = value;
+            }
+        }
+        return flatObj;
     }
 
 }
