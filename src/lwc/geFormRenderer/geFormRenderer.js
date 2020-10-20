@@ -981,7 +981,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._account1Name = null;
         this._contact1LastName = null;
         this._contact1FirstName = null;
-        fireEvent(this, 'resetReviewDonationsEvent', {});
     }
 
     get mode() {
