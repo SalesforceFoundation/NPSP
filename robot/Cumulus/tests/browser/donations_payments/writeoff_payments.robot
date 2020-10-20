@@ -40,7 +40,7 @@ Verify values in Create one or more Payments for this Opportunity page
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open
     Set Checkbutton To                   Written Off             checked
-    Click Modal Button                   Save
+    Click Button                         Save
     Wait Until Modal Is Closed
     Click Special Related List Button    Payments    Schedule Payments
     Current Page Should Be               Custom      SchedulePayment
@@ -54,9 +54,9 @@ Verify values in Create one or more Payments for this Opportunity page
     Wait Until Modal Is Open
     Set Checkbutton To                   Written Off    checked
     Set Checkbutton To                   Paid           checked
-    Click Modal Button                   Save
+    Click Button                         Save
     Page Should Contain                  A Payment can't be both paid and written off. You must deselect one or both checkboxes.
-    Click Modal Button                   Cancel
+    Click Button                         Cancel
     Current Page Should Be               Details         Opportunity
     Click ViewAll Related List           Payments
     Verify Details
@@ -73,7 +73,7 @@ Verify values in Writeoff Remaining Balance Page
     Wait Until Modal Is Open
     Set Checkbutton To                  Written Off      checked
     Populate Field                      Payment Amount   200
-    Click Modal Button                  Save
+    Click Button                        Save
     Wait Until Modal Is Closed
 
     Navigate To Writeoff Payments Page

@@ -10,7 +10,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 ***Keywords***
 
@@ -36,66 +36,73 @@ Setup Test Data
 *** Test Cases ***
 
 Find Matching Gifts
+    Go To Page                             Details
+    ...                                    Opportunity
+    ...                                    object_id=${data}[contact1_opportunity][Id]
+    Current Page Should Be                 Details                           Opportunity
+    Click Button                           title:Edit
+    Populate Lookup Field                  Matching Gift Account             ${data}[org][Name]
+    Select Value From Dropdown             Matching Gift Status              Potential
+    Click Modal Button                     Save
+    Wait Until Modal Is Closed
+    Go To Page                             Details
+    ...                                    Opportunity
+    ...                                    object_id=${data}[org_opportunity][Id]
+    Current Page Should Be                 Details                           Opportunity
+    Navigate to Matching Gifts Page
 
-     Go To Page                             Details
-     ...                                    Opportunity
-     ...                                    object_id=${data}[contact1_opportunity][Id]
-     Click More Actions Button
-     Click Link                             link=Edit
-     Populate Lookup Field                  Matching Gift Account             ${data}[org][Name]
-     Select Value From Dropdown             Matching Gift Status              Potential
-     Click Modal Button                     Save
-     Go To Page                             Details
-     ...                                    Opportunity
-     ...                                    object_id=${data}[org_opportunity][Id]
-     Navigate to Matching Gifts Page
+    Page Should Contain Link               Contact1 $50 donation               limit=1
+    Set Checkbutton To                     Contact1 $50 donation               checked
+    Click Link                             link=Find More Gifts
+    Populate Modal Field                   Primary Contact                     ${data}[contact2][FirstName] ${data}[contact2][LastName]
+    Click Button With Value                Search
+    Set Checkbutton To                     Contact2 $25 Donation                checked
+    Click Button With Value                Save
+    Current Page Should Be                 Details    Opportunity
+    Select Tab                             Related
+    Verify Related Object Field Values     Contact Roles
+    ...                                    ${data}[contact1][FirstName] ${data}[contact1][LastName]=Matched Donor
+    ...                                    ${data}[contact2][FirstName] ${data}[contact2][LastName]=Matched Donor
+    Go To Page                             Details
+    ...                                    Opportunity
+    ...                                    object_id=${data}[org_opportunity][Id]
+    Select Tab                             Related
+    Verify Related Object Field Values     Partial Soft Credits
+    ...                                    ${data}[contact1][FirstName] ${data}[contact1][LastName]=$50.00
+    ...                                    ${data}[contact2][FirstName] ${data}[contact2][LastName]=$25.00
 
-     Page Should Contain Link               Contact1 $50 donation               limit=1
-     Set Checkbutton To                     Contact1 $50 donation               checked
-     Click Link                             link=Find More Gifts
-     Populate Modal Field                   Primary Contact                     ${data}[contact2][FirstName] ${data}[contact2][LastName]
-     Click Button With Value                Search
-     Set Checkbutton To                     Contact2 $25 Donation                checked
-     Click Button With Value                Save
-     Current Page Should Be                 Details    Opportunity
-     Select Tab                             Related
-      Verify Related Object Field Values    Contact Roles
-      ...                                   ${data}[contact1][FirstName] ${data}[contact1][LastName]=Matched Donor
-      ...                                   ${data}[contact2][FirstName] ${data}[contact2][LastName]=Matched Donor
+    Go To Page                             Details
+    ...                                    Opportunity
+    ...                                    object_id=${data}[org_opportunity][Id]
 
-     Go To Page                             Detail
-       ...                                  Opportunity
-       ...                                  object_id=${data}[org_opportunity][Id]
+    Select Tab    Related
+    Verify Related Object Field Values     Matched Gifts
+    ...                                    ${data}[contact1_opportunity][Name]=$50.00
+    ...                                    ${data}[contact2_opportunity][Name]=$25.00
 
-     Select Tab                            Related
-     Verify Related Object Field Values    Partial Soft Credits
-      ...                                  ${data}[contact1][FirstName] ${data}[contact1][LastName]=$50.00
-      ...                                  ${data}[contact2][FirstName] ${data}[contact2][LastName]=$25.00
+    Go To Page                             Details
+    ...                                    Opportunity
+    ...                                    object_id=${data}[contact1_opportunity][Id]
+    Navigate To And Validate Field Value   Matching Gift    contains    ${data}[org_opportunity][Name]
 
-     Go To Page                              Detail
-      ...                                    Opportunity
-      ...                                    object_id=${data}[org_opportunity][Id]
+    Go To Page                             Details
+    ...                                    Opportunity
+    ...                                    object_id=${data}[contact2_opportunity][Id]
+    Navigate To And Validate Field Value   Matching Gift    contains    ${data}[org_opportunity][Name]
 
-      Select Tab    Related
-      Verify Related Object Field Values    Matched Gifts
-      ...                                  ${data}[contact1_opportunity][Name]=$50.00
-      ...                                  ${data}[contact2_opportunity][Name]=$25.00
+    Run Donations Batch Process
 
-      Go To Record Home                    ${data}[contact1_opportunity][Id]
-      Navigate To And Validate Field Value    Matching Gift    contains    ${data}[org_opportunity][Name]
+    Go To Page                             Details
+    ...                                    Contact
+    ...                                    object_id=${data}[contact1][Id]
 
-      Go To Record Home  ${data}[contact2_opportunity][Id]
-      Navigate To And Validate Field Value    Matching Gift    contains    ${data}[org_opportunity][Name]
+    Navigate To And Validate Field Value   Total Gifts    contains    $50.00
+    Navigate To And Validate Field Value   Soft Credit Total    contains    $50.00
 
-      Run Donations Batch Process
+    Go To Page                             Details
+    ...                                    Contact
+    ...                                    object_id=${data}[contact2][Id]
 
-      Go To Record Home    ${data}[contact1][Id]
-
-      Navigate To And Validate Field Value    Total Gifts    contains    $50.00
-      Navigate To And Validate Field Value   Soft Credit Total    contains    $50.00
-
-      Go To Record Home    ${data}[contact2][Id]
-
-      Navigate To And Validate Field Value    Total Gifts    contains    $25.00
-      Navigate To And Validate Field Value    Soft Credit Total    contains    $25.00
+    Navigate To And Validate Field Value   Total Gifts    contains    $25.00
+    Navigate To And Validate Field Value   Soft Credit Total    contains    $25.00
 

@@ -32,10 +32,11 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             self.selenium.wait_until_element_is_visible(locator)
             self.salesforce._jsclick(locator)
         else:
-            self.npsp.click_link_with_text(title)
-            locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
+            #self.npsp.click_link_with_text(title)
+            locator=npsp_lex_locators["npsp_settings"]["main_menu_link"].format(title)
             self.selenium.wait_until_page_contains_element(locator,
                                                error=f"click on {title} link was not successful even after 30 seconds")
+            self.salesforce._jsclick(locator)
         self.selenium.capture_page_screenshot()
 
     def open_sub_link(self,title):
