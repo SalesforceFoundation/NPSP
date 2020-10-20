@@ -99,7 +99,6 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend
     Validate Related Record Count      Opportunities                                    1
     @{opportunities} =                 API Query Opportunity For Recurring Donation     ${data}[contact_rd][Id]
-    Log To Console                     ${opportunities}[0][Id]
     Create An Opportunity Related to Recurring Donation                    ${data}[contact_rd][Id]            Pledged
 
     Go To Page                         Details
@@ -119,6 +118,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
 
     #Validate that the number of opportunities now show as 2 .
     Validate Related Record Count      Opportunities                                   2
+    Run Recurring Donations Batch      RD2
     @{opportunity} =                   API Query Opportunity For Recurring Donation                  ${data}[contact_rd][Id]
     #Verify the details on the respective opportunities
     Validate Opportunity Details       ${opportunities}[0][Id]            Pledged                    ${next_payment_date}
