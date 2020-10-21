@@ -1831,7 +1831,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 opportunityRecordTypeValue :
                 this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
 
-            this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.opportunityRecordTypeNameFor(val);
+            this.formState[DONATION_RECORD_TYPE_NAME.fieldApiName] =
+                this.opportunityRecordTypeNameFor(val);
+
             this.setDonationRecordTypeIdInFormState(val);
         }
     }
@@ -2004,11 +2006,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     setDonationRecordTypeIdInFormState(opportunityRecordTypeId) {
         const donationImportedRelatedRecordField =
             relatedRecordFieldNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName);
+        const relatedRecord =
+            this.getFieldValueFromFormState(donationImportedRelatedRecordField);
 
-        const relatedRecord = this.formState[donationImportedRelatedRecordField];
         let updatedRecord;
         if (relatedRecord) {
-            updatedRecord = Object.assign(relatedRecord, {recordTypeId: opportunityRecordTypeId});
+            updatedRecord = Object.assign(
+                relatedRecord,
+                {recordTypeId: opportunityRecordTypeId});
         } else {
             updatedRecord = {recordTypeId: opportunityRecordTypeId};
         }
