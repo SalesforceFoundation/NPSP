@@ -236,18 +236,22 @@ public inherited sharing class RD2_RecurringDonation {
         if (isClosed() || !hasSchedule()) {
             return;
         }
-
-        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
     
-        if (pauseHandler.isCurrentlyPaused(scheduleService, currentDate, rd.RecurringDonationSchedules__r)) {
-            if (rd.Status__c != RD2_Constants.STATUS_PAUSED && RD2_ValidationService.isRDPausedStatusValid()) {
-                RecurringDonationSchedule__c nextPauseSchedule = pauseHandler.getNextActivePauseSchedule(currentDate, rd.RecurringDonationSchedules__r);
+        if (scheduleService.isCurrentlyPaused(currentDate, rd.RecurringDonationSchedules__r)) {
+
+            if (rd.Status__c != RD2_Constants.STATUS_PAUSED && RD2_ValidationService.isStatusPausedActive()) {
+                RecurringDonationSchedule__c nextPauseSchedule = scheduleService.getNextActivePauseSchedule(
+                    currentDate,
+                    rd.RecurringDonationSchedules__r
+                );
+
                 rd.Status__c = RD2_Constants.STATUS_PAUSED;
                 rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
                 changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             }
         } else {
+
             if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
                 rd.ClosedReason__c = '';

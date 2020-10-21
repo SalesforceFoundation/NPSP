@@ -219,7 +219,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * If Paused Status is not Active, an error record will be generated.
     */
     private void validateStatusField() {
-       if (!RD2_ValidationService.isRDPausedStatusValid()) {
+       if (!RD2_ValidationService.isStatusPausedActive()) {
             BatchException ex = new BatchException(System.Label.RD2_PauseStatusMustExist);
             ex.setMessage(System.Label.RD2_PauseStatusMustExist);
             ERR_Handler.processError(ex, ERR_Handler_API.Context.RD);
