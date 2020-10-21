@@ -157,7 +157,11 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Start Method
     */
     public Database.QueryLocator start(Database.BatchableContext context) {
-        validateRecurringDonationRequriement();
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
+        }
+
+        validateStatusField();
         String query = getRDBatchQuery();
 
         if (isBatchInProgress) {
@@ -211,35 +215,14 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
     /**
     * @description validate system requirements related to Recurring Donation Evaluation Batch
-    * If Enhanced RD is not enabled, the batch will be terminate.
-    * If Pause Status does not exist in RD Status value, an error record will be generated.
+    * If Paused Status is not Active, an error record will be generated.
     */
-    private void validateRecurringDonationRequriement() {
-        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
-
-        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
+    private void validateStatusField() {
+       if (!RD2_ValidationService.isRDPausedStatusValid()) {
+            BatchException ex = new BatchException(System.Label.RD2_PauseStatusMustExist);
+            ex.setMessage(System.Label.RD2_PauseStatusMustExist);
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.RD);
         }
-
-        if (!UTIL_Describe.isValidPicklistOption(
-            'npe03__Recurring_Donation__c',
-            String.valueOf(npe03__Recurring_Donation__c.Status__c),
-            RD2_Constants.STATUS_PAUSED)
-        ) {
-            Error__c errorRecord = new Error__c(
-                Context_Type__c = ERR_Handler_API.Context.RD.name(),
-                Datetime__c = System.now(),
-                Error_Type__c = System.Label.errErrorTypeOther,
-                Object_Type__c = String.valueOf(npe03__Recurring_Donation__c.SObjectType),
-                Full_Message__c = System.Label.RD2_PauseStatusMustExist
-            );
-
-
-            errorResult.errorRecords.add(errorRecord);
-        }
-
-        errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
-        ERR_Handler.processErrorsOnly(errorResult, ERR_Handler_API.Context.RD.name());
     }
 
     /**

@@ -1928,7 +1928,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
     /**
     * @description Verifies that when the RD is in the middle of pause period
-    * the RD status should stay as Pause when the nightly batch job runs
+    * the RD status should stay as Paused when the nightly batch job runs
     */
     @isTest
     private static void shouldStayInPauseWhenRDIsInPausedPeriod() {
@@ -2001,7 +2001,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
         /**
-    * @description Verifies that when RD is entering the pasued,
+    * @description Verifies that when RD is entering the paused,
     * the next installment will be created with close date after the pause
     */
     @isTest

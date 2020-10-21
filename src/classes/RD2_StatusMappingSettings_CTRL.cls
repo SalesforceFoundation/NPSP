@@ -226,7 +226,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
     /**
      * @description Builds custom metadata records from status to state mapping records.
      * Only admin added Status field picklist values are saved while
-     * Active, Lapsed, Pause and Closed read-only status mapping are not stored into the CMT.
+     * Active, Lapsed, Paused and Closed read-only status mapping are not stored into the CMT.
      * @param jsonMapping JSON representation of mapping records
      * @return List<Metadata.CustomMetadata>
      */

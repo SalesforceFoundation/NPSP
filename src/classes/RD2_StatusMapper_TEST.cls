@@ -33,12 +33,7 @@
 */
 @IsTest(IsParallel=true)
 public with sharing class RD2_StatusMapper_TEST {
-    private static final Set<String> READ_ONLY_STATUS_VALUES = new Set<String>{
-        RD2_Constants.STATUS_ACTIVE,
-        RD2_Constants.STATUS_LAPSED,
-        RD2_Constants.STATUS_CLOSED,
-        RD2_Constants.STATUS_PAUSED
-    };
+    private static final Set<String> READ_ONLY_STATUS_VALUES = RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.keySet();
 
     /**
      * @description Verifies default Status picklist field mapping is returned

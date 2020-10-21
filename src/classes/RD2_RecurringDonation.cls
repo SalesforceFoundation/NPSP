@@ -182,8 +182,10 @@ public inherited sharing class RD2_RecurringDonation {
 
         } else if (isOpenEnded()) {
             reviseStatusForOpenEnded(currentDate);
-            reviseStatusForPaused(currentDate, scheduleService);
         }
+
+        reviseStatusForPaused(currentDate, scheduleService);
+
         return this;
     }
 
@@ -231,45 +233,27 @@ public inherited sharing class RD2_RecurringDonation {
     * @param scheduleService RD Schedule Service
     */
     private void reviseStatusForPaused(Date currentDate, RD2_ScheduleService scheduleService) {
-        if (getState() == RD2_Constants.STATUS_CLOSED
-            || rd.RecurringDonationSchedules__r == null
-        ) {
+        if (isClosed() || !hasSchedule()) {
             return;
         }
-   
-        if (!scheduleService.pauseHandler.hasActivePause(rd.RecurringDonationSchedules__r, currentDate)) {
+
+        RD2_ScheduleService.PauseScheduleHandler pauseHandler = new RD2_ScheduleService.PauseScheduleHandler();
+    
+        if (pauseHandler.isCurrentlyPaused(scheduleService, currentDate, rd.RecurringDonationSchedules__r)) {
+            if (rd.Status__c != RD2_Constants.STATUS_PAUSED && RD2_ValidationService.isRDPausedStatusValid()) {
+                RecurringDonationSchedule__c nextPauseSchedule = pauseHandler.getNextActivePauseSchedule(currentDate, rd.RecurringDonationSchedules__r);
+                rd.Status__c = RD2_Constants.STATUS_PAUSED;
+                rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
+                changedFields.add(npe03__Recurring_Donation__c.Status__c);
+                changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
+            }
+        } else {
             if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
                 rd.ClosedReason__c = '';
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
                 changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             }
-            return;
-        }
-
-        Boolean isPauseStatusValid = UTIL_Describe.isValidPicklistOption(
-            'npe03__Recurring_Donation__c',
-            String.valueOf(npe03__Recurring_Donation__c.Status__c),
-            RD2_Constants.STATUS_PAUSED);
-        
-        if (!isPauseStatusValid) {
-            return;
-        }
-
-        RecurringDonationSchedule__c nextPauseSchedule = scheduleService.getNextActivePauseSchedule(rd.RecurringDonationSchedules__r);
-
-        List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
-                currentDate,
-                nextPauseSchedule.StartDate__c.addDays(-1),
-                rd.RecurringDonationSchedules__r);
-
-        if (installments.isEmpty()
-            && rd.Status__c != RD2_Constants.STATUS_PAUSED
-        ) {
-            rd.Status__c = RD2_Constants.STATUS_PAUSED;
-            rd.ClosedReason__c = nextPauseSchedule.StatusReason__c;
-            changedFields.add(npe03__Recurring_Donation__c.Status__c);
-            changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
         }
     }
 

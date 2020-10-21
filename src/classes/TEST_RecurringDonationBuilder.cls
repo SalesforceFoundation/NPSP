@@ -450,7 +450,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Recurring Donation Status to Pause
+    * @description Sets Recurring Donation Status to Paused
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withStatusPaused() {
