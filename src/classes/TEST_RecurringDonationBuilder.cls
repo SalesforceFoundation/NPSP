@@ -55,6 +55,11 @@ public without sharing class TEST_RecurringDonationBuilder {
     private Map<String, Object> valuesByFieldName = new Map<String, Object>();
 
     /***
+    * @description String representation of CreatedDate
+    */
+    private String createdDateValue;
+
+    /***
     * @description Recurring Donation builder mode
     */
     private Mode recordMode;
@@ -220,7 +225,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Date Established
+    * @description Sets Date Established to default value
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withDateEstablished() {
@@ -234,6 +239,24 @@ public without sharing class TEST_RecurringDonationBuilder {
     */
     public TEST_RecurringDonationBuilder withDateEstablished(Date dt) {
         valuesByFieldName.put('npe03__Date_Established__c', dt);
+        return this;
+    }
+
+    /***
+    * @description Sets CreatedDate to default value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCreatedDate() {
+        return withCreatedDate(DEFAULT_ESTABLISHED_DATE);
+    }
+
+    /***
+    * @description Sets Created Date value
+    * @param dt Date
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCreatedDate(Date dt) {
+        createdDateValue = (Datetime.newInstance(dt.year(), dt.month(), dt.day())).format('yyyy-MM-dd\'T\'HH:mm:ss.SSS');
         return this;
     }
 
@@ -571,12 +594,31 @@ public without sharing class TEST_RecurringDonationBuilder {
             rd.put(fieldName, valuesByFieldName.get(fieldName));
         }
 
+        rd = handleCreatedDate(rd);
+
         if (calculateNextDonationDate) {
             new RD2_RecurringDonation(rd)
                 .reviseNextDonationDateBeforeInsert(new RD2_ScheduleService());
         }
 
         return rd;
+    }
+
+    /***
+    * @description Inserts Created Date into Recurring Donation record
+    * @param rd npe03__Recurring_Donation__c
+    * @return npe03__Recurring_Donation__c
+    */
+    private npe03__Recurring_Donation__c handleCreatedDate(npe03__Recurring_Donation__c rd) {
+        if (createdDateValue == null) {
+            return rd;
+        }
+
+        String rdRecord = JSON.serialize(rd);
+        rdRecord = rdRecord.left(rdRecord.length() - 1);
+        rdRecord += ',"CreatedDate":"' + createdDateValue + '"}';
+
+        return (npe03__Recurring_Donation__c) JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
     }
 
     /***
